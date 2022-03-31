@@ -1,14 +1,14 @@
-﻿using Dfinity.Agent;
-using Dfinity.Agent.Auth;
-using Dfinity.Common.Crypto;
-using Dfinity.Common.Models;
+﻿using ICP.Agent;
+using ICP.Agent.Auth;
+using ICP.Common.Crypto;
+using ICP.Common.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dfinity.Identity
+namespace ICP.Identity
 {
     public class DelegationIdentity : SignIdentity
     {

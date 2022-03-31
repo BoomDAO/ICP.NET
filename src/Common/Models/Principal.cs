@@ -1,8 +1,8 @@
-﻿using Dfinity.Common.Crypto;
+﻿using ICP.Common.Crypto;
 using System;
 using System.Linq;
 
-namespace Dfinity.Common.Models
+namespace ICP.Common.Models
 {
 	public class PrincipalId : IHashable
     {

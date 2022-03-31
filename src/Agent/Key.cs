@@ -1,7 +1,7 @@
-﻿using Dfinity.Common;
+﻿using ICP.Common;
 using System;
 
-namespace Dfinity.Agent
+namespace ICP.Agent
 {
 	public class Key
 	{

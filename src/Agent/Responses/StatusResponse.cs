@@ -1,11 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
-using Dahomey.Cbor;
-using Dahomey.Cbor.ObjectModel;
-using Dfinity.Common;
+using ICP.Common;
 
-namespace Dfinity.Agent.Responses
+namespace ICP.Agent.Responses
 {
     public class StatusResponse
     {

@@ -1,11 +1,11 @@
-﻿using Dfinity.Common.Models;
+﻿using ICP.Common.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dfinity.Agent.CanisterInterfaces
+namespace ICP.Agent.CanisterInterfaces
 {
 	public interface IManagementCanisterRecord
 	{

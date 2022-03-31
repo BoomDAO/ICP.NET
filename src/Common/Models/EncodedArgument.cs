@@ -1,6 +1,6 @@
-﻿using Dfinity.Common.Crypto;
+﻿using ICP.Common.Crypto;
 
-namespace Dfinity.Common.Models
+namespace ICP.Common.Models
 {
     public class EncodedArgument : IHashable
     {

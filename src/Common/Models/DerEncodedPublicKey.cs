@@ -4,9 +4,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Dfinity.Common.Crypto;
+using ICP.Common.Crypto;
 
-namespace Dfinity.Common.Models
+namespace ICP.Common.Models
 {
     public class DerEncodedPublicKey : IHashable, IPublicKey
     {

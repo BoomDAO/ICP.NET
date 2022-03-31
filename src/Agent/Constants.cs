@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Dfinity.Agent
+namespace ICP.Agent
 {
 	public static class Constants
 	{

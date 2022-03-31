@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Dfinity.Common.Crypto
+namespace ICP.Common.Crypto
 {
     public class SHA224
     {

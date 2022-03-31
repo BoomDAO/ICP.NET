@@ -1,7 +1,7 @@
-﻿using Dfinity.Agent.Agents;
-using Dfinity.Agent.Auth;
-using Dfinity.Agent.Responses;
-using Dfinity.Common.Models;
+﻿using ICP.Agent.Agents;
+using ICP.Agent.Auth;
+using ICP.Agent.Responses;
+using ICP.Common.Models;
 
 var identity = new AnonymousIdentity();
 IAgent agent = new HttpAgent(identity, new Uri("http://127.0.0.1:8000"));

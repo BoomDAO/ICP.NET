@@ -2,7 +2,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Dfinity.Common.Encodings
+namespace ICP.Common.Encodings
 {
 	public class LEB128
     {
@@ -84,7 +84,8 @@ namespace Dfinity.Common.Encodings
 
 		public static LEB128 FromNat(UnboundedUInt unboundedUInt)
 		{
-
+            // TODO
+            throw new NotImplementedException();
 		}
 
 		public static LEB128 FromRaw(byte[] value)

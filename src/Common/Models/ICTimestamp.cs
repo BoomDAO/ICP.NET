@@ -2,10 +2,10 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Http.Headers;
 using Candid;
-using Dfinity.Common.Crypto;
-using Dfinity.Common.Encodings;
+using ICP.Common.Crypto;
+using ICP.Common.Encodings;
 
-namespace Dfinity.Common.Models
+namespace ICP.Common.Models
 {
     public class ICTimestamp : IHashable
     {

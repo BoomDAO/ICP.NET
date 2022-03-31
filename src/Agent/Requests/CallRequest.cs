@@ -1,9 +1,9 @@
 ﻿using Candid;
-using Dfinity.Common.Models;
+using ICP.Common.Models;
 using System;
 using System.Collections.Generic;
 
-namespace Dfinity.Agent.Requests
+namespace ICP.Agent.Requests
 {
     public class CallRequest : IRepresentationIndependentHashItem
     {

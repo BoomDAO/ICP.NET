@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace Dfinity.Common.Crypto
+namespace ICP.Common.Crypto
 {
     internal abstract class BlockHash
     {

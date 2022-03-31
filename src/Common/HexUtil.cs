@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Dfinity.Common
+namespace ICP.Common
 {
 	public class HexUtil
 	{

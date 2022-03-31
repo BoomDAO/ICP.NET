@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Dahomey.Cbor.ObjectModel;
 
-namespace Dfinity.Agent.Responses
+namespace ICP.Agent.Responses
 {
     public class ReadStateResponse
     {

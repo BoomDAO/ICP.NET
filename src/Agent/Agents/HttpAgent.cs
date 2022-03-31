@@ -1,15 +1,15 @@
-﻿using Dfinity.Agent.Auth;
-using Dfinity.Agent.Requests;
-using Dfinity.Agent.Responses;
-using Dfinity.Common.Models;
+﻿using ICP.Agent.Auth;
+using ICP.Agent.Requests;
+using ICP.Agent.Responses;
+using ICP.Common.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Path = Dfinity.Common.Models.Path;
+using Path = ICP.Common.Models.Path;
 
-namespace Dfinity.Agent.Agents
+namespace ICP.Agent.Agents
 {
 	public class HttpAgent : IAgent
     {

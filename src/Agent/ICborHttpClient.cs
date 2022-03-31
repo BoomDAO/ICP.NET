@@ -1,4 +1,4 @@
-﻿namespace Dfinity.Agent
+﻿namespace ICP.Agent
 {
 	public interface ICborHttpClient
 	{

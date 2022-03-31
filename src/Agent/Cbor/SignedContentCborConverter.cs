@@ -1,4 +1,4 @@
-﻿using Dfinity.Agent.Auth;
+﻿using ICP.Agent.Auth;
 using System;
 using System.Collections.Generic;
 using System.Formats.Cbor;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dfinity.Agent.Cbor
+namespace ICP.Agent.Cbor
 {
 	public class SignedContentCborConverter : ICborConverter<SignedContent>
 	{

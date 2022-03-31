@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Dfinity.Common
+namespace ICP.Common
 {
     public static class Base32EncodingUtil
     {

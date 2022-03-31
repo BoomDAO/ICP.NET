@@ -1,7 +1,7 @@
 using System;
 using System.Security.Cryptography;
 
-namespace Dfinity.Common.Crypto
+namespace ICP.Common.Crypto
 {
     public interface IHashFunction
     {

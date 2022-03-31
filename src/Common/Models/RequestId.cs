@@ -1,13 +1,13 @@
 ﻿using Candid;
-using Dfinity.Common.Crypto;
-using Dfinity.Common.Encodings;
+using ICP.Common.Crypto;
+using ICP.Common.Encodings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Dfinity.Common.Models
+namespace ICP.Common.Models
 {
     public static class CandidUtil
     {

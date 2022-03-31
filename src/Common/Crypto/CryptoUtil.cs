@@ -1,8 +1,8 @@
-using Dfinity.Common.Models;
+using ICP.Common.Models;
 using System;
 using System.Diagnostics;
 
-namespace Dfinity.Common.Crypto
+namespace ICP.Common.Crypto
 {
     public static class CryptoUtil
     {

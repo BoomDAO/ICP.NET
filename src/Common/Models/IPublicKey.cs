@@ -1,7 +1,7 @@
 ﻿using System;
-using Dfinity.Common.Models;
+using ICP.Common.Models;
 
-namespace Dfinity.Common.Models
+namespace ICP.Common.Models
 {
     public interface IPublicKey
     {

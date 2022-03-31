@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Candid;
-using Dfinity.Common.Crypto;
+using ICP.Common.Crypto;
 
-namespace Dfinity.Common.Models
+namespace ICP.Common.Models
 {
 	public interface IHashable
 	{

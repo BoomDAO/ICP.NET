@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Dfinity.Agent.Responses
+namespace ICP.Agent.Responses
 {
     public class QueryResponse
     {

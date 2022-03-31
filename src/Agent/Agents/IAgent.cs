@@ -1,12 +1,12 @@
-﻿using Dfinity.Agent.Auth;
-using Dfinity.Agent.Responses;
-using Dfinity.Common.Models;
+﻿using ICP.Agent.Auth;
+using ICP.Agent.Responses;
+using ICP.Common.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dfinity.Agent.Agents
+namespace ICP.Agent.Agents
 {
     public interface IAgent
     {
@@ -40,7 +40,7 @@ namespace Dfinity.Agent.Agents
 
         /**
 		* Send a query call to a canister. See
-		* {@link https://sdk.dfinity.org/docs/interface-spec/#http-query | the interface spec}.
+		* {@link https://sdk.ICP.org/docs/interface-spec/#http-query | the interface spec}.
 		* @param canisterId The Principal of the Canister to send the query to. Sending a query to
 		*     the management canister is not supported (as it has no meaning from an agent).
 		* @param options Options to use to create and send the query.

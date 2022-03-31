@@ -2,7 +2,7 @@
 using Candid;
 using System;
 
-namespace Dfinity.Common.Encodings
+namespace ICP.Common.Encodings
 {
 	public class SLEB128
 	{

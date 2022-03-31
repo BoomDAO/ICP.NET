@@ -1,5 +1,5 @@
-﻿using Dfinity.Common.Models;
-using Dfinity.Common.Types;
+﻿using ICP.Common.Encodings;
+using ICP.Common.Models;
 using System;
 using System.Collections.Generic;
 using System.Formats.Cbor;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dfinity.Agent.Cbor
+namespace ICP.Agent.Cbor
 {
     public class PrincipalIdCborConverter : ICborConverter<PrincipalId>
     {

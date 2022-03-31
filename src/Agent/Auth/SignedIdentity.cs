@@ -1,13 +1,13 @@
 ﻿using Candid;
-using Dfinity.Common.Crypto;
-using Dfinity.Common.Models;
+using ICP.Common.Crypto;
+using ICP.Common.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dfinity.Agent.Auth
+namespace ICP.Agent.Auth
 {
     public abstract class SignIdentity : IIdentity
     {

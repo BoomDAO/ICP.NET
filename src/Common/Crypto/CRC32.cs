@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dfinity.Common.Crypto
+namespace ICP.Common.Crypto
 {
     public class CRC32
     {

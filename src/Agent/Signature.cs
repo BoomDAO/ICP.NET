@@ -1,8 +1,8 @@
-﻿using Dfinity.Common.Crypto;
-using Dfinity.Common.Models;
+﻿using ICP.Common.Crypto;
+using ICP.Common.Models;
 using System;
 
-namespace Dfinity.Agent
+namespace ICP.Agent
 {
 	public class Signature : IHashable
 	{

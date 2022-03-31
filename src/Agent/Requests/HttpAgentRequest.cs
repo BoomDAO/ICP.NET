@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Dfinity.Agent.Requests
+namespace ICP.Agent.Requests
 {
 	public class HttpAgentRequest
 	{
