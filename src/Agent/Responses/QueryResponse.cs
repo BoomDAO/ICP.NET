@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Dahomey.Cbor.ObjectModel;
+using System;
 
 namespace ICP.Agent.Responses
 {

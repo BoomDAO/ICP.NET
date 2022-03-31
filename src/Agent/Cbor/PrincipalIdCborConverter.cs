@@ -1,17 +1,15 @@
-﻿using ICP.Common.Encodings;
+﻿using Dahomey.Cbor.Serialization;
+using Dahomey.Cbor.Serialization.Converters;
+using ICP.Common.Encodings;
 using ICP.Common.Models;
 using System;
-using System.Collections.Generic;
-using System.Formats.Cbor;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ICP.Agent.Cbor
 {
-    public class PrincipalIdCborConverter : ICborConverter<PrincipalId>
+    public class PrincipalIdCborConverter : CborConverterBase<PrincipalId>
     {
-        public PrincipalId Read(ref CborReader reader)
+        public override PrincipalId Read(ref CborReader reader)
         {
             ReadOnlySpan<byte> raw = reader.ReadByteString();
 
@@ -39,11 +37,11 @@ namespace ICP.Agent.Cbor
                     }
                 }
             }
-
-            throw new CborContentException("Failed to deserialize PrincipalId, invalid bytes");
+            
+            throw new Dahomey.Cbor.CborException("Failed to deserialize PrincipalId, invalid bytes");
         }
 
-        public void Write(ref CborWriter writer, PrincipalId value)
+        public override void Write(ref CborWriter writer, PrincipalId value)
         {
             byte[] rawValue = value.Raw;
             LEB128 byteLength = LEB128.FromUInt64((ulong)rawValue.Length);

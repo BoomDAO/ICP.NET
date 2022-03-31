@@ -1,20 +1,16 @@
-﻿using Candid;
-using ICP.Common.Crypto;
-using ICP.Common.Models;
+﻿using ICP.Common.Models;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Formats.Cbor;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ICP.Agent.Auth
 {
 	public class SignedContent : IRepresentationIndependentHashItem
 	{
+		[Dahomey.Cbor.Attributes.CborProperty("content")]
 		public Dictionary<string, IHashable> Content { get; }
+		[Dahomey.Cbor.Attributes.CborProperty("sender_pubkey")]
 		public DerEncodedPublicKey? SenderPublicKey { get; }
+		[Dahomey.Cbor.Attributes.CborProperty("sender_sig")]
 		public Signature? SenderSignature { get; }
 		// TODO `? sender_delegation: [*4 signed-delegation]`
 

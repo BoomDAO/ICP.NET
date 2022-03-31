@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using Dahomey.Cbor.ObjectModel;
 using ICP.Common;
 
 namespace ICP.Agent.Responses

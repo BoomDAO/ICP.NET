@@ -3,6 +3,7 @@ using ICP.Agent.Requests;
 using ICP.Agent.Responses;
 using ICP.Common.Models;
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
@@ -93,7 +94,7 @@ namespace ICP.Agent.Agents
         {
             Func<Task<Stream>> streamFunc = await this.SendRawAsync(url, null);
             Stream stream = await streamFunc();
-            return await CborUtil.DeserializeAsync<TResponse>(stream);
+            return await Dahomey.Cbor.Cbor.DeserializeAsync<TResponse>(stream);
         }
 
         private async Task<TResponse> SendAsync<TRequest, TResponse>(string url, Func<PrincipalId, ICTimestamp, TRequest> getRequest, IIdentity? identityOverride)
@@ -101,7 +102,7 @@ namespace ICP.Agent.Agents
         {
             Func<Task<Stream>> streamFunc = await this.SendInternalAsync(url, getRequest, identityOverride);
             Stream stream = await streamFunc();
-            return await CborUtil.DeserializeAsync<TResponse>(stream);
+            return await Dahomey.Cbor.Cbor.DeserializeAsync<TResponse>(stream);
         }
 
         private async Task<Func<Task<Stream>>> SendInternalAsync<TRequest>(string url, Func<PrincipalId, ICTimestamp, TRequest> getRequest, IIdentity? identityOverride)
@@ -115,8 +116,9 @@ namespace ICP.Agent.Agents
             Dictionary<string, IHashable> content = request.BuildHashableItem();
             SignedContent signedContent = identityOverride.CreateSignedContent(content);
 
-            byte[] cborBody = CborUtil.Serialize(signedContent);
-
+            IBufferWriter<byte> buffer = new ArrayBufferWriter<byte>();
+            Dahomey.Cbor.Cbor.Serialize(signedContent, in buffer);
+            byte[] cborBody = buffer.GetMemory().ToArray();
             return await this.SendRawAsync(url, cborBody);
         }
 

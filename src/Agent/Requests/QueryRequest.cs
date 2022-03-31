@@ -7,26 +7,31 @@ namespace ICP.Agent.Requests
 {
     public class QueryRequest : IRepresentationIndependentHashItem
     {
+        [Dahomey.Cbor.Attributes.CborProperty(Properties.REQUEST_TYPE)]
         public string RequestType { get; } = "query";
 
         /// <summary>
         /// The principal of the canister to call.
         /// </summary>
+		[Dahomey.Cbor.Attributes.CborProperty(Properties.CANNISTER_ID)]
         public PrincipalId CanisterId { get; }
 
         /// <summary>
         /// Name of the canister method to call
         /// </summary>
+		[Dahomey.Cbor.Attributes.CborProperty(Properties.METHOD_NAME)]
         public string Method { get; }
 
         /// <summary>
         /// Argument to pass to the canister method
         /// </summary>
+		[Dahomey.Cbor.Attributes.CborProperty(Properties.ARG)]
         public EncodedArgument EncodedArgument { get; }
 
         /// <summary>
         /// Required. The user who issued the request.
         /// </summary>
+		[Dahomey.Cbor.Attributes.CborProperty(Properties.SENDER)]
         public PrincipalId Sender { get; }
 
         /// <summary>
@@ -36,12 +41,14 @@ namespace ICP.Agent.Requests
         /// the past. The IC may refuse to accept requests with an ingress expiry date too far in the future. 
         /// This applies to synchronous and asynchronous requests alike (and could have been called request_expiry).
         /// </summary>
+		[Dahomey.Cbor.Attributes.CborProperty(Properties.INGRESS_EXPIRY)]
         public ICTimestamp IngressExpiry { get; }
 
         /// <summary>
         /// Optional. Arbitrary user-provided data, typically randomly generated. 
         /// This can be used to create distinct requests with otherwise identical fields.
         /// </summary>
+		[Dahomey.Cbor.Attributes.CborProperty(Properties.NONCE)]
         public byte[]? Nonce { get; }
 
         public QueryRequest(PrincipalId canisterId, string method, EncodedArgument encodedArgument, PrincipalId sender, ICTimestamp ingressExpiry)
@@ -55,7 +62,7 @@ namespace ICP.Agent.Requests
 
         public Dictionary<string, IHashable> BuildHashableItem()
         {
-            return new Dictionary<string, IHashable>
+            var properties = new Dictionary<string, IHashable>
             {
                 {Properties.REQUEST_TYPE, this.RequestType.ToHashable()},
                 {Properties.CANNISTER_ID, this.CanisterId},
@@ -64,6 +71,11 @@ namespace ICP.Agent.Requests
                 {Properties.SENDER, this.Sender},
                 {Properties.INGRESS_EXPIRY, this.IngressExpiry}
             };
+            if (this.Nonce != null)
+            {
+                properties.Add(Properties.NONCE, this.Nonce.ToHashable());
+            }
+            return properties;
         }
 
 

@@ -6,9 +6,13 @@ namespace ICP.Agent.Requests
 {
     public class ReadStateRequest : IRepresentationIndependentHashItem
     {
+        [Dahomey.Cbor.Attributes.CborProperty(Properties.REQUEST_TYPE)]
         public string REQUEST_TYPE { get; } = "query";
+        [Dahomey.Cbor.Attributes.CborProperty(Properties.PATHS)]
         public List<Path> Paths { get; }
+        [Dahomey.Cbor.Attributes.CborProperty(Properties.SENDER)]
         public PrincipalId Sender { get; }
+        [Dahomey.Cbor.Attributes.CborProperty(Properties.INGRESS_EXPIRY)]
         public ICTimestamp IngressExpiry { get; }
 
         public ReadStateRequest(List<Path> paths, PrincipalId sender, ICTimestamp ingressExpiry)
