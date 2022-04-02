@@ -13,8 +13,7 @@ namespace Agent.Cbor
 	{
 		public static void Write(ref CborWriter writer, UnboundedUInt value)
 		{
-			LEB128 leb = LEB128.FromNat(value);
-			if (leb.TryToUInt64(out ulong longValue))
+			if (value.TryToUInt64(out ulong longValue))
 			{
 				writer.WriteUInt64(longValue);
 			}
@@ -28,9 +27,12 @@ namespace Agent.Cbor
 
 		public static UnboundedUInt ReadUnboundedUInt(ref CborReader reader)
 		{
-			if(reader.TryReadSemanticTag(out ulong semanticTag))
+			if (reader.TryReadSemanticTag(out ulong semanticTag))
 			{
+				if (semanticTag != 2)
+				{
 
+				}
 			}
 		}
 	}
