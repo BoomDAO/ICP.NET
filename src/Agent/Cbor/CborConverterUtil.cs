@@ -1,9 +1,11 @@
 ﻿using Candid;
+using Dahomey.Cbor;
 using Dahomey.Cbor.Serialization;
 using ICP.Common.Encodings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -20,8 +22,10 @@ namespace Agent.Cbor
 			else
 			{
 				writer.WriteSemanticTag(2);
-				writer.WriteByteString(leb.Raw.Length);
-				writer.WriteByteString(leb.Raw);
+				byte[] raw = value.GetRawBytes();
+				byte[] lengthBytes = new BigInteger(raw.Length).ToByteArray(isUnsigned: true, isBigEndian: true);
+				writer.WriteByteString(lengthBytes);
+				writer.WriteByteString(raw);
 			}
 		}
 
@@ -29,11 +33,13 @@ namespace Agent.Cbor
 		{
 			if (reader.TryReadSemanticTag(out ulong semanticTag))
 			{
-				if (semanticTag != 2)
+				if (semanticTag == 2)
 				{
-
+					ReadOnlySpan<byte> bytes = reader.ReadByteString();
+					return new UnboundedUInt(new BigInteger(bytes.ToArray()));
 				}
 			}
+			throw new CborException("Unable to read value as Unbounded UInt");
 		}
 	}
 }

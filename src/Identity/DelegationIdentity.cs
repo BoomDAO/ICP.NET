@@ -75,12 +75,12 @@ namespace ICP.Identity
             List<PrincipalId>? targets = null)
         {
             var delegation = new Delegation(publicKey, expiration, targets);
-            IHashable hashable = delegation.BuildHashableItem();
+            Dictionary<string, IHashable> hashable = delegation.BuildHashableItem();
             // The signature is calculated by signing the concatenation of the domain separator
             // and the message.
             var hashFunction = SHA256HashFunction.Create();
 
-            byte[] delegationHashDigest = hashable.ComputeHash(hashFunction);
+            byte[] delegationHashDigest = new HashableObject(hashable).ComputeHash(hashFunction);
             byte[] challenge = Encoding.UTF8.GetBytes("\x1Aic-request-auth-delegation") // Prefix with domain seperator
                 .Concat(delegationHashDigest)
                 .ToArray();

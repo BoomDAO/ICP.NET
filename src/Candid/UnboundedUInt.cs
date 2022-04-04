@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -8,31 +9,27 @@ namespace Candid
 {
 	public class UnboundedUInt : IComparable<UnboundedUInt>
 	{
-		/// <summary>
-		/// How many overflows of `offset` or the ulong.MaxValue count to add to the whole
-		/// </summary>
-		private ulong offsetOverflowCount;
+		private BigInteger value;
 
-		/// <summary>
-		/// The raw value to add to the whole
-		/// </summary>
-		private ulong offset;
-		public UnboundedUInt(ulong uint64Count, ulong offset)
+		public UnboundedUInt(BigInteger value)
 		{
-			this.offsetOverflowCount = uint64Count;
-			this.offset = offset;
+			if (value < 0)
+			{
+				throw new ArgumentException("Value must be 0 or greater");
+			}
+			this.value = value;
 		}
 
-		public (ulong Count, ulong Offset) GetValue()
+		public byte[] GetRawBytes()
 		{
-			return (this.offsetOverflowCount, this.offset);
+			return this.value.ToByteArray(isUnsigned: true, isBigEndian: true);
 		}
 
 		public bool TryToUInt64(out ulong value)
 		{
-			if (this.offsetOverflowCount == 0)
+			if (this.value <= ulong.MaxValue)
 			{
-				value = offset;
+				value = (ulong)this.value;
 				return true;
 			}
 			value = 0;
@@ -41,44 +38,28 @@ namespace Candid
 
 		public bool Equals(UnboundedUInt uuint)
 		{
-			return this.CompareTo(uuint) == 0;
+			return this.value == uuint.value;
 		}
 
 		public override bool Equals(object? obj)
 		{
-			if (obj is UnboundedUInt uuint)
-			{
-				return this.Equals(uuint);
-			}
-			return false;
+			return this.value.Equals(obj);
 		}
 
 
 		public int CompareTo(UnboundedUInt? other)
 		{
-			if (other == null)
-			{
-				return 1;
-			}
-			if (this.offsetOverflowCount > other.offsetOverflowCount)
-			{
-				return 1;
-			}
-			if (this.offsetOverflowCount == other.offsetOverflowCount)
-			{
-				return this.offset.CompareTo(other.offset);
-			}
-			return -1;
+			return this.value.CompareTo(other);
 		}
 
 		public static UnboundedUInt FromUInt64(ulong value)
 		{
-			return new UnboundedUInt(0, value);
+			return new UnboundedUInt(new BigInteger(value));
 		}
 
 		public override int GetHashCode()
 		{
-			return HashCode.Combine(offsetOverflowCount, offset);
+			return this.value.GetHashCode();
 		}
 	}
 
