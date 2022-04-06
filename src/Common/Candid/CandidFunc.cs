@@ -12,6 +12,16 @@
 			this.CanisterId = canisterId;
 			this.Name = name;
 		}
+
+		public override byte[] EncodeType()
+		{
+			return 
+		}
+
+		public override byte[] EncodeValue()
+		{
+			throw new NotImplementedException();
+		}
 	}
 
 }

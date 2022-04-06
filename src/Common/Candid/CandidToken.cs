@@ -23,12 +23,14 @@ namespace Candid
 	{
 		public abstract CandidTokenType Type { get; }
 
-
 		public static CandidToken Null { get; } = new CandidNull();
 
 		public static CandidToken Reserved { get; } = new CandidReserved();
 
 		public static CandidToken Empty { get; } = new CandidEmpty();
+
+		public abstract byte[] EncodeType();
+		public abstract byte[] EncodeValue();
 
 		public CandidPrimitive AsPrimitive()
 		{

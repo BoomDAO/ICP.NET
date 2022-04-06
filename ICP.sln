@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.32106.194
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32113.165
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9A64FA9E-AC6C-4C1F-B648-E9E64F172EA8}"
 	ProjectSection(SolutionItems) = preProject
@@ -15,8 +15,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity", "src\Identity\Identity.csproj", "{8D3B09E6-9D98-42CF-8F5C-B61AFEFF4036}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample", "src\Sample\Sample.csproj", "{99A0577B-3900-4A2D-905A-777FD86C60F8}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Candid", "src\Candid\Candid.csproj", "{B19AE37B-FAD1-4750-B5B3-4F69976A8C87}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -40,10 +38,6 @@ Global
 		{99A0577B-3900-4A2D-905A-777FD86C60F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{99A0577B-3900-4A2D-905A-777FD86C60F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{99A0577B-3900-4A2D-905A-777FD86C60F8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B19AE37B-FAD1-4750-B5B3-4F69976A8C87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B19AE37B-FAD1-4750-B5B3-4F69976A8C87}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B19AE37B-FAD1-4750-B5B3-4F69976A8C87}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B19AE37B-FAD1-4750-B5B3-4F69976A8C87}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

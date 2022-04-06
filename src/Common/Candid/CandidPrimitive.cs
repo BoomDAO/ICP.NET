@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Candid.Constants;
+using ICP.Common.Encodings;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +11,6 @@ namespace Candid
 	public enum CandidPrimitiveType
 	{
 		Text,
-		Blob,
 		Nat,
 		Nat8,
 		Nat16,
@@ -38,16 +39,59 @@ namespace Candid
 			this.value = value;
 		}
 
+
+		public override byte[] EncodeType()
+		{
+			IDLType type = this.ValueType switch
+			{
+				CandidPrimitiveType.Text => IDLType.Text,
+				CandidPrimitiveType.Nat => IDLType.Nat,
+				CandidPrimitiveType.Nat8 => IDLType.Nat8,
+				CandidPrimitiveType.Nat16 => IDLType.Nat16,
+				CandidPrimitiveType.Nat32 => IDLType.Nat32,
+				CandidPrimitiveType.Nat64 => IDLType.Nat64,
+				CandidPrimitiveType.Int => IDLType.Int,
+				CandidPrimitiveType.Int8 => IDLType.Int8,
+				CandidPrimitiveType.Int16 => IDLType.Int16,
+				CandidPrimitiveType.Int32 => IDLType.Int32,
+				CandidPrimitiveType.Int64 => IDLType.Int64,
+				CandidPrimitiveType.Float32 => IDLType.Float32,
+				CandidPrimitiveType.Float64 => IDLType.Float64,
+				CandidPrimitiveType.Bool => IDLType.Bool,
+				CandidPrimitiveType.Principal => IDLType.Principal,
+				_ => throw new NotImplementedException()
+			};
+			return SLEB128.FromInt64((long)type).Raw;
+		}
+
+		public override byte[] EncodeValue()
+		{
+			return this.ValueType switch
+			{
+				CandidPrimitiveType.Text => LEB128.FromUInt64(this.AsText().Length).Raw
+					.Concat(raw),
+				CandidPrimitiveType.Nat => IDLType.Nat,
+				CandidPrimitiveType.Nat8 => IDLType.Nat8,
+				CandidPrimitiveType.Nat16 => IDLType.Nat16,
+				CandidPrimitiveType.Nat32 => IDLType.Nat32,
+				CandidPrimitiveType.Nat64 => IDLType.Nat64,
+				CandidPrimitiveType.Int => IDLType.Int,
+				CandidPrimitiveType.Int8 => IDLType.Int8,
+				CandidPrimitiveType.Int16 => IDLType.Int16,
+				CandidPrimitiveType.Int32 => IDLType.Int32,
+				CandidPrimitiveType.Int64 => IDLType.Int64,
+				CandidPrimitiveType.Float32 => IDLType.Float32,
+				CandidPrimitiveType.Float64 => IDLType.Float64,
+				CandidPrimitiveType.Bool => IDLType.Bool,
+				CandidPrimitiveType.Principal => IDLType.Principal,
+				_ => throw new NotImplementedException()
+			};
+		}
+
 		public string AsText()
 		{
 			this.ValidateType(CandidPrimitiveType.Text);
 			return (string)this.value;
-		}
-
-		public byte[] AsBlob()
-		{
-			this.ValidateType(CandidPrimitiveType.Blob);
-			return (byte[])this.value;
 		}
 
 		public UnboundedUInt AsNat()

@@ -1,4 +1,5 @@
-﻿using ICP.Common.Crypto;
+﻿using Candid;
+using ICP.Common.Crypto;
 
 namespace ICP.Common.Models
 {
@@ -15,5 +16,11 @@ namespace ICP.Common.Models
         {
             return hashFunction.ComputeHash(this.Value);
         }
+
+        public static EncodedArgument FromCandid(CandidToken token)
+		{
+            byte[] bytes = token.;
+            return new EncodedArgument(bytes);
+		}
     }
 }

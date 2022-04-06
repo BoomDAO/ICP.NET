@@ -9,7 +9,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Agent\Agent.csproj" />
-    <ProjectReference Include="..\Candid\Candid.csproj" />
     <ProjectReference Include="..\Common\Common.csproj" />
     <ProjectReference Include="..\Identity\Identity.csproj" />
   </ItemGroup>

@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Candid\Candid.csproj" />
     <ProjectReference Include="..\Common\Common.csproj" />
   </ItemGroup>
 
