@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Candid.Constants
+namespace ICP.Common.Candid.Constants
 {
 	public enum IDLType
 	{

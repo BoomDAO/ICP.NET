@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
-namespace Candid
+namespace ICP.Common.Candid
 {
 	public class CandidRecord : CandidToken
 	{

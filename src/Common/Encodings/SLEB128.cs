@@ -1,5 +1,5 @@
 ﻿
-using Candid;
+using ICP.Common.Candid;
 using System;
 
 namespace ICP.Common.Encodings
@@ -10,7 +10,7 @@ namespace ICP.Common.Encodings
 
 		private SLEB128(byte[] raw)
 		{
-			if(raw == null || raw.Length < 1)
+			if (raw == null || raw.Length < 1)
 			{
 				throw new ArgumentException("LEB128 requires at least one byte");
 			}

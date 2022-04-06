@@ -1,4 +1,4 @@
-﻿using Candid;
+﻿using ICP.Common.Candid;
 using Dahomey.Cbor;
 using Dahomey.Cbor.Serialization;
 using ICP.Common.Encodings;
@@ -38,8 +38,13 @@ namespace Agent.Cbor
 					ReadOnlySpan<byte> bytes = reader.ReadByteString();
 					return new UnboundedUInt(new BigInteger(bytes.ToArray()));
 				}
+				throw new CborException("Unable to read value as Unbounded UInt");
 			}
-			throw new CborException("Unable to read value as Unbounded UInt");
+			else
+			{
+				ulong value = reader.ReadUInt64();
+				return new UnboundedUInt(new BigInteger(value));
+			}
 		}
 	}
 }

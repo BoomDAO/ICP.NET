@@ -5,7 +5,7 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Candid
+namespace ICP.Common.Candid
 {
 	public class UnboundedUInt : IComparable<UnboundedUInt>
 	{

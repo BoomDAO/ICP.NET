@@ -4,24 +4,40 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "build",
-            "command": "dotnet",
-            "type": "shell",
-            "args": [
-                "build",
-                // Ask dotnet build to generate full paths for file names.
-                "/property:GenerateFullPaths=true",
-                // Do not generate summary otherwise it leads to duplicate errors in Problems panel
-                "/consoleloggerparameters:NoSummary"
-            ],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
-            "presentation": {
-                "reveal": "silent"
-            },
-            "problemMatcher": "$msCompile"
-        }
+			"label": "build",
+			"command": "dotnet",
+			"type": "process",
+			"args": [
+				"build",
+				"${workspaceFolder}/src/Sample/Sample.csproj",
+				"/property:GenerateFullPaths=true",
+				"/consoleloggerparameters:NoSummary"
+			],
+			"problemMatcher": "$msCompile"
+		},
+		{
+			"label": "publish",
+			"command": "dotnet",
+			"type": "process",
+			"args": [
+				"publish",
+				"${workspaceFolder}/src/Sample/Sample.csproj",
+				"/property:GenerateFullPaths=true",
+				"/consoleloggerparameters:NoSummary"
+			],
+			"problemMatcher": "$msCompile"
+		},
+		{
+			"label": "watch",
+			"command": "dotnet",
+			"type": "process",
+			"args": [
+				"watch",
+				"run",
+				"--project",
+				"${workspaceFolder}/src/Sample/Sample.csproj"
+			],
+			"problemMatcher": "$msCompile"
+		}
     ]
 }

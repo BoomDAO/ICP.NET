@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Candid
+namespace ICP.Common.Candid
 {
 	public enum CandidPrimitiveType
 	{

@@ -1,4 +1,4 @@
-﻿using Candid;
+﻿using ICP.Common.Candid;
 using Candid.Constants;
 using ICP.Common.Encodings;
 using System;

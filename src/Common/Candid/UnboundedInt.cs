@@ -5,9 +5,9 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Candid
+namespace ICP.Common.Candid
 {
-	public class UnboundedInt  : IComparable<UnboundedInt>
+	public class UnboundedInt : IComparable<UnboundedInt>
 	{
 		private BigInteger value;
 

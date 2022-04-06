@@ -1,4 +1,4 @@
-﻿namespace Candid
+﻿namespace ICP.Common.Candid
 {
 	public class CandidVector : CandidToken
 	{
@@ -9,7 +9,7 @@
 		public CandidVector(CandidToken[] values)
 		{
 			CandidTokenType? valueType = values.FirstOrDefault()?.Type;
-			if(valueType != null && values.Any(v => v.Type != valueType))
+			if (valueType != null && values.Any(v => v.Type != valueType))
 			{
 				throw new ArgumentException("All vector values must be the same type");
 			}

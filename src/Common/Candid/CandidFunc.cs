@@ -1,4 +1,4 @@
-﻿namespace Candid
+﻿namespace ICP.Common.Candid
 {
 	public class CandidFunc : CandidToken
 	{
@@ -15,7 +15,7 @@
 
 		public override byte[] EncodeType()
 		{
-			return 
+			return
 		}
 
 		public override byte[] EncodeValue()

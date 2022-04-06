@@ -1,4 +1,4 @@
-﻿using Candid;
+﻿using ICP.Common.Candid;
 using ICP.Agent.Requests;
 using ICP.Common;
 using ICP.Common.Crypto;
@@ -11,10 +11,10 @@ using System.Threading.Tasks;
 
 namespace ICP.Agent.Auth
 {
-    public interface IIdentity
-    {
-        PrincipalId Principal { get; }
+	public interface IIdentity
+	{
+		PrincipalId Principal { get; }
 
-        SignedContent CreateSignedContent(Dictionary<string, IHashable> content);
-    }
+		SignedContent CreateSignedContent(Dictionary<string, IHashable> content);
+	}
 }

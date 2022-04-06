@@ -1,4 +1,4 @@
-﻿namespace Candid
+﻿namespace ICP.Common.Candid
 {
 	public class CandidEmpty : CandidToken
 	{

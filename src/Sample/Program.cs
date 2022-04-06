@@ -1,4 +1,4 @@
-﻿using Candid;
+﻿using ICP.Common.Candid;
 using ICP.Agent.Agents;
 using ICP.Agent.Auth;
 using ICP.Agent.Responses;

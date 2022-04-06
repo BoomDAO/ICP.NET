@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Candid;
+using ICP.Common.Candid;
 using ICP.Common.Crypto;
 
 namespace ICP.Common.Models
