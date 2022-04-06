@@ -68,7 +68,7 @@ namespace ICP.Common.Candid
 		{
 			return this.ValueType switch
 			{
-				CandidPrimitiveType.Text => LEB128.FromUInt64(this.AsText().Length).Raw
+				CandidPrimitiveType.Text => LEB128.FromUInt64((ulong)this.AsText().Length).Raw
 					.Concat(raw),
 				CandidPrimitiveType.Nat => IDLType.Nat,
 				CandidPrimitiveType.Nat8 => IDLType.Nat8,
