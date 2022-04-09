@@ -10,7 +10,7 @@ IAgent agent = new HttpAgent(identity, new Uri("http://127.0.0.1:8000"));
 string characterDatabaseText = "";
 PrincipalId characterDatabase = PrincipalId.FromText(characterDatabaseText);
 string method = "create";
-var candidArg = CandidRecord.FromDictionary(new Dictionary<string, CandidToken>
+var candidArg = CandidRecord.FromDictionary(new Dictionary<string, CandidValue>
 {
 	{"attack", CandidPrimitive.Nat(UnboundedUInt.FromUInt64(1))}
 });

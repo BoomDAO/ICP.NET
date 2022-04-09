@@ -1,4 +1,5 @@
 ﻿using Candid.Constants;
+using ICP.Common.Candid.Constants;
 using ICP.Common.Encodings;
 using System;
 using System.Collections.Generic;
@@ -27,9 +28,9 @@ namespace ICP.Common.Candid
 		Principal
 	}
 
-	public class CandidPrimitive : CandidToken
+	public class CandidPrimitive : CandidValue
 	{
-		public override CandidTokenType Type { get; } = CandidTokenType.Primitive;
+		public override CandidValueType Type { get; } = CandidValueType.Primitive;
 		public CandidPrimitiveType ValueType { get; }
 		private readonly object value;
 
@@ -40,28 +41,8 @@ namespace ICP.Common.Candid
 		}
 
 
-		public override byte[] EncodeType()
+		public override byte[] BuildTypeDefinition()
 		{
-			IDLType type = this.ValueType switch
-			{
-				CandidPrimitiveType.Text => IDLType.Text,
-				CandidPrimitiveType.Nat => IDLType.Nat,
-				CandidPrimitiveType.Nat8 => IDLType.Nat8,
-				CandidPrimitiveType.Nat16 => IDLType.Nat16,
-				CandidPrimitiveType.Nat32 => IDLType.Nat32,
-				CandidPrimitiveType.Nat64 => IDLType.Nat64,
-				CandidPrimitiveType.Int => IDLType.Int,
-				CandidPrimitiveType.Int8 => IDLType.Int8,
-				CandidPrimitiveType.Int16 => IDLType.Int16,
-				CandidPrimitiveType.Int32 => IDLType.Int32,
-				CandidPrimitiveType.Int64 => IDLType.Int64,
-				CandidPrimitiveType.Float32 => IDLType.Float32,
-				CandidPrimitiveType.Float64 => IDLType.Float64,
-				CandidPrimitiveType.Bool => IDLType.Bool,
-				CandidPrimitiveType.Principal => IDLType.Principal,
-				_ => throw new NotImplementedException()
-			};
-			return SLEB128.FromInt64((long)type).Raw;
 		}
 
 		public override byte[] EncodeValue()
@@ -70,20 +51,20 @@ namespace ICP.Common.Candid
 			{
 				CandidPrimitiveType.Text => LEB128.FromUInt64((ulong)this.AsText().Length).Raw
 					.Concat(raw),
-				CandidPrimitiveType.Nat => IDLType.Nat,
-				CandidPrimitiveType.Nat8 => IDLType.Nat8,
-				CandidPrimitiveType.Nat16 => IDLType.Nat16,
-				CandidPrimitiveType.Nat32 => IDLType.Nat32,
-				CandidPrimitiveType.Nat64 => IDLType.Nat64,
-				CandidPrimitiveType.Int => IDLType.Int,
-				CandidPrimitiveType.Int8 => IDLType.Int8,
-				CandidPrimitiveType.Int16 => IDLType.Int16,
-				CandidPrimitiveType.Int32 => IDLType.Int32,
-				CandidPrimitiveType.Int64 => IDLType.Int64,
-				CandidPrimitiveType.Float32 => IDLType.Float32,
-				CandidPrimitiveType.Float64 => IDLType.Float64,
-				CandidPrimitiveType.Bool => IDLType.Bool,
-				CandidPrimitiveType.Principal => IDLType.Principal,
+				CandidPrimitiveType.Nat => IDLTypeCode.Nat,
+				CandidPrimitiveType.Nat8 => IDLTypeCode.Nat8,
+				CandidPrimitiveType.Nat16 => IDLTypeCode.Nat16,
+				CandidPrimitiveType.Nat32 => IDLTypeCode.Nat32,
+				CandidPrimitiveType.Nat64 => IDLTypeCode.Nat64,
+				CandidPrimitiveType.Int => IDLTypeCode.Int,
+				CandidPrimitiveType.Int8 => IDLTypeCode.Int8,
+				CandidPrimitiveType.Int16 => IDLTypeCode.Int16,
+				CandidPrimitiveType.Int32 => IDLTypeCode.Int32,
+				CandidPrimitiveType.Int64 => IDLTypeCode.Int64,
+				CandidPrimitiveType.Float32 => IDLTypeCode.Float32,
+				CandidPrimitiveType.Float64 => IDLTypeCode.Float64,
+				CandidPrimitiveType.Bool => IDLTypeCode.Bool,
+				CandidPrimitiveType.Principal => IDLTypeCode.Principal,
 				_ => throw new NotImplementedException()
 			};
 		}
@@ -180,7 +161,7 @@ namespace ICP.Common.Candid
 
 
 
-		public static CandidToken Blob(byte[] value)
+		public static CandidValue Blob(byte[] value)
 		{
 			return new CandidPrimitive(CandidPrimitiveType.Blob, value);
 		}
@@ -190,7 +171,7 @@ namespace ICP.Common.Candid
 			return new CandidPrimitive(CandidPrimitiveType.Nat, value);
 		}
 
-		public static CandidToken Text(string value)
+		public static CandidValue Text(string value)
 		{
 			return new CandidPrimitive(CandidPrimitiveType.Text, value);
 		}

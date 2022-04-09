@@ -1,14 +1,14 @@
 ﻿namespace ICP.Common.Candid
 {
-	public class CandidVector : CandidToken
+	public class CandidVector : CandidValue
 	{
-		public override CandidTokenType Type { get; } = CandidTokenType.Vector;
+		public override CandidValueType Type { get; } = CandidValueType.Vector;
 
-		public CandidToken[] Values { get; }
+		public CandidValue[] Values { get; }
 
-		public CandidVector(CandidToken[] values)
+		public CandidVector(CandidValue[] values)
 		{
-			CandidTokenType? valueType = values.FirstOrDefault()?.Type;
+			CandidValueType? valueType = values.FirstOrDefault()?.Type;
 			if (valueType != null && values.Any(v => v.Type != valueType))
 			{
 				throw new ArgumentException("All vector values must be the same type");

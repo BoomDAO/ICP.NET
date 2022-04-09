@@ -1,13 +1,13 @@
 ﻿namespace ICP.Common.Candid
 {
-	public class CandidVariant : CandidToken
+	public class CandidVariant : CandidValue
 	{
-		public override CandidTokenType Type { get; } = CandidTokenType.Variant;
+		public override CandidValueType Type { get; } = CandidValueType.Variant;
 
 		public uint Tag { get; }
-		public CandidToken Value { get; }
+		public CandidValue Value { get; }
 
-		public CandidVariant(uint tag, CandidToken value)
+		public CandidVariant(uint tag, CandidValue value)
 		{
 			this.Tag = tag;
 			this.Value = value;

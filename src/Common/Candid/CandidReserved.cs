@@ -1,7 +1,7 @@
 ﻿namespace ICP.Common.Candid
 {
-	public class CandidReserved : CandidToken
+	public class CandidReserved : CandidValue
 	{
-		public override CandidTokenType Type { get; } = CandidTokenType.Reserved;
+		public override CandidValueType Type { get; } = CandidValueType.Reserved;
 	}
 }

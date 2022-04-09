@@ -39,7 +39,7 @@ namespace ICP.Common.Models
 			return hashFunction.ComputeHash(LEB128.FromNat(this.NanoSeconds).Raw);
 		}
 
-		public CandidToken ToCandid()
+		public CandidValue ToCandid()
 		{
 			return CandidPrimitive.Nat(this.NanoSeconds);
 		}

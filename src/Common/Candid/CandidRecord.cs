@@ -1,72 +1,58 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using Common.Models;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Text;
 
 namespace ICP.Common.Candid
 {
-	public class CandidRecord : CandidToken
+	public class CandidRecord : CandidValue
 	{
-		public override CandidTokenType Type { get; } = CandidTokenType.Record;
+		public override CandidValueType Type { get; } = CandidValueType.Record;
 
-		private readonly Dictionary<uint, CandidTokenInfo> fields;
+		public Dictionary<Label, CandidValue> Fields { get; }
 
-		private CandidRecord(Dictionary<uint, CandidTokenInfo> fields)
+		public CandidRecord(Dictionary<Label, CandidValue> fields)
 		{
-			this.fields = fields;
+			this.Fields = fields;
 		}
 
-		public bool TryGetField(string name, [NotNullWhen(true)] out CandidToken? value)
+		public bool TryGetField(string name, [NotNullWhen(true)] out CandidValue? value)
 		{
-			uint hashedName = CandidRecord.HashFieldName(name);
+			Label hashedName = Label.FromName(name);
 			return this.TryGetField(hashedName, out value);
 		}
 
-		public bool TryGetField(uint nameHash, [NotNullWhen(true)] out CandidToken? value)
+		public bool TryGetField(Label label, [NotNullWhen(true)] out CandidValue? value)
 		{
-			bool exists = this.fields.TryGetValue(nameHash, out CandidTokenInfo? v);
-			value = v?.Value;
-			return exists;
+			return this.Fields.TryGetValue(label, out value);
 		}
 
-		private static uint HashFieldName(string value)
+		public static CandidRecord FromDictionary(Dictionary<string, CandidValue> dict)
 		{
-			byte[] utf8Bytes = Encoding.UTF8.GetBytes(value);
-			double sum = utf8Bytes
-				.Select((v, i) => v * Math.Pow(223, utf8Bytes.Length - i))
-				.Sum();
-			return (uint)(sum % Math.Pow(2, 32));
-		}
-
-		public static CandidRecord FromDictionary(Dictionary<string, CandidToken> dict)
-		{
-			Dictionary<uint, CandidTokenInfo> hashedDict = dict
-				.ToDictionary(d => CandidRecord.HashFieldName(d.Key), d => new CandidTokenInfo(d.Key, d.Value));
+			Dictionary<Label, CandidValue> hashedDict = dict
+				.ToDictionary(d => Label.FromName(d.Key), d => d.Value);
 
 			return new CandidRecord(hashedDict);
 		}
 
-		public static CandidRecord FromDictionary(Dictionary<uint, CandidToken> dict)
+		public static CandidRecord FromDictionary(Dictionary<Label, CandidValue> dict)
 		{
-			Dictionary<uint, CandidTokenInfo> hashedDict = dict
-				.ToDictionary(d => d.Key, d => new CandidTokenInfo(null, d.Value));
+			Dictionary<Label, CandidValue> hashedDict = dict
+				.ToDictionary(d => d.Key, d => d.Value);
 
 			return new CandidRecord(hashedDict);
 		}
 
-		public Dictionary<uint, CandidToken> GetFields()
+		public override CandidTypeDefinition BuildTypeDefinition()
 		{
-			return this.fields.ToDictionary(f => f.Key, f => f.Value.Value);
+			return new RecordCandidTypeDefinition(this.Fields.ToDictionary(f => f.Key, f => f.Value.BuildTypeDefinition()));
 		}
 
-		private class CandidTokenInfo
+		public override byte[] EncodeValue()
 		{
-			public string? Name { get; }
-			public CandidToken Value { get; }
 
-			public CandidTokenInfo(string? name, CandidToken value)
-			{
-				this.Name = name;
-				this.Value = value;
-			}
 		}
 	}
 

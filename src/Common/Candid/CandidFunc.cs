@@ -1,8 +1,11 @@
-﻿namespace ICP.Common.Candid
+﻿using Common.Models;
+using System;
+
+namespace ICP.Common.Candid
 {
-	public class CandidFunc : CandidToken
+	public class CandidFunc : CandidValue
 	{
-		public override CandidTokenType Type { get; } = CandidTokenType.Func;
+		public override CandidValueType Type { get; } = CandidValueType.Func;
 
 		public byte[] CanisterId { get; }
 		public string Name { get; }
@@ -13,14 +16,14 @@
 			this.Name = name;
 		}
 
-		public override byte[] EncodeType()
+		public override CandidTypeDefinition BuildTypeDefinition()
 		{
-			return
+			return new FuncCandidTypeDefinition(modes, argTypes, returnTypes);
 		}
 
 		public override byte[] EncodeValue()
 		{
-			throw new NotImplementedException();
+
 		}
 	}
 

@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Common.Models;
+using ICP.Common.Models;
+using System;
 
 namespace ICP.Common.Candid
 {
-	public enum CandidTokenType
+	public enum CandidValueType
 	{
 		Primitive,
 		Vector,
@@ -19,62 +18,63 @@ namespace ICP.Common.Candid
 		Optional
 	}
 
-	public abstract class CandidToken
+	public abstract class CandidValue
 	{
-		public abstract CandidTokenType Type { get; }
+		public abstract CandidValueType Type { get; }
 
-		public static CandidToken Null { get; } = new CandidNull();
+		public static CandidValue Null { get; } = new CandidNull();
 
-		public static CandidToken Reserved { get; } = new CandidReserved();
+		public static CandidValue Reserved { get; } = new CandidReserved();
 
-		public static CandidToken Empty { get; } = new CandidEmpty();
+		public static CandidValue Empty { get; } = new CandidEmpty();
 
-		public abstract byte[] EncodeType();
+		public abstract CandidTypeDefinition BuildTypeDefinition();
+
 		public abstract byte[] EncodeValue();
 
 		public CandidPrimitive AsPrimitive()
 		{
-			this.ValidateType(CandidTokenType.Primitive);
+			this.ValidateType(CandidValueType.Primitive);
 			return (CandidPrimitive)this;
 		}
 
 		public CandidVector AsVector()
 		{
-			this.ValidateType(CandidTokenType.Vector);
+			this.ValidateType(CandidValueType.Vector);
 			return (CandidVector)this;
 		}
 
 		public CandidRecord AsRecord()
 		{
-			this.ValidateType(CandidTokenType.Record);
+			this.ValidateType(CandidValueType.Record);
 			return (CandidRecord)this;
 		}
 
 		public CandidVariant AsVariant()
 		{
-			this.ValidateType(CandidTokenType.Variant);
+			this.ValidateType(CandidValueType.Variant);
 			return (CandidVariant)this;
 		}
 
 		public CandidFunc AsFunc()
 		{
-			this.ValidateType(CandidTokenType.Func);
+			this.ValidateType(CandidValueType.Func);
 			return (CandidFunc)this;
 		}
 
 		public CandidService AsService()
 		{
-			this.ValidateType(CandidTokenType.Service);
+			this.ValidateType(CandidValueType.Service);
 			return (CandidService)this;
 		}
 
 		public CandidOptional AsOptional()
 		{
-			this.ValidateType(CandidTokenType.Optional);
+			this.ValidateType(CandidValueType.Optional);
 			return (CandidOptional)this;
 		}
 
-		protected void ValidateType(CandidTokenType type)
+		protected void ValidateType(CandidValueType type)
 		{
 			if (this.Type != type)
 			{

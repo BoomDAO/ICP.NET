@@ -21,26 +21,16 @@ namespace ICP.Common.Models
 			return hashFunction.ComputeHash(this.Value);
 		}
 
-		public static EncodedArgument FromCandid(List<CandidToken> args)
+		public static EncodedArgument FromCandid(List<CandidValue> args)
 		{
-			TypeTable typeTable = TypeTable.FromArgs(args);
+			IDLBuilder builder = IDLBuilder.FromArgs(args);
+			return new EncodedArgument(builder.Encode());
+		}
 
-			byte[] encodedPrefix = Encoding.UTF8.GetBytes("DIDL");
-			byte[] encodedTable = typeTable.Encode();
-			byte[] encodedLength = LEB128.FromUInt64((ulong)args.Count).Raw;
-			IEnumerable<byte> encodedTypes = args
-				.SelectMany(a => a.EncodeType());
-			IEnumerable<byte> encodedValues = args
-				.SelectMany(a => a.EncodeValue());
-
-			byte[] encodedBytes = encodedPrefix
-				.Concat(encodedTable)
-				.Concat(encodedLength)
-				.Concat(encodedTypes)
-				.Concat(encodedValues)
-				.ToArray();
-
-			return new EncodedArgument(encodedBytes);
+		public static EncodedArgument FromCandid(params CandidValue[] args)
+		{
+			IDLBuilder builder = IDLBuilder.FromArgs(args);
+			return new EncodedArgument(builder.Encode());
 		}
 	}
 }

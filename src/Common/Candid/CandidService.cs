@@ -1,8 +1,8 @@
 ﻿namespace ICP.Common.Candid
 {
-	public class CandidService : CandidToken
+	public class CandidService : CandidValue
 	{
-		public override CandidTokenType Type { get; } = CandidTokenType.Service;
+		public override CandidValueType Type { get; } = CandidValueType.Service;
 		public byte[] PrincipalId { get; set; }
 
 		public CandidService(byte[] principalId)

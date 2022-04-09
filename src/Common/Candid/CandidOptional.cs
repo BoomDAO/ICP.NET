@@ -1,11 +1,11 @@
 ﻿namespace ICP.Common.Candid
 {
-	public class CandidOptional : CandidToken
+	public class CandidOptional : CandidValue
 	{
-		public override CandidTokenType Type { get; } = CandidTokenType.Optional;
-		public CandidToken? Value { get; }
+		public override CandidValueType Type { get; } = CandidValueType.Optional;
+		public CandidValue? Value { get; }
 
-		public CandidOptional(CandidToken? value)
+		public CandidOptional(CandidValue? value)
 		{
 			this.Value = value;
 		}
