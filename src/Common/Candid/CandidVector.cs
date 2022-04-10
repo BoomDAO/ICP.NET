@@ -1,4 +1,8 @@
-﻿namespace ICP.Common.Candid
+﻿using ICP.Common.Encodings;
+using System;
+using System.Linq;
+
+namespace ICP.Common.Candid
 {
 	public class CandidVector : CandidValue
 	{
@@ -14,6 +18,17 @@
 				throw new ArgumentException("All vector values must be the same type");
 			}
 			this.Values = values;
+		}
+
+		public override byte[] EncodeValue()
+		{
+			byte[] valueListBytes = this.Values
+				.SelectMany(v => v.EncodeValue())
+				.ToArray();
+			byte[] encodedByteLength = LEB128.FromUInt64((ulong)valueListBytes.Length).Raw;
+			return encodedByteLength
+				.Concat(valueListBytes)
+				.ToArray();
 		}
 	}
 

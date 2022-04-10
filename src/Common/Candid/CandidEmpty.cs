@@ -7,11 +7,6 @@ namespace ICP.Common.Candid
 	{
 		public override CandidValueType Type { get; } = CandidValueType.Empty;
 
-		public override CandidTypeDefinition BuildTypeDefinition()
-		{
-			return new PrimitiveCandidTypeDefinition(Constants.IDLTypeCode.Empty);
-		}
-
 		public override byte[] EncodeValue()
 		{
 			throw new InvalidOperationException("Emtpy values cannot appear as a function argument");

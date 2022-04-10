@@ -11,7 +11,7 @@ namespace ICP.Common.Candid
 	{
 		public override CandidValueType Type { get; } = CandidValueType.Record;
 
-		public Dictionary<Label, CandidValue> Fields { get; }
+		public List<(Label, CandidValue)> Fields { get; }
 
 		public CandidRecord(Dictionary<Label, CandidValue> fields)
 		{
@@ -45,14 +45,13 @@ namespace ICP.Common.Candid
 			return new CandidRecord(hashedDict);
 		}
 
-		public override CandidTypeDefinition BuildTypeDefinition()
-		{
-			return new RecordCandidTypeDefinition(this.Fields.ToDictionary(f => f.Key, f => f.Value.BuildTypeDefinition()));
-		}
-
 		public override byte[] EncodeValue()
 		{
-
+			// bytes = ordered
+			return this.Fields
+				.OrderBy(l => l.Key)
+				.SelectMany(v => v.Value.EncodeValue())
+				.ToArray();
 		}
 	}
 

@@ -1,4 +1,6 @@
-﻿namespace ICP.Common.Candid
+﻿using System;
+
+namespace ICP.Common.Candid
 {
 	public class CandidService : CandidValue
 	{

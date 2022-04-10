@@ -16,11 +16,6 @@ namespace ICP.Common.Candid
 			this.Name = name;
 		}
 
-		public override CandidTypeDefinition BuildTypeDefinition()
-		{
-			return new FuncCandidTypeDefinition(modes, argTypes, returnTypes);
-		}
-
 		public override byte[] EncodeValue()
 		{
 

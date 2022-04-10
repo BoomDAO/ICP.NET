@@ -20,9 +20,9 @@ namespace ICP.Common.Candid
 			this.value = value;
 		}
 
-		public byte[] GetRawBytes()
+		public byte[] GetRawBytes(bool isBigEndian)
 		{
-			return this.value.ToByteArray(isUnsigned: true, isBigEndian: true);
+			return this.value.ToByteArray(isUnsigned: true, isBigEndian: isBigEndian);
 		}
 
 		public bool TryToUInt64(out ulong value)

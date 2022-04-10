@@ -1,9 +1,9 @@
-﻿using Candid.Constants;
-using ICP.Common.Candid.Constants;
+﻿using ICP.Common.Candid.Constants;
 using ICP.Common.Encodings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -38,35 +38,6 @@ namespace ICP.Common.Candid
 		{
 			this.ValueType = valueType;
 			this.value = value;
-		}
-
-
-		public override byte[] BuildTypeDefinition()
-		{
-		}
-
-		public override byte[] EncodeValue()
-		{
-			return this.ValueType switch
-			{
-				CandidPrimitiveType.Text => LEB128.FromUInt64((ulong)this.AsText().Length).Raw
-					.Concat(raw),
-				CandidPrimitiveType.Nat => IDLTypeCode.Nat,
-				CandidPrimitiveType.Nat8 => IDLTypeCode.Nat8,
-				CandidPrimitiveType.Nat16 => IDLTypeCode.Nat16,
-				CandidPrimitiveType.Nat32 => IDLTypeCode.Nat32,
-				CandidPrimitiveType.Nat64 => IDLTypeCode.Nat64,
-				CandidPrimitiveType.Int => IDLTypeCode.Int,
-				CandidPrimitiveType.Int8 => IDLTypeCode.Int8,
-				CandidPrimitiveType.Int16 => IDLTypeCode.Int16,
-				CandidPrimitiveType.Int32 => IDLTypeCode.Int32,
-				CandidPrimitiveType.Int64 => IDLTypeCode.Int64,
-				CandidPrimitiveType.Float32 => IDLTypeCode.Float32,
-				CandidPrimitiveType.Float64 => IDLTypeCode.Float64,
-				CandidPrimitiveType.Bool => IDLTypeCode.Bool,
-				CandidPrimitiveType.Principal => IDLTypeCode.Principal,
-				_ => throw new NotImplementedException()
-			};
 		}
 
 		public string AsText()
@@ -158,6 +129,135 @@ namespace ICP.Common.Candid
 			this.ValidateType(CandidPrimitiveType.Principal);
 			return (byte[])this.value;
 		}
+
+
+
+
+
+		public override byte[] EncodeValue()
+		{
+			return this.ValueType switch
+			{
+				CandidPrimitiveType.Text => this.EncodeText(),
+				CandidPrimitiveType.Nat => this.EncodeNat(),
+				CandidPrimitiveType.Nat8 => this.EncodeNat8(),
+				CandidPrimitiveType.Nat16 => this.EncodeNat16(),
+				CandidPrimitiveType.Nat32 => this.EncodeNat32(),
+				CandidPrimitiveType.Nat64 => this.EncodeNat64(),
+				CandidPrimitiveType.Int => this.EncodeInt(),
+				CandidPrimitiveType.Int8 => this.EncodeInt8(),
+				CandidPrimitiveType.Int16 => this.EncodeInt16(),
+				CandidPrimitiveType.Int32 => this.EncodeInt32(),
+				CandidPrimitiveType.Int64 => this.EncodeInt64(),
+				CandidPrimitiveType.Float32 => this.EncodeFloat32(),
+				CandidPrimitiveType.Float64 => this.EncodeFloat64(),
+				CandidPrimitiveType.Bool => this.EncodeBool(),
+				CandidPrimitiveType.Principal => this.EncodePrincipal(),
+				_ => throw new NotImplementedException()
+			};
+		}
+
+		private byte[] EncodeText()
+		{
+			string value = this.AsText();
+			// bytes = Length (LEB128) + text (UTF8)
+			return LEB128.FromUInt64((ulong)value.Length).Raw
+					   .Concat(Encoding.UTF8.GetBytes(value))
+					   .ToArray();
+		}
+
+		private byte[] EncodeNat()
+		{
+			UnboundedUInt value = this.AsNat();
+			return LEB128.FromNat(value).Raw;
+		}
+
+		private byte[] EncodeNat8()
+		{
+			byte value = this.AsNat8();
+			return new byte[] { value };
+		}
+
+		private byte[] EncodeNat16()
+		{
+			ushort value = this.AsNat16();
+			return new BigInteger(value).ToByteArray(isUnsigned: true, isBigEndian: false);
+		}
+
+		private byte[] EncodeNat32()
+		{
+			uint value = this.AsNat32();
+			return new BigInteger(value).ToByteArray(isUnsigned: true, isBigEndian: false);
+		}
+
+		private byte[] EncodeNat64()
+		{
+			ulong value = this.AsNat64();
+			return new BigInteger(value).ToByteArray(isUnsigned: true, isBigEndian: false);
+		}
+
+		private byte[] EncodeInt()
+		{
+			UnboundedInt value = this.AsInt();
+			return SLEB128.FromInt(value).Raw;
+		}
+
+		private byte[] EncodeInt8()
+		{
+			byte value = this.AsInt8();
+			return new byte[] { value };
+		}
+
+		private byte[] EncodeInt16()
+		{
+			short value = this.AsInt16();
+			return new BigInteger(value).ToByteArray(isUnsigned: false, isBigEndian: false);
+		}
+
+		private byte[] EncodeInt32()
+		{
+			int value = this.AsInt32();
+			return new BigInteger(value).ToByteArray(isUnsigned: false, isBigEndian: false);
+		}
+
+		private byte[] EncodeInt64()
+		{
+			long value = this.AsInt64();
+			return new BigInteger(value).ToByteArray(isUnsigned: false, isBigEndian: false);
+		}
+
+		private byte[] EncodeFloat32()
+		{
+			float value = this.AsFloat32();
+			return BitConverter.GetBytes(value);
+		}
+
+		private byte[] EncodeFloat64()
+		{
+			double value = this.AsFloat64();
+			return BitConverter.GetBytes(value);
+		}
+
+		private byte[] EncodeBool()
+		{
+			bool value = this.AsBool();
+			return BitConverter.GetBytes(value);
+		}
+
+		private byte[] EncodePrincipal()
+		{
+			byte[] value = this.AsPrincipal();
+			byte[] encodedValueLength = LEB128.FromUInt64((ulong)value.Length).Raw;
+			return new byte[] { 1 }
+				.Concat(encodedValueLength)
+				.Concat(value)
+				.ToArray();
+		}
+
+
+
+
+
 
 
 

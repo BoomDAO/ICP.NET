@@ -59,9 +59,9 @@ namespace ICP.Common.Models
 		private readonly List<byte[]> EncodedValues = new List<byte[]>();
 
 
-		public void Add(CandidValue value)
+		public void Add(CandidValue value, CandidTypeDefinition def)
 		{
-			byte[] encodedType = value.BuildTypeDefinition().Encode(this.compoundTypeTable);
+			byte[] encodedType = def.Encode(this.compoundTypeTable);
 			this.EncodedTypes.Add(encodedType);
 			byte[] encodedValue = value.EncodeValue();
 			this.EncodedValues.Add(encodedValue);
@@ -138,12 +138,12 @@ namespace ICP.Common.Models
 			};
 		}
 
-		internal static IDLBuilder FromArgs(IEnumerable<CandidValue> values)
+		public static IDLBuilder FromArgs(IEnumerable<(CandidValue, CandidTypeDefinition)> values)
 		{
 			var builder = new IDLBuilder();
-			foreach (CandidValue value in values)
+			foreach ((CandidValue value, CandidTypeDefinition def) in values)
 			{
-				builder.Add(value);
+				builder.Add(value, def);
 			}
 			return builder;
 		}

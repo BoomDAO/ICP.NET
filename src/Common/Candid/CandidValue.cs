@@ -28,8 +28,6 @@ namespace ICP.Common.Candid
 
 		public static CandidValue Empty { get; } = new CandidEmpty();
 
-		public abstract CandidTypeDefinition BuildTypeDefinition();
-
 		public abstract byte[] EncodeValue();
 
 		public CandidPrimitive AsPrimitive()

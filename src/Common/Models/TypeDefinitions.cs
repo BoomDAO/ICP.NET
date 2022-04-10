@@ -278,7 +278,7 @@ namespace Common.Models
 
 		public ServiceCandidTypeDefinition(List<(string MethodName, CandidTypeDefinition Type)> methods)
 		{
-			this.Methods = methods;
+			this.Methods = methods.AsReadOnly();
 		}
 
 		protected override byte[] EncodeInnerType(CompoundTypeTable compoundTypeTable)

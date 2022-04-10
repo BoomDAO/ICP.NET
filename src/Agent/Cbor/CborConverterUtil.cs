@@ -22,7 +22,7 @@ namespace Agent.Cbor
 			else
 			{
 				writer.WriteSemanticTag(2);
-				byte[] raw = value.GetRawBytes();
+				byte[] raw = value.GetRawBytes(isBigEndian: true);
 				byte[] lengthBytes = new BigInteger(raw.Length).ToByteArray(isUnsigned: true, isBigEndian: true);
 				writer.WriteByteString(lengthBytes);
 				writer.WriteByteString(raw);
