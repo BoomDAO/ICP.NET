@@ -118,7 +118,7 @@ namespace ICP.Agent.Agents
 
             IBufferWriter<byte> buffer = new ArrayBufferWriter<byte>();
             Dahomey.Cbor.Cbor.Serialize(signedContent, in buffer);
-            byte[] cborBody = buffer.GetMemory().ToArray();
+            byte[] cborBody = ((ArrayBufferWriter<byte>)buffer).WrittenMemory.ToArray();
             return await this.SendRawAsync(url, cborBody);
         }
 

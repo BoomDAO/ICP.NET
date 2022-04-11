@@ -5,20 +5,20 @@ using ICP.Agent.Responses;
 using ICP.Common.Models;
 using Common.Models;
 
-var identity = new AnonymousIdentity();
-IAgent agent = new HttpAgent(identity, new Uri("http://127.0.0.1:8000"));
+//Uri url = new Uri("http://127.0.0.1:8000");
+Uri url = new Uri($"https://ic0.app");
 
-string characterDatabaseText = "";
-PrincipalId characterDatabase = PrincipalId.FromText(characterDatabaseText);
-string method = "create";
-var candidArg = CandidRecord.FromDictionary(new Dictionary<string, CandidValue>
-{
-	{"attack", CandidPrimitive.Nat(UnboundedUInt.FromUInt64(1))}
-});
-var def = new RecordCandidTypeDefinition(new Dictionary<Label, CandidTypeDefinition>
-{
-	{Label.FromName("attack"), new PrimitiveCandidTypeDefinition(ICP.Common.Candid.Constants.IDLTypeCode.Nat) }
-});
+var identity = new AnonymousIdentity();
+IAgent agent = new HttpAgent(identity, url);
+
+//string icManagementCanister = "aaaaa-aa";
+string governanceCanister = "rrkah-fqaaa-aaaaa-aaaaq-cai";
+
+PrincipalId canisterId = PrincipalId.FromText(governanceCanister);
+
+string method = "get_proposal_info";
+var candidArg = CandidPrimitive.Nat64(54021);
+var def = new PrimitiveCandidTypeDefinition(ICP.Common.Candid.Constants.IDLTypeCode.Nat64);
 EncodedArgument encodedArgument = EncodedArgument.FromCandid((candidArg, def));
 
-QueryResponse response = await agent.QueryAsync(characterDatabase, method, encodedArgument, identityOverride: null);
+QueryResponse response = await agent.QueryAsync(canisterId, method, encodedArgument, identityOverride: null);

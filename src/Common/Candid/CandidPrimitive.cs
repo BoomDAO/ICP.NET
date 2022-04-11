@@ -74,7 +74,7 @@ namespace ICP.Common.Candid
 		public ulong AsNat64()
 		{
 			this.ValidateType(CandidPrimitiveType.Nat64);
-			return (uint)this.value;
+			return (ulong)this.value;
 		}
 
 		public UnboundedInt AsInt()

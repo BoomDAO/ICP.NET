@@ -64,7 +64,7 @@ namespace ICP.Common.Encodings
 			//  0100110  0001110  1100101  Split into 7-bit groups
 			// 00100110 10001110 11100101  Add high 1 bits on all but last (most significant) group to form bytes
 
-			int bitCount = (int)Math.Ceiling(Math.Log2(value)); // log2 gets bit count
+			int bitCount = (int)Math.Ceiling(Math.Log2(value)) + 1; // log2 gets bit count
 			int byteCount = (int)Math.Ceiling(bitCount / 7m); // 7, not 8, the 8th bit is to indicate end of number
 			byte[] bytes = new byte[byteCount];
 
