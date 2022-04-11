@@ -8,7 +8,8 @@ namespace ICP.Common.Candid
 
 		public override byte[] EncodeValue()
 		{
-			throw new InvalidOperationException("Reserved values cannot be encoded");
+			// Empty byte sequence
+			return new byte[0];
 		}
 	}
 }

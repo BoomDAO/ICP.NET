@@ -11,7 +11,7 @@ namespace ICP.Common.Candid
 	{
 		public override CandidValueType Type { get; } = CandidValueType.Record;
 
-		public List<(Label, CandidValue)> Fields { get; }
+		public Dictionary<Label, CandidValue> Fields { get; }
 
 		public CandidRecord(Dictionary<Label, CandidValue> fields)
 		{
@@ -47,7 +47,7 @@ namespace ICP.Common.Candid
 
 		public override byte[] EncodeValue()
 		{
-			// bytes = ordered
+			// bytes = ordered keys by hash hashes added together
 			return this.Fields
 				.OrderBy(l => l.Key)
 				.SelectMany(v => v.Value.EncodeValue())

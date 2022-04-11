@@ -274,24 +274,25 @@ namespace Common.Models
 	{
 		public override IDLTypeCode TypeCode { get; } = IDLTypeCode.Service;
 
-		public IReadOnlyList<(string MethodName, FuncCandidTypeDefinition Type)> Methods { get; }
+		public IReadOnlyDictionary<string, FuncCandidTypeDefinition> Methods { get; }
 
-		public ServiceCandidTypeDefinition(List<(string MethodName, CandidTypeDefinition Type)> methods)
+		public ServiceCandidTypeDefinition(IReadOnlyDictionary<string, FuncCandidTypeDefinition> methods)
 		{
-			this.Methods = methods.AsReadOnly();
+			this.Methods = methods;
 		}
 
 		protected override byte[] EncodeInnerType(CompoundTypeTable compoundTypeTable)
 		{
 			byte[] methodCount = LEB128.FromUInt64((ulong)this.Methods.Count).Raw;
 			IEnumerable<byte> methodTypes = this.Methods
+				.OrderBy(m => m.Key) // Ordered by method name
 				.SelectMany(m =>
 				{
-					byte[] encodedName = Encoding.UTF8.GetBytes(m.MethodName);
+					byte[] encodedName = Encoding.UTF8.GetBytes(m.Key);
 					byte[] encodedNameLength = LEB128.FromUInt64((ulong)encodedName.Length).Raw;
 					return encodedNameLength
 					.Concat(encodedName)
-					.Concat(m.Type.Encode(compoundTypeTable));
+					.Concat(m.Value.Encode(compoundTypeTable));
 				});
 			return methodCount
 				.Concat(methodTypes)
@@ -302,9 +303,9 @@ namespace Common.Models
 		{
 			if(obj is ServiceCandidTypeDefinition sDef)
 			{
-				return sDef.Methods
-					.OrderBy(s => s.MethodName)
-					.SequenceEqual(sDef.Methods.OrderBy(s => s.MethodName));
+				return this.Methods
+					.OrderBy(s => s.Key)
+					.SequenceEqual(sDef.Methods.OrderBy(s => s.Key));
 			}
 			return false;
 		}
@@ -362,11 +363,13 @@ namespace Common.Models
 
 		public override bool Equals(object? obj)
 		{
-			if (obj is ServiceCandidTypeDefinition sDef)
+			if (obj is FuncCandidTypeDefinition sDef)
 			{
-				return sDef.Methods
-					.OrderBy(s => s.MethodName)
-					.SequenceEqual(sDef.Methods.OrderBy(s => s.MethodName));
+				return this.Modes
+					.OrderBy(s => s)
+					.SequenceEqual(sDef.Modes.OrderBy(s => s))
+					&& this.ArgTypes.SequenceEqual(sDef.ArgTypes)
+					&& this.ReturnTypes.SequenceEqual(sDef.ArgTypes);
 			}
 			return false;
 		}

@@ -1,5 +1,7 @@
 ﻿using Common.Models;
 using System;
+using System.Linq;
+using System.Text;
 
 namespace ICP.Common.Candid
 {
@@ -7,18 +9,21 @@ namespace ICP.Common.Candid
 	{
 		public override CandidValueType Type { get; } = CandidValueType.Func;
 
-		public byte[] CanisterId { get; }
+		public CandidService Service { get; }
 		public string Name { get; }
 
-		public CandidFunc(byte[] canisterId, string name)
+		public CandidFunc(CandidService service, string name)
 		{
-			this.CanisterId = canisterId;
+			this.Service = service;
 			this.Name = name;
 		}
 
 		public override byte[] EncodeValue()
 		{
-
+			return new byte[] { 1 }
+				.Concat(this.Service.EncodeValue())
+				.Concat(Encoding.UTF8.GetBytes(this.Name))
+				.ToArray();
 		}
 	}
 

@@ -1,5 +1,6 @@
 ﻿using ICP.Common.Candid.Constants;
 using ICP.Common.Encodings;
+using ICP.Common.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -124,10 +125,10 @@ namespace ICP.Common.Candid
 			return (bool)this.value;
 		}
 
-		public byte[] AsPrincipal()
+		public PrincipalId AsPrincipal()
 		{
 			this.ValidateType(CandidPrimitiveType.Principal);
-			return (byte[])this.value;
+			return (PrincipalId)this.value;
 		}
 
 
@@ -246,7 +247,7 @@ namespace ICP.Common.Candid
 
 		private byte[] EncodePrincipal()
 		{
-			byte[] value = this.AsPrincipal();
+			byte[] value = this.AsPrincipal().Raw;
 			byte[] encodedValueLength = LEB128.FromUInt64((ulong)value.Length).Raw;
 			return new byte[] { 1 }
 				.Concat(encodedValueLength)
@@ -258,12 +259,9 @@ namespace ICP.Common.Candid
 
 
 
-
-
-
-		public static CandidValue Blob(byte[] value)
+		public static CandidPrimitive Text(string value)
 		{
-			return new CandidPrimitive(CandidPrimitiveType.Blob, value);
+			return new CandidPrimitive(CandidPrimitiveType.Text, value);
 		}
 
 		public static CandidPrimitive Nat(UnboundedUInt value)
@@ -271,10 +269,73 @@ namespace ICP.Common.Candid
 			return new CandidPrimitive(CandidPrimitiveType.Nat, value);
 		}
 
-		public static CandidValue Text(string value)
+		public static CandidPrimitive Nat8(byte value)
 		{
-			return new CandidPrimitive(CandidPrimitiveType.Text, value);
+			return new CandidPrimitive(CandidPrimitiveType.Nat8, value);
 		}
+
+		public static CandidPrimitive Nat16(ushort value)
+		{
+			return new CandidPrimitive(CandidPrimitiveType.Nat16, value);
+		}
+
+		public static CandidPrimitive Nat32(uint value)
+		{
+			return new CandidPrimitive(CandidPrimitiveType.Nat32, value);
+		}
+
+		public static CandidPrimitive Nat64(ulong value)
+		{
+			return new CandidPrimitive(CandidPrimitiveType.Nat64, value);
+		}
+
+		public static CandidPrimitive Int(UnboundedInt value)
+		{
+			return new CandidPrimitive(CandidPrimitiveType.Int, value);
+		}
+
+		public static CandidPrimitive Int8(byte value)
+		{
+			return new CandidPrimitive(CandidPrimitiveType.Int8, value);
+		}
+
+		public static CandidPrimitive Int16(short value)
+		{
+			return new CandidPrimitive(CandidPrimitiveType.Int16, value);
+		}
+
+		public static CandidPrimitive Int32(int value)
+		{
+			return new CandidPrimitive(CandidPrimitiveType.Int32, value);
+		}
+
+		public static CandidPrimitive Int64(long value)
+		{
+			return new CandidPrimitive(CandidPrimitiveType.Int64, value);
+		}
+
+		public static CandidPrimitive Float32(float value)
+		{
+			return new CandidPrimitive(CandidPrimitiveType.Float32, value);
+		}
+
+		public static CandidPrimitive Float64(double value)
+		{
+			return new CandidPrimitive(CandidPrimitiveType.Float64, value);
+		}
+
+		public static CandidPrimitive Bool(bool value)
+		{
+			return new CandidPrimitive(CandidPrimitiveType.Bool, value);
+		}
+
+		public static CandidPrimitive Principal(PrincipalId value)
+		{
+			return new CandidPrimitive(CandidPrimitiveType.Principal, value);
+		}
+
+
+
 
 
 
