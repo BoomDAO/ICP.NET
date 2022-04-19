@@ -1,4 +1,6 @@
-﻿using ICP.Agent.Auth;
+﻿using Agent.Cbor;
+using Dahomey.Cbor;
+using ICP.Agent.Auth;
 using ICP.Agent.Requests;
 using ICP.Agent.Responses;
 using ICP.Common.Models;
@@ -15,6 +17,15 @@ namespace ICP.Agent.Agents
 	public class HttpAgent : IAgent
     {
         private const string CBOR_CONTENT_TYPE = "application/cbor";
+
+        private static readonly Lazy<CborOptions> cborOptionsLazy = new Lazy<CborOptions>(() =>
+        {
+            var options = new CborOptions();
+            var provider = new CborConverterProvider();
+            options.Registry.ConverterRegistry.RegisterConverterProvider(provider);
+            options.Registry.ConverterRegistry.RegisterConverter(typeof(IHashable), new HashbleCborConverter(options.Registry.ConverterRegistry));
+            return options;
+        }, isThreadSafe: true);
 
         public IIdentity Identity { get; }
 
@@ -94,7 +105,7 @@ namespace ICP.Agent.Agents
         {
             Func<Task<Stream>> streamFunc = await this.SendRawAsync(url, null);
             Stream stream = await streamFunc();
-            return await Dahomey.Cbor.Cbor.DeserializeAsync<TResponse>(stream);
+            return await Dahomey.Cbor.Cbor.DeserializeAsync<TResponse>(stream, HttpAgent.cborOptionsLazy.Value);
         }
 
         private async Task<TResponse> SendAsync<TRequest, TResponse>(string url, Func<PrincipalId, ICTimestamp, TRequest> getRequest, IIdentity? identityOverride)
@@ -102,7 +113,7 @@ namespace ICP.Agent.Agents
         {
             Func<Task<Stream>> streamFunc = await this.SendInternalAsync(url, getRequest, identityOverride);
             Stream stream = await streamFunc();
-            return await Dahomey.Cbor.Cbor.DeserializeAsync<TResponse>(stream);
+            return await Dahomey.Cbor.Cbor.DeserializeAsync<TResponse>(stream, HttpAgent.cborOptionsLazy.Value);
         }
 
         private async Task<Func<Task<Stream>>> SendInternalAsync<TRequest>(string url, Func<PrincipalId, ICTimestamp, TRequest> getRequest, IIdentity? identityOverride)
@@ -117,10 +128,11 @@ namespace ICP.Agent.Agents
             SignedContent signedContent = identityOverride.CreateSignedContent(content);
 
             IBufferWriter<byte> buffer = new ArrayBufferWriter<byte>();
-            Dahomey.Cbor.Cbor.Serialize(signedContent, in buffer);
+            Dahomey.Cbor.Cbor.Serialize(signedContent, in buffer, HttpAgent.cborOptionsLazy.Value);
             byte[] cborBody = ((ArrayBufferWriter<byte>)buffer).WrittenMemory.ToArray();
             return await this.SendRawAsync(url, cborBody);
         }
+
 
         private async Task<Func<Task<Stream>>> SendRawAsync(string url, byte[]? cborBody = null)
         {
@@ -143,6 +155,8 @@ namespace ICP.Agent.Agents
             HttpResponseMessage response = await this.httpClient.SendAsync(request);
             if (!response.IsSuccessStatusCode)
             {
+                byte[] bytes = await response.Content.ReadAsByteArrayAsync();
+                var a = Dahomey.Cbor.Cbor.Deserialize<object>((ReadOnlySpan<byte>)bytes, HttpAgent.cborOptionsLazy.Value);
                 throw new Exception($"Response returned a failed status. HttpStatusCode={response.StatusCode} Reason={response.ReasonPhrase}");
             }
             return async () => await response.Content.ReadAsStreamAsync();

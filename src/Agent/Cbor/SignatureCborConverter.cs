@@ -1,5 +1,6 @@
 ﻿using Dahomey.Cbor.Serialization;
 using Dahomey.Cbor.Serialization.Converters;
+using ICP.Agent;
 using ICP.Common.Models;
 using System;
 using System.Collections.Generic;
@@ -9,16 +10,16 @@ using System.Threading.Tasks;
 
 namespace Agent.Cbor
 {
-	internal class DerEncodedPublicKeyCborConverter : CborConverterBase<DerEncodedPublicKey?>
+	internal class SignatureCborConverter : CborConverterBase<Signature>
 	{
-		public override DerEncodedPublicKey? Read(ref CborReader reader)
+		public override Signature Read(ref CborReader reader)
 		{
 			ReadOnlySpan<byte> bytes = reader.ReadByteString();
 
-			return new DerEncodedPublicKey(bytes.ToArray());
+			return new Signature(bytes.ToArray());
 		}
 
-		public override void Write(ref CborWriter writer, DerEncodedPublicKey? value)
+		public override void Write(ref CborWriter writer, Signature value)
 		{
 			writer.WriteByteString(value?.Value);
 		}
