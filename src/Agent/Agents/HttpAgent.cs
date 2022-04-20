@@ -9,12 +9,13 @@ using System.Buffers;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using Path = ICP.Common.Models.Path;
 
 namespace ICP.Agent.Agents
 {
-	public class HttpAgent : IAgent
+    public class HttpAgent : IAgent
     {
         private const string CBOR_CONTENT_TYPE = "application/cbor";
 
@@ -35,9 +36,9 @@ namespace ICP.Agent.Agents
         {
             this.Identity = identity;
             this.httpClient = new HttpClient
-			{
+            {
                 BaseAddress = boundryCanisterUrl
-			};
+            };
             this.httpClient.DefaultRequestHeaders
                 .Accept
                 .Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(CBOR_CONTENT_TYPE));
@@ -156,8 +157,8 @@ namespace ICP.Agent.Agents
             if (!response.IsSuccessStatusCode)
             {
                 byte[] bytes = await response.Content.ReadAsByteArrayAsync();
-                var a = Dahomey.Cbor.Cbor.Deserialize<object>((ReadOnlySpan<byte>)bytes, HttpAgent.cborOptionsLazy.Value);
-                throw new Exception($"Response returned a failed status. HttpStatusCode={response.StatusCode} Reason={response.ReasonPhrase}");
+                string message = Encoding.UTF8.GetString(bytes);
+                throw new Exception($"Response returned a failed status. HttpStatusCode={response.StatusCode} Reason={response.ReasonPhrase} Message={message}");
             }
             return async () => await response.Content.ReadAsStreamAsync();
         }

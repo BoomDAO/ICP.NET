@@ -7,10 +7,14 @@ using System.Linq;
 
 namespace ICP.Agent.Cbor
 {
-    public class PrincipalIdCborConverter : CborConverterBase<PrincipalId>
+    public class PrincipalIdCborConverter : CborConverterBase<PrincipalId?>
     {
-        public override PrincipalId Read(ref CborReader reader)
+        public override PrincipalId? Read(ref CborReader reader)
         {
+            if (reader.GetCurrentDataItemType() == CborDataItemType.Null)
+            {
+                return null;
+            }
             ReadOnlySpan<byte> raw = reader.ReadByteString();
 
             if (raw[0] == 1) // first byte must be 1
@@ -41,15 +45,14 @@ namespace ICP.Agent.Cbor
             throw new Dahomey.Cbor.CborException("Failed to deserialize PrincipalId, invalid bytes");
         }
 
-        public override void Write(ref CborWriter writer, PrincipalId value)
+        public override void Write(ref CborWriter writer, PrincipalId? value)
         {
-            byte[] rawValue = value.Raw;
-            LEB128 byteLength = LEB128.FromUInt64((ulong)rawValue.Length);
-            byte[] bytes = new byte[] { 1 } // First byte is 1
-                .Concat(byteLength.Raw) // Then a LEB128 of the size of the raw value
-                .Concat(rawValue) // Then have the raw byte value
-                .ToArray();
-            writer.WriteByteString(bytes);
+            if (value == null)
+            {
+                writer.WriteNull();
+                return;
+            }
+            writer.WriteByteString(value.Raw);
         }
     }
 }

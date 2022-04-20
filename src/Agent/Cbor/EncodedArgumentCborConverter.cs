@@ -10,26 +10,26 @@ using System.Threading.Tasks;
 
 namespace Agent.Cbor
 {
-	internal class SignatureCborConverter : CborConverterBase<Signature?>
+	internal class EncodedArgumentCborConverter : CborConverterBase<EncodedArgument?>
 	{
-		public override Signature? Read(ref CborReader reader)
+		public override EncodedArgument? Read(ref CborReader reader)
 		{
-			if(reader.GetCurrentDataItemType() == CborDataItemType.Null)
-            {
+			if (reader.GetCurrentDataItemType() == CborDataItemType.Null)
+			{
 				return null;
-            }
+			}
 			ReadOnlySpan<byte> bytes = reader.ReadByteString();
 
-			return new Signature(bytes.ToArray());
+			return new EncodedArgument(bytes.ToArray());
 		}
 
-		public override void Write(ref CborWriter writer, Signature? value)
+		public override void Write(ref CborWriter writer, EncodedArgument? value)
 		{
-			if(value == null)
-            {
+			if (value == null)
+			{
 				writer.WriteNull();
 				return;
-            }
+			}
 			writer.WriteByteString(value.Value);
 		}
 	}

@@ -20,7 +20,7 @@ namespace ICP.Agent.Responses
             return (QueryReply)this.value;
         }
 
-        public (ReplicaRejectCode Code, string Message) AsRejected()
+        public (ReplicaRejectCode Code, string? Message) AsRejected()
         {
             this.ThrowIfWrongType(QueryResponseType.Rejected);
             return (ValueTuple<ReplicaRejectCode, string>)this.value;
@@ -34,36 +34,12 @@ namespace ICP.Agent.Responses
             }
         }
 
-        public static QueryResponse FromCbor(CborObject cbor)
-        {
-            string status = cbor["status"].Value<string>();
-            QueryResponseType type;
-            object value;
-            switch (status)
-            {
-                case "replied":
-                    type = QueryResponseType.Replied;
-                    QueryReply reply = QueryReply.FromCbor(cbor["reply"].Value<CborObject>());
-                    value = QueryResponse.Replied(reply);
-                    break;
-                case "rejected":
-                    type = QueryResponseType.Rejected;
-                    ReplicaRejectCode code = cbor["reject_code"].Value<ReplicaRejectCode>();
-                    string message = cbor["reject_message"].Value<string>();
-                    value = QueryResponse.Rejected(code, message);
-                    break;
-                default:
-                    throw new Exception($"Invalid query response status: {status}");
-            }
-            return new QueryResponse(type, value);
-        }
-
-        public static QueryResponse Rejected(ReplicaRejectCode code, string message)
+        public static QueryResponse Rejected(ReplicaRejectCode code, string? message)
         {
             return new QueryResponse(QueryResponseType.Rejected, (code, message));
         }
 
-        private static QueryResponse Replied(QueryReply reply)
+        public static QueryResponse Replied(QueryReply reply)
         {
             return new QueryResponse(QueryResponseType.Replied, reply);
         }
@@ -82,12 +58,6 @@ namespace ICP.Agent.Responses
         public QueryReply(byte[] arg)
         {
             this.Arg = arg;
-        }
-
-        public static QueryReply FromCbor(CborObject cborObject)
-        {
-            byte[] arg = cborObject.Value<byte[]>();
-            return new QueryReply(arg);
         }
     }
 

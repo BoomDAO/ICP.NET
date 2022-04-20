@@ -13,6 +13,10 @@ namespace Agent.Cbor
 	{
 		public override DerEncodedPublicKey? Read(ref CborReader reader)
 		{
+			if (reader.GetCurrentDataItemType() == CborDataItemType.Null)
+			{
+				return null;
+			}
 			ReadOnlySpan<byte> bytes = reader.ReadByteString();
 
 			return new DerEncodedPublicKey(bytes.ToArray());
@@ -20,7 +24,12 @@ namespace Agent.Cbor
 
 		public override void Write(ref CborWriter writer, DerEncodedPublicKey? value)
 		{
-			writer.WriteByteString(value?.Value);
+			if (value == null)
+			{
+				writer.WriteNull();
+				return;
+			}
+			writer.WriteByteString(value.Value);
 		}
 	}
 }

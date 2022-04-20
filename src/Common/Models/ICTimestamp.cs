@@ -26,7 +26,7 @@ namespace ICP.Common.Models
 
 		private static ulong EpochNowInNanoseconds()
 		{
-			return (ulong)(((DateTime.UtcNow - epoch).TotalMilliseconds - REPLICA_PERMITTED_DRIFT_MILLISECONDS) * 1_000_000);
+			return (ulong)(((DateTime.UtcNow - epoch).TotalMilliseconds + REPLICA_PERMITTED_DRIFT_MILLISECONDS) * 1_000_000);
 		}
 
 		public static ICTimestamp Now()

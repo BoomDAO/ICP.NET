@@ -13,7 +13,7 @@ namespace ICP.Agent.Requests
         /// <summary>
         /// The principal of the canister to call.
         /// </summary>
-		[Dahomey.Cbor.Attributes.CborProperty(Properties.CANNISTER_ID)]
+		[Dahomey.Cbor.Attributes.CborProperty(Properties.CANISTER_ID)]
         public PrincipalId CanisterId { get; }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace ICP.Agent.Requests
             var properties = new Dictionary<string, IHashable>
             {
                 {Properties.REQUEST_TYPE, this.RequestType.ToHashable()},
-                {Properties.CANNISTER_ID, this.CanisterId},
+                {Properties.CANISTER_ID, this.CanisterId},
                 {Properties.METHOD_NAME, this.Method.ToHashable()},
                 {Properties.ARG, this.EncodedArgument},
                 {Properties.SENDER, this.Sender},
@@ -82,7 +82,7 @@ namespace ICP.Agent.Requests
         private static class Properties
         {
             public const string REQUEST_TYPE = "request_type";
-            public const string CANNISTER_ID = "cannister_id";
+            public const string CANISTER_ID = "canister_id";
             public const string METHOD_NAME = "method_name";
             public const string ARG = "arg";
             public const string SENDER = "sender";

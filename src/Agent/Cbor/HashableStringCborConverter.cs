@@ -15,12 +15,21 @@ namespace ICP.Agent.Cbor
 
         public override HashableString? Read(ref CborReader reader)
         {
+            if (reader.GetCurrentDataItemType() == CborDataItemType.Null)
+            {
+                return null;
+            }
             string? value = reader.ReadString();
             return value == null ? null : new HashableString(value);
         }
         public override void Write(ref CborWriter writer, HashableString? value)
         {
-            writer.WriteString(value?.Value);
+            if (value == null)
+            {
+                writer.WriteNull();
+                return;
+            }
+            writer.WriteString(value.Value);
         }
     }
 }

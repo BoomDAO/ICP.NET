@@ -22,3 +22,4 @@ var def = new PrimitiveCandidTypeDefinition(ICP.Common.Candid.Constants.IDLTypeC
 EncodedArgument encodedArgument = EncodedArgument.FromCandid((candidArg, def));
 
 QueryResponse response = await agent.QueryAsync(canisterId, method, encodedArgument, identityOverride: null);
+int a = 1;
