@@ -1,4 +1,5 @@
-﻿using ICP.Common.Candid.Constants;
+﻿using ICP.Common.Candid;
+using ICP.Common.Candid.Constants;
 using ICP.Common.Encodings;
 using ICP.Common.Models;
 using System;
@@ -12,7 +13,7 @@ namespace Common.Models
 
 	public abstract class CandidTypeDefinition
 	{
-		public abstract IDLTypeCode TypeCode { get; }
+		public abstract IDLTypeCode Type { get; }
 
 		public abstract override bool Equals(object? obj);
 
@@ -24,30 +25,50 @@ namespace Common.Models
 
 	public class PrimitiveCandidTypeDefinition : CandidTypeDefinition
 	{
-		public override IDLTypeCode TypeCode { get; }
+		public override IDLTypeCode Type { get; }
 
-		public PrimitiveCandidTypeDefinition(IDLTypeCode typeCode)
+		public PrimitiveCandidTypeDefinition(CandidPrimitiveType type)
 		{
-			this.TypeCode = typeCode;
+			this.Type = type switch
+            {
+                CandidPrimitiveType.Text => IDLTypeCode.Text,
+                CandidPrimitiveType.Nat => IDLTypeCode.Nat,
+                CandidPrimitiveType.Nat8 => IDLTypeCode.Nat8,
+                CandidPrimitiveType.Nat16 => IDLTypeCode.Nat16,
+                CandidPrimitiveType.Nat32 => IDLTypeCode.Nat32,
+                CandidPrimitiveType.Nat64 => IDLTypeCode.Nat64,
+                CandidPrimitiveType.Int => IDLTypeCode.Int,
+                CandidPrimitiveType.Int8 => IDLTypeCode.Int8,
+                CandidPrimitiveType.Int16 => IDLTypeCode.Int16,
+                CandidPrimitiveType.Int32 => IDLTypeCode.Int32,
+                CandidPrimitiveType.Int64 => IDLTypeCode.Int64,
+                CandidPrimitiveType.Float32 => IDLTypeCode.Float32,
+                CandidPrimitiveType.Float64 => IDLTypeCode.Float64,
+                CandidPrimitiveType.Bool => IDLTypeCode.Bool,
+				CandidPrimitiveType.Null => IDLTypeCode.Null,
+				CandidPrimitiveType.Empty => IDLTypeCode.Empty,
+				CandidPrimitiveType.Reserved => IDLTypeCode.Reserved,
+				_ => throw new NotImplementedException(),
+            };
 		}
 
 		public override byte[] Encode(CompoundTypeTable compoundTypeTable)
 		{
-			return SLEB128.FromInt64((long)this.TypeCode).Raw;
+			return SLEB128.FromInt64((long)this.Type).Raw;
 		}
 
 		public override bool Equals(object? obj)
 		{
 			if (obj is PrimitiveCandidTypeDefinition pDef)
 			{
-				return this.TypeCode == pDef.TypeCode;
+				return this.Type == pDef.Type;
 			}
 			return false;
 		}
 
 		public override int GetHashCode()
 		{
-			return (int)this.TypeCode;
+			return (int)this.Type;
 		}
 	}
 
@@ -63,7 +84,7 @@ namespace Common.Models
 		private byte[] EncodeInternal(CompoundTypeTable compoundTypeTable)
 		{
 			byte[] encodedInnerValue = this.EncodeInnerType(compoundTypeTable);
-			return SLEB128.FromInt64((long)this.TypeCode).Raw
+			return SLEB128.FromInt64((long)this.Type).Raw
 				.Concat(encodedInnerValue)
 				.ToArray();
 		}
@@ -71,7 +92,7 @@ namespace Common.Models
 
 	public class OptCandidTypeDefinition : CompoundCandidTypeDefinition
 	{
-		public override IDLTypeCode TypeCode { get; } = IDLTypeCode.Opt;
+		public override IDLTypeCode Type { get; } = IDLTypeCode.Opt;
 		public CandidTypeDefinition Value { get; }
 
 		public OptCandidTypeDefinition(CandidTypeDefinition value)
@@ -101,7 +122,7 @@ namespace Common.Models
 
 	public class VectorCandidTypeDefinition : CompoundCandidTypeDefinition
 	{
-		public override IDLTypeCode TypeCode { get; } = IDLTypeCode.Vector;
+		public override IDLTypeCode Type { get; } = IDLTypeCode.Vector;
 
 		public CandidTypeDefinition Value { get; }
 
@@ -132,7 +153,7 @@ namespace Common.Models
 
 	public abstract class RecordOrVariantCandidTypeDefinition : CompoundCandidTypeDefinition
 	{
-		public override abstract IDLTypeCode TypeCode { get; }
+		public override abstract IDLTypeCode Type { get; }
 
 		protected abstract string ArgumentExceptionMessage { get; }
 
@@ -188,11 +209,11 @@ namespace Common.Models
 
 		public override int GetHashCode()
 		{
-			return HashCode.Combine(this.TypeCode, this.Fields);
+			return HashCode.Combine(this.Type, this.Fields);
 		}
 	}
 
-	public class Label
+	public class Label : IComparable<Label>, IComparable
 	{
 		public string? Name { get; }
 		public uint Id { get; }
@@ -210,11 +231,21 @@ namespace Common.Models
 
 		public override bool Equals(object? obj)
 		{
-			if(obj is Label l)
-			{
-				return this.Id == l.Id;
-			}
-			return false;
+			return this.CompareTo(obj) == 0;
+		}
+
+		public int CompareTo(object? obj)
+		{
+			return this.CompareTo(obj as Label);
+		}
+
+		public int CompareTo(Label? other)
+		{
+			if(other == null)
+            {
+				return 1;
+            }
+			return this.Id.CompareTo(other.Id);
 		}
 
 		public override int GetHashCode()
@@ -244,11 +275,11 @@ namespace Common.Models
 
 			return new Label(id, name);
 		}
-	}
+    }
 
 	public class RecordCandidTypeDefinition : RecordOrVariantCandidTypeDefinition
 	{
-		public override IDLTypeCode TypeCode { get; } = IDLTypeCode.Record;
+		public override IDLTypeCode Type { get; } = IDLTypeCode.Record;
 
 		protected override string ArgumentExceptionMessage { get; } = "At least one record field must be specified";
 
@@ -260,7 +291,7 @@ namespace Common.Models
 
 	public class VariantCandidTypeDefinition : RecordOrVariantCandidTypeDefinition
 	{
-		public override IDLTypeCode TypeCode { get; } = IDLTypeCode.Variant;
+		public override IDLTypeCode Type { get; } = IDLTypeCode.Variant;
 
 		protected override string ArgumentExceptionMessage { get; } = "At least one variant option must be specified";
 
@@ -272,7 +303,7 @@ namespace Common.Models
 
 	public class ServiceCandidTypeDefinition : CompoundCandidTypeDefinition
 	{
-		public override IDLTypeCode TypeCode { get; } = IDLTypeCode.Service;
+		public override IDLTypeCode Type { get; } = IDLTypeCode.Service;
 
 		public IReadOnlyDictionary<string, FuncCandidTypeDefinition> Methods { get; }
 
@@ -312,14 +343,14 @@ namespace Common.Models
 
 		public override int GetHashCode()
 		{
-			return HashCode.Combine(this.TypeCode, this.Methods);
+			return HashCode.Combine(this.Type, this.Methods);
 		}
 	}
 
 
 	public class FuncCandidTypeDefinition : CompoundCandidTypeDefinition
 	{
-		public override IDLTypeCode TypeCode { get; } = IDLTypeCode.Func;
+		public override IDLTypeCode Type { get; } = IDLTypeCode.Func;
 
 		public IReadOnlyList<FuncMode> Modes { get; }
 		public IReadOnlyList<CandidTypeDefinition> ArgTypes { get; }
@@ -376,7 +407,7 @@ namespace Common.Models
 
 		public override int GetHashCode()
 		{
-			return HashCode.Combine(this.TypeCode, this.Modes, this.ArgTypes, this.ReturnTypes);
+			return HashCode.Combine(this.Type, this.Modes, this.ArgTypes, this.ReturnTypes);
 		}
 	}
 }

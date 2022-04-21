@@ -8,14 +8,15 @@ namespace ICP.Common.Candid
 		public override CandidValueType Type { get; } = CandidValueType.Optional;
 		public CandidValue Value { get; }
 
-		public CandidOptional(CandidValue value)
+		public CandidOptional(CandidValue? value = null)
 		{
-			this.Value = value ?? throw new ArgumentNullException(nameof(value));
+			this.Value = value ?? CandidPrimitive.Null();
 		}
 
 		public override byte[] EncodeValue()
 		{
-			if(this.Value.Type == CandidValueType.Null)
+			if(this.Value.Type == CandidValueType.Principal
+				&& this.Value.AsPrimitive().ValueType == CandidPrimitiveType.Null)
 			{
 				return new byte[] { 0 };
 			}

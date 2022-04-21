@@ -1,6 +1,7 @@
 ﻿
 using ICP.Common.Candid;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 
@@ -80,10 +81,7 @@ namespace ICP.Common.Encodings
 				
 				throw new InvalidOperationException("Big integer value too large to convert to a SLEB128");
             }
-			long byteCount = (long)Math.Ceiling(bitCount / 7m); // 7, not 8, the 8th bit is to indicate end of number
-			byte[] bytes = new byte[byteCount];
-
-			int i = 0;
+			var bytes = new List<byte>();
 			bool more = true;
             while (more)
 			{
@@ -101,9 +99,9 @@ namespace ICP.Common.Encodings
                 {
 					byteValue |= 0b1000_0000;
 				}
-				bytes[i++] = byteValue;
+				bytes.Add(byteValue);
 			}
-			return new SLEB128(bytes);
+			return new SLEB128(bytes.ToArray());
 		}
 	}
 }

@@ -12,21 +12,13 @@ namespace ICP.Common.Candid
 		Variant,
 		Func,
 		Service,
-		Reserved,
-		Empty,
-		Null,
-		Optional
+		Optional,
+		Principal
 	}
 
 	public abstract class CandidValue
 	{
 		public abstract CandidValueType Type { get; }
-
-		public static CandidValue Null { get; } = new CandidNull();
-
-		public static CandidValue Reserved { get; } = new CandidReserved();
-
-		public static CandidValue Empty { get; } = new CandidEmpty();
 
 		public abstract byte[] EncodeValue();
 
