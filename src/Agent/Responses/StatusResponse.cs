@@ -47,7 +47,7 @@ namespace ICP.Agent.Responses
             byte[]? rawDevelopmentRootKey = cbor["root_key"].Value<byte[]?>();
             Key? developmentRootKey = rawDevelopmentRootKey == null
                 ? null
-                : new Key(HexUtil.BytesToHex(rawDevelopmentRootKey));
+                : new Key(Convert.ToHexString(rawDevelopmentRootKey));
             return new StatusResponse(
                 icApiVersion,
                 implementationSource,

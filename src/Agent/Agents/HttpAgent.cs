@@ -114,6 +114,15 @@ namespace ICP.Agent.Agents
         {
             Func<Task<Stream>> streamFunc = await this.SendInternalAsync(url, getRequest, identityOverride);
             Stream stream = await streamFunc();
+#if DEBUG
+            using (var memoryStream = new MemoryStream())
+            {
+                stream.CopyTo(memoryStream);
+                byte[] cborBytes = memoryStream.ToArray();
+                string cborHex = Convert.ToHexString(cborBytes.AsSpan());
+            }
+            stream.Position = 0;
+#endif
             return await Dahomey.Cbor.Cbor.DeserializeAsync<TResponse>(stream, HttpAgent.cborOptionsLazy.Value);
         }
 

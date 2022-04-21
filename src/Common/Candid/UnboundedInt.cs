@@ -37,6 +37,16 @@ namespace ICP.Common.Candid
 			return this.value == uuint.value;
 		}
 
+		public static UnboundedInt FromBigInteger(BigInteger value)
+		{
+			return new UnboundedInt(value);
+		}
+
+		public BigInteger ToBigInteger()
+		{
+			return this.value;
+		}
+
 		public override bool Equals(object? obj)
 		{
 			return this.value.Equals(obj);
@@ -57,7 +67,7 @@ namespace ICP.Common.Candid
 		{
 			return this.value.GetHashCode();
 		}
-	}
+    }
 
 	public static class UnboundedIntExtensions
 	{

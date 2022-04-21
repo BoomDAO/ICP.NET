@@ -16,7 +16,7 @@ namespace ICP.Agent
 
 		public byte[] GetBytes()
 		{
-			return HexUtil.HexToBytes(this.HexValue.AsSpan());
+			return Convert.FromHexString(this.HexValue.AsSpan());
 		}
 	}
 }

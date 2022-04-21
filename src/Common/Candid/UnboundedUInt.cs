@@ -36,6 +36,16 @@ namespace ICP.Common.Candid
 			return false;
 		}
 
+        public static UnboundedUInt FromBigInteger(BigInteger value)
+        {
+			return new UnboundedUInt(value);
+        }
+
+        public BigInteger ToBigInteger()
+        {
+			return this.value;
+        }
+
 		public bool Equals(UnboundedUInt uuint)
 		{
 			return this.value == uuint.value;

@@ -83,10 +83,10 @@ namespace ICP.Common.Candid
 			return (UnboundedInt)this.value;
 		}
 
-		public byte AsInt8()
+		public sbyte AsInt8()
 		{
 			this.ValidateType(CandidPrimitiveType.Int8);
-			return (byte)this.value;
+			return (sbyte)this.value;
 		}
 
 		public short AsInt16()
@@ -205,8 +205,8 @@ namespace ICP.Common.Candid
 
 		private byte[] EncodeInt8()
 		{
-			byte value = this.AsInt8();
-			return new byte[] { value };
+			sbyte value = this.AsInt8();
+			return new byte[] { (byte)value };
 		}
 
 		private byte[] EncodeInt16()
@@ -294,7 +294,7 @@ namespace ICP.Common.Candid
 			return new CandidPrimitive(CandidPrimitiveType.Int, value);
 		}
 
-		public static CandidPrimitive Int8(byte value)
+		public static CandidPrimitive Int8(sbyte value)
 		{
 			return new CandidPrimitive(CandidPrimitiveType.Int8, value);
 		}

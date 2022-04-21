@@ -1,6 +1,7 @@
 ﻿using ICP.Common.Candid;
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Numerics;
 
 namespace ICP.Common.Encodings
 {
@@ -47,15 +48,19 @@ namespace ICP.Common.Encodings
 
 		public static LEB128 FromUInt64(ulong v)
 		{
-			byte[] bytes = GetBytes(v);
-			return new LEB128(bytes);
+			return LEB128.FromBigInteger(new BigInteger(v));
 		}
 
-		private static byte[] GetBytes(ulong value)
+		public static LEB128 FromNat(UnboundedUInt value)
+		{
+			return LEB128.FromBigInteger(value.ToBigInteger());
+		}
+
+        public static LEB128 FromBigInteger(BigInteger value)
 		{
 			if (value == 0)
 			{
-				return new byte[] { 0b0 };
+				return new LEB128(new byte[] { 0b0 });
 			}
 
 			// Unsigned LEB128 - https://en.wikipedia.org/wiki/LEB128#Unsigned_LEB128
@@ -64,35 +69,29 @@ namespace ICP.Common.Encodings
 			//  0100110  0001110  1100101  Split into 7-bit groups
 			// 00100110 10001110 11100101  Add high 1 bits on all but last (most significant) group to form bytes
 
-			int bitCount = (int)Math.Ceiling(Math.Log2(value)) + 1; // log2 gets bit count
-			int byteCount = (int)Math.Ceiling(bitCount / 7m); // 7, not 8, the 8th bit is to indicate end of number
-			byte[] bytes = new byte[byteCount];
+			long bitCount = value.GetBitLength();
+			long byteCount = (long)Math.Ceiling(bitCount / 7m); // 7, not 8, the 8th bit is to indicate end of number
+			byte[] lebBytes = new byte[byteCount];
 
 			for (int i = 0; i < byteCount; i++)
 			{
-				byte byteValue = Convert.ToByte(value & 0b0111_1111); // Get the last 7 bits
+				byte byteValue = (value & 0b0111_1111).ToByteArray()[0]; // Get the last 7 bits
 				value = value >> 7; // Chop off last 7 bits
 				if (value != 0)
 				{
 					// Have most left of byte be 1 if there is another byte
 					byteValue |= 0b10000000;
 				}
-				bytes[i] = byteValue;
+				lebBytes[i] = byteValue;
 			}
-			return bytes;
+			return new LEB128(lebBytes);
 		}
 
-		public static LEB128 FromNat(UnboundedUInt unboundedUInt)
-		{
-			// TODO
-			throw new NotImplementedException();
-		}
-
-		public static LEB128 FromRaw(byte[] value)
+        public static LEB128 FromRaw(byte[] value)
 		{
 			if (!LEB128.TryFromRaw(value, out LEB128? leb))
 			{
-				throw new ArgumentException($"Invalid byte array value for leb: {HexUtil.BytesToHex(value)}");
+				throw new ArgumentException($"Invalid byte array value for leb: {Convert.ToHexString(value)}");
 			}
 			return leb;
 		}
