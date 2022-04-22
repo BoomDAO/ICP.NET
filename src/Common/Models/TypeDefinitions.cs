@@ -48,6 +48,7 @@ namespace Common.Models
 				CandidPrimitiveType.Null => IDLTypeCode.Null,
 				CandidPrimitiveType.Empty => IDLTypeCode.Empty,
 				CandidPrimitiveType.Reserved => IDLTypeCode.Reserved,
+				CandidPrimitiveType.Principal => IDLTypeCode.Principal,
 				_ => throw new NotImplementedException(),
             };
 		}
@@ -78,7 +79,8 @@ namespace Common.Models
 
 		public override byte[] Encode(CompoundTypeTable compoundTypeTable)
 		{
-			return compoundTypeTable.GetOrAdd(this, this.EncodeInternal);
+			int index =  compoundTypeTable.GetOrAdd(this, this.EncodeInternal);
+			return SLEB128.FromInt64(index).Raw;
 		}
 
 		private byte[] EncodeInternal(CompoundTypeTable compoundTypeTable)
@@ -263,10 +265,12 @@ namespace Common.Models
 		public static uint HashName(string name)
 		{
 			byte[] bytes = Encoding.UTF8.GetBytes(name);
-			int k = bytes.Length - 1;
-			return (uint)bytes
-				.Select((v, i) => Math.Pow(v * 223, k - i) % Math.Pow(2, 32))
-				.Sum();
+			uint digest = 0;
+			foreach(byte b in bytes)
+            {
+				digest = (digest * 223) + b;
+            }
+			return digest;
 		}
 
 		public static Label FromName(string name)

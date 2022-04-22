@@ -26,6 +26,7 @@ namespace ICP.Common.Candid
         Float32,
         Float64,
         Bool,
+        Principal,
         Reserved,
         Empty,
         Null
@@ -127,6 +128,12 @@ namespace ICP.Common.Candid
             return (bool)this.value!;
         }
 
+        public PrincipalId AsPrincipal()
+        {
+            this.ValidateType(CandidPrimitiveType.Principal);
+            return (PrincipalId)this.value!;
+        }
+
 
 
 
@@ -148,6 +155,7 @@ namespace ICP.Common.Candid
                 CandidPrimitiveType.Int64 => this.EncodeInt64(),
                 CandidPrimitiveType.Float32 => this.EncodeFloat32(),
                 CandidPrimitiveType.Float64 => this.EncodeFloat64(),
+                CandidPrimitiveType.Principal => this.EncodePrincipal(),
                 CandidPrimitiveType.Bool => this.EncodeBool(),
                 CandidPrimitiveType.Null => this.EncodeNull(),
                 CandidPrimitiveType.Reserved => this.EncodeReserved(),
@@ -235,6 +243,16 @@ namespace ICP.Common.Candid
         {
             double value = this.AsFloat64();
             return BitConverter.GetBytes(value);
+        }
+
+        private byte[] EncodePrincipal()
+        {
+            byte[] value = this.AsPrincipal().Raw;
+            byte[] encodedValueLength = LEB128.FromUInt64((ulong)value.Length).Raw;
+            return new byte[] { 1 }
+                .Concat(encodedValueLength)
+                .Concat(value)
+                .ToArray();
         }
 
         private byte[] EncodeBool()

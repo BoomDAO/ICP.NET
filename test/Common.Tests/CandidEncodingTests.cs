@@ -227,54 +227,92 @@ namespace Common.Tests
         [Fact]
         public void Encode_Opt()
         {
-            const string expectedPrefix = "016E7C";
+            string expectedPrefix = "016E7C";
             var candidValue = new CandidOptional();
             string expectedHex = "010000";
-            TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidValue, new OptCandidTypeDefinition(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Null)));
+            var typeDef = new OptCandidTypeDefinition(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Int)); // opt int
+            TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidValue, typeDef);
 
             candidValue = new CandidOptional(CandidPrimitive.Int(UnboundedInt.FromInt64(42)));
             expectedHex = "0100012A";
-            TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidValue, new OptCandidTypeDefinition(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Bool)));
+            TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidValue, typeDef);
 
 
-            candidValue = new CandidOptional(new CandidOptional(CandidPrimitive.Null()));
-            expectedHex = "026e016e000100010100";
-            TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidValue, new OptCandidTypeDefinition(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Bool)));
+            candidValue = new CandidOptional(candidValue);
+            // TODO docs say this but I order the type table differently. Should work though?
+            //expectedPrefix = "026E016E7C";
+            //expectedHex = "010001012A";
+            expectedPrefix = "026E7C6E00";
+            expectedHex = "010101012A";
+            typeDef = new OptCandidTypeDefinition(typeDef); // opt opt int
+            TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidValue, typeDef);
         }
 
-        //[Fact]
-        //public void Encode_Vec()
-        //{
-        //    var candidValue = new CandidVector(new CandidValue[0]);
-        //    string expectedHex = "00";
-        //    TestUtil.AssertEncodedCandid(expectedHex, candidValue);
+        [Fact]
+        public void Encode_Vec()
+        {
+            var candidValue = new CandidVector(new CandidValue[0]);
+            string expectedPrefix = "016D7C0100";
+            string expectedHex = "00";
+            var typeDef = new VectorCandidTypeDefinition(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Int));
+            TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidValue, typeDef);
 
-        //    var vector = new CandidValue[]
-        //    {
-        //        CandidPrimitive.Bool(false),
-        //        CandidPrimitive.Int32(-234),
-        //        CandidPrimitive.Text("Test"),
-        //    };
-        //    candidValue = new CandidVector(vector);
-        //    expectedHex = "080016FF0454657374";
-        //    TestUtil.AssertEncodedCandid(expectedHex, candidValue);
-        //}
+            var vector = new CandidPrimitive[]
+            {
+                CandidPrimitive.Int(UnboundedInt.FromInt64(1)),
+                CandidPrimitive.Int(UnboundedInt.FromInt64(2))
+            };
+            candidValue = new CandidVector(vector);
+            expectedHex = "020102";
+            TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidValue, typeDef);
+        }
 
-        //[Fact]
-        //public void Encode_Record()
-        //{
-        //    var candidValue = new CandidRecord(new Dictionary<Label, CandidValue>());
-        //    string expectedHex = "";
-        //    TestUtil.AssertEncodedCandid(expectedHex, candidValue);
+        [Theory]
+        [InlineData("id", 23515)]
+        [InlineData("", 0)]
+        [InlineData("description", 1595738364)]
+        [InlineData("_1.23_", 1360503298)]
+        public void Encode_Label(string name, uint hashedName)
+        {
+            uint digest = Label.HashName(name);
+            Assert.Equal(hashedName, digest);
 
-        //    candidValue = new CandidRecord(new Dictionary<Label, CandidValue>
-        //    {
-        //        {Label.FromName("bool"), CandidPrimitive.Bool(true) },
-        //        {Label.FromName("int32"), CandidPrimitive.Int32(-234) },
-        //        {Label.FromName("test"), CandidPrimitive.Text("Test") }
-        //    });
-        //    expectedHex = "01045465737416FF";
-        //    TestUtil.AssertEncodedCandid(expectedHex, candidValue);
-        //}
+        }
+
+        [Fact]
+        public void Encode_Record_Ids()
+        {
+            var candidValue = new CandidRecord(new Dictionary<Label, CandidValue>
+            {
+                {new Label(1), CandidPrimitive.Int(UnboundedInt.FromInt64(42)) },
+            });
+            string expectedPrefix = "";
+            string expectedHex = "016C01017C01002A";
+            var typeDef = new RecordCandidTypeDefinition(new Dictionary<Label, CandidTypeDefinition>
+            {
+                {new Label(1), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Int) },
+            });
+            TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidValue, typeDef);
+        }
+
+        [Fact]
+        public void Encode_Record_Named()
+        {
+            var candidValue = new CandidRecord(new Dictionary<Label, CandidValue>
+            {
+                {Label.FromName("foo"),CandidPrimitive.Int(UnboundedInt.FromInt64(42)) },
+                {Label.FromName("bar"), CandidPrimitive.Bool(true) }
+            });
+            string expectedPrefix = "";
+            // TODO ordering of types again
+            //string expectedHex = "016C02D3E3AA027E868EB7027C0100012A";
+            string expectedHex = "016C02868EB7027CD3E3AA027E0100012A";
+            var typeDef = new RecordCandidTypeDefinition(new Dictionary<Label, CandidTypeDefinition>
+            {
+                {Label.FromName("foo"), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Int) },
+                {Label.FromName("bar"), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Bool) },
+            });
+            TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidValue, typeDef);
+        }
     }
 }

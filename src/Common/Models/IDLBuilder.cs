@@ -21,7 +21,7 @@ namespace ICP.Common.Models
 		/// </summary>
 		private readonly Dictionary<CompoundCandidTypeDefinition, int> CompoundTypeIndexMap = new Dictionary<CompoundCandidTypeDefinition, int>();
 
-		public byte[] GetOrAdd(CompoundCandidTypeDefinition def, Func<CompoundTypeTable, byte[]> encodeFunc)
+		public int GetOrAdd(CompoundCandidTypeDefinition def, Func<CompoundTypeTable, byte[]> encodeFunc)
 		{
 			if (!this.CompoundTypeIndexMap.TryGetValue(def, out int index))
 			{
@@ -30,7 +30,7 @@ namespace ICP.Common.Models
 				index = this.EncodedCompoundTypes.Count - 1;
 				this.CompoundTypeIndexMap.Add(def, index);
 			}
-			return this.EncodedCompoundTypes[index];
+			return index;
 		}
 
 		public IEnumerable<byte> Encode()

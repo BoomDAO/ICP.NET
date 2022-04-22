@@ -18,7 +18,7 @@ namespace Common.Tests
 			builder.Add(value, typeDef);
 			byte[] actualValue = builder.Encode();
 			string actualHex = Convert.ToHexString(actualValue);
-			string didlPrefix = "4449444C";
+			const string didlPrefix = "4449444C";
 			Assert.StartsWith(didlPrefix, actualHex);
 			actualHex = actualHex[8..];
 			Assert.StartsWith(expectedPrefix, actualHex);

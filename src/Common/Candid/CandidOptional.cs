@@ -15,7 +15,7 @@ namespace ICP.Common.Candid
 
 		public override byte[] EncodeValue()
 		{
-			if(this.Value.Type == CandidValueType.Principal
+			if(this.Value.Type == CandidValueType.Primitive
 				&& this.Value.AsPrimitive().ValueType == CandidPrimitiveType.Null)
 			{
 				return new byte[] { 0 };
