@@ -40,9 +40,9 @@ namespace Common.Tests
         }
 
         [Theory]
-        [InlineData(0, "00")]
-        [InlineData(16, "10")]
-        [InlineData(543210, "EA4908")]
+        [InlineData(0, "0000000000000000")]
+        [InlineData(16, "1000000000000000")]
+        [InlineData(543210, "EA49080000000000")]
         public void Encode_Nat64(ulong natValue, string expectedHex)
         {
             const string expectedPrefix = "000178";
@@ -51,9 +51,9 @@ namespace Common.Tests
         }
 
         [Theory]
-        [InlineData(0, "00")]
-        [InlineData(16, "10")]
-        [InlineData(543210, "EA4908")]
+        [InlineData(0, "00000000")]
+        [InlineData(16, "10000000")]
+        [InlineData(543210, "EA490800")]
         public void Encode_Nat32(uint natValue, string expectedHex)
         {
             const string expectedPrefix = "000179";
@@ -62,8 +62,8 @@ namespace Common.Tests
         }
 
         [Theory]
-        [InlineData(0, "00")]
-        [InlineData(16, "10")]
+        [InlineData(0, "0000")]
+        [InlineData(16, "1000")]
         [InlineData(9999, "0F27")]
         public void Encode_Nat16(ushort natValue, string expectedHex)
         {
@@ -89,6 +89,7 @@ namespace Common.Tests
         [InlineData(-15, "71")]
         [InlineData(624485, "E58E26")]
         [InlineData(-123456, "C0BB78")]
+        [InlineData(128, "8001")]
         public void Encode_Int(long intValue, string expectedHex)
         {
             const string expectedPrefix = "00017C";
@@ -101,18 +102,18 @@ namespace Common.Tests
         public void Encode_Int_Big()
         {
             const string expectedPrefix = "00017C";
-            const string expectedHex = "FFFFFFFFFFFFFFFFFFFFFFFFFFFF03";
-            BigInteger bigInteger = BigInteger.Pow(2, 100) - 1;
+            const string expectedHex = "8080E88B96CAB5957F";
+            BigInteger bigInteger = -60000000000000000;
             var @int = UnboundedInt.FromBigInteger(bigInteger);
             var candidInt = CandidPrimitive.Int(@int);
             TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidInt, new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Int));
         }
 
         [Theory]
-        [InlineData(0, "00")]
-        [InlineData(16, "10")]
-        [InlineData(-15, "F1")]
-        [InlineData(543210, "EA4908")]
+        [InlineData(0, "0000000000000000")]
+        [InlineData(16, "1000000000000000")]
+        [InlineData(-15, "F100000000000000")]
+        [InlineData(4294967295, "FFFFFFFF00000000")]
         public void Encode_Int64(long intValue, string expectedHex)
         {
             const string expectedPrefix = "000174";
@@ -121,10 +122,10 @@ namespace Common.Tests
         }
 
         [Theory]
-        [InlineData(0, "00")]
-        [InlineData(16, "10")]
-        [InlineData(-15, "F1")]
-        [InlineData(543210, "EA4908")]
+        [InlineData(0, "00000000")]
+        [InlineData(16, "10000000")]
+        [InlineData(-15, "F1000000")]
+        [InlineData(65535, "FFFF0000")]
         public void Encode_Int32(int intValue, string expectedHex)
         {
             const string expectedPrefix = "000175";
@@ -133,9 +134,9 @@ namespace Common.Tests
         }
 
         [Theory]
-        [InlineData(0, "00")]
-        [InlineData(16, "10")]
-        [InlineData(-15, "F1")]
+        [InlineData(0, "0000")]
+        [InlineData(16, "1000")]
+        [InlineData(-15, "F100")]
         [InlineData(9999, "0F27")]
         public void Encode_Int16(short intValue, string expectedHex)
         {

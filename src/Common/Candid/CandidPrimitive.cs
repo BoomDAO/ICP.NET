@@ -188,19 +188,22 @@ namespace ICP.Common.Candid
         private byte[] EncodeNat16()
         {
             ushort value = this.AsNat16();
-            return new BigInteger(value).ToByteArray(isUnsigned: true, isBigEndian: false);
+            var bytes = new BigInteger(value).ToByteArray(isUnsigned: true, isBigEndian: false);
+            return CandidPrimitive.PadBytes(bytes, 2);
         }
 
         private byte[] EncodeNat32()
         {
             uint value = this.AsNat32();
-            return new BigInteger(value).ToByteArray(isUnsigned: true, isBigEndian: false);
+            var bytes = new BigInteger(value).ToByteArray(isUnsigned: true, isBigEndian: false);
+            return CandidPrimitive.PadBytes(bytes, 4);
         }
 
         private byte[] EncodeNat64()
         {
             ulong value = this.AsNat64();
-            return new BigInteger(value).ToByteArray(isUnsigned: true, isBigEndian: false);
+            var bytes = new BigInteger(value).ToByteArray(isUnsigned: true, isBigEndian: false);
+            return CandidPrimitive.PadBytes(bytes, 8);
         }
 
         private byte[] EncodeInt()
@@ -218,19 +221,22 @@ namespace ICP.Common.Candid
         private byte[] EncodeInt16()
         {
             short value = this.AsInt16();
-            return new BigInteger(value).ToByteArray(isUnsigned: false, isBigEndian: false);
+            var bytes = new BigInteger(value).ToByteArray(isUnsigned: false, isBigEndian: false);
+            return CandidPrimitive.PadBytes(bytes, 2);
         }
 
         private byte[] EncodeInt32()
         {
             int value = this.AsInt32();
-            return new BigInteger(value).ToByteArray(isUnsigned: false, isBigEndian: false);
+            var bytes = new BigInteger(value).ToByteArray(isUnsigned: false, isBigEndian: false);
+            return CandidPrimitive.PadBytes(bytes, 4);
         }
 
         private byte[] EncodeInt64()
         {
             long value = this.AsInt64();
-            return new BigInteger(value).ToByteArray(isUnsigned: false, isBigEndian: false);
+            var bytes = new BigInteger(value).ToByteArray(isUnsigned: false, isBigEndian: false);
+            return CandidPrimitive.PadBytes(bytes, 8);
         }
 
         private byte[] EncodeFloat32()
@@ -269,6 +275,22 @@ namespace ICP.Common.Candid
         private byte[] EncodeReserved()
         {
             return new byte[0];
+        }
+
+        private static byte[] PadBytes(byte[] bytes, int byteSize)
+        {
+            if (bytes.Length > byteSize)
+            {
+                throw new ArgumentException("Bytes is already too large");
+            }
+            if (bytes.Length == byteSize)
+            {
+                return bytes;
+            }
+            int paddingSize = byteSize - bytes.Length;
+            return bytes
+                .Concat(Enumerable.Range(0, paddingSize).Select(x => (byte)0))
+                .ToArray();
         }
 
 

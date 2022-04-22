@@ -27,7 +27,7 @@ namespace ICP.Agent.Agents
 		*/
         Task<ReadStateResponse> ReadStateAsync(PrincipalId canisterId, List<Path> paths, IIdentity? identityOverride = null);
 
-        Task CallAsync(PrincipalId canisterId, string method, EncodedArgument encodedArgument, PrincipalId? effectiveCanisterId = null, IIdentity? identityOverride = null);
+        Task CallAsync(PrincipalId canisterId, string method, CandidArg encodedArgument, PrincipalId? effectiveCanisterId = null, IIdentity? identityOverride = null);
 
         /**
 		* Query the status endpoint of the replica. This normally has a few fields that
@@ -48,7 +48,7 @@ namespace ICP.Agent.Agents
 		*     failed. If the query itself failed but no protocol errors happened, the response will
 		*     be of type QueryResponseRejected.
 		*/
-        Task<QueryResponse> QueryAsync(PrincipalId canisterId, string method, EncodedArgument encodedArgument, IIdentity? identityOverride = null);
+        Task<QueryResponse> QueryAsync(PrincipalId canisterId, string method, CandidArg encodedArgument, IIdentity? identityOverride = null);
         /**
 		* By default, the agent is configured to talk to the main Internet Computer,
 		* and verifies responses using a hard-coded public key.

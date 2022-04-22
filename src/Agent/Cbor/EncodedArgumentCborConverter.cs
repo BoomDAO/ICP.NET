@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace Agent.Cbor
 {
-	internal class EncodedArgumentCborConverter : CborConverterBase<EncodedArgument?>
+	internal class EncodedArgumentCborConverter : CborConverterBase<CandidArg?>
 	{
-		public override EncodedArgument? Read(ref CborReader reader)
+		public override CandidArg? Read(ref CborReader reader)
 		{
 			if (reader.GetCurrentDataItemType() == CborDataItemType.Null)
 			{
@@ -20,17 +20,17 @@ namespace Agent.Cbor
 			}
 			ReadOnlySpan<byte> bytes = reader.ReadByteString();
 
-			return new EncodedArgument(bytes.ToArray());
+			return CandidArg.FromBytes(bytes.ToArray());
 		}
 
-		public override void Write(ref CborWriter writer, EncodedArgument? value)
+		public override void Write(ref CborWriter writer, CandidArg? value)
 		{
 			if (value == null)
 			{
 				writer.WriteNull();
 				return;
 			}
-			writer.WriteByteString(value.Value);
+			writer.WriteByteString(value.Encode());
 		}
 	}
 }

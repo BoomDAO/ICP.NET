@@ -75,20 +75,12 @@ namespace Common.Models
 
 	public abstract class CompoundCandidTypeDefinition : CandidTypeDefinition
 	{
-		protected abstract byte[] EncodeInnerType(CompoundTypeTable compoundTypeTable);
+		internal abstract byte[] EncodeInnerType(CompoundTypeTable compoundTypeTable);
 
 		public override byte[] Encode(CompoundTypeTable compoundTypeTable)
 		{
-			int index =  compoundTypeTable.GetOrAdd(this, this.EncodeInternal);
+			int index =  compoundTypeTable.GetOrAdd(this);
 			return SLEB128.FromInt64(index).Raw;
-		}
-
-		private byte[] EncodeInternal(CompoundTypeTable compoundTypeTable)
-		{
-			byte[] encodedInnerValue = this.EncodeInnerType(compoundTypeTable);
-			return SLEB128.FromInt64((long)this.Type).Raw
-				.Concat(encodedInnerValue)
-				.ToArray();
 		}
 	}
 

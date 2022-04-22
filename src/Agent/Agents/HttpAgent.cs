@@ -44,7 +44,7 @@ namespace ICP.Agent.Agents
                 .Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(CBOR_CONTENT_TYPE));
         }
 
-        public async Task CallAsync(PrincipalId canisterId, string method, EncodedArgument encodedArgument, PrincipalId? targetCanisterOverride = null, IIdentity? identityOverride = null)
+        public async Task CallAsync(PrincipalId canisterId, string method, CandidArg encodedArgument, PrincipalId? targetCanisterOverride = null, IIdentity? identityOverride = null)
         {
             if (targetCanisterOverride == null)
             {
@@ -75,7 +75,7 @@ namespace ICP.Agent.Agents
             return await this.SendAsync<StatusResponse>("/api/v2/status");
         }
 
-        public async Task<QueryResponse> QueryAsync(PrincipalId canisterId, string method, EncodedArgument encodedArgument, IIdentity? identityOverride = null)
+        public async Task<QueryResponse> QueryAsync(PrincipalId canisterId, string method, CandidArg encodedArgument, IIdentity? identityOverride = null)
         {
             return await this.SendAsync<QueryRequest, QueryResponse>($"/api/v2/canister/{canisterId.ToText()}/query", BuildRequest, identityOverride);
 

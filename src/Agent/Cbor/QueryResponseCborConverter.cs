@@ -23,7 +23,8 @@ namespace Agent.Cbor
             switch (context.Status)
             {
 				case "replied":
-                    var reply = new QueryReply(context.ReplyArg!);
+                    var arg = CandidArg.FromBytes(context.ReplyArg!);
+                    var reply = new QueryReply(arg);
 					return QueryResponse.Replied(reply);
 				case "rejected":
                     ReplicaRejectCode code = (ReplicaRejectCode)context.RejectCode!.ToUInt64();
@@ -48,39 +49,51 @@ namespace Agent.Cbor
 
         public void ReadMapItem(ref CborReader reader, ref QueryReponseContext context)
         {
-            string? field = reader.ReadString();
-            reader.MoveNextMapItem();
-            switch (field)
+            bool lastItem = false;
+            bool read = true;
+            while(read)
             {
-                case "status":
-                    string? status = reader.ReadString();
-                    context.Status = status;
-                    return;
-                case "reply":
-                    byte[]? replyContext = null;
-                    reader.ReadMap(new ReplyCborMapReader(), ref replyContext);
-                    context.ReplyArg = replyContext;
-                    return;
-                case "reject_code":
-                    CborDataItemType codeType = reader.GetCurrentDataItemType();
-                    switch (codeType)
-                    {
-                        case CborDataItemType.Unsigned:
-                            ulong code = reader.ReadUInt64();
-                            context.RejectCode = LEB128.FromUInt64(code);
-                            return;
-                        case CborDataItemType.ByteString:
-                            byte[] codeBytes = reader.ReadByteString().ToArray();
-                            context.RejectCode = LEB128.FromRaw(codeBytes);
-                            return;
-                        default:
-                            throw new NotImplementedException($"Cannot deserialize query reject_code of type '{codeType}'");
-                    }
-                case "reject_message":
-                    context.RejectMessage = reader.ReadString();
-                    return;
-                default:
-                    throw new NotImplementedException($"Cannot deserialize query response. Unknown field '{field}'");
+                string? field = reader.ReadString();
+                reader.MoveNextMapItem();
+                switch (field)
+                {
+                    case "status":
+                        string? status = reader.ReadString();
+                        context.Status = status;
+                        break;
+                    case "reply":
+                        byte[]? replyContext = null;
+                        reader.ReadMap(new ReplyCborMapReader(), ref replyContext);
+                        context.ReplyArg = replyContext;
+                        break;
+                    case "reject_code":
+                        CborDataItemType codeType = reader.GetCurrentDataItemType();
+                        switch (codeType)
+                        {
+                            case CborDataItemType.Unsigned:
+                                ulong code = reader.ReadUInt64();
+                                context.RejectCode = LEB128.FromUInt64(code);
+                                break;
+                            case CborDataItemType.ByteString:
+                                byte[] codeBytes = reader.ReadByteString().ToArray();
+                                context.RejectCode = LEB128.FromRaw(codeBytes);
+                                break;
+                            default:
+                                throw new NotImplementedException($"Cannot deserialize query reject_code of type '{codeType}'");
+                        }
+                        break;
+                    case "reject_message":
+                        context.RejectMessage = reader.ReadString();
+                        break;
+                    default:
+                        throw new NotImplementedException($"Cannot deserialize query response. Unknown field '{field}'");
+                }
+                bool isNext = reader.MoveNextMapItem();
+                read = isNext || !lastItem;
+                if (!isNext)
+                {
+                    lastItem = true;
+                }
             }
         }
     }
@@ -94,7 +107,16 @@ namespace Agent.Cbor
 
         public void ReadMapItem(ref CborReader reader, ref byte[]? context)
         {
-            context = reader.ReadByteString().ToArray();
+            string? field = reader.ReadString();
+            reader.MoveNextMapItem();
+            switch (field)
+            {
+                case "arg":
+                    context = reader.ReadByteString().ToArray();
+                    break;
+                default:
+                    throw new NotImplementedException($"Cannot deserialize query response. Unknown field '{field}'");
+            }
         }
     }
     

@@ -109,8 +109,7 @@ namespace ICP.Common.Encodings
 
 		private static bool AreBytesValid(byte[] value)
 		{
-			// TODO
-			throw new NotImplementedException();
+
 		}
 	}
 }

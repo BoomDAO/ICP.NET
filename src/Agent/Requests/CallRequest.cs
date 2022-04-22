@@ -21,7 +21,7 @@ namespace ICP.Agent.Requests
 		/// Argument to pass to the canister method
 		/// </summary>
 		[Dahomey.Cbor.Attributes.CborProperty(Properties.ARG)]
-		public EncodedArgument EncodedArgument { get; }
+		public CandidArg EncodedArgument { get; }
 		/// <summary>
 		/// The user who issued the request
 		/// </summary>
@@ -38,7 +38,7 @@ namespace ICP.Agent.Requests
 		[Dahomey.Cbor.Attributes.CborProperty(Properties.NONCE)]
 		public byte[]? Nonce { get; }
 
-		public CallRequest(PrincipalId canisterId, string method, EncodedArgument encodedArgument, PrincipalId sender, ICTimestamp ingressExpiry)
+		public CallRequest(PrincipalId canisterId, string method, CandidArg encodedArgument, PrincipalId sender, ICTimestamp ingressExpiry)
 		{
 			this.CanisterId = canisterId ?? throw new ArgumentNullException(nameof(canisterId));
 			this.Method = method ?? throw new ArgumentNullException(nameof(method));

@@ -1,4 +1,5 @@
 ﻿using Dahomey.Cbor.ObjectModel;
+using ICP.Common.Models;
 using System;
 
 namespace ICP.Agent.Responses
@@ -53,9 +54,9 @@ namespace ICP.Agent.Responses
 
     public class QueryReply
     {
-        public byte[] Arg { get; }
+        public CandidArg Arg { get; }
 
-        public QueryReply(byte[] arg)
+        public QueryReply(CandidArg arg)
         {
             this.Arg = arg;
         }

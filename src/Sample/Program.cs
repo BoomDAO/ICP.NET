@@ -19,7 +19,7 @@ PrincipalId canisterId = PrincipalId.FromText(governanceCanister);
 string method = "get_proposal_info";
 var candidArg = CandidPrimitive.Nat64(54021);
 var def = new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat64);
-EncodedArgument encodedArgument = EncodedArgument.FromCandid((candidArg, def));
+CandidArg encodedArgument = CandidArg.FromCandid((candidArg, def));
 
 QueryResponse response = await agent.QueryAsync(canisterId, method, encodedArgument, identityOverride: null);
 int a = 1;
