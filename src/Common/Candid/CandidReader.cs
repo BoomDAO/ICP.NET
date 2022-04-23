@@ -30,7 +30,7 @@ namespace Common.Candid
         }
         public CompoundTypeTable ReadArgTypeTable()
         {
-            UnboundedUInt countOfTypes = this.ReadLEB128();
+            UnboundedUInt countOfTypes = LEB128.DecodeUnsigned(this.reader.BaseStream);
             var types = new List<CompoundCandidTypeDefinition>();
             while (countOfTypes > 0)
             {
@@ -52,13 +52,6 @@ namespace Common.Candid
 
         }
 
-        private UnboundedUInt ReadLEB128()
-        {
-            while (true)
-            {
-                byte b = this.reader.ReadByte();
-            }
-        }
 
         public List<CandidTypeDefinition> ReadArgTypes(CompoundTypeTable typeTable)
         {

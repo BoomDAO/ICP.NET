@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Numerics;
 
 namespace ICP.Common.Encodings
@@ -19,6 +20,10 @@ namespace ICP.Common.Encodings
 			}
 			return new UnboundedUInt(v);
 		}
+		public static UnboundedUInt DecodeUnsigned(Stream stream)
+        {
+
+        }
 
 
 		public static UnboundedInt DecodeSigned(byte[] encodedValue)
@@ -27,6 +32,30 @@ namespace ICP.Common.Encodings
 			for (int i = 0; i < encodedValue.Length; i++)
 			{
 				byte b = encodedValue[i];
+				long valueToAdd = (b & 0b0111_1111) << (7 * i); // Shift over 7 * i bits to get value to add
+				v += valueToAdd;
+			}
+			return new UnboundedInt(v);
+		}
+
+		public static UnboundedInt DecodeSigned(Stream stream)
+		{
+			BigInteger v = 0;
+			int i = 0;
+			while(true)
+			{
+				int byteOrEnd = stream.ReadByte();
+				if(byteOrEnd == -1)
+                {
+					// TODO end
+					break;
+                }
+				byte b = (byte)byteOrEnd;
+                if (endOfLEB)
+                {
+					// TODO detect end of LEB
+					break;
+                }
 				long valueToAdd = (b & 0b0111_1111) << (7 * i); // Shift over 7 * i bits to get value to add
 				v += valueToAdd;
 			}
