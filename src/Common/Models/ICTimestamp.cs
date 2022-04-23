@@ -36,7 +36,7 @@ namespace ICP.Common.Models
 
 		public byte[] ComputeHash(IHashFunction hashFunction)
 		{
-			return hashFunction.ComputeHash(LEB128.FromNat(this.NanoSeconds).Raw);
+			return hashFunction.ComputeHash(LEB128.EncodeUnsigned(this.NanoSeconds));
 		}
 
 		public CandidValue ToCandid()

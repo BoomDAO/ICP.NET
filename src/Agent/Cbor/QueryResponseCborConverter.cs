@@ -27,7 +27,7 @@ namespace Agent.Cbor
                     var reply = new QueryReply(arg);
 					return QueryResponse.Replied(reply);
 				case "rejected":
-                    ReplicaRejectCode code = (ReplicaRejectCode)context.RejectCode!.ToUInt64();
+                    ReplicaRejectCode code = (ReplicaRejectCode)(ulong)context.RejectCode!;
 					return QueryResponse.Rejected(code, context.RejectMessage);
 				default:
 					throw new NotImplementedException($"Cannot deserialize query response with status '{context.Status}'");
@@ -71,12 +71,11 @@ namespace Agent.Cbor
                         switch (codeType)
                         {
                             case CborDataItemType.Unsigned:
-                                ulong code = reader.ReadUInt64();
-                                context.RejectCode = LEB128.FromUInt64(code);
+                                context.RejectCode = reader.ReadUInt64();
                                 break;
                             case CborDataItemType.ByteString:
                                 byte[] codeBytes = reader.ReadByteString().ToArray();
-                                context.RejectCode = LEB128.FromRaw(codeBytes);
+                                context.RejectCode = LEB128.DecodeUnsigned(codeBytes);
                                 break;
                             default:
                                 throw new NotImplementedException($"Cannot deserialize query reject_code of type '{codeType}'");
@@ -124,7 +123,7 @@ namespace Agent.Cbor
     {
         public string? Status { get; set; }
         public byte[]? ReplyArg { get; set; }
-        public LEB128? RejectCode { get; set; }
+        public UnboundedUInt? RejectCode { get; set; }
         public string? RejectMessage { get; set; }
     }
 }

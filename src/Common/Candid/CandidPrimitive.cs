@@ -168,7 +168,7 @@ namespace ICP.Common.Candid
         {
             string value = this.AsText();
             // bytes = Length (LEB128) + text (UTF8)
-            return LEB128.FromUInt64((ulong)value.Length).Raw
+            return LEB128.EncodeSigned(value.Length)
                        .Concat(Encoding.UTF8.GetBytes(value))
                        .ToArray();
         }
@@ -176,7 +176,7 @@ namespace ICP.Common.Candid
         private byte[] EncodeNat()
         {
             UnboundedUInt value = this.AsNat();
-            return LEB128.FromNat(value).Raw;
+            return LEB128.EncodeUnsigned(value);
         }
 
         private byte[] EncodeNat8()
@@ -209,7 +209,7 @@ namespace ICP.Common.Candid
         private byte[] EncodeInt()
         {
             UnboundedInt value = this.AsInt();
-            return SLEB128.FromInt(value).Raw;
+            return LEB128.EncodeSigned(value);
         }
 
         private byte[] EncodeInt8()
@@ -254,7 +254,7 @@ namespace ICP.Common.Candid
         private byte[] EncodePrincipal()
         {
             byte[] value = this.AsPrincipal().Raw;
-            byte[] encodedValueLength = LEB128.FromUInt64((ulong)value.Length).Raw;
+            byte[] encodedValueLength = LEB128.EncodeSigned(value.Length);
             return new byte[] { 1 }
                 .Concat(encodedValueLength)
                 .Concat(value)

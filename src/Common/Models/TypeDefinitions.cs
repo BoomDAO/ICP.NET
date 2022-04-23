@@ -55,7 +55,7 @@ namespace Common.Models
 
 		public override byte[] Encode(CompoundTypeTable compoundTypeTable)
 		{
-			return SLEB128.FromInt64((long)this.Type).Raw;
+			return LEB128.EncodeSigned((long)this.Type);
 		}
 
 		public override bool Equals(object? obj)
@@ -80,7 +80,7 @@ namespace Common.Models
 		public override byte[] Encode(CompoundTypeTable compoundTypeTable)
 		{
 			int index =  compoundTypeTable.GetOrAdd(this);
-			return SLEB128.FromInt64(index).Raw;
+			return LEB128.EncodeSigned(index);
 		}
 	}
 
@@ -94,7 +94,7 @@ namespace Common.Models
 			this.Value = value ?? throw new ArgumentNullException(nameof(value));
 		}
 
-		protected override byte[] EncodeInnerType(CompoundTypeTable compoundTypeTable)
+		internal override byte[] EncodeInnerType(CompoundTypeTable compoundTypeTable)
 		{
 			return this.Value.Encode(compoundTypeTable);
 		}
@@ -125,7 +125,7 @@ namespace Common.Models
 			this.Value = value ?? throw new ArgumentNullException(nameof(value));
 		}
 
-		protected override byte[] EncodeInnerType(CompoundTypeTable compoundTypeTable)
+		internal override byte[] EncodeInnerType(CompoundTypeTable compoundTypeTable)
 		{
 			return this.Value.Encode(compoundTypeTable);
 		}
@@ -162,13 +162,13 @@ namespace Common.Models
 			this.Fields = fields;
 		}
 
-		protected override byte[] EncodeInnerType(CompoundTypeTable compoundTypeTable)
+		internal override byte[] EncodeInnerType(CompoundTypeTable compoundTypeTable)
 		{
-			byte[] fieldCount = LEB128.FromUInt64((ulong)this.Fields.Count).Raw;
+			byte[] fieldCount = LEB128.EncodeSigned(this.Fields.Count);
 			IEnumerable<byte> fieldTypes = this.Fields
 				.SelectMany(f =>
 				{
-					return LEB128.FromUInt64(f.Key.Id).Raw
+					return LEB128.EncodeUnsigned(f.Key.Id)
 						.Concat(f.Value.Encode(compoundTypeTable));
 				});
 			return fieldCount
@@ -308,15 +308,15 @@ namespace Common.Models
 			this.Methods = methods;
 		}
 
-		protected override byte[] EncodeInnerType(CompoundTypeTable compoundTypeTable)
+		internal override byte[] EncodeInnerType(CompoundTypeTable compoundTypeTable)
 		{
-			byte[] methodCount = LEB128.FromUInt64((ulong)this.Methods.Count).Raw;
+			byte[] methodCount = LEB128.EncodeSigned(this.Methods.Count);
 			IEnumerable<byte> methodTypes = this.Methods
 				.OrderBy(m => m.Key) // Ordered by method name
 				.SelectMany(m =>
 				{
 					byte[] encodedName = Encoding.UTF8.GetBytes(m.Key);
-					byte[] encodedNameLength = LEB128.FromUInt64((ulong)encodedName.Length).Raw;
+					byte[] encodedNameLength = LEB128.EncodeSigned(encodedName.Length);
 					return encodedNameLength
 					.Concat(encodedName)
 					.Concat(m.Value.Encode(compoundTypeTable));
@@ -362,22 +362,22 @@ namespace Common.Models
 			this.ReturnTypes = returnTypes;
 		}
 
-		protected override byte[] EncodeInnerType(CompoundTypeTable compoundTypeTable)
+		internal override byte[] EncodeInnerType(CompoundTypeTable compoundTypeTable)
 		{
-			byte[] argsCount = LEB128.FromUInt64((ulong)this.ArgTypes.Count).Raw;
+			byte[] argsCount = LEB128.EncodeSigned(this.ArgTypes.Count);
 
 			IEnumerable<byte> argTypes = this.ArgTypes
 				.SelectMany(a => a.Encode(compoundTypeTable));
 
-			byte[] returnsCount = LEB128.FromUInt64((ulong)this.ReturnTypes.Count).Raw;
+			byte[] returnsCount = LEB128.EncodeSigned(this.ReturnTypes.Count);
 
 			IEnumerable<byte> returnTypes = this.ReturnTypes
 				.SelectMany(a => a.Encode(compoundTypeTable));
 
-			byte[] modesCount = LEB128.FromUInt64((ulong)this.Modes.Count).Raw;
+			byte[] modesCount = LEB128.EncodeSigned(this.Modes.Count);
 
 			IEnumerable<byte> modeTypes = this.Modes
-				.SelectMany(m => SLEB128.FromInt64((long)m).Raw);
+				.SelectMany(m => LEB128.EncodeSigned((UnboundedInt)(long)m));
 
 			return argsCount
 				.Concat(argTypes)

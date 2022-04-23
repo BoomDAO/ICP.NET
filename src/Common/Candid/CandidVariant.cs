@@ -19,7 +19,7 @@ namespace ICP.Common.Candid
 		public override byte[] EncodeValue()
 		{
 			// bytes = index (LEB128) + encoded value
-			return LEB128.FromUInt64(this.Index).Raw
+			return LEB128.EncodeUnsigned(this.Index)
 				.Concat(this.Value.EncodeValue())
 				.ToArray();
 		}

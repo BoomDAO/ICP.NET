@@ -1,66 +1,57 @@
 ﻿using ICP.Common.Candid;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 
 namespace ICP.Common.Encodings
 {
-	public class LEB128
+	public static class LEB128
 	{
-		public byte[] Raw { get; }
-
-		private LEB128(byte[] raw)
+		public static UnboundedUInt DecodeUnsigned(byte[] encodedValue)
 		{
-			if (raw == null || raw.Length < 1)
+			BigInteger v = 0;
+			for (int i = 0; i < encodedValue.Length; i++)
 			{
-				throw new ArgumentException("LEB128 requires at least one byte");
-			}
-			this.Raw = raw ?? throw new Exception(nameof(raw));
-		}
-
-		public ulong ToUInt64()
-		{
-			if (!this.TryToUInt64(out ulong value))
-			{
-				throw new InvalidOperationException("LEB128 is too large to fit in a UInt64");
-			}
-			return value;
-		}
-
-		public bool TryToUInt64(out ulong value)
-		{
-			ulong v = 0;
-			for (int i = 0; i < this.Raw.Length; i++)
-			{
-				byte b = this.Raw[i];
-				if (i >= 10 && b > 1)
-				{
-					// Larger than ulong.MaxValue
-					value = 0;
-					return false;
-				}
+				byte b = encodedValue[i];
 				ulong valueToAdd = (b & 0b0111_1111ul) << (7 * i); // Shift over 7 * i bits to get value to add
 				v += valueToAdd;
 			}
-			value = v;
-			return true;
+			return new UnboundedUInt(v);
 		}
 
-		public static LEB128 FromUInt64(ulong v)
+
+		public static UnboundedInt DecodeSigned(byte[] encodedValue)
 		{
-			return LEB128.FromBigInteger(new BigInteger(v));
+			BigInteger v = 0;
+			for (int i = 0; i < encodedValue.Length; i++)
+			{
+				byte b = encodedValue[i];
+				long valueToAdd = (b & 0b0111_1111) << (7 * i); // Shift over 7 * i bits to get value to add
+				v += valueToAdd;
+			}
+			return new UnboundedInt(v);
 		}
 
-		public static LEB128 FromNat(UnboundedUInt value)
+		public static byte[] EncodeUnsigned(UnboundedUInt value)
 		{
-			return LEB128.FromBigInteger(value.ToBigInteger());
+			return LEB128.EncodeUnsigned(value.ToBigInteger());
 		}
 
-        public static LEB128 FromBigInteger(BigInteger value)
+		public static byte[] EncodeSigned(UnboundedInt unboundedInt)
 		{
+			return LEB128.EncodeSigned(unboundedInt.ToBigInteger());
+		}
+
+		private static byte[] EncodeUnsigned(BigInteger value)
+		{
+			if(value < 0)
+            {
+				throw new ArgumentOutOfRangeException(nameof(value), "Value must be 0 or greater");
+            }
 			if (value == 0)
 			{
-				return new LEB128(new byte[] { 0b0 });
+				return new byte[] { 0b0 };
 			}
 
 			// Unsigned LEB128 - https://en.wikipedia.org/wiki/LEB128#Unsigned_LEB128
@@ -84,32 +75,53 @@ namespace ICP.Common.Encodings
 				}
 				lebBytes[i] = byteValue;
 			}
-			return new LEB128(lebBytes);
+			return lebBytes;
 		}
 
-        public static LEB128 FromRaw(byte[] value)
+
+		private static byte[] EncodeSigned(BigInteger value)
 		{
-			if (!LEB128.TryFromRaw(value, out LEB128? leb))
+			if (value == 0)
 			{
-				throw new ArgumentException($"Invalid byte array value for leb: {Convert.ToHexString(value)}");
+				return new byte[] { 0b0 };
 			}
-			return leb;
-		}
 
-		public static bool TryFromRaw(byte[] value, [NotNullWhen(true)] out LEB128? leb)
-		{
-			if (!LEB128.AreBytesValid(value))
+			// Signed LEB128 - https://en.wikipedia.org/wiki/LEB128#Signed_LEB128
+			//         11110001001000000  Binary encoding of 123456
+			//     00001_11100010_01000000  As a 21-bit number (multiple of 7)
+			//     11110_00011101_10111111  Negating all bits (one's complement)
+			//     11110_00011101_11000000  Adding one (two's complement)
+			// 1111000  0111011  1000000  Split into 7-bit groups
+			//01111000 10111011 11000000  Add high 1 bits on all but last (most significant) group to form bytes
+
+
+			long bitCount = value.GetBitLength(); // log2 gets bit count and there is an extra bit for sign
+			if (bitCount > int.MaxValue) // Addresses the issue of bitcount has to be an int below
 			{
-				leb = null;
-				return false;
+
+				throw new InvalidOperationException("Big integer value too large to convert to a SLEB128");
 			}
-			leb = new LEB128(value);
-			return true;
-		}
-
-		private static bool AreBytesValid(byte[] value)
-		{
-
+			var bytes = new List<byte>();
+			bool more = true;
+			while (more)
+			{
+				byte byteValue = (value & 0b0111_1111).ToByteArray()[0]; // Get the last 7 bits
+				value = value >> 7; // Shift over 7 bits to setup the next byte
+				if (value == 0 && (byteValue & 0b0100_0000) == 0)
+				{
+					more = false;
+				}
+				else if (value == -1 && (byteValue & 0b0100_0000) > 0)
+				{
+					more = false;
+				}
+				else
+				{
+					byteValue |= 0b1000_0000;
+				}
+				bytes.Add(byteValue);
+			}
+			return bytes.ToArray();
 		}
 	}
 }

@@ -25,7 +25,7 @@ namespace ICP.Common.Candid
 			byte[] valueListBytes = this.Values
 				.SelectMany(v => v.EncodeValue())
 				.ToArray();
-			byte[] encodedByteLength = LEB128.FromUInt64((ulong)valueListBytes.Length).Raw;
+			byte[] encodedByteLength = LEB128.EncodeSigned(valueListBytes.Length);
 			return encodedByteLength
 				.Concat(valueListBytes)
 				.ToArray();

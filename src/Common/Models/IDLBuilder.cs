@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using Common.Models;
 using ICP.Common.Candid;
@@ -37,87 +38,88 @@ namespace ICP.Common.Models
         private byte[] EncodeFunc(CompoundCandidTypeDefinition typeDef)
         {
             byte[] encodedInnerValue = typeDef.EncodeInnerType(this);
-            return SLEB128.FromInt64((long)typeDef.Type).Raw
+            return LEB128.EncodeSigned((UnboundedInt)(long)typeDef.Type)
                 .Concat(encodedInnerValue)
                 .ToArray();
         }
 
         public IEnumerable<byte> Encode()
         {
-            byte[] compoundTypesCount = LEB128.FromUInt64((ulong)this.EncodedCompoundTypes.Count).Raw;
+            byte[] compoundTypesCount = LEB128.EncodeUnsigned((UnboundedUInt)this.EncodedCompoundTypes.Count);
             return compoundTypesCount
                 .Concat(this.EncodedCompoundTypes.SelectMany(t => t));
         }
 
-        public static CompoundTypeTable FromTypes(List<CandidTypeDefinition> types)
+        public static CompoundTypeTable FromTypes(List<CompoundCandidTypeDefinition> types)
         {
             var table = new CompoundTypeTable();
-            foreach (CandidTypeDefinition type in types)
+            foreach (CompoundCandidTypeDefinition type in types)
             {
-                table.GetOrAdd(type, )
-}
-        }
-
-        public class IDLBuilder
-        {
-            /// <summary>
-            /// Helper to capture compound types
-            /// </summary>
-            private readonly CompoundTypeTable compoundTypeTable = new CompoundTypeTable();
-            /// <summary>
-            /// Ordered list of encoded types (encoded with SLEB128).
-            /// If SLEB value is positive, it is an index for `EncodedCompoundTypes` for a compound type
-            /// If SLEB value is negative, it is type code for a primitive value
-            /// </summary>
-            private readonly List<byte[]> EncodedTypes = new List<byte[]>();
-            /// <summary>
-            /// Ordered list of encoded values
-            /// </summary>
-            private readonly List<byte[]> EncodedValues = new List<byte[]>();
-
-
-            public void Add(CandidValue value, CandidTypeDefinition def)
-            {
-                byte[] encodedType = def.Encode(this.compoundTypeTable);
-                this.EncodedTypes.Add(encodedType);
-                byte[] encodedValue = value.EncodeValue();
-                this.EncodedValues.Add(encodedValue);
+                table.GetOrAdd(type);
             }
-
-            public static IDLBuilder FromArgs(IEnumerable<(CandidValue, CandidTypeDefinition)> values)
-            {
-                var builder = new IDLBuilder();
-                foreach ((CandidValue value, CandidTypeDefinition def) in values)
-                {
-                    builder.Add(value, def);
-                }
-                return builder;
-            }
-
-            public byte[] Encode()
-            {
-                byte[] encodedPrefix = Encoding.UTF8.GetBytes("DIDL");
-
-                IEnumerable<byte> encodedTypes = this.GenerateTypeEncoding();
-                IEnumerable<byte> encodedValues = this.GenerateValueEncoding();
-                return encodedPrefix
-                    .Concat(encodedTypes)
-                    .Concat(encodedValues)
-                    .ToArray();
-            }
-
-            private IEnumerable<byte> GenerateTypeEncoding()
-            {
-                byte[] encodedTypesCount = LEB128.FromUInt64((ulong)this.EncodedTypes.Count).Raw;
-
-                return this.compoundTypeTable.Encode()
-                    .Concat(encodedTypesCount)
-                    .Concat(this.EncodedTypes.SelectMany(t => t));
-            }
-
-            private IEnumerable<byte> GenerateValueEncoding()
-            {
-                return this.EncodedValues.SelectMany(v => v);
-            }
+            return table;
         }
     }
+    public class IDLBuilder
+    {
+        /// <summary>
+        /// Helper to capture compound types
+        /// </summary>
+        private readonly CompoundTypeTable compoundTypeTable = new CompoundTypeTable();
+        /// <summary>
+        /// Ordered list of encoded types (encoded with SLEB128).
+        /// If SLEB value is positive, it is an index for `EncodedCompoundTypes` for a compound type
+        /// If SLEB value is negative, it is type code for a primitive value
+        /// </summary>
+        private readonly List<byte[]> EncodedTypes = new List<byte[]>();
+        /// <summary>
+        /// Ordered list of encoded values
+        /// </summary>
+        private readonly List<byte[]> EncodedValues = new List<byte[]>();
+
+
+        public void Add(CandidValue value, CandidTypeDefinition def)
+        {
+            byte[] encodedType = def.Encode(this.compoundTypeTable);
+            this.EncodedTypes.Add(encodedType);
+            byte[] encodedValue = value.EncodeValue();
+            this.EncodedValues.Add(encodedValue);
+        }
+
+        public static IDLBuilder FromArgs(IEnumerable<(CandidValue, CandidTypeDefinition)> values)
+        {
+            var builder = new IDLBuilder();
+            foreach ((CandidValue value, CandidTypeDefinition def) in values)
+            {
+                builder.Add(value, def);
+            }
+            return builder;
+        }
+
+        public byte[] Encode()
+        {
+            byte[] encodedPrefix = Encoding.UTF8.GetBytes("DIDL");
+
+            IEnumerable<byte> encodedTypes = this.GenerateTypeEncoding();
+            IEnumerable<byte> encodedValues = this.GenerateValueEncoding();
+            return encodedPrefix
+                .Concat(encodedTypes)
+                .Concat(encodedValues)
+                .ToArray();
+        }
+
+        private IEnumerable<byte> GenerateTypeEncoding()
+        {
+            byte[] encodedTypesCount = LEB128.EncodeSigned(this.EncodedTypes.Count);
+
+            return this.compoundTypeTable.Encode()
+                .Concat(encodedTypesCount)
+                .Concat(this.EncodedTypes.SelectMany(t => t));
+        }
+
+        private IEnumerable<byte> GenerateValueEncoding()
+        {
+            return this.EncodedValues.SelectMany(v => v);
+        }
+    }
+}

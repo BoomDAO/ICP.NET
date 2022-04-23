@@ -30,13 +30,13 @@ namespace Common.Candid
         }
         public CompoundTypeTable ReadArgTypeTable()
         {
-            LEB128 typeCount = this.ReadLEB128();
-            var types = new List<CandidTypeDefinition>();
-            while (typeCount > 0)
+            UnboundedUInt countOfTypes = this.ReadLEB128();
+            var types = new List<CompoundCandidTypeDefinition>();
+            while (countOfTypes > 0)
             {
-                CandidTypeDefinition typeDef = this.ReadType();
+                CompoundCandidTypeDefinition typeDef = this.ReadCompoundType();
                 types.Add(typeDef);
-                typeCount--;
+                countOfTypes--;
             }
 
             return CompoundTypeTable.FromTypes(types);
@@ -44,10 +44,15 @@ namespace Common.Candid
 
         private CandidTypeDefinition ReadType()
         {
-            throw new NotImplementedException();
+
         }
 
-        private LEB128 ReadLEB128()
+        private CompoundCandidTypeDefinition ReadCompoundType()
+        {
+
+        }
+
+        private UnboundedUInt ReadLEB128()
         {
             while (true)
             {
