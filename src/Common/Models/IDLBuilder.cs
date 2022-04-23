@@ -21,15 +21,15 @@ namespace ICP.Common.Models
         /// <summary>
         /// A mapping of compound type definition to `EncodedCompoundTypes` index to be used as reference
         /// </summary>
-        private readonly Dictionary<CompoundCandidTypeDefinition, int> CompoundTypeIndexMap = new Dictionary<CompoundCandidTypeDefinition, int>();
+        private readonly Dictionary<CompoundCandidTypeDefinition, UnboundedUInt> CompoundTypeIndexMap = new Dictionary<CompoundCandidTypeDefinition, UnboundedUInt>();
 
-        public int GetOrAdd(CompoundCandidTypeDefinition typeDef)
+        public UnboundedUInt GetOrAdd(CompoundCandidTypeDefinition typeDef)
         {
-            if (!this.CompoundTypeIndexMap.TryGetValue(typeDef, out int index))
+            if (!this.CompoundTypeIndexMap.TryGetValue(typeDef, out UnboundedUInt? index))
             {
                 byte[] encodedType = this.EncodeFunc(typeDef);
                 this.EncodedCompoundTypes.Add(encodedType);
-                index = this.EncodedCompoundTypes.Count - 1;
+                index = (UnboundedUInt)this.EncodedCompoundTypes.Count - 1;
                 this.CompoundTypeIndexMap.Add(typeDef, index);
             }
             return index;
@@ -53,7 +53,7 @@ namespace ICP.Common.Models
         public static CompoundTypeTable FromTypes(List<CompoundCandidTypeDefinition> types)
         {
             var table = new CompoundTypeTable();
-            foreach (CompoundCandidTypeDefinition type in types)
+            foreach (CompoundCandidTypeDefinition? type in types)
             {
                 table.GetOrAdd(type);
             }

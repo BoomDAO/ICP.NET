@@ -79,7 +79,7 @@ namespace Common.Models
 
 		public override byte[] Encode(CompoundTypeTable compoundTypeTable)
 		{
-			int index =  compoundTypeTable.GetOrAdd(this);
+			UnboundedUInt index =  compoundTypeTable.GetOrAdd(this);
 			return LEB128.EncodeSigned(index);
 		}
 	}
@@ -168,7 +168,7 @@ namespace Common.Models
 			IEnumerable<byte> fieldTypes = this.Fields
 				.SelectMany(f =>
 				{
-					return LEB128.EncodeUnsigned(f.Key.Id)
+					return LEB128.EncodeUnsigned(f.Key.IdOrIndex)
 						.Concat(f.Value.Encode(compoundTypeTable));
 				});
 			return fieldCount
@@ -210,15 +210,15 @@ namespace Common.Models
 	public class Label : IComparable<Label>, IComparable
 	{
 		public string? Name { get; }
-		public uint Id { get; }
+		public UnboundedUInt IdOrIndex { get; }
 
-		private Label(uint id, string? name)
+		private Label(UnboundedUInt id, string? name)
 		{
-			this.Id = id;
+			this.IdOrIndex = id;
 			this.Name = name;
 		}
 
-		public Label(uint id) : this(id, null)
+		public Label(UnboundedUInt id) : this(id, null)
 		{
 
 		}
@@ -239,12 +239,12 @@ namespace Common.Models
             {
 				return 1;
             }
-			return this.Id.CompareTo(other.Id);
+			return this.IdOrIndex.CompareTo(other.IdOrIndex);
 		}
 
 		public override int GetHashCode()
 		{
-			return HashCode.Combine(this.Id);
+			return HashCode.Combine(this.IdOrIndex);
 		}
 
 
@@ -271,7 +271,12 @@ namespace Common.Models
 
 			return new Label(id, name);
 		}
-    }
+
+		public static Label FromId(UnboundedUInt id)
+		{
+			return new Label(id, null);
+		}
+	}
 
 	public class RecordCandidTypeDefinition : RecordOrVariantCandidTypeDefinition
 	{
@@ -411,6 +416,6 @@ namespace Common.Models
 
 public enum FuncMode
 {
-	Oneway, // No response
-	Query // Response
+	Oneway = 2, // No response
+	Query = 1 // Response
 }

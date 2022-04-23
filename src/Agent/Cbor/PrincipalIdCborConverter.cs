@@ -1,5 +1,6 @@
 ﻿using Dahomey.Cbor.Serialization;
 using Dahomey.Cbor.Serialization.Converters;
+using ICP.Common.Candid;
 using ICP.Common.Encodings;
 using ICP.Common.Models;
 using System;
@@ -28,17 +29,15 @@ namespace ICP.Agent.Cbor
                 while (b >= 0b1000_0000); // Last byte will not have a left most 1
 
                 byte[] bytes = raw.Slice(1, i).ToArray();
-                if (LEB128.TryFromRaw(bytes, out LEB128? length))
+                UnboundedUInt length = LEB128.DecodeUnsigned(bytes);
+                if (length.TryToUInt64(out ulong lengthLong)
+                    && lengthLong <= int.MaxValue
+                    && (int)lengthLong <= bytes.Length + i)
                 {
-                    if (length.TryToUInt64(out ulong lengthLong)
-                        && lengthLong <= int.MaxValue
-                        && (int)lengthLong <= bytes.Length + i)
-                    {
-                        byte[] rawPrincipalId = raw
-                            .Slice(i, (int)lengthLong)
-                            .ToArray();
-                        return PrincipalId.FromRaw(rawPrincipalId);
-                    }
+                    byte[] rawPrincipalId = raw
+                        .Slice(i, (int)lengthLong)
+                        .ToArray();
+                    return PrincipalId.FromRaw(rawPrincipalId);
                 }
             }
             

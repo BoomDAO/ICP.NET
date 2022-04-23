@@ -32,7 +32,7 @@ namespace ICP.Common.Models
 
         public static CandidArg FromBytes(byte[] value)
         {
-            var arg = CandidReader.ReadArg(value);
+            var arg = CandidReader.Read(value);
             return new CandidArg(arg);
         }
 

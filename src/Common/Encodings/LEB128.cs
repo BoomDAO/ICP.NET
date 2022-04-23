@@ -22,44 +22,47 @@ namespace ICP.Common.Encodings
 		}
 		public static UnboundedUInt DecodeUnsigned(Stream stream)
         {
-
-        }
-
-
-		public static UnboundedInt DecodeSigned(byte[] encodedValue)
-		{
-			BigInteger v = 0;
-			for (int i = 0; i < encodedValue.Length; i++)
+			BigInteger v = LEB128.Decode(stream, (b, i) =>
 			{
-				byte b = encodedValue[i];
-				long valueToAdd = (b & 0b0111_1111) << (7 * i); // Shift over 7 * i bits to get value to add
-				v += valueToAdd;
-			}
-			return new UnboundedInt(v);
+				var valueToAdd = new BigInteger(b & 0b0111_1111u); // Remove first bit, just an indicator if there are more bytes
+				valueToAdd <<= (7 * i); // Shift over 7 * i bits to get value to add\
+				return valueToAdd;
+			});
+			return new UnboundedUInt(v);
 		}
 
 		public static UnboundedInt DecodeSigned(Stream stream)
 		{
+			BigInteger v = LEB128.Decode(stream, (b, i) =>
+			{
+				var valueToAdd = new BigInteger(b & 0b0111_1111); // Remove first bit, just an indicator if there are more bytes
+				// TODO correct value
+				valueToAdd <<= (7 * i); // Shift over 7 * i bits to get value to add\
+				return valueToAdd;
+			});
+			return new UnboundedInt(v);
+		}
+
+		private static BigInteger Decode(Stream stream, Func<byte, int, BigInteger> getValueFunc)
+        {
 			BigInteger v = 0;
 			int i = 0;
-			while(true)
+			while (true)
 			{
 				int byteOrEnd = stream.ReadByte();
-				if(byteOrEnd == -1)
-                {
-					// TODO end
-					break;
-                }
+				if (byteOrEnd == -1)
+				{
+					throw new EndOfStreamException();
+				}
 				byte b = (byte)byteOrEnd;
-                if (endOfLEB)
-                {
-					// TODO detect end of LEB
-					break;
-                }
-				long valueToAdd = (b & 0b0111_1111) << (7 * i); // Shift over 7 * i bits to get value to add
+				BigInteger valueToAdd = getValueFunc(b, i);
 				v += valueToAdd;
+				bool more = (b & 0b1000_0000) == 0b1000_0000; // first bit is a flag if there is more bytes
+				if (!more)
+				{
+					return v;
+				}
 			}
-			return new UnboundedInt(v);
 		}
 
 		public static byte[] EncodeUnsigned(UnboundedUInt value)
@@ -123,13 +126,6 @@ namespace ICP.Common.Encodings
 			// 1111000  0111011  1000000  Split into 7-bit groups
 			//01111000 10111011 11000000  Add high 1 bits on all but last (most significant) group to form bytes
 
-
-			long bitCount = value.GetBitLength(); // log2 gets bit count and there is an extra bit for sign
-			if (bitCount > int.MaxValue) // Addresses the issue of bitcount has to be an int below
-			{
-
-				throw new InvalidOperationException("Big integer value too large to convert to a SLEB128");
-			}
 			var bytes = new List<byte>();
 			bool more = true;
 			while (more)
@@ -146,7 +142,7 @@ namespace ICP.Common.Encodings
 				}
 				else
 				{
-					byteValue |= 0b1000_0000;
+					byteValue |= 0b1000_0000; // Indicate there are more bytes with first bit
 				}
 				bytes.Add(byteValue);
 			}

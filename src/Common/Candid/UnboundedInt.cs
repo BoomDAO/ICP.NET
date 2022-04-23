@@ -118,6 +118,14 @@ namespace ICP.Common.Candid
 			return new UnboundedInt(a.value--);
 		}
 
+
+
+		public static implicit operator UnboundedInt(UnboundedUInt value)
+		{
+			return UnboundedUInt.FromBigInteger(value.ToBigInteger());
+		}
+
+
 		public static implicit operator UnboundedInt(long value)
 		{
 			return UnboundedInt.FromInt64(value);

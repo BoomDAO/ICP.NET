@@ -123,6 +123,14 @@ namespace ICP.Common.Candid
 		}
 
 
+		public static implicit operator UnboundedUInt(UnboundedInt value)
+		{
+			if(value < 0)
+            {
+				throw new InvalidCastException("Value must be 0 or greater");
+            }
+			return UnboundedUInt.FromBigInteger(value.ToBigInteger());
+		}
 
 
 

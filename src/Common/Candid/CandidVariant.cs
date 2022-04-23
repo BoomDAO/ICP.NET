@@ -7,10 +7,10 @@ namespace ICP.Common.Candid
 	{
 		public override CandidValueType Type { get; } = CandidValueType.Variant;
 
-		public uint Index { get; }
+		public UnboundedUInt Index { get; }
 		public CandidValue Value { get; }
 
-		public CandidVariant(uint tag, CandidValue value)
+		public CandidVariant(UnboundedUInt tag, CandidValue value)
 		{
 			this.Index = tag;
 			this.Value = value;
