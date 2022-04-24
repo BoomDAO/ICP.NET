@@ -62,10 +62,18 @@ namespace ICP.Common.Candid
 		{
 			if (other is CandidRecord r)
 			{
-				return this.Fields.SequenceEqual(r.Fields);
+				return this.GetOrderedFields(this)
+					.SequenceEqual(this.GetOrderedFields(r));
 			}
 			return false;
 		}
-	}
+
+        private IEnumerable<(UnboundedUInt, CandidValue)> GetOrderedFields(CandidRecord candidRecord)
+        {
+			return candidRecord.Fields
+					   .Select(f => (f.Key.IdOrIndex, f.Value))
+					   .OrderBy(f => f.IdOrIndex);
+        }
+    }
 
 }

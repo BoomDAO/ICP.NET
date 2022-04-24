@@ -56,6 +56,7 @@ namespace ICP.Common.Encodings
 		}
 		private static IEnumerable<bool> GetValueBits(Stream stream, bool isUnsigned)
 		{
+			int i = 0;
 			while (true)
 			{
 				int byteOrEnd = stream.ReadByte();
@@ -67,32 +68,43 @@ namespace ICP.Common.Encodings
 				bool more = (byteOrEnd & 0b1000_0000) == 0b1000_0000; // first bit is a flag if there is more bytes
 
 				// See which of the 7 bits are set
-				yield return (byteOrEnd & 0b0000_0001) == 0b0000_0001;
-				yield return (byteOrEnd & 0b0000_0010) == 0b0000_0010;
-				yield return (byteOrEnd & 0b0000_0100) == 0b0000_0100;
-				yield return (byteOrEnd & 0b0000_1000) == 0b0000_1000;
-				yield return (byteOrEnd & 0b0001_0000) == 0b0001_0000;
-				yield return (byteOrEnd & 0b0010_0000) == 0b0010_0000;
+				yield return GetBit(0b0000_0001);
+				yield return GetBit(0b0000_0010);
+				yield return GetBit(0b0000_0100);
+				yield return GetBit(0b0000_1000);
+				yield return GetBit(0b0001_0000);
+				yield return GetBit(0b0010_0000);
 
-				bool lastBitSet = (byteOrEnd & 0b0100_0000) == 0b0100_0000;
-                if (!isUnsigned)
-                {
-					if (!more && lastBitSet)
-					{
-						yield return true;
-						yield return lastBitSet;
-						break;
-					}
-                }
+				bool lastBitSet = GetBit(0b0100_0000);
 				yield return lastBitSet;
 				if (!more)
 				{
+					bool paddingValue;
+					if (isUnsigned)
+                    {
+						paddingValue = false;
+                    }
+                    else
+                    {
+						paddingValue = lastBitSet; // 1 if signed and last bit is 1, otherwise 0
+                    }
+					while (i % 8 != 0)
+					{
+						// Round out the 
+						yield return paddingValue;
+						i++;
+					}
 					break;
+				}
+				bool GetBit(byte bitMask)
+				{
+					i++;
+					return (byteOrEnd & bitMask) == bitMask;
 				}
 			}
 		}
 
-		public static byte[] EncodeUnsigned(UnboundedUInt value)
+        public static byte[] EncodeUnsigned(UnboundedUInt value)
 		{
 			return LEB128.EncodeUnsigned(value.ToBigInteger());
 		}

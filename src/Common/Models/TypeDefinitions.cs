@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace Common.Models
 {
 
-	public abstract class CandidTypeDefinition
+	public abstract class CandidTypeDefinition : IEquatable<CandidTypeDefinition>
 	{
 		public abstract IDLTypeCode Type { get; }
 
@@ -20,6 +20,21 @@ namespace Common.Models
 		public abstract override int GetHashCode();
 
 		public abstract byte[] Encode(CompoundTypeTable compoundTypeTable);
+
+        public bool Equals(CandidTypeDefinition? other)
+        {
+			return this.Equals(other as object);
+		}
+
+		public static bool operator ==(CandidTypeDefinition def1, CandidTypeDefinition def2)
+		{
+			return def1.Equals(def2);
+		}
+
+		public static bool operator !=(CandidTypeDefinition def1, CandidTypeDefinition def2)
+		{
+			return !def1.Equals(def2);
+		}
 	}
 
 

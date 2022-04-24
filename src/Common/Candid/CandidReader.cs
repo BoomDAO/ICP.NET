@@ -350,7 +350,7 @@ namespace Common.Candid
             List<DefintionOrReference> compoundDefOrRefs = reader.ReadVectorInner(() =>
             {
                 var t = reader.ReadType();
-                if (t.Type != DefintionOrReferenceType.Compound)
+                if (t.Type == DefintionOrReferenceType.Primitive)
                 {
                     // TODO
                     throw new Exception();
