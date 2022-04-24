@@ -110,7 +110,6 @@ namespace ICP.Common.Encodings
 			return lebBytes;
 		}
 
-
 		private static byte[] EncodeSigned(BigInteger value)
 		{
 			if (value == 0)
@@ -126,27 +125,59 @@ namespace ICP.Common.Encodings
 			// 1111000  0111011  1000000  Split into 7-bit groups
 			//01111000 10111011 11000000  Add high 1 bits on all but last (most significant) group to form bytes
 
+			// The way it is handled here is the BigInteger handles the heavy lifing of 
+			// converting the value to 2's compliment 
 			var bytes = new List<byte>();
 			bool more = true;
 			while (more)
 			{
 				byte byteValue = (value & 0b0111_1111).ToByteArray()[0]; // Get the last 7 bits
 				value = value >> 7; // Shift over 7 bits to setup the next byte
-				if (value == 0 && (byteValue & 0b0100_0000) == 0)
+				bool mostSignficantBitIsSet = (byteValue & 0b0100_0000) != 0;
+				if (value == 0)
 				{
-					more = false;
+					// No more values and tha last bit isnt a 1  => end
+					// If the last bit is a 1, loop one more time, setting the next byte as 
+
+                    if (mostSignficantBitIsSet)
+					{
+						AddByteWithMoreFlag(byteValue);
+						bytes.Add(0b0000_0000);
+					}
+                    else
+                    {
+						bytes.Add(byteValue);
+					}
+					break;
 				}
-				else if (value == -1 && (byteValue & 0b0100_0000) > 0)
+				if (value == -1)
 				{
-					more = false;
+                    // -1 is equivalent to all 1's in the binary sequence/255 if unsigned
+                    // AND since if the number is negative, 1 is used to fill vacated bit positions
+                    // meaning the remaining value is just the sign bit
+
+                    // IF the most signficant bit is not set, set the final byte to 0b0111_1111
+                    // otherwise end
+
+                    if (mostSignficantBitIsSet)
+					{
+						bytes.Add(byteValue);
+					}
+                    else
+					{
+						AddByteWithMoreFlag(byteValue);
+						bytes.Add(0b1111_111);
+					}
+					break;
 				}
-				else
-				{
-					byteValue |= 0b1000_0000; // Indicate there are more bytes with first bit
-				}
-				bytes.Add(byteValue);
+				AddByteWithMoreFlag(byteValue);
 			}
 			return bytes.ToArray();
+
+			void AddByteWithMoreFlag(byte byteValue)
+			{
+				bytes.Add((byte)(byteValue | 0b1000_0000));
+			}
 		}
 	}
 }
