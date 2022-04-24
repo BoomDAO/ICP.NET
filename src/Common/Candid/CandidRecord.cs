@@ -53,6 +53,19 @@ namespace ICP.Common.Candid
 				.SelectMany(v => v.Value.EncodeValue())
 				.ToArray();
 		}
+		public override int GetHashCode()
+		{
+			return HashCode.Combine(this.Fields);
+		}
+
+		public override bool Equals(CandidValue? other)
+		{
+			if (other is CandidRecord r)
+			{
+				return this.Fields.SequenceEqual(r.Fields);
+			}
+			return false;
+		}
 	}
 
 }

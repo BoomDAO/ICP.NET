@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -37,7 +38,7 @@ namespace Common.Candid
             {
                 return DefintionOrReference.Reference((UnboundedUInt)typeCode);
             }
-            if (typeCode.TryToUInt64(out long typeCodeInt))
+            if (typeCode.TryToInt64(out long typeCodeInt))
             {
                 return this.ReadTypeInner(typeCodeInt);
             }
@@ -94,7 +95,7 @@ namespace Common.Candid
                         return new OptCandidTypeDefinition(t);
                     });
                 case IDLTypeCode.Record:
-                    UnboundedUInt size = this.ReadUInt();
+                    UnboundedUInt size = this.ReadNat();
                     Dictionary<Label, DefintionOrReference> recordFields = this.ReadRecordInner(size);
                     return DefintionOrReference.CompoundDefintion(resolver =>
                     {
@@ -110,7 +111,7 @@ namespace Common.Candid
                         return new VectorCandidTypeDefinition(t);
                     });
                 case IDLTypeCode.Variant:
-                    DefintionOrReference innerVariantType = this.ReadType();https://music.youtube.com/
+                    DefintionOrReference innerVariantType = this.ReadType();
                     return DefintionOrReference.CompoundDefintion(resolver =>
                     {
                         CandidTypeDefinition t = resolver.Resolve(innerVariantType);
@@ -136,8 +137,7 @@ namespace Common.Candid
                 case IDLTypeCode.Service:
                     List<(string Name, DefintionOrReference Type)> methods = this.ReadVectorInner(() =>
                     {
-                        UnboundedUInt nameLenth = this.ReadUInt();
-                        string name = this.ReadTextInner(nameLenth);
+                        string name = this.ReadText();
                         DefintionOrReference type = this.ReadType();
                         return (name, type);
                     });
@@ -147,7 +147,7 @@ namespace Common.Candid
                             .ToDictionary(m => m.Name, m =>
                             {
                                 var type = resolver.Resolve(m.Type);
-                                if(type is FuncCandidTypeDefinition f)
+                                if (type is FuncCandidTypeDefinition f)
                                 {
                                     return f;
                                 }
@@ -161,10 +161,16 @@ namespace Common.Candid
             };
         }
 
+        private string ReadText()
+        {
+            UnboundedUInt length = this.ReadNat();
+            return this.ReadTextInner(length);
+        }
+
         private string ReadTextInner(UnboundedUInt nameLenth)
         {
             var bytes = new List<byte>();
-            while(nameLenth > 0)
+            while (nameLenth > 0)
             {
                 bytes.Add(this.ReadByte());
                 nameLenth--;
@@ -180,9 +186,9 @@ namespace Common.Candid
         private Dictionary<Label, DefintionOrReference> ReadRecordInner(UnboundedUInt size)
         {
             var map = new Dictionary<Label, DefintionOrReference>();
-            while(size > 0)
+            while (size > 0)
             {
-                UnboundedUInt label = this.ReadUInt();
+                UnboundedUInt label = this.ReadNat();
                 DefintionOrReference type = this.ReadType();
                 map.Add(Label.FromId(label), type);
                 size--;
@@ -197,7 +203,7 @@ namespace Common.Candid
 
         private List<T> ReadVectorInner<T>(Func<T> func)
         {
-            UnboundedUInt length = this.ReadUInt();
+            UnboundedUInt length = this.ReadNat();
             var items = new List<T>();
             while (length > 0)
             {
@@ -208,7 +214,7 @@ namespace Common.Candid
             return items;
         }
 
-        private UnboundedUInt ReadUInt()
+        private UnboundedUInt ReadNat()
         {
             return LEB128.DecodeUnsigned(this.reader.BaseStream);
         }
@@ -220,6 +226,7 @@ namespace Common.Candid
         {
             return typeDef switch
             {
+                PrimitiveCandidTypeDefinition p => this.ReadPrimitive(p.PrimitiveType),
                 OptCandidTypeDefinition o => this.ReadOptValue(o.Value),
                 VectorCandidTypeDefinition ve => this.ReadVectorValue(ve.Value),
                 RecordCandidTypeDefinition r => this.ReadRecordValue(r.Fields.ToDictionary(f => f.Key, f => f.Value)),
@@ -228,6 +235,52 @@ namespace Common.Candid
                 FuncCandidTypeDefinition f => this.ReadFuncValue(f.ArgTypes, f.ReturnTypes, f.Modes),
                 _ => throw new NotImplementedException(),
             };
+        }
+
+        private CandidPrimitive ReadPrimitive(CandidPrimitiveType type)
+        {
+            return type switch
+            {
+                CandidPrimitiveType.Text => CandidPrimitive.Text(this.ReadText()),
+                CandidPrimitiveType.Nat => CandidPrimitive.Nat(this.ReadNat()),
+                CandidPrimitiveType.Nat8 => CandidPrimitive.Nat8(this.ReadByte()),
+                CandidPrimitiveType.Nat16 => CandidPrimitive.Nat16(this.reader.ReadUInt16()),
+                CandidPrimitiveType.Nat32 => CandidPrimitive.Nat32(this.reader.ReadUInt32()),
+                CandidPrimitiveType.Nat64 => CandidPrimitive.Nat64(this.reader.ReadUInt64()),
+                CandidPrimitiveType.Int => CandidPrimitive.Int(this.ReadInt()),
+                CandidPrimitiveType.Int8 => CandidPrimitive.Int8(this.ReadInt8()),
+                CandidPrimitiveType.Int16 => CandidPrimitive.Int16(this.ReadInt16()),
+                CandidPrimitiveType.Int32 => CandidPrimitive.Int32(this.ReadInt32()),
+                CandidPrimitiveType.Int64 => CandidPrimitive.Int64(this.ReadInt64()),
+                CandidPrimitiveType.Float32 => CandidPrimitive.Float32(BitConverter.ToSingle(this.reader.ReadBytes(4))),
+                CandidPrimitiveType.Float64 => CandidPrimitive.Float64(BitConverter.ToDouble(this.reader.ReadBytes(8))),
+                CandidPrimitiveType.Bool => CandidPrimitive.Bool(this.reader.ReadByte() > 0),
+                CandidPrimitiveType.Principal => throw new NotImplementedException(),//CandidPrimitive.Pricipal(PrincipalId.FromRaw(this.Rea)),
+                CandidPrimitiveType.Reserved => CandidPrimitive.Reserved(),
+                CandidPrimitiveType.Empty => CandidPrimitive.Empty(),
+                CandidPrimitiveType.Null => CandidPrimitive.Null(),
+                _ => throw new NotImplementedException(),
+            };
+        }
+
+        private sbyte ReadInt8()
+        {
+            return this.reader.ReadSByte();
+        }
+
+        private short ReadInt16()
+        {
+            return this.reader.ReadInt16();
+        }
+
+        private int ReadInt32()
+        {
+            return this.reader.ReadInt32();
+        }
+
+        private long ReadInt64()
+        {
+            return this.reader.ReadInt64();
         }
 
         private CandidFunc ReadFuncValue(IEnumerable<CandidTypeDefinition> argTypes, IEnumerable<CandidTypeDefinition> returnTypes, IEnumerable<FuncMode> modes)
@@ -244,8 +297,8 @@ namespace Common.Candid
 
         private CandidVariant ReadVariantValue(Dictionary<Label, CandidTypeDefinition> fields)
         {
-            UnboundedUInt tag = this.ReadUInt();
-            if(!fields.TryGetValue(Label.FromId(tag), out CandidTypeDefinition? typeDef))
+            UnboundedUInt tag = this.ReadNat();
+            if (!fields.TryGetValue(Label.FromId(tag), out CandidTypeDefinition? typeDef))
             {
                 // TODO
                 throw new Exception();
@@ -297,7 +350,7 @@ namespace Common.Candid
             List<DefintionOrReference> compoundDefOrRefs = reader.ReadVectorInner(() =>
             {
                 var t = reader.ReadType();
-                if (t.Type == DefintionOrReferenceType.Primitive)
+                if (t.Type != DefintionOrReferenceType.Compound)
                 {
                     // TODO
                     throw new Exception();
@@ -349,6 +402,17 @@ namespace Common.Candid
             {
                 return new DefintionOrReference(DefintionOrReferenceType.Primitive, definition, null, null);
             }
+
+            public override string ToString()
+            {
+                return this.Type switch
+                {
+                    DefintionOrReferenceType.Reference => $"Ref({this.ReferenceIndex!})",
+                    DefintionOrReferenceType.Compound => "Compound",
+                    DefintionOrReferenceType.Primitive => $"Primitive({this.Definition!.Type})",
+                    _ => throw new NotImplementedException(),
+                };
+            }
         }
 
         private enum DefintionOrReferenceType
@@ -379,7 +443,7 @@ namespace Common.Candid
             public CandidTypeDefinition ResolveByIndex(UnboundedUInt referenceIndex)
             {
                 int index = (int)referenceIndex;
-                if(this.Types.Count <= index)
+                if (this.Types.Count <= index)
                 {
                     // TODO 
                     throw new Exception();

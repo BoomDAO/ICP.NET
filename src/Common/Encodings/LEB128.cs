@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Linq;
 using System.Numerics;
 
 namespace ICP.Common.Encodings
@@ -22,31 +23,39 @@ namespace ICP.Common.Encodings
 		}
 		public static UnboundedUInt DecodeUnsigned(Stream stream)
         {
-			BigInteger v = LEB128.Decode(stream, (b, i) =>
-			{
-				var valueToAdd = new BigInteger(b & 0b0111_1111u); // Remove first bit, just an indicator if there are more bytes
-				valueToAdd <<= (7 * i); // Shift over 7 * i bits to get value to add\
-				return valueToAdd;
-			});
+			BigInteger v = LEB128.Decode(stream, isUnsigned: true);
 			return new UnboundedUInt(v);
 		}
 
 		public static UnboundedInt DecodeSigned(Stream stream)
 		{
-			BigInteger v = LEB128.Decode(stream, (b, i) =>
-			{
-				var valueToAdd = new BigInteger(b & 0b0111_1111); // Remove first bit, just an indicator if there are more bytes
-				// TODO correct value
-				valueToAdd <<= (7 * i); // Shift over 7 * i bits to get value to add\
-				return valueToAdd;
-			});
+			BigInteger v = LEB128.Decode(stream, isUnsigned: false);
 			return new UnboundedInt(v);
 		}
 
-		private static BigInteger Decode(Stream stream, Func<byte, int, BigInteger> getValueFunc)
-        {
-			BigInteger v = 0;
-			int i = 0;
+		private static BigInteger Decode(Stream stream, bool isUnsigned)
+		{
+            byte[] bytes = LEB128.GetValueBits(stream, isUnsigned)
+				.Chunk(8)
+				.Select(bits =>
+				{
+					byte b = 0;
+                    for (int i = bits.Length - 1; i >= 0; i--)
+					{
+						bool bit = bits[i];
+						b |= bit ? (byte)1 : (byte)0;
+						if (i > 0)
+						{
+							b <<= 1;
+						}
+                    }
+					return b;
+				})
+				.ToArray();
+			return new BigInteger(bytes, isUnsigned: isUnsigned, isBigEndian: false);
+		}
+		private static IEnumerable<bool> GetValueBits(Stream stream, bool isUnsigned)
+		{
 			while (true)
 			{
 				int byteOrEnd = stream.ReadByte();
@@ -54,13 +63,31 @@ namespace ICP.Common.Encodings
 				{
 					throw new EndOfStreamException();
 				}
-				byte b = (byte)byteOrEnd;
-				BigInteger valueToAdd = getValueFunc(b, i);
-				v += valueToAdd;
-				bool more = (b & 0b1000_0000) == 0b1000_0000; // first bit is a flag if there is more bytes
+
+				bool more = (byteOrEnd & 0b1000_0000) == 0b1000_0000; // first bit is a flag if there is more bytes
+
+				// See which of the 7 bits are set
+				yield return (byteOrEnd & 0b0000_0001) == 0b0000_0001;
+				yield return (byteOrEnd & 0b0000_0010) == 0b0000_0010;
+				yield return (byteOrEnd & 0b0000_0100) == 0b0000_0100;
+				yield return (byteOrEnd & 0b0000_1000) == 0b0000_1000;
+				yield return (byteOrEnd & 0b0001_0000) == 0b0001_0000;
+				yield return (byteOrEnd & 0b0010_0000) == 0b0010_0000;
+
+				bool lastBitSet = (byteOrEnd & 0b0100_0000) == 0b0100_0000;
+                if (!isUnsigned)
+                {
+					if (!more && lastBitSet)
+					{
+						yield return true;
+						yield return lastBitSet;
+						break;
+					}
+                }
+				yield return lastBitSet;
 				if (!more)
 				{
-					return v;
+					break;
 				}
 			}
 		}
@@ -121,12 +148,10 @@ namespace ICP.Common.Encodings
 			//         11110001001000000  Binary encoding of 123456
 			//     00001_11100010_01000000  As a 21-bit number (multiple of 7)
 			//     11110_00011101_10111111  Negating all bits (one's complement)
-			//     11110_00011101_11000000  Adding one (two's complement)
+			//     11110_00011101_11000000  Adding one (two's complement) (Binary encoding of signed -123456)
 			// 1111000  0111011  1000000  Split into 7-bit groups
 			//01111000 10111011 11000000  Add high 1 bits on all but last (most significant) group to form bytes
 
-			// The way it is handled here is the BigInteger handles the heavy lifing of 
-			// converting the value to 2's compliment 
 			var bytes = new List<byte>();
 			bool more = true;
 			while (more)
@@ -134,23 +159,19 @@ namespace ICP.Common.Encodings
 				byte byteValue = (value & 0b0111_1111).ToByteArray()[0]; // Get the last 7 bits
 				value = value >> 7; // Shift over 7 bits to setup the next byte
 				bool mostSignficantBitIsSet = (byteValue & 0b0100_0000) != 0;
-				if (value == 0)
+				if (value == 0) // no more bits => end
 				{
-					// No more values and tha last bit isnt a 1  => end
-					// If the last bit is a 1, loop one more time, setting the next byte as 
-
                     if (mostSignficantBitIsSet)
 					{
+						// If last bit is a 1, add another 0 value byte
 						AddByteWithMoreFlag(byteValue);
 						bytes.Add(0b0000_0000);
+						break;
 					}
-                    else
-                    {
-						bytes.Add(byteValue);
-					}
+					bytes.Add(byteValue);
 					break;
 				}
-				if (value == -1)
+				if (value == -1) // -1 == only bit remaining is a sign bit (with backfilled 1's from a right shift) => end
 				{
                     // -1 is equivalent to all 1's in the binary sequence/255 if unsigned
                     // AND since if the number is negative, 1 is used to fill vacated bit positions
@@ -159,15 +180,14 @@ namespace ICP.Common.Encodings
                     // IF the most signficant bit is not set, set the final byte to 0b0111_1111
                     // otherwise end
 
-                    if (mostSignficantBitIsSet)
+                    if (!mostSignficantBitIsSet)
 					{
-						bytes.Add(byteValue);
-					}
-                    else
-					{
+						// If last bit is a 1, add another 111_1111 value byte
 						AddByteWithMoreFlag(byteValue);
-						bytes.Add(0b1111_111);
-					}
+                        bytes.Add(0b0111_1111);
+						break;
+                    }
+					bytes.Add(byteValue);
 					break;
 				}
 				AddByteWithMoreFlag(byteValue);

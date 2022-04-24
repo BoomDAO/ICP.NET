@@ -26,9 +26,11 @@ namespace Common.Models
 	public class PrimitiveCandidTypeDefinition : CandidTypeDefinition
 	{
 		public override IDLTypeCode Type { get; }
+		public CandidPrimitiveType PrimitiveType { get; }
 
 		public PrimitiveCandidTypeDefinition(CandidPrimitiveType type)
 		{
+			this.PrimitiveType = type;
 			this.Type = type switch
             {
                 CandidPrimitiveType.Text => IDLTypeCode.Text,
@@ -207,7 +209,7 @@ namespace Common.Models
 		}
 	}
 
-	public class Label : IComparable<Label>, IComparable
+	public class Label : IComparable<Label>, IComparable, IEquatable<Label>
 	{
 		public string? Name { get; }
 		public UnboundedUInt IdOrIndex { get; }
@@ -223,9 +225,15 @@ namespace Common.Models
 
 		}
 
+
+		public bool Equals(Label? other)
+		{
+			return this.CompareTo(other) == 0;
+		}
+
 		public override bool Equals(object? obj)
 		{
-			return this.CompareTo(obj) == 0;
+			return this.Equals(obj as Label);
 		}
 
 		public int CompareTo(object? obj)
@@ -276,7 +284,7 @@ namespace Common.Models
 		{
 			return new Label(id, null);
 		}
-	}
+    }
 
 	public class RecordCandidTypeDefinition : RecordOrVariantCandidTypeDefinition
 	{

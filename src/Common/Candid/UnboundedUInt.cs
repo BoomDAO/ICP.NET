@@ -46,20 +46,29 @@ namespace ICP.Common.Candid
 			return this.value;
         }
 
-		public bool Equals(UnboundedUInt? uuint)
+        public override string ToString()
+        {
+			return this.value.ToString();
+        }
+
+        public bool Equals(UnboundedUInt? uuint)
 		{
 			return this.CompareTo(uuint) == 0;
 		}
 
 		public override bool Equals(object? obj)
 		{
-			return this.value.Equals(obj);
+			return this.Equals(obj as UnboundedUInt);
 		}
 
 
 		public int CompareTo(UnboundedUInt? other)
 		{
-			return this.value.CompareTo(other);
+			if(other == null)
+            {
+				return 1;
+            }
+			return this.value.CompareTo(other.value);
 		}
 
 		public static UnboundedUInt FromUInt64(ulong value)
@@ -114,12 +123,12 @@ namespace ICP.Common.Candid
 
 		public static UnboundedUInt operator ++(UnboundedUInt a)
 		{
-			return new UnboundedUInt(a.value++);
+			return new UnboundedUInt(a.value + 1);
 		}
 
 		public static UnboundedUInt operator --(UnboundedUInt a)
 		{
-			return new UnboundedUInt(a.value--);
+			return new UnboundedUInt(a.value - 1);
 		}
 
 
@@ -230,7 +239,7 @@ namespace ICP.Common.Candid
 			{
 				throw new InvalidCastException("Value is too large");
 			}
-			if (value.value < maxValue)
+			if (value.value < minValue)
 			{
 				throw new InvalidCastException("Value is too small");
 			}

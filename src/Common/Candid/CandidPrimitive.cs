@@ -189,21 +189,21 @@ namespace ICP.Common.Candid
         {
             ushort value = this.AsNat16();
             var bytes = new BigInteger(value).ToByteArray(isUnsigned: true, isBigEndian: false);
-            return CandidPrimitive.PadBytes(bytes, 2);
+            return CandidPrimitive.PadBytes(bytes, 2, isPositive: true);
         }
 
         private byte[] EncodeNat32()
         {
             uint value = this.AsNat32();
             var bytes = new BigInteger(value).ToByteArray(isUnsigned: true, isBigEndian: false);
-            return CandidPrimitive.PadBytes(bytes, 4);
+            return CandidPrimitive.PadBytes(bytes, 4, isPositive: true);
         }
 
         private byte[] EncodeNat64()
         {
             ulong value = this.AsNat64();
             var bytes = new BigInteger(value).ToByteArray(isUnsigned: true, isBigEndian: false);
-            return CandidPrimitive.PadBytes(bytes, 8);
+            return CandidPrimitive.PadBytes(bytes, 8, isPositive: true);
         }
 
         private byte[] EncodeInt()
@@ -222,21 +222,22 @@ namespace ICP.Common.Candid
         {
             short value = this.AsInt16();
             var bytes = new BigInteger(value).ToByteArray(isUnsigned: false, isBigEndian: false);
-            return CandidPrimitive.PadBytes(bytes, 2);
+            
+            return CandidPrimitive.PadBytes(bytes, 2, isPositive: value >= 0);
         }
 
         private byte[] EncodeInt32()
         {
             int value = this.AsInt32();
             var bytes = new BigInteger(value).ToByteArray(isUnsigned: false, isBigEndian: false);
-            return CandidPrimitive.PadBytes(bytes, 4);
+            return CandidPrimitive.PadBytes(bytes, 4, isPositive: value >= 0);
         }
 
         private byte[] EncodeInt64()
         {
             long value = this.AsInt64();
             var bytes = new BigInteger(value).ToByteArray(isUnsigned: false, isBigEndian: false);
-            return CandidPrimitive.PadBytes(bytes, 8);
+            return CandidPrimitive.PadBytes(bytes, 8, isPositive: value >= 0);
         }
 
         private byte[] EncodeFloat32()
@@ -277,7 +278,7 @@ namespace ICP.Common.Candid
             return new byte[0];
         }
 
-        private static byte[] PadBytes(byte[] bytes, int byteSize)
+        private static byte[] PadBytes(byte[] bytes, int byteSize, bool isPositive)
         {
             if (bytes.Length > byteSize)
             {
@@ -288,8 +289,9 @@ namespace ICP.Common.Candid
                 return bytes;
             }
             int paddingSize = byteSize - bytes.Length;
+            byte paddingByte = isPositive ? (byte)0 : (byte)0b1111_1111; // Pad with 0s when posiive. 1's when negative
             return bytes
-                .Concat(Enumerable.Range(0, paddingSize).Select(x => (byte)0))
+                .Concat(Enumerable.Range(0, paddingSize).Select(x => paddingByte))
                 .ToArray();
         }
 
@@ -367,17 +369,22 @@ namespace ICP.Common.Candid
         {
             return new CandidPrimitive(CandidPrimitiveType.Bool, value);
         }
-        public static CandidValue Null()
+        public static CandidPrimitive Pricipal(PrincipalId value)
+        {
+            return new CandidPrimitive(CandidPrimitiveType.Principal, value);
+        }
+
+        public static CandidPrimitive Null()
         {
             return new CandidPrimitive(CandidPrimitiveType.Null, null);
         }
 
-        public static CandidValue Reserved()
+        public static CandidPrimitive Reserved()
         {
             return new CandidPrimitive(CandidPrimitiveType.Reserved, null);
         }
 
-        public static CandidValue Empty()
+        public static CandidPrimitive Empty()
         {
             return new CandidPrimitive(CandidPrimitiveType.Empty, null);
         }
@@ -394,6 +401,27 @@ namespace ICP.Common.Candid
             {
                 throw new InvalidOperationException($"Cannot convert candid type '{this.Type}' to candid type '{type}'");
             }
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(this.value, this.ValueType);
+        }
+
+        public override bool Equals(CandidValue? other)
+        {
+            if (other is CandidPrimitive p)
+            {
+                if (this.ValueType == p.ValueType)
+                {
+                    if (this.value == null)
+                    {
+                        return p.value == null;
+                    }
+                    return this.value.Equals(p.value);
+                }
+            }
+            return false;
         }
     }
 }

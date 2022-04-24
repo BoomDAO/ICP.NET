@@ -21,7 +21,7 @@ namespace ICP.Common.Candid
 			return this.value.ToByteArray(isUnsigned: false, isBigEndian: isBigEndian);
 		}
 
-		public bool TryToUInt64(out long value)
+		public bool TryToInt64(out long value)
 		{
 			if (this.value <= long.MaxValue)
 			{
@@ -31,6 +31,12 @@ namespace ICP.Common.Candid
 			value = 0;
 			return false;
 		}
+
+		public override string ToString()
+		{
+			return this.value.ToString();
+		}
+
 
 		public bool Equals(UnboundedInt? uuint)
 		{
@@ -49,13 +55,13 @@ namespace ICP.Common.Candid
 
 		public override bool Equals(object? obj)
 		{
-			return this.value.Equals(obj);
+			return this.Equals(obj as UnboundedInt);
 		}
 
 
 		public int CompareTo(UnboundedInt? other)
 		{
-			return this.value.CompareTo(other);
+			return this.value.CompareTo(other.value);
 		}
 
 		public static UnboundedInt FromInt64(long value)
@@ -110,19 +116,19 @@ namespace ICP.Common.Candid
 
 		public static UnboundedInt operator ++(UnboundedInt a)
 		{
-			return new UnboundedInt(a.value++);
+			return new UnboundedInt(a.value + 1);
 		}
 
 		public static UnboundedInt operator --(UnboundedInt a)
 		{
-			return new UnboundedInt(a.value--);
+			return new UnboundedInt(a.value - 1);
 		}
 
 
 
 		public static implicit operator UnboundedInt(UnboundedUInt value)
 		{
-			return UnboundedUInt.FromBigInteger(value.ToBigInteger());
+			return UnboundedInt.FromBigInteger(value.ToBigInteger());
 		}
 
 

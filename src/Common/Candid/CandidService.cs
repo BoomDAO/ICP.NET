@@ -20,5 +20,18 @@ namespace ICP.Common.Candid
 				.Concat(this.PrincipalId.Raw)
 				.ToArray();
 		}
+		public override int GetHashCode()
+		{
+			return HashCode.Combine(this.PrincipalId);
+		}
+
+		public override bool Equals(CandidValue? other)
+		{
+			if (other is CandidService s)
+			{
+				return this.PrincipalId == s.PrincipalId;
+			}
+			return false;
+		}
 	}
 }

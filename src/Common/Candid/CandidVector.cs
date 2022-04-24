@@ -30,6 +30,23 @@ namespace ICP.Common.Candid
 				.Concat(valueListBytes)
 				.ToArray();
 		}
+
+		public override int GetHashCode()
+		{
+			return HashCode.Combine(this.Values.Select(v => v.GetHashCode()));
+		}
+
+		public override bool Equals(CandidValue? other)
+		{
+			if (other is CandidVector v)
+			{
+				if (this.Values.Length == v.Values.Length)
+				{
+					return this.Values.SequenceEqual(v.Values);
+				}
+			}
+			return false;
+		}
 	}
 
 }

@@ -25,6 +25,19 @@ namespace ICP.Common.Candid
 				.Concat(Encoding.UTF8.GetBytes(this.Name))
 				.ToArray();
 		}
+		public override int GetHashCode()
+		{
+			return HashCode.Combine(this.Name, this.Service.GetHashCode());
+		}
+
+		public override bool Equals(CandidValue? other)
+		{
+			if (other is CandidFunc f)
+			{
+				return this.Name == f.Name && this.Service == f.Service;
+			}
+			return false;
+		}
 	}
 
 }

@@ -24,5 +24,18 @@ namespace ICP.Common.Candid
 				.Concat(this.Value.EncodeValue())
 				.ToArray();
 		}
+		public override int GetHashCode()
+		{
+			return HashCode.Combine(this.Value);
+		}
+
+		public override bool Equals(CandidValue? other)
+		{
+			if (other is CandidOptional o)
+			{
+				return this.Value == o.Value;
+			}
+			return false;
+		}
 	}
 }

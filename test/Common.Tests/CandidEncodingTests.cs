@@ -114,7 +114,7 @@ namespace Common.Tests
         [Theory]
         [InlineData(0, "0000000000000000")]
         [InlineData(16, "1000000000000000")]
-        [InlineData(-15, "F100000000000000")]
+        [InlineData(-15, "F1FFFFFFFFFFFFFF")]
         [InlineData(4294967295, "FFFFFFFF00000000")]
         public void Encode_Int64(long intValue, string expectedHex)
         {
@@ -126,7 +126,7 @@ namespace Common.Tests
         [Theory]
         [InlineData(0, "00000000")]
         [InlineData(16, "10000000")]
-        [InlineData(-15, "F1000000")]
+        [InlineData(-15, "F1FFFFFF")]
         [InlineData(65535, "FFFF0000")]
         public void Encode_Int32(int intValue, string expectedHex)
         {
@@ -138,7 +138,7 @@ namespace Common.Tests
         [Theory]
         [InlineData(0, "0000")]
         [InlineData(16, "1000")]
-        [InlineData(-15, "F100")]
+        [InlineData(-15, "F1FF")]
         [InlineData(9999, "0F27")]
         public void Encode_Int16(short intValue, string expectedHex)
         {

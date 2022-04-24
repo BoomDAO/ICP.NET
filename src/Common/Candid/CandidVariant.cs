@@ -1,4 +1,5 @@
 ﻿using ICP.Common.Encodings;
+using System;
 using System.Linq;
 
 namespace ICP.Common.Candid
@@ -22,6 +23,20 @@ namespace ICP.Common.Candid
 			return LEB128.EncodeUnsigned(this.Index)
 				.Concat(this.Value.EncodeValue())
 				.ToArray();
+		}
+
+		public override int GetHashCode()
+		{
+			return HashCode.Combine(this.Index, this.Value);
+		}
+
+		public override bool Equals(CandidValue? other)
+		{
+			if (other is CandidVariant v)
+			{
+				return this.Index == v.Index && this.Value == v.Value;
+			}
+			return false;
 		}
 	}
 
