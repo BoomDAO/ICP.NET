@@ -111,11 +111,20 @@ namespace Common.Candid
                         return new VectorCandidTypeDefinition(t);
                     });
                 case IDLTypeCode.Variant:
-                    DefintionOrReference innerVariantType = this.ReadType();
+                    UnboundedUInt length = this.ReadNat();
+                    var variantOptions = new Dictionary<Label, DefintionOrReference>();
+                    while (length > 0)
+                    {
+                        length--;
+                        UnboundedUInt tag = this.ReadNat();
+                        DefintionOrReference option = this.ReadType();
+                        variantOptions.Add(tag, option);
+                    }
                     return DefintionOrReference.CompoundDefintion(resolver =>
                     {
-                        CandidTypeDefinition t = resolver.Resolve(innerVariantType);
-                        return new VectorCandidTypeDefinition(t);
+                        Dictionary<Label, CandidTypeDefinition> map = variantOptions
+                            .ToDictionary(o => o.Key, o => resolver.Resolve(o.Value));
+                        return new VariantCandidTypeDefinition(map);
                     });
                 case IDLTypeCode.Func:
                     List<DefintionOrReference> argTypes = this.ReadVectorInner();
@@ -295,14 +304,18 @@ namespace Common.Candid
             throw new NotImplementedException();
         }
 
-        private CandidVariant ReadVariantValue(Dictionary<Label, CandidTypeDefinition> fields)
+        private CandidVariant ReadVariantValue(Dictionary<Label, CandidTypeDefinition> options)
         {
-            UnboundedUInt tag = this.ReadNat();
-            if (!fields.TryGetValue(Label.FromId(tag), out CandidTypeDefinition? typeDef))
+            UnboundedUInt index = this.ReadNat();
+            if (!index.TryToUInt64(out ulong i) || i > int.MaxValue)
             {
-                // TODO
+                //TODO
                 throw new Exception();
             }
+            (Label tag, CandidTypeDefinition typeDef) = options
+                .OrderBy(f => f.Key)
+                .Select(f => (f.Key, f.Value))
+                .ElementAt((int)i);
             CandidValue value = this.ReadValue(typeDef);
             return new CandidVariant(tag, value);
         }
@@ -311,7 +324,7 @@ namespace Common.Candid
         {
             Dictionary<Label, CandidValue> fieldValues = fields
                 // TODO are all the fields always there?
-                .OrderBy(f => f.Key.IdOrIndex)
+                .OrderBy(f => f.Key.Id)
                 .Select(f => (f.Key, this.ReadValue(f.Value)))
                 .ToDictionary(f => f.Key, f => f.Item2);
             return new CandidRecord(fieldValues);
@@ -328,7 +341,13 @@ namespace Common.Candid
 
         private CandidOptional ReadOptValue(CandidTypeDefinition innerTypeDef)
         {
-            CandidValue innerValue = this.ReadValue(innerTypeDef);
+            byte isSet = this.ReadByte();
+            CandidValue? innerValue = isSet switch
+            {
+                0 => null,
+                1 => this.ReadValue(innerTypeDef),
+                _ => throw new Exception() // TODO
+            };
             return new CandidOptional(innerValue);
         }
 
@@ -350,7 +369,7 @@ namespace Common.Candid
             List<DefintionOrReference> compoundDefOrRefs = reader.ReadVectorInner(() =>
             {
                 var t = reader.ReadType();
-                if (t.Type == DefintionOrReferenceType.Primitive)
+                if (t.Type != DefintionOrReferenceType.Compound)
                 {
                     // TODO
                     throw new Exception();

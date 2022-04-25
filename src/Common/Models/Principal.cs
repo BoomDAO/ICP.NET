@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace ICP.Common.Models
 {
-	public class PrincipalId : IHashable
+	public class PrincipalId : IHashable, IEquatable<PrincipalId>
     {
         private const byte anonymousSuffix = 4;
         private const byte selfAuthenticatingSuffix = 4;
@@ -120,6 +120,25 @@ namespace ICP.Common.Models
         public byte[] ComputeHash(IHashFunction hashFunction)
         {
             return hashFunction.ComputeHash(this.Raw);
+        }
+
+        public bool Equals(PrincipalId? other)
+        {
+            if (other == null)
+            {
+                return false;
+            }
+            return this.Raw.SequenceEqual(other.Raw);
+        }
+
+        public override bool Equals(object? obj)
+        {
+            return this.Equals(obj as PrincipalId);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(this.Raw);
         }
     }
 }

@@ -48,7 +48,7 @@ namespace ICP.Agent.Agents
 		*     failed. If the query itself failed but no protocol errors happened, the response will
 		*     be of type QueryResponseRejected.
 		*/
-        Task<QueryResponse> QueryAsync(PrincipalId canisterId, string method, CandidArg encodedArgument, IIdentity? identityOverride = null);
+        Task<QueryResponse> QueryAsync(PrincipalId canisterId, string method, CandidArg arg, IIdentity? identityOverride = null);
         /**
 		* By default, the agent is configured to talk to the main Internet Computer,
 		* and verifies responses using a hard-coded public key.

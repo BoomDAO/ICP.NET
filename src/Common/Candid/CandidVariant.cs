@@ -1,4 +1,5 @@
-﻿using ICP.Common.Encodings;
+﻿using Common.Models;
+using ICP.Common.Encodings;
 using System;
 using System.Linq;
 
@@ -8,33 +9,33 @@ namespace ICP.Common.Candid
 	{
 		public override CandidValueType Type { get; } = CandidValueType.Variant;
 
-		public UnboundedUInt Index { get; }
+		public Label Tag { get; }
 		public CandidValue Value { get; }
 
-		public CandidVariant(UnboundedUInt tag, CandidValue value)
+		public CandidVariant(Label tag, CandidValue? value = null)
 		{
-			this.Index = tag;
-			this.Value = value;
+			this.Tag = tag;
+			this.Value = value ?? CandidPrimitive.Null();
 		}
 
 		public override byte[] EncodeValue()
 		{
 			// bytes = index (LEB128) + encoded value
-			return LEB128.EncodeUnsigned(this.Index)
+			return LEB128.EncodeUnsigned(this.Tag.Id)
 				.Concat(this.Value.EncodeValue())
 				.ToArray();
 		}
 
 		public override int GetHashCode()
 		{
-			return HashCode.Combine(this.Index, this.Value);
+			return HashCode.Combine(this.Tag.Id, this.Value);
 		}
 
 		public override bool Equals(CandidValue? other)
 		{
 			if (other is CandidVariant v)
 			{
-				return this.Index == v.Index && this.Value == v.Value;
+				return this.Tag.Id == v.Tag.Id && this.Value.Equals(v.Value);
 			}
 			return false;
 		}

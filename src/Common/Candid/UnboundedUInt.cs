@@ -64,7 +64,7 @@ namespace ICP.Common.Candid
 
 		public int CompareTo(UnboundedUInt? other)
 		{
-			if(other == null)
+			if(object.ReferenceEquals(other, null))
             {
 				return 1;
             }
@@ -79,6 +79,25 @@ namespace ICP.Common.Candid
 		public override int GetHashCode()
 		{
 			return this.value.GetHashCode();
+		}
+
+
+		public static bool operator ==(UnboundedUInt? v1, UnboundedUInt? v2)
+		{
+			if(object.ReferenceEquals(v1, null))
+            {
+				return object.ReferenceEquals(v2, null);
+            }
+			return v1.Equals(v2);
+		}
+
+		public static bool operator !=(UnboundedUInt? v1, UnboundedUInt? v2)
+		{
+			if (object.ReferenceEquals(v1, null))
+			{
+				return object.ReferenceEquals(v2, null);
+			}
+			return !v1.Equals(v2);
 		}
 
 		public static UnboundedUInt operator +(UnboundedUInt a, UnboundedUInt b)

@@ -18,6 +18,7 @@ namespace Common.Models
 		public abstract override bool Equals(object? obj);
 
 		public abstract override int GetHashCode();
+		public abstract override string ToString();
 
 		public abstract byte[] Encode(CompoundTypeTable compoundTypeTable);
 
@@ -88,7 +89,33 @@ namespace Common.Models
 		{
 			return (int)this.Type;
 		}
-	}
+
+        public override string ToString()
+        {
+			return this.PrimitiveType switch
+            {
+                CandidPrimitiveType.Text => "text",
+                CandidPrimitiveType.Nat => "nat",
+                CandidPrimitiveType.Nat8 => "nat8",
+                CandidPrimitiveType.Nat16 => "nat16",
+                CandidPrimitiveType.Nat32 => "nat32",
+                CandidPrimitiveType.Nat64 => "nat64",
+                CandidPrimitiveType.Int => "int",
+                CandidPrimitiveType.Int8 => "int8",
+                CandidPrimitiveType.Int16 => "int16",
+                CandidPrimitiveType.Int32 => "int32",
+                CandidPrimitiveType.Int64 => "int64",
+                CandidPrimitiveType.Float32 => "float32",
+                CandidPrimitiveType.Float64 => "float64",
+                CandidPrimitiveType.Bool => "bool",
+                CandidPrimitiveType.Principal => "principal",
+                CandidPrimitiveType.Reserved => "reserved",
+                CandidPrimitiveType.Empty => "empty",
+                CandidPrimitiveType.Null => "null",
+                _ => throw new NotImplementedException(),
+            };
+        }
+    }
 
 	public abstract class CompoundCandidTypeDefinition : CandidTypeDefinition
 	{
@@ -129,7 +156,12 @@ namespace Common.Models
 		{
 			return HashCode.Combine(IDLTypeCode.Opt, this.Value);
 		}
-	}
+
+        public override string ToString()
+        {
+			return $"opt {this.Value}";
+        }
+    }
 
 	public class VectorCandidTypeDefinition : CompoundCandidTypeDefinition
 	{
@@ -160,22 +192,22 @@ namespace Common.Models
 		{
 			return HashCode.Combine(IDLTypeCode.Vector, this.Value);
 		}
-	}
+
+        public override string ToString()
+        {
+			return $"vec {this.Value}";
+        }
+    }
 
 	public abstract class RecordOrVariantCandidTypeDefinition : CompoundCandidTypeDefinition
 	{
 		public override abstract IDLTypeCode Type { get; }
-
-		protected abstract string ArgumentExceptionMessage { get; }
+		protected abstract string TypeString { get; }
 
 		public IReadOnlyDictionary<Label, CandidTypeDefinition> Fields { get; }
 
 		protected RecordOrVariantCandidTypeDefinition(Dictionary<Label, CandidTypeDefinition> fields)
 		{
-			if(fields?.Any() != true)
-			{
-				throw new ArgumentException(this.ArgumentExceptionMessage, nameof(fields));
-			}
 			this.Fields = fields;
 		}
 
@@ -185,7 +217,7 @@ namespace Common.Models
 			IEnumerable<byte> fieldTypes = this.Fields
 				.SelectMany(f =>
 				{
-					return LEB128.EncodeUnsigned(f.Key.IdOrIndex)
+					return LEB128.EncodeUnsigned(f.Key.Id)
 						.Concat(f.Value.Encode(compoundTypeTable));
 				});
 			return fieldCount
@@ -222,16 +254,22 @@ namespace Common.Models
 		{
 			return HashCode.Combine(this.Type, this.Fields);
 		}
+
+		public override string ToString()
+		{
+			IEnumerable<string> fields = this.Fields.Select(f => $"{f.Key}:{f.Value}");
+			return $"{this.TypeString} {{{string.Join("; ", fields)}}}";
+		}
 	}
 
 	public class Label : IComparable<Label>, IComparable, IEquatable<Label>
 	{
 		public string? Name { get; }
-		public UnboundedUInt IdOrIndex { get; }
+		public UnboundedUInt Id { get; }
 
 		private Label(UnboundedUInt id, string? name)
 		{
-			this.IdOrIndex = id;
+			this.Id = id;
 			this.Name = name;
 		}
 
@@ -262,12 +300,12 @@ namespace Common.Models
             {
 				return 1;
             }
-			return this.IdOrIndex.CompareTo(other.IdOrIndex);
+			return this.Id.CompareTo(other.Id);
 		}
 
 		public override int GetHashCode()
 		{
-			return HashCode.Combine(this.IdOrIndex);
+			return HashCode.Combine(this.Id);
 		}
 
 
@@ -299,31 +337,58 @@ namespace Common.Models
 		{
 			return new Label(id, null);
 		}
+
+		public static implicit operator Label(string value)
+		{
+			return Label.FromName(value);
+		}
+
+		public static implicit operator Label(UnboundedUInt value)
+		{
+			return Label.FromId(value);
+		}
+
+		public static implicit operator UnboundedUInt(Label value)
+		{
+			return value.Id;
+		}
+
+        public override string ToString()
+        {
+			string value = this.Id.ToString();
+			if(this.Name != null)
+            {
+				value += $"({this.Name})";
+            }
+			return value;
+        }
     }
 
 	public class RecordCandidTypeDefinition : RecordOrVariantCandidTypeDefinition
 	{
 		public override IDLTypeCode Type { get; } = IDLTypeCode.Record;
+		protected override string TypeString { get; } = "record";
 
-		protected override string ArgumentExceptionMessage { get; } = "At least one record field must be specified";
 
 		public RecordCandidTypeDefinition(Dictionary<Label, CandidTypeDefinition> fields) : base(fields)
 		{
 		}
-
-	}
+    }
 
 	public class VariantCandidTypeDefinition : RecordOrVariantCandidTypeDefinition
 	{
 		public override IDLTypeCode Type { get; } = IDLTypeCode.Variant;
 
-		protected override string ArgumentExceptionMessage { get; } = "At least one variant option must be specified";
+		protected override string TypeString { get; } = "variant";
 
 		public VariantCandidTypeDefinition(Dictionary<Label, CandidTypeDefinition> options) : base(options)
 		{
+			if (options?.Any() != true)
+			{
+				throw new ArgumentException("At least one variant option must be specified", nameof(options));
+			}
 		}
-
-	}
+    }
 
 	public class ServiceCandidTypeDefinition : CompoundCandidTypeDefinition
 	{
@@ -369,7 +434,13 @@ namespace Common.Models
 		{
 			return HashCode.Combine(this.Type, this.Methods);
 		}
-	}
+
+        public override string ToString()
+        {
+			// TODO
+            throw new NotImplementedException();
+        }
+    }
 
 
 	public class FuncCandidTypeDefinition : CompoundCandidTypeDefinition
@@ -433,7 +504,13 @@ namespace Common.Models
 		{
 			return HashCode.Combine(this.Type, this.Modes, this.ArgTypes, this.ReturnTypes);
 		}
-	}
+
+        public override string ToString()
+        {
+			// TODO
+            throw new NotImplementedException();
+        }
+    }
 }
 
 

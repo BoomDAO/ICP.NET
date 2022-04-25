@@ -115,11 +115,12 @@ namespace ICP.Agent.Agents
             Func<Task<Stream>> streamFunc = await this.SendInternalAsync(url, getRequest, identityOverride);
             Stream stream = await streamFunc();
 #if DEBUG
+            string cborHex;
             using (var memoryStream = new MemoryStream())
             {
                 stream.CopyTo(memoryStream);
                 byte[] cborBytes = memoryStream.ToArray();
-                string cborHex = Convert.ToHexString(cborBytes.AsSpan());
+                cborHex = Convert.ToHexString(cborBytes.AsSpan());
             }
             stream.Position = 0;
 #endif

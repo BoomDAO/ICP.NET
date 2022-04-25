@@ -11,7 +11,7 @@ using ICP.Common.Encodings;
 
 namespace ICP.Common.Models
 {
-    public class CandidArg : IHashable
+    public class CandidArg : IHashable, IEquatable<CandidArg>
     {
         public List<(CandidValue, CandidTypeDefinition)> Value { get; }
 
@@ -44,6 +44,31 @@ namespace ICP.Common.Models
         public static CandidArg FromCandid(params (CandidValue, CandidTypeDefinition)[] args)
         {
             return new CandidArg(args.ToList());
+        }
+
+        public override string ToString()
+        {
+            IEnumerable<string> args = this.Value.Select(v => v.Item2.ToString()!);
+            return $"({string.Join(",", args)})";
+        }
+
+        public bool Equals(CandidArg? other)
+        {
+            if(other == null)
+            {
+                return false;
+            }
+            return this.Value.SequenceEqual(other.Value);
+        }
+
+        public override bool Equals(object? obj)
+        {
+            return this.Equals(obj as CandidArg);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(this.Value.Select(v => v.GetHashCode()));
         }
     }
 }

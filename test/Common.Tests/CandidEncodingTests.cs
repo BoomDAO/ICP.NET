@@ -1,6 +1,7 @@
 ﻿using Common.Models;
 using ICP.Common.Candid;
 using ICP.Common.Candid.Constants;
+using ICP.Common.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -231,7 +232,7 @@ namespace Common.Tests
         public void Encode_Opt()
         {
             string expectedPrefix = "016E7C";
-            var candidValue = new CandidOptional();
+            var candidValue = new CandidOptional(null);
             string expectedHex = "010000";
             var typeDef = new OptCandidTypeDefinition(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Int)); // opt int
             TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidValue, typeDef);
@@ -316,6 +317,71 @@ namespace Common.Tests
                 {Label.FromName("bar"), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Bool) },
             });
             TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidValue, typeDef);
+        }
+
+        [Fact]
+        public void Encode_Variant()
+        {
+            //4449444C Magic header
+            //03 3 types
+            //6B -21 Variant [0]
+            //02 variant length
+            //9CC201 'ok'
+            //02 ref
+            //E58EB402 'err'
+            //01 ref
+            //6B -21 Variant [1]
+            //01 variant length
+            //CFA0DEF206 'NotFound'
+            //7F -1 Null
+            //6C -20 record [2]
+            //05 record length
+            //C4A7C9A101 'total'
+            //79 -7 NAT32
+            //DC8BD3F401 'desktop'
+            //79 -7 NAT32
+            //8D98F3E704 'time'
+            //7C INT
+            //E2D8DEFB0B 'mobile'
+            //79 -7 NAT32
+            //89FB97EB0E 'route'
+            //71 -15 Text
+            //01 Arg count
+            //00 ref
+            //01 variant index/tag
+            //00 variant value
+            const string hex = "4449444C036B029CC20102E58EB402016B01CFA0DEF2067F6C05C4A7C9A10179DC8BD3F401798D98F3E7047CE2D8DEFB0B7989FB97EB0E7101000100";
+            var value1 = new CandidVariant("err", new CandidVariant("NotFound"));
+            var type1 = new VariantCandidTypeDefinition(new Dictionary<Label, CandidTypeDefinition>
+            {
+                {
+                    Label.FromName("ok"),
+                    new RecordCandidTypeDefinition(new Dictionary<Label, CandidTypeDefinition>
+                    {
+                        { "total", new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat32) },
+                        { "desktop", new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat32) },
+                        { "time", new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Int) },
+                        { "mobile", new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat32) },
+                        { "route", new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Text) }
+                    })
+                },
+                {
+                    Label.FromName("err"),
+                    new VariantCandidTypeDefinition(new Dictionary<Label, CandidTypeDefinition>
+                    {
+                        {"NotFound", new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Null) }
+                    })
+                }
+            });
+            var expectedArg = CandidArg.FromCandid(new List<(CandidValue, CandidTypeDefinition)>
+            {
+                (value1, type1)
+            });
+
+            byte[] actualBytes = Convert.FromHexString(hex);
+            CandidArg actualArg = CandidArg.FromBytes(actualBytes);
+
+            Assert.Equal(expectedArg, actualArg);
         }
     }
 }

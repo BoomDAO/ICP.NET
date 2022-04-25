@@ -23,6 +23,9 @@ namespace Agent.Cbor
             switch (context.Status)
             {
 				case "replied":
+#if DEBUG
+                    string argHex = Convert.ToHexString(context.ReplyArg!);
+#endif
                     var arg = CandidArg.FromBytes(context.ReplyArg!);
                     var reply = new QueryReply(arg);
 					return QueryResponse.Replied(reply);

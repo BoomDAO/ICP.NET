@@ -24,6 +24,26 @@ namespace ICP.Common.Candid
         public abstract override int GetHashCode();
         public abstract bool Equals(CandidValue? other);
 
+
+        public override bool Equals(object? obj)
+        {
+            if (obj is CandidValue v)
+            {
+                return this.Equals(v);
+            }
+            return false;
+        }
+
+        public static bool operator ==(CandidValue v1, CandidValue v2)
+        {
+            return v1.Equals(v2);
+        }
+
+        public static bool operator !=(CandidValue v1, CandidValue v2)
+        {
+            return !v1.Equals(v2);
+        }
+
         public CandidPrimitive AsPrimitive()
         {
             this.ValidateType(CandidValueType.Primitive);
@@ -72,16 +92,6 @@ namespace ICP.Common.Candid
             {
                 throw new InvalidOperationException($"Cannot convert candid type '{this.Type}' to candid type '{type}'");
             }
-        }
-
-
-        public override bool Equals(object? obj)
-        {
-            if (obj is CandidValue v)
-            {
-                return this.Equals(v);
-            }
-            return false;
         }
     }
 }

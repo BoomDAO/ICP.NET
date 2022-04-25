@@ -71,8 +71,8 @@ namespace ICP.Common.Candid
         private IEnumerable<(UnboundedUInt, CandidValue)> GetOrderedFields(CandidRecord candidRecord)
         {
 			return candidRecord.Fields
-					   .Select(f => (f.Key.IdOrIndex, f.Value))
-					   .OrderBy(f => f.IdOrIndex);
+					   .Select(f => (f.Key.Id, f.Value))
+					   .OrderBy(f => f.Id);
         }
     }
 

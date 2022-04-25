@@ -33,7 +33,7 @@ namespace ICP.Common.Candid
 		{
 			if (other is CandidOptional o)
 			{
-				return this.Value == o.Value;
+				return this.Value.Equals(o.Value);
 			}
 			return false;
 		}

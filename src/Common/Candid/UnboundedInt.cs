@@ -23,6 +23,7 @@ namespace ICP.Common.Candid
 
 		public bool TryToInt64(out long value)
 		{
+
 			if (this.value <= long.MaxValue)
 			{
 				value = (long)this.value;
@@ -61,6 +62,10 @@ namespace ICP.Common.Candid
 
 		public int CompareTo(UnboundedInt? other)
 		{
+			if (object.ReferenceEquals(other, null))
+			{
+				return 1;
+			}
 			return this.value.CompareTo(other.value);
 		}
 
@@ -72,6 +77,24 @@ namespace ICP.Common.Candid
 		public override int GetHashCode()
 		{
 			return this.value.GetHashCode();
+		}
+
+		public static bool operator ==(UnboundedInt? v1, UnboundedInt? v2)
+		{
+			if (object.ReferenceEquals(v1, null))
+			{
+				return object.ReferenceEquals(v2, null);
+			}
+			return v1.Equals(v2);
+		}
+
+		public static bool operator !=(UnboundedInt? v1, UnboundedInt? v2)
+		{
+			if (object.ReferenceEquals(v1, null))
+			{
+				return object.ReferenceEquals(v2, null);
+			}
+			return !v1.Equals(v2);
 		}
 
 		public static UnboundedInt operator +(UnboundedInt a, UnboundedInt b)
