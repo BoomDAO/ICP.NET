@@ -23,6 +23,7 @@ namespace ICP.Common.Candid
         public abstract byte[] EncodeValue();
         public abstract override int GetHashCode();
         public abstract bool Equals(CandidValue? other);
+        public abstract override string ToString();
 
 
         public override bool Equals(object? obj)

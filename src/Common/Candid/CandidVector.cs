@@ -1,5 +1,6 @@
 ﻿using ICP.Common.Encodings;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace ICP.Common.Candid
@@ -47,6 +48,12 @@ namespace ICP.Common.Candid
 			}
 			return false;
 		}
-	}
+
+        public override string ToString()
+        {
+			IEnumerable<string> values = this.Values.Select(v => v.ToString());
+			return $"[{string.Join(", ", values)}]";
+        }
+    }
 
 }

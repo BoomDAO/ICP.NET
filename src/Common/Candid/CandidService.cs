@@ -33,5 +33,11 @@ namespace ICP.Common.Candid
 			}
 			return false;
 		}
-	}
+
+        public override string ToString()
+        {
+			// TODO
+            throw new NotImplementedException();
+        }
+    }
 }

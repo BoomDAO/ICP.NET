@@ -5,10 +5,20 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+	  <RootNamespace>ICP.Sample</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Governance.did" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Governance.did" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Agent\Agent.csproj" />
+    <ProjectReference Include="..\ClientGenerator\ClientGenerator.csproj" />
     <ProjectReference Include="..\Common\Common.csproj" />
     <ProjectReference Include="..\Identity\Identity.csproj" />
   </ItemGroup>

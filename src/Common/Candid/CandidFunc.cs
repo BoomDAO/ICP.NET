@@ -38,6 +38,11 @@ namespace ICP.Common.Candid
 			}
 			return false;
 		}
-	}
+
+        public override string ToString()
+        {
+			return $"(Method: {this.Name}, Service: {this.Service})";
+        }
+    }
 
 }

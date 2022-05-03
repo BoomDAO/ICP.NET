@@ -48,7 +48,7 @@ namespace ICP.Common.Models
 
         public override string ToString()
         {
-            IEnumerable<string> args = this.Value.Select(v => v.Item2.ToString()!);
+            IEnumerable<string> args = this.Value.Select(v => v.Item1.ToString()!);
             return $"({string.Join(",", args)})";
         }
 

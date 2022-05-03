@@ -164,6 +164,32 @@ namespace ICP.Common.Candid
             };
         }
 
+        public override string ToString()
+        {
+            return this.ValueType switch
+            {
+                CandidPrimitiveType.Text => $"'{this.AsText()}'",
+                CandidPrimitiveType.Nat => this.AsNat().ToString(),
+                CandidPrimitiveType.Nat8 => this.AsNat8().ToString(),
+                CandidPrimitiveType.Nat16 => this.AsNat16().ToString(),
+                CandidPrimitiveType.Nat32 => this.AsNat32().ToString(),
+                CandidPrimitiveType.Nat64 => this.AsNat64().ToString(),
+                CandidPrimitiveType.Int => this.AsInt().ToString(),
+                CandidPrimitiveType.Int8 => this.AsInt8().ToString(),
+                CandidPrimitiveType.Int16 => this.AsInt16().ToString(),
+                CandidPrimitiveType.Int32 => this.AsInt32().ToString(),
+                CandidPrimitiveType.Int64 => this.AsInt64().ToString(),
+                CandidPrimitiveType.Float32 => this.AsFloat32().ToString(),
+                CandidPrimitiveType.Float64 => this.AsFloat64().ToString(),
+                CandidPrimitiveType.Principal => this.AsPrincipal().ToString(),
+                CandidPrimitiveType.Bool => this.AsBool() ? "true" : "false",
+                CandidPrimitiveType.Null => "null",
+                CandidPrimitiveType.Reserved => "(reserved)",
+                CandidPrimitiveType.Empty => "(empty)",
+                _ => throw new NotImplementedException()
+            };
+        }
+
         private byte[] EncodeText()
         {
             string value = this.AsText();

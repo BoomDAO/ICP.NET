@@ -27,13 +27,21 @@ namespace Common.Models
 			return this.Equals(other as object);
 		}
 
-		public static bool operator ==(CandidTypeDefinition def1, CandidTypeDefinition def2)
+		public static bool operator ==(CandidTypeDefinition? def1, CandidTypeDefinition? def2)
 		{
+			if(object.ReferenceEquals(def1, null))
+            {
+				return object.ReferenceEquals(def2, null);
+            }
 			return def1.Equals(def2);
 		}
 
-		public static bool operator !=(CandidTypeDefinition def1, CandidTypeDefinition def2)
+		public static bool operator !=(CandidTypeDefinition? def1, CandidTypeDefinition? def2)
 		{
+			if (object.ReferenceEquals(def1, null))
+			{
+				return !object.ReferenceEquals(def2, null);
+			}
 			return !def1.Equals(def2);
 		}
 	}
@@ -119,16 +127,68 @@ namespace Common.Models
 
 	public abstract class CompoundCandidTypeDefinition : CandidTypeDefinition
 	{
+		public string? RecursiveId { get; set; }
 		internal abstract byte[] EncodeInnerType(CompoundTypeTable compoundTypeTable);
+		protected abstract string ToStringInternal();
 
 		public override byte[] Encode(CompoundTypeTable compoundTypeTable)
 		{
 			UnboundedUInt index =  compoundTypeTable.GetOrAdd(this);
 			return LEB128.EncodeSigned(index);
 		}
-	}
 
-	public class OptCandidTypeDefinition : CompoundCandidTypeDefinition
+        public override string ToString()
+        {
+			string value = this.ToStringInternal();
+			if(this.RecursiveId != null)
+            {
+				value = $"{this.RecursiveId}.{value}";
+            }
+			return value;
+        }
+    }
+
+    public class RecursiveReferenceCandidTypeDefinition : CandidTypeDefinition
+    {
+		public override IDLTypeCode Type => IDLTypeCode.Func; // TODO
+		public string RecursiveId { get; }
+
+		public RecursiveReferenceCandidTypeDefinition(string recursiveId)
+		{
+			this.RecursiveId = recursiveId;
+		}
+
+		public override byte[] Encode(CompoundTypeTable compoundTypeTable)
+        {
+			// Never will be encoded
+			throw new NotImplementedException();
+        }
+
+        public override bool Equals(object? obj)
+		{
+			if (obj is RecursiveReferenceCandidTypeDefinition r)
+			{
+				return this.RecursiveId == r.RecursiveId;
+			}
+			if (obj is CompoundCandidTypeDefinition c)
+			{
+				return this.RecursiveId == c.RecursiveId;
+			}
+			return false;
+        }
+
+        public override int GetHashCode()
+        {
+			return HashCode.Combine(this.Type, this.RecursiveId);
+        }
+
+        public override string ToString()
+        {
+			return $"rec {this.RecursiveId}";
+        }
+    }
+
+    public class OptCandidTypeDefinition : CompoundCandidTypeDefinition
 	{
 		public override IDLTypeCode Type { get; } = IDLTypeCode.Opt;
 		public CandidTypeDefinition Value { get; }
@@ -157,7 +217,7 @@ namespace Common.Models
 			return HashCode.Combine(IDLTypeCode.Opt, this.Value);
 		}
 
-        public override string ToString()
+        protected override string ToStringInternal()
         {
 			return $"opt {this.Value}";
         }
@@ -193,8 +253,8 @@ namespace Common.Models
 			return HashCode.Combine(IDLTypeCode.Vector, this.Value);
 		}
 
-        public override string ToString()
-        {
+		protected override string ToStringInternal()
+		{
 			return $"vec {this.Value}";
         }
     }
@@ -255,7 +315,7 @@ namespace Common.Models
 			return HashCode.Combine(this.Type, this.Fields);
 		}
 
-		public override string ToString()
+		protected override string ToStringInternal()
 		{
 			IEnumerable<string> fields = this.Fields.Select(f => $"{f.Key}:{f.Value}");
 			return $"{this.TypeString} {{{string.Join("; ", fields)}}}";
@@ -373,7 +433,8 @@ namespace Common.Models
 		public RecordCandidTypeDefinition(Dictionary<Label, CandidTypeDefinition> fields) : base(fields)
 		{
 		}
-    }
+
+	}
 
 	public class VariantCandidTypeDefinition : RecordOrVariantCandidTypeDefinition
 	{
@@ -435,8 +496,8 @@ namespace Common.Models
 			return HashCode.Combine(this.Type, this.Methods);
 		}
 
-        public override string ToString()
-        {
+		protected override string ToStringInternal()
+		{
 			// TODO
             throw new NotImplementedException();
         }
@@ -505,8 +566,8 @@ namespace Common.Models
 			return HashCode.Combine(this.Type, this.Modes, this.ArgTypes, this.ReturnTypes);
 		}
 
-        public override string ToString()
-        {
+		protected override string ToStringInternal()
+		{
 			// TODO
             throw new NotImplementedException();
         }

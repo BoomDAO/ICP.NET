@@ -252,7 +252,7 @@ namespace ICP.Common.Candid
 			{
 				throw new InvalidCastException("Value is too large");
 			}
-			if (value.value < maxValue)
+			if (value.value < minValue)
 			{
 				throw new InvalidCastException("Value is too small");
 			}

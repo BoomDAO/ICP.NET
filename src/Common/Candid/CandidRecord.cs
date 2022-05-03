@@ -74,6 +74,12 @@ namespace ICP.Common.Candid
 					   .Select(f => (f.Key.Id, f.Value))
 					   .OrderBy(f => f.Id);
         }
+
+        public override string ToString()
+        {
+			IEnumerable<string> fields = this.Fields.Select(f => $"{f.Key}:{f.Value}");
+			return $"{{{string.Join("; ", fields)}}}";
+        }
     }
 
 }

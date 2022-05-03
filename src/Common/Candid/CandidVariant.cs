@@ -39,6 +39,11 @@ namespace ICP.Common.Candid
 			}
 			return false;
 		}
-	}
+
+        public override string ToString()
+        {
+			return $"{{{this.Tag}:{this.Value}}}";
+        }
+    }
 
 }
