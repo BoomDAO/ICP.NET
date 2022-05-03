@@ -128,7 +128,16 @@ namespace Common.Models
 	public abstract class CompoundCandidTypeDefinition : CandidTypeDefinition
 	{
 		public string? RecursiveId { get; set; }
-		internal abstract byte[] EncodeInnerType(CompoundTypeTable compoundTypeTable);
+
+		public CompoundCandidTypeDefinition(string? recursiveId)
+        {
+			this.RecursiveId = recursiveId;
+        }
+
+		internal abstract byte[] EncodeInnerTypes(CompoundTypeTable compoundTypeTable);
+
+		internal abstract IEnumerable<CandidTypeDefinition> GetInnerTypes();
+
 		protected abstract string ToStringInternal();
 
 		public override byte[] Encode(CompoundTypeTable compoundTypeTable)
@@ -142,7 +151,7 @@ namespace Common.Models
 			string value = this.ToStringInternal();
 			if(this.RecursiveId != null)
             {
-				value = $"{this.RecursiveId}.{value}";
+				value = $"μ{this.RecursiveId}.{value}";
             }
 			return value;
         }
@@ -160,8 +169,8 @@ namespace Common.Models
 
 		public override byte[] Encode(CompoundTypeTable compoundTypeTable)
         {
-			// Never will be encoded
-			throw new NotImplementedException();
+			uint index = compoundTypeTable.GetRecursiveReferenceIndex(this.RecursiveId);
+			return LEB128.EncodeUnsigned(index);
         }
 
         public override bool Equals(object? obj)
@@ -193,14 +202,19 @@ namespace Common.Models
 		public override IDLTypeCode Type { get; } = IDLTypeCode.Opt;
 		public CandidTypeDefinition Value { get; }
 
-		public OptCandidTypeDefinition(CandidTypeDefinition value)
+		public OptCandidTypeDefinition(CandidTypeDefinition value, string? recursiveId = null) : base(recursiveId)
 		{
 			this.Value = value ?? throw new ArgumentNullException(nameof(value));
 		}
 
-		internal override byte[] EncodeInnerType(CompoundTypeTable compoundTypeTable)
+		internal override byte[] EncodeInnerTypes(CompoundTypeTable compoundTypeTable)
 		{
 			return this.Value.Encode(compoundTypeTable);
+		}
+
+		internal override IEnumerable<CandidTypeDefinition> GetInnerTypes()
+		{
+			yield return this.Value;
 		}
 
 		public override bool Equals(object? obj)
@@ -229,14 +243,19 @@ namespace Common.Models
 
 		public CandidTypeDefinition Value { get; }
 
-		public VectorCandidTypeDefinition(CandidTypeDefinition value)
+		public VectorCandidTypeDefinition(CandidTypeDefinition value, string? recursiveId = null) : base(recursiveId)
 		{
 			this.Value = value ?? throw new ArgumentNullException(nameof(value));
 		}
 
-		internal override byte[] EncodeInnerType(CompoundTypeTable compoundTypeTable)
+		internal override byte[] EncodeInnerTypes(CompoundTypeTable compoundTypeTable)
 		{
 			return this.Value.Encode(compoundTypeTable);
+		}
+
+		internal override IEnumerable<CandidTypeDefinition> GetInnerTypes()
+		{
+			yield return this.Value;
 		}
 
 		public override bool Equals(object? obj)
@@ -266,12 +285,12 @@ namespace Common.Models
 
 		public IReadOnlyDictionary<Label, CandidTypeDefinition> Fields { get; }
 
-		protected RecordOrVariantCandidTypeDefinition(Dictionary<Label, CandidTypeDefinition> fields)
+		protected RecordOrVariantCandidTypeDefinition(Dictionary<Label, CandidTypeDefinition> fields, string? recursiveId) : base(recursiveId)
 		{
 			this.Fields = fields;
 		}
 
-		internal override byte[] EncodeInnerType(CompoundTypeTable compoundTypeTable)
+		internal override byte[] EncodeInnerTypes(CompoundTypeTable compoundTypeTable)
 		{
 			byte[] fieldCount = LEB128.EncodeSigned(this.Fields.Count);
 			IEnumerable<byte> fieldTypes = this.Fields
@@ -283,6 +302,11 @@ namespace Common.Models
 			return fieldCount
 				.Concat(fieldTypes)
 				.ToArray(); ;
+		}
+
+		internal override IEnumerable<CandidTypeDefinition> GetInnerTypes()
+		{
+			return this.Fields.Values;
 		}
 
 		public override bool Equals(object? obj)
@@ -430,7 +454,7 @@ namespace Common.Models
 		protected override string TypeString { get; } = "record";
 
 
-		public RecordCandidTypeDefinition(Dictionary<Label, CandidTypeDefinition> fields) : base(fields)
+		public RecordCandidTypeDefinition(Dictionary<Label, CandidTypeDefinition> fields, string? recursiveId = null) : base(fields, recursiveId)
 		{
 		}
 
@@ -442,7 +466,7 @@ namespace Common.Models
 
 		protected override string TypeString { get; } = "variant";
 
-		public VariantCandidTypeDefinition(Dictionary<Label, CandidTypeDefinition> options) : base(options)
+		public VariantCandidTypeDefinition(Dictionary<Label, CandidTypeDefinition> options, string? recursiveId = null) : base(options, recursiveId)
 		{
 			if (options?.Any() != true)
 			{
@@ -457,12 +481,12 @@ namespace Common.Models
 
 		public IReadOnlyDictionary<string, FuncCandidTypeDefinition> Methods { get; }
 
-		public ServiceCandidTypeDefinition(IReadOnlyDictionary<string, FuncCandidTypeDefinition> methods)
+		public ServiceCandidTypeDefinition(IReadOnlyDictionary<string, FuncCandidTypeDefinition> methods, string? recursiveId = null) : base(recursiveId)
 		{
 			this.Methods = methods;
 		}
 
-		internal override byte[] EncodeInnerType(CompoundTypeTable compoundTypeTable)
+		internal override byte[] EncodeInnerTypes(CompoundTypeTable compoundTypeTable)
 		{
 			byte[] methodCount = LEB128.EncodeSigned(this.Methods.Count);
 			IEnumerable<byte> methodTypes = this.Methods
@@ -478,6 +502,11 @@ namespace Common.Models
 			return methodCount
 				.Concat(methodTypes)
 				.ToArray();
+		}
+
+		internal override IEnumerable<CandidTypeDefinition> GetInnerTypes()
+		{
+			return this.Methods.Values;
 		}
 
 		public override bool Equals(object? obj)
@@ -515,14 +544,16 @@ namespace Common.Models
 		public FuncCandidTypeDefinition(
 			List<FuncMode> modes,
 			List<CandidTypeDefinition> argTypes,
-			List<CandidTypeDefinition> returnTypes)
+			List<CandidTypeDefinition> returnTypes,
+			string? recursiveId = null)
+			: base(recursiveId)
 		{
 			this.Modes = modes.Distinct().ToList();
 			this.ArgTypes = argTypes;
 			this.ReturnTypes = returnTypes;
 		}
 
-		internal override byte[] EncodeInnerType(CompoundTypeTable compoundTypeTable)
+		internal override byte[] EncodeInnerTypes(CompoundTypeTable compoundTypeTable)
 		{
 			byte[] argsCount = LEB128.EncodeSigned(this.ArgTypes.Count);
 
@@ -546,6 +577,11 @@ namespace Common.Models
 				.Concat(modesCount)
 				.Concat(modeTypes)
 				.ToArray();
+		}
+
+		internal override IEnumerable<CandidTypeDefinition> GetInnerTypes()
+		{
+			return this.ArgTypes.Concat(this.ReturnTypes);
 		}
 
 		public override bool Equals(object? obj)

@@ -537,7 +537,7 @@ namespace Common.Candid
                                 // If already resolved, use it
                                 return typeInfo.ResolvedType;
                             }
-                            typeInfo.RecursiveId = $"μrec_{++this.referenceCount}";
+                            typeInfo.RecursiveId = $"rec_{++this.referenceCount}";
                             // If neither, then it is 'resolving', meaning it is a recursive type
                             this.Tracer.RecursiveReference(typeInfo.RecursiveId);
                             return new RecursiveReferenceCandidTypeDefinition(typeInfo.RecursiveId);

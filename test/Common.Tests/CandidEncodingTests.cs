@@ -383,5 +383,55 @@ namespace Common.Tests
 
             Assert.Equal(expectedArg, actualArg);
         }
+        [Fact]
+        public void Encode_Record_Recursive()
+        {
+            //4449444C Magic header
+            //02 2 types -- Compound Types start
+            //6E Opt [0]
+            //01 Ref [1]
+            //6C -20 Record [1]
+            //01 record length
+            //A78A839908 'selfRef'
+            //00 Ref [0]
+            //01 Arg count -- Arg types start
+            //01 Ref [1]
+            //01 Opt has value -- Values start
+            //00 Opt does not have value
+            const string actualHex = "4449444C026E016C01A78A8399080001010100";
+
+            var value1 = new CandidRecord(new Dictionary<Label, CandidValue>
+            {
+                {
+                    Label.FromName("selfRef"),
+                    new CandidOptional(new CandidRecord(new Dictionary<Label, CandidValue>
+                    {
+                        {
+                            Label.FromName("selfRef"),
+                            new CandidOptional()
+                        }
+                    }))
+                }
+            });
+            var type1 = new RecordCandidTypeDefinition(new Dictionary<Label, CandidTypeDefinition>
+            {
+                {
+                    Label.FromName("selfRef"),
+                    new OptCandidTypeDefinition(new RecursiveReferenceCandidTypeDefinition("rec_1"))
+                }
+            }, "rec_1");
+            var expectedArg = CandidArg.FromCandid(new List<(CandidValue, CandidTypeDefinition)>
+            {
+                (value1, type1)
+            });
+
+            byte[] actualBytes = Convert.FromHexString(actualHex);
+            CandidArg actualArg = CandidArg.FromBytes(actualBytes);
+
+            string expectedHex = Convert.ToHexString(expectedArg.Encode());
+
+            Assert.Equal(expectedHex, actualHex);
+            Assert.Equal(expectedArg, actualArg);
+        }
     }
 }

@@ -13,23 +13,25 @@ namespace ICP.Common.Models
 {
     public class CompoundTypeTable
     {
-        /// <summary>
-        /// Bytes of compound types. The types are referenced by index such as in in `EncodedTypes`
-        /// </summary>
-        private readonly List<byte[]> EncodedCompoundTypes = new List<byte[]>();
 
         /// <summary>
         /// A mapping of compound type definition to `EncodedCompoundTypes` index to be used as reference
         /// </summary>
-        private readonly Dictionary<CompoundCandidTypeDefinition, UnboundedUInt> CompoundTypeIndexMap = new Dictionary<CompoundCandidTypeDefinition, UnboundedUInt>();
+        private readonly Dictionary<CompoundCandidTypeDefinition, uint> CompoundTypeIndexMap = new Dictionary<CompoundCandidTypeDefinition, uint>();
 
         public UnboundedUInt GetOrAdd(CompoundCandidTypeDefinition typeDef)
         {
-            if (!this.CompoundTypeIndexMap.TryGetValue(typeDef, out UnboundedUInt? index))
+            foreach (CandidTypeDefinition innerType in typeDef.GetInnerTypes())
             {
-                byte[] encodedType = this.EncodeFunc(typeDef);
-                this.EncodedCompoundTypes.Add(encodedType);
-                index = (UnboundedUInt)this.EncodedCompoundTypes.Count - 1;
+                // Recursively go through and add the inner types before adding the parent type
+                if (innerType is CompoundCandidTypeDefinition innerCompoundType)
+                {
+                    this.GetOrAdd(innerCompoundType);
+                }
+            }
+            if(!this.CompoundTypeIndexMap.TryGetValue(typeDef, out uint index))
+            {
+                index = (uint)this.CompoundTypeIndexMap.Count;
                 this.CompoundTypeIndexMap.Add(typeDef, index);
             }
             return index;
@@ -37,7 +39,7 @@ namespace ICP.Common.Models
 
         private byte[] EncodeFunc(CompoundCandidTypeDefinition typeDef)
         {
-            byte[] encodedInnerValue = typeDef.EncodeInnerType(this);
+            byte[] encodedInnerValue = typeDef.EncodeInnerTypes(this);
             return LEB128.EncodeSigned((UnboundedInt)(long)typeDef.Type)
                 .Concat(encodedInnerValue)
                 .ToArray();
@@ -45,9 +47,12 @@ namespace ICP.Common.Models
 
         public IEnumerable<byte> Encode()
         {
-            byte[] compoundTypesCount = LEB128.EncodeUnsigned((UnboundedUInt)this.EncodedCompoundTypes.Count);
-            return compoundTypesCount
-                .Concat(this.EncodedCompoundTypes.SelectMany(t => t));
+            byte[] compoundTypesCount = LEB128.EncodeUnsigned((UnboundedUInt)this.CompoundTypeIndexMap.Count);
+            IEnumerable<byte> encodedTypes = this.CompoundTypeIndexMap
+                .OrderBy(x => x.Value)
+                .SelectMany(t => this.EncodeFunc(t.Key));
+            return compoundTypesCount                
+                .Concat(encodedTypes);
         }
 
         public static CompoundTypeTable FromTypes(List<CompoundCandidTypeDefinition> types)
@@ -58,6 +63,20 @@ namespace ICP.Common.Models
                 table.GetOrAdd(type);
             }
             return table;
+        }
+
+        public uint GetRecursiveReferenceIndex(string recursiveId)
+        {
+            uint? index = this.CompoundTypeIndexMap
+                .Where(c => c.Key.RecursiveId == recursiveId)
+                .Select(c => (uint?)c.Value)
+                .SingleOrDefault();
+            if(index == null)
+            {
+                // TODO
+                throw new Exception();
+            }
+            return index.Value;
         }
     }
     public class IDLBuilder
