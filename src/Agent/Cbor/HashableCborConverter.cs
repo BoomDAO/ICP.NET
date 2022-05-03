@@ -9,17 +9,18 @@ using System.Threading.Tasks;
 
 namespace Agent.Cbor
 {
-    internal class HashbleCborConverter : CborConverterBase<IHashable>
+    internal class HashableCborConverter : CborConverterBase<IHashable>
     {
         private readonly CborConverterRegistry registry;
 
-        public HashbleCborConverter(CborConverterRegistry registry)
+        public HashableCborConverter(CborConverterRegistry registry)
         {
             this.registry = registry;
         }
 
         public override IHashable Read(ref CborReader reader)
         {
+            // Never reads
             throw new NotImplementedException();
         }
 

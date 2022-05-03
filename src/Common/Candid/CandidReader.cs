@@ -306,9 +306,9 @@ namespace Common.Candid
 
         private CandidValue ReadCompoundValue(CompoundCandidTypeDefinition c, Dictionary<string, CompoundCandidTypeDefinition> recursiveTypes)
         {
-            if(c.RecursiveId != null)
+            if (c.RecursiveId != null)
             {
-                recursiveTypes[c.RecursiveId] = c; 
+                recursiveTypes[c.RecursiveId] = c;
             }
             return c switch
             {
@@ -325,7 +325,7 @@ namespace Common.Candid
         private CandidValue ReadRecursiveValue(string recursiveId, Dictionary<string, CompoundCandidTypeDefinition> recursiveTypes)
         {
             CompoundCandidTypeDefinition? typeDef = recursiveTypes.GetValueOrDefault(recursiveId);
-            if(typeDef == null)
+            if (typeDef == null)
             {
                 // TODO
                 throw new Exception();
@@ -351,12 +351,36 @@ namespace Common.Candid
                 CandidPrimitiveType.Float32 => CandidPrimitive.Float32(BitConverter.ToSingle(this.reader.ReadBytes(4))),
                 CandidPrimitiveType.Float64 => CandidPrimitive.Float64(BitConverter.ToDouble(this.reader.ReadBytes(8))),
                 CandidPrimitiveType.Bool => CandidPrimitive.Bool(this.reader.ReadByte() > 0),
-                CandidPrimitiveType.Principal => throw new NotImplementedException(),// TODO CandidPrimitive.Pricipal(PrincipalId.FromRaw(this.Rea)),
+                CandidPrimitiveType.Principal => CandidPrimitive.Pricipal(this.ReadPrincipal()),
                 CandidPrimitiveType.Reserved => CandidPrimitive.Reserved(),
                 CandidPrimitiveType.Empty => CandidPrimitive.Empty(),
                 CandidPrimitiveType.Null => CandidPrimitive.Null(),
                 _ => throw new NotImplementedException(),
             };
+        }
+
+        private PrincipalId ReadPrincipal()
+        {
+            // TODO
+            //M(ref(r) : principal) = i8(0)
+            //M(id(v*) : principal) = i8(1) M(v* : vec nat8)
+            //R(ref(r) : principal) = r
+            //R(id(b *) : principal) = .
+            byte b = this.reader.ReadByte();
+            switch (b)
+            {
+                case 0:
+                    // ??
+                    throw new NotImplementedException();
+                case 1:
+                    {
+                        List<byte> bytes = this.ReadVectorInner(() => this.ReadByte());
+                        return PrincipalId.FromRaw(bytes.ToArray());
+                    }
+                default:
+                    //TODO
+                    throw new Exception();
+            }
         }
 
         private sbyte ReadInt8()
@@ -525,7 +549,7 @@ namespace Common.Candid
                                 // If not resolved, try to resolve
                                 typeInfo.ResolvingOrResolved = true;
                                 typeInfo.ResolvedType = typeInfo.ResolveFunc(this);
-                                if(typeInfo.RecursiveId != null)
+                                if (typeInfo.RecursiveId != null)
                                 {
                                     // If there was a recursive reference, stamp the resolved (parent) type to have the id
                                     typeInfo.ResolvedType.RecursiveId = typeInfo.RecursiveId;

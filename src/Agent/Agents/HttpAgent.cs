@@ -24,7 +24,7 @@ namespace ICP.Agent.Agents
             var options = new CborOptions();
             var provider = new CborConverterProvider();
             options.Registry.ConverterRegistry.RegisterConverterProvider(provider);
-            options.Registry.ConverterRegistry.RegisterConverter(typeof(IHashable), new HashbleCborConverter(options.Registry.ConverterRegistry));
+            options.Registry.ConverterRegistry.RegisterConverter(typeof(IHashable), new HashableCborConverter(options.Registry.ConverterRegistry));
             return options;
         }, isThreadSafe: true);
 

@@ -39,6 +39,7 @@ namespace Agent.Cbor
 
 		public override void Write(ref CborWriter writer, QueryResponse value)
 		{
+            // Never write
 			throw new NotImplementedException();
 		}
 	}
