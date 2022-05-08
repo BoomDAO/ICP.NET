@@ -1,13 +1,13 @@
-﻿using ICP.Common.Candid;
-using Dahomey.Cbor;
+﻿using Dahomey.Cbor;
 using Dahomey.Cbor.Serialization;
-using ICP.Common.Encodings;
+using ICP.Candid.Encodings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using ICP.Candid;
 
 namespace Agent.Cbor
 {

@@ -1,4 +1,4 @@
-﻿using ICP.Common.Models;
+﻿using ICP.Candid.Models;
 using System;
 using System.Collections.Generic;
 

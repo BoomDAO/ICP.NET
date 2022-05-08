@@ -1,5 +1,5 @@
 ﻿using Dahomey.Cbor.ObjectModel;
-using ICP.Common.Models;
+using ICP.Candid.Models;
 using System;
 
 namespace ICP.Agent.Responses
@@ -33,6 +33,16 @@ namespace ICP.Agent.Responses
             {
                 throw new InvalidOperationException($"Unable to parse '{this.Type}' query response as type '{type}'");
             }
+        }
+
+        public QueryReply ThrowOrGetReply()
+        {
+            if (this.Type == QueryResponseType.Rejected)
+            {
+                (ReplicaRejectCode code, string? message) = this.AsRejected();
+                throw new QueryRejectedException(code, message);
+            }
+            return this.AsReplied();
         }
 
         public static QueryResponse Rejected(ReplicaRejectCode code, string? message)
@@ -69,5 +79,18 @@ namespace ICP.Agent.Responses
         DestinationInvalid = 3,
         CanisterReject = 4,
         CanisterError = 5
+    }
+
+    public class QueryRejectedException : Exception
+    {
+        public ReplicaRejectCode Code { get; }
+        public string? RejectionMessage { get; }
+        public QueryRejectedException(ReplicaRejectCode code, string? message)
+        {
+            this.Code = code;
+            this.RejectionMessage = message;
+        }
+
+        public override string Message => $"Query was rejected. Code: {this.Code}, Message: {this.Message}";
     }
 }

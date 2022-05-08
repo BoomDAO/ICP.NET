@@ -3,7 +3,7 @@ using Dahomey.Cbor;
 using ICP.Agent.Auth;
 using ICP.Agent.Requests;
 using ICP.Agent.Responses;
-using ICP.Common.Models;
+using ICP.Candid.Models;
 using System;
 using System.Buffers;
 using System.Collections.Generic;

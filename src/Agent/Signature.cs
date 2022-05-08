@@ -1,5 +1,5 @@
-﻿using ICP.Common.Crypto;
-using ICP.Common.Models;
+﻿using ICP.Candid.Crypto;
+using ICP.Candid.Models;
 using System;
 
 namespace ICP.Agent

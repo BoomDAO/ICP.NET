@@ -1,0 +1,46 @@
+﻿using System;
+using System.Linq;
+
+namespace ICP.Candid.Models.Values
+{
+	public class CandidOptional : CandidValue
+	{
+		public override CandidValueType Type { get; } = CandidValueType.Optional;
+		public CandidValue Value { get; }
+
+		public CandidOptional(CandidValue? value = null)
+		{
+			this.Value = value ?? CandidPrimitive.Null();
+		}
+
+		public override byte[] EncodeValue()
+		{
+			if(this.Value.Type == CandidValueType.Primitive
+				&& this.Value.AsPrimitive().ValueType == CandidPrimitiveType.Null)
+			{
+				return new byte[] { 0 };
+			}
+			return new byte[] { 1 }
+				.Concat(this.Value.EncodeValue())
+				.ToArray();
+		}
+		public override int GetHashCode()
+		{
+			return HashCode.Combine(this.Value);
+		}
+
+		public override bool Equals(CandidValue? other)
+		{
+			if (other is CandidOptional o)
+			{
+				return this.Value.Equals(o.Value);
+			}
+			return false;
+		}
+
+        public override string ToString()
+        {
+			return this.Value.ToString();
+        }
+    }
+}

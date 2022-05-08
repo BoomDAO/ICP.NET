@@ -2,7 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using Dahomey.Cbor.ObjectModel;
-using ICP.Common;
+using ICP.Candid;
 
 namespace ICP.Agent.Responses
 {

@@ -1,7 +1,7 @@
-﻿using Common.Models;
-using ICP.Common.Candid;
-using ICP.Common.Candid.Constants;
-using ICP.Common.Models;
+﻿using ICP.Candid;
+using ICP.Candid.Models;
+using ICP.Candid.Models.Types;
+using ICP.Candid.Models.Values;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Common.Tests
+namespace ICP.Candid.Tests
 {
     // https://github.com/dfinity/candid/blob/master/test/prim.test.did
     // https://github.com/dfinity/candid/blob/master/test/reference.test.did
@@ -278,7 +278,7 @@ namespace Common.Tests
         [InlineData("_1.23_", 1360503298)]
         public void Encode_Label(string name, uint hashedName)
         {
-            uint digest = Label.HashName(name);
+            uint digest = CandidLabel.HashName(name);
             Assert.Equal(hashedName, digest);
 
         }
@@ -286,15 +286,15 @@ namespace Common.Tests
         [Fact]
         public void Encode_Record_Ids()
         {
-            var candidValue = new CandidRecord(new Dictionary<Label, CandidValue>
+            var candidValue = new CandidRecord(new Dictionary<CandidLabel, CandidValue>
             {
-                {new Label(1), CandidPrimitive.Int(UnboundedInt.FromInt64(42)) },
+                {new CandidLabel(1), CandidPrimitive.Int(UnboundedInt.FromInt64(42)) },
             });
             string expectedPrefix = "";
             string expectedHex = "016C01017C01002A";
-            var typeDef = new RecordCandidTypeDefinition(new Dictionary<Label, CandidTypeDefinition>
+            var typeDef = new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
             {
-                {new Label(1), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Int) },
+                {new CandidLabel(1), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Int) },
             });
             TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidValue, typeDef);
         }
@@ -302,19 +302,19 @@ namespace Common.Tests
         [Fact]
         public void Encode_Record_Named()
         {
-            var candidValue = new CandidRecord(new Dictionary<Label, CandidValue>
+            var candidValue = new CandidRecord(new Dictionary<CandidLabel, CandidValue>
             {
-                {Label.FromName("foo"),CandidPrimitive.Int(UnboundedInt.FromInt64(42)) },
-                {Label.FromName("bar"), CandidPrimitive.Bool(true) }
+                {CandidLabel.FromName("foo"),CandidPrimitive.Int(UnboundedInt.FromInt64(42)) },
+                {CandidLabel.FromName("bar"), CandidPrimitive.Bool(true) }
             });
             string expectedPrefix = "";
             // TODO ordering of types again
             //string expectedHex = "016C02D3E3AA027E868EB7027C0100012A";
             string expectedHex = "016C02868EB7027CD3E3AA027E0100012A";
-            var typeDef = new RecordCandidTypeDefinition(new Dictionary<Label, CandidTypeDefinition>
+            var typeDef = new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
             {
-                {Label.FromName("foo"), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Int) },
-                {Label.FromName("bar"), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Bool) },
+                {CandidLabel.FromName("foo"), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Int) },
+                {CandidLabel.FromName("bar"), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Bool) },
             });
             TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidValue, typeDef);
         }
@@ -352,11 +352,11 @@ namespace Common.Tests
             //00 variant value
             const string hex = "4449444C036B029CC20102E58EB402016B01CFA0DEF2067F6C05C4A7C9A10179DC8BD3F401798D98F3E7047CE2D8DEFB0B7989FB97EB0E7101000100";
             var value1 = new CandidVariant("err", new CandidVariant("NotFound"));
-            var type1 = new VariantCandidTypeDefinition(new Dictionary<Label, CandidTypeDefinition>
+            var type1 = new VariantCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
             {
                 {
-                    Label.FromName("ok"),
-                    new RecordCandidTypeDefinition(new Dictionary<Label, CandidTypeDefinition>
+                    CandidLabel.FromName("ok"),
+                    new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
                     {
                         { "total", new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat32) },
                         { "desktop", new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat32) },
@@ -366,17 +366,17 @@ namespace Common.Tests
                     })
                 },
                 {
-                    Label.FromName("err"),
-                    new VariantCandidTypeDefinition(new Dictionary<Label, CandidTypeDefinition>
+                    CandidLabel.FromName("err"),
+                    new VariantCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
                     {
                         {"NotFound", new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Null) }
                     })
                 }
             });
-            var expectedArg = CandidArg.FromCandid(new List<(CandidValue, CandidTypeDefinition)>
+            var expectedArg = CandidArg.FromCandid(new List<CandidValueWithType>
             {
-                (value1, type1)
-            }, null);
+                CandidValueWithType.FromValueAndType(value1, type1)
+            }, null); ;
 
             byte[] actualBytes = Convert.FromHexString(hex);
             CandidArg actualArg = CandidArg.FromBytes(actualBytes);
@@ -400,29 +400,29 @@ namespace Common.Tests
             //00 Opt does not have value
             const string actualHex = "4449444C026E016C01A78A8399080001010100";
 
-            var value1 = new CandidRecord(new Dictionary<Label, CandidValue>
+            var value1 = new CandidRecord(new Dictionary<CandidLabel, CandidValue>
             {
                 {
-                    Label.FromName("selfRef"),
-                    new CandidOptional(new CandidRecord(new Dictionary<Label, CandidValue>
+                    CandidLabel.FromName("selfRef"),
+                    new CandidOptional(new CandidRecord(new Dictionary<CandidLabel, CandidValue>
                     {
                         {
-                            Label.FromName("selfRef"),
+                            CandidLabel.FromName("selfRef"),
                             new CandidOptional()
                         }
                     }))
                 }
             });
-            var type1 = new RecordCandidTypeDefinition(new Dictionary<Label, CandidTypeDefinition>
+            var type1 = new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
             {
                 {
-                    Label.FromName("selfRef"),
+                    CandidLabel.FromName("selfRef"),
                     new OptCandidTypeDefinition(new RecursiveReferenceCandidTypeDefinition("rec_1", IDLTypeCode.Record))
                 }
             }, "rec_1");
-            var expectedArg = CandidArg.FromCandid(new List<(CandidValue, CandidTypeDefinition)>
+            var expectedArg = CandidArg.FromCandid(new List<CandidValueWithType>
             {
-                (value1, type1)
+                CandidValueWithType.FromValueAndType(value1, type1)
             });
 
             byte[] actualBytes = Convert.FromHexString(actualHex);

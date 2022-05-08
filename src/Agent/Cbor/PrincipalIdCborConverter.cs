@@ -1,8 +1,8 @@
 ﻿using Dahomey.Cbor.Serialization;
 using Dahomey.Cbor.Serialization.Converters;
-using ICP.Common.Candid;
-using ICP.Common.Encodings;
-using ICP.Common.Models;
+using ICP.Candid;
+using ICP.Candid.Encodings;
+using ICP.Candid.Models;
 using System;
 using System.Linq;
 

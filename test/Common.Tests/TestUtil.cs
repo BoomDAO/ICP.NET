@@ -1,15 +1,15 @@
-﻿using Common.Candid;
-using Common.Models;
-using ICP.Common.Candid;
-using ICP.Common.Models;
+﻿using ICP.Candid.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
+using ICP.Candid.Models.Values;
+using ICP.Candid.Models.Types;
+using ICP.Candid;
 
-namespace Common.Tests
+namespace ICP.Candid.Tests
 {
     public static class TestUtil
 	{
@@ -17,7 +17,7 @@ namespace Common.Tests
 		{
 			// Encode test
 			var builder = new IDLBuilder();
-			builder.Add(value, typeDef);
+			builder.Add(CandidValueWithType.FromValueAndType(value, typeDef));
 			byte[] actualBytes = builder.Encode();
 			string actualHex = Convert.ToHexString(actualBytes);
 			const string didlPrefix = "4449444C";
@@ -29,11 +29,11 @@ namespace Common.Tests
 
 			// Decode test
             CandidArg args = CandidArg.FromBytes(actualBytes);
-            (CandidValue actualValue, CandidTypeDefinition actualTypeDef) = Assert.Single(args.Value);
+			CandidValueWithType actual = Assert.Single(args.Values);
 			Assert.Empty(args.OpaqueReferenceBytes);
 
-			Assert.Equal(value, actualValue);
-			Assert.Equal(typeDef, actualTypeDef);
+			Assert.Equal(value, actual.Value);
+			Assert.Equal(typeDef, actual.Type);
 		}
 	}
 }

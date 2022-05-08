@@ -1,4 +1,4 @@
-﻿using ICP.Common;
+﻿using ICP.Candid;
 using System;
 
 namespace ICP.Agent
