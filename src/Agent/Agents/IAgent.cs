@@ -25,7 +25,7 @@ namespace ICP.Agent.Agents
 		* @param effectiveCanisterId A Canister ID related to this call.
 		* @param options The options for this call.
 		*/
-        Task<ReadStateResponse> ReadStateAsync(PrincipalId canisterId, List<Path> paths, IIdentity? identityOverride = null);
+        Task<ReadStateResponse> ReadStateAsync(PrincipalId canisterId, List<PathSegment> paths, IIdentity? identityOverride = null);
 
         Task CallAsync(PrincipalId canisterId, string method, CandidArg encodedArgument, PrincipalId? effectiveCanisterId = null, IIdentity? identityOverride = null);
 

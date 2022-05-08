@@ -11,7 +11,6 @@ using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using Path = ICP.Common.Models.Path;
 
 namespace ICP.Agent.Agents
 {
@@ -85,13 +84,13 @@ namespace ICP.Agent.Agents
             }
         }
 
-        public async Task<ReadStateResponse> ReadStateAsync(PrincipalId canisterId, List<Path> paths, IIdentity? identityOverride)
+        public async Task<ReadStateResponse> ReadStateAsync(PrincipalId canisterId, List<PathSegment> path, IIdentity? identityOverride)
         {
             return await this.SendAsync<ReadStateRequest, ReadStateResponse>($"/api/v2/canister/{canisterId.ToText()}/read_state", BuildRequest, identityOverride);
 
             ReadStateRequest BuildRequest(PrincipalId sender, ICTimestamp now)
             {
-                return new ReadStateRequest(paths, sender, now);
+                return new ReadStateRequest(path, sender, now);
             }
         }
 

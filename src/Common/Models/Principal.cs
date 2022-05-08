@@ -108,12 +108,7 @@ namespace ICP.Common.Models
 
         public static PrincipalId FromRaw(byte[] raw)
         {
-            // TODO
-            bool isValid = true;
-            if (!isValid)
-            {
-                throw new InvalidOperationException("Invalid princial id bytes");
-            }
+            // TODO any validation?
             return new PrincipalId(raw);
         }
 

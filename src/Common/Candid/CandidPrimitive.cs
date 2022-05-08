@@ -128,10 +128,14 @@ namespace ICP.Common.Candid
             return (bool)this.value!;
         }
 
-        public PrincipalId AsPrincipal()
+        /// <summary>
+        /// If opaque, returns null, otherwise the principalid
+        /// </summary>
+        /// <returns></returns>
+        public PrincipalId? AsPrincipal()
         {
             this.ValidateType(CandidPrimitiveType.Principal);
-            return (PrincipalId)this.value!;
+            return (PrincipalId?)this.value;
         }
 
 
@@ -181,7 +185,7 @@ namespace ICP.Common.Candid
                 CandidPrimitiveType.Int64 => this.AsInt64().ToString(),
                 CandidPrimitiveType.Float32 => this.AsFloat32().ToString(),
                 CandidPrimitiveType.Float64 => this.AsFloat64().ToString(),
-                CandidPrimitiveType.Principal => this.AsPrincipal().ToString(),
+                CandidPrimitiveType.Principal => this.AsPrincipal()?.ToString() ?? "(Opaque Reference)",
                 CandidPrimitiveType.Bool => this.AsBool() ? "true" : "false",
                 CandidPrimitiveType.Null => "null",
                 CandidPrimitiveType.Reserved => "(reserved)",
@@ -280,7 +284,12 @@ namespace ICP.Common.Candid
 
         private byte[] EncodePrincipal()
         {
-            byte[] value = this.AsPrincipal().Raw;
+            PrincipalId? principalId = this.AsPrincipal();
+            if(principalId == null)
+            {
+                return new byte[] { 0 };
+            }
+            byte[] value = principalId.Raw;
             byte[] encodedValueLength = LEB128.EncodeSigned(value.Length);
             return new byte[] { 1 }
                 .Concat(encodedValueLength)
@@ -395,7 +404,7 @@ namespace ICP.Common.Candid
         {
             return new CandidPrimitive(CandidPrimitiveType.Bool, value);
         }
-        public static CandidPrimitive Pricipal(PrincipalId value)
+        public static CandidPrimitive Pricipal(PrincipalId? value)
         {
             return new CandidPrimitive(CandidPrimitiveType.Principal, value);
         }

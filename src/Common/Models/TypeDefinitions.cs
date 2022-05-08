@@ -527,10 +527,10 @@ namespace Common.Models
 
 		protected override string ToStringInternal()
 		{
-			// TODO
-            throw new NotImplementedException();
-        }
-    }
+			IEnumerable<string> methods = this.Methods.Select(f => $"{f.Key}:{f.Value}");
+			return $"Service {{{string.Join("; ", methods)}}}";
+		}
+	}
 
 
 	public class FuncCandidTypeDefinition : CompoundCandidTypeDefinition
@@ -604,9 +604,11 @@ namespace Common.Models
 
 		protected override string ToStringInternal()
 		{
-			// TODO
-            throw new NotImplementedException();
-        }
+			string args = string.Join(",", this.ArgTypes.Select(f => f.ToString()));
+			string returnTypes = string.Join(",", this.ReturnTypes.Select(f => f.ToString()));
+			string modes = string.Join(",", this.Modes.Select(f => f.ToString()));
+			return $"Func (Args: [{args}], ReturnTypes: [{returnTypes}], Modes: [{modes}])";
+		}
     }
 }
 

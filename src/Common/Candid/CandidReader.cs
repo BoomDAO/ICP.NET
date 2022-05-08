@@ -17,11 +17,9 @@ namespace Common.Candid
     public class CandidReader : IDisposable
     {
         private readonly BinaryReader reader;
-        private readonly CandidDebugTracer tracer;
         public CandidReader(byte[] value)
         {
             this.reader = new BinaryReader(new MemoryStream(value));
-            this.tracer = new CandidDebugTracer();
         }
 
         public static List<(CandidValue, CandidTypeDefinition)> Read(byte[] value)
@@ -59,8 +57,7 @@ namespace Common.Candid
             }
             catch (Exception ex)
             {
-                // TODO
-                throw new Exception($"Failed to parse the candid arg. Here is the trace that it parsed so far:\n{reader.tracer}", ex);
+                throw new Exception($"Failed to parse the candid arg. Here is the trace that it parsed so far:\n{resolver.Tracer}", ex);
             }
         }
 
@@ -129,9 +126,9 @@ namespace Common.Candid
                     DefintionOrReference innerType = this.ReadType();
                     return DefintionOrReference.CompoundDefintion(resolver =>
                     {
-                        this.tracer.StartCompound("Opt");
+                        resolver.Tracer.StartCompound("Opt");
                         CandidTypeDefinition t = resolver.Resolve(innerType);
-                        this.tracer.EndCompound("Opt");
+                        resolver.Tracer.EndCompound("Opt");
                         return new OptCandidTypeDefinition(t);
                     });
                 case IDLTypeCode.Record:
@@ -140,23 +137,23 @@ namespace Common.Candid
                     return DefintionOrReference.CompoundDefintion(resolver =>
                     {
                         var map = new Dictionary<Label, CandidTypeDefinition>();
-                        this.tracer.StartCompound("Record");
+                        resolver.Tracer.StartCompound("Record");
                         foreach ((Label field, DefintionOrReference defOrRef) in recordFields)
                         {
-                            this.tracer.Field(field);
+                            resolver.Tracer.Field(field);
                             CandidTypeDefinition type = resolver.Resolve(defOrRef);
                             map.Add(field, type);
                         }
-                        this.tracer.EndCompound("Record");
+                        resolver.Tracer.EndCompound("Record");
                         return new RecordCandidTypeDefinition(map);
                     });
                 case IDLTypeCode.Vector:
                     DefintionOrReference innerVectorType = this.ReadType();
                     return DefintionOrReference.CompoundDefintion(resolver =>
                     {
-                        this.tracer.StartCompound("Vector");
+                        resolver.Tracer.StartCompound("Vector");
                         CandidTypeDefinition t = resolver.Resolve(innerVectorType);
-                        this.tracer.EndCompound("Vector");
+                        resolver.Tracer.EndCompound("Vector");
                         return new VectorCandidTypeDefinition(t);
                     });
                 case IDLTypeCode.Variant:
@@ -172,14 +169,14 @@ namespace Common.Candid
                     return DefintionOrReference.CompoundDefintion(resolver =>
                     {
                         var map = new Dictionary<Label, CandidTypeDefinition>();
-                        this.tracer.StartCompound("Variant");
+                        resolver.Tracer.StartCompound("Variant");
                         foreach ((Label field, DefintionOrReference defOrRef) in variantOptions)
                         {
-                            this.tracer.Field(field);
+                            resolver.Tracer.Field(field);
                             CandidTypeDefinition type = resolver.Resolve(defOrRef);
                             map.Add(field, type);
                         }
-                        this.tracer.StartCompound("Variant");
+                        resolver.Tracer.StartCompound("Variant");
                         return new VariantCandidTypeDefinition(map);
                     });
                 case IDLTypeCode.Func:
@@ -188,8 +185,7 @@ namespace Common.Candid
                     List<byte> modes = this.ReadVectorInner(() => this.ReadByte());
                     return DefintionOrReference.CompoundDefintion(resolver =>
                     {
-                        this.tracer.StartCompound("Func");
-                        // TODO trace each part
+                        resolver.Tracer.StartCompound("Func");
                         List<CandidTypeDefinition> a = argTypes
                             .Select(a => resolver.Resolve(a))
                             .ToList();
@@ -197,9 +193,13 @@ namespace Common.Candid
                             .Select(a => resolver.Resolve(a))
                             .ToList();
                         List<FuncMode> m = modes
-                            .Select(m => (FuncMode)m)
+                            .Select(m =>
+                            {
+                                resolver.Tracer.Primitive(CandidPrimitiveType.Int8);
+                                return (FuncMode)m;
+                            })
                             .ToList();
-                        this.tracer.EndCompound("Func");
+                        resolver.Tracer.EndCompound("Func");
                         return new FuncCandidTypeDefinition(m, a, r);
                     });
                 case IDLTypeCode.Service:
@@ -211,8 +211,8 @@ namespace Common.Candid
                     });
                     return DefintionOrReference.CompoundDefintion(resolver =>
                     {
-                        this.tracer.StartCompound("Service");
-                        // TODO trace each part
+                        resolver.Tracer.StartCompound("Service");
+
                         IReadOnlyDictionary<string, FuncCandidTypeDefinition> m = methods
                             .ToDictionary(m => m.Name, m =>
                             {
@@ -224,7 +224,7 @@ namespace Common.Candid
                                 // TODO 
                                 throw new Exception();
                             });
-                        this.tracer.EndCompound("Service");
+                        resolver.Tracer.EndCompound("Service");
                         return new ServiceCandidTypeDefinition(m);
                     });
                 default:
@@ -316,8 +316,8 @@ namespace Common.Candid
                 VectorCandidTypeDefinition ve => this.ReadVectorValue(ve.Value, recursiveTypes),
                 RecordCandidTypeDefinition r => this.ReadRecordValue(r.Fields.ToDictionary(f => f.Key, f => f.Value), recursiveTypes),
                 VariantCandidTypeDefinition va => this.ReadVariantValue(va.Fields.ToDictionary(f => f.Key, f => f.Value), recursiveTypes),
-                ServiceCandidTypeDefinition s => this.ReadServiceValue(s.Methods.ToDictionary(f => f.Key, f => f.Value), recursiveTypes),
-                FuncCandidTypeDefinition f => this.ReadFuncValue(f.ArgTypes, f.ReturnTypes, f.Modes, recursiveTypes),
+                ServiceCandidTypeDefinition s => this.ReadServiceValue(),
+                FuncCandidTypeDefinition f => this.ReadFuncValue(),
                 _ => throw new NotImplementedException(),
             };
         }
@@ -359,27 +359,18 @@ namespace Common.Candid
             };
         }
 
-        private PrincipalId ReadPrincipal()
+        private PrincipalId? ReadPrincipal()
         {
-            // TODO
-            //M(ref(r) : principal) = i8(0)
-            //M(id(v*) : principal) = i8(1) M(v* : vec nat8)
-            //R(ref(r) : principal) = r
-            //R(id(b *) : principal) = .
-            byte b = this.reader.ReadByte();
-            switch (b)
+            bool isRef = !this.ReadBool();
+            if (isRef)
             {
-                case 0:
-                    // ??
-                    throw new NotImplementedException();
-                case 1:
-                    {
-                        List<byte> bytes = this.ReadVectorInner(() => this.ReadByte());
-                        return PrincipalId.FromRaw(bytes.ToArray());
-                    }
-                default:
-                    //TODO
-                    throw new Exception();
+                // Opaque reference
+                return null;
+            }
+            else
+            {
+                List<byte> bytes = this.ReadVectorInner(() => this.ReadByte());
+                return PrincipalId.FromRaw(bytes.ToArray());
             }
         }
 
@@ -403,16 +394,48 @@ namespace Common.Candid
             return this.reader.ReadInt64();
         }
 
-        private CandidFunc ReadFuncValue(IEnumerable<CandidTypeDefinition> argTypes, IEnumerable<CandidTypeDefinition> returnTypes, IEnumerable<FuncMode> modes, Dictionary<string, CompoundCandidTypeDefinition> recursiveTypes)
+        private bool ReadBool()
         {
-            // TODO
-            throw new NotImplementedException();
+            byte b = this.ReadByte();
+            if (b == 0)
+            {
+                return false;
+            }
+            if (b == 1)
+            {
+                return true;
+            }
+            // TODO 
+            throw new Exception();
         }
 
-        private CandidService ReadServiceValue(Dictionary<string, FuncCandidTypeDefinition> methods, Dictionary<string, CompoundCandidTypeDefinition> recursiveTypes)
+        private CandidValue ReadFuncValue()
         {
-            // TODO
-            throw new NotImplementedException();
+            bool isRef = !this.ReadBool();
+            if (isRef)
+            {
+                return CandidFunc.OpaqueReference();
+            }
+            else
+            {
+                CandidService service = this.ReadServiceValue();
+                string method = this.ReadText();
+                return CandidFunc.TrasparentReference(service, method);
+            }
+        }
+
+        private CandidService ReadServiceValue()
+        {
+            bool isRef = !this.ReadBool();
+            if (isRef)
+            {
+                return CandidService.OpaqueReference();
+            }
+            else
+            {
+                PrincipalId? principalId = this.ReadPrincipal();
+                return CandidService.TraparentReference(principalId);
+            }
         }
 
         private CandidVariant ReadVariantValue(Dictionary<Label, CandidTypeDefinition> options, Dictionary<string, CompoundCandidTypeDefinition> recursiveTypes)
@@ -524,14 +547,14 @@ namespace Common.Candid
         private class DefinitionResolver
         {
             private List<TypeInfo> Types { get; }
-            private CandidDebugTracer Tracer { get; }
+            public CandidDebugTracer Tracer { get; }
             private int referenceCount = 0;
 
 
-            public DefinitionResolver(List<Func<DefinitionResolver, CompoundCandidTypeDefinition>> types, CandidDebugTracer? tracer = null)
+            public DefinitionResolver(List<Func<DefinitionResolver, CompoundCandidTypeDefinition>> types)
             {
                 this.Types = types.Select(t => new TypeInfo(t)).ToList();
-                this.Tracer = tracer ?? new CandidDebugTracer();
+                this.Tracer = new CandidDebugTracer();
             }
 
             public CandidTypeDefinition Resolve(DefintionOrReference defOrRef)
