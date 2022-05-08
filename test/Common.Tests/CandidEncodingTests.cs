@@ -417,7 +417,7 @@ namespace Common.Tests
             {
                 {
                     Label.FromName("selfRef"),
-                    new OptCandidTypeDefinition(new RecursiveReferenceCandidTypeDefinition("rec_1"))
+                    new OptCandidTypeDefinition(new RecursiveReferenceCandidTypeDefinition("rec_1", IDLTypeCode.Record))
                 }
             }, "rec_1");
             var expectedArg = CandidArg.FromCandid(new List<(CandidValue, CandidTypeDefinition)>

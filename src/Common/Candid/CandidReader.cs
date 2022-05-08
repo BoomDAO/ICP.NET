@@ -2,6 +2,7 @@
 using ICP.Common.Candid;
 using ICP.Common.Candid.Constants;
 using ICP.Common.Encodings;
+using ICP.Common.Exceptions;
 using ICP.Common.Models;
 using System;
 using System.Collections.Generic;
@@ -14,21 +15,16 @@ using System.Threading.Tasks;
 
 namespace Common.Candid
 {
-    public class CandidReader : IDisposable
+    internal class CandidReader : IDisposable
     {
         private readonly BinaryReader reader;
-        public CandidReader(byte[] value)
+        private CandidReader(byte[] value)
         {
             this.reader = new BinaryReader(new MemoryStream(value));
         }
 
         public static CandidArg Read(byte[] value)
         {
-            if (value.Length < 5)
-            {
-                // TODO
-                throw new Exception();
-            }
             var reader = new CandidReader(value);
             reader.ReadMagicNumber();
 
@@ -38,8 +34,7 @@ namespace Common.Candid
                 DefintionOrReference t = reader.ReadType();
                 if (t.Type != DefintionOrReferenceType.Compound)
                 {
-                    // TODO
-                    throw new Exception();
+                    throw CandidParseException.FromReader(reader.reader, $"Expected compound type, got '{t.Type}'");
                 }
                 return t.DefinitionFunc!;
             });
@@ -67,7 +62,7 @@ namespace Common.Candid
                     .ToArray();
                 return CandidArg.FromCandid(args, opaqueReferenceBytes);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex is not CandidDeserializationException)
             {
                 throw new Exception($"Failed to parse the candid arg. Here is the trace that it parsed so far:\n{resolver.Tracer}", ex);
             }
@@ -78,8 +73,7 @@ namespace Common.Candid
             byte[] magicNumber = this.reader.ReadBytes(4);
             if (!magicNumber.SequenceEqual(new byte[] { 68, 73, 68, 76 }))
             {
-                // TODO
-                throw new Exception();
+                throw CandidParseException.FromReader(this.reader, "Bytes must start with 'DIDL' (0x68, 0x73, 0x68, 0x76)");
             }
         }
 
@@ -233,8 +227,7 @@ namespace Common.Candid
                                 {
                                     return f;
                                 }
-                                // TODO 
-                                throw new Exception();
+                                throw new CandidTypeResolutionException($"Service method values can only be Func types. Actual type '{type}'");
                             });
                         resolver.Tracer.EndCompound("Service");
                         return new ServiceCandidTypeDefinition(m);
@@ -339,8 +332,7 @@ namespace Common.Candid
             CompoundCandidTypeDefinition? typeDef = recursiveTypes.GetValueOrDefault(recursiveId);
             if (typeDef == null)
             {
-                // TODO
-                throw new Exception();
+                throw CandidParseException.FromReader(this.reader, $"Cannot find recursive type with id '{recursiveId}'");
             }
             return this.ReadValue(typeDef, recursiveTypes);
         }
@@ -417,8 +409,7 @@ namespace Common.Candid
             {
                 return true;
             }
-            // TODO 
-            throw new Exception();
+            throw CandidParseException.FromReader(this.reader, $"Expected byte with value 0 or 1, got: {b}");
         }
 
         private CandidValue ReadFuncValue()
@@ -455,8 +446,7 @@ namespace Common.Candid
             UnboundedUInt index = this.ReadNat();
             if (!index.TryToUInt64(out ulong i) || i > int.MaxValue)
             {
-                //TODO
-                throw new Exception();
+                throw CandidParseException.FromReader(this.reader, $"Cannot handle variants with more than '{int.MaxValue}' options");
             }
             (Label tag, CandidTypeDefinition typeDef) = options
                 .OrderBy(f => f.Key)
@@ -487,13 +477,10 @@ namespace Common.Candid
 
         private CandidOptional ReadOptValue(CandidTypeDefinition innerTypeDef, Dictionary<string, CompoundCandidTypeDefinition> recursiveTypes)
         {
-            byte isSet = this.ReadByte();
-            CandidValue? innerValue = isSet switch
-            {
-                0 => null,
-                1 => this.ReadValue(innerTypeDef, recursiveTypes),
-                _ => throw new Exception() // TODO
-            };
+            bool isSet = this.ReadBool();
+            CandidValue? innerValue = isSet
+                ? this.ReadValue(innerTypeDef, recursiveTypes)
+                : null;
             return new CandidOptional(innerValue);
         }
 
@@ -579,27 +566,31 @@ namespace Common.Candid
                         case DefintionOrReferenceType.Reference:
                             TypeInfo typeInfo = this.Types[(int)defOrRef.ReferenceIndex!];
 
+                            // If not resolved, try to resolve
                             if (!typeInfo.ResolvingOrResolved)
                             {
-                                // If not resolved, try to resolve
-                                typeInfo.ResolvingOrResolved = true;
-                                typeInfo.ResolvedType = typeInfo.ResolveFunc(this);
-                                if (typeInfo.RecursiveId != null)
+                                typeInfo.ResolvingOrResolved = true; // Mark as resolving, any child with same type info 
+                                typeInfo.ResolvedType = typeInfo.ResolveFunc(this); // Resolve
+
+                                // If this type has recursion attached to it, set its resolved type 
+                                // to also have a recursive type
+                                if(typeInfo.RecursiveId != null)
                                 {
-                                    // If there was a recursive reference, stamp the resolved (parent) type to have the id
                                     typeInfo.ResolvedType.RecursiveId = typeInfo.RecursiveId;
                                 }
+
                                 return typeInfo.ResolvedType;
                             }
+                            // If already resolved, use it
                             if (typeInfo.ResolvedType != null)
                             {
-                                // If already resolved, use it
                                 return typeInfo.ResolvedType;
                             }
-                            typeInfo.RecursiveId = $"rec_{++this.referenceCount}";
                             // If neither, then it is 'resolving', meaning it is a recursive type
+                            typeInfo.RecursiveId = $"rec_{++this.referenceCount}"; // Create a new reference to mark parent object
                             this.Tracer.RecursiveReference(typeInfo.RecursiveId);
-                            return new RecursiveReferenceCandidTypeDefinition(typeInfo.RecursiveId);
+                            // Give func to resolve the type which WILL be resolved, but not yet
+                            return new RecursiveReferenceCandidTypeDefinition(typeInfo.RecursiveId, () => typeInfo.ResolvedType!.Type);
                         case DefintionOrReferenceType.Compound:
                             return defOrRef.DefinitionFunc!(this);
                         case DefintionOrReferenceType.Primitive:

@@ -159,12 +159,21 @@ namespace Common.Models
 
     public class RecursiveReferenceCandidTypeDefinition : CandidTypeDefinition
     {
-		public override IDLTypeCode Type => IDLTypeCode.Func; // TODO
+		public override IDLTypeCode Type => this.getTypeFunc();
+
+		private readonly Func<IDLTypeCode> getTypeFunc;
 		public string RecursiveId { get; }
 
-		public RecursiveReferenceCandidTypeDefinition(string recursiveId)
+		public RecursiveReferenceCandidTypeDefinition(string recursiveId, Func<IDLTypeCode> getTypeFunc)
 		{
 			this.RecursiveId = recursiveId;
+			this.getTypeFunc = getTypeFunc;
+		}
+
+		public RecursiveReferenceCandidTypeDefinition(string recursiveId, IDLTypeCode type)
+		{
+			this.RecursiveId = recursiveId;
+			this.getTypeFunc = () => type;
 		}
 
 		public override byte[] Encode(CompoundTypeTable compoundTypeTable)

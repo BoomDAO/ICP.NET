@@ -73,8 +73,7 @@ namespace ICP.Common.Models
                 .SingleOrDefault();
             if(index == null)
             {
-                // TODO
-                throw new Exception();
+                throw new Exception($"Unable to find type with recursive id '{recursiveId}'");
             }
             return index.Value;
         }

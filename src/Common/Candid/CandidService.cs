@@ -27,8 +27,7 @@ namespace ICP.Common.Candid
 		{
 			if (this.IsOpqaueReference)
 			{
-				// TODO
-				throw new Exception();
+				throw new InvalidOperationException("Cannot get principal from opaque service reference.");
 			}
 			return this.principalId!;
 		}
