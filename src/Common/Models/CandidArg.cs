@@ -14,10 +14,12 @@ namespace ICP.Common.Models
     public class CandidArg : IHashable, IEquatable<CandidArg>
     {
         public List<(CandidValue, CandidTypeDefinition)> Value { get; }
+        public byte[] OpaqueReferenceBytes { get; }
 
-        public CandidArg(List<(CandidValue, CandidTypeDefinition)> value)
+        public CandidArg(List<(CandidValue, CandidTypeDefinition)> value, byte[]? opaqueReferencesBytes = null)
         {
             this.Value = value;
+            this.OpaqueReferenceBytes = opaqueReferencesBytes ?? new byte[0];
         }
 
         public byte[] ComputeHash(IHashFunction hashFunction)
@@ -32,18 +34,17 @@ namespace ICP.Common.Models
 
         public static CandidArg FromBytes(byte[] value)
         {
-            var arg = CandidReader.Read(value);
-            return new CandidArg(arg);
+            return CandidReader.Read(value);
         }
 
-        public static CandidArg FromCandid(List<(CandidValue, CandidTypeDefinition)> args)
+        public static CandidArg FromCandid(List<(CandidValue, CandidTypeDefinition)> args, byte[]? opaqueReferencesBytes = null)
         {
-            return new CandidArg(args);
+            return new CandidArg(args, opaqueReferencesBytes);
         }
 
         public static CandidArg FromCandid(params (CandidValue, CandidTypeDefinition)[] args)
         {
-            return new CandidArg(args.ToList());
+            return new CandidArg(args.ToList(), null);
         }
 
         public override string ToString()

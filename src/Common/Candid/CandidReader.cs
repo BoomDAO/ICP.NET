@@ -22,7 +22,7 @@ namespace Common.Candid
             this.reader = new BinaryReader(new MemoryStream(value));
         }
 
-        public static List<(CandidValue, CandidTypeDefinition)> Read(byte[] value)
+        public static CandidArg Read(byte[] value)
         {
             if (value.Length < 5)
             {
@@ -31,6 +31,8 @@ namespace Common.Candid
             }
             var reader = new CandidReader(value);
             reader.ReadMagicNumber();
+
+            //Read type table (all compound type definitions)
             List<Func<DefinitionResolver, CompoundCandidTypeDefinition>> compoundDefOrRefs = reader.ReadVectorInner(() =>
             {
                 DefintionOrReference t = reader.ReadType();
@@ -45,15 +47,25 @@ namespace Common.Candid
 
             try
             {
+                // Get all arg types
                 List<CandidTypeDefinition> types = reader.ReadVectorInner(() =>
                 {
                     DefintionOrReference t = reader.ReadType();
                     return resolver.Resolve(t);
                 });
                 Dictionary<string, CompoundCandidTypeDefinition> recursiveTypes = new();
-                return types
+
+                // Get an arg value for each type
+                List<(CandidValue Value, CandidTypeDefinition Type)> args = types
                     .Select(t => (reader.ReadValue(t, recursiveTypes), t))
                     .ToList();
+
+                // Remaining bytes are opaque reference bytes
+                byte[] opaqueReferenceBytes = value
+                    .AsMemory()
+                    .Slice((int)reader.reader.BaseStream.Position)
+                    .ToArray();
+                return CandidArg.FromCandid(args, opaqueReferenceBytes);
             }
             catch (Exception ex)
             {

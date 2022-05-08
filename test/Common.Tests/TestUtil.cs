@@ -28,8 +28,9 @@ namespace Common.Tests
 			Assert.Equal(expectedHex, actualHex);
 
 			// Decode test
-            List<(CandidValue, CandidTypeDefinition)> args = CandidReader.Read(actualBytes);
-            (CandidValue actualValue, CandidTypeDefinition actualTypeDef) = Assert.Single(args);
+            CandidArg args = CandidReader.Read(actualBytes);
+            (CandidValue actualValue, CandidTypeDefinition actualTypeDef) = Assert.Single(args.Value);
+			Assert.Empty(args.OpaqueReferenceBytes);
 
 			Assert.Equal(value, actualValue);
 			Assert.Equal(typeDef, actualTypeDef);

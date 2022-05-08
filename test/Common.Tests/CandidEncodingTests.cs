@@ -376,7 +376,7 @@ namespace Common.Tests
             var expectedArg = CandidArg.FromCandid(new List<(CandidValue, CandidTypeDefinition)>
             {
                 (value1, type1)
-            });
+            }, null);
 
             byte[] actualBytes = Convert.FromHexString(hex);
             CandidArg actualArg = CandidArg.FromBytes(actualBytes);
