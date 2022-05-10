@@ -5,7 +5,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-	  <RootNamespace>ICP.Sample</RootNamespace>
+	  <RootNamespace>ICP.Sample.CLI</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,8 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Agent\Agent.csproj" />
-    <ProjectReference Include="..\Candid\Candid.csproj" />
+    <ProjectReference Include="..\..\src\Agent\Agent.csproj" />
+    <ProjectReference Include="..\..\src\Candid\Candid.csproj" />
   </ItemGroup>
 
 </Project>

@@ -8,9 +8,9 @@ using System.Linq;
 
 namespace ICP.Agent.Cbor
 {
-    public class PrincipalIdCborConverter : CborConverterBase<PrincipalId?>
+    public class PrincipalIdCborConverter : CborConverterBase<Principal?>
     {
-        public override PrincipalId? Read(ref CborReader reader)
+        public override Principal? Read(ref CborReader reader)
         {
             if (reader.GetCurrentDataItemType() == CborDataItemType.Null)
             {
@@ -37,14 +37,14 @@ namespace ICP.Agent.Cbor
                     byte[] rawPrincipalId = raw
                         .Slice(i, (int)lengthLong)
                         .ToArray();
-                    return PrincipalId.FromRaw(rawPrincipalId);
+                    return Principal.FromRaw(rawPrincipalId);
                 }
             }
             
             throw new Dahomey.Cbor.CborException("Failed to deserialize PrincipalId, invalid bytes");
         }
 
-        public override void Write(ref CborWriter writer, PrincipalId? value)
+        public override void Write(ref CborWriter writer, Principal? value)
         {
             if (value == null)
             {

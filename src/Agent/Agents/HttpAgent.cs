@@ -43,7 +43,7 @@ namespace ICP.Agent.Agents
                 .Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(CBOR_CONTENT_TYPE));
         }
 
-        public async Task CallAsync(PrincipalId canisterId, string method, CandidArg encodedArgument, PrincipalId? targetCanisterOverride = null, IIdentity? identityOverride = null)
+        public async Task CallAsync(Principal canisterId, string method, CandidArg encodedArgument, Principal? targetCanisterOverride = null, IIdentity? identityOverride = null)
         {
             if (targetCanisterOverride == null)
             {
@@ -51,13 +51,13 @@ namespace ICP.Agent.Agents
             }
             await this.SendWithNoResponseAsync($"/api/v2/canister/{targetCanisterOverride.ToText()}/query", BuildRequest, identityOverride);
 
-            CallRequest BuildRequest(PrincipalId sender, ICTimestamp now)
+            CallRequest BuildRequest(Principal sender, ICTimestamp now)
             {
                 return new CallRequest(canisterId, method, encodedArgument, sender, now);
             }
         }
 
-        public PrincipalId GetPrincipal()
+        public Principal GetPrincipal()
         {
             return this.Identity.Principal;
         }
@@ -74,28 +74,28 @@ namespace ICP.Agent.Agents
             return await this.SendAsync<StatusResponse>("/api/v2/status");
         }
 
-        public async Task<QueryResponse> QueryAsync(PrincipalId canisterId, string method, CandidArg encodedArgument, IIdentity? identityOverride = null)
+        public async Task<QueryResponse> QueryAsync(Principal canisterId, string method, CandidArg encodedArgument, IIdentity? identityOverride = null)
         {
             return await this.SendAsync<QueryRequest, QueryResponse>($"/api/v2/canister/{canisterId.ToText()}/query", BuildRequest, identityOverride);
 
-            QueryRequest BuildRequest(PrincipalId sender, ICTimestamp now)
+            QueryRequest BuildRequest(Principal sender, ICTimestamp now)
             {
                 return new QueryRequest(canisterId, method, encodedArgument, sender, now);
             }
         }
 
-        public async Task<ReadStateResponse> ReadStateAsync(PrincipalId canisterId, List<PathSegment> path, IIdentity? identityOverride)
+        public async Task<ReadStateResponse> ReadStateAsync(Principal canisterId, List<PathSegment> path, IIdentity? identityOverride)
         {
             return await this.SendAsync<ReadStateRequest, ReadStateResponse>($"/api/v2/canister/{canisterId.ToText()}/read_state", BuildRequest, identityOverride);
 
-            ReadStateRequest BuildRequest(PrincipalId sender, ICTimestamp now)
+            ReadStateRequest BuildRequest(Principal sender, ICTimestamp now)
             {
                 return new ReadStateRequest(path, sender, now);
             }
         }
 
 
-        private async Task SendWithNoResponseAsync<TRequest>(string url, Func<PrincipalId, ICTimestamp, TRequest> getRequest, IIdentity? identityOverride)
+        private async Task SendWithNoResponseAsync<TRequest>(string url, Func<Principal, ICTimestamp, TRequest> getRequest, IIdentity? identityOverride)
             where TRequest : IRepresentationIndependentHashItem
         {
             _ = await this.SendInternalAsync(url, getRequest, identityOverride);
@@ -108,7 +108,7 @@ namespace ICP.Agent.Agents
             return await Dahomey.Cbor.Cbor.DeserializeAsync<TResponse>(stream, HttpAgent.cborOptionsLazy.Value);
         }
 
-        private async Task<TResponse> SendAsync<TRequest, TResponse>(string url, Func<PrincipalId, ICTimestamp, TRequest> getRequest, IIdentity? identityOverride)
+        private async Task<TResponse> SendAsync<TRequest, TResponse>(string url, Func<Principal, ICTimestamp, TRequest> getRequest, IIdentity? identityOverride)
             where TRequest : IRepresentationIndependentHashItem
         {
             Func<Task<Stream>> streamFunc = await this.SendInternalAsync(url, getRequest, identityOverride);
@@ -126,7 +126,7 @@ namespace ICP.Agent.Agents
             return await Dahomey.Cbor.Cbor.DeserializeAsync<TResponse>(stream, HttpAgent.cborOptionsLazy.Value);
         }
 
-        private async Task<Func<Task<Stream>>> SendInternalAsync<TRequest>(string url, Func<PrincipalId, ICTimestamp, TRequest> getRequest, IIdentity? identityOverride)
+        private async Task<Func<Task<Stream>>> SendInternalAsync<TRequest>(string url, Func<Principal, ICTimestamp, TRequest> getRequest, IIdentity? identityOverride)
             where TRequest : IRepresentationIndependentHashItem
         {
             if (identityOverride == null)

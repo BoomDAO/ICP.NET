@@ -362,7 +362,7 @@ namespace ICP.Candid
             };
         }
 
-        private PrincipalId? ReadPrincipal()
+        private Principal? ReadPrincipal()
         {
             bool isRef = !this.ReadBool();
             if (isRef)
@@ -373,7 +373,7 @@ namespace ICP.Candid
             else
             {
                 List<byte> bytes = this.ReadVectorInner(() => this.ReadByte());
-                return PrincipalId.FromRaw(bytes.ToArray());
+                return Principal.FromRaw(bytes.ToArray());
             }
         }
 
@@ -435,7 +435,7 @@ namespace ICP.Candid
             }
             else
             {
-                PrincipalId? principalId = this.ReadPrincipal();
+                Principal? principalId = this.ReadPrincipal();
                 return CandidService.TraparentReference(principalId);
             }
         }

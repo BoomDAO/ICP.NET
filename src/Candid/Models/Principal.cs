@@ -4,13 +4,13 @@ using System.Linq;
 
 namespace ICP.Candid.Models
 {
-	public class PrincipalId : IHashable, IEquatable<PrincipalId>
+	public class Principal : IHashable, IEquatable<Principal>
     {
         private const byte anonymousSuffix = 4;
         private const byte selfAuthenticatingSuffix = 4;
 
         public byte[] Raw { get; }
-        public PrincipalId(byte[] raw)
+        public Principal(byte[] raw)
         {
             this.Raw = raw;
         }
@@ -55,23 +55,23 @@ namespace ICP.Candid.Models
             return this.Raw.Length == 1 && this.Raw[0] == anonymousSuffix;
         }
 
-        public static PrincipalId ICManagementCanisterId()
+        public static Principal ICManagementCanisterId()
 		{
-            return new PrincipalId(new byte[0]);
+            return new Principal(new byte[0]);
 		}
 
-        public static PrincipalId FromHex(string hex)
+        public static Principal FromHex(string hex)
         {
             byte[] bytes = Convert.FromHexString(hex.AsSpan());
-            return new PrincipalId(bytes);
+            return new Principal(bytes);
         }
 
-        public static PrincipalId Anonymous()
+        public static Principal Anonymous()
         {
-            return new PrincipalId(new byte[] { anonymousSuffix });
+            return new Principal(new byte[] { anonymousSuffix });
         }
 
-        public static PrincipalId SelfAuthenticating(byte[] publicKey)
+        public static Principal SelfAuthenticating(byte[] publicKey)
         {
             byte[] digest = new SHA224().GenerateDigest(publicKey);
 
@@ -79,10 +79,10 @@ namespace ICP.Candid.Models
             byte[] bytes = new byte[digest.Length + 1];
             digest.CopyTo(bytes.AsSpan());
             bytes[^1] = selfAuthenticatingSuffix;
-            return new PrincipalId(bytes);
+            return new Principal(bytes);
         }
 
-        public static PrincipalId FromText(string text)
+        public static Principal FromText(string text)
         {
             string canisterIdNoDash = text
                 .ToLower()
@@ -96,7 +96,7 @@ namespace ICP.Candid.Models
                 .Slice(4)
                 .ToArray();
 
-            var principal = new PrincipalId(bytes);
+            var principal = new Principal(bytes);
             string parsedText = principal.ToText();
             if (parsedText != text)
             {
@@ -106,10 +106,10 @@ namespace ICP.Candid.Models
             return principal;
         }
 
-        public static PrincipalId FromRaw(byte[] raw)
+        public static Principal FromRaw(byte[] raw)
         {
             // TODO any validation?
-            return new PrincipalId(raw);
+            return new Principal(raw);
         }
 
         public byte[] ComputeHash(IHashFunction hashFunction)
@@ -117,7 +117,7 @@ namespace ICP.Candid.Models
             return hashFunction.ComputeHash(this.Raw);
         }
 
-        public bool Equals(PrincipalId? other)
+        public bool Equals(Principal? other)
         {
             if (other == null)
             {
@@ -128,7 +128,7 @@ namespace ICP.Candid.Models
 
         public override bool Equals(object? obj)
         {
-            return this.Equals(obj as PrincipalId);
+            return this.Equals(obj as Principal);
         }
 
         public override int GetHashCode()

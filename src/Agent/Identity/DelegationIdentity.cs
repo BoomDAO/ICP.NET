@@ -48,7 +48,7 @@ namespace ICP.Agent.Identity
             DerEncodedPublicKey publicKey,
             ICTimestamp expiration,
             DelegationChain? previousChain = null,
-            List<PrincipalId>? principalIds = null)
+            List<Principal>? principalIds = null)
         {
             SignedDelegation signedDelegation = SignedDelegation.Create(identity, publicKey, expiration, principalIds);
             List<SignedDelegation> delegations = previousChain?.Delegations ?? new List<SignedDelegation>();
@@ -72,7 +72,7 @@ namespace ICP.Agent.Identity
             SignIdentity fromIdentity,
             DerEncodedPublicKey publicKey,
             ICTimestamp expiration,
-            List<PrincipalId>? targets = null)
+            List<Principal>? targets = null)
         {
             var delegation = new Delegation(publicKey, expiration, targets);
             Dictionary<string, IHashable> hashable = delegation.BuildHashableItem();

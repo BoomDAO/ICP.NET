@@ -5,7 +5,7 @@ namespace ICP.Agent.Auth
 {
 	public interface IIdentity
 	{
-		PrincipalId Principal { get; }
+		Principal Principal { get; }
 
 		SignedContent CreateSignedContent(Dictionary<string, IHashable> content);
 	}

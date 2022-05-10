@@ -12,9 +12,9 @@ namespace ICP.Candid.Models
     {
         public DerEncodedPublicKey PublicKey { get; }
         public ICTimestamp Expiration { get; }
-        public List<PrincipalId>? Targets { get; }
+        public List<Principal>? Targets { get; }
 
-        public Delegation(DerEncodedPublicKey publicKey, ICTimestamp expiration, List<PrincipalId>? targets)
+        public Delegation(DerEncodedPublicKey publicKey, ICTimestamp expiration, List<Principal>? targets)
         {
             this.PublicKey = publicKey ?? throw new ArgumentNullException(nameof(publicKey));
             this.Expiration = expiration;

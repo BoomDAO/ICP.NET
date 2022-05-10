@@ -1,5 +1,5 @@
 ﻿
-namespace ICP.Sample
+namespace ICP.Sample.CLI
 {
     public class CandidApiAttribute : Attribute
     {

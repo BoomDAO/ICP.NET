@@ -24,7 +24,7 @@ async Task CallGetProposalInfoAsync(ulong proposalId)
     CandidArg encodedArgument = CandidArg.FromCandid(candidArg);
 
     string governanceCanister = "rrkah-fqaaa-aaaaa-aaaaq-cai";
-    PrincipalId canisterId = PrincipalId.FromText(governanceCanister);
+    Principal canisterId = Principal.FromText(governanceCanister);
     QueryResponse response = await agent.QueryAsync(canisterId, method, encodedArgument, identityOverride: null);
     QueryReply reply = response.ThrowOrGetReply();
 

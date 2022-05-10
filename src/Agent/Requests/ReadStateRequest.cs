@@ -11,11 +11,11 @@ namespace ICP.Agent.Requests
         [Dahomey.Cbor.Attributes.CborProperty(Properties.PATHS)]
         public List<PathSegment> Paths { get; }
         [Dahomey.Cbor.Attributes.CborProperty(Properties.SENDER)]
-        public PrincipalId Sender { get; }
+        public Principal Sender { get; }
         [Dahomey.Cbor.Attributes.CborProperty(Properties.INGRESS_EXPIRY)]
         public ICTimestamp IngressExpiry { get; }
 
-        public ReadStateRequest(List<PathSegment> paths, PrincipalId sender, ICTimestamp ingressExpiry)
+        public ReadStateRequest(List<PathSegment> paths, Principal sender, ICTimestamp ingressExpiry)
         {
             this.Paths = paths ?? throw new ArgumentNullException(nameof(paths));
             this.IngressExpiry = ingressExpiry ?? throw new ArgumentNullException(nameof(ingressExpiry));

@@ -10,7 +10,7 @@ namespace ICP.Agent.Auth
 {
     public class AnonymousIdentity : IIdentity
     {
-        public PrincipalId Principal { get; } = PrincipalId.Anonymous();
+        public Principal Principal { get; } = Principal.Anonymous();
 
         public SignedContent CreateSignedContent(Dictionary<string, IHashable> request)
         {

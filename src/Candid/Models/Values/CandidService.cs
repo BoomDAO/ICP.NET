@@ -9,9 +9,9 @@ namespace ICP.Candid.Models.Values
 		public override CandidValueType Type { get; } = CandidValueType.Service;
 		public bool IsOpqaueReference { get; }
 
-		private readonly PrincipalId? principalId;
+		private readonly Principal? principalId;
 
-		public CandidService(PrincipalId? principalId)
+		public CandidService(Principal? principalId)
 		{
 			this.principalId = principalId ?? throw new ArgumentNullException(nameof(principalId));
 			this.IsOpqaueReference = false;
@@ -23,7 +23,7 @@ namespace ICP.Candid.Models.Values
 			this.IsOpqaueReference = true;
 		}
 
-		public PrincipalId GetAsPrincipal()
+		public Principal GetAsPrincipal()
 		{
 			if (this.IsOpqaueReference)
 			{
@@ -72,7 +72,7 @@ namespace ICP.Candid.Models.Values
 				: this.principalId!.ToString();
 		}
 
-		public static CandidService TraparentReference(PrincipalId? principalId)
+		public static CandidService TraparentReference(Principal? principalId)
 		{
 			return new CandidService(principalId);
 		}

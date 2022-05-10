@@ -10,7 +10,7 @@ namespace ICP.Agent.Requests
 		/// The principal of the canister to call
 		/// </summary>
 		[Dahomey.Cbor.Attributes.CborProperty(Properties.CANISTER_ID)]
-		public PrincipalId CanisterId { get; }
+		public Principal CanisterId { get; }
 		/// <summary>
 		/// Name of the canister method to call
 		/// </summary>
@@ -25,7 +25,7 @@ namespace ICP.Agent.Requests
 		/// The user who issued the request
 		/// </summary>
 		[Dahomey.Cbor.Attributes.CborProperty(Properties.SENDER)]
-		public PrincipalId Sender { get; }
+		public Principal Sender { get; }
 		/// <summary>
 		/// An upper limit on the validity of the request, expressed in nanoseconds since 1970-01-01
 		/// </summary>
@@ -37,7 +37,7 @@ namespace ICP.Agent.Requests
 		[Dahomey.Cbor.Attributes.CborProperty(Properties.NONCE)]
 		public byte[]? Nonce { get; }
 
-		public CallRequest(PrincipalId canisterId, string method, CandidArg encodedArgument, PrincipalId sender, ICTimestamp ingressExpiry)
+		public CallRequest(Principal canisterId, string method, CandidArg encodedArgument, Principal sender, ICTimestamp ingressExpiry)
 		{
 			this.CanisterId = canisterId ?? throw new ArgumentNullException(nameof(canisterId));
 			this.Method = method ?? throw new ArgumentNullException(nameof(method));

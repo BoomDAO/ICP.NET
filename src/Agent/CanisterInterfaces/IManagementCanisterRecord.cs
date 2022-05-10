@@ -17,7 +17,7 @@ namespace ICP.Agent.CanisterInterfaces
 		/// <param name="settings">Optional. Settings for canister creation</param>
 		/// <param name="cyclesToAdd">Optional. Adds cycles to the balance of canister identified by amount (implicitly capping it at MAX_CANISTER_BALANCE)</param>
 		/// <returns></returns>
-		Task<PrincipalId> ProvisionalCreateCanisterWithCyclesAsync(CanisterSettings? settings = null, ulong cyclesToAdd = 0);
+		Task<Principal> ProvisionalCreateCanisterWithCyclesAsync(CanisterSettings? settings = null, ulong cyclesToAdd = 0);
 
 		/// <summary>
 		/// 
@@ -27,7 +27,7 @@ namespace ICP.Agent.CanisterInterfaces
 		/// <param name="wasmModule"></param>
 		/// <param name="argument"></param>
 		/// <returns></returns>
-		Task InstallCodeAsync(InstallType type, PrincipalId canisterId, byte[] wasmModule, byte[] argument);
+		Task InstallCodeAsync(InstallType type, Principal canisterId, byte[] wasmModule, byte[] argument);
 	}
 
 	public enum InstallType
@@ -51,7 +51,7 @@ namespace ICP.Agent.CanisterInterfaces
 		/// This value is assigned to the controllers attribute of the canister.
 		/// Default value: A list containing only the caller of the create_canister call.
 		/// </summary>
-		public List<PrincipalId>? Controllers { get; }
+		public List<Principal>? Controllers { get; }
 		/// <summary>
 		/// Must be a number between 0 and 100, inclusively.
 		/// It indicates how much compute power should be guaranteed to this canister, expressed as a percentage 
@@ -82,7 +82,7 @@ namespace ICP.Agent.CanisterInterfaces
 
 
 		public CanisterSettings(
-			List<PrincipalId>? controllers = null,
+			List<Principal>? controllers = null,
 			ulong? computeAllocation = null,
 			ulong? memoryAllocation = null,
 			ulong? freezingThreshold = null)

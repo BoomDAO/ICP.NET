@@ -131,10 +131,10 @@ namespace ICP.Candid.Models.Values
         /// If opaque, returns null, otherwise the principalid
         /// </summary>
         /// <returns></returns>
-        public PrincipalId? AsPrincipal()
+        public Principal? AsPrincipal()
         {
             this.ValidateType(CandidPrimitiveType.Principal);
-            return (PrincipalId?)this.value;
+            return (Principal?)this.value;
         }
 
 
@@ -283,7 +283,7 @@ namespace ICP.Candid.Models.Values
 
         private byte[] EncodePrincipal()
         {
-            PrincipalId? principalId = this.AsPrincipal();
+            Principal? principalId = this.AsPrincipal();
             if(principalId == null)
             {
                 return new byte[] { 0 };
@@ -403,7 +403,7 @@ namespace ICP.Candid.Models.Values
         {
             return new CandidPrimitive(CandidPrimitiveType.Bool, value);
         }
-        public static CandidPrimitive Pricipal(PrincipalId? value)
+        public static CandidPrimitive Pricipal(Principal? value)
         {
             return new CandidPrimitive(CandidPrimitiveType.Principal, value);
         }

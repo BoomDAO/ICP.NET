@@ -10,9 +10,9 @@ namespace ICP.Agent.Auth
 {
 	public abstract class SignIdentity : IIdentity
 	{
-		public PrincipalId Principal { get; }
+		public Principal Principal { get; }
 
-		public SignIdentity(PrincipalId principal)
+		public SignIdentity(Principal principal)
 		{
 			this.Principal = principal;
 		}
