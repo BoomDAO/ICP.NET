@@ -1,5 +1,7 @@
 ﻿@page "/"
-@inject Sample.BlazorWebAssembly.Shared.GovernanceApiClient Client
+@inject Sample.Shared.GovernanceApiClient Client
+@inject System.Net.Http.HttpClient Http
+
 
 <PageTitle>Get Proposal Info</PageTitle>
 
@@ -7,7 +9,8 @@
 
 <input type="number" @bind-value="this.ProposalId" @bind-value:event="oninput" />
 
-<button @onclick="ReloadProposalInfo">Fetch</button>
+<button @onclick="ReloadProposalInfo">Fetch using WebAssembly</button>
+<button @onclick="ServerReloadProposalInfo">Fetch using Server Api</button>
 
 @if (this.Info != null)
 {
@@ -40,6 +43,17 @@
         if (this.ProposalId != null)
         {
             this.Info = await this.Client.GetProposalInfoAsync(this.ProposalId.Value);
+        }
+    }
+
+    
+    public async Task ServerReloadProposalInfo()
+    {
+        if (this.ProposalId != null)
+        {
+            HttpResponseMessage response = await this.Http.GetAsync($"api/Governance/GetProposalInfo/{this.ProposalId.Value}");
+            response.EnsureSuccessStatusCode();
+            this.Info = await response.Content.ReadFromJsonAsync<ProposalInfo?>();
         }
     }
 }

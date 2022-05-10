@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sample.BlazorWebAssembly.Shared.Models
+namespace Sample.Shared.Models
 {
     public class ProposalInfo
     {

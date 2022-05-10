@@ -3,13 +3,13 @@ using ICP.Agent.Auth;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Sample.BlazorWebAssembly.Client;
-using Sample.BlazorWebAssembly.Shared;
+using Sample.Shared;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7288") });
 
 Uri url = new Uri($"https://ic0.app");
 

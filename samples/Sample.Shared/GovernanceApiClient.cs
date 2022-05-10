@@ -3,14 +3,14 @@ using ICP.Agent.Responses;
 using ICP.Candid.Models;
 using ICP.Candid.Models.Types;
 using ICP.Candid.Models.Values;
-using Sample.BlazorWebAssembly.Shared.Models;
+using Sample.Shared.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sample.BlazorWebAssembly.Shared
+namespace Sample.Shared
 {
     public class GovernanceApiClient
     {
