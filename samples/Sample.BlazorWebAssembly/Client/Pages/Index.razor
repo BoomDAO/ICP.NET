@@ -1,8 +1,45 @@
 ﻿@page "/"
+@inject Sample.BlazorWebAssembly.Shared.GovernanceApiClient Client
 
 <PageTitle>Get Proposal Info</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1>Get Proposal Info</h1>
 
-Welcome to your new app.
+<input type="number" @bind-value="this.ProposalId" @bind-value:event="oninput" />
 
+<button @onclick="ReloadProposalInfo">Fetch</button>
+
+@if (this.Info != null)
+{
+    <h2>Id: @this.Info.Id?.Id</h2>
+    <h2>Status: @this.Info.Status</h2>
+    <h2>Topic: @this.Info.Topic</h2>
+    if (this.Info.LatestTally != null)
+    {
+        <h1>Votes</h1>
+        <ul>
+            <li>Yes: @this.Info.LatestTally.Yes</li>
+            <li>No: @this.Info.LatestTally.No</li>
+            <li>Total: @this.Info.LatestTally.Total</li>
+        </ul>
+    }
+    if(this.Info.Proposal != null)
+    {
+        <h1>Proposal</h1>
+        <h2>Url: @this.Info.Proposal.Url</h2>
+        <h2>Text: @this.Info.Proposal.Title</h2>
+    }
+}
+
+@code {
+    public ulong? ProposalId { get; set; }
+    public ProposalInfo? Info { get; set; }
+
+    public async Task ReloadProposalInfo()
+    {
+        if (this.ProposalId != null)
+        {
+            this.Info = await this.Client.GetProposalInfoAsync(this.ProposalId.Value);
+        }
+    }
+}

@@ -86,6 +86,17 @@ namespace ICP.Candid.Models.Values
             return (CandidOptional)this;
         }
 
+        public T? AsOptionalValueOrDefault<T>(Func<CandidValue, T> valueConverter)
+        {
+            this.ValidateType(CandidValueType.Optional);
+            var optional = (CandidOptional)this;
+            if(optional.Value is CandidPrimitive p && p.ValueType == CandidPrimitiveType.Null)
+            {
+                return default;
+            }
+            return valueConverter(optional.Value);
+        }
+
         protected void ValidateType(CandidValueType type)
         {
             if (this.Type != type)
