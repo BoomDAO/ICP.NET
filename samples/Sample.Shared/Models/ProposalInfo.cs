@@ -55,7 +55,7 @@ namespace Sample.Shared.Models
         {
             public string Url { get; set; }
             public string? Title { get; set; }
-            public ActionVariant Action { get; set; }
+            public ActionVariant? Action { get; set; }
             public string Summary { get; set; }
         }
         public class ActionVariant

@@ -1,4 +1,5 @@
 ﻿@page "/"
+@using System.Text.Json
 @inject Sample.Shared.GovernanceApiClient Client
 @inject System.Net.Http.HttpClient Http
 
@@ -31,7 +32,9 @@
         <h1>Proposal</h1>
         <h2>Url: @this.Info.Proposal.Url</h2>
         <h2>Text: @this.Info.Proposal.Title</h2>
-    }
+    }    <pre>
+        @JsonSerializer.Serialize(this.Info, new JsonSerializerOptions{WriteIndented=true});
+    </pre>
 }
 
 @code {

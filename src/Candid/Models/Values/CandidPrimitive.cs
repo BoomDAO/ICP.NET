@@ -43,85 +43,85 @@ namespace ICP.Candid.Models.Values
             this.value = value;
         }
 
-        public string AsText()
+        public new string AsText()
         {
             this.ValidateType(CandidPrimitiveType.Text);
             return (string)this.value!;
         }
 
-        public UnboundedUInt AsNat()
+        public new UnboundedUInt AsNat()
         {
             this.ValidateType(CandidPrimitiveType.Nat);
             return (UnboundedUInt)this.value!;
         }
 
-        public byte AsNat8()
+        public new byte AsNat8()
         {
             this.ValidateType(CandidPrimitiveType.Nat8);
             return (byte)this.value!;
         }
 
-        public ushort AsNat16()
+        public new ushort AsNat16()
         {
             this.ValidateType(CandidPrimitiveType.Nat16);
             return (ushort)this.value!;
         }
 
-        public uint AsNat32()
+        public new uint AsNat32()
         {
             this.ValidateType(CandidPrimitiveType.Nat32);
             return (uint)this.value!;
         }
 
-        public ulong AsNat64()
+        public new ulong AsNat64()
         {
             this.ValidateType(CandidPrimitiveType.Nat64);
             return (ulong)this.value!;
         }
 
-        public UnboundedInt AsInt()
+        public new UnboundedInt AsInt()
         {
             this.ValidateType(CandidPrimitiveType.Int);
             return (UnboundedInt)this.value!;
         }
 
-        public sbyte AsInt8()
+        public new sbyte AsInt8()
         {
             this.ValidateType(CandidPrimitiveType.Int8);
             return (sbyte)this.value!;
         }
 
-        public short AsInt16()
+        public new short AsInt16()
         {
             this.ValidateType(CandidPrimitiveType.Int16);
             return (short)this.value!;
         }
 
-        public int AsInt32()
+        public new int AsInt32()
         {
             this.ValidateType(CandidPrimitiveType.Int32);
             return (int)this.value!;
         }
 
-        public long AsInt64()
+        public new long AsInt64()
         {
             this.ValidateType(CandidPrimitiveType.Int64);
             return (long)this.value!;
         }
 
-        public float AsFloat32()
+        public new float AsFloat32()
         {
             this.ValidateType(CandidPrimitiveType.Float32);
             return (float)this.value!;
         }
 
-        public double AsFloat64()
+        public new double AsFloat64()
         {
             this.ValidateType(CandidPrimitiveType.Float64);
             return (double)this.value!;
         }
 
-        public bool AsBool()
+        public new bool AsBool()
         {
             this.ValidateType(CandidPrimitiveType.Bool);
             return (bool)this.value!;
@@ -131,7 +131,7 @@ namespace ICP.Candid.Models.Values
         /// If opaque, returns null, otherwise the principalid
         /// </summary>
         /// <returns></returns>
-        public Principal? AsPrincipal()
+        public new Principal? AsPrincipal()
         {
             this.ValidateType(CandidPrimitiveType.Principal);
             return (Principal?)this.value;

@@ -41,43 +41,155 @@ namespace Sample.Shared
 
         private static ProposalInfo? MapCandid(CandidValueWithType arg)
         {
-            return arg.Value.AsOptionalValueOrDefault(v =>
+            return arg.Value.AsOptional(v =>
             {
-                CandidRecord root = v.AsRecord();
-                ProposalInfo.Tally? latestTally = root.Fields["latest_tally"].AsOptionalValueOrDefault(t =>
+                return v.AsRecord(r =>
                 {
-                    CandidRecord tally = t.AsRecord(); // TODO
-                    return new ProposalInfo.Tally
+                    return new ProposalInfo
                     {
-                        No = tally.Fields["no"].AsPrimitive().AsNat64(),
-                        Yes = tally.Fields["yes"].AsPrimitive().AsNat64(),
-                        Total = tally.Fields["total"].AsPrimitive().AsNat64(),
-                        TimestampSeconds = tally.Fields["timestamp_seconds"].AsPrimitive().AsNat64()
-                    };
-                });
-                ProposalInfo.ProposalDetails? proposal = root.Fields["proposal"].AsOptionalValueOrDefault(p =>
-                {
-                    CandidRecord prop = p.AsRecord();
-                    return new ProposalInfo.ProposalDetails
-                    {
-                        Url = prop.Fields["url"].AsPrimitive().AsText(),
-                        Title = prop.Fields["title"].AsOptionalValueOrDefault(v => v.AsPrimitive().AsText()),
-                        Action = null // TODO
-                    };
-                });
-                return new ProposalInfo
-                {
-                    Id = root.Fields["id"].AsOptionalValueOrDefault(i =>
-                    {
-                        return new ProposalInfo.IdInfo
+                        Id = r["id"].AsOptional(i =>
                         {
-                            Id = i.AsRecord().Fields["id"].AsPrimitive().AsNat64()
-                        };
-                    }),
-                    LatestTally = latestTally,
-                    Proposal = proposal
-                };
+                            return i.AsRecord(ConvertIdInfo);
+                        }),
+                        LatestTally = r["latest_tally"].AsOptional(t =>
+                        {
+                            return t.AsRecord(tally =>
+                            {
+                                return new ProposalInfo.Tally
+                                {
+                                    No = tally["no"].AsNat64(),
+                                    Yes = tally["yes"].AsNat64(),
+                                    Total = tally["total"].AsNat64(),
+                                    TimestampSeconds = tally["timestamp_seconds"].AsNat64()
+                                };
+                            });
+                        }),
+                        Proposal = r["proposal"].AsOptional(p =>
+                        {
+                            return p.AsRecord(r2 =>
+                            {
+                                return new ProposalInfo.ProposalDetails
+                                {
+                                    Url = r2["url"].AsText(),
+                                    Title = r2["title"].AsOptional(v => v.AsText()),
+                                    Action = r2["action"].AsOptional(o => o.AsVariant(v =>
+                                    {
+                                        if (v.Tag == CandidLabel.FromName("RegisterKnownNeuron"))
+                                        {
+                                            var info = v.Value.AsRecord(r =>
+                                            {
+                                                return new ProposalInfo.ActionVariant.RegisterKnownNeuronInfo
+                                                {
+                                                    Id = r["id"].AsOptional(o => o.AsRecord(ConvertIdInfo)),
+                                                    KnownNeuronData = r["knownNeuronData"].AsRecord(r =>
+                                                    {
+                                                        return new ProposalInfo.ActionVariant.RegisterKnownNeuronInfo.Data
+                                                        {
+                                                            Name = r["name"].AsText(),
+                                                            Description = r["description"].AsOptional(o => o.AsText()),
+                                                        };
+                                                    })
+                                                };
+                                            });
+                                            return ProposalInfo.ActionVariant.RegisterKnownNeuron(info);
+                                        }
+                                        if (v.Tag == CandidLabel.FromName("ManageNeuron"))
+                                        {
+                                            var info = v.Value.AsRecord(v =>
+                                            {
+                                                return new ProposalInfo.ActionVariant.ManageNeuronInfo
+                                                {
+                                                    Id = v["id"].AsOptional(o => o.AsRecord(ConvertIdInfo)),
+                                                    Command = v["command"].AsOptional(o => o.AsVariant<ProposalInfo.ActionVariant.ManageNeuronInfo.CommandVariant>(v =>
+                                                    {
+                                                        // TODO finish
+                                                        throw new NotImplementedException();
+                                                    }))
+                                                };
+                                            });
+                                            return ProposalInfo.ActionVariant.ManageNeuron(info);
+                                        }
+                                        if (v.Tag == CandidLabel.FromName("ExecuteNnsFunction"))
+                                        {
+                                            // TODO finish
+                                            throw new NotImplementedException();
+                                        }
+                                        if (v.Tag == CandidLabel.FromName("RewardNodeProvider"))
+                                        {
+                                            // TODO finish
+                                            throw new NotImplementedException();
+                                        }
+                                        if (v.Tag == CandidLabel.FromName("SetDefaultFollowees"))
+                                        {
+                                            // TODO finish
+                                            throw new NotImplementedException();
+                                        }
+                                        if (v.Tag == CandidLabel.FromName("RewardNodeProviders"))
+                                        {
+                                            // TODO finish
+                                            throw new NotImplementedException();
+                                        }
+                                        if (v.Tag == CandidLabel.FromName("ManageNetworkEconomics"))
+                                        {
+                                            // TODO finish
+                                            throw new NotImplementedException();
+                                        }
+                                        if (v.Tag == CandidLabel.FromName("ApproveGenesisKyc"))
+                                        {
+                                            // TODO finish
+                                            throw new NotImplementedException();
+                                        }
+                                        if (v.Tag == CandidLabel.FromName("AddOrRemoveNodeProvider"))
+                                        {
+                                            // TODO finish
+                                            throw new NotImplementedException();
+                                        }
+                                        if (v.Tag == CandidLabel.FromName("Motion"))
+                                        {
+                                            var info = v.Value.AsRecord(r =>
+                                            {
+                                                return new ProposalInfo.ActionVariant.MotionInfo
+                                                {
+                                                    MotionText = r["motion_text"].AsText()
+                                                };
+                                            });
+                                            return ProposalInfo.ActionVariant.Motion(info);
+                                        }
+                                        throw new NotImplementedException(v.Tag.ToString());
+                                    })),
+                                    Summary = r2["summary"].AsText()
+                                };
+                            });
+                        }),
+                        Ballots = r["ballots"].AsVector(v =>
+                        {
+                            return v.AsRecord(r =>
+                            {
+                                ulong c = r[CandidLabel.FromId(0)].AsNat64();
+                                var prop = r[CandidLabel.FromId(1)].AsRecord(r =>
+                                {
+                                    return new ProposalInfo.VoteInfo
+                                    {
+                                        Vote = r["vote"].AsInt32(),
+                                        VotingPower = r["voting_power"].AsNat64()
+                                    };
+                                });
+                                return (c, prop);
+                            });
+                        }),
+                        Topic = r["topic"].AsInt32(),
+                        Status = r["status"].AsInt32()
+                    };
+                });
             });
+        }
+
+        private static ProposalInfo.IdInfo ConvertIdInfo(CandidRecord r)
+        {
+            return new ProposalInfo.IdInfo
+            {
+                Id = r["id"].AsNat64()
+            };
         }
     }
 }

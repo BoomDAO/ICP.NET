@@ -78,11 +78,28 @@ namespace ICP.Candid.Models.Types
 
 		public int CompareTo(CandidLabel? other)
 		{
-			if(other == null)
+			if(object.ReferenceEquals(other, null))
             {
 				return 1;
             }
 			return this.Id.CompareTo(other.Id);
+		}
+		public static bool operator ==(CandidLabel? l1, CandidLabel? l2)
+		{
+			if (object.ReferenceEquals(l1, null))
+			{
+				return object.ReferenceEquals(l2, null);
+			}
+			return l1.Equals(l2);
+		}
+
+		public static bool operator !=(CandidLabel? l1, CandidLabel? l2)
+		{
+			if (object.ReferenceEquals(l1, null))
+			{
+				return !object.ReferenceEquals(l2, null);
+			}
+			return !l1.Equals(l2);
 		}
 
 		public override int GetHashCode()

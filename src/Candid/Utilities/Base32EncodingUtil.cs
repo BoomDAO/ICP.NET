@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ICP.Candid
+namespace ICP.Candid.Utilities
 {
     public static class Base32EncodingUtil
     {

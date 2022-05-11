@@ -1,5 +1,7 @@
 ﻿using ICP.Candid.Models;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ICP.Candid.Models.Values
 {
@@ -55,17 +57,35 @@ namespace ICP.Candid.Models.Values
             this.ValidateType(CandidValueType.Vector);
             return (CandidVector)this;
         }
+        public List<T> AsVector<T>(Func<CandidValue, T> converter)
+        {
+            CandidVector vector = this.AsVector();
+            return vector.Values
+                .Select(v => converter(v))
+                .ToList();
+        }
 
         public CandidRecord AsRecord()
         {
             this.ValidateType(CandidValueType.Record);
             return (CandidRecord)this;
         }
+        public T AsRecord<T>(Func<CandidRecord, T> converter)
+        {
+            CandidRecord record = this.AsRecord();
+            return converter(record);
+        }
 
         public CandidVariant AsVariant()
         {
             this.ValidateType(CandidValueType.Variant);
             return (CandidVariant)this;
+        }
+
+        public T AsVariant<T>(Func<CandidVariant, T> converter)
+        {
+            CandidVariant v = this.AsVariant();
+            return converter(v);
         }
 
         public CandidFunc AsFunc()
@@ -86,15 +106,93 @@ namespace ICP.Candid.Models.Values
             return (CandidOptional)this;
         }
 
-        public T? AsOptionalValueOrDefault<T>(Func<CandidValue, T> valueConverter)
+        public T? AsOptional<T>(Func<CandidValue, T> valueConverter)
         {
-            this.ValidateType(CandidValueType.Optional);
-            var optional = (CandidOptional)this;
+            CandidOptional? optional = this.AsOptional();
             if(optional.Value is CandidPrimitive p && p.ValueType == CandidPrimitiveType.Null)
             {
                 return default;
             }
             return valueConverter(optional.Value);
+        }
+
+        public string AsText()
+        {
+            return this.AsPrimitive().AsText();
+        }
+
+        public UnboundedUInt AsNat()
+        {
+            return this.AsPrimitive().AsNat();
+        }
+
+        public byte AsNat8()
+        {
+            return this.AsPrimitive().AsNat8();
+        }
+
+        public ushort AsNat16()
+        {
+            return this.AsPrimitive().AsNat16();
+        }
+
+        public uint AsNat32()
+        {
+            return this.AsPrimitive().AsNat32();
+        }
+
+        public ulong AsNat64()
+        {
+            return this.AsPrimitive().AsNat64();
+        }
+
+        public UnboundedInt AsInt()
+        {
+            return this.AsPrimitive().AsInt();
+        }
+
+        public sbyte AsInt8()
+        {
+            return this.AsPrimitive().AsInt8();
+        }
+
+        public short AsInt16()
+        {
+            return this.AsPrimitive().AsInt16();
+        }
+
+        public int AsInt32()
+        {
+            return this.AsPrimitive().AsInt32();
+        }
+
+        public long AsInt64()
+        {
+            return this.AsPrimitive().AsInt64();
+        }
+
+        public float AsFloat32()
+        {
+            return this.AsPrimitive().AsFloat32();
+        }
+
+        public double AsFloat64()
+        {
+            return this.AsPrimitive().AsFloat64();
+        }
+
+        public bool AsBool()
+        {
+            return this.AsPrimitive().AsBool();
+        }
+
+        /// <summary>
+        /// If opaque, returns null, otherwise the principalid
+        /// </summary>
+        /// <returns></returns>
+        public Principal? AsPrincipal()
+        {
+            return this.AsPrimitive().AsPrincipal();
         }
 
         protected void ValidateType(CandidValueType type)
