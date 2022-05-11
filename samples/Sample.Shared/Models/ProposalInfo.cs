@@ -110,6 +110,66 @@ namespace Sample.Shared.Models
                 return new ActionVariant(ActionVariantType.Motion, info);
             }
 
+            public RegisterKnownNeuronInfo AsRegisterKnownNeuron()
+            {
+                this.ValidateType(ActionVariantType.RegisterKnownNeuron);
+                return (RegisterKnownNeuronInfo)this.value;
+            }
+
+            public ManageNeuronInfo AsManageNeuron()
+            {
+                this.ValidateType(ActionVariantType.ManageNeuron);
+                return (ManageNeuronInfo)this.value;
+            }
+            public ExecuteNnsFunctionInfo AsExecuteNnsFunction()
+            {
+                this.ValidateType(ActionVariantType.ExecuteNnsFunction);
+                return (ExecuteNnsFunctionInfo)this.value;
+            }
+            public RewardNodeProviderInfo AsRewardNodeProvider()
+            {
+                this.ValidateType(ActionVariantType.RewardNodeProvider);
+                return (RewardNodeProviderInfo)this.value;
+            }
+            public SetDefaultFolloweesInfo AsSetDefaultFollowees()
+            {
+                this.ValidateType(ActionVariantType.SetDefaultFollowees);
+                return (SetDefaultFolloweesInfo)this.value;
+            }
+            public RewardNodeProvidersInfo AsRewardNodeProviders()
+            {
+                this.ValidateType(ActionVariantType.RewardNodeProviders);
+                return (RewardNodeProvidersInfo)this.value;
+            }
+            public ManageNetworkEconomicsInfo AsManageNetworkEconomics()
+            {
+                this.ValidateType(ActionVariantType.ManageNetworkEconomics);
+                return (ManageNetworkEconomicsInfo)this.value;
+            }
+            public ApproveGenesisKycInfo AsApproveGenesisKyc()
+            {
+                this.ValidateType(ActionVariantType.ApproveGenesisKyc);
+                return (ApproveGenesisKycInfo)this.value;
+            }
+            public AddOrRemoveNodeProviderInfo AsAddOrRemoveNodeProvider()
+            {
+                this.ValidateType(ActionVariantType.AddOrRemoveNodeProvider);
+                return (AddOrRemoveNodeProviderInfo)this.value;
+            }
+            public MotionInfo AsMotion()
+            {
+                this.ValidateType(ActionVariantType.Motion);
+                return (MotionInfo)this.value;
+            }
+
+            private void ValidateType(ActionVariantType type)
+            {
+                if(this.Type != type)
+                {
+                    throw new InvalidOperationException($"Cannot cast '{this.Type}' to type '{type}'");
+                }
+            }
+
             public class RegisterKnownNeuronInfo
             {
                 public IdInfo? Id { get; set; }

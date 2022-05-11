@@ -30,9 +30,20 @@
     if(this.Info.Proposal != null)
     {
         <h1>Proposal</h1>
+        <h2>Title: @this.Info.Proposal.Title</h2>
+        <h2>Summary: @this.Info.Proposal.Summary</h2>
         <h2>Url: @this.Info.Proposal.Url</h2>
-        <h2>Text: @this.Info.Proposal.Title</h2>
-    }    <pre>
+        if (this.Info.Proposal.Action != null)
+        {
+            switch (this.Info.Proposal.Action.Type)
+            {
+                case ProposalInfo.ActionVariantType.Motion:
+                    <h2>Motion: @this.Info.Proposal.Action.AsMotion().MotionText</h2>
+                    break;
+            }
+        }
+    }
+    <pre>
         @JsonSerializer.Serialize(this.Info, new JsonSerializerOptions{WriteIndented=true});
     </pre>
 }
