@@ -8,7 +8,7 @@ namespace ICP.Candid.Models.Types
 {
 	public class VectorCandidTypeDefinition : CompoundCandidTypeDefinition
 	{
-		public override IDLTypeCode Type { get; } = IDLTypeCode.Vector;
+		public override CandidTypeCode Type { get; } = CandidTypeCode.Vector;
 
 		public CandidTypeDefinition Value { get; }
 
@@ -38,7 +38,7 @@ namespace ICP.Candid.Models.Types
 
 		public override int GetHashCode()
 		{
-			return HashCode.Combine(IDLTypeCode.Vector, this.Value);
+			return HashCode.Combine(CandidTypeCode.Vector, this.Value);
 		}
 
 		protected override string ToStringInternal()

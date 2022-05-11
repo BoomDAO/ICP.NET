@@ -28,7 +28,7 @@ namespace ICP.Candid.Models
 
         public byte[] Encode()
         {
-            return IDLBuilder.FromArgs(this.Values).Encode();
+            return CandidArgBuilder.FromArgs(this.Values).Encode();
         }
 
         public static CandidArg FromBytes(byte[] value)

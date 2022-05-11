@@ -14,7 +14,7 @@ namespace ICP.Candid.Models.Types
 	}
 	public class FuncCandidTypeDefinition : CompoundCandidTypeDefinition
 	{
-		public override IDLTypeCode Type { get; } = IDLTypeCode.Func;
+		public override CandidTypeCode Type { get; } = CandidTypeCode.Func;
 
 		public IReadOnlyList<FuncMode> Modes { get; }
 		public IReadOnlyList<CandidTypeDefinition> ArgTypes { get; }

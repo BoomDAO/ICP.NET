@@ -9,7 +9,7 @@ namespace ICP.Candid.Models.Types
 {
 	public class ServiceCandidTypeDefinition : CompoundCandidTypeDefinition
 	{
-		public override IDLTypeCode Type { get; } = IDLTypeCode.Service;
+		public override CandidTypeCode Type { get; } = CandidTypeCode.Service;
 
 		public IReadOnlyDictionary<string, FuncCandidTypeDefinition> Methods { get; }
 

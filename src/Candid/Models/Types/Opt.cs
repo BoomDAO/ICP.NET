@@ -8,7 +8,7 @@ namespace ICP.Candid.Models.Types
 {
 	public class OptCandidTypeDefinition : CompoundCandidTypeDefinition
 	{
-		public override IDLTypeCode Type { get; } = IDLTypeCode.Opt;
+		public override CandidTypeCode Type { get; } = CandidTypeCode.Opt;
 		public CandidTypeDefinition Value { get; }
 
 		public OptCandidTypeDefinition(CandidTypeDefinition value, string? recursiveId = null) : base(recursiveId)
@@ -37,7 +37,7 @@ namespace ICP.Candid.Models.Types
 
 		public override int GetHashCode()
 		{
-			return HashCode.Combine(IDLTypeCode.Opt, this.Value);
+			return HashCode.Combine(CandidTypeCode.Opt, this.Value);
 		}
 
 		protected override string ToStringInternal()

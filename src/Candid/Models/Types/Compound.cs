@@ -42,7 +42,7 @@ namespace ICP.Candid.Models.Types
 
 	public abstract class RecordOrVariantCandidTypeDefinition : CompoundCandidTypeDefinition
 	{
-		public override abstract IDLTypeCode Type { get; }
+		public override abstract CandidTypeCode Type { get; }
 		protected abstract string TypeString { get; }
 
 		public IReadOnlyDictionary<CandidLabel, CandidTypeDefinition> Fields { get; }

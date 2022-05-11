@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ICP.Candid
 {
-	public enum IDLTypeCode
+	public enum CandidTypeCode
 	{
 		Null = -1,
 		Bool = -2,

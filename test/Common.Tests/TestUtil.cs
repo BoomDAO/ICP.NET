@@ -16,7 +16,7 @@ namespace ICP.Candid.Tests
 		public static void AssertEncodedCandid(string expectedHex, string expectedPrefix, CandidValue value, CandidTypeDefinition typeDef)
 		{
 			// Encode test
-			var builder = new IDLBuilder();
+			var builder = new CandidArgBuilder();
 			builder.Add(CandidValueWithType.FromValueAndType(value, typeDef));
 			byte[] actualBytes = builder.Encode();
 			string actualHex = Convert.ToHexString(actualBytes);

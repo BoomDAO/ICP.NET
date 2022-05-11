@@ -11,7 +11,7 @@ namespace ICP.Candid.Models.Types
 {
 	public abstract class CandidTypeDefinition : IEquatable<CandidTypeDefinition>
 	{
-		public abstract IDLTypeCode Type { get; }
+		public abstract CandidTypeCode Type { get; }
 
 		public abstract override bool Equals(object? obj);
 

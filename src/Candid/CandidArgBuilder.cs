@@ -11,7 +11,7 @@ using ICP.Candid.Models.Values;
 
 namespace ICP.Candid
 {
-    public class IDLBuilder
+    public class CandidArgBuilder
     {
         /// <summary>
         /// Helper to capture compound types
@@ -37,9 +37,9 @@ namespace ICP.Candid
             this.EncodedValues.Add(encodedValue);
         }
 
-        public static IDLBuilder FromArgs(IEnumerable<CandidValueWithType> values)
+        public static CandidArgBuilder FromArgs(IEnumerable<CandidValueWithType> values)
         {
-            var builder = new IDLBuilder();
+            var builder = new CandidArgBuilder();
             foreach (CandidValueWithType vwt in values)
             {
                 builder.Add(vwt);

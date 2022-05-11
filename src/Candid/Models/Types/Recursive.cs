@@ -9,18 +9,18 @@ namespace ICP.Candid.Models.Types
 {
 	public class RecursiveReferenceCandidTypeDefinition : CandidTypeDefinition
 	{
-		public override IDLTypeCode Type => this.getTypeFunc();
+		public override CandidTypeCode Type => this.getTypeFunc();
 
-		private readonly Func<IDLTypeCode> getTypeFunc;
+		private readonly Func<CandidTypeCode> getTypeFunc;
 		public string RecursiveId { get; }
 
-		public RecursiveReferenceCandidTypeDefinition(string recursiveId, Func<IDLTypeCode> getTypeFunc)
+		public RecursiveReferenceCandidTypeDefinition(string recursiveId, Func<CandidTypeCode> getTypeFunc)
 		{
 			this.RecursiveId = recursiveId;
 			this.getTypeFunc = getTypeFunc;
 		}
 
-		public RecursiveReferenceCandidTypeDefinition(string recursiveId, IDLTypeCode type)
+		public RecursiveReferenceCandidTypeDefinition(string recursiveId, CandidTypeCode type)
 		{
 			this.RecursiveId = recursiveId;
 			this.getTypeFunc = () => type;

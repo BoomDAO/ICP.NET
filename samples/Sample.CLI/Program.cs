@@ -4,28 +4,14 @@ using ICP.Agent.Responses;
 using ICP.Candid.Models;
 using ICP.Candid.Models.Types;
 using ICP.Candid.Models.Values;
+using Sample.Shared;
+using Sample.Shared.Models;
 
 Uri url = new Uri($"https://ic0.app");
 
 var identity = new AnonymousIdentity();
 IAgent agent = new HttpAgent(identity, url);
 
+var client = new GovernanceApiClient(agent);
 
-await CallGetProposalInfoAsync(54021);
-
-async Task CallGetProposalInfoAsync(ulong proposalId)
-{
-    string method = "get_proposal_info";
-    var candidArg = CandidValueWithType.FromValueAndType(
-        CandidPrimitive.Nat64(proposalId),
-        new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat64)
-    );
-
-    CandidArg encodedArgument = CandidArg.FromCandid(candidArg);
-
-    string governanceCanister = "rrkah-fqaaa-aaaaa-aaaaq-cai";
-    Principal canisterId = Principal.FromText(governanceCanister);
-    QueryResponse response = await agent.QueryAsync(canisterId, method, encodedArgument, identityOverride: null);
-    QueryReply reply = response.ThrowOrGetReply();
-
-}
+ProposalInfo? info = await client.GetProposalInfoAsync(54021);

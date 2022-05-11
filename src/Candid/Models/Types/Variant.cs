@@ -8,7 +8,7 @@ namespace ICP.Candid.Models.Types
 {
 	public class VariantCandidTypeDefinition : RecordOrVariantCandidTypeDefinition
 	{
-		public override IDLTypeCode Type { get; } = IDLTypeCode.Variant;
+		public override CandidTypeCode Type { get; } = CandidTypeCode.Variant;
 
 		protected override string TypeString { get; } = "variant";
 

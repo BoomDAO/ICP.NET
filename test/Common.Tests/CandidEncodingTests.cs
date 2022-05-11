@@ -417,7 +417,7 @@ namespace ICP.Candid.Tests
             {
                 {
                     CandidLabel.FromName("selfRef"),
-                    new OptCandidTypeDefinition(new RecursiveReferenceCandidTypeDefinition("rec_1", IDLTypeCode.Record))
+                    new OptCandidTypeDefinition(new RecursiveReferenceCandidTypeDefinition("rec_1", CandidTypeCode.Record))
                 }
             }, "rec_1");
             var expectedArg = CandidArg.FromCandid(new List<CandidValueWithType>

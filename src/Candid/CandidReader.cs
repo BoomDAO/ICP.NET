@@ -88,46 +88,46 @@ namespace ICP.Candid
 
         private DefintionOrReference ReadTypeInner(long typeCodeInt)
         {
-            IDLTypeCode type = (IDLTypeCode)typeCodeInt;
+            CandidTypeCode type = (CandidTypeCode)typeCodeInt;
             switch (type)
             {
-                case IDLTypeCode.Int:
+                case CandidTypeCode.Int:
                     return DefintionOrReference.Primitive(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Int));
-                case IDLTypeCode.Int64:
+                case CandidTypeCode.Int64:
                     return DefintionOrReference.Primitive(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Int64));
-                case IDLTypeCode.Int32:
+                case CandidTypeCode.Int32:
                     return DefintionOrReference.Primitive(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Int32));
-                case IDLTypeCode.Int16:
+                case CandidTypeCode.Int16:
                     return DefintionOrReference.Primitive(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Int16));
-                case IDLTypeCode.Int8:
+                case CandidTypeCode.Int8:
                     return DefintionOrReference.Primitive(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Int8));
-                case IDLTypeCode.Nat:
+                case CandidTypeCode.Nat:
                     return DefintionOrReference.Primitive(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat));
-                case IDLTypeCode.Nat64:
+                case CandidTypeCode.Nat64:
                     return DefintionOrReference.Primitive(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat64));
-                case IDLTypeCode.Nat32:
+                case CandidTypeCode.Nat32:
                     return DefintionOrReference.Primitive(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat32));
-                case IDLTypeCode.Nat16:
+                case CandidTypeCode.Nat16:
                     return DefintionOrReference.Primitive(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat16));
-                case IDLTypeCode.Nat8:
+                case CandidTypeCode.Nat8:
                     return DefintionOrReference.Primitive(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat8));
-                case IDLTypeCode.Float32:
+                case CandidTypeCode.Float32:
                     return DefintionOrReference.Primitive(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Float32));
-                case IDLTypeCode.Float64:
+                case CandidTypeCode.Float64:
                     return DefintionOrReference.Primitive(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Float64));
-                case IDLTypeCode.Empty:
+                case CandidTypeCode.Empty:
                     return DefintionOrReference.Primitive(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Empty));
-                case IDLTypeCode.Null:
+                case CandidTypeCode.Null:
                     return DefintionOrReference.Primitive(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Null));
-                case IDLTypeCode.Reserved:
+                case CandidTypeCode.Reserved:
                     return DefintionOrReference.Primitive(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Reserved));
-                case IDLTypeCode.Text:
+                case CandidTypeCode.Text:
                     return DefintionOrReference.Primitive(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Text));
-                case IDLTypeCode.Principal:
+                case CandidTypeCode.Principal:
                     return DefintionOrReference.Primitive(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Principal));
-                case IDLTypeCode.Bool:
+                case CandidTypeCode.Bool:
                     return DefintionOrReference.Primitive(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Bool));
-                case IDLTypeCode.Opt:
+                case CandidTypeCode.Opt:
                     DefintionOrReference innerType = this.ReadType();
                     return DefintionOrReference.CompoundDefintion(resolver =>
                     {
@@ -136,7 +136,7 @@ namespace ICP.Candid
                         resolver.Tracer.EndCompound("Opt");
                         return new OptCandidTypeDefinition(t);
                     });
-                case IDLTypeCode.Record:
+                case CandidTypeCode.Record:
                     UnboundedUInt size = this.ReadNat();
                     Dictionary<CandidLabel, DefintionOrReference> recordFields = this.ReadRecordInner(size);
                     return DefintionOrReference.CompoundDefintion(resolver =>
@@ -152,7 +152,7 @@ namespace ICP.Candid
                         resolver.Tracer.EndCompound("Record");
                         return new RecordCandidTypeDefinition(map);
                     });
-                case IDLTypeCode.Vector:
+                case CandidTypeCode.Vector:
                     DefintionOrReference innerVectorType = this.ReadType();
                     return DefintionOrReference.CompoundDefintion(resolver =>
                     {
@@ -161,7 +161,7 @@ namespace ICP.Candid
                         resolver.Tracer.EndCompound("Vector");
                         return new VectorCandidTypeDefinition(t);
                     });
-                case IDLTypeCode.Variant:
+                case CandidTypeCode.Variant:
                     UnboundedUInt length = this.ReadNat();
                     var variantOptions = new Dictionary<CandidLabel, DefintionOrReference>();
                     while (length > 0)
@@ -184,7 +184,7 @@ namespace ICP.Candid
                         resolver.Tracer.StartCompound("Variant");
                         return new VariantCandidTypeDefinition(map);
                     });
-                case IDLTypeCode.Func:
+                case CandidTypeCode.Func:
                     List<DefintionOrReference> argTypes = this.ReadVectorInner();
                     List<DefintionOrReference> returnTypes = this.ReadVectorInner();
                     List<byte> modes = this.ReadVectorInner(() => this.ReadByte());
@@ -207,7 +207,7 @@ namespace ICP.Candid
                         resolver.Tracer.EndCompound("Func");
                         return new FuncCandidTypeDefinition(m, a, r);
                     });
-                case IDLTypeCode.Service:
+                case CandidTypeCode.Service:
                     List<(string Name, DefintionOrReference Type)> methods = this.ReadVectorInner(() =>
                     {
                         string name = this.ReadText();
