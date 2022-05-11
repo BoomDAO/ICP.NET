@@ -295,7 +295,7 @@ namespace Sample.Shared.Models
 
                             public static ByVariant MemoAndController(MemoAndControllerInfo info)
                             {
-                                return new ByVariant(ByVariantType.MemoAndController, null);
+                                return new ByVariant(ByVariantType.MemoAndController, info);
                             }
 
                             public static ByVariant Memo()
@@ -417,7 +417,7 @@ namespace Sample.Shared.Models
                         public ulong DissolveDelaySeconds { get; set; }
                         public bool KycVerified { get; set; }
                         public ulong AmountE8s { get; set; }
-                        public Principal? NewControllewr { get; set; }
+                        public Principal? NewController { get; set; }
                         public ulong Nonce { get; set; }
                     }
 
@@ -480,7 +480,7 @@ namespace Sample.Shared.Models
             public class ExecuteNnsFunctionInfo
             {
                 public int NnsFunction { get; set; }
-                public byte[] Payload { get; set; }
+                public List<byte> Payload { get; set; }
             }
 
             public class RewardNodeProviderInfo
@@ -588,7 +588,7 @@ namespace Sample.Shared.Models
 
         public class AccountInfo
         {
-            public byte[] Hash { get; set; }
+            public List<byte> Hash { get; set; }
         }
 
         public class AmountInfo

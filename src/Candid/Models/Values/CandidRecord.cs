@@ -18,12 +18,26 @@ namespace ICP.Candid.Models.Values
 		{
 			this.Fields = fields;
 		}
+		public CandidValue this[string name]
+		{
+			get
+			{
+				return this.Fields[name];
+			}
+		}
+		public CandidValue this[int id]
+		{
+			get
+			{
+				return this.Fields[CandidLabel.FromId((UnboundedUInt)id)];
+			}
+		}
 		public CandidValue this[CandidLabel tag]
 		{
 			get
-            {
+			{
 				return this.Fields[tag];
-            }
+			}
 		}
 
 		public bool TryGetField(string name, [NotNullWhen(true)] out CandidValue? value)
