@@ -1,5 +1,5 @@
 # ICP.NET
-Collection of Internet Computer Protocol (ICP) libraries 
+Collection of Internet Computer Protocol (ICP) libraries for .NET/Blazor
 
 - Agent - Library to allow communication to and from the Internet Computer
 
@@ -58,12 +58,10 @@ string title = firstArg.AsRecord()["title"];
 
 ```cs
 CandidArg arg = CandidArg.FromBytes(rawCandidBytes);
-MyObj obj = arg.Values[0].Value.AsRecord(r => {
-    return new MyObj
-    {
-        Title = r["title"].AsText(),
-        IsGoodTitle = r["is_good_title"].AsBool()
-    }
+MyObj obj = arg.Values[0].Value.AsRecord(r => new MyObj
+{
+    Title = r["title"].AsText(),
+    IsGoodTitle = r["is_good_title"].AsBool()
 });
 
 public class MyObj
