@@ -32,7 +32,7 @@ CandidArg arg = CandidArg.FromCandid(
 // Make request to IC
 string method = "get_proposal_info";
 Principal governanceCanisterId = Principal.FromText("rrkah-fqaaa-aaaaa-aaaaq-cai");
-QueryResponse response = await this.agent.QueryAsync(governanceCanisterId, method, arg);
+QueryResponse response = await agent.QueryAsync(governanceCanisterId, method, arg);
 
 QueryReply reply = response.ThrowOrGetReply();
 
@@ -72,3 +72,9 @@ public class MyObj
     public bool IsGoodTitle { get; set; }
 }
 ```
+
+# Links
+- [IC Http Interface Spec](https://smartcontracts.org/docs/current/references/ic-interface-spec)
+- [Candid Spec](https://github.com/dfinity/candid/blob/master/spec/Candid.md)
+- [Candid Decoder](https://fxa77-fiaaa-aaaae-aaana-cai.raw.ic0.app/explain)
+- [Candid UI Tester](https://a4gq6-oaaaa-aaaab-qaa4q-cai.raw.ic0.app)
