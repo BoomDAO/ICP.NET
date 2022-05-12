@@ -58,31 +58,5 @@ namespace ICP.Candid.Models.Types
         {
             return (int)this.Type;
         }
-
-        public override string ToString()
-        {
-            return this.PrimitiveType switch
-            {
-                CandidPrimitiveType.Text => "text",
-                CandidPrimitiveType.Nat => "nat",
-                CandidPrimitiveType.Nat8 => "nat8",
-                CandidPrimitiveType.Nat16 => "nat16",
-                CandidPrimitiveType.Nat32 => "nat32",
-                CandidPrimitiveType.Nat64 => "nat64",
-                CandidPrimitiveType.Int => "int",
-                CandidPrimitiveType.Int8 => "int8",
-                CandidPrimitiveType.Int16 => "int16",
-                CandidPrimitiveType.Int32 => "int32",
-                CandidPrimitiveType.Int64 => "int64",
-                CandidPrimitiveType.Float32 => "float32",
-                CandidPrimitiveType.Float64 => "float64",
-                CandidPrimitiveType.Bool => "bool",
-                CandidPrimitiveType.Principal => "principal",
-                CandidPrimitiveType.Reserved => "reserved",
-                CandidPrimitiveType.Empty => "empty",
-                CandidPrimitiveType.Null => "null",
-                _ => throw new NotImplementedException(),
-            };
-        }
     }
 }

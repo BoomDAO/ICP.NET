@@ -20,22 +20,10 @@ namespace ICP.Candid.Models.Types
 
 		internal abstract IEnumerable<CandidTypeDefinition> GetInnerTypes();
 
-		protected abstract string ToStringInternal();
-
 		public override byte[] Encode(CompoundTypeTable compoundTypeTable)
 		{
 			UnboundedUInt index = compoundTypeTable.GetOrAdd(this);
 			return LEB128.EncodeSigned(index);
-		}
-
-		public override string ToString()
-		{
-			string value = this.ToStringInternal();
-			if (this.RecursiveId != null)
-			{
-				value = $"μ{this.RecursiveId}.{value}";
-			}
-			return value;
 		}
 	}
 
@@ -45,9 +33,9 @@ namespace ICP.Candid.Models.Types
 		public override abstract CandidTypeCode Type { get; }
 		protected abstract string TypeString { get; }
 
-		public IReadOnlyDictionary<CandidLabel, CandidTypeDefinition> Fields { get; }
+		public IReadOnlyDictionary<CandidTag, CandidTypeDefinition> Fields { get; }
 
-		protected RecordOrVariantCandidTypeDefinition(Dictionary<CandidLabel, CandidTypeDefinition> fields, string? recursiveId) : base(recursiveId)
+		protected RecordOrVariantCandidTypeDefinition(Dictionary<CandidTag, CandidTypeDefinition> fields, string? recursiveId) : base(recursiveId)
 		{
 			this.Fields = fields;
 		}
@@ -80,7 +68,7 @@ namespace ICP.Candid.Models.Types
 				{
 					return false;
 				}
-				foreach ((CandidLabel fLabel, CandidTypeDefinition fDef) in this.Fields)
+				foreach ((CandidTag fLabel, CandidTypeDefinition fDef) in this.Fields)
 				{
 					if (!def.Fields.TryGetValue(fLabel, out CandidTypeDefinition? otherFDef))
 					{
@@ -99,12 +87,6 @@ namespace ICP.Candid.Models.Types
 		public override int GetHashCode()
 		{
 			return HashCode.Combine(this.Type, this.Fields);
-		}
-
-		protected override string ToStringInternal()
-		{
-			IEnumerable<string> fields = this.Fields.Select(f => $"{f.Key}:{f.Value}");
-			return $"{this.TypeString} {{{string.Join("; ", fields)}}}";
 		}
 	}
 }

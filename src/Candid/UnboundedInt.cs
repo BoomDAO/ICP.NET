@@ -38,12 +38,6 @@ namespace ICP.Candid
 			return this.value.ToString();
 		}
 
-
-		public bool Equals(UnboundedInt? uuint)
-		{
-			return this.CompareTo(uuint) == 0;
-		}
-
 		public static UnboundedInt FromBigInteger(BigInteger value)
 		{
 			return new UnboundedInt(value);
@@ -52,6 +46,12 @@ namespace ICP.Candid
 		public BigInteger ToBigInteger()
 		{
 			return this.value;
+		}
+
+
+		public bool Equals(UnboundedInt? uuint)
+		{
+			return this.CompareTo(uuint) == 0;
 		}
 
 		public override bool Equals(object? obj)
@@ -67,11 +67,6 @@ namespace ICP.Candid
 				return 1;
 			}
 			return this.value.CompareTo(other.value);
-		}
-
-		public static UnboundedInt FromInt64(long value)
-		{
-			return new UnboundedInt(new BigInteger(value));
 		}
 
 		public override int GetHashCode()
@@ -244,6 +239,11 @@ namespace ICP.Candid
 		{
 			ValidateMinMax(value, sbyte.MinValue, sbyte.MaxValue);
 			return (sbyte)value.value;
+		}
+
+		public static UnboundedInt FromInt64(long value)
+		{
+			return new UnboundedInt(new BigInteger(value));
 		}
 
 		private static void ValidateMinMax(UnboundedInt value, BigInteger minValue, BigInteger maxValue)

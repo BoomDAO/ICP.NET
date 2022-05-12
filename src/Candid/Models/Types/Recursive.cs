@@ -49,10 +49,5 @@ namespace ICP.Candid.Models.Types
 		{
 			return HashCode.Combine(this.Type, this.RecursiveId);
 		}
-
-		public override string ToString()
-		{
-			return $"rec {this.RecursiveId}";
-		}
 	}
 }

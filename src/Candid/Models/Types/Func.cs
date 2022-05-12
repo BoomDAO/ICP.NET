@@ -80,13 +80,5 @@ namespace ICP.Candid.Models.Types
 		{
 			return HashCode.Combine(this.Type, this.Modes, this.ArgTypes, this.ReturnTypes);
 		}
-
-		protected override string ToStringInternal()
-		{
-			string args = string.Join(",", this.ArgTypes.Select(f => f.ToString()));
-			string returnTypes = string.Join(",", this.ReturnTypes.Select(f => f.ToString()));
-			string modes = string.Join(",", this.Modes.Select(f => f.ToString()));
-			return $"Func (Args: [{args}], ReturnTypes: [{returnTypes}], Modes: [{modes}])";
-		}
-	}
+    }
 }

@@ -12,7 +12,7 @@ namespace ICP.Candid.Models.Types
 		protected override string TypeString { get; } = "record";
 
 
-		public RecordCandidTypeDefinition(Dictionary<CandidLabel, CandidTypeDefinition> fields, string? recursiveId = null) : base(fields, recursiveId)
+		public RecordCandidTypeDefinition(Dictionary<CandidTag, CandidTypeDefinition> fields, string? recursiveId = null) : base(fields, recursiveId)
 		{
 		}
 

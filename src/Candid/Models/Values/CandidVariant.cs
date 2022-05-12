@@ -10,10 +10,10 @@ namespace ICP.Candid.Models.Values
 	{
 		public override CandidValueType Type { get; } = CandidValueType.Variant;
 
-		public CandidLabel Tag { get; }
+		public CandidTag Tag { get; }
 		public CandidValue Value { get; }
 
-		public CandidVariant(CandidLabel tag, CandidValue? value = null)
+		public CandidVariant(CandidTag tag, CandidValue? value = null)
 		{
 			this.Tag = tag;
 			this.Value = value ?? CandidPrimitive.Null();

@@ -39,10 +39,5 @@ namespace ICP.Candid.Models.Types
 		{
 			return HashCode.Combine(CandidTypeCode.Opt, this.Value);
 		}
-
-		protected override string ToStringInternal()
-		{
-			return $"opt {this.Value}";
-		}
-    }
+	}
 }

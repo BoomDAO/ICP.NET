@@ -11,11 +11,13 @@ namespace ICP.Candid.Models.Types
 	{
 		public override CandidTypeCode Type { get; } = CandidTypeCode.Service;
 
+		public string? Name { get; }
 		public IReadOnlyDictionary<string, FuncCandidTypeDefinition> Methods { get; }
 
-		public ServiceCandidTypeDefinition(IReadOnlyDictionary<string, FuncCandidTypeDefinition> methods, string? recursiveId = null) : base(recursiveId)
+		public ServiceCandidTypeDefinition(IReadOnlyDictionary<string, FuncCandidTypeDefinition> methods, string? name, string? recursiveId = null) : base(recursiveId)
 		{
 			this.Methods = methods;
+			this.Name = name;
 		}
 
 		internal override byte[] EncodeInnerTypes(CompoundTypeTable compoundTypeTable)
@@ -55,12 +57,6 @@ namespace ICP.Candid.Models.Types
 		public override int GetHashCode()
 		{
 			return HashCode.Combine(this.Type, this.Methods);
-		}
-
-		protected override string ToStringInternal()
-		{
-			IEnumerable<string> methods = this.Methods.Select(f => $"{f.Key}:{f.Value}");
-			return $"Service {{{string.Join("; ", methods)}}}";
 		}
 	}
 }

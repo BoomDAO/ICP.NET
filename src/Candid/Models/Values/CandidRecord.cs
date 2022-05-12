@@ -12,9 +12,9 @@ namespace ICP.Candid.Models.Values
 	{
 		public override CandidValueType Type { get; } = CandidValueType.Record;
 
-		public Dictionary<CandidLabel, CandidValue> Fields { get; }
+		public Dictionary<CandidTag, CandidValue> Fields { get; }
 
-		public CandidRecord(Dictionary<CandidLabel, CandidValue> fields)
+		public CandidRecord(Dictionary<CandidTag, CandidValue> fields)
 		{
 			this.Fields = fields;
 		}
@@ -29,10 +29,10 @@ namespace ICP.Candid.Models.Values
 		{
 			get
 			{
-				return this.Fields[CandidLabel.FromId((UnboundedUInt)id)];
+				return this.Fields[CandidTag.FromId((UnboundedUInt)id)];
 			}
 		}
-		public CandidValue this[CandidLabel tag]
+		public CandidValue this[CandidTag tag]
 		{
 			get
 			{
@@ -42,26 +42,26 @@ namespace ICP.Candid.Models.Values
 
 		public bool TryGetField(string name, [NotNullWhen(true)] out CandidValue? value)
 		{
-			CandidLabel hashedName = CandidLabel.FromName(name);
+			CandidTag hashedName = CandidTag.FromName(name);
 			return this.TryGetField(hashedName, out value);
 		}
 
-		public bool TryGetField(CandidLabel label, [NotNullWhen(true)] out CandidValue? value)
+		public bool TryGetField(CandidTag label, [NotNullWhen(true)] out CandidValue? value)
 		{
 			return this.Fields.TryGetValue(label, out value);
 		}
 
 		public static CandidRecord FromDictionary(Dictionary<string, CandidValue> dict)
 		{
-			Dictionary<CandidLabel, CandidValue> hashedDict = dict
-				.ToDictionary(d => CandidLabel.FromName(d.Key), d => d.Value);
+			Dictionary<CandidTag, CandidValue> hashedDict = dict
+				.ToDictionary(d => CandidTag.FromName(d.Key), d => d.Value);
 
 			return new CandidRecord(hashedDict);
 		}
 
-		public static CandidRecord FromDictionary(Dictionary<CandidLabel, CandidValue> dict)
+		public static CandidRecord FromDictionary(Dictionary<CandidTag, CandidValue> dict)
 		{
-			Dictionary<CandidLabel, CandidValue> hashedDict = dict
+			Dictionary<CandidTag, CandidValue> hashedDict = dict
 				.ToDictionary(d => d.Key, d => d.Value);
 
 			return new CandidRecord(hashedDict);

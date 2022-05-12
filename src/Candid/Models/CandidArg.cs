@@ -33,7 +33,7 @@ namespace ICP.Candid.Models
 
         public static CandidArg FromBytes(byte[] value)
         {
-            return CandidReader.Read(value);
+            return CandidByteReader.Read(value);
         }
 
         public static CandidArg FromCandid(List<CandidValueWithType> args, byte[]? opaqueReferencesBytes = null)
@@ -69,6 +69,24 @@ namespace ICP.Candid.Models
         public override int GetHashCode()
         {
             return HashCode.Combine(this.Values.Select(v => v.GetHashCode()));
+        }
+
+        public static bool operator ==(CandidArg? v1, CandidArg? v2)
+        {
+            if (object.ReferenceEquals(v1, null))
+            {
+                return object.ReferenceEquals(v2, null);
+            }
+            return v1.Equals(v2);
+        }
+
+        public static bool operator !=(CandidArg? v1, CandidArg? v2)
+        {
+            if (object.ReferenceEquals(v1, null))
+            {
+                return object.ReferenceEquals(v2, null);
+            }
+            return !v1.Equals(v2);
         }
     }
 }

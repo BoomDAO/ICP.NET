@@ -278,7 +278,7 @@ namespace ICP.Candid.Tests
         [InlineData("_1.23_", 1360503298)]
         public void Encode_Label(string name, uint hashedName)
         {
-            uint digest = CandidLabel.HashName(name);
+            uint digest = CandidTag.HashName(name);
             Assert.Equal(hashedName, digest);
 
         }
@@ -286,15 +286,15 @@ namespace ICP.Candid.Tests
         [Fact]
         public void Encode_Record_Ids()
         {
-            var candidValue = new CandidRecord(new Dictionary<CandidLabel, CandidValue>
+            var candidValue = new CandidRecord(new Dictionary<CandidTag, CandidValue>
             {
-                {new CandidLabel(1), CandidPrimitive.Int(UnboundedInt.FromInt64(42)) },
+                {new CandidTag(1), CandidPrimitive.Int(UnboundedInt.FromInt64(42)) },
             });
             string expectedPrefix = "";
             string expectedHex = "016C01017C01002A";
-            var typeDef = new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+            var typeDef = new RecordCandidTypeDefinition(new Dictionary<CandidTag, CandidTypeDefinition>
             {
-                {new CandidLabel(1), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Int) },
+                {new CandidTag(1), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Int) },
             });
             TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidValue, typeDef);
         }
@@ -302,19 +302,19 @@ namespace ICP.Candid.Tests
         [Fact]
         public void Encode_Record_Named()
         {
-            var candidValue = new CandidRecord(new Dictionary<CandidLabel, CandidValue>
+            var candidValue = new CandidRecord(new Dictionary<CandidTag, CandidValue>
             {
-                {CandidLabel.FromName("foo"),CandidPrimitive.Int(UnboundedInt.FromInt64(42)) },
-                {CandidLabel.FromName("bar"), CandidPrimitive.Bool(true) }
+                {CandidTag.FromName("foo"),CandidPrimitive.Int(UnboundedInt.FromInt64(42)) },
+                {CandidTag.FromName("bar"), CandidPrimitive.Bool(true) }
             });
             string expectedPrefix = "";
             // TODO ordering of types again
             //string expectedHex = "016C02D3E3AA027E868EB7027C0100012A";
             string expectedHex = "016C02868EB7027CD3E3AA027E0100012A";
-            var typeDef = new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+            var typeDef = new RecordCandidTypeDefinition(new Dictionary<CandidTag, CandidTypeDefinition>
             {
-                {CandidLabel.FromName("foo"), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Int) },
-                {CandidLabel.FromName("bar"), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Bool) },
+                {CandidTag.FromName("foo"), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Int) },
+                {CandidTag.FromName("bar"), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Bool) },
             });
             TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidValue, typeDef);
         }
@@ -352,11 +352,11 @@ namespace ICP.Candid.Tests
             //00 variant value
             const string hex = "4449444C036B029CC20102E58EB402016B01CFA0DEF2067F6C05C4A7C9A10179DC8BD3F401798D98F3E7047CE2D8DEFB0B7989FB97EB0E7101000100";
             var value1 = new CandidVariant("err", new CandidVariant("NotFound"));
-            var type1 = new VariantCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+            var type1 = new VariantCandidTypeDefinition(new Dictionary<CandidTag, CandidTypeDefinition>
             {
                 {
-                    CandidLabel.FromName("ok"),
-                    new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                    CandidTag.FromName("ok"),
+                    new RecordCandidTypeDefinition(new Dictionary<CandidTag, CandidTypeDefinition>
                     {
                         { "total", new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat32) },
                         { "desktop", new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat32) },
@@ -366,8 +366,8 @@ namespace ICP.Candid.Tests
                     })
                 },
                 {
-                    CandidLabel.FromName("err"),
-                    new VariantCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                    CandidTag.FromName("err"),
+                    new VariantCandidTypeDefinition(new Dictionary<CandidTag, CandidTypeDefinition>
                     {
                         {"NotFound", new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Null) }
                     })
@@ -400,23 +400,23 @@ namespace ICP.Candid.Tests
             //00 Opt does not have value
             const string actualHex = "4449444C026E016C01A78A8399080001010100";
 
-            var value1 = new CandidRecord(new Dictionary<CandidLabel, CandidValue>
+            var value1 = new CandidRecord(new Dictionary<CandidTag, CandidValue>
             {
                 {
-                    CandidLabel.FromName("selfRef"),
-                    new CandidOptional(new CandidRecord(new Dictionary<CandidLabel, CandidValue>
+                    CandidTag.FromName("selfRef"),
+                    new CandidOptional(new CandidRecord(new Dictionary<CandidTag, CandidValue>
                     {
                         {
-                            CandidLabel.FromName("selfRef"),
+                            CandidTag.FromName("selfRef"),
                             new CandidOptional()
                         }
                     }))
                 }
             });
-            var type1 = new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+            var type1 = new RecordCandidTypeDefinition(new Dictionary<CandidTag, CandidTypeDefinition>
             {
                 {
-                    CandidLabel.FromName("selfRef"),
+                    CandidTag.FromName("selfRef"),
                     new OptCandidTypeDefinition(new RecursiveReferenceCandidTypeDefinition("rec_1", CandidTypeCode.Record))
                 }
             }, "rec_1");

@@ -40,10 +40,5 @@ namespace ICP.Candid.Models.Types
 		{
 			return HashCode.Combine(CandidTypeCode.Vector, this.Value);
 		}
-
-		protected override string ToStringInternal()
-		{
-			return $"vec {this.Value}";
-		}
 	}
 }

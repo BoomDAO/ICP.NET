@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ICP.Candid.Models.Types
+namespace ICP.Candid.Models
 {
     public class CandidTextTokenHelper
     {
