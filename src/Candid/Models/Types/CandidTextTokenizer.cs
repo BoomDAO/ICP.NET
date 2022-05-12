@@ -65,6 +65,7 @@ namespace ICP.Candid.Models.Types
                     {
                         if(index >= textSpan.Length - 1)
                         {
+                            index++;
                             break;
                         }
                         c = textSpan[++index];
@@ -83,10 +84,6 @@ namespace ICP.Candid.Models.Types
                 }
                 tokens.Add(new CandidTextToken(tokenType, text));
                 index++;
-                if (index >= textSpan.Length)
-                {
-                    break;
-                }
             }
             return new CandidTextTokenHelper(tokens);
         }

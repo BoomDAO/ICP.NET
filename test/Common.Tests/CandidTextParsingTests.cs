@@ -1,4 +1,5 @@
 ﻿using ICP.Candid.Models.Types;
+using ICP.Candid.Models.Values;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -249,12 +250,593 @@ namespace ICP.Candid.Tests
                                     new RecordCandidTypeDefinition(
                                         new Dictionary<CandidLabel, CandidTypeDefinition>
                                         {
-                                            {CandidLabel.FromName("id"), new PrimitiveCandidTypeDefinition(Models.Values.CandidPrimitiveType.Nat64) }
+                                            {CandidLabel.FromName("id"), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat64) }
                                         }
                                     )
                                 )
                             },
+                            {
+                                CandidLabel.FromName("status"),
+                                new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Int32)
+                            },
+                            {
+                                CandidLabel.FromName("topic"),
+                                new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Int32)
+                            },
+                            {
+                                CandidLabel.FromName("failure_reason"),
+                                new OptCandidTypeDefinition(
+                                    new RecordCandidTypeDefinition(
+                                        new Dictionary<CandidLabel, CandidTypeDefinition>
+                                        {
+                                            { CandidLabel.FromName("error_message"), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Text) },
+                                            { CandidLabel.FromName("error_type"), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Int32) }
+                                        }
+                                    )
+                                )
+                            },
+                            {
+                                CandidLabel.FromName("ballots"),
+                                new VectorCandidTypeDefinition(
+                                    new RecordCandidTypeDefinition(
+                                        new Dictionary<CandidLabel, CandidTypeDefinition>
+                                        {
+                                            {
+                                                CandidLabel.FromId(0),
+                                                new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat64) },
+                                            {
+                                                CandidLabel.FromId(1),
+                                                new RecordCandidTypeDefinition(
+                                                    new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                    {
+                                                        { CandidLabel.FromName("vote"), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Int32) },
+                                                        { CandidLabel.FromName("voting_power"), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat64) }
+                                                    }
+                                                )
+                                            }
+                                        }
+                                    )
+                                )
+                            },
+                            {
+                                CandidLabel.FromName("proposal_timestamp_seconds"),
+                                new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat64)
+                            },
+                            {
+                                CandidLabel.FromName("reward_event_round"),
+                                new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat64)
+                            },
+                            {
+                                CandidLabel.FromName("deadline_timestamp_seconds"),
+                                new OptCandidTypeDefinition(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat64))
+                            },
+                            {
+                                CandidLabel.FromName("failed_timestamp_seconds"),
+                                new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat64)
+                            },
+                            {
+                                CandidLabel.FromName("reject_cost_e8s"),
+                                new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat64)
+                            },
+                            {
+                                CandidLabel.FromName("latest_tally"),
+                                new OptCandidTypeDefinition(
+                                    new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                    {
+                                        { CandidLabel.FromName("no"), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat64) },
+                                        { CandidLabel.FromName("yes"), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat64) },
+                                        { CandidLabel.FromName("total"), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat64) },
+                                        { CandidLabel.FromName("timestamp_seconds"), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat64) },
+                                    })
+                                )
+                            },
+                            {
+                                CandidLabel.FromName("reward_status"),
+                                new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Int32)
+                            },
+                            {
+                                CandidLabel.FromName("decided_timestamp_seconds"),
+                                new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat64)
+                            },
+                            {
+                                CandidLabel.FromName("proposal"),
+                                new OptCandidTypeDefinition(
+                                    new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                    {
+                                        {
+                                            CandidLabel.FromName("url"),
+                                            new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Text)
+                                        },
+                                        {
+                                            CandidLabel.FromName("title"),
+                                            new OptCandidTypeDefinition(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Text))
+                                        },
+                                        {
+                                            CandidLabel.FromName("action"),
+                                            new OptCandidTypeDefinition(
+                                                new VariantCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                {
+                                                    {
+                                                        CandidLabel.FromName("RegisterKnownNeuron"),
+                                                        new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                        {
+                                                            {
+                                                                CandidLabel.FromName("id"),
+                                                                new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                                {
+                                                                    { CandidLabel.FromName("id"), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat64) }
+                                                                })
+                                                            },
+                                                            {
+                                                                CandidLabel.FromName("known_neuron_data"),
+                                                                new OptCandidTypeDefinition(
+                                                                    new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                                    {
+                                                                        { CandidLabel.FromName("name"), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Text) },
+                                                                        { CandidLabel.FromName("description"), new OptCandidTypeDefinition(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Text)) }
+                                                                    })
+                                                                )
+                                                            }
+                                                        })
+                                                    },
+                                                    {
+                                                        CandidLabel.FromName("ManageNeuron"),
+                                                        new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                        {
+                                                            {
+                                                                CandidLabel.FromName("id"),
+                                                                new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                                {
+                                                                    { CandidLabel.FromName("id"), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat64) }
+                                                                })
+                                                            },
+                                                            {
+                                                                CandidLabel.FromName("command"),
+                                                                new OptCandidTypeDefinition(
+                                                                    new VariantCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                                    {
+                                                                        {
+                                                                            CandidLabel.FromName("Spawn"),
+                                                                            new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                                            {
+                                                                                { CandidLabel.FromName("percentage_to_spawn"), new OptCandidTypeDefinition(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat32)) },
+                                                                                { CandidLabel.FromName("new_controller"), new OptCandidTypeDefinition(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Principal)) },
+                                                                                { CandidLabel.FromName("nonce"), new OptCandidTypeDefinition(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat64)) },
+                                                                            })
+                                                                        },
+                                                                        {
+                                                                            CandidLabel.FromName("Split"),
+                                                                            new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                                            {
+                                                                                { CandidLabel.FromName("amount_e8s"), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat64) }
+                                                                            })
+                                                                        },
+                                                                        {
+                                                                            CandidLabel.FromName("Follow"),
+                                                                            new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                                            {
+                                                                                { CandidLabel.FromName("topic"), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Int32) },
+                                                                                {
+                                                                                    CandidLabel.FromName("followees"),
+                                                                                    new VectorCandidTypeDefinition(new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                                                    {
+                                                                                        { CandidLabel.FromName("id"), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat64) }
+                                                                                    }))
+                                                                                },
+                                                                            })
+                                                                        },
+                                                                        {
+                                                                            CandidLabel.FromName("ClaimOrRefresh"),
+                                                                            new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                                            {
+                                                                                {
+                                                                                    CandidLabel.FromName("by"),
+                                                                                    new OptCandidTypeDefinition(new VariantCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                                                    {
+                                                                                        { CandidLabel.FromName("NeuronIdOrSubaccount"), new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>()) },
+                                                                                        {
+                                                                                            CandidLabel.FromName("MemoAndController"),
+                                                                                            new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                                                            {
+                                                                                                { CandidLabel.FromName("controller"), new OptCandidTypeDefinition(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Principal)) },
+                                                                                                { CandidLabel.FromName("memo"), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat64) }
+                                                                                            })
+                                                                                        },
+                                                                                        { CandidLabel.FromName("Memo"), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat64) }
+                                                                                    }))
+                                                                                },
+                                                                            })
+                                                                        },
+                                                                        {
+                                                                            CandidLabel.FromName("Configure"),
+                                                                            new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                                            {
+                                                                                {
+                                                                                    CandidLabel.FromName("operation"),
+                                                                                    new OptCandidTypeDefinition(new VariantCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                                                    {
+                                                                                        {
+                                                                                            CandidLabel.FromName("RemoveHotKey"),
+                                                                                            new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                                                            {
+                                                                                                { CandidLabel.FromName("hot_key_to_remove"), new OptCandidTypeDefinition(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Principal)) }
+                                                                                            })
+                                                                                        },
+                                                                                        {
+                                                                                            CandidLabel.FromName("AddHotKey"),
+                                                                                            new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                                                            {
+                                                                                                { CandidLabel.FromName("new_hot_key"), new OptCandidTypeDefinition(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Principal)) }
+                                                                                            })
+                                                                                        },
+                                                                                        {
+                                                                                            CandidLabel.FromName("StopDissolving"),
+                                                                                            new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>())
+                                                                                        },
+                                                                                        {
+                                                                                            CandidLabel.FromName("StartDissolving"),
+                                                                                            new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>())
+                                                                                        },
+                                                                                        {
+                                                                                            CandidLabel.FromName("IncreaseDissolveDelay"),
+                                                                                            new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                                                            {
+                                                                                                { CandidLabel.FromName("additional_dissolve_delay_seconds"), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat32) }
+                                                                                            })
+                                                                                        },
+                                                                                        {
+                                                                                            CandidLabel.FromName("JoinCommunityFund"),
+                                                                                            new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>())
+                                                                                        },
+                                                                                        {
+                                                                                            CandidLabel.FromName("SetDissolveTimestamp"),
+                                                                                            new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                                                            {
+                                                                                                { CandidLabel.FromName("dissolve_timestamp_seconds"), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat64) }
+                                                                                            })
+                                                                                        },
+                                                                                    }))
+                                                                                },
+                                                                            })
+                                                                        },
+                                                                        {
+                                                                            CandidLabel.FromName("RegisterVote"),
+                                                                            new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                                            {
+                                                                                { CandidLabel.FromName("vote"), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Int32) },
+                                                                                {
+                                                                                    CandidLabel.FromName("proposal"),
+                                                                                    new OptCandidTypeDefinition(
+                                                                                        new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                                                        {
+                                                                                            { CandidLabel.FromName("id"), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat64) }
+                                                                                        })
+                                                                                    )
+                                                                                },
+                                                                            })
+                                                                        },
+                                                                        {
+                                                                            CandidLabel.FromName("Merge"),
+                                                                            new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                                            {
+                                                                                {
+                                                                                    CandidLabel.FromName("source_neuron_id"),
+                                                                                    new OptCandidTypeDefinition(
+                                                                                        new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                                                        {
+                                                                                            { CandidLabel.FromName("id"), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat64) }
+                                                                                        })
+                                                                                    )
+                                                                                },
+                                                                            })
+                                                                        },
+                                                                        {
+                                                                            CandidLabel.FromName("DisburseToNeuron"),
+                                                                            new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                                            {
+                                                                                { CandidLabel.FromName("dissolve_delay_seconds"), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat64) },
+                                                                                { CandidLabel.FromName("kyc_verified"), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Bool) },
+                                                                                { CandidLabel.FromName("amount_e8s"), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat64) },
+                                                                                { CandidLabel.FromName("new_controller"), new OptCandidTypeDefinition(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Principal)) },
+                                                                                { CandidLabel.FromName("nonce"), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat64) },
+                                                                            })
+                                                                        },
+                                                                        {
+                                                                            CandidLabel.FromName("MakeProposal"),
+                                                                            new RecursiveReferenceCandidTypeDefinition("rec_1", CandidTypeCode.Record)
+                                                                        },
+                                                                        {
+                                                                            CandidLabel.FromName("MergeMaturity"),
+                                                                            new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                                            {
+                                                                                { CandidLabel.FromName("percentage_to_merge"), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat32) },
+                                                                            })
+                                                                        },
+                                                                        {
+                                                                            CandidLabel.FromName("Disburse"),
+                                                                            new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                                            {
+                                                                                {
+                                                                                    CandidLabel.FromName("to_account"),
+                                                                                    new OptCandidTypeDefinition(
+                                                                                        new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                                                        {
+                                                                                            { CandidLabel.FromName("hash"), new VectorCandidTypeDefinition(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat8)) }
+                                                                                        })
+                                                                                    )
+                                                                                },
+                                                                                {
+                                                                                    CandidLabel.FromName("amount"),
+                                                                                    new OptCandidTypeDefinition(
+                                                                                        new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                                                        {
+                                                                                            { CandidLabel.FromName("e8s"), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat64) }
+                                                                                        })
+                                                                                    )
+                                                                                },
+                                                                            })
+                                                                        },
+                                                                    })
+                                                                )
+                                                            },
+                                                            {
+                                                                CandidLabel.FromName("neuron_id_or_subaccount"),
+                                                                new OptCandidTypeDefinition(
+                                                                    new VariantCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                                    {
+                                                                        { CandidLabel.FromName("Subaccount"), new VectorCandidTypeDefinition(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat8)) },
+                                                                        {
+                                                                            CandidLabel.FromName("NeuronId"),
+                                                                            new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                                            {
+                                                                                { CandidLabel.FromName("id"), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat64) }
+                                                                            })
+                                                                        },
+                                                                    })
+                                                                )
+                                                            },
+                                                        })
+                                                    },
+                                                    {
+                                                        CandidLabel.FromName("ExecuteNnsFunction"),
+                                                        new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                        {
+                                                            {
+                                                                CandidLabel.FromName("nns_function"),
+                                                                new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Int32)
+                                                            },
+                                                            {
+                                                                CandidLabel.FromName("payload"),
+                                                                new VectorCandidTypeDefinition(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat8))
+                                                            }
+                                                        })
+                                                    },
+                                                    {
+                                                        CandidLabel.FromName("RewardNodeProvider"),
+                                                        new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                        {
+                                                            {
+                                                                CandidLabel.FromName("node_provider"),
+                                                                new OptCandidTypeDefinition(
+                                                                    new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                                    {
+                                                                        { CandidLabel.FromName("id"), new OptCandidTypeDefinition(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat64)) },
+                                                                        {
+                                                                            CandidLabel.FromName("reward_account"),
+                                                                            new OptCandidTypeDefinition(new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                                            {
+                                                                                { CandidLabel.FromName("hash"), new VectorCandidTypeDefinition(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat8)) }
+                                                                            }))
+                                                                        },
+                                                                    })
+                                                                )
+                                                            },
+                                                            {
+                                                                CandidLabel.FromName("reward_mode"),
+                                                                new OptCandidTypeDefinition(
+                                                                    new VariantCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                                    {
+                                                                        {
+                                                                            CandidLabel.FromName("RewardToNeuron"),
+                                                                            new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                                            {
+                                                                                { CandidLabel.FromName("dissolve_delay_seconds"), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat64) }
+                                                                            })
+                                                                        },
+                                                                        {
+                                                                            CandidLabel.FromName("RewardToAccount"),
+                                                                            new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                                            {
+                                                                                {
+                                                                                    CandidLabel.FromName("to_account"),
+                                                                                    new OptCandidTypeDefinition(new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                                                    {
+                                                                                        { CandidLabel.FromName("hash"), new VectorCandidTypeDefinition(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat8)) }
+                                                                                    }))
+                                                                                }
+                                                                            })
+                                                                        },
+                                                                    })
+                                                                )
+                                                            },
+                                                            {
+                                                                CandidLabel.FromName("amount_e8s"),
+                                                                new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat64)
+                                                            }
+                                                        })
+                                                    },
+                                                    {
+                                                        CandidLabel.FromName("SetDefaultFollowees"),
+                                                        new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                        {
+                                                            {
+                                                                CandidLabel.FromName("default_followees"),
+                                                                new VectorCandidTypeDefinition(
+                                                                    new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                                    {
+                                                                        { CandidLabel.FromId(0), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Int32) },
+                                                                        {
+                                                                            CandidLabel.FromId(1),
+                                                                            new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                                            {
+                                                                                {
+                                                                                    CandidLabel.FromName("followees"),
+                                                                                    new VectorCandidTypeDefinition(
+                                                                                        new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                                                        {
+                                                                                            { CandidLabel.FromName("id"), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat64) }
+                                                                                        })
+                                                                                    )
+                                                                                }
+                                                                            })
+                                                                        }
 
+                                                                    })
+                                                                )
+                                                            }
+                                                        })
+                                                    },
+                                                    {
+                                                        CandidLabel.FromName("RewardNodeProviders"),
+                                                        new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                        {
+                                                            { CandidLabel.FromName("use_registry_derived_rewards"), new OptCandidTypeDefinition(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Bool)) },
+                                                            {
+                                                                CandidLabel.FromName("rewards"),
+                                                                new VectorCandidTypeDefinition(
+                                                                    new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                                    {
+                                                                        {
+                                                                            CandidLabel.FromName("node_provider"),
+                                                                            new OptCandidTypeDefinition(
+                                                                                new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                                                {
+                                                                                    { CandidLabel.FromName("id"), new OptCandidTypeDefinition(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat64)) },
+                                                                                    {
+                                                                                        CandidLabel.FromName("reward_account"),
+                                                                                        new OptCandidTypeDefinition(new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                                                        {
+                                                                                            { CandidLabel.FromName("hash"), new VectorCandidTypeDefinition(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat8)) }
+                                                                                        }))
+                                                                                    },
+                                                                                })
+                                                                            )
+                                                                        },
+                                                                        {
+                                                                            CandidLabel.FromName("reward_mode"),
+                                                                            new OptCandidTypeDefinition(
+                                                                                new VariantCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                                                {
+                                                                                    {
+                                                                                        CandidLabel.FromName("RewardToNeuron"),
+                                                                                        new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                                                        {
+                                                                                            { CandidLabel.FromName("dissolve_delay_seconds"), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat64) }
+                                                                                        })
+                                                                                    },
+                                                                                    {
+                                                                                        CandidLabel.FromName("RewardToAccount"),
+                                                                                        new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                                                        {
+                                                                                            {
+                                                                                                CandidLabel.FromName("to_account"),
+                                                                                                new OptCandidTypeDefinition(new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                                                                {
+                                                                                                    { CandidLabel.FromName("hash"), new VectorCandidTypeDefinition(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat8)) }
+                                                                                                }))
+                                                                                            }
+                                                                                        })
+                                                                                    },
+                                                                                })
+                                                                            )
+                                                                        },
+                                                                        { CandidLabel.FromName("amount_e8s"), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat64) }
+                                                                    })
+                                                                )
+                                                            }
+                                                        })
+                                                    },
+                                                    {
+                                                        CandidLabel.FromName("ManageNetworkEconomics"),
+                                                        new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                        {
+                                                            { CandidLabel.FromName("neuron_minimum_stake_e8s"), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat64) },
+                                                            { CandidLabel.FromName("max_proposals_to_keep_per_topic"), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat32) },
+                                                            { CandidLabel.FromName("neuron_management_fee_per_proposal_e8s"), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat64) },
+                                                            { CandidLabel.FromName("reject_cost_e8s"), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat64) },
+                                                            { CandidLabel.FromName("transaction_fee_e8s"), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat64) },
+                                                            { CandidLabel.FromName("neuron_spawn_dissolve_delay_seconds"), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat64) },
+                                                            { CandidLabel.FromName("minimum_icp_xdr_rate"), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat64) },
+                                                            { CandidLabel.FromName("maximum_node_provider_rewards_e8s"), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat64) }
+                                                        })
+                                                    },
+                                                    {
+                                                        CandidLabel.FromName("ApproveGenesisKyc"),
+                                                        new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                        {
+                                                            { CandidLabel.FromName("principals"), new VectorCandidTypeDefinition(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Principal)) },
+                                                        })
+                                                    },
+                                                    {
+                                                        CandidLabel.FromName("AddOrRemoveNodeProvider"),
+                                                        new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                        {
+                                                            {
+                                                                CandidLabel.FromName("change"),
+                                                                new OptCandidTypeDefinition(
+                                                                    new VariantCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                                    {
+                                                                        {
+                                                                            CandidLabel.FromName("ToRemove"),
+                                                                            new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                                            {
+                                                                                { CandidLabel.FromName("id"), new OptCandidTypeDefinition(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Principal)) },
+                                                                                {
+                                                                                    CandidLabel.FromName("reward_account"),
+                                                                                    new OptCandidTypeDefinition(
+                                                                                        new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                                                        {
+                                                                                            { CandidLabel.FromName("hash"), new VectorCandidTypeDefinition(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat8)) }
+                                                                                        })
+                                                                                    )
+                                                                                },
+                                                                            })
+                                                                        }
+                                                                    }) 
+                                                                )
+                                                            }
+                                                        })
+                                                    },
+                                                    {
+                                                        CandidLabel.FromName("Motion"),
+                                                        new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                                        {
+                                                            { CandidLabel.FromName("motion_text"), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Text) },
+                                                        })
+                                                    },
+                                                })
+                                            )
+                                        },
+                                        {
+                                            CandidLabel.FromName("summary"),
+                                            new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Text)
+                                        },
+                                    }, "rec_1")
+                                )
+                            },
+                            {
+                                CandidLabel.FromName("proposer"),
+                                new OptCandidTypeDefinition(
+                                    new RecordCandidTypeDefinition(new Dictionary<CandidLabel, CandidTypeDefinition>
+                                    {
+                                        { CandidLabel.FromName("id"), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat64) }
+                                    })
+                                )
+                            },
+                            {
+                                CandidLabel.FromName("executed_timestamp_seconds"),
+                                new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat64)
+                            },
                         }
                     )
                 )
