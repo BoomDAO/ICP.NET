@@ -44,5 +44,5 @@ namespace ICP.Candid.Models.Types
 		{
 			return $"opt {this.Value}";
 		}
-	}
+    }
 }

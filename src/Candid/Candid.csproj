@@ -1,11 +1,28 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-		<Nullable>enable</Nullable>
-		<LangVersion>latest</LangVersion>
+	  <TargetFramework>net6.0</TargetFramework>
+	  <Nullable>enable</Nullable>
+	  <LangVersion>latest</LangVersion>
 	  <RootNamespace>ICP.Candid</RootNamespace>
+	  <RepositoryUrl>https://github.com/Gekctek/ICP.NET</RepositoryUrl>
+	  <RepositoryType>git</RepositoryType>
+	  <PackageTags>.net;blazor;ICP;IC</PackageTags>
+	  <PackageReadmeFile>README.md</PackageReadmeFile>
+	  <PackageProjectUrl>https://github.com/Gekctek/ICP.NET</PackageProjectUrl>
+	  <Product>ICP.Candid</Product>
+	  <Company>Edjcase</Company>
+	  <Authors>Gekctek</Authors>
+	  <Version>0.0.1-beta.1</Version>
+	  <PackageId>EdjCase.ICP.Candid</PackageId>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="System.Memory" Version="4.5.4" />

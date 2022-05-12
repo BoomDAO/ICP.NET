@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -6,9 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\Agent\Agent.csproj" />
-    <ProjectReference Include="..\..\src\Candid\Candid.csproj" />
-  </ItemGroup>
 
+	<ItemGroup>
+		<PackageReference Include="EdjCase.ICP.Agent" Version="0.0.1-beta.2" />
+	</ItemGroup>
 </Project>
