@@ -19,14 +19,13 @@ namespace ICP.Candid
 
             using (var stringWriter = new StringWriter())
             {
-                using (var writer = new IndentedTextWriter(stringWriter))
+                using (var writer = new IndentedTextWriter(stringWriter, " "))
                 {
-                    var indentContext = new IndentContext(indented, 0);
-                    textComponent.WriteText(writer, indentContext);
-                    return stringWriter.ToString();
+                    textComponent.WriteText(writer, indented);
                 }
+                return stringWriter.ToString();
             }
-
+        
         }
         private static TextComponentBase GenerateInternal(CandidTypeDefinition t)
         {
@@ -151,28 +150,36 @@ namespace ICP.Candid
         private abstract record TextComponentBase
         {
             public abstract int UnIndentedWidth { get; }
-            public abstract void WriteText(IndentedTextWriter writer, IndentContext indentContext);
+            public abstract void WriteText(IndentedTextWriter writer, bool indented);
 
-            protected void WriteMultiple<T>(IndentedTextWriter writer, List<T> items, string delimiter, IndentContext indentContext)
+            protected void WriteMultiple<T>(IndentedTextWriter writer, List<T> items, string delimiter, bool indented)
                 where T : TextComponentBase
             {
-                int singleLineWidth = items.Sum(i => i.UnIndentedWidth + delimiter.Length) - delimiter.Length;
-                bool indented = indentContext.IsIndentRequired(singleLineWidth);
                 if (indented)
                 {
                     writer.Indent += 2;
-                    // Reset for new line
-                    indentContext = new IndentContext(indented, writer.Indent);
+                    writer.WriteLine();
+                }
+                else
+                {
+                    writer.Write(" ");
                 }
                 for (int i = 0; i < items.Count; i++)
                 {
                     TextComponentBase item = items[i];
-                    item.WriteText(writer, indentContext);
+                    item.WriteText(writer, indented);
                     if (i != items.Count - 1)
                     {
                         // Add seperator to all but last
                         writer.Write(delimiter);
-                        writer.Write(indented ? "\n" : " ");
+                    }
+                    if (indented)
+                    {
+                        writer.WriteLine();
+                    }
+                    else
+                    {
+                        writer.Write(" ");
                     }
                 }
                 if (indented)
@@ -191,10 +198,10 @@ namespace ICP.Candid
                 + 1; // ")"
 
 
-            public override void WriteText(IndentedTextWriter writer, IndentContext indentContext)
+            public override void WriteText(IndentedTextWriter writer, bool indented)
             {
                 writer.Write($"(");
-                this.WriteMultiple(writer, this.Items, ",", indentContext);
+                this.WriteMultiple(writer, this.Items, ",", indented);
                 writer.Write(")");
             }
         }
@@ -207,10 +214,10 @@ namespace ICP.Candid
                 + (this.Suffixes.Count - 1); // Gaps between suffixes
 
 
-            public override void WriteText(IndentedTextWriter writer, IndentContext indentContext)
+            public override void WriteText(IndentedTextWriter writer, bool indented)
             {
                 this.Tuple.WriteText(writer, indented);
-                foreach (string suffix in this.Suffixes)
+                foreach(string suffix in this.Suffixes)
                 {
                     writer.Write(" ");
                     writer.Write(suffix);
@@ -225,7 +232,7 @@ namespace ICP.Candid
                 + 3 // ' : '
                 + this.Value.UnIndentedWidth; // '{value}'
 
-            public override void WriteText(IndentedTextWriter writer, IndentContext indentContext)
+            public override void WriteText(IndentedTextWriter writer, bool indented)
             {
                 writer.Write($"{this.Key} : ");
                 this.Value.WriteText(writer, indented);
@@ -240,7 +247,7 @@ namespace ICP.Candid
                 + (this.Fields.Count - 1) * 2 // '; ' (kv seperators)
                 + 2; // ' }'
 
-            public override void WriteText(IndentedTextWriter writer, IndentContext indentContext)
+            public override void WriteText(IndentedTextWriter writer, bool indented)
             {
                 writer.Write($"{{");
                 this.WriteMultiple(writer, this.Fields, ";", indented);
@@ -251,14 +258,14 @@ namespace ICP.Candid
         private record CompoundTypeTextComponent(TextComponentBase Type, string Seperator, TextComponentBase InnerValue, string? RecursiveId) : TextComponentBase
         {
             public override int UnIndentedWidth =>
-                this.RecursiveId != null ? this.RecursiveId.Length + 2 : 0 // 'μ{recursiveId}.' or ''
+                this.RecursiveId != null ?  this.RecursiveId.Length + 2 : 0 // 'μ{recursiveId}.' or ''
                 + this.Type.UnIndentedWidth // '{type}'
                 + this.Seperator.Length // '{seperator}'
                 + this.InnerValue.UnIndentedWidth; // '{value}'
 
-            public override void WriteText(IndentedTextWriter writer, IndentContext indentContext)
+            public override void WriteText(IndentedTextWriter writer, bool indented)
             {
-                if (this.RecursiveId != null)
+                if(this.RecursiveId != null)
                 {
                     writer.Write("μ");
                     writer.Write(this.RecursiveId);
@@ -275,28 +282,10 @@ namespace ICP.Candid
         {
             public override int UnIndentedWidth => this.Value.Length;
 
-            public override void WriteText(IndentedTextWriter writer, IndentContext indentContext)
+            public override void WriteText(IndentedTextWriter writer, bool indented)
             {
                 writer.Write(this.Value);
             }
-        }
-
-        private class IndentContext
-        {
-            public bool Indented { get; }
-            public int MaxSingleLineWidth { get; private set; }
-            public IndentContext(bool indented, int indentCount, int maxSingleLineWidth = 25)
-            {
-                this.Indented = indented;
-                this.MaxSingleLineWidth = maxSingleLineWidth - indentCount;
-            }
-
-            public void AddIndent(int size)
-            {
-                this.MaxSingleLineWidth -= size;
-            }
-
-            public bool IsIndentRequired(int length) => this.Indented && length > this.MaxSingleLineWidth;
         }
     }
 }
