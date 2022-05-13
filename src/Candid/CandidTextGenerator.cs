@@ -13,20 +13,40 @@ namespace ICP.Candid
 {
     public static class CandidTextGenerator
     {
-        public static string Generate(CandidTypeDefinition t, bool indented = false)
+        public enum IndentType
+        {
+            None,
+            Spaces_2,
+            Spaces_3,
+            Spaces_4,
+            Tab
+        }
+
+
+        public static string Generate(CandidTypeDefinition t, IndentType indentType = IndentType.None)
         {
             var textComponent = CandidTextGenerator.GenerateInternal(t);
+            string? tabString = indentType switch
+            {
+                IndentType.None => "",
+                IndentType.Spaces_2 => "  ",
+                IndentType.Spaces_3 => "   ",
+                IndentType.Spaces_4 => "    ",
+                IndentType.Tab => "\t",
+                _ => throw new NotImplementedException()
+            };
 
             using (var stringWriter = new StringWriter())
             {
-                using (var writer = new IndentedTextWriter(stringWriter, " "))
+                using (var writer = new IndentedTextWriter(stringWriter, tabString))
                 {
-                    textComponent.WriteText(writer, indented);
+                    textComponent.WriteText(writer, indentType != IndentType.None);
                 }
                 return stringWriter.ToString();
             }
-        
+
         }
+
         private static TextComponentBase GenerateInternal(CandidTypeDefinition t)
         {
             return t switch
@@ -82,7 +102,7 @@ namespace ICP.Candid
                 .Select(f => new KeyValueTextComponent(f.Key, GenerateInternal(f.Value)))
                 .ToList();
             var type = new KeyValueTextComponent("service", new ConstantTextComponent($"({s.Name})"));
-            return new CompoundTypeTextComponent(type, " -> ", new CurlyBraceTypeTextComponent(methods), s.RecursiveId);
+            return new CompoundTypeTextComponent(type, " -> ", new CurlyBraceTypeTextComponent<KeyValueTextComponent>(methods), s.RecursiveId);
         }
 
         private static CompoundTypeTextComponent GenerateVariant(VariantCandidTypeDefinition va)
@@ -90,16 +110,31 @@ namespace ICP.Candid
             List<KeyValueTextComponent> fields = va.Fields
                 .Select(f => new KeyValueTextComponent(GenerateTag(f.Key), GenerateInternal(f.Value)))
                 .ToList();
-            var innerValue = new CurlyBraceTypeTextComponent(fields);
+            var innerValue = new CurlyBraceTypeTextComponent<KeyValueTextComponent>(fields);
             return new CompoundTypeTextComponent(new ConstantTextComponent("variant"), " ", innerValue, va.RecursiveId);
         }
 
         private static CompoundTypeTextComponent GenerateRecord(RecordCandidTypeDefinition r)
         {
-            List<KeyValueTextComponent> fields = r.Fields
-                .Select(f => new KeyValueTextComponent(GenerateTag(f.Key), GenerateInternal(f.Value)))
-                .ToList();
-            var innerValue = new CurlyBraceTypeTextComponent(fields);
+            bool tagsMatchIndex = r.Fields
+                .Select((f, i) => (Tag: f.Key, Index: i))
+                .All((f => f.Tag == f.Index));
+            TextComponentBase innerValue;
+            // If tags are indicies, use shorthand
+            if (tagsMatchIndex)
+            {
+                List<TextComponentBase> fields = r.Fields
+                    .Select(f => GenerateInternal(f.Value))
+                    .ToList();
+                innerValue = new CurlyBraceTypeTextComponent<TextComponentBase>(fields);
+            }
+            else
+            {
+                List<KeyValueTextComponent> fields = r.Fields
+                    .Select(f => new KeyValueTextComponent(GenerateTag(f.Key), GenerateInternal(f.Value)))
+                    .ToList();
+                innerValue = new CurlyBraceTypeTextComponent<KeyValueTextComponent>(fields);
+            }
             return new CompoundTypeTextComponent(new ConstantTextComponent("record"), " ", innerValue, r.RecursiveId);
         }
 
@@ -229,17 +264,18 @@ namespace ICP.Candid
         {
             public override int UnIndentedWidth =>
                 this.Key.Length // '{key}'
-                + 3 // ' : '
+                + 1 // ':'
                 + this.Value.UnIndentedWidth; // '{value}'
 
             public override void WriteText(IndentedTextWriter writer, bool indented)
             {
-                writer.Write($"{this.Key} : ");
+                writer.Write($"{this.Key}:");
                 this.Value.WriteText(writer, indented);
             }
         }
 
-        private record CurlyBraceTypeTextComponent(List<KeyValueTextComponent> Fields) : TextComponentBase
+        private record CurlyBraceTypeTextComponent<T>(List<T> Fields) : TextComponentBase
+            where T : TextComponentBase
         {
             public override int UnIndentedWidth =>
                 2 // '{ '

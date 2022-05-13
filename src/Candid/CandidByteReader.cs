@@ -377,7 +377,7 @@ namespace ICP.Candid
                             length--;
                             UnboundedUInt tag = this.ReadNat();
                             DefintionOrReference option = this.ReadType();
-                            variantOptions.Add(tag, option);
+                            variantOptions.Add((uint)tag, option);
                         }
                         return DefintionOrReference.CompoundDefintion(resolver =>
                         {
@@ -471,9 +471,9 @@ namespace ICP.Candid
                 var map = new Dictionary<CandidTag, DefintionOrReference>();
                 while (size > 0)
                 {
-                    UnboundedUInt label = this.ReadNat();
+                    UnboundedUInt tag = this.ReadNat();
                     DefintionOrReference type = this.ReadType();
-                    map.Add(CandidTag.FromId(label), type);
+                    map.Add(CandidTag.FromId((uint)tag), type);
                     size--;
                 }
                 return map;

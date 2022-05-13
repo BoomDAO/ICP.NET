@@ -9,15 +9,15 @@ namespace ICP.Candid.Models
     public class CandidTag : IComparable<CandidTag>, IComparable, IEquatable<CandidTag>
     {
         public string? Name { get; }
-        public UnboundedUInt Id { get; }
+        public uint Id { get; }
 
-        private CandidTag(UnboundedUInt id, string? name)
+        private CandidTag(uint id, string? name)
         {
             this.Id = id;
             this.Name = name;
         }
 
-        public CandidTag(UnboundedUInt id) : this(id, null)
+        public CandidTag(uint id) : this(id, null)
         {
 
         }
@@ -94,7 +94,7 @@ namespace ICP.Candid.Models
             return new CandidTag(id, name);
         }
 
-        public static CandidTag FromId(UnboundedUInt id)
+        public static CandidTag FromId(uint id)
         {
             return new CandidTag(id, null);
         }
@@ -104,12 +104,12 @@ namespace ICP.Candid.Models
             return CandidTag.FromName(value);
         }
 
-        public static implicit operator CandidTag(UnboundedUInt value)
+        public static implicit operator CandidTag(uint value)
         {
             return CandidTag.FromId(value);
         }
 
-        public static implicit operator UnboundedUInt(CandidTag value)
+        public static implicit operator uint(CandidTag value)
         {
             return value.Id;
         }

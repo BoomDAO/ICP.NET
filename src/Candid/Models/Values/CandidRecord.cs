@@ -29,7 +29,7 @@ namespace ICP.Candid.Models.Values
 		{
 			get
 			{
-				return this.Fields[CandidTag.FromId((UnboundedUInt)id)];
+				return this.Fields[CandidTag.FromId((uint)id)];
 			}
 		}
 		public CandidValue this[CandidTag tag]
@@ -90,7 +90,7 @@ namespace ICP.Candid.Models.Values
 			return false;
 		}
 
-        private IEnumerable<(UnboundedUInt, CandidValue)> GetOrderedFields(CandidRecord candidRecord)
+        private IEnumerable<(uint, CandidValue)> GetOrderedFields(CandidRecord candidRecord)
         {
 			return candidRecord.Fields
 					   .Select(f => (f.Key.Id, f.Value))
