@@ -7,15 +7,15 @@ namespace ICP.Candid.Models
     public class CandidValueWithType
     {
         public CandidValue Value { get; }
-        public CandidTypeDefinition Type { get; }
+        public CandidType Type { get; }
 
-        private CandidValueWithType(CandidValue value, CandidTypeDefinition type)
+        private CandidValueWithType(CandidValue value, CandidType type)
         {
             this.Value = value ?? throw new ArgumentNullException(nameof(value));
             this.Type = type ?? throw new ArgumentNullException(nameof(type));
         }
 
-        public static CandidValueWithType FromValueAndType(CandidValue value, CandidTypeDefinition type)
+        public static CandidValueWithType FromValueAndType(CandidValue value, CandidType type)
         {
             // TODO validate
             return new CandidValueWithType(value, type);

@@ -22,12 +22,12 @@ namespace ICP.Candid
             helper.ReadMagicNumber();
 
             //Read type table (all compound type definitions)
-            List<Func<DefinitionResolver, CompoundCandidTypeDefinition>> compoundDefOrRefs = helper.ReadVectorInner(() =>
+            List<Func<DefinitionResolver, CandidCompoundType>> compoundDefOrRefs = helper.ReadVectorInner(() =>
             {
                 DefintionOrReference t = helper.ReadType();
                 if (t.Type != DefintionOrReferenceType.Compound)
                 {
-                    throw CandidParseException.FromReader(helper.Reader, $"Expected compound type, got '{t.Type}'");
+                    throw CandidSerializationParseException.FromReader(helper.Reader, $"Expected compound type, got '{t.Type}'");
                 }
                 return t.DefinitionFunc!;
             });
@@ -36,12 +36,12 @@ namespace ICP.Candid
             try
             {
                 // Get all arg types
-                List<CandidTypeDefinition> types = helper.ReadVectorInner(() =>
+                List<CandidType> types = helper.ReadVectorInner(() =>
                 {
                     DefintionOrReference t = helper.ReadType();
                     return resolver.Resolve(t);
                 });
-                Dictionary<CandidId, CompoundCandidTypeDefinition> recursiveTypes = new();
+                Dictionary<CandidId, CandidCompoundType> recursiveTypes = new();
 
                 // Get an arg value for each type
                 List<CandidValueWithType> args = types
@@ -55,7 +55,7 @@ namespace ICP.Candid
                     .ToArray();
                 return CandidArg.FromCandid(args, opaqueReferenceBytes);
             }
-            catch (Exception ex) when (ex is not CandidDeserializationException)
+            catch (Exception ex) when (ex is not CandidSerializationException)
             {
                 throw new Exception($"Failed to parse the candid arg. Here is the trace that it parsed so far:\n{resolver.Tracer}", ex);
             }
@@ -65,13 +65,13 @@ namespace ICP.Candid
         private class DefintionOrReference
         {
             public DefintionOrReferenceType Type { get; }
-            public PrimitiveCandidTypeDefinition? Definition { get; }
-            public Func<DefinitionResolver, CompoundCandidTypeDefinition>? DefinitionFunc { get; }
+            public CandidPrimitiveType? Definition { get; }
+            public Func<DefinitionResolver, CandidCompoundType>? DefinitionFunc { get; }
             public uint? ReferenceIndex { get; }
             public DefintionOrReference(
                 DefintionOrReferenceType type,
-                PrimitiveCandidTypeDefinition? definition,
-                Func<DefinitionResolver, CompoundCandidTypeDefinition>? definitionFunc,
+                CandidPrimitiveType? definition,
+                Func<DefinitionResolver, CandidCompoundType>? definitionFunc,
                 uint? referenceIndex)
             {
                 this.Type = type;
@@ -85,12 +85,12 @@ namespace ICP.Candid
                 return new DefintionOrReference(DefintionOrReferenceType.Reference, null, null, index);
             }
 
-            public static DefintionOrReference CompoundDefintion(Func<DefinitionResolver, CompoundCandidTypeDefinition> definitionFunc)
+            public static DefintionOrReference CompoundDefintion(Func<DefinitionResolver, CandidCompoundType> definitionFunc)
             {
                 return new DefintionOrReference(DefintionOrReferenceType.Compound, null, definitionFunc, null);
             }
 
-            public static DefintionOrReference Primitive(PrimitiveCandidTypeDefinition definition)
+            public static DefintionOrReference Primitive(CandidPrimitiveType definition)
             {
                 return new DefintionOrReference(DefintionOrReferenceType.Primitive, definition, null, null);
             }
@@ -121,13 +121,13 @@ namespace ICP.Candid
             private int referenceCount = 0;
 
 
-            public DefinitionResolver(List<Func<DefinitionResolver, CompoundCandidTypeDefinition>> types)
+            public DefinitionResolver(List<Func<DefinitionResolver, CandidCompoundType>> types)
             {
                 this.Types = types.Select(t => new TypeInfo(t)).ToList();
                 this.Tracer = new CandidDebugTracer();
             }
 
-            public CandidTypeDefinition Resolve(DefintionOrReference defOrRef)
+            public CandidType Resolve(DefintionOrReference defOrRef)
             {
                 this.Tracer.Indent();
                 try
@@ -161,7 +161,7 @@ namespace ICP.Candid
                             typeInfo.RecursiveId = CandidId.Parse($"rec_{++this.referenceCount}"); // Create a new reference to mark parent object
                             this.Tracer.RecursiveReference(typeInfo.RecursiveId);
                             // Give func to resolve the type which WILL be resolved, but not yet
-                            return new ReferenceCandidTypeDefinition(typeInfo.RecursiveId, () => typeInfo.ResolvedType!.Type);
+                            return new CandidReferenceType(typeInfo.RecursiveId, () => typeInfo.ResolvedType!.Type);
                         case DefintionOrReferenceType.Compound:
                             return defOrRef.DefinitionFunc!(this);
                         case DefintionOrReferenceType.Primitive:
@@ -178,12 +178,12 @@ namespace ICP.Candid
             }
             public class TypeInfo
             {
-                public Func<DefinitionResolver, CompoundCandidTypeDefinition> ResolveFunc { get; }
-                public CompoundCandidTypeDefinition? ResolvedType { get; set; }
+                public Func<DefinitionResolver, CandidCompoundType> ResolveFunc { get; }
+                public CandidCompoundType? ResolvedType { get; set; }
                 public bool ResolvingOrResolved { get; set; }
                 public CandidId? RecursiveId { get; set; }
 
-                public TypeInfo(Func<DefinitionResolver, CompoundCandidTypeDefinition> resolveFunc)
+                public TypeInfo(Func<DefinitionResolver, CandidCompoundType> resolveFunc)
                 {
                     this.ResolveFunc = resolveFunc ?? throw new ArgumentNullException(nameof(resolveFunc));
                     this.ResolvedType = null;
@@ -216,7 +216,7 @@ namespace ICP.Candid
                 this.indentLevel--;
             }
 
-            public void Primitive(CandidPrimitiveType type)
+            public void Primitive(PrimitiveType type)
             {
                 this.indentLevel++;
                 this.AppendIndent();
@@ -280,7 +280,7 @@ namespace ICP.Candid
                 byte[] magicNumber = this.Reader.ReadBytes(4);
                 if (!magicNumber.SequenceEqual(new byte[] { 68, 73, 68, 76 }))
                 {
-                    throw CandidParseException.FromReader(this.Reader, "Bytes must start with 'DIDL' (0x68, 0x73, 0x68, 0x76)");
+                    throw CandidSerializationParseException.FromReader(this.Reader, "Bytes must start with 'DIDL' (0x68, 0x73, 0x68, 0x76)");
                 }
             }
 
@@ -300,74 +300,74 @@ namespace ICP.Candid
                 switch (type)
                 {
                     case CandidTypeCode.Int:
-                        return DefintionOrReference.Primitive(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Int));
+                        return DefintionOrReference.Primitive(new CandidPrimitiveType(PrimitiveType.Int));
                     case CandidTypeCode.Int64:
-                        return DefintionOrReference.Primitive(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Int64));
+                        return DefintionOrReference.Primitive(new CandidPrimitiveType(PrimitiveType.Int64));
                     case CandidTypeCode.Int32:
-                        return DefintionOrReference.Primitive(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Int32));
+                        return DefintionOrReference.Primitive(new CandidPrimitiveType(PrimitiveType.Int32));
                     case CandidTypeCode.Int16:
-                        return DefintionOrReference.Primitive(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Int16));
+                        return DefintionOrReference.Primitive(new CandidPrimitiveType(PrimitiveType.Int16));
                     case CandidTypeCode.Int8:
-                        return DefintionOrReference.Primitive(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Int8));
+                        return DefintionOrReference.Primitive(new CandidPrimitiveType(PrimitiveType.Int8));
                     case CandidTypeCode.Nat:
-                        return DefintionOrReference.Primitive(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat));
+                        return DefintionOrReference.Primitive(new CandidPrimitiveType(PrimitiveType.Nat));
                     case CandidTypeCode.Nat64:
-                        return DefintionOrReference.Primitive(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat64));
+                        return DefintionOrReference.Primitive(new CandidPrimitiveType(PrimitiveType.Nat64));
                     case CandidTypeCode.Nat32:
-                        return DefintionOrReference.Primitive(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat32));
+                        return DefintionOrReference.Primitive(new CandidPrimitiveType(PrimitiveType.Nat32));
                     case CandidTypeCode.Nat16:
-                        return DefintionOrReference.Primitive(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat16));
+                        return DefintionOrReference.Primitive(new CandidPrimitiveType(PrimitiveType.Nat16));
                     case CandidTypeCode.Nat8:
-                        return DefintionOrReference.Primitive(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat8));
+                        return DefintionOrReference.Primitive(new CandidPrimitiveType(PrimitiveType.Nat8));
                     case CandidTypeCode.Float32:
-                        return DefintionOrReference.Primitive(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Float32));
+                        return DefintionOrReference.Primitive(new CandidPrimitiveType(PrimitiveType.Float32));
                     case CandidTypeCode.Float64:
-                        return DefintionOrReference.Primitive(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Float64));
+                        return DefintionOrReference.Primitive(new CandidPrimitiveType(PrimitiveType.Float64));
                     case CandidTypeCode.Empty:
-                        return DefintionOrReference.Primitive(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Empty));
+                        return DefintionOrReference.Primitive(new CandidPrimitiveType(PrimitiveType.Empty));
                     case CandidTypeCode.Null:
-                        return DefintionOrReference.Primitive(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Null));
+                        return DefintionOrReference.Primitive(new CandidPrimitiveType(PrimitiveType.Null));
                     case CandidTypeCode.Reserved:
-                        return DefintionOrReference.Primitive(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Reserved));
+                        return DefintionOrReference.Primitive(new CandidPrimitiveType(PrimitiveType.Reserved));
                     case CandidTypeCode.Text:
-                        return DefintionOrReference.Primitive(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Text));
+                        return DefintionOrReference.Primitive(new CandidPrimitiveType(PrimitiveType.Text));
                     case CandidTypeCode.Principal:
-                        return DefintionOrReference.Primitive(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Principal));
+                        return DefintionOrReference.Primitive(new CandidPrimitiveType(PrimitiveType.Principal));
                     case CandidTypeCode.Bool:
-                        return DefintionOrReference.Primitive(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Bool));
+                        return DefintionOrReference.Primitive(new CandidPrimitiveType(PrimitiveType.Bool));
                     case CandidTypeCode.Opt:
                         DefintionOrReference innerType = this.ReadType();
                         return DefintionOrReference.CompoundDefintion(resolver =>
                         {
                             resolver.Tracer.StartCompound("Opt");
-                            CandidTypeDefinition t = resolver.Resolve(innerType);
+                            CandidType t = resolver.Resolve(innerType);
                             resolver.Tracer.EndCompound("Opt");
-                            return new OptCandidTypeDefinition(t);
+                            return new CandidOptType(t);
                         });
                     case CandidTypeCode.Record:
                         UnboundedUInt size = this.ReadNat();
                         Dictionary<CandidTag, DefintionOrReference> recordFields = this.ReadRecordInner(size);
                         return DefintionOrReference.CompoundDefintion(resolver =>
                         {
-                            var map = new Dictionary<CandidTag, CandidTypeDefinition>();
+                            var map = new Dictionary<CandidTag, CandidType>();
                             resolver.Tracer.StartCompound("Record");
                             foreach ((CandidTag field, DefintionOrReference defOrRef) in recordFields)
                             {
                                 resolver.Tracer.Field(field);
-                                CandidTypeDefinition type = resolver.Resolve(defOrRef);
+                                CandidType type = resolver.Resolve(defOrRef);
                                 map.Add(field, type);
                             }
                             resolver.Tracer.EndCompound("Record");
-                            return new RecordCandidTypeDefinition(map);
+                            return new CandidRecordType(map);
                         });
                     case CandidTypeCode.Vector:
                         DefintionOrReference innerVectorType = this.ReadType();
                         return DefintionOrReference.CompoundDefintion(resolver =>
                         {
                             resolver.Tracer.StartCompound("Vector");
-                            CandidTypeDefinition t = resolver.Resolve(innerVectorType);
+                            CandidType t = resolver.Resolve(innerVectorType);
                             resolver.Tracer.EndCompound("Vector");
-                            return new VectorCandidTypeDefinition(t);
+                            return new CandidVectorType(t);
                         });
                     case CandidTypeCode.Variant:
                         UnboundedUInt length = this.ReadNat();
@@ -381,16 +381,16 @@ namespace ICP.Candid
                         }
                         return DefintionOrReference.CompoundDefintion(resolver =>
                         {
-                            var map = new Dictionary<CandidTag, CandidTypeDefinition>();
+                            var map = new Dictionary<CandidTag, CandidType>();
                             resolver.Tracer.StartCompound("Variant");
                             foreach ((CandidTag field, DefintionOrReference defOrRef) in variantOptions)
                             {
                                 resolver.Tracer.Field(field);
-                                CandidTypeDefinition type = resolver.Resolve(defOrRef);
+                                CandidType type = resolver.Resolve(defOrRef);
                                 map.Add(field, type);
                             }
                             resolver.Tracer.StartCompound("Variant");
-                            return new VariantCandidTypeDefinition(map);
+                            return new CandidVariantType(map);
                         });
                     case CandidTypeCode.Func:
                         List<DefintionOrReference> argTypes = this.ReadVectorInner();
@@ -399,21 +399,21 @@ namespace ICP.Candid
                         return DefintionOrReference.CompoundDefintion(resolver =>
                         {
                             resolver.Tracer.StartCompound("Func");
-                            List<CandidTypeDefinition> a = argTypes
+                            List<CandidType> a = argTypes
                                 .Select(a => resolver.Resolve(a))
                                 .ToList();
-                            List<CandidTypeDefinition> r = returnTypes
+                            List<CandidType> r = returnTypes
                                 .Select(a => resolver.Resolve(a))
                                 .ToList();
                             List<FuncMode> m = modes
                                 .Select(m =>
                                 {
-                                    resolver.Tracer.Primitive(CandidPrimitiveType.Int8);
+                                    resolver.Tracer.Primitive(PrimitiveType.Int8);
                                     return (FuncMode)m;
                                 })
                                 .ToList();
                             resolver.Tracer.EndCompound("Func");
-                            return new FuncCandidTypeDefinition(m, a, r);
+                            return new CandidFuncType(m, a, r);
                         });
                     case CandidTypeCode.Service:
                         List<(string Name, DefintionOrReference Type)> methods = this.ReadVectorInner(() =>
@@ -426,18 +426,18 @@ namespace ICP.Candid
                         {
                             resolver.Tracer.StartCompound("Service");
 
-                            IReadOnlyDictionary<string, FuncCandidTypeDefinition> m = methods
+                            IReadOnlyDictionary<string, CandidFuncType> m = methods
                                 .ToDictionary(m => m.Name, m =>
                                 {
                                     var type = resolver.Resolve(m.Type);
-                                    if (type is FuncCandidTypeDefinition f)
+                                    if (type is CandidFuncType f)
                                     {
                                         return f;
                                     }
                                     throw new CandidTypeResolutionException($"Service method values can only be Func types. Actual type '{type}'");
                                 });
                             resolver.Tracer.EndCompound("Service");
-                            return new ServiceCandidTypeDefinition(m, id: null);
+                            return new CandidServiceType(m, id: null);
                         });
                     default:
                         throw new NotImplementedException($"Invalid type code '{typeCodeInt}'");
@@ -505,18 +505,18 @@ namespace ICP.Candid
             {
                 return LEB128.DecodeSigned(this.Reader.BaseStream);
             }
-            public CandidValue ReadValue(CandidTypeDefinition typeDef, Dictionary<CandidId, CompoundCandidTypeDefinition> recursiveTypes)
+            public CandidValue ReadValue(CandidType typeDef, Dictionary<CandidId, CandidCompoundType> recursiveTypes)
             {
                 return typeDef switch
                 {
-                    PrimitiveCandidTypeDefinition p => this.ReadPrimitive(p.PrimitiveType),
-                    ReferenceCandidTypeDefinition r => this.ReadRecursiveValue(r.Id, recursiveTypes),
-                    CompoundCandidTypeDefinition c => this.ReadCompoundValue(c, recursiveTypes),
+                    CandidPrimitiveType p => this.ReadPrimitive(p.PrimitiveType),
+                    CandidReferenceType r => this.ReadRecursiveValue(r.Id, recursiveTypes),
+                    CandidCompoundType c => this.ReadCompoundValue(c, recursiveTypes),
                     _ => throw new NotImplementedException(),
                 };
             }
 
-            public CandidValue ReadCompoundValue(CompoundCandidTypeDefinition c, Dictionary<CandidId, CompoundCandidTypeDefinition> recursiveTypes)
+            public CandidValue ReadCompoundValue(CandidCompoundType c, Dictionary<CandidId, CandidCompoundType> recursiveTypes)
             {
                 if (c.RecursiveId != null)
                 {
@@ -524,48 +524,48 @@ namespace ICP.Candid
                 }
                 return c switch
                 {
-                    OptCandidTypeDefinition o => this.ReadOptValue(o.Value, recursiveTypes),
-                    VectorCandidTypeDefinition ve => this.ReadVectorValue(ve.Value, recursiveTypes),
-                    RecordCandidTypeDefinition r => this.ReadRecordValue(r.Fields.ToDictionary(f => f.Key, f => f.Value), recursiveTypes),
-                    VariantCandidTypeDefinition va => this.ReadVariantValue(va.Fields.ToDictionary(f => f.Key, f => f.Value), recursiveTypes),
-                    ServiceCandidTypeDefinition s => this.ReadServiceValue(),
-                    FuncCandidTypeDefinition f => this.ReadFuncValue(),
+                    CandidOptType o => this.ReadOptValue(o.Value, recursiveTypes),
+                    CandidVectorType ve => this.ReadVectorValue(ve.Value, recursiveTypes),
+                    CandidRecordType r => this.ReadRecordValue(r.Fields.ToDictionary(f => f.Key, f => f.Value), recursiveTypes),
+                    CandidVariantType va => this.ReadVariantValue(va.Fields.ToDictionary(f => f.Key, f => f.Value), recursiveTypes),
+                    CandidServiceType s => this.ReadServiceValue(),
+                    CandidFuncType f => this.ReadFuncValue(),
                     _ => throw new NotImplementedException(),
                 };
             }
 
-            public CandidValue ReadRecursiveValue(CandidId recursiveId, Dictionary<CandidId, CompoundCandidTypeDefinition> recursiveTypes)
+            public CandidValue ReadRecursiveValue(CandidId recursiveId, Dictionary<CandidId, CandidCompoundType> recursiveTypes)
             {
-                CompoundCandidTypeDefinition? typeDef = recursiveTypes.GetValueOrDefault(recursiveId);
+                CandidCompoundType? typeDef = recursiveTypes.GetValueOrDefault(recursiveId);
                 if (typeDef == null)
                 {
-                    throw CandidParseException.FromReader(this.Reader, $"Cannot find recursive type with id '{recursiveId}'");
+                    throw CandidSerializationParseException.FromReader(this.Reader, $"Cannot find recursive type with id '{recursiveId}'");
                 }
                 return this.ReadValue(typeDef, recursiveTypes);
             }
 
-            public CandidPrimitive ReadPrimitive(CandidPrimitiveType type)
+            public CandidPrimitive ReadPrimitive(PrimitiveType type)
             {
                 return type switch
                 {
-                    CandidPrimitiveType.Text => CandidPrimitive.Text(this.ReadText()),
-                    CandidPrimitiveType.Nat => CandidPrimitive.Nat(this.ReadNat()),
-                    CandidPrimitiveType.Nat8 => CandidPrimitive.Nat8(this.ReadByte()),
-                    CandidPrimitiveType.Nat16 => CandidPrimitive.Nat16(this.Reader.ReadUInt16()),
-                    CandidPrimitiveType.Nat32 => CandidPrimitive.Nat32(this.Reader.ReadUInt32()),
-                    CandidPrimitiveType.Nat64 => CandidPrimitive.Nat64(this.Reader.ReadUInt64()),
-                    CandidPrimitiveType.Int => CandidPrimitive.Int(this.ReadInt()),
-                    CandidPrimitiveType.Int8 => CandidPrimitive.Int8(this.ReadInt8()),
-                    CandidPrimitiveType.Int16 => CandidPrimitive.Int16(this.ReadInt16()),
-                    CandidPrimitiveType.Int32 => CandidPrimitive.Int32(this.ReadInt32()),
-                    CandidPrimitiveType.Int64 => CandidPrimitive.Int64(this.ReadInt64()),
-                    CandidPrimitiveType.Float32 => CandidPrimitive.Float32(BitConverter.ToSingle(this.Reader.ReadBytes(4))),
-                    CandidPrimitiveType.Float64 => CandidPrimitive.Float64(BitConverter.ToDouble(this.Reader.ReadBytes(8))),
-                    CandidPrimitiveType.Bool => CandidPrimitive.Bool(this.Reader.ReadByte() > 0),
-                    CandidPrimitiveType.Principal => CandidPrimitive.Pricipal(this.ReadPrincipal()),
-                    CandidPrimitiveType.Reserved => CandidPrimitive.Reserved(),
-                    CandidPrimitiveType.Empty => CandidPrimitive.Empty(),
-                    CandidPrimitiveType.Null => CandidPrimitive.Null(),
+                    PrimitiveType.Text => CandidPrimitive.Text(this.ReadText()),
+                    PrimitiveType.Nat => CandidPrimitive.Nat(this.ReadNat()),
+                    PrimitiveType.Nat8 => CandidPrimitive.Nat8(this.ReadByte()),
+                    PrimitiveType.Nat16 => CandidPrimitive.Nat16(this.Reader.ReadUInt16()),
+                    PrimitiveType.Nat32 => CandidPrimitive.Nat32(this.Reader.ReadUInt32()),
+                    PrimitiveType.Nat64 => CandidPrimitive.Nat64(this.Reader.ReadUInt64()),
+                    PrimitiveType.Int => CandidPrimitive.Int(this.ReadInt()),
+                    PrimitiveType.Int8 => CandidPrimitive.Int8(this.ReadInt8()),
+                    PrimitiveType.Int16 => CandidPrimitive.Int16(this.ReadInt16()),
+                    PrimitiveType.Int32 => CandidPrimitive.Int32(this.ReadInt32()),
+                    PrimitiveType.Int64 => CandidPrimitive.Int64(this.ReadInt64()),
+                    PrimitiveType.Float32 => CandidPrimitive.Float32(BitConverter.ToSingle(this.Reader.ReadBytes(4))),
+                    PrimitiveType.Float64 => CandidPrimitive.Float64(BitConverter.ToDouble(this.Reader.ReadBytes(8))),
+                    PrimitiveType.Bool => CandidPrimitive.Bool(this.Reader.ReadByte() > 0),
+                    PrimitiveType.Principal => CandidPrimitive.Pricipal(this.ReadPrincipal()),
+                    PrimitiveType.Reserved => CandidPrimitive.Reserved(),
+                    PrimitiveType.Empty => CandidPrimitive.Empty(),
+                    PrimitiveType.Null => CandidPrimitive.Null(),
                     _ => throw new NotImplementedException(),
                 };
             }
@@ -616,7 +616,7 @@ namespace ICP.Candid
                 {
                     return true;
                 }
-                throw CandidParseException.FromReader(this.Reader, $"Expected byte with value 0 or 1, got: {b}");
+                throw CandidSerializationParseException.FromReader(this.Reader, $"Expected byte with value 0 or 1, got: {b}");
             }
 
             public CandidValue ReadFuncValue()
@@ -648,14 +648,14 @@ namespace ICP.Candid
                 }
             }
 
-            public CandidVariant ReadVariantValue(Dictionary<CandidTag, CandidTypeDefinition> options, Dictionary<CandidId, CompoundCandidTypeDefinition> recursiveTypes)
+            public CandidVariant ReadVariantValue(Dictionary<CandidTag, CandidType> options, Dictionary<CandidId, CandidCompoundType> recursiveTypes)
             {
                 UnboundedUInt index = this.ReadNat();
                 if (!index.TryToUInt64(out ulong i) || i > int.MaxValue)
                 {
-                    throw CandidParseException.FromReader(this.Reader, $"Cannot handle variants with more than '{int.MaxValue}' options");
+                    throw CandidSerializationParseException.FromReader(this.Reader, $"Cannot handle variants with more than '{int.MaxValue}' options");
                 }
-                (CandidTag tag, CandidTypeDefinition typeDef) = options
+                (CandidTag tag, CandidType typeDef) = options
                     .OrderBy(f => f.Key)
                     .Select(f => (f.Key, f.Value))
                     .ElementAt((int)i);
@@ -663,7 +663,7 @@ namespace ICP.Candid
                 return new CandidVariant(tag, value);
             }
 
-            public CandidRecord ReadRecordValue(Dictionary<CandidTag, CandidTypeDefinition> fields, Dictionary<CandidId, CompoundCandidTypeDefinition> recursiveTypes)
+            public CandidRecord ReadRecordValue(Dictionary<CandidTag, CandidType> fields, Dictionary<CandidId, CandidCompoundType> recursiveTypes)
             {
                 Dictionary<CandidTag, CandidValue> fieldValues = fields
                     // TODO are all the fields always there?
@@ -673,7 +673,7 @@ namespace ICP.Candid
                 return new CandidRecord(fieldValues);
             }
 
-            public CandidVector ReadVectorValue(CandidTypeDefinition innerTypeDef, Dictionary<CandidId, CompoundCandidTypeDefinition> recursiveTypes)
+            public CandidVector ReadVectorValue(CandidType innerTypeDef, Dictionary<CandidId, CandidCompoundType> recursiveTypes)
             {
                 List<CandidValue> values = this.ReadVectorInner(() =>
                 {
@@ -682,7 +682,7 @@ namespace ICP.Candid
                 return new CandidVector(values.ToArray());
             }
 
-            public CandidOptional ReadOptValue(CandidTypeDefinition innerTypeDef, Dictionary<CandidId, CompoundCandidTypeDefinition> recursiveTypes)
+            public CandidOptional ReadOptValue(CandidType innerTypeDef, Dictionary<CandidId, CandidCompoundType> recursiveTypes)
             {
                 bool isSet = this.ReadBool();
                 CandidValue? innerValue = isSet

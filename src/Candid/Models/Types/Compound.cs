@@ -7,18 +7,18 @@ using System.Threading.Tasks;
 
 namespace ICP.Candid.Models.Types
 {
-	public abstract class CompoundCandidTypeDefinition : CandidTypeDefinition
+	public abstract class CandidCompoundType : CandidType
 	{
 		public CandidId? RecursiveId { get; set; }
 
-		public CompoundCandidTypeDefinition(CandidId? recursiveId)
+		public CandidCompoundType(CandidId? recursiveId)
 		{
 			this.RecursiveId = recursiveId;
 		}
 
 		internal abstract byte[] EncodeInnerTypes(CompoundTypeTable compoundTypeTable);
 
-		internal abstract IEnumerable<CandidTypeDefinition> GetInnerTypes();
+		internal abstract IEnumerable<CandidType> GetInnerTypes();
 
 		public override byte[] Encode(CompoundTypeTable compoundTypeTable)
 		{
@@ -28,14 +28,14 @@ namespace ICP.Candid.Models.Types
 	}
 
 
-	public abstract class RecordOrVariantCandidTypeDefinition : CompoundCandidTypeDefinition
+	public abstract class CandidRecordOrVariantType : CandidCompoundType
 	{
 		public override abstract CandidTypeCode Type { get; }
 		protected abstract string TypeString { get; }
 
-		public IReadOnlyDictionary<CandidTag, CandidTypeDefinition> Fields { get; }
+		public IReadOnlyDictionary<CandidTag, CandidType> Fields { get; }
 
-		protected RecordOrVariantCandidTypeDefinition(Dictionary<CandidTag, CandidTypeDefinition> fields, CandidId? recursiveId) : base(recursiveId)
+		protected CandidRecordOrVariantType(Dictionary<CandidTag, CandidType> fields, CandidId? recursiveId) : base(recursiveId)
 		{
 			this.Fields = fields;
 		}
@@ -54,7 +54,7 @@ namespace ICP.Candid.Models.Types
 				.ToArray(); ;
 		}
 
-		internal override IEnumerable<CandidTypeDefinition> GetInnerTypes()
+		internal override IEnumerable<CandidType> GetInnerTypes()
 		{
 			return this.Fields.Values;
 		}
@@ -62,15 +62,15 @@ namespace ICP.Candid.Models.Types
 		public override bool Equals(object? obj)
 		{
 			bool exactType = this.GetType() == obj?.GetType();
-			if (exactType && obj is RecordOrVariantCandidTypeDefinition def)
+			if (exactType && obj is CandidRecordOrVariantType def)
 			{
 				if (this.Fields.Count != def.Fields.Count)
 				{
 					return false;
 				}
-				foreach ((CandidTag fLabel, CandidTypeDefinition fDef) in this.Fields)
+				foreach ((CandidTag fLabel, CandidType fDef) in this.Fields)
 				{
-					if (!def.Fields.TryGetValue(fLabel, out CandidTypeDefinition? otherFDef))
+					if (!def.Fields.TryGetValue(fLabel, out CandidType? otherFDef))
 					{
 						return false;
 					}

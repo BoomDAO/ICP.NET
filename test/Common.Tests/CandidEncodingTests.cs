@@ -26,7 +26,7 @@ namespace ICP.Candid.Tests
             const string expectedPrefix = "00017D";
             var nat = UnboundedUInt.FromUInt64(natValue);
             var candidNat = CandidPrimitive.Nat(nat);
-            TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidNat, new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat));
+            TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidNat, new CandidPrimitiveType(PrimitiveType.Nat));
         }
 
         [Fact]
@@ -37,7 +37,7 @@ namespace ICP.Candid.Tests
             BigInteger bigInteger = 60000000000000000;
             var nat = UnboundedUInt.FromBigInteger(bigInteger);
             var candidNat = CandidPrimitive.Nat(nat);
-            TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidNat, new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat));
+            TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidNat, new CandidPrimitiveType(PrimitiveType.Nat));
         }
 
         [Theory]
@@ -48,7 +48,7 @@ namespace ICP.Candid.Tests
         {
             const string expectedPrefix = "000178";
             var candidNat = CandidPrimitive.Nat64(natValue);
-            TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidNat, new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat64));
+            TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidNat, new CandidPrimitiveType(PrimitiveType.Nat64));
         }
 
         [Theory]
@@ -59,7 +59,7 @@ namespace ICP.Candid.Tests
         {
             const string expectedPrefix = "000179";
             var candidNat = CandidPrimitive.Nat32(natValue);
-            TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidNat, new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat32));
+            TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidNat, new CandidPrimitiveType(PrimitiveType.Nat32));
         }
 
         [Theory]
@@ -70,7 +70,7 @@ namespace ICP.Candid.Tests
         {
             const string expectedPrefix = "00017A";
             var candidNat = CandidPrimitive.Nat16(natValue);
-            TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidNat, new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat16));
+            TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidNat, new CandidPrimitiveType(PrimitiveType.Nat16));
         }
 
         [Theory]
@@ -81,7 +81,7 @@ namespace ICP.Candid.Tests
         {
             const string expectedPrefix = "00017B";
             var candidNat = CandidPrimitive.Nat8(natValue);
-            TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidNat, new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat8));
+            TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidNat, new CandidPrimitiveType(PrimitiveType.Nat8));
         }
 
         [Theory]
@@ -98,7 +98,7 @@ namespace ICP.Candid.Tests
             const string expectedPrefix = "00017C";
             var @int = UnboundedInt.FromInt64(intValue);
             var candidInt = CandidPrimitive.Int(@int);
-            TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidInt, new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Int));
+            TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidInt, new CandidPrimitiveType(PrimitiveType.Int));
         }
 
         [Fact]
@@ -109,7 +109,7 @@ namespace ICP.Candid.Tests
             BigInteger bigInteger = -60000000000000000;
             var @int = UnboundedInt.FromBigInteger(bigInteger);
             var candidInt = CandidPrimitive.Int(@int);
-            TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidInt, new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Int));
+            TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidInt, new CandidPrimitiveType(PrimitiveType.Int));
         }
 
         [Theory]
@@ -121,7 +121,7 @@ namespace ICP.Candid.Tests
         {
             const string expectedPrefix = "000174";
             var candidInt = CandidPrimitive.Int64(intValue);
-            TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidInt, new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Int64));
+            TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidInt, new CandidPrimitiveType(PrimitiveType.Int64));
         }
 
         [Theory]
@@ -133,7 +133,7 @@ namespace ICP.Candid.Tests
         {
             const string expectedPrefix = "000175";
             var candidInt = CandidPrimitive.Int32(intValue);
-            TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidInt, new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Int32));
+            TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidInt, new CandidPrimitiveType(PrimitiveType.Int32));
         }
 
         [Theory]
@@ -145,7 +145,7 @@ namespace ICP.Candid.Tests
         {
             const string expectedPrefix = "000176";
             var candidInt = CandidPrimitive.Int16(intValue);
-            TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidInt, new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Int16));
+            TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidInt, new CandidPrimitiveType(PrimitiveType.Int16));
         }
 
         [Theory]
@@ -156,7 +156,7 @@ namespace ICP.Candid.Tests
         {
             const string expectedPrefix = "000177";
             var candidInt = CandidPrimitive.Int8((sbyte)intValue);
-            TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidInt, new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Int8));
+            TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidInt, new CandidPrimitiveType(PrimitiveType.Int8));
         }
         [Fact]
         public void Encode_Int8_Neg()
@@ -164,7 +164,7 @@ namespace ICP.Candid.Tests
             const string expectedPrefix = "000177";
             const string expectedHex = "F1";
             var candidInt = CandidPrimitive.Int8((sbyte)-15);
-            TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidInt, new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Int8));
+            TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidInt, new CandidPrimitiveType(PrimitiveType.Int8));
         }
 
         [Theory]
@@ -175,7 +175,7 @@ namespace ICP.Candid.Tests
         {
             const string expectedPrefix = "000173";
             var candidValue = CandidPrimitive.Float32(value);
-            TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidValue, new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Float32));
+            TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidValue, new CandidPrimitiveType(PrimitiveType.Float32));
         }
 
         [Theory]
@@ -186,7 +186,7 @@ namespace ICP.Candid.Tests
         {
             const string expectedPrefix = "000172";
             var candidValue = CandidPrimitive.Float64(value);
-            TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidValue, new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Float64));
+            TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidValue, new CandidPrimitiveType(PrimitiveType.Float64));
         }
 
         [Theory]
@@ -196,7 +196,7 @@ namespace ICP.Candid.Tests
         {
             const string expectedPrefix = "00017E";
             var candidValue = CandidPrimitive.Bool(value);
-            TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidValue, new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Bool));
+            TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidValue, new CandidPrimitiveType(PrimitiveType.Bool));
         }
 
         [Theory]
@@ -207,7 +207,7 @@ namespace ICP.Candid.Tests
         {
             const string expectedPrefix = "000171";
             var candidValue = CandidPrimitive.Text(value);
-            TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidValue, new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Text));
+            TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidValue, new CandidPrimitiveType(PrimitiveType.Text));
         }
 
         [Fact]
@@ -216,7 +216,7 @@ namespace ICP.Candid.Tests
             const string expectedPrefix = "00017F";
             var candidValue = CandidPrimitive.Null();
             string expectedHex = "";
-            TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidValue, new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Null));
+            TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidValue, new CandidPrimitiveType(PrimitiveType.Null));
         }
 
         [Fact]
@@ -225,7 +225,7 @@ namespace ICP.Candid.Tests
             const string expectedPrefix = "000170";
             var candidValue = CandidPrimitive.Reserved();
             string expectedHex = "";
-            TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidValue, new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Reserved));
+            TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidValue, new CandidPrimitiveType(PrimitiveType.Reserved));
         }
 
         [Fact]
@@ -234,7 +234,7 @@ namespace ICP.Candid.Tests
             string expectedPrefix = "016E7C";
             var candidValue = new CandidOptional(null);
             string expectedHex = "010000";
-            var typeDef = new OptCandidTypeDefinition(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Int)); // opt int
+            var typeDef = new CandidOptType(new CandidPrimitiveType(PrimitiveType.Int)); // opt int
             TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidValue, typeDef);
 
             candidValue = new CandidOptional(CandidPrimitive.Int(UnboundedInt.FromInt64(42)));
@@ -248,7 +248,7 @@ namespace ICP.Candid.Tests
             //expectedHex = "010001012A";
             expectedPrefix = "026E7C6E00";
             expectedHex = "010101012A";
-            typeDef = new OptCandidTypeDefinition(typeDef); // opt opt int
+            typeDef = new CandidOptType(typeDef); // opt opt int
             TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidValue, typeDef);
         }
 
@@ -258,7 +258,7 @@ namespace ICP.Candid.Tests
             var candidValue = new CandidVector(new CandidValue[0]);
             string expectedPrefix = "016D7C0100";
             string expectedHex = "00";
-            var typeDef = new VectorCandidTypeDefinition(new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Int));
+            var typeDef = new CandidVectorType(new CandidPrimitiveType(PrimitiveType.Int));
             TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidValue, typeDef);
 
             var vector = new CandidPrimitive[]
@@ -292,9 +292,9 @@ namespace ICP.Candid.Tests
             });
             string expectedPrefix = "";
             string expectedHex = "016C01017C01002A";
-            var typeDef = new RecordCandidTypeDefinition(new Dictionary<CandidTag, CandidTypeDefinition>
+            var typeDef = new CandidRecordType(new Dictionary<CandidTag, CandidType>
             {
-                {new CandidTag(1), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Int) },
+                {new CandidTag(1), new CandidPrimitiveType(PrimitiveType.Int) },
             });
             TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidValue, typeDef);
         }
@@ -311,10 +311,10 @@ namespace ICP.Candid.Tests
             // TODO ordering of types again
             //string expectedHex = "016C02D3E3AA027E868EB7027C0100012A";
             string expectedHex = "016C02868EB7027CD3E3AA027E0100012A";
-            var typeDef = new RecordCandidTypeDefinition(new Dictionary<CandidTag, CandidTypeDefinition>
+            var typeDef = new CandidRecordType(new Dictionary<CandidTag, CandidType>
             {
-                {CandidTag.FromName("foo"), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Int) },
-                {CandidTag.FromName("bar"), new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Bool) },
+                {CandidTag.FromName("foo"), new CandidPrimitiveType(PrimitiveType.Int) },
+                {CandidTag.FromName("bar"), new CandidPrimitiveType(PrimitiveType.Bool) },
             });
             TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidValue, typeDef);
         }
@@ -352,24 +352,24 @@ namespace ICP.Candid.Tests
             //00 variant value
             const string hex = "4449444C036B029CC20102E58EB402016B01CFA0DEF2067F6C05C4A7C9A10179DC8BD3F401798D98F3E7047CE2D8DEFB0B7989FB97EB0E7101000100";
             var value1 = new CandidVariant("err", new CandidVariant("NotFound"));
-            var type1 = new VariantCandidTypeDefinition(new Dictionary<CandidTag, CandidTypeDefinition>
+            var type1 = new CandidVariantType(new Dictionary<CandidTag, CandidType>
             {
                 {
                     CandidTag.FromName("ok"),
-                    new RecordCandidTypeDefinition(new Dictionary<CandidTag, CandidTypeDefinition>
+                    new CandidRecordType(new Dictionary<CandidTag, CandidType>
                     {
-                        { "total", new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat32) },
-                        { "desktop", new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat32) },
-                        { "time", new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Int) },
-                        { "mobile", new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat32) },
-                        { "route", new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Text) }
+                        { "total", new CandidPrimitiveType(PrimitiveType.Nat32) },
+                        { "desktop", new CandidPrimitiveType(PrimitiveType.Nat32) },
+                        { "time", new CandidPrimitiveType(PrimitiveType.Int) },
+                        { "mobile", new CandidPrimitiveType(PrimitiveType.Nat32) },
+                        { "route", new CandidPrimitiveType(PrimitiveType.Text) }
                     })
                 },
                 {
                     CandidTag.FromName("err"),
-                    new VariantCandidTypeDefinition(new Dictionary<CandidTag, CandidTypeDefinition>
+                    new CandidVariantType(new Dictionary<CandidTag, CandidType>
                     {
-                        {"NotFound", new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Null) }
+                        {"NotFound", new CandidPrimitiveType(PrimitiveType.Null) }
                     })
                 }
             });
@@ -414,11 +414,11 @@ namespace ICP.Candid.Tests
                 }
             });
             var referenceId = CandidId.Parse("rec_1");
-            var type1 = new RecordCandidTypeDefinition(new Dictionary<CandidTag, CandidTypeDefinition>
+            var type1 = new CandidRecordType(new Dictionary<CandidTag, CandidType>
             {
                 {
                     CandidTag.FromName("selfRef"),
-                    new OptCandidTypeDefinition(new ReferenceCandidTypeDefinition(referenceId, CandidTypeCode.Record))
+                    new CandidOptType(new CandidReferenceType(referenceId, CandidTypeCode.Record))
                 }
             }, referenceId);
             var expectedArg = CandidArg.FromCandid(new List<CandidValueWithType>

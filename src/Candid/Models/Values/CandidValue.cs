@@ -109,7 +109,7 @@ namespace ICP.Candid.Models.Values
         public T? AsOptional<T>(Func<CandidValue, T> valueConverter)
         {
             CandidOptional? optional = this.AsOptional();
-            if(optional.Value is CandidPrimitive p && p.ValueType == CandidPrimitiveType.Null)
+            if(optional.Value is CandidPrimitive p && p.ValueType == PrimitiveType.Null)
             {
                 return default;
             }

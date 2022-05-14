@@ -23,7 +23,7 @@ namespace ICP.Candid
         }
 
 
-        public static string Generate(CandidTypeDefinition t, IndentType indentType = IndentType.None)
+        public static string Generate(CandidType t, IndentType indentType = IndentType.None)
         {
             var textComponent = CandidTextGenerator.GenerateInternal(t);
             string? tabString = indentType switch
@@ -47,55 +47,55 @@ namespace ICP.Candid
 
         }
 
-        private static TextComponentBase GenerateInternal(CandidTypeDefinition t)
+        private static TextComponentBase GenerateInternal(CandidType t)
         {
             return t switch
             {
-                FuncCandidTypeDefinition f => GenerateFunc(f),
-                OptCandidTypeDefinition o => GenerateOpt(o),
-                VectorCandidTypeDefinition ve => GeneratorVec(ve),
-                RecordCandidTypeDefinition r => GenerateRecord(r),
-                VariantCandidTypeDefinition va => GenerateVariant(va),
-                ServiceCandidTypeDefinition s => GenerateService(s),
-                ReferenceCandidTypeDefinition r => GenerateRecursive(r),
-                PrimitiveCandidTypeDefinition p => GeneratePrimitive(p),
+                CandidFuncType f => GenerateFunc(f),
+                CandidOptType o => GenerateOpt(o),
+                CandidVectorType ve => GenerateVec(ve),
+                CandidRecordType r => GenerateRecord(r),
+                CandidVariantType va => GenerateVariant(va),
+                CandidServiceType s => GenerateService(s),
+                CandidReferenceType r => GenerateRecursive(r),
+                CandidPrimitiveType p => GeneratePrimitive(p),
                 _ => throw new NotImplementedException()
             };
         }
 
-        private static ConstantTextComponent GenerateRecursive(ReferenceCandidTypeDefinition r)
+        private static ConstantTextComponent GenerateRecursive(CandidReferenceType r)
         {
             return new ConstantTextComponent(r.Id.ToString());
         }
 
-        private static ConstantTextComponent GeneratePrimitive(PrimitiveCandidTypeDefinition p)
+        private static ConstantTextComponent GeneratePrimitive(CandidPrimitiveType p)
         {
             string type = p.PrimitiveType switch
             {
-                CandidPrimitiveType.Text => "text",
-                CandidPrimitiveType.Nat => "nat",
-                CandidPrimitiveType.Nat8 => "nat8",
-                CandidPrimitiveType.Nat16 => "nat16",
-                CandidPrimitiveType.Nat32 => "nat32",
-                CandidPrimitiveType.Nat64 => "nat64",
-                CandidPrimitiveType.Int => "int",
-                CandidPrimitiveType.Int8 => "int8",
-                CandidPrimitiveType.Int16 => "int16",
-                CandidPrimitiveType.Int32 => "int32",
-                CandidPrimitiveType.Int64 => "int64",
-                CandidPrimitiveType.Float32 => "float32",
-                CandidPrimitiveType.Float64 => "float64",
-                CandidPrimitiveType.Bool => "bool",
-                CandidPrimitiveType.Principal => "principal",
-                CandidPrimitiveType.Reserved => "reserved",
-                CandidPrimitiveType.Empty => "empty",
-                CandidPrimitiveType.Null => "null",
+                PrimitiveType.Text => "text",
+                PrimitiveType.Nat => "nat",
+                PrimitiveType.Nat8 => "nat8",
+                PrimitiveType.Nat16 => "nat16",
+                PrimitiveType.Nat32 => "nat32",
+                PrimitiveType.Nat64 => "nat64",
+                PrimitiveType.Int => "int",
+                PrimitiveType.Int8 => "int8",
+                PrimitiveType.Int16 => "int16",
+                PrimitiveType.Int32 => "int32",
+                PrimitiveType.Int64 => "int64",
+                PrimitiveType.Float32 => "float32",
+                PrimitiveType.Float64 => "float64",
+                PrimitiveType.Bool => "bool",
+                PrimitiveType.Principal => "principal",
+                PrimitiveType.Reserved => "reserved",
+                PrimitiveType.Empty => "empty",
+                PrimitiveType.Null => "null",
                 _ => throw new NotImplementedException(),
             };
             return new ConstantTextComponent(type);
         }
 
-        private static CompoundTypeTextComponent GenerateService(ServiceCandidTypeDefinition s)
+        private static CompoundTypeTextComponent GenerateService(CandidServiceType s)
         {
             // TODO dynamic single vs multi line based on width
             List<KeyValueTextComponent> methods = s.Methods
@@ -105,7 +105,7 @@ namespace ICP.Candid
             return new CompoundTypeTextComponent(type, " -> ", new CurlyBraceTypeTextComponent<KeyValueTextComponent>(methods), s.RecursiveId);
         }
 
-        private static CompoundTypeTextComponent GenerateVariant(VariantCandidTypeDefinition va)
+        private static CompoundTypeTextComponent GenerateVariant(CandidVariantType va)
         {
             List<KeyValueTextComponent> fields = va.Fields
                 .Select(f => new KeyValueTextComponent(GenerateTag(f.Key), GenerateInternal(f.Value)))
@@ -114,7 +114,7 @@ namespace ICP.Candid
             return new CompoundTypeTextComponent(new ConstantTextComponent("variant"), " ", innerValue, va.RecursiveId);
         }
 
-        private static CompoundTypeTextComponent GenerateRecord(RecordCandidTypeDefinition r)
+        private static CompoundTypeTextComponent GenerateRecord(CandidRecordType r)
         {
             bool tagsMatchIndex = r.Fields
                 .Select((f, i) => (Tag: f.Key, Index: i))
@@ -143,19 +143,19 @@ namespace ICP.Candid
             return key.Name ?? key.Id.ToString();
         }
 
-        private static CompoundTypeTextComponent GeneratorVec(VectorCandidTypeDefinition ve)
+        private static CompoundTypeTextComponent GenerateVec(CandidVectorType ve)
         {
             TextComponentBase innerValue = GenerateInternal(ve.Value);
             return new CompoundTypeTextComponent(new ConstantTextComponent("vec"), " ", innerValue, ve.RecursiveId);
         }
 
-        private static CompoundTypeTextComponent GenerateOpt(OptCandidTypeDefinition o)
+        private static CompoundTypeTextComponent GenerateOpt(CandidOptType o)
         {
             TextComponentBase innerValue = GenerateInternal(o.Value);
             return new CompoundTypeTextComponent(new ConstantTextComponent("opt"), " ", innerValue, o.RecursiveId);
         }
 
-        private static CompoundTypeTextComponent GenerateFunc(FuncCandidTypeDefinition func)
+        private static CompoundTypeTextComponent GenerateFunc(CandidFuncType func)
         {
             List<TextComponentBase> argTypes = func.ArgTypes
                 .Select(t => CandidTextGenerator.GenerateInternal(t))

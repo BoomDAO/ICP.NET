@@ -10,7 +10,7 @@ namespace ICP.Candid
 {
     public static class CandidDIDGenerator
     {
-        public static string GenerateString(ServiceCandidTypeDefinition service)
+        public static string GenerateString(CandidServiceType service)
         {
             // TODO
             throw new NotImplementedException();

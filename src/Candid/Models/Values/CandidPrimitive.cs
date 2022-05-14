@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ICP.Candid.Models.Values
 {
-    public enum CandidPrimitiveType
+    public enum PrimitiveType
     {
         Text,
         Nat,
@@ -34,10 +34,10 @@ namespace ICP.Candid.Models.Values
     public class CandidPrimitive : CandidValue
     {
         public override CandidValueType Type { get; } = CandidValueType.Primitive;
-        public CandidPrimitiveType ValueType { get; }
+        public PrimitiveType ValueType { get; }
         private readonly object? value;
 
-        private CandidPrimitive(CandidPrimitiveType valueType, object? value)
+        private CandidPrimitive(PrimitiveType valueType, object? value)
         {
             this.ValueType = valueType;
             this.value = value;
@@ -45,85 +45,85 @@ namespace ICP.Candid.Models.Values
 
         public new string AsText()
         {
-            this.ValidateType(CandidPrimitiveType.Text);
+            this.ValidateType(PrimitiveType.Text);
             return (string)this.value!;
         }
 
         public new UnboundedUInt AsNat()
         {
-            this.ValidateType(CandidPrimitiveType.Nat);
+            this.ValidateType(PrimitiveType.Nat);
             return (UnboundedUInt)this.value!;
         }
 
         public new byte AsNat8()
         {
-            this.ValidateType(CandidPrimitiveType.Nat8);
+            this.ValidateType(PrimitiveType.Nat8);
             return (byte)this.value!;
         }
 
         public new ushort AsNat16()
         {
-            this.ValidateType(CandidPrimitiveType.Nat16);
+            this.ValidateType(PrimitiveType.Nat16);
             return (ushort)this.value!;
         }
 
         public new uint AsNat32()
         {
-            this.ValidateType(CandidPrimitiveType.Nat32);
+            this.ValidateType(PrimitiveType.Nat32);
             return (uint)this.value!;
         }
 
         public new ulong AsNat64()
         {
-            this.ValidateType(CandidPrimitiveType.Nat64);
+            this.ValidateType(PrimitiveType.Nat64);
             return (ulong)this.value!;
         }
 
         public new UnboundedInt AsInt()
         {
-            this.ValidateType(CandidPrimitiveType.Int);
+            this.ValidateType(PrimitiveType.Int);
             return (UnboundedInt)this.value!;
         }
 
         public new sbyte AsInt8()
         {
-            this.ValidateType(CandidPrimitiveType.Int8);
+            this.ValidateType(PrimitiveType.Int8);
             return (sbyte)this.value!;
         }
 
         public new short AsInt16()
         {
-            this.ValidateType(CandidPrimitiveType.Int16);
+            this.ValidateType(PrimitiveType.Int16);
             return (short)this.value!;
         }
 
         public new int AsInt32()
         {
-            this.ValidateType(CandidPrimitiveType.Int32);
+            this.ValidateType(PrimitiveType.Int32);
             return (int)this.value!;
         }
 
         public new long AsInt64()
         {
-            this.ValidateType(CandidPrimitiveType.Int64);
+            this.ValidateType(PrimitiveType.Int64);
             return (long)this.value!;
         }
 
         public new float AsFloat32()
         {
-            this.ValidateType(CandidPrimitiveType.Float32);
+            this.ValidateType(PrimitiveType.Float32);
             return (float)this.value!;
         }
 
         public new double AsFloat64()
         {
-            this.ValidateType(CandidPrimitiveType.Float64);
+            this.ValidateType(PrimitiveType.Float64);
             return (double)this.value!;
         }
 
         public new bool AsBool()
         {
-            this.ValidateType(CandidPrimitiveType.Bool);
+            this.ValidateType(PrimitiveType.Bool);
             return (bool)this.value!;
         }
 
@@ -133,7 +133,7 @@ namespace ICP.Candid.Models.Values
         /// <returns></returns>
         public new Principal? AsPrincipal()
         {
-            this.ValidateType(CandidPrimitiveType.Principal);
+            this.ValidateType(PrimitiveType.Principal);
             return (Principal?)this.value;
         }
 
@@ -145,23 +145,23 @@ namespace ICP.Candid.Models.Values
         {
             return this.ValueType switch
             {
-                CandidPrimitiveType.Text => this.EncodeText(),
-                CandidPrimitiveType.Nat => this.EncodeNat(),
-                CandidPrimitiveType.Nat8 => this.EncodeNat8(),
-                CandidPrimitiveType.Nat16 => this.EncodeNat16(),
-                CandidPrimitiveType.Nat32 => this.EncodeNat32(),
-                CandidPrimitiveType.Nat64 => this.EncodeNat64(),
-                CandidPrimitiveType.Int => this.EncodeInt(),
-                CandidPrimitiveType.Int8 => this.EncodeInt8(),
-                CandidPrimitiveType.Int16 => this.EncodeInt16(),
-                CandidPrimitiveType.Int32 => this.EncodeInt32(),
-                CandidPrimitiveType.Int64 => this.EncodeInt64(),
-                CandidPrimitiveType.Float32 => this.EncodeFloat32(),
-                CandidPrimitiveType.Float64 => this.EncodeFloat64(),
-                CandidPrimitiveType.Principal => this.EncodePrincipal(),
-                CandidPrimitiveType.Bool => this.EncodeBool(),
-                CandidPrimitiveType.Null => this.EncodeNull(),
-                CandidPrimitiveType.Reserved => this.EncodeReserved(),
+                PrimitiveType.Text => this.EncodeText(),
+                PrimitiveType.Nat => this.EncodeNat(),
+                PrimitiveType.Nat8 => this.EncodeNat8(),
+                PrimitiveType.Nat16 => this.EncodeNat16(),
+                PrimitiveType.Nat32 => this.EncodeNat32(),
+                PrimitiveType.Nat64 => this.EncodeNat64(),
+                PrimitiveType.Int => this.EncodeInt(),
+                PrimitiveType.Int8 => this.EncodeInt8(),
+                PrimitiveType.Int16 => this.EncodeInt16(),
+                PrimitiveType.Int32 => this.EncodeInt32(),
+                PrimitiveType.Int64 => this.EncodeInt64(),
+                PrimitiveType.Float32 => this.EncodeFloat32(),
+                PrimitiveType.Float64 => this.EncodeFloat64(),
+                PrimitiveType.Principal => this.EncodePrincipal(),
+                PrimitiveType.Bool => this.EncodeBool(),
+                PrimitiveType.Null => this.EncodeNull(),
+                PrimitiveType.Reserved => this.EncodeReserved(),
                 // exclude empty, will never be encoded
                 _ => throw new NotImplementedException()
             };
@@ -171,24 +171,24 @@ namespace ICP.Candid.Models.Values
         {
             return this.ValueType switch
             {
-                CandidPrimitiveType.Text => $"'{this.AsText()}'",
-                CandidPrimitiveType.Nat => this.AsNat().ToString(),
-                CandidPrimitiveType.Nat8 => this.AsNat8().ToString(),
-                CandidPrimitiveType.Nat16 => this.AsNat16().ToString(),
-                CandidPrimitiveType.Nat32 => this.AsNat32().ToString(),
-                CandidPrimitiveType.Nat64 => this.AsNat64().ToString(),
-                CandidPrimitiveType.Int => this.AsInt().ToString(),
-                CandidPrimitiveType.Int8 => this.AsInt8().ToString(),
-                CandidPrimitiveType.Int16 => this.AsInt16().ToString(),
-                CandidPrimitiveType.Int32 => this.AsInt32().ToString(),
-                CandidPrimitiveType.Int64 => this.AsInt64().ToString(),
-                CandidPrimitiveType.Float32 => this.AsFloat32().ToString(),
-                CandidPrimitiveType.Float64 => this.AsFloat64().ToString(),
-                CandidPrimitiveType.Principal => this.AsPrincipal()?.ToString() ?? "(Opaque Reference)",
-                CandidPrimitiveType.Bool => this.AsBool() ? "true" : "false",
-                CandidPrimitiveType.Null => "null",
-                CandidPrimitiveType.Reserved => "(reserved)",
-                CandidPrimitiveType.Empty => "(empty)",
+                PrimitiveType.Text => $"'{this.AsText()}'",
+                PrimitiveType.Nat => this.AsNat().ToString(),
+                PrimitiveType.Nat8 => this.AsNat8().ToString(),
+                PrimitiveType.Nat16 => this.AsNat16().ToString(),
+                PrimitiveType.Nat32 => this.AsNat32().ToString(),
+                PrimitiveType.Nat64 => this.AsNat64().ToString(),
+                PrimitiveType.Int => this.AsInt().ToString(),
+                PrimitiveType.Int8 => this.AsInt8().ToString(),
+                PrimitiveType.Int16 => this.AsInt16().ToString(),
+                PrimitiveType.Int32 => this.AsInt32().ToString(),
+                PrimitiveType.Int64 => this.AsInt64().ToString(),
+                PrimitiveType.Float32 => this.AsFloat32().ToString(),
+                PrimitiveType.Float64 => this.AsFloat64().ToString(),
+                PrimitiveType.Principal => this.AsPrincipal()?.ToString() ?? "(Opaque Reference)",
+                PrimitiveType.Bool => this.AsBool() ? "true" : "false",
+                PrimitiveType.Null => "null",
+                PrimitiveType.Reserved => "(reserved)",
+                PrimitiveType.Empty => "(empty)",
                 _ => throw new NotImplementedException()
             };
         }
@@ -336,91 +336,91 @@ namespace ICP.Candid.Models.Values
 
         public static CandidPrimitive Text(string value)
         {
-            return new CandidPrimitive(CandidPrimitiveType.Text, value);
+            return new CandidPrimitive(PrimitiveType.Text, value);
         }
 
         public static CandidPrimitive Nat(UnboundedUInt value)
         {
-            return new CandidPrimitive(CandidPrimitiveType.Nat, value);
+            return new CandidPrimitive(PrimitiveType.Nat, value);
         }
 
         public static CandidPrimitive Nat8(byte value)
         {
-            return new CandidPrimitive(CandidPrimitiveType.Nat8, value);
+            return new CandidPrimitive(PrimitiveType.Nat8, value);
         }
 
         public static CandidPrimitive Nat16(ushort value)
         {
-            return new CandidPrimitive(CandidPrimitiveType.Nat16, value);
+            return new CandidPrimitive(PrimitiveType.Nat16, value);
         }
 
         public static CandidPrimitive Nat32(uint value)
         {
-            return new CandidPrimitive(CandidPrimitiveType.Nat32, value);
+            return new CandidPrimitive(PrimitiveType.Nat32, value);
         }
 
         public static CandidPrimitive Nat64(ulong value)
         {
-            return new CandidPrimitive(CandidPrimitiveType.Nat64, value);
+            return new CandidPrimitive(PrimitiveType.Nat64, value);
         }
 
         public static CandidPrimitive Int(UnboundedInt value)
         {
-            return new CandidPrimitive(CandidPrimitiveType.Int, value);
+            return new CandidPrimitive(PrimitiveType.Int, value);
         }
 
         public static CandidPrimitive Int8(sbyte value)
         {
-            return new CandidPrimitive(CandidPrimitiveType.Int8, value);
+            return new CandidPrimitive(PrimitiveType.Int8, value);
         }
 
         public static CandidPrimitive Int16(short value)
         {
-            return new CandidPrimitive(CandidPrimitiveType.Int16, value);
+            return new CandidPrimitive(PrimitiveType.Int16, value);
         }
 
         public static CandidPrimitive Int32(int value)
         {
-            return new CandidPrimitive(CandidPrimitiveType.Int32, value);
+            return new CandidPrimitive(PrimitiveType.Int32, value);
         }
 
         public static CandidPrimitive Int64(long value)
         {
-            return new CandidPrimitive(CandidPrimitiveType.Int64, value);
+            return new CandidPrimitive(PrimitiveType.Int64, value);
         }
 
         public static CandidPrimitive Float32(float value)
         {
-            return new CandidPrimitive(CandidPrimitiveType.Float32, value);
+            return new CandidPrimitive(PrimitiveType.Float32, value);
         }
 
         public static CandidPrimitive Float64(double value)
         {
-            return new CandidPrimitive(CandidPrimitiveType.Float64, value);
+            return new CandidPrimitive(PrimitiveType.Float64, value);
         }
 
         public static CandidPrimitive Bool(bool value)
         {
-            return new CandidPrimitive(CandidPrimitiveType.Bool, value);
+            return new CandidPrimitive(PrimitiveType.Bool, value);
         }
         public static CandidPrimitive Pricipal(Principal? value)
         {
-            return new CandidPrimitive(CandidPrimitiveType.Principal, value);
+            return new CandidPrimitive(PrimitiveType.Principal, value);
         }
 
         public static CandidPrimitive Null()
         {
-            return new CandidPrimitive(CandidPrimitiveType.Null, null);
+            return new CandidPrimitive(PrimitiveType.Null, null);
         }
 
         public static CandidPrimitive Reserved()
         {
-            return new CandidPrimitive(CandidPrimitiveType.Reserved, null);
+            return new CandidPrimitive(PrimitiveType.Reserved, null);
         }
 
         public static CandidPrimitive Empty()
         {
-            return new CandidPrimitive(CandidPrimitiveType.Empty, null);
+            return new CandidPrimitive(PrimitiveType.Empty, null);
         }
 
 
@@ -429,7 +429,7 @@ namespace ICP.Candid.Models.Values
 
 
 
-        protected void ValidateType(CandidPrimitiveType type)
+        protected void ValidateType(PrimitiveType type)
         {
             if (this.ValueType != type)
             {

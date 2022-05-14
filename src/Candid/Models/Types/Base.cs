@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace ICP.Candid.Models.Types
 {
-    public abstract class CandidTypeDefinition : IEquatable<CandidTypeDefinition>
+    public abstract class CandidType : IEquatable<CandidType>
     {
         public abstract CandidTypeCode Type { get; }
 
@@ -24,12 +24,12 @@ namespace ICP.Candid.Models.Types
 
         public abstract byte[] Encode(CompoundTypeTable compoundTypeTable);
 
-        public bool Equals(CandidTypeDefinition? other)
+        public bool Equals(CandidType? other)
         {
             return this.Equals(other as object);
         }
 
-        public static bool operator ==(CandidTypeDefinition? def1, CandidTypeDefinition? def2)
+        public static bool operator ==(CandidType? def1, CandidType? def2)
         {
             if (object.ReferenceEquals(def1, null))
             {
@@ -38,7 +38,7 @@ namespace ICP.Candid.Models.Types
             return def1.Equals(def2);
         }
 
-        public static bool operator !=(CandidTypeDefinition? def1, CandidTypeDefinition? def2)
+        public static bool operator !=(CandidType? def1, CandidType? def2)
         {
             if (object.ReferenceEquals(def1, null))
             {

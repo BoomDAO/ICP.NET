@@ -8,34 +8,34 @@ using System.Threading.Tasks;
 
 namespace ICP.Candid.Models.Types
 {
-    public class PrimitiveCandidTypeDefinition : CandidTypeDefinition
+    public class CandidPrimitiveType : CandidType
     {
         public override CandidTypeCode Type { get; }
-        public CandidPrimitiveType PrimitiveType { get; }
+        public PrimitiveType PrimitiveType { get; }
 
-        public PrimitiveCandidTypeDefinition(CandidPrimitiveType type)
+        public CandidPrimitiveType(PrimitiveType type)
         {
             this.PrimitiveType = type;
             this.Type = type switch
             {
-                CandidPrimitiveType.Text => CandidTypeCode.Text,
-                CandidPrimitiveType.Nat => CandidTypeCode.Nat,
-                CandidPrimitiveType.Nat8 => CandidTypeCode.Nat8,
-                CandidPrimitiveType.Nat16 => CandidTypeCode.Nat16,
-                CandidPrimitiveType.Nat32 => CandidTypeCode.Nat32,
-                CandidPrimitiveType.Nat64 => CandidTypeCode.Nat64,
-                CandidPrimitiveType.Int => CandidTypeCode.Int,
-                CandidPrimitiveType.Int8 => CandidTypeCode.Int8,
-                CandidPrimitiveType.Int16 => CandidTypeCode.Int16,
-                CandidPrimitiveType.Int32 => CandidTypeCode.Int32,
-                CandidPrimitiveType.Int64 => CandidTypeCode.Int64,
-                CandidPrimitiveType.Float32 => CandidTypeCode.Float32,
-                CandidPrimitiveType.Float64 => CandidTypeCode.Float64,
-                CandidPrimitiveType.Bool => CandidTypeCode.Bool,
-                CandidPrimitiveType.Null => CandidTypeCode.Null,
-                CandidPrimitiveType.Empty => CandidTypeCode.Empty,
-                CandidPrimitiveType.Reserved => CandidTypeCode.Reserved,
-                CandidPrimitiveType.Principal => CandidTypeCode.Principal,
+                PrimitiveType.Text => CandidTypeCode.Text,
+                PrimitiveType.Nat => CandidTypeCode.Nat,
+                PrimitiveType.Nat8 => CandidTypeCode.Nat8,
+                PrimitiveType.Nat16 => CandidTypeCode.Nat16,
+                PrimitiveType.Nat32 => CandidTypeCode.Nat32,
+                PrimitiveType.Nat64 => CandidTypeCode.Nat64,
+                PrimitiveType.Int => CandidTypeCode.Int,
+                PrimitiveType.Int8 => CandidTypeCode.Int8,
+                PrimitiveType.Int16 => CandidTypeCode.Int16,
+                PrimitiveType.Int32 => CandidTypeCode.Int32,
+                PrimitiveType.Int64 => CandidTypeCode.Int64,
+                PrimitiveType.Float32 => CandidTypeCode.Float32,
+                PrimitiveType.Float64 => CandidTypeCode.Float64,
+                PrimitiveType.Bool => CandidTypeCode.Bool,
+                PrimitiveType.Null => CandidTypeCode.Null,
+                PrimitiveType.Empty => CandidTypeCode.Empty,
+                PrimitiveType.Reserved => CandidTypeCode.Reserved,
+                PrimitiveType.Principal => CandidTypeCode.Principal,
                 _ => throw new NotImplementedException(),
             };
         }
@@ -47,7 +47,7 @@ namespace ICP.Candid.Models.Types
 
         public override bool Equals(object? obj)
         {
-            if (obj is PrimitiveCandidTypeDefinition pDef)
+            if (obj is CandidPrimitiveType pDef)
             {
                 return this.Type == pDef.Type;
             }

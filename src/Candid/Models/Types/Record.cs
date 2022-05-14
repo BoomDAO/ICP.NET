@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace ICP.Candid.Models.Types
 {
-	public class RecordCandidTypeDefinition : RecordOrVariantCandidTypeDefinition
+	public class CandidRecordType : CandidRecordOrVariantType
 	{
 		public override CandidTypeCode Type { get; } = CandidTypeCode.Record;
 		protected override string TypeString { get; } = "record";
 
 
-		public RecordCandidTypeDefinition(Dictionary<CandidTag, CandidTypeDefinition> fields, CandidId? recursiveId = null) : base(fields, recursiveId)
+		public CandidRecordType(Dictionary<CandidTag, CandidType> fields, CandidId? recursiveId = null) : base(fields, recursiveId)
 		{
 		}
 

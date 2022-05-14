@@ -13,7 +13,7 @@ namespace ICP.Candid.Tests
 {
     public static class TestUtil
 	{
-		public static void AssertEncodedCandid(string expectedHex, string expectedPrefix, CandidValue value, CandidTypeDefinition typeDef)
+		public static void AssertEncodedCandid(string expectedHex, string expectedPrefix, CandidValue value, CandidType typeDef)
 		{
 			// Encode test
 			var builder = new CandidArgBuilder();

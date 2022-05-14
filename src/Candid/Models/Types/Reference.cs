@@ -7,20 +7,20 @@ using System.Threading.Tasks;
 
 namespace ICP.Candid.Models.Types
 {
-	public class ReferenceCandidTypeDefinition : CandidTypeDefinition
+	public class CandidReferenceType : CandidType
 	{
 		public override CandidTypeCode Type => this.getTypeFunc();
 
 		private readonly Func<CandidTypeCode> getTypeFunc;
 		public CandidId Id { get; }
 
-		public ReferenceCandidTypeDefinition(CandidId id, Func<CandidTypeCode> getTypeFunc)
+		public CandidReferenceType(CandidId id, Func<CandidTypeCode> getTypeFunc)
 		{
 			this.Id = id;
 			this.getTypeFunc = getTypeFunc;
 		}
 
-		public ReferenceCandidTypeDefinition(CandidId id, CandidTypeCode type)
+		public CandidReferenceType(CandidId id, CandidTypeCode type)
 		{
 			this.Id = id;
 			this.getTypeFunc = () => type;
@@ -34,11 +34,11 @@ namespace ICP.Candid.Models.Types
 
 		public override bool Equals(object? obj)
 		{
-			if (obj is ReferenceCandidTypeDefinition r)
+			if (obj is CandidReferenceType r)
 			{
 				return this.Id == r.Id;
 			}
-			if (obj is CompoundCandidTypeDefinition c)
+			if (obj is CandidCompoundType c)
 			{
 				return this.Id == c.RecursiveId;
 			}

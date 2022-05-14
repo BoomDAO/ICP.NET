@@ -7,16 +7,16 @@ using System.Threading.Tasks;
 
 namespace ICP.Candid.Exceptions
 {
-    public abstract class CandidDeserializationException : Exception
+    public abstract class CandidSerializationException : Exception
     {
 
     }
 
-    public class CandidParseException : CandidDeserializationException
+    public class CandidSerializationParseException : CandidSerializationException
     {
         public int ByteEndIndex { get; }
         public string ErrorMessage { get; }
-        public CandidParseException(int byteEndIndex, string message)
+        public CandidSerializationParseException(int byteEndIndex, string message)
         {
             this.ByteEndIndex = byteEndIndex;
             this.ErrorMessage = message;
@@ -30,13 +30,13 @@ namespace ICP.Candid.Exceptions
             }
         }
 
-        internal static CandidParseException FromReader(BinaryReader reader, string message)
+        internal static CandidSerializationParseException FromReader(BinaryReader reader, string message)
         {
-            return new CandidParseException((int)reader.BaseStream.Position, message);
+            return new CandidSerializationParseException((int)reader.BaseStream.Position, message);
         }
     }
 
-    public class CandidTypeResolutionException : CandidDeserializationException
+    public class CandidTypeResolutionException : CandidSerializationException
     {
         public string ErrorMessage { get; }
         public CandidTypeResolutionException(string message)
@@ -52,9 +52,9 @@ namespace ICP.Candid.Exceptions
             }
         }
 
-        internal static CandidParseException FromReader(BinaryReader reader, string message)
+        internal static CandidSerializationParseException FromReader(BinaryReader reader, string message)
         {
-            return new CandidParseException((int)reader.BaseStream.Position, message);
+            return new CandidSerializationParseException((int)reader.BaseStream.Position, message);
         }
     }
 }

@@ -10,61 +10,27 @@ using System.Threading.Tasks;
 
 namespace ICP.Candid
 {
-    public static class CandidTextReader
+    public static class CandidTextParser
     {
-        public static FuncCandidTypeDefinition ReadFunc(string value)
+        public static CandidType Parse(string text)
         {
-            CandidTextTokenHelper helper = CandidTextTokenizer.Tokenize(value);
-
-            helper.CurrentToken.ValidateType(CandidTextTokenType.OpenParenthesis);
-
-            helper.MoveNextOrThrow();
-            var argTypes = new List<CandidTypeDefinition>();
-            while (helper.CurrentToken.Type != CandidTextTokenType.CloseParenthesis)
-            {
-                CandidTypeDefinition type = GetType(helper);
-                argTypes.Add(type);
-            }
-
-            helper.MoveNextOrThrow();
-            string arrow = helper.CurrentToken.GetTextValueOrThrow();
-            if(arrow != "->")
-            {
-                // TODO
-                throw new CandidTextParseException();
-            }
-            helper.MoveNextOrThrow();
-            helper.CurrentToken.ValidateType(CandidTextTokenType.OpenParenthesis);
-
-            helper.MoveNextOrThrow();
-            var returnTypes = new List<CandidTypeDefinition>();
-            while (helper.CurrentToken.Type != CandidTextTokenType.CloseParenthesis)
-            {
-                CandidTypeDefinition type = GetType(helper);
-                returnTypes.Add(type);
-            }
-
-            var modes = new List<FuncMode>();
-            while (helper.MoveNext())
-            {
-                string rawMode = helper.CurrentToken.GetTextValueOrThrow();
-                FuncMode mode = rawMode switch
-                {
-                    "query" => FuncMode.Query,
-                    "oneway" => FuncMode.Oneway,
-                    _ => throw new CandidTextParseException()
-                };
-                modes.Add(mode);
-            }
-            return new FuncCandidTypeDefinition(modes, argTypes, returnTypes);
+            return Parse<CandidType>(text);
         }
 
-        internal static OptCandidTypeDefinition ReadOpt(string text)
+        public static T Parse<T>(string text)
+            where T : CandidType
         {
-            throw new NotImplementedException();
+            CandidTextTokenHelper helper = CandidTextTokenizer.Tokenize(text);
+            CandidType def = ParseInternal(helper);
+            if(def.GetType() != typeof(T))
+            {
+                throw new InvalidOperationException($"Cannot convert parsed type '{def.GetType().Name}' to type '{typeof(T).Name}'");
+            }
+            return (T)def;
         }
 
-        private static CandidTypeDefinition GetType(CandidTextTokenHelper helper)
+
+        private static CandidType ParseInternal(CandidTextTokenHelper helper)
         {
             CandidId? recursiveId = null;
             string type = helper.CurrentToken.GetTextValueOrThrow();
@@ -79,7 +45,7 @@ namespace ICP.Candid
                 type = helper.CurrentToken.GetTextValueOrThrow();
             }
             helper.MoveNextOrThrow();
-            CandidTypeDefinition typeDef = GetType(type, recursiveId, helper);
+            CandidType typeDef = GetType(type, recursiveId, helper);
             if (helper.CurrentToken.Type == CandidTextTokenType.SemiColon)
             {
                 helper.MoveNextOrThrow();
@@ -87,25 +53,25 @@ namespace ICP.Candid
             return typeDef;
         }
 
-        private static CandidTypeDefinition GetType(string type, CandidId? recursiveId, CandidTextTokenHelper helper)
+        private static CandidType GetType(string type, CandidId? recursiveId, CandidTextTokenHelper helper)
         {
             switch (type)
             {
                 case "opt":
                     {
-                        CandidTypeDefinition innerValue = GetType(helper);
-                        return new OptCandidTypeDefinition(innerValue, recursiveId);
+                        CandidType innerValue = ParseInternal(helper);
+                        return new CandidOptType(innerValue, recursiveId);
                     }
                 case "record":
                     {
-                        Dictionary<CandidTag, CandidTypeDefinition> fields = new();
+                        Dictionary<CandidTag, CandidType> fields = new();
                         helper.CurrentToken.ValidateType(CandidTextTokenType.OpenCurlyBrace);
                         helper.MoveNextOrThrow();
                         uint index = 0;
                         while (helper.CurrentToken.Type != CandidTextTokenType.CloseCurlyBrace)
                         {
                             CandidTag label;
-                            CandidTypeDefinition fieldType;
+                            CandidType fieldType;
                             if (helper.NextToken?.Type == CandidTextTokenType.Colon)
                             {
                                 // `label`: `type`
@@ -114,53 +80,91 @@ namespace ICP.Candid
                                 helper.MoveNextOrThrow();
                                 helper.CurrentToken.ValidateType(CandidTextTokenType.Colon);
                                 helper.MoveNextOrThrow();
-                                fieldType = GetType(helper);
+                                fieldType = ParseInternal(helper);
                             }
                             else
                             {
                                 // `type` (based on position/index)
                                 label = CandidTag.FromId(index++);
-                                fieldType = GetType(helper);
+                                fieldType = ParseInternal(helper);
                             }
                             fields.Add(label, fieldType);
                         }
                         helper.MoveNextOrThrow();
-                        return new RecordCandidTypeDefinition(fields, recursiveId);
+                        return new CandidRecordType(fields, recursiveId);
                     }
                 case "vec":
                     {
-                        CandidTypeDefinition innerValue = GetType(helper);
-                        return new VectorCandidTypeDefinition(innerValue, recursiveId);
+                        CandidType innerValue = ParseInternal(helper);
+                        return new CandidVectorType(innerValue, recursiveId);
                     }
                 case "variant":
                     {
-                        Dictionary<CandidTag, CandidTypeDefinition> options = new();
+                        Dictionary<CandidTag, CandidType> options = new();
                         helper.CurrentToken.ValidateType(CandidTextTokenType.OpenCurlyBrace);
                         helper.MoveNextOrThrow();
                         while (helper.CurrentToken.Type != CandidTextTokenType.CloseCurlyBrace)
                         {
                             string label = helper.CurrentToken.GetTextValueOrThrow();
                             helper.MoveNextOrThrow();
-                            CandidTypeDefinition fieldType;
+                            CandidType fieldType;
                             if (helper.CurrentToken.Type == CandidTextTokenType.SemiColon)
                             {
-                                fieldType = new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Null);
+                                fieldType = new CandidPrimitiveType(PrimitiveType.Null);
                             }
                             else
                             {
                                 helper.CurrentToken.ValidateType(CandidTextTokenType.Colon);
                                 helper.MoveNextOrThrow();
-                                fieldType = GetType(helper);
+                                fieldType = ParseInternal(helper);
                             }
                             options.Add(CandidTag.FromName(label), fieldType);
                         }
                         helper.MoveNextOrThrow();
-                        return new VariantCandidTypeDefinition(options, recursiveId);
+                        return new CandidVariantType(options, recursiveId);
                     }
                 case "func":
                     {
-                        // TODO
-                        throw new NotImplementedException();
+                        helper.CurrentToken.ValidateType(CandidTextTokenType.OpenParenthesis);
+
+                        helper.MoveNextOrThrow();
+                        var argTypes = new List<CandidType>();
+                        while (helper.CurrentToken.Type != CandidTextTokenType.CloseParenthesis)
+                        {
+                            CandidType t = ParseInternal(helper);
+                            argTypes.Add(t);
+                        }
+
+                        helper.MoveNextOrThrow();
+                        string arrow = helper.CurrentToken.GetTextValueOrThrow();
+                        if (arrow != "->")
+                        {
+                            throw new CandidTextParseException($"Expected token '->', got '{arrow}'");
+                        }
+                        helper.MoveNextOrThrow();
+                        helper.CurrentToken.ValidateType(CandidTextTokenType.OpenParenthesis);
+
+                        helper.MoveNextOrThrow();
+                        var returnTypes = new List<CandidType>();
+                        while (helper.CurrentToken.Type != CandidTextTokenType.CloseParenthesis)
+                        {
+                            CandidType t = ParseInternal(helper);
+                            returnTypes.Add(t);
+                        }
+
+                        var modes = new List<FuncMode>();
+                        while (helper.MoveNext())
+                        {
+                            string rawMode = helper.CurrentToken.GetTextValueOrThrow();
+                            FuncMode mode = rawMode switch
+                            {
+                                "query" => FuncMode.Query,
+                                "oneway" => FuncMode.Oneway,
+                                _ => throw new CandidTextParseException($"Unexpected func mode '{rawMode}'. Valid func modes: {string.Join(", ", Enum.GetValues<FuncMode>())}")
+                            };
+                            modes.Add(mode);
+                        }
+                        return new CandidFuncType(modes, argTypes, returnTypes);
                     }
                 case "service":
                     {
@@ -169,68 +173,67 @@ namespace ICP.Candid
                     }
                 case "int8":
                     ThrowIfRecursiveIdSet();
-                    return new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Int8);
+                    return new CandidPrimitiveType(PrimitiveType.Int8);
                 case "int16":
                     ThrowIfRecursiveIdSet();
-                    return new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Int16);
+                    return new CandidPrimitiveType(PrimitiveType.Int16);
                 case "int32":
                     ThrowIfRecursiveIdSet();
-                    return new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Int32);
+                    return new CandidPrimitiveType(PrimitiveType.Int32);
                 case "int64":
                     ThrowIfRecursiveIdSet();
-                    return new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Int64);
+                    return new CandidPrimitiveType(PrimitiveType.Int64);
                 case "int":
                     ThrowIfRecursiveIdSet();
-                    return new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Int);
+                    return new CandidPrimitiveType(PrimitiveType.Int);
                 case "nat8":
                     ThrowIfRecursiveIdSet();
-                    return new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat8);
+                    return new CandidPrimitiveType(PrimitiveType.Nat8);
                 case "nat16":
                     ThrowIfRecursiveIdSet();
-                    return new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat16);
+                    return new CandidPrimitiveType(PrimitiveType.Nat16);
                 case "nat32":
                     ThrowIfRecursiveIdSet();
-                    return new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat32);
+                    return new CandidPrimitiveType(PrimitiveType.Nat32);
                 case "nat64":
                     ThrowIfRecursiveIdSet();
-                    return new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat64);
+                    return new CandidPrimitiveType(PrimitiveType.Nat64);
                 case "nat":
-                    return new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat);
+                    return new CandidPrimitiveType(PrimitiveType.Nat);
                 case "text":
                     ThrowIfRecursiveIdSet();
-                    return new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Text);
+                    return new CandidPrimitiveType(PrimitiveType.Text);
                 case "float32":
                     ThrowIfRecursiveIdSet();
-                    return new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Float32);
+                    return new CandidPrimitiveType(PrimitiveType.Float32);
                 case "float64":
                     ThrowIfRecursiveIdSet();
-                    return new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Float64);
+                    return new CandidPrimitiveType(PrimitiveType.Float64);
                 case "bool":
                     ThrowIfRecursiveIdSet();
-                    return new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Bool);
+                    return new CandidPrimitiveType(PrimitiveType.Bool);
                 case "principal":
                     ThrowIfRecursiveIdSet();
-                    return new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Principal);
+                    return new CandidPrimitiveType(PrimitiveType.Principal);
                 case "reserved":
                     ThrowIfRecursiveIdSet();
-                    return new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Reserved);
+                    return new CandidPrimitiveType(PrimitiveType.Reserved);
                 case "empty":
                     ThrowIfRecursiveIdSet();
-                    return new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Empty);
+                    return new CandidPrimitiveType(PrimitiveType.Empty);
                 case "null":
                     ThrowIfRecursiveIdSet();
-                    return new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Null);
+                    return new CandidPrimitiveType(PrimitiveType.Null);
                 default:
                     ThrowIfRecursiveIdSet();
-                    return new ReferenceCandidTypeDefinition(CandidId.Parse(type), () => throw new NotImplementedException()); // TODO
+                    return new CandidReferenceType(CandidId.Parse(type), () => throw new NotImplementedException()); // TODO
             }
 
             void ThrowIfRecursiveIdSet()
             {
                 if (recursiveId != null)
                 {
-                    // TODO
-                    throw new CandidTextParseException();
+                    throw new CandidTextParseException($"Recursive reference id '{recursiveId}' is set on an invalid type '{type}'");
                 }
             }
         }

@@ -7,15 +7,15 @@ using System.Threading.Tasks;
 
 namespace ICP.Candid.Models.Types
 {
-	public class ServiceCandidTypeDefinition : CompoundCandidTypeDefinition
+	public class CandidServiceType : CandidCompoundType
 	{
 		public override CandidTypeCode Type { get; } = CandidTypeCode.Service;
 
 		public CandidId? Id { get; }
-		public IReadOnlyDictionary<string, FuncCandidTypeDefinition> Methods { get; }
+		public IReadOnlyDictionary<string, CandidFuncType> Methods { get; }
 
 
-        public ServiceCandidTypeDefinition(IReadOnlyDictionary<string, FuncCandidTypeDefinition> methods, CandidId? id, CandidId? recursiveId = null) : base(recursiveId)
+        public CandidServiceType(IReadOnlyDictionary<string, CandidFuncType> methods, CandidId? id, CandidId? recursiveId = null) : base(recursiveId)
 		{
 			this.Methods = methods;
 			this.Id = id;
@@ -39,14 +39,14 @@ namespace ICP.Candid.Models.Types
 				.ToArray();
 		}
 
-		internal override IEnumerable<CandidTypeDefinition> GetInnerTypes()
+		internal override IEnumerable<CandidType> GetInnerTypes()
 		{
 			return this.Methods.Values;
 		}
 
 		public override bool Equals(object? obj)
 		{
-			if (obj is ServiceCandidTypeDefinition sDef)
+			if (obj is CandidServiceType sDef)
 			{
 				return this.Methods
 					.OrderBy(s => s.Key)

@@ -12,18 +12,18 @@ namespace ICP.Candid.Models.Types
 		Oneway = 2, // No response
 		Query = 1 // Response
 	}
-	public class FuncCandidTypeDefinition : CompoundCandidTypeDefinition
+	public class CandidFuncType : CandidCompoundType
 	{
 		public override CandidTypeCode Type { get; } = CandidTypeCode.Func;
 
 		public IReadOnlyList<FuncMode> Modes { get; }
-		public IReadOnlyList<CandidTypeDefinition> ArgTypes { get; }
-		public IReadOnlyList<CandidTypeDefinition> ReturnTypes { get; }
+		public IReadOnlyList<CandidType> ArgTypes { get; }
+		public IReadOnlyList<CandidType> ReturnTypes { get; }
 
-		public FuncCandidTypeDefinition(
+		public CandidFuncType(
 			List<FuncMode> modes,
-			List<CandidTypeDefinition> argTypes,
-			List<CandidTypeDefinition> returnTypes,
+			List<CandidType> argTypes,
+			List<CandidType> returnTypes,
 			CandidId? recursiveId = null)
 			: base(recursiveId)
 		{
@@ -58,14 +58,14 @@ namespace ICP.Candid.Models.Types
 				.ToArray();
 		}
 
-		internal override IEnumerable<CandidTypeDefinition> GetInnerTypes()
+		internal override IEnumerable<CandidType> GetInnerTypes()
 		{
 			return this.ArgTypes.Concat(this.ReturnTypes);
 		}
 
 		public override bool Equals(object? obj)
 		{
-			if (obj is FuncCandidTypeDefinition sDef)
+			if (obj is CandidFuncType sDef)
 			{
 				bool modesEqual = this.Modes
 					.OrderBy(s => s)

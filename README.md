@@ -11,6 +11,7 @@ Collection of Internet Computer Protocol (ICP) libraries for .NET/Blazor
 - Serialization for custom C# models
 - Automatic Api Client/Model generation from Candid spec
 - Infer type from value, vs specifying value + type
+- DID file parsing
 
 # Agent
 ## Usage
@@ -41,20 +42,20 @@ CandidArg responseArg = reply.Arg;
 ```
 
 # Candid
-## Usage
-### Parsing bytes
+## Parse from bytes
 ```cs
 CandidArg arg = CandidArg.FromBytes(rawCandidBytes);
 ```
 
-### Using candid values directly
+## Reading candid values directly
 ```cs
 CandidArg arg = CandidArg.FromBytes(rawCandidBytes);
 CandidValue firstArg = arg.Values[0];
 string title = firstArg.AsRecord()["title"];
 ```
 
-### Converting candid to custom classes (custom serialization is on the roadmap)
+## Converting candid to custom classes
+### (custom serialization doesn't exist yet but is on the roadmap)
 
 ```cs
 CandidArg arg = CandidArg.FromBytes(rawCandidBytes);
@@ -70,6 +71,29 @@ public class MyObj
     public bool IsGoodTitle { get; set; }
 }
 ```
+## Parse from Text
+### * DID file formats are currently not supported
+```cs
+string text = "record { field_1:nat64; field_2: vec nat8 }";
+CandidRecordType type = CandidTextParser.Parse<CandidRecordType>(text);
+```
+
+## Generate Text representation
+```cs
+var type = new CandidRecordType(new Dictionary<CandidTag, CandidType>
+{
+    {
+        CandidTag.FromName("field_1"),
+        new CandidPrimitiveType(PrimitiveType.Nat64)
+    },
+    {
+        CandidTag.FromName("field_2"),
+        new CandidVectorType(new CandidPrimitiveType(PrimitiveType.Nat8))
+    }
+});
+string text = CandidTextGenerator.Generator(type, IndentType.Tab);
+```
+
 
 # Links
 - [IC Http Interface Spec](https://smartcontracts.org/docs/current/references/ic-interface-spec)

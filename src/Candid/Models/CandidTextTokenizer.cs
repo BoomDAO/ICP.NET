@@ -36,8 +36,7 @@ namespace ICP.Candid.Models
         {
             if (!this.MoveNext())
             {
-                // TODO
-                throw new CandidTextParseException();
+                throw new CandidTextParseException("Unexpected end of text");
             }
         }
     }
@@ -117,15 +116,14 @@ namespace ICP.Candid.Models
         public string GetTextValueOrThrow()
         {
             this.ValidateType(CandidTextTokenType.Text);
-            return this.Text ?? throw new CandidTextParseException(); // TODO
+            return this.Text ?? throw new CandidTextParseException("Expected text value, got null");
         }
 
         internal void ValidateType(CandidTextTokenType type)
         {
             if (this.Type != type)
             {
-                // TODO
-                throw new CandidTextParseException();
+                throw new CandidTextParseException($"Expected type '{type}', got '{this.Type}'");
             }
         }
     }
