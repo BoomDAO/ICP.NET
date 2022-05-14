@@ -301,7 +301,6 @@ namespace ICP.Candid
 
             public override void WriteText(IndentedTextWriter writer, bool indented)
             {
-                bool b = this.InnerValue is CurlyBraceTypeTextComponent<KeyValueTextComponent> c && c.Fields.Count == 4;
                 if (this.RecursiveId != null)
                 {
                     writer.Write("μ");
