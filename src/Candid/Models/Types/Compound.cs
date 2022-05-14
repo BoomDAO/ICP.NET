@@ -9,9 +9,9 @@ namespace ICP.Candid.Models.Types
 {
 	public abstract class CompoundCandidTypeDefinition : CandidTypeDefinition
 	{
-		public string? RecursiveId { get; set; }
+		public CandidId? RecursiveId { get; set; }
 
-		public CompoundCandidTypeDefinition(string? recursiveId)
+		public CompoundCandidTypeDefinition(CandidId? recursiveId)
 		{
 			this.RecursiveId = recursiveId;
 		}
@@ -35,7 +35,7 @@ namespace ICP.Candid.Models.Types
 
 		public IReadOnlyDictionary<CandidTag, CandidTypeDefinition> Fields { get; }
 
-		protected RecordOrVariantCandidTypeDefinition(Dictionary<CandidTag, CandidTypeDefinition> fields, string? recursiveId) : base(recursiveId)
+		protected RecordOrVariantCandidTypeDefinition(Dictionary<CandidTag, CandidTypeDefinition> fields, CandidId? recursiveId) : base(recursiveId)
 		{
 			this.Fields = fields;
 		}

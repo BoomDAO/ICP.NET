@@ -62,7 +62,7 @@ namespace ICP.Candid.Models
             return table;
         }
 
-        public uint GetRecursiveReferenceIndex(string recursiveId)
+        public uint GetRecursiveReferenceIndex(CandidId recursiveId)
         {
             uint? index = this.CompoundTypeIndexMap
                 .Where(c => c.Key.RecursiveId == recursiveId)

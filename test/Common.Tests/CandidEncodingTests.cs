@@ -413,13 +413,14 @@ namespace ICP.Candid.Tests
                     }))
                 }
             });
+            var referenceId = CandidId.Parse("rec_1");
             var type1 = new RecordCandidTypeDefinition(new Dictionary<CandidTag, CandidTypeDefinition>
             {
                 {
                     CandidTag.FromName("selfRef"),
-                    new OptCandidTypeDefinition(new RecursiveReferenceCandidTypeDefinition("rec_1", CandidTypeCode.Record))
+                    new OptCandidTypeDefinition(new ReferenceCandidTypeDefinition(referenceId, CandidTypeCode.Record))
                 }
-            }, "rec_1");
+            }, referenceId);
             var expectedArg = CandidArg.FromCandid(new List<CandidValueWithType>
             {
                 CandidValueWithType.FromValueAndType(value1, type1)

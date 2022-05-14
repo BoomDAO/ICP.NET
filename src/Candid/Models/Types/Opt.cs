@@ -11,7 +11,7 @@ namespace ICP.Candid.Models.Types
 		public override CandidTypeCode Type { get; } = CandidTypeCode.Opt;
 		public CandidTypeDefinition Value { get; }
 
-		public OptCandidTypeDefinition(CandidTypeDefinition value, string? recursiveId = null) : base(recursiveId)
+		public OptCandidTypeDefinition(CandidTypeDefinition value, CandidId? recursiveId = null) : base(recursiveId)
 		{
 			this.Value = value ?? throw new ArgumentNullException(nameof(value));
 		}

@@ -66,13 +66,13 @@ namespace ICP.Candid
 
         private static CandidTypeDefinition GetType(CandidTextTokenHelper helper)
         {
-            string? recursiveId = null;
+            CandidId? recursiveId = null;
             string type = helper.CurrentToken.GetTextValueOrThrow();
 
             // Check to see if text is recursive id like `μrec_1.record` vs just the type name `record`
             if (type.StartsWith("μ"))
             {
-                recursiveId = type[1..];
+                recursiveId = CandidId.Parse(type[1..]);
                 helper.MoveNextOrThrow();
                 helper.CurrentToken.ValidateType(CandidTextTokenType.Period); // Period seperates recursive id and type
                 helper.MoveNextOrThrow();
@@ -87,7 +87,7 @@ namespace ICP.Candid
             return typeDef;
         }
 
-        private static CandidTypeDefinition GetType(string type, string? recursiveId, CandidTextTokenHelper helper)
+        private static CandidTypeDefinition GetType(string type, CandidId? recursiveId, CandidTextTokenHelper helper)
         {
             switch (type)
             {
@@ -222,7 +222,7 @@ namespace ICP.Candid
                     return new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Null);
                 default:
                     ThrowIfRecursiveIdSet();
-                    return new RecursiveReferenceCandidTypeDefinition(type, () => throw new NotImplementedException()); // TODO
+                    return new ReferenceCandidTypeDefinition(CandidId.Parse(type), () => throw new NotImplementedException()); // TODO
             }
 
             void ThrowIfRecursiveIdSet()

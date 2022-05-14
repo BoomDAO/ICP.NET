@@ -41,7 +41,7 @@ namespace ICP.Candid
                     DefintionOrReference t = helper.ReadType();
                     return resolver.Resolve(t);
                 });
-                Dictionary<string, CompoundCandidTypeDefinition> recursiveTypes = new();
+                Dictionary<CandidId, CompoundCandidTypeDefinition> recursiveTypes = new();
 
                 // Get an arg value for each type
                 List<CandidValueWithType> args = types
@@ -158,10 +158,10 @@ namespace ICP.Candid
                                 return typeInfo.ResolvedType;
                             }
                             // If neither, then it is 'resolving', meaning it is a recursive type
-                            typeInfo.RecursiveId = $"rec_{++this.referenceCount}"; // Create a new reference to mark parent object
+                            typeInfo.RecursiveId = CandidId.Parse($"rec_{++this.referenceCount}"); // Create a new reference to mark parent object
                             this.Tracer.RecursiveReference(typeInfo.RecursiveId);
                             // Give func to resolve the type which WILL be resolved, but not yet
-                            return new RecursiveReferenceCandidTypeDefinition(typeInfo.RecursiveId, () => typeInfo.ResolvedType!.Type);
+                            return new ReferenceCandidTypeDefinition(typeInfo.RecursiveId, () => typeInfo.ResolvedType!.Type);
                         case DefintionOrReferenceType.Compound:
                             return defOrRef.DefinitionFunc!(this);
                         case DefintionOrReferenceType.Primitive:
@@ -181,7 +181,7 @@ namespace ICP.Candid
                 public Func<DefinitionResolver, CompoundCandidTypeDefinition> ResolveFunc { get; }
                 public CompoundCandidTypeDefinition? ResolvedType { get; set; }
                 public bool ResolvingOrResolved { get; set; }
-                public string? RecursiveId { get; set; }
+                public CandidId? RecursiveId { get; set; }
 
                 public TypeInfo(Func<DefinitionResolver, CompoundCandidTypeDefinition> resolveFunc)
                 {
@@ -224,11 +224,11 @@ namespace ICP.Candid
                 this.indentLevel--;
             }
 
-            public void RecursiveReference(string recursiveId)
+            public void RecursiveReference(CandidId recursiveId)
             {
                 this.indentLevel++;
                 this.AppendIndent();
-                this.stringBuilder.AppendLine("rec " + recursiveId);
+                this.stringBuilder.AppendLine(recursiveId.ToString());
                 this.indentLevel--;
             }
 
@@ -437,7 +437,7 @@ namespace ICP.Candid
                                     throw new CandidTypeResolutionException($"Service method values can only be Func types. Actual type '{type}'");
                                 });
                             resolver.Tracer.EndCompound("Service");
-                            return new ServiceCandidTypeDefinition(m, name: null);
+                            return new ServiceCandidTypeDefinition(m, id: null);
                         });
                     default:
                         throw new NotImplementedException($"Invalid type code '{typeCodeInt}'");
@@ -505,18 +505,18 @@ namespace ICP.Candid
             {
                 return LEB128.DecodeSigned(this.Reader.BaseStream);
             }
-            public CandidValue ReadValue(CandidTypeDefinition typeDef, Dictionary<string, CompoundCandidTypeDefinition> recursiveTypes)
+            public CandidValue ReadValue(CandidTypeDefinition typeDef, Dictionary<CandidId, CompoundCandidTypeDefinition> recursiveTypes)
             {
                 return typeDef switch
                 {
                     PrimitiveCandidTypeDefinition p => this.ReadPrimitive(p.PrimitiveType),
-                    RecursiveReferenceCandidTypeDefinition r => this.ReadRecursiveValue(r.RecursiveId, recursiveTypes),
+                    ReferenceCandidTypeDefinition r => this.ReadRecursiveValue(r.Id, recursiveTypes),
                     CompoundCandidTypeDefinition c => this.ReadCompoundValue(c, recursiveTypes),
                     _ => throw new NotImplementedException(),
                 };
             }
 
-            public CandidValue ReadCompoundValue(CompoundCandidTypeDefinition c, Dictionary<string, CompoundCandidTypeDefinition> recursiveTypes)
+            public CandidValue ReadCompoundValue(CompoundCandidTypeDefinition c, Dictionary<CandidId, CompoundCandidTypeDefinition> recursiveTypes)
             {
                 if (c.RecursiveId != null)
                 {
@@ -534,7 +534,7 @@ namespace ICP.Candid
                 };
             }
 
-            public CandidValue ReadRecursiveValue(string recursiveId, Dictionary<string, CompoundCandidTypeDefinition> recursiveTypes)
+            public CandidValue ReadRecursiveValue(CandidId recursiveId, Dictionary<CandidId, CompoundCandidTypeDefinition> recursiveTypes)
             {
                 CompoundCandidTypeDefinition? typeDef = recursiveTypes.GetValueOrDefault(recursiveId);
                 if (typeDef == null)
@@ -648,7 +648,7 @@ namespace ICP.Candid
                 }
             }
 
-            public CandidVariant ReadVariantValue(Dictionary<CandidTag, CandidTypeDefinition> options, Dictionary<string, CompoundCandidTypeDefinition> recursiveTypes)
+            public CandidVariant ReadVariantValue(Dictionary<CandidTag, CandidTypeDefinition> options, Dictionary<CandidId, CompoundCandidTypeDefinition> recursiveTypes)
             {
                 UnboundedUInt index = this.ReadNat();
                 if (!index.TryToUInt64(out ulong i) || i > int.MaxValue)
@@ -663,7 +663,7 @@ namespace ICP.Candid
                 return new CandidVariant(tag, value);
             }
 
-            public CandidRecord ReadRecordValue(Dictionary<CandidTag, CandidTypeDefinition> fields, Dictionary<string, CompoundCandidTypeDefinition> recursiveTypes)
+            public CandidRecord ReadRecordValue(Dictionary<CandidTag, CandidTypeDefinition> fields, Dictionary<CandidId, CompoundCandidTypeDefinition> recursiveTypes)
             {
                 Dictionary<CandidTag, CandidValue> fieldValues = fields
                     // TODO are all the fields always there?
@@ -673,7 +673,7 @@ namespace ICP.Candid
                 return new CandidRecord(fieldValues);
             }
 
-            public CandidVector ReadVectorValue(CandidTypeDefinition innerTypeDef, Dictionary<string, CompoundCandidTypeDefinition> recursiveTypes)
+            public CandidVector ReadVectorValue(CandidTypeDefinition innerTypeDef, Dictionary<CandidId, CompoundCandidTypeDefinition> recursiveTypes)
             {
                 List<CandidValue> values = this.ReadVectorInner(() =>
                 {
@@ -682,7 +682,7 @@ namespace ICP.Candid
                 return new CandidVector(values.ToArray());
             }
 
-            public CandidOptional ReadOptValue(CandidTypeDefinition innerTypeDef, Dictionary<string, CompoundCandidTypeDefinition> recursiveTypes)
+            public CandidOptional ReadOptValue(CandidTypeDefinition innerTypeDef, Dictionary<CandidId, CompoundCandidTypeDefinition> recursiveTypes)
             {
                 bool isSet = this.ReadBool();
                 CandidValue? innerValue = isSet

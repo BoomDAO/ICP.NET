@@ -12,7 +12,7 @@ namespace ICP.Candid.Models.Types
 
 		public CandidTypeDefinition Value { get; }
 
-		public VectorCandidTypeDefinition(CandidTypeDefinition value, string? recursiveId = null) : base(recursiveId)
+		public VectorCandidTypeDefinition(CandidTypeDefinition value, CandidId? recursiveId = null) : base(recursiveId)
 		{
 			this.Value = value ?? throw new ArgumentNullException(nameof(value));
 		}

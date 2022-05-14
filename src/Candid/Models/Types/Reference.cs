@@ -7,47 +7,47 @@ using System.Threading.Tasks;
 
 namespace ICP.Candid.Models.Types
 {
-	public class RecursiveReferenceCandidTypeDefinition : CandidTypeDefinition
+	public class ReferenceCandidTypeDefinition : CandidTypeDefinition
 	{
 		public override CandidTypeCode Type => this.getTypeFunc();
 
 		private readonly Func<CandidTypeCode> getTypeFunc;
-		public string RecursiveId { get; }
+		public CandidId Id { get; }
 
-		public RecursiveReferenceCandidTypeDefinition(string recursiveId, Func<CandidTypeCode> getTypeFunc)
+		public ReferenceCandidTypeDefinition(CandidId id, Func<CandidTypeCode> getTypeFunc)
 		{
-			this.RecursiveId = recursiveId;
+			this.Id = id;
 			this.getTypeFunc = getTypeFunc;
 		}
 
-		public RecursiveReferenceCandidTypeDefinition(string recursiveId, CandidTypeCode type)
+		public ReferenceCandidTypeDefinition(CandidId id, CandidTypeCode type)
 		{
-			this.RecursiveId = recursiveId;
+			this.Id = id;
 			this.getTypeFunc = () => type;
 		}
 
 		public override byte[] Encode(CompoundTypeTable compoundTypeTable)
 		{
-			uint index = compoundTypeTable.GetRecursiveReferenceIndex(this.RecursiveId);
+			uint index = compoundTypeTable.GetRecursiveReferenceIndex(this.Id);
 			return LEB128.EncodeUnsigned(index);
 		}
 
 		public override bool Equals(object? obj)
 		{
-			if (obj is RecursiveReferenceCandidTypeDefinition r)
+			if (obj is ReferenceCandidTypeDefinition r)
 			{
-				return this.RecursiveId == r.RecursiveId;
+				return this.Id == r.Id;
 			}
 			if (obj is CompoundCandidTypeDefinition c)
 			{
-				return this.RecursiveId == c.RecursiveId;
+				return this.Id == c.RecursiveId;
 			}
 			return false;
 		}
 
 		public override int GetHashCode()
 		{
-			return HashCode.Combine(this.Type, this.RecursiveId);
+			return HashCode.Combine(this.Type, this.Id);
 		}
 	}
 }

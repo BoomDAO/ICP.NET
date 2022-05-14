@@ -57,15 +57,15 @@ namespace ICP.Candid
                 RecordCandidTypeDefinition r => GenerateRecord(r),
                 VariantCandidTypeDefinition va => GenerateVariant(va),
                 ServiceCandidTypeDefinition s => GenerateService(s),
-                RecursiveReferenceCandidTypeDefinition r => GenerateRecursive(r),
+                ReferenceCandidTypeDefinition r => GenerateRecursive(r),
                 PrimitiveCandidTypeDefinition p => GeneratePrimitive(p),
                 _ => throw new NotImplementedException()
             };
         }
 
-        private static ConstantTextComponent GenerateRecursive(RecursiveReferenceCandidTypeDefinition r)
+        private static ConstantTextComponent GenerateRecursive(ReferenceCandidTypeDefinition r)
         {
-            return new ConstantTextComponent($"rec {r.RecursiveId}");
+            return new ConstantTextComponent(r.Id.ToString());
         }
 
         private static ConstantTextComponent GeneratePrimitive(PrimitiveCandidTypeDefinition p)
@@ -101,7 +101,7 @@ namespace ICP.Candid
             List<KeyValueTextComponent> methods = s.Methods
                 .Select(f => new KeyValueTextComponent(f.Key, GenerateInternal(f.Value)))
                 .ToList();
-            var type = new KeyValueTextComponent("service", new ConstantTextComponent($"({s.Name})"));
+            var type = new KeyValueTextComponent("service", new ConstantTextComponent($"({s.Id})"));
             return new CompoundTypeTextComponent(type, " -> ", new CurlyBraceTypeTextComponent<KeyValueTextComponent>(methods), s.RecursiveId);
         }
 
@@ -291,20 +291,21 @@ namespace ICP.Candid
             }
         }
 
-        private record CompoundTypeTextComponent(TextComponentBase Type, string Seperator, TextComponentBase InnerValue, string? RecursiveId) : TextComponentBase
+        private record CompoundTypeTextComponent(TextComponentBase Type, string Seperator, TextComponentBase InnerValue, CandidId? RecursiveId) : TextComponentBase
         {
             public override int UnIndentedWidth =>
-                this.RecursiveId != null ?  this.RecursiveId.Length + 2 : 0 // 'μ{recursiveId}.' or ''
+                this.RecursiveId != null ?  this.RecursiveId.Value.Length + 2 : 0 // 'μ{recursiveId}.' or ''
                 + this.Type.UnIndentedWidth // '{type}'
                 + this.Seperator.Length // '{seperator}'
                 + this.InnerValue.UnIndentedWidth; // '{value}'
 
             public override void WriteText(IndentedTextWriter writer, bool indented)
             {
-                if(this.RecursiveId != null)
+                bool b = this.InnerValue is CurlyBraceTypeTextComponent<KeyValueTextComponent> c && c.Fields.Count == 4;
+                if (this.RecursiveId != null)
                 {
                     writer.Write("μ");
-                    writer.Write(this.RecursiveId);
+                    writer.Write(this.RecursiveId.ToString());
                     writer.Write(".");
                 }
 

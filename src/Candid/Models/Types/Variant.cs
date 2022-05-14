@@ -12,7 +12,7 @@ namespace ICP.Candid.Models.Types
 
 		protected override string TypeString { get; } = "variant";
 
-		public VariantCandidTypeDefinition(Dictionary<CandidTag, CandidTypeDefinition> options, string? recursiveId = null) : base(options, recursiveId)
+		public VariantCandidTypeDefinition(Dictionary<CandidTag, CandidTypeDefinition> options, CandidId? recursiveId = null) : base(options, recursiveId)
 		{
 			if (options?.Any() != true)
 			{

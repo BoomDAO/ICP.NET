@@ -24,7 +24,7 @@ namespace ICP.Candid.Models.Types
 			List<FuncMode> modes,
 			List<CandidTypeDefinition> argTypes,
 			List<CandidTypeDefinition> returnTypes,
-			string? recursiveId = null)
+			CandidId? recursiveId = null)
 			: base(recursiveId)
 		{
 			this.Modes = modes.Distinct().ToList();
