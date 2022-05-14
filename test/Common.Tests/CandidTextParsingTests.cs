@@ -879,7 +879,7 @@ namespace ICP.Candid.Tests
             FuncCandidTypeDefinition expectedFunc = new FuncCandidTypeDefinition(expectedModes, expectedArgTypes, expectedReturnTypes);
             FuncCandidTypeDefinition func = CandidTextReader.ReadFunc(text);
 
-            //Assert.Equal(expectedFunc, func);
+            Assert.Equal(expectedFunc, func);
             string generatedText = CandidTextGenerator.Generate(func, CandidTextGenerator.IndentType.Spaces_2);
             Assert.Equal(text, generatedText);
         }

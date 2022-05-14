@@ -67,11 +67,14 @@ namespace ICP.Candid.Models.Types
 		{
 			if (obj is FuncCandidTypeDefinition sDef)
 			{
-				return this.Modes
+				bool modesEqual = this.Modes
 					.OrderBy(s => s)
-					.SequenceEqual(sDef.Modes.OrderBy(s => s))
-					&& this.ArgTypes.SequenceEqual(sDef.ArgTypes)
-					&& this.ReturnTypes.SequenceEqual(sDef.ArgTypes);
+					.SequenceEqual(sDef.Modes.OrderBy(s => s));
+				bool argTypesEqual = this.ArgTypes.SequenceEqual(sDef.ArgTypes);
+				bool returnTypesEqual = this.ReturnTypes.SequenceEqual(sDef.ReturnTypes);
+				return modesEqual
+					&& argTypesEqual
+					&& returnTypesEqual;
 			}
 			return false;
 		}
