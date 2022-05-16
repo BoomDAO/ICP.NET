@@ -22,7 +22,7 @@ namespace ICP.Candid
         {
             CandidTextTokenHelper helper = CandidTextTokenizer.Tokenize(text);
             CandidType def = ParseInternal(helper);
-            if(def.GetType() != typeof(T))
+            if (def.GetType() != typeof(T))
             {
                 throw new InvalidOperationException($"Cannot convert parsed type '{def.GetType().Name}' to type '{typeof(T).Name}'");
             }
@@ -32,9 +32,142 @@ namespace ICP.Candid
 
         private static CandidType ParseInternal(CandidTextTokenHelper helper)
         {
+            switch (helper.CurrentToken.Type)
+            {
+                case CandidTextTokenType.Text:
+                    CandidType typeDef = GetNamedType(helper);
+                    return typeDef;
+                case CandidTextTokenType.OpenParenthesis:
+                    return CandidTextParser.GetFunc(helper);
+                default:
+                    // TODO
+                    throw new NotImplementedException();
+            }
+        }
+
+        private static CandidFuncType GetFunc(CandidTextTokenHelper helper)
+        {
+            helper.CurrentToken.ValidateType(CandidTextTokenType.OpenParenthesis);
+
+            helper.MoveNextOrThrow();
+            var argTypes = new List<CandidType>();
+            while (helper.CurrentToken.Type != CandidTextTokenType.CloseParenthesis)
+            {
+                CandidType t = ParseInternal(helper);
+                argTypes.Add(t);
+            }
+
+            helper.MoveNextOrThrow();
+            string arrow = helper.CurrentToken.GetTextValueOrThrow();
+            if (arrow != "->")
+            {
+                throw new CandidTextParseException($"Expected token '->', got '{arrow}'");
+            }
+            helper.MoveNextOrThrow();
+            helper.CurrentToken.ValidateType(CandidTextTokenType.OpenParenthesis);
+
+            helper.MoveNextOrThrow();
+            var returnTypes = new List<CandidType>();
+            while (helper.CurrentToken.Type != CandidTextTokenType.CloseParenthesis)
+            {
+                CandidType t = ParseInternal(helper);
+                returnTypes.Add(t);
+            }
+
+            var modes = new List<FuncMode>();
+            while (helper.MoveNext())
+            {
+                string rawMode = helper.CurrentToken.GetTextValueOrThrow();
+                FuncMode mode = rawMode switch
+                {
+                    "query" => FuncMode.Query,
+                    "oneway" => FuncMode.Oneway,
+                    _ => throw new CandidTextParseException($"Unexpected func mode '{rawMode}'. Valid func modes: {string.Join(", ", Enum.GetValues<FuncMode>())}")
+                };
+                modes.Add(mode);
+            }
+            return new CandidFuncType(modes, argTypes, returnTypes);
+        }
+        private static CandidOptType GetOpt(CandidTextTokenHelper helper, CandidId? recursiveId)
+        {
+            CandidType innerValue = ParseInternal(helper);
+            return new CandidOptType(innerValue, recursiveId);
+        }
+
+        private static CandidRecordType GetRecord(CandidTextTokenHelper helper, CandidId? recursiveId)
+        {
+            Dictionary<CandidTag, CandidType> fields = new();
+            helper.CurrentToken.ValidateType(CandidTextTokenType.OpenCurlyBrace);
+            helper.MoveNextOrThrow();
+            uint index = 0;
+            while (helper.CurrentToken.Type != CandidTextTokenType.CloseCurlyBrace)
+            {
+                CandidTag label;
+                CandidType fieldType;
+                if (helper.NextToken?.Type == CandidTextTokenType.Colon)
+                {
+                    // `label`: `type`
+                    string rawLabel = helper.CurrentToken.GetTextValueOrThrow();
+                    label = CandidTag.FromName(rawLabel);
+                    helper.MoveNextOrThrow();
+                    helper.CurrentToken.ValidateType(CandidTextTokenType.Colon);
+                    helper.MoveNextOrThrow();
+                    fieldType = ParseInternal(helper);
+                }
+                else
+                {
+                    // `type` (based on position/index)
+                    label = CandidTag.FromId(index++);
+                    fieldType = ParseInternal(helper);
+                }
+                fields.Add(label, fieldType);
+            }
+            helper.MoveNextOrThrow();
+            return new CandidRecordType(fields, recursiveId);
+        }
+
+        private static CandidVectorType GetVec(CandidTextTokenHelper helper, CandidId? recursiveId)
+        {
+            CandidType innerValue = ParseInternal(helper);
+            return new CandidVectorType(innerValue, recursiveId);
+        }
+
+        private static CandidVariantType GetVariant(CandidTextTokenHelper helper, CandidId? recursiveId)
+        {
+            Dictionary<CandidTag, CandidType> options = new();
+            helper.CurrentToken.ValidateType(CandidTextTokenType.OpenCurlyBrace);
+            helper.MoveNextOrThrow();
+            while (helper.CurrentToken.Type != CandidTextTokenType.CloseCurlyBrace)
+            {
+                string label = helper.CurrentToken.GetTextValueOrThrow();
+                helper.MoveNextOrThrow();
+                CandidType fieldType;
+                if (helper.CurrentToken.Type == CandidTextTokenType.SemiColon)
+                {
+                    fieldType = new CandidPrimitiveType(PrimitiveType.Null);
+                }
+                else
+                {
+                    helper.CurrentToken.ValidateType(CandidTextTokenType.Colon);
+                    helper.MoveNextOrThrow();
+                    fieldType = ParseInternal(helper);
+                }
+                options.Add(CandidTag.FromName(label), fieldType);
+            }
+            helper.MoveNextOrThrow();
+            return new CandidVariantType(options, recursiveId);
+        }
+
+        private static CandidServiceType GetService(CandidTextTokenHelper helper, CandidId? recursiveId)
+        {
+            // TODO
+            throw new NotImplementedException();
+        }
+
+        private static CandidType GetNamedType(CandidTextTokenHelper helper)
+        {
             CandidId? recursiveId = null;
             string type = helper.CurrentToken.GetTextValueOrThrow();
-
             // Check to see if text is recursive id like `μrec_1.record` vs just the type name `record`
             if (type.StartsWith("μ"))
             {
@@ -45,132 +178,29 @@ namespace ICP.Candid
                 type = helper.CurrentToken.GetTextValueOrThrow();
             }
             helper.MoveNextOrThrow();
-            CandidType typeDef = GetType(type, recursiveId, helper);
+
+            CandidType t = CandidTextParser.GetNamedType(type, helper, recursiveId);
             if (helper.CurrentToken.Type == CandidTextTokenType.SemiColon)
             {
                 helper.MoveNextOrThrow();
             }
-            return typeDef;
+            return t;
         }
 
-        private static CandidType GetType(string type, CandidId? recursiveId, CandidTextTokenHelper helper)
+        private static CandidType GetNamedType(string type, CandidTextTokenHelper helper, CandidId? recursiveId)
         {
             switch (type)
             {
                 case "opt":
-                    {
-                        CandidType innerValue = ParseInternal(helper);
-                        return new CandidOptType(innerValue, recursiveId);
-                    }
+                    return CandidTextParser.GetOpt(helper, recursiveId);
                 case "record":
-                    {
-                        Dictionary<CandidTag, CandidType> fields = new();
-                        helper.CurrentToken.ValidateType(CandidTextTokenType.OpenCurlyBrace);
-                        helper.MoveNextOrThrow();
-                        uint index = 0;
-                        while (helper.CurrentToken.Type != CandidTextTokenType.CloseCurlyBrace)
-                        {
-                            CandidTag label;
-                            CandidType fieldType;
-                            if (helper.NextToken?.Type == CandidTextTokenType.Colon)
-                            {
-                                // `label`: `type`
-                                string rawLabel = helper.CurrentToken.GetTextValueOrThrow();
-                                label = CandidTag.FromName(rawLabel);
-                                helper.MoveNextOrThrow();
-                                helper.CurrentToken.ValidateType(CandidTextTokenType.Colon);
-                                helper.MoveNextOrThrow();
-                                fieldType = ParseInternal(helper);
-                            }
-                            else
-                            {
-                                // `type` (based on position/index)
-                                label = CandidTag.FromId(index++);
-                                fieldType = ParseInternal(helper);
-                            }
-                            fields.Add(label, fieldType);
-                        }
-                        helper.MoveNextOrThrow();
-                        return new CandidRecordType(fields, recursiveId);
-                    }
+                    return CandidTextParser.GetRecord(helper, recursiveId);
                 case "vec":
-                    {
-                        CandidType innerValue = ParseInternal(helper);
-                        return new CandidVectorType(innerValue, recursiveId);
-                    }
+                    return CandidTextParser.GetVec(helper, recursiveId);
                 case "variant":
-                    {
-                        Dictionary<CandidTag, CandidType> options = new();
-                        helper.CurrentToken.ValidateType(CandidTextTokenType.OpenCurlyBrace);
-                        helper.MoveNextOrThrow();
-                        while (helper.CurrentToken.Type != CandidTextTokenType.CloseCurlyBrace)
-                        {
-                            string label = helper.CurrentToken.GetTextValueOrThrow();
-                            helper.MoveNextOrThrow();
-                            CandidType fieldType;
-                            if (helper.CurrentToken.Type == CandidTextTokenType.SemiColon)
-                            {
-                                fieldType = new CandidPrimitiveType(PrimitiveType.Null);
-                            }
-                            else
-                            {
-                                helper.CurrentToken.ValidateType(CandidTextTokenType.Colon);
-                                helper.MoveNextOrThrow();
-                                fieldType = ParseInternal(helper);
-                            }
-                            options.Add(CandidTag.FromName(label), fieldType);
-                        }
-                        helper.MoveNextOrThrow();
-                        return new CandidVariantType(options, recursiveId);
-                    }
-                case "func":
-                    {
-                        helper.CurrentToken.ValidateType(CandidTextTokenType.OpenParenthesis);
-
-                        helper.MoveNextOrThrow();
-                        var argTypes = new List<CandidType>();
-                        while (helper.CurrentToken.Type != CandidTextTokenType.CloseParenthesis)
-                        {
-                            CandidType t = ParseInternal(helper);
-                            argTypes.Add(t);
-                        }
-
-                        helper.MoveNextOrThrow();
-                        string arrow = helper.CurrentToken.GetTextValueOrThrow();
-                        if (arrow != "->")
-                        {
-                            throw new CandidTextParseException($"Expected token '->', got '{arrow}'");
-                        }
-                        helper.MoveNextOrThrow();
-                        helper.CurrentToken.ValidateType(CandidTextTokenType.OpenParenthesis);
-
-                        helper.MoveNextOrThrow();
-                        var returnTypes = new List<CandidType>();
-                        while (helper.CurrentToken.Type != CandidTextTokenType.CloseParenthesis)
-                        {
-                            CandidType t = ParseInternal(helper);
-                            returnTypes.Add(t);
-                        }
-
-                        var modes = new List<FuncMode>();
-                        while (helper.MoveNext())
-                        {
-                            string rawMode = helper.CurrentToken.GetTextValueOrThrow();
-                            FuncMode mode = rawMode switch
-                            {
-                                "query" => FuncMode.Query,
-                                "oneway" => FuncMode.Oneway,
-                                _ => throw new CandidTextParseException($"Unexpected func mode '{rawMode}'. Valid func modes: {string.Join(", ", Enum.GetValues<FuncMode>())}")
-                            };
-                            modes.Add(mode);
-                        }
-                        return new CandidFuncType(modes, argTypes, returnTypes);
-                    }
+                    return CandidTextParser.GetVariant(helper, recursiveId);
                 case "service":
-                    {
-                        // TODO
-                        throw new NotImplementedException();
-                    }
+                    return CandidTextParser.GetService(helper, recursiveId);
                 case "int8":
                     ThrowIfRecursiveIdSet();
                     return new CandidPrimitiveType(PrimitiveType.Int8);
@@ -225,9 +255,8 @@ namespace ICP.Candid
                     ThrowIfRecursiveIdSet();
                     return new CandidPrimitiveType(PrimitiveType.Null);
                 default:
-                    ThrowIfRecursiveIdSet();
                     return new CandidReferenceType(CandidId.Parse(type), () => throw new NotImplementedException()); // TODO
-            }
+            };
 
             void ThrowIfRecursiveIdSet()
             {
