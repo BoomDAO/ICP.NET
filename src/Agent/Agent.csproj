@@ -13,7 +13,7 @@
 		<Product>ICP.Agent</Product>
 		<Company>Edjcase</Company>
 		<Authors>Gekctek</Authors>
-		<Version>0.0.1-beta.2</Version>
+		<Version>0.0.1-beta.3</Version>
 		<PackageId>EdjCase.ICP.Agent</PackageId>
 	</PropertyGroup>
 

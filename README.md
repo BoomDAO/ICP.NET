@@ -1,17 +1,27 @@
 # ICP.NET
 Collection of Internet Computer Protocol (ICP) libraries for .NET/Blazor
 
-- Agent - Library to allow communication to and from the Internet Computer
+- Agent
+  - Library to communicate to and from the Internet Computer
+  - Nuget: [`EdjCase.ICP.Agent`](https://www.nuget.org/packages/EdjCase.ICP.Agent) (*currently only pre-release versions are available)
 
-- Candid - Library of Candid Encoding, Models and Helpers to work with 
+- Candid
+  - Library of Candid Encoding, Models and Helpers
+  - Nuget: [`EdjCase.ICP.Candid`](https://www.nuget.org/packages/EdjCase.ICP.Camdid) (*currently only pre-release versions are available)
 
-- Samples - A few projects to demo the capabilities of the ICP libraries
+- Samples
+  - A few projects to demo the capabilities of the ICP libraries
+    - Blazor
+    - AspNetCore
+    - CLI
 
 # Roadmap/TODO
 - Serialization for custom C# models
 - Automatic Api Client/Model generation from Candid spec
 - Infer type from value, vs specifying value + type
 - DID file parsing
+
+
 
 # Agent
 ## Usage
