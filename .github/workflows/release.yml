@@ -19,7 +19,6 @@ jobs:
         uses: rohith/publish-nuget@v2
         with:
           PROJECT_FILE_PATH: src\Candid\Candid.csproj
-          BUILD_CONFIGURATION: Release
           VERSION_STATIC: ${{ github.event.release.tag_name }}
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
           NUGET_SOURCE: https://api.nuget.org
@@ -30,19 +29,17 @@ jobs:
         uses: rohith/publish-nuget@v2
         with:
           PROJECT_FILE_PATH: src\Agent\Agent.csproj
-          BUILD_CONFIGURATION: Release
           VERSION_STATIC: ${{ github.event.release.tag_name }}
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
           NUGET_SOURCE: https://api.nuget.org
           INCLUDE_SYMBOLS: true
           
-      - name: Publish Client Generator
-        id: publish_nuget_client_generator
-        uses: rohith/publish-nuget@v2
-        with:
-          PROJECT_FILE_PATH: src\ClientGenerator\ClientGenerator.csproj
-          BUILD_CONFIGURATION: Release
-          VERSION_STATIC: ${{ github.event.release.tag_name }}
-          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
-          NUGET_SOURCE: https://api.nuget.org
-          INCLUDE_SYMBOLS: true
+      # - name: Publish Client Generator
+      #   id: publish_nuget_client_generator
+      #   uses: rohith/publish-nuget@v2
+      #   with:
+      #     PROJECT_FILE_PATH: src\ClientGenerator\ClientGenerator.csproj
+      #     VERSION_STATIC: ${{ github.event.release.tag_name }}
+      #     NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+      #     NUGET_SOURCE: https://api.nuget.org
+      #     INCLUDE_SYMBOLS: true
