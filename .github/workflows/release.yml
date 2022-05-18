@@ -16,19 +16,19 @@ jobs:
           dotnet-version: 6.0.x
 
       - name: Pack Candid
-        run: dotnet pack src/Candid/Candid.csproj --configuration Release /p:Version=${{ github.event.release.tag_name }} --output .
+        run: dotnet pack src/Candid/Candid.csproj --configuration Release /p:Version=${{ github.event.release.tag_name }} --output . --include-symbols --include-source
 
       - name: Push Candid
-        run: dotnet nuget push ICP.Candid.${{ github.event.release.tag_name }}.nupkg --api-key ${{ secrets.NUGET_API_KEY }}
+        run: dotnet nuget push ICP.Candid.${{ github.event.release.tag_name }}.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org
           
       - name: Pack Agent
-        run: dotnet pack src/Agent/Agent.csproj --configuration Release /p:Version=${{ github.event.release.tag_name }} --output .
+        run: dotnet pack src/Agent/Agent.csproj --configuration Release /p:Version=${{ github.event.release.tag_name }} --output . --include-symbols --include-source
 
       - name: Push Agent
-        run: dotnet nuget push ICP.Agent.${{ github.event.release.tag_name }}.nupkg --api-key ${{ secrets.NUGET_API_KEY }}
+        run: dotnet nuget push ICP.Agent.${{ github.event.release.tag_name }}.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org
 
       # - name: Pack Client Generator
-      #   run: dotnet pack src/ClientGenerator/ClientGenerator.csproj --configuration Release /p:Version=${{ github.event.release.tag_name }} --output .
+      #   run: dotnet pack src/ClientGenerator/ClientGenerator.csproj --configuration Release /p:Version=${{ github.event.release.tag_name }} --output . --include-symbols --include-source M
 
       # - name: Push Client Generator
-      #   run: dotnet nuget push ICP.ClientGenerator.${{ github.event.release.tag_name }}.nupkg --api-key ${{ secrets.NUGET_API_KEY }}
+      #   run: dotnet nuget push ICP.ClientGenerator.${{ github.event.release.tag_name }}.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org
