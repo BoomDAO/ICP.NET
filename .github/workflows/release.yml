@@ -15,32 +15,20 @@ jobs:
         with:
           dotnet-version: 6.0.x
 
-      - name: Publish Candid
-        id: publish_nuget_candid
-        uses: rohith/publish-nuget@v2
-        with:
-          PROJECT_FILE_PATH: src/Candid/Candid.csproj
-          VERSION_STATIC: ${{ github.event.release.tag_name }}
-          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
-          NUGET_SOURCE: https://api.nuget.org
-          INCLUDE_SYMBOLS: true
+      - name: Pack Candid
+        run: dotnet pack src/Candid/Candid.csproj --configuration Release /p:Version=${{ github.event.release.tag_name }} --output .
+
+      - name: Push Candid
+        run: dotnet nuget push ICP.Candid.${{ github.event.release.tag_name }}.nupkg --api-key ${{ secrets.NUGET_API_KEY }}
           
-      - name: Publish Agent
-        id: publish_nuget_agent
-        uses: rohith/publish-nuget@v2
-        with:
-          PROJECT_FILE_PATH: src/Agent/Agent.csproj
-          VERSION_STATIC: ${{ github.event.release.tag_name }}
-          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
-          NUGET_SOURCE: https://api.nuget.org
-          INCLUDE_SYMBOLS: true
-          
-      # - name: Publish Client Generator
-      #   id: publish_nuget_client_generator
-      #   uses: rohith/publish-nuget@v2
-      #   with:
-      #     PROJECT_FILE_PATH: src\ClientGenerator\ClientGenerator.csproj
-      #     VERSION_STATIC: ${{ github.event.release.tag_name }}
-      #     NUGET_KEY: ${{secrets.NUGET_API_KEY}}
-      #     NUGET_SOURCE: https://api.nuget.org
-      #     INCLUDE_SYMBOLS: true
+      - name: Pack Agent
+        run: dotnet pack src/Agent/Agent.csproj --configuration Release /p:Version=${{ github.event.release.tag_name }} --output .
+
+      - name: Push Agent
+        run: dotnet nuget push ICP.Agent.${{ github.event.release.tag_name }}.nupkg --api-key ${{ secrets.NUGET_API_KEY }}
+
+      # - name: Pack Client Generator
+      #   run: dotnet pack src/ClientGenerator/ClientGenerator.csproj --configuration Release /p:Version=${{ github.event.release.tag_name }} --output .
+
+      # - name: Push Client Generator
+      #   run: dotnet nuget push ICP.ClientGenerator.${{ github.event.release.tag_name }}.nupkg --api-key ${{ secrets.NUGET_API_KEY }}
