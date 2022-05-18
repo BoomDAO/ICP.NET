@@ -19,7 +19,7 @@ jobs:
         id: publish_nuget_candid
         uses: rohith/publish-nuget@v2
         with:
-          PROJECT_FILE_PATH: src\Candid\Candid.csproj
+          PROJECT_FILE_PATH: ../../src/Candid/Candid.csproj
           VERSION_STATIC: ${{ github.event.release.tag_name }}
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
           NUGET_SOURCE: https://api.nuget.org
@@ -29,7 +29,7 @@ jobs:
         id: publish_nuget_agent
         uses: rohith/publish-nuget@v2
         with:
-          PROJECT_FILE_PATH: src\Agent\Agent.csproj
+          PROJECT_FILE_PATH: ../../src/Agent/Agent.csproj
           VERSION_STATIC: ${{ github.event.release.tag_name }}
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
           NUGET_SOURCE: https://api.nuget.org
