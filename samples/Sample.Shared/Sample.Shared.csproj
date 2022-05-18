@@ -6,8 +6,21 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Governance.did" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="Governance.did" />
+  </ItemGroup>
+
 
 	<ItemGroup>
 		<PackageReference Include="EdjCase.ICP.Agent" Version="0.0.1-beta.2" />
+	</ItemGroup>
+
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\src\ClientGenerator\ClientGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
 	</ItemGroup>
 </Project>

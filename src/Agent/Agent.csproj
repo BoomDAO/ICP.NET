@@ -13,7 +13,7 @@
 		<Product>ICP.Agent</Product>
 		<Company>Edjcase</Company>
 		<Authors>Gekctek</Authors>
-		<Version>0.0.1-beta.3</Version>
+		<Version>0.0.1-beta.4</Version>
 		<PackageId>EdjCase.ICP.Agent</PackageId>
 	</PropertyGroup>
 
@@ -26,6 +26,6 @@
 
 	<ItemGroup>
 		<PackageReference Include="Dahomey.Cbor" Version="1.16.1" />
-		<PackageReference Include="EdjCase.ICP.Candid" Version="0.0.1-beta.1" />
+		<PackageReference Include="EdjCase.ICP.Candid" Version="0.0.1-beta.2" />
 	</ItemGroup>
 </Project>

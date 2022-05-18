@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Sample.Shared.Models
 {
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     public class ProposalInfo
     {
         public IdInfo? Id { get; set; }
@@ -642,4 +643,5 @@ namespace Sample.Shared.Models
             public ulong AmountE8s { get; set; }
         }
     }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 }

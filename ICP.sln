@@ -25,9 +25,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.BlazorWebAssembly.Cl
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{7FADA9D9-5FDA-4CFB-8A53-A578A61FBBA9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.Shared", "samples\Sample.Shared\Sample.Shared.csproj", "{DDCE02AF-6DEE-485B-AA69-C69F0973E00B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Shared", "samples\Sample.Shared\Sample.Shared.csproj", "{DDCE02AF-6DEE-485B-AA69-C69F0973E00B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.RestAPI", "samples\Sample.RestAPI\Sample.RestAPI.csproj", "{F76CA92C-211B-46A7-8B21-A808291B268E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.RestAPI", "samples\Sample.RestAPI\Sample.RestAPI.csproj", "{F76CA92C-211B-46A7-8B21-A808291B268E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientGenerator", "src\ClientGenerator\ClientGenerator.csproj", "{1C184ECB-7653-4DC1-B453-E529656897CB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -67,6 +69,10 @@ Global
 		{F76CA92C-211B-46A7-8B21-A808291B268E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F76CA92C-211B-46A7-8B21-A808291B268E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F76CA92C-211B-46A7-8B21-A808291B268E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C184ECB-7653-4DC1-B453-E529656897CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C184ECB-7653-4DC1-B453-E529656897CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C184ECB-7653-4DC1-B453-E529656897CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C184ECB-7653-4DC1-B453-E529656897CB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
