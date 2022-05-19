@@ -16,7 +16,7 @@
 
 
 	<ItemGroup>
-		<PackageReference Include="EdjCase.ICP.Agent" Version="0.0.1-beta.2" />
+		<PackageReference Include="EdjCase.ICP.Agent" Version="0.0.1-beta.13" />
 	</ItemGroup>
 
 
