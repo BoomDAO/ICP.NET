@@ -27,8 +27,8 @@ jobs:
       - name: Push Agent
         run: dotnet nuget push EdjCase.ICP.Agent.${{ github.event.release.tag_name }}.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
 
-      # - name: Pack Client Generator
-      #   run: dotnet pack src/ClientGenerator/ClientGenerator.csproj --configuration Release /p:Version=${{ github.event.release.tag_name }} --output . --include-symbols --include-source M
+      - name: Pack Client Generator
+        run: dotnet pack src/ClientGenerator/ClientGenerator.csproj --configuration Release /p:Version=${{ github.event.release.tag_name }} --output . --include-symbols --include-source
 
-      # - name: Push Client Generator
-      #   run: dotnet nuget push EdjCase.ICP.ClientGenerator.${{ github.event.release.tag_name }}.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+      - name: Push Client Generator
+        run: dotnet nuget push EdjCase.ICP.ClientGenerator.${{ github.event.release.tag_name }}.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json

@@ -25,7 +25,7 @@ namespace Sample.Shared
             string method = "get_proposal_info";
             var candidArg = CandidValueWithType.FromValueAndType(
                 CandidPrimitive.Nat64(proposalId),
-                new PrimitiveCandidTypeDefinition(CandidPrimitiveType.Nat64)
+                new CandidPrimitiveType(PrimitiveType.Nat64)
             );
 
             CandidArg encodedArgument = CandidArg.FromCandid(candidArg);
@@ -75,7 +75,7 @@ namespace Sample.Shared
                             Title = r2["title"].AsOptional(v => v.AsText()),
                             Action = r2["action"].AsOptional(o => o.AsVariant(v =>
                             {
-                                if (v.Tag == CandidLabel.FromName("RegisterKnownNeuron"))
+                                if (v.Tag == CandidTag.FromName("RegisterKnownNeuron"))
                                 {
                                     var info = v.Value.AsRecord(r =>
                                     {
@@ -94,7 +94,7 @@ namespace Sample.Shared
                                     });
                                     return ProposalInfo.ActionVariant.RegisterKnownNeuron(info);
                                 }
-                                if (v.Tag == CandidLabel.FromName("ManageNeuron"))
+                                if (v.Tag == CandidTag.FromName("ManageNeuron"))
                                 {
                                     var info = v.Value.AsRecord(v =>
                                     {
@@ -103,7 +103,7 @@ namespace Sample.Shared
                                             Id = v["id"].AsOptional(o => o.AsRecord(MapIdInfo)),
                                             Command = v["command"].AsOptional(o => o.AsVariant<ProposalInfo.ActionVariant.ManageNeuronInfo.CommandVariant>(v =>
                                             {
-                                                if (v.Tag == CandidLabel.FromName("Spawn"))
+                                                if (v.Tag == CandidTag.FromName("Spawn"))
                                                 {
                                                     var info = v.Value.AsRecord(r => new ProposalInfo.ActionVariant.ManageNeuronInfo.CommandVariant.SpawnInfo
                                                     {
@@ -113,7 +113,7 @@ namespace Sample.Shared
                                                     });
                                                     return ProposalInfo.ActionVariant.ManageNeuronInfo.CommandVariant.Spawn(info);
                                                 }
-                                                if (v.Tag == CandidLabel.FromName("Split"))
+                                                if (v.Tag == CandidTag.FromName("Split"))
                                                 {
                                                     var info = v.Value.AsRecord(r => new ProposalInfo.ActionVariant.ManageNeuronInfo.CommandVariant.SplitInfo
                                                     {
@@ -121,7 +121,7 @@ namespace Sample.Shared
                                                     });
                                                     return ProposalInfo.ActionVariant.ManageNeuronInfo.CommandVariant.Split(info);
                                                 }
-                                                if (v.Tag == CandidLabel.FromName("Follow"))
+                                                if (v.Tag == CandidTag.FromName("Follow"))
                                                 {
                                                     var info = v.Value.AsRecord(r => new ProposalInfo.ActionVariant.ManageNeuronInfo.CommandVariant.FollowInfo
                                                     {
@@ -130,17 +130,17 @@ namespace Sample.Shared
                                                     });
                                                     return ProposalInfo.ActionVariant.ManageNeuronInfo.CommandVariant.Follow(info);
                                                 }
-                                                if (v.Tag == CandidLabel.FromName("ClaimOrRefresh"))
+                                                if (v.Tag == CandidTag.FromName("ClaimOrRefresh"))
                                                 {
                                                     var info = v.Value.AsRecord(r => new ProposalInfo.ActionVariant.ManageNeuronInfo.CommandVariant.ClaimOrRefreshInfo
                                                     {
                                                         By = r["by"].AsVariant(b =>
                                                         {
-                                                            if (v.Tag == CandidLabel.FromName("NeuronIdOrSubaccount"))
+                                                            if (v.Tag == CandidTag.FromName("NeuronIdOrSubaccount"))
                                                             {
                                                                 return ProposalInfo.ActionVariant.ManageNeuronInfo.CommandVariant.ClaimOrRefreshInfo.ByVariant.NeuronIdOrSubaccount();
                                                             }
-                                                            if (v.Tag == CandidLabel.FromName("MemoAndController"))
+                                                            if (v.Tag == CandidTag.FromName("MemoAndController"))
                                                             {
                                                                 var info = v.Value.AsRecord(r => new ProposalInfo.ActionVariant.ManageNeuronInfo.CommandVariant.ClaimOrRefreshInfo.ByVariant.MemoAndControllerInfo
                                                                 {
@@ -149,7 +149,7 @@ namespace Sample.Shared
                                                                 });
                                                                 return ProposalInfo.ActionVariant.ManageNeuronInfo.CommandVariant.ClaimOrRefreshInfo.ByVariant.MemoAndController(info);
                                                             }
-                                                            if (v.Tag == CandidLabel.FromName("Memo"))
+                                                            if (v.Tag == CandidTag.FromName("Memo"))
                                                             {
                                                                 return ProposalInfo.ActionVariant.ManageNeuronInfo.CommandVariant.ClaimOrRefreshInfo.ByVariant.Memo();
                                                             }
@@ -158,7 +158,7 @@ namespace Sample.Shared
                                                     });
                                                     return ProposalInfo.ActionVariant.ManageNeuronInfo.CommandVariant.ClaimOrRefresh(info);
                                                 }
-                                                if (v.Tag == CandidLabel.FromName("Configure"))
+                                                if (v.Tag == CandidTag.FromName("Configure"))
                                                 {
                                                     var info = v.Value.AsRecord(r =>
                                                     {
@@ -166,7 +166,7 @@ namespace Sample.Shared
                                                         {
                                                             Operation = r["operation"].AsVariant(v =>
                                                             {
-                                                                if (v.Tag == CandidLabel.FromName("RemoveHotKey"))
+                                                                if (v.Tag == CandidTag.FromName("RemoveHotKey"))
                                                                 {
                                                                     var info = v.Value.AsRecord(r => new ProposalInfo.ActionVariant.ManageNeuronInfo.CommandVariant.ConfigureInfo.OperationVariant.RemoveHotKeyInfo
                                                                     {
@@ -174,7 +174,7 @@ namespace Sample.Shared
                                                                     });
                                                                     return ProposalInfo.ActionVariant.ManageNeuronInfo.CommandVariant.ConfigureInfo.OperationVariant.RemoveHotKey(info);
                                                                 }
-                                                                if (v.Tag == CandidLabel.FromName("AddHotKey"))
+                                                                if (v.Tag == CandidTag.FromName("AddHotKey"))
                                                                 {
                                                                     var info = v.Value.AsRecord(r => new ProposalInfo.ActionVariant.ManageNeuronInfo.CommandVariant.ConfigureInfo.OperationVariant.AddHotKeyInfo
                                                                     {
@@ -182,15 +182,15 @@ namespace Sample.Shared
                                                                     });
                                                                     return ProposalInfo.ActionVariant.ManageNeuronInfo.CommandVariant.ConfigureInfo.OperationVariant.AddHotKey(info);
                                                                 }
-                                                                if (v.Tag == CandidLabel.FromName("StopDissolving"))
+                                                                if (v.Tag == CandidTag.FromName("StopDissolving"))
                                                                 {
                                                                     return ProposalInfo.ActionVariant.ManageNeuronInfo.CommandVariant.ConfigureInfo.OperationVariant.StopDissolving();
                                                                 }
-                                                                if (v.Tag == CandidLabel.FromName("StartDissolving"))
+                                                                if (v.Tag == CandidTag.FromName("StartDissolving"))
                                                                 {
                                                                     return ProposalInfo.ActionVariant.ManageNeuronInfo.CommandVariant.ConfigureInfo.OperationVariant.StartDissolving();
                                                                 }
-                                                                if (v.Tag == CandidLabel.FromName("IncreaseDissolveDelay"))
+                                                                if (v.Tag == CandidTag.FromName("IncreaseDissolveDelay"))
                                                                 {
                                                                     var info = v.Value.AsRecord(r => new ProposalInfo.ActionVariant.ManageNeuronInfo.CommandVariant.ConfigureInfo.OperationVariant.IncreaseDissolveDelayInfo
                                                                     {
@@ -198,11 +198,11 @@ namespace Sample.Shared
                                                                     });
                                                                     return ProposalInfo.ActionVariant.ManageNeuronInfo.CommandVariant.ConfigureInfo.OperationVariant.IncreaseDissolveDelay(info);
                                                                 }
-                                                                if (v.Tag == CandidLabel.FromName("JoinCommunityFund"))
+                                                                if (v.Tag == CandidTag.FromName("JoinCommunityFund"))
                                                                 {
                                                                     return ProposalInfo.ActionVariant.ManageNeuronInfo.CommandVariant.ConfigureInfo.OperationVariant.JoinCommunityFund();
                                                                 }
-                                                                if (v.Tag == CandidLabel.FromName("SetDissolveTimestamp"))
+                                                                if (v.Tag == CandidTag.FromName("SetDissolveTimestamp"))
                                                                 {
                                                                     var info = v.Value.AsRecord(r => new ProposalInfo.ActionVariant.ManageNeuronInfo.CommandVariant.ConfigureInfo.OperationVariant.SetDissolveTimestampInfo
                                                                     {
@@ -216,7 +216,7 @@ namespace Sample.Shared
                                                     });
                                                     return ProposalInfo.ActionVariant.ManageNeuronInfo.CommandVariant.Configure(info);
                                                 }
-                                                if (v.Tag == CandidLabel.FromName("RegisterVote"))
+                                                if (v.Tag == CandidTag.FromName("RegisterVote"))
                                                 {
                                                     var info = v.Value.AsRecord(r =>
                                                     {
@@ -228,7 +228,7 @@ namespace Sample.Shared
                                                     });
                                                     return ProposalInfo.ActionVariant.ManageNeuronInfo.CommandVariant.RegisterVote(info);
                                                 }
-                                                if (v.Tag == CandidLabel.FromName("Merge"))
+                                                if (v.Tag == CandidTag.FromName("Merge"))
                                                 {
                                                     var info = v.Value.AsRecord(r => new ProposalInfo.ActionVariant.ManageNeuronInfo.CommandVariant.MergeInfo
                                                     {
@@ -236,7 +236,7 @@ namespace Sample.Shared
                                                     });
                                                     return ProposalInfo.ActionVariant.ManageNeuronInfo.CommandVariant.Merge(info);
                                                 }
-                                                if (v.Tag == CandidLabel.FromName("DisburseToNeuron"))
+                                                if (v.Tag == CandidTag.FromName("DisburseToNeuron"))
                                                 {
                                                     var info = v.Value.AsRecord(r => new ProposalInfo.ActionVariant.ManageNeuronInfo.CommandVariant.DisburseToNeuronInfo
                                                     {
@@ -248,12 +248,12 @@ namespace Sample.Shared
                                                     });
                                                     return ProposalInfo.ActionVariant.ManageNeuronInfo.CommandVariant.DisburseToNeuron(info);
                                                 }
-                                                if (v.Tag == CandidLabel.FromName("MakeProposal"))
+                                                if (v.Tag == CandidTag.FromName("MakeProposal"))
                                                 {
                                                     var info = v.Value.AsRecord(MapProposalInfo);
                                                     return ProposalInfo.ActionVariant.ManageNeuronInfo.CommandVariant.MakeProposal(info);
                                                 }
-                                                if (v.Tag == CandidLabel.FromName("MergeMaturity"))
+                                                if (v.Tag == CandidTag.FromName("MergeMaturity"))
                                                 {
                                                     var info = v.Value.AsRecord(r => new ProposalInfo.ActionVariant.ManageNeuronInfo.CommandVariant.MergeMaturityInfo
                                                     {
@@ -261,7 +261,7 @@ namespace Sample.Shared
                                                     });
                                                     return ProposalInfo.ActionVariant.ManageNeuronInfo.CommandVariant.MergeMaturity(info);
                                                 }
-                                                if (v.Tag == CandidLabel.FromName("Disburse"))
+                                                if (v.Tag == CandidTag.FromName("Disburse"))
                                                 {
                                                     var info = v.Value.AsRecord(r => new ProposalInfo.ActionVariant.ManageNeuronInfo.CommandVariant.DisburseInfo
                                                     {
@@ -279,7 +279,7 @@ namespace Sample.Shared
                                     });
                                     return ProposalInfo.ActionVariant.ManageNeuron(info);
                                 }
-                                if (v.Tag == CandidLabel.FromName("ExecuteNnsFunction"))
+                                if (v.Tag == CandidTag.FromName("ExecuteNnsFunction"))
                                 {
                                     var info = v.Value.AsRecord(r => new ProposalInfo.ActionVariant.ExecuteNnsFunctionInfo
                                     {
@@ -288,7 +288,7 @@ namespace Sample.Shared
                                     });
                                     return ProposalInfo.ActionVariant.ExecuteNnsFunction(info);
                                 }
-                                if (v.Tag == CandidLabel.FromName("RewardNodeProvider"))
+                                if (v.Tag == CandidTag.FromName("RewardNodeProvider"))
                                 {
                                     var info = v.Value.AsRecord(r => new ProposalInfo.ActionVariant.RewardNodeProviderInfo
                                     {
@@ -297,7 +297,7 @@ namespace Sample.Shared
                                     });
                                     return ProposalInfo.ActionVariant.RewardNodeProvider(info);
                                 }
-                                if (v.Tag == CandidLabel.FromName("SetDefaultFollowees"))
+                                if (v.Tag == CandidTag.FromName("SetDefaultFollowees"))
                                 {
                                     var info = v.Value.AsRecord(r => new ProposalInfo.ActionVariant.SetDefaultFolloweesInfo
                                     {
@@ -311,7 +311,7 @@ namespace Sample.Shared
                                     });
                                     return ProposalInfo.ActionVariant.SetDefaultFollowees(info);
                                 }
-                                if (v.Tag == CandidLabel.FromName("RewardNodeProviders"))
+                                if (v.Tag == CandidTag.FromName("RewardNodeProviders"))
                                 {
                                     var info = v.Value.AsRecord(r => new ProposalInfo.ActionVariant.RewardNodeProvidersInfo
                                     {
@@ -324,7 +324,7 @@ namespace Sample.Shared
                                     });
                                     return ProposalInfo.ActionVariant.RewardNodeProviders(info);
                                 }
-                                if (v.Tag == CandidLabel.FromName("ManageNetworkEconomics"))
+                                if (v.Tag == CandidTag.FromName("ManageNetworkEconomics"))
                                 {
                                     var info = v.Value.AsRecord(r => new ProposalInfo.ActionVariant.ManageNetworkEconomicsInfo
                                     {
@@ -339,7 +339,7 @@ namespace Sample.Shared
                                     });
                                     return ProposalInfo.ActionVariant.ManageNetworkEconomics(info);
                                 }
-                                if (v.Tag == CandidLabel.FromName("ApproveGenesisKyc"))
+                                if (v.Tag == CandidTag.FromName("ApproveGenesisKyc"))
                                 {
                                     var info = v.Value.AsRecord(r => new ProposalInfo.ActionVariant.ApproveGenesisKycInfo
                                     {
@@ -347,18 +347,18 @@ namespace Sample.Shared
                                     });
                                     return ProposalInfo.ActionVariant.ApproveGenesisKyc(info);
                                 }
-                                if (v.Tag == CandidLabel.FromName("AddOrRemoveNodeProvider"))
+                                if (v.Tag == CandidTag.FromName("AddOrRemoveNodeProvider"))
                                 {
                                     var info = v.Value.AsRecord(r => new ProposalInfo.ActionVariant.AddOrRemoveNodeProviderInfo
                                     {
                                         Change = r["change"].AsVariant(v =>
                                         {
-                                            if (v.Tag == CandidLabel.FromName("ToAdd"))
+                                            if (v.Tag == CandidTag.FromName("ToAdd"))
                                             {
                                                 var info = v.Value.AsRecord(MapNodeProvider);
                                                 return ProposalInfo.ActionVariant.AddOrRemoveNodeProviderInfo.ChangeVariant.ToAdd(info);
                                             }
-                                            if (v.Tag == CandidLabel.FromName("ToRemove"))
+                                            if (v.Tag == CandidTag.FromName("ToRemove"))
                                             {
                                                 var info = v.Value.AsRecord(MapNodeProvider);
                                                 return ProposalInfo.ActionVariant.AddOrRemoveNodeProviderInfo.ChangeVariant.ToRemove(info);
@@ -368,7 +368,7 @@ namespace Sample.Shared
                                     });
                                     return ProposalInfo.ActionVariant.AddOrRemoveNodeProvider(info);
                                 }
-                                if (v.Tag == CandidLabel.FromName("Motion"))
+                                if (v.Tag == CandidTag.FromName("Motion"))
                                 {
                                     var info = v.Value.AsRecord(r =>
                                     {
@@ -389,8 +389,8 @@ namespace Sample.Shared
                 {
                     return v.AsRecord(r =>
                     {
-                        ulong c = r[CandidLabel.FromId(0)].AsNat64();
-                        var prop = r[CandidLabel.FromId(1)].AsRecord(r =>
+                        ulong c = r[CandidTag.FromId(0)].AsNat64();
+                        var prop = r[CandidTag.FromId(1)].AsRecord(r =>
                         {
                             return new ProposalInfo.VoteInfo
                             {
@@ -408,7 +408,7 @@ namespace Sample.Shared
 
         private static ProposalInfo.RewardModeVariant MapRewardMode(CandidVariant v)
         {
-            if (v.Tag == CandidLabel.FromName("RewardToNeuron"))
+            if (v.Tag == CandidTag.FromName("RewardToNeuron"))
             {
                 var info = v.Value.AsRecord(r => new ProposalInfo.RewardModeVariant.RewardToNeuronInfo
                 {
@@ -416,7 +416,7 @@ namespace Sample.Shared
                 });
                 return ProposalInfo.RewardModeVariant.RewardToNeuron(info);
             }
-            if (v.Tag == CandidLabel.FromName("RewardToAccount"))
+            if (v.Tag == CandidTag.FromName("RewardToAccount"))
             {
                 var info = v.Value.AsRecord(r => new ProposalInfo.RewardModeVariant.RewardToAccountInfo
                 {
