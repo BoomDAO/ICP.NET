@@ -25,6 +25,6 @@
 
 	<ItemGroup>
 		<PackageReference Include="Dahomey.Cbor" Version="1.16.1" />
-		<PackageReference Include="EdjCase.ICP.Candid" Version="0.0.1-beta.2" />
+		<PackageReference Include="EdjCase.ICP.Candid" Version="0.0.1-beta.14" />
 	</ItemGroup>
 </Project>
