@@ -1,4 +1,5 @@
 ﻿using ICP.Candid;
+using ICP.Candid.Utilities;
 using System;
 
 namespace ICP.Agent
@@ -16,7 +17,7 @@ namespace ICP.Agent
 
 		public byte[] GetBytes()
 		{
-			return Convert.FromHexString(this.HexValue.AsSpan());
+			return ByteUtil.FromHexString(this.HexValue);
 		}
 	}
 }

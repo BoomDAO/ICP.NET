@@ -48,7 +48,7 @@ namespace ICP.Candid.Models
 
         public string ToHex()
         {
-            return Convert.ToHexString(this.Raw);
+            return ByteUtil.ToHexString(this.Raw);
         }
 
         public bool IsAnonymous()
@@ -63,7 +63,7 @@ namespace ICP.Candid.Models
 
         public static Principal FromHex(string hex)
         {
-            byte[] bytes = Convert.FromHexString(hex.AsSpan());
+            byte[] bytes = ByteUtil.FromHexString(hex);
             return new Principal(bytes);
         }
 

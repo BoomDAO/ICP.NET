@@ -1,5 +1,6 @@
 ﻿using ICP.Candid.Encodings;
 using ICP.Candid.Models;
+using ICP.Candid.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -217,21 +218,22 @@ namespace ICP.Candid.Models.Values
         private byte[] EncodeNat16()
         {
             ushort value = this.AsNat16();
-            var bytes = new BigInteger(value).ToByteArray(isUnsigned: true, isBigEndian: false);
+
+            byte[] bytes = new BigInteger(value).ToByteArray(unsignedBits: true, bigEndian: false);
             return CandidPrimitive.PadBytes(bytes, 2, isPositive: true);
         }
 
         private byte[] EncodeNat32()
         {
             uint value = this.AsNat32();
-            var bytes = new BigInteger(value).ToByteArray(isUnsigned: true, isBigEndian: false);
+            byte[] bytes = new BigInteger(value).ToByteArray(unsignedBits: true, bigEndian: false);
             return CandidPrimitive.PadBytes(bytes, 4, isPositive: true);
         }
 
         private byte[] EncodeNat64()
         {
             ulong value = this.AsNat64();
-            var bytes = new BigInteger(value).ToByteArray(isUnsigned: true, isBigEndian: false);
+            byte[] bytes = new BigInteger(value).ToByteArray(unsignedBits: true, bigEndian: false);
             return CandidPrimitive.PadBytes(bytes, 8, isPositive: true);
         }
 
@@ -250,22 +252,22 @@ namespace ICP.Candid.Models.Values
         private byte[] EncodeInt16()
         {
             short value = this.AsInt16();
-            var bytes = new BigInteger(value).ToByteArray(isUnsigned: false, isBigEndian: false);
-            
+            byte[] bytes = new BigInteger(value).ToByteArray(unsignedBits: false, bigEndian: false);
+
             return CandidPrimitive.PadBytes(bytes, 2, isPositive: value >= 0);
         }
 
         private byte[] EncodeInt32()
         {
             int value = this.AsInt32();
-            var bytes = new BigInteger(value).ToByteArray(isUnsigned: false, isBigEndian: false);
+            byte[] bytes = new BigInteger(value).ToByteArray(unsignedBits: false, bigEndian: false);
             return CandidPrimitive.PadBytes(bytes, 4, isPositive: value >= 0);
         }
 
         private byte[] EncodeInt64()
         {
             long value = this.AsInt64();
-            var bytes = new BigInteger(value).ToByteArray(isUnsigned: false, isBigEndian: false);
+            byte[] bytes = new BigInteger(value).ToByteArray(unsignedBits: false, bigEndian: false);
             return CandidPrimitive.PadBytes(bytes, 8, isPositive: value >= 0);
         }
 

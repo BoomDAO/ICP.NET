@@ -4,6 +4,7 @@ using ICP.Agent.Auth;
 using ICP.Agent.Requests;
 using ICP.Agent.Responses;
 using ICP.Candid.Models;
+using ICP.Candid.Utilities;
 using System;
 using System.Buffers;
 using System.Collections.Generic;
@@ -119,7 +120,7 @@ namespace ICP.Agent.Agents
             {
                 stream.CopyTo(memoryStream);
                 byte[] cborBytes = memoryStream.ToArray();
-                cborHex = Convert.ToHexString(cborBytes.AsSpan());
+                cborHex = ByteUtil.ToHexString(cborBytes);
             }
             stream.Position = 0;
 #endif
@@ -137,10 +138,12 @@ namespace ICP.Agent.Agents
             Dictionary<string, IHashable> content = request.BuildHashableItem();
             SignedContent signedContent = identityOverride.CreateSignedContent(content);
 
-            IBufferWriter<byte> buffer = new ArrayBufferWriter<byte>();
-            Dahomey.Cbor.Cbor.Serialize(signedContent, in buffer, HttpAgent.cborOptionsLazy.Value);
-            byte[] cborBody = ((ArrayBufferWriter<byte>)buffer).WrittenMemory.ToArray();
-            return await this.SendRawAsync(url, cborBody);
+            using (var stream = new MemoryStream())
+            {
+                await Dahomey.Cbor.Cbor.SerializeAsync(signedContent, stream, HttpAgent.cborOptionsLazy.Value);
+                byte[] cborBody = stream.ToArray();
+                return await this.SendRawAsync(url, cborBody);
+            }
         }
 
 

@@ -4,6 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+	  <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,11 +17,8 @@
 
 
 	<ItemGroup>
-		<PackageReference Include="EdjCase.ICP.Agent" Version="0.0.1-beta.13" />
-	</ItemGroup>
-
-
-	<ItemGroup>
+	  <ProjectReference Include="..\..\src\Agent\Agent.csproj" />
+	  <ProjectReference Include="..\..\src\Candid\Candid.csproj" />
 	  <ProjectReference Include="..\..\src\ClientGenerator\ClientGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
 	</ItemGroup>
 </Project>

@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Dahomey.Cbor.ObjectModel;
 using ICP.Candid;
+using ICP.Candid.Utilities;
 
 namespace ICP.Agent.Responses
 {
@@ -47,7 +48,7 @@ namespace ICP.Agent.Responses
             byte[]? rawDevelopmentRootKey = cbor["root_key"].Value<byte[]?>();
             Key? developmentRootKey = rawDevelopmentRootKey == null
                 ? null
-                : new Key(Convert.ToHexString(rawDevelopmentRootKey));
+                : new Key(ByteUtil.ToHexString(rawDevelopmentRootKey));
             return new StatusResponse(
                 icApiVersion,
                 implementationSource,

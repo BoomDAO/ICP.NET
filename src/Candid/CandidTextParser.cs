@@ -82,7 +82,7 @@ namespace ICP.Candid
                 {
                     "query" => FuncMode.Query,
                     "oneway" => FuncMode.Oneway,
-                    _ => throw new CandidTextParseException($"Unexpected func mode '{rawMode}'. Valid func modes: {string.Join(", ", Enum.GetValues<FuncMode>())}")
+                    _ => throw new CandidTextParseException($"Unexpected func mode '{rawMode}'. Valid func modes: {string.Join(", ", Enum.GetValues(typeof(FuncMode)))}")
                 };
                 modes.Add(mode);
             }

@@ -6,6 +6,7 @@ using ICP.Agent.Responses;
 using ICP.Candid;
 using ICP.Candid.Encodings;
 using ICP.Candid.Models;
+using ICP.Candid.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,7 +25,7 @@ namespace Agent.Cbor
             {
 				case "replied":
 #if DEBUG
-                    string argHex = Convert.ToHexString(context.ReplyArg!);
+                    string argHex = ByteUtil.ToHexString(context.ReplyArg!);
 #endif
                     var arg = CandidArg.FromBytes(context.ReplyArg!);
                     var reply = new QueryReply(arg);

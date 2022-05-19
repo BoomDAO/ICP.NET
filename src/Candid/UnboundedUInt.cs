@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ICP.Candid.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -22,7 +23,7 @@ namespace ICP.Candid
 
 		public byte[] GetRawBytes(bool isBigEndian)
 		{
-			return this.value.ToByteArray(isUnsigned: true, isBigEndian: isBigEndian);
+			return NumericUtil.ToByteArray(this.value, unsignedBits: true, bigEndian: isBigEndian);
 		}
 
 		public bool TryToUInt64(out ulong value)

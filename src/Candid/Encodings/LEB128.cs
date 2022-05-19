@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ICP.Candid.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -51,7 +52,7 @@ namespace ICP.Candid.Encodings
 					return b;
 				})
 				.ToArray();
-			return new BigInteger(bytes, isUnsigned: isUnsigned, isBigEndian: false);
+			return bytes.ToBigInteger(isUnsigned: isUnsigned, isBigEndian: false);
 		}
 		private static IEnumerable<bool> GetValueBits(Stream stream, bool isUnsigned)
 		{

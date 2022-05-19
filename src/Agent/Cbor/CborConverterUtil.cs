@@ -8,6 +8,7 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using ICP.Candid;
+using ICP.Candid.Utilities;
 
 namespace Agent.Cbor
 {
@@ -23,7 +24,8 @@ namespace Agent.Cbor
 			{
 				writer.WriteSemanticTag(2);
 				byte[] raw = value.GetRawBytes(isBigEndian: true);
-				byte[] lengthBytes = new BigInteger(raw.Length).ToByteArray(isUnsigned: true, isBigEndian: true);
+				byte[] lengthBytes = new BigInteger(raw.Length)
+					.ToByteArray(unsignedBits: true, bigEndian: true);
 				writer.WriteByteString(lengthBytes);
 				writer.WriteByteString(raw);
 			}

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFramework>netstandard2.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<LangVersion>latest</LangVersion>
 		<RootNamespace>ICP.Agent</RootNamespace>
@@ -25,6 +25,9 @@
 
 	<ItemGroup>
 		<PackageReference Include="Dahomey.Cbor" Version="1.16.1" />
-		<PackageReference Include="EdjCase.ICP.Candid" Version="0.0.1-beta.14" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\Candid\Candid.csproj" />
 	</ItemGroup>
 </Project>

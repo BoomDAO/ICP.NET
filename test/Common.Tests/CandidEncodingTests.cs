@@ -2,6 +2,7 @@
 using ICP.Candid.Models;
 using ICP.Candid.Models.Types;
 using ICP.Candid.Models.Values;
+using ICP.Candid.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -378,7 +379,7 @@ namespace ICP.Candid.Tests
                 CandidValueWithType.FromValueAndType(value1, type1)
             }, null); ;
 
-            byte[] actualBytes = Convert.FromHexString(hex);
+            byte[] actualBytes = ByteUtil.FromHexString(hex);
             CandidArg actualArg = CandidArg.FromBytes(actualBytes);
 
             Assert.Equal(expectedArg, actualArg);
