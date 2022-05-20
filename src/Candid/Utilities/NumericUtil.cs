@@ -12,7 +12,7 @@ namespace ICP.Candid.Utilities
         {
             byte[] bytes = value.ToByteArray(); // BigInteger returns twos compliment (signed) bytes
             BinarySequence bits = BinarySequence.FromBytes(bytes, isBigEndian: false);
-            if (unsignedBits)
+            if (unsignedBits && bits.MostSignificantBit)
             {
                 bits = bits.ToReverseTwosCompliment();
             }
