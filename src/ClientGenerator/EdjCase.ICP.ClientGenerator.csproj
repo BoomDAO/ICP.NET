@@ -31,5 +31,9 @@
 		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.8.0" PrivateAssets="all" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\Agent\EdjCase.ICP.Agent.csproj" />
+	</ItemGroup>
+
 
 </Project>

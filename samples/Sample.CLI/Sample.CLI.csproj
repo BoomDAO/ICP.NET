@@ -13,6 +13,7 @@
     <AdditionalFiles Include="Governance.did" />
   </ItemGroup>
 
+
   <ItemGroup>
     <ProjectReference Include="..\Sample.Shared\Sample.Shared.csproj" />
 	  <ProjectReference Include="..\..\src\ClientGenerator\EdjCase.ICP.ClientGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
