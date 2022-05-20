@@ -28,6 +28,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\Candid\Candid.csproj" />
+	  <ProjectReference Include="..\Candid\EdjCase.ICP.Candid.csproj" />
 	</ItemGroup>
 </Project>

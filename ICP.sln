@@ -9,9 +9,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Agent", "src\Agent\Agent.csproj", "{773B18A6-5864-4FAE-B6B0-A863FE8F151C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdjCase.ICP.Agent", "src\Agent\EdjCase.ICP.Agent.csproj", "{773B18A6-5864-4FAE-B6B0-A863FE8F151C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Candid", "src\Candid\Candid.csproj", "{8EF917C9-479A-4DE1-9FE1-EB0066BA601A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdjCase.ICP.Candid", "src\Candid\EdjCase.ICP.Candid.csproj", "{8EF917C9-479A-4DE1-9FE1-EB0066BA601A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.CLI", "samples\Sample.CLI\Sample.CLI.csproj", "{99A0577B-3900-4A2D-905A-777FD86C60F8}"
 EndProject
@@ -29,7 +29,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Shared", "samples\Sa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.RestAPI", "samples\Sample.RestAPI\Sample.RestAPI.csproj", "{F76CA92C-211B-46A7-8B21-A808291B268E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientGenerator", "src\ClientGenerator\ClientGenerator.csproj", "{1C184ECB-7653-4DC1-B453-E529656897CB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdjCase.ICP.ClientGenerator", "src\ClientGenerator\EdjCase.ICP.ClientGenerator.csproj", "{1C184ECB-7653-4DC1-B453-E529656897CB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

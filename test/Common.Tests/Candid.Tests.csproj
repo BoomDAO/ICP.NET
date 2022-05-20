@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Candid\Candid.csproj" />
+    <ProjectReference Include="..\..\src\Candid\EdjCase.ICP.Candid.csproj" />
   </ItemGroup>
 
 </Project>

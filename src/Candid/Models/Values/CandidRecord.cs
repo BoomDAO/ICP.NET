@@ -40,13 +40,21 @@ namespace ICP.Candid.Models.Values
 			}
 		}
 
-		public bool TryGetField(string name, [NotNullWhen(true)] out CandidValue? value)
+		public bool TryGetField(string name,
+#if !NETSTANDARD2_0
+		[NotNullWhen(true)]
+#endif
+			out CandidValue? value)
 		{
 			CandidTag hashedName = CandidTag.FromName(name);
 			return this.TryGetField(hashedName, out value);
 		}
 
-		public bool TryGetField(CandidTag label, [NotNullWhen(true)] out CandidValue? value)
+		public bool TryGetField(CandidTag label,
+#if !NETSTANDARD2_0
+		[NotNullWhen(true)]
+# endif
+			out CandidValue? value)
 		{
 			return this.Fields.TryGetValue(label, out value);
 		}

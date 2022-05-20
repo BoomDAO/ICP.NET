@@ -7,18 +7,13 @@
 	  <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="Governance.did" />
-  </ItemGroup>
-
-  <ItemGroup>
+	<ItemGroup>
     <AdditionalFiles Include="Governance.did" />
   </ItemGroup>
 
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\src\Agent\Agent.csproj" />
-	  <ProjectReference Include="..\..\src\Candid\Candid.csproj" />
-	  <ProjectReference Include="..\..\src\ClientGenerator\ClientGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+	  <ProjectReference Include="..\..\src\Agent\EdjCase.ICP.Agent.csproj" />
+	  <ProjectReference Include="..\..\src\Candid\EdjCase.ICP.Candid.csproj" />
 	</ItemGroup>
 </Project>
