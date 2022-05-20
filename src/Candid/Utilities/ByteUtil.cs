@@ -34,7 +34,7 @@ namespace ICP.Candid.Utilities
             if (isUnsigned || isBigEndian)
             {
                 BinarySequence bits = BinarySequence.FromBytes(bytes, isBigEndian);
-                if (isUnsigned)
+                if (isUnsigned && bits.MostSignificantBit)
                 {
                     // Convert unsigned to signed
                     bits = bits.ToTwosCompliment();

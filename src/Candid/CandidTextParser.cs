@@ -171,7 +171,7 @@ namespace ICP.Candid
             // Check to see if text is recursive id like `μrec_1.record` vs just the type name `record`
             if (type.StartsWith("μ"))
             {
-                recursiveId = CandidId.Parse(type[1..]);
+                recursiveId = CandidId.Parse(type.Substring(1));
                 helper.MoveNextOrThrow();
                 helper.CurrentToken.ValidateType(CandidTextTokenType.Period); // Period seperates recursive id and type
                 helper.MoveNextOrThrow();

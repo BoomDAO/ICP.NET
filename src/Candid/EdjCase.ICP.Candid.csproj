@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-	  <PackageReference Include="Theraot.Core" Version="3.2.11" />
+	  <PackageReference Include="Microsoft.Bcl.HashCode" Version="1.1.1" />
 	  <PackageReference Include="System.Memory" Version="4.5.4" />
   </ItemGroup>
 

@@ -79,7 +79,7 @@ namespace ICP.Candid.Models
             // bytes = digest + selfAuthenticatingSuffix
             byte[] bytes = new byte[digest.Length + 1];
             digest.CopyTo(bytes.AsSpan());
-            bytes[^1] = selfAuthenticatingSuffix;
+            bytes[bytes.Length - 1] = selfAuthenticatingSuffix;
             return new Principal(bytes);
         }
 

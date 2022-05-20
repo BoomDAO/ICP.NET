@@ -11,6 +11,8 @@ namespace ICP.Candid
         // Least signifcant bit (index 0) => Most signifcant bit (index n - 1)
         private readonly bool[] bits;
 
+        public bool MostSignificantBit => this.bits[this.bits.Length - 1];
+
         /// <param name="bits">Least signifcant to most ordered bits</param>
         public BinarySequence(bool[] bits)
         {
@@ -20,11 +22,11 @@ namespace ICP.Candid
         public BinarySequence ToTwosCompliment()
         {
             // If value most significant bit is `1`, the 2's compliment needs to be 1 bit larger to hold sign bit
-            if (this.bits.Last())
+            if (this.MostSignificantBit)
             {               
                 bool[] newBits = new bool[this.bits.Length + 1];
                 this.bits.CopyTo(newBits, 0);
-                return new BinarySequence(newBits).ToTwosCompliment();
+                return new BinarySequence(newBits);
             }
             bool[] bits = this.ToTwosComplimentInternal().ToArray();
             return new BinarySequence(bits);
@@ -43,7 +45,6 @@ namespace ICP.Candid
         public byte[] ToByteArray(bool bigEndian = false)
         {
             IEnumerable<byte> bytes = this.bits
-                .Reverse() // Reverse to start with least significant bit
                 .Chunk(8)
                 .Select(BitsToByte);
             // Reverse if need big endian
@@ -65,7 +66,10 @@ namespace ICP.Candid
                 for (int i = 0; i < bits.Length; i++)
                 {
                     bool b = bits[i];
-                    value |= 1 << i;
+                    if (b)
+                    {
+                        value |= 1 << i;
+                    }
                 }
                 return (byte)value;
             }
@@ -74,7 +78,7 @@ namespace ICP.Candid
         public override string ToString()
         {
             var stringBuilder = new StringBuilder();
-            foreach (bool bit in this.bits)
+            foreach (bool bit in this.bits.Reverse()) // Reverse to show LSB on right (normal display)
             {
                 stringBuilder.Append(bit ? "1" : "0");
             }
@@ -88,7 +92,7 @@ namespace ICP.Candid
             {
                 byteSeq = byteSeq.Reverse();
             }
-            bool[] bits = bytes
+            bool[] bits = byteSeq
                 .SelectMany(ByteToBits)
                 .ToArray();
             return new BinarySequence(bits);
