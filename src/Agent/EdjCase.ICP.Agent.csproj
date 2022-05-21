@@ -24,7 +24,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Dahomey.Cbor" Version="1.16.1" />
+		<PackageReference Include="Dahomey.Cbor" Version="1.16.1" PrivateAssets="all" />
 	</ItemGroup>
 
 	<ItemGroup>

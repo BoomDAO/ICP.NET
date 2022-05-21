@@ -63,8 +63,22 @@ namespace ICP.ClientGenerator
         private string GenerateDeclaredType(CandidId id, CandidType type)
         {
             var builder = new IndentedStringBuilder();
-            this.WriteType(builder, id.ToString(), type);
+            this.WriteNamespace(builder, "EdjCase.ICP.Clients.Models", () =>
+            {
+                this.WriteType(builder, id.ToString(), type);
+            });
             return builder.ToString();
+        }
+
+        private void WriteNamespace(IndentedStringBuilder builder, string name, Action inner)
+        {
+            builder.AppendLine($"namespace {name}");
+            builder.AppendLine("{");
+            using (builder.Indent())
+            {
+                inner();
+            }
+            builder.AppendLine("}");
         }
 
         private void WriteType(IndentedStringBuilder builder, string name, CandidType type)
@@ -282,7 +296,10 @@ namespace ICP.ClientGenerator
         private string GenerateFromService(string name, CandidServiceType service)
         {
             var builder = new IndentedStringBuilder();
-            this.WriteService(builder, name, service);
+            this.WriteNamespace(builder, "EdjCase.ICP.Clients", () =>
+            {
+                this.WriteService(builder, name, service);
+            });
             return builder.ToString() ?? "";
         }
 

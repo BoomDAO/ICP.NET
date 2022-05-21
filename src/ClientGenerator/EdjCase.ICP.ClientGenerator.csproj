@@ -16,7 +16,7 @@
 	  <Version>0.0.1-beta.14</Version>
 	  <PackageId>EdjCase.ICP.ClientGenerator</PackageId>
 	  
-	  <DevelopmentDependency>true</DevelopmentDependency>
+	  <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
 	<ItemGroup>
@@ -33,7 +33,7 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\Agent\EdjCase.ICP.Agent.csproj" />
+	  <ProjectReference Include="..\Candid\EdjCase.ICP.Candid.csproj" />
 	</ItemGroup>
-
 
 </Project>
