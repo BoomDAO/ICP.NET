@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ICP.Agent.Requests
+namespace EdjCase.ICP.Agent.Requests
 {
 	public class HttpAgentRequest
 	{

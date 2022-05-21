@@ -4,9 +4,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ICP.Candid.Crypto;
+using EdjCase.ICP.Candid.Crypto;
 
-namespace ICP.Candid.Models
+namespace EdjCase.ICP.Candid.Models
 {
     public class DerEncodedPublicKey : IHashable, IPublicKey
     {

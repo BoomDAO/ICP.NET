@@ -1,7 +1,7 @@
-﻿using ICP.Candid.Models;
+﻿using EdjCase.ICP.Candid.Models;
 using System.Collections.Generic;
 
-namespace ICP.Agent.Auth
+namespace EdjCase.ICP.Agent.Auth
 {
 	public interface IIdentity
 	{

@@ -1,8 +1,8 @@
-﻿using ICP.Candid.Models;
+﻿using EdjCase.ICP.Candid.Models;
 using System;
 using System.Linq;
 
-namespace ICP.Candid.Models.Values
+namespace EdjCase.ICP.Candid.Models.Values
 {
 	public class CandidService : CandidValue
 	{

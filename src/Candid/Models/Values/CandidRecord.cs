@@ -1,12 +1,12 @@
-﻿using ICP.Candid.Models;
-using ICP.Candid.Models.Types;
+﻿using EdjCase.ICP.Candid.Models;
+using EdjCase.ICP.Candid.Models.Types;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 
-namespace ICP.Candid.Models.Values
+namespace EdjCase.ICP.Candid.Models.Values
 {
 	public class CandidRecord : CandidValue
 	{

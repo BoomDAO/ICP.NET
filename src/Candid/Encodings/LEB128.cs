@@ -1,4 +1,4 @@
-﻿using ICP.Candid.Utilities;
+﻿using EdjCase.ICP.Candid.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Numerics;
 
-namespace ICP.Candid.Encodings
+namespace EdjCase.ICP.Candid.Encodings
 {
 	public static class LEB128
 	{

@@ -2,10 +2,10 @@
 using System.IO;
 using System.Threading.Tasks;
 using Dahomey.Cbor.ObjectModel;
-using ICP.Candid;
-using ICP.Candid.Utilities;
+using EdjCase.ICP.Candid;
+using EdjCase.ICP.Candid.Utilities;
 
-namespace ICP.Agent.Responses
+namespace EdjCase.ICP.Agent.Responses
 {
     public class StatusResponse
     {

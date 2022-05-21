@@ -1,6 +1,6 @@
-﻿using ICP.Candid.Models;
-using ICP.Candid.Encodings;
-using ICP.Candid.Exceptions;
+﻿using EdjCase.ICP.Candid.Models;
+using EdjCase.ICP.Candid.Encodings;
+using EdjCase.ICP.Candid.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -9,10 +9,10 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
-using ICP.Candid.Models.Types;
-using ICP.Candid.Models.Values;
+using EdjCase.ICP.Candid.Models.Types;
+using EdjCase.ICP.Candid.Models.Values;
 
-namespace ICP.Candid.Parsers
+namespace EdjCase.ICP.Candid.Parsers
 {
     public static class CandidByteParser
     {

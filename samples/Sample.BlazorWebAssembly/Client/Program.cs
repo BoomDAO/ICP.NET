@@ -1,5 +1,5 @@
-using ICP.Agent.Agents;
-using ICP.Agent.Auth;
+using EdjCase.ICP.Agent.Agents;
+using EdjCase.ICP.Agent.Auth;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Sample.BlazorWebAssembly.Client;

@@ -1,10 +1,10 @@
 ﻿using Agent.Cbor;
 using Dahomey.Cbor;
-using ICP.Agent.Auth;
-using ICP.Agent.Requests;
-using ICP.Agent.Responses;
-using ICP.Candid.Models;
-using ICP.Candid.Utilities;
+using EdjCase.ICP.Agent.Auth;
+using EdjCase.ICP.Agent.Requests;
+using EdjCase.ICP.Agent.Responses;
+using EdjCase.ICP.Candid.Models;
+using EdjCase.ICP.Candid.Utilities;
 using System;
 using System.Buffers;
 using System.Collections.Generic;
@@ -13,7 +13,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ICP.Agent.Agents
+namespace EdjCase.ICP.Agent.Agents
 {
     public class HttpAgent : IAgent
     {

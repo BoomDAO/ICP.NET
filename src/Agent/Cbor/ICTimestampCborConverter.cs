@@ -1,7 +1,7 @@
 ﻿using Dahomey.Cbor.Serialization;
 using Dahomey.Cbor.Serialization.Converters;
-using ICP.Candid;
-using ICP.Candid.Models;
+using EdjCase.ICP.Candid;
+using EdjCase.ICP.Candid.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

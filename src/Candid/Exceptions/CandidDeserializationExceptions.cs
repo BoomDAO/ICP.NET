@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ICP.Candid.Exceptions
+namespace EdjCase.ICP.Candid.Exceptions
 {
     public abstract class CandidSerializationException : Exception
     {

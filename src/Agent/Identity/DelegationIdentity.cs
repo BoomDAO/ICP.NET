@@ -1,14 +1,14 @@
-﻿using ICP.Agent;
-using ICP.Agent.Auth;
-using ICP.Candid.Crypto;
-using ICP.Candid.Models;
+﻿using EdjCase.ICP.Agent;
+using EdjCase.ICP.Agent.Auth;
+using EdjCase.ICP.Candid.Crypto;
+using EdjCase.ICP.Candid.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ICP.Agent.Identity
+namespace EdjCase.ICP.Agent.Identity
 {
     public class DelegationIdentity : SignIdentity
     {

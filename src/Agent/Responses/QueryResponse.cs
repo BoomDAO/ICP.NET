@@ -1,8 +1,8 @@
 ﻿using Dahomey.Cbor.ObjectModel;
-using ICP.Candid.Models;
+using EdjCase.ICP.Candid.Models;
 using System;
 
-namespace ICP.Agent.Responses
+namespace EdjCase.ICP.Agent.Responses
 {
     public class QueryResponse
     {

@@ -1,8 +1,8 @@
-﻿using ICP.Candid;
-using ICP.Candid.Utilities;
+﻿using EdjCase.ICP.Candid;
+using EdjCase.ICP.Candid.Utilities;
 using System;
 
-namespace ICP.Agent
+namespace EdjCase.ICP.Agent
 {
 	public class Key
 	{

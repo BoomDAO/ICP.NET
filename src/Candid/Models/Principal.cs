@@ -1,9 +1,9 @@
-﻿using ICP.Candid.Crypto;
-using ICP.Candid.Utilities;
+﻿using EdjCase.ICP.Candid.Crypto;
+using EdjCase.ICP.Candid.Utilities;
 using System;
 using System.Linq;
 
-namespace ICP.Candid.Models
+namespace EdjCase.ICP.Candid.Models
 {
 	public class Principal : IHashable, IEquatable<Principal>
     {

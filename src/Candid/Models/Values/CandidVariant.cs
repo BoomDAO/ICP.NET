@@ -1,10 +1,10 @@
-﻿using ICP.Candid.Models;
-using ICP.Candid.Encodings;
+﻿using EdjCase.ICP.Candid.Models;
+using EdjCase.ICP.Candid.Encodings;
 using System;
 using System.Linq;
-using ICP.Candid.Models.Types;
+using EdjCase.ICP.Candid.Models.Types;
 
-namespace ICP.Candid.Models.Values
+namespace EdjCase.ICP.Candid.Models.Values
 {
 	public class CandidVariant : CandidValue
 	{

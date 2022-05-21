@@ -1,5 +1,5 @@
-using ICP.Agent.Agents;
-using ICP.Agent.Auth;
+using EdjCase.ICP.Agent.Agents;
+using EdjCase.ICP.Agent.Auth;
 using Sample.Shared;
 
 var builder = WebApplication.CreateBuilder(args);

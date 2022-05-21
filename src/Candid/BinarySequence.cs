@@ -1,10 +1,10 @@
-﻿using ICP.Candid.Utilities;
+﻿using EdjCase.ICP.Candid.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace ICP.Candid
+namespace EdjCase.ICP.Candid
 {
     public class BinarySequence
     {

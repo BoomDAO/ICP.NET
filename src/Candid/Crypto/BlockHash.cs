@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace ICP.Candid.Crypto
+namespace EdjCase.ICP.Candid.Crypto
 {
     internal abstract class BlockHash
     {

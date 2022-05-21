@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 
-namespace ICP.Candid.Utilities
+namespace EdjCase.ICP.Candid.Utilities
 {
     public static class ByteUtil
     {

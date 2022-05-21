@@ -3,9 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ICP.Candid.Crypto;
+using EdjCase.ICP.Candid.Crypto;
 
-namespace ICP.Candid.Models
+namespace EdjCase.ICP.Candid.Models
 {
 	public interface IHashable
 	{

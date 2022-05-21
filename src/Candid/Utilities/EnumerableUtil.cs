@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ICP.Candid.Utilities
+namespace EdjCase.ICP.Candid.Utilities
 {
     public static class EnumerableUtil
     {

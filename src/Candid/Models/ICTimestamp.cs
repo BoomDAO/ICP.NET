@@ -1,9 +1,9 @@
 ﻿using System;
-using ICP.Candid.Crypto;
-using ICP.Candid.Encodings;
-using ICP.Candid.Models.Values;
+using EdjCase.ICP.Candid.Crypto;
+using EdjCase.ICP.Candid.Encodings;
+using EdjCase.ICP.Candid.Models.Values;
 
-namespace ICP.Candid.Models
+namespace EdjCase.ICP.Candid.Models
 {
 	public class ICTimestamp : IHashable
 	{

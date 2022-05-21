@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace ICP.Candid.Models
+namespace EdjCase.ICP.Candid.Models
 {
     public class CandidId : IEquatable<CandidId>, IEquatable<string>, IComparable<CandidId>
     {

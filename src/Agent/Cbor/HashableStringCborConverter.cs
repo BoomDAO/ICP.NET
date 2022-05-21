@@ -1,14 +1,14 @@
 ﻿using Dahomey.Cbor.Serialization;
 using Dahomey.Cbor.Serialization.Converters;
 using Dahomey.Cbor.Serialization.Converters.Mappings;
-using ICP.Candid.Encodings;
-using ICP.Candid.Models;
+using EdjCase.ICP.Candid.Encodings;
+using EdjCase.ICP.Candid.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
-namespace ICP.Agent.Cbor
+namespace EdjCase.ICP.Agent.Cbor
 {
     public class HashableStringCborConverter : CborConverterBase<HashableString?>
     {

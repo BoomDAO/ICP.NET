@@ -1,8 +1,8 @@
-using ICP.Candid.Models;
+using EdjCase.ICP.Candid.Models;
 using System;
 using System.Diagnostics;
 
-namespace ICP.Candid.Crypto
+namespace EdjCase.ICP.Candid.Crypto
 {
     public static class CryptoUtil
     {

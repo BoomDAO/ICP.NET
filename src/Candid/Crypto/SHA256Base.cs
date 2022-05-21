@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ICP.Candid.Crypto
+namespace EdjCase.ICP.Candid.Crypto
 {
     internal abstract class SHA256Base : BlockHash
     {

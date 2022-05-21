@@ -1,6 +1,6 @@
-﻿using ICP.Candid.Models;
-using ICP.Candid.Models.Types;
-using ICP.Candid.Models.Values;
+﻿using EdjCase.ICP.Candid.Models;
+using EdjCase.ICP.Candid.Models.Types;
+using EdjCase.ICP.Candid.Models.Values;
 using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ICP.Candid
+namespace EdjCase.ICP.Candid
 {
     public static class CandidTextGenerator
     {

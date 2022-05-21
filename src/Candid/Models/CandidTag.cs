@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ICP.Candid.Models
+namespace EdjCase.ICP.Candid.Models
 {
     public class CandidTag : IComparable<CandidTag>, IComparable, IEquatable<CandidTag>
     {

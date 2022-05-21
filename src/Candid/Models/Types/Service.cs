@@ -1,11 +1,11 @@
-﻿using ICP.Candid.Encodings;
+﻿using EdjCase.ICP.Candid.Encodings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ICP.Candid.Models.Types
+namespace EdjCase.ICP.Candid.Models.Types
 {
 	public class CandidServiceType : CandidCompoundType
 	{

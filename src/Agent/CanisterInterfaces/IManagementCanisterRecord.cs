@@ -1,11 +1,11 @@
-﻿using ICP.Candid.Models;
+﻿using EdjCase.ICP.Candid.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ICP.Agent.CanisterInterfaces
+namespace EdjCase.ICP.Agent.CanisterInterfaces
 {
 	public interface IManagementCanisterRecord
 	{

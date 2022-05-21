@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ICP.Candid.Crypto
+namespace EdjCase.ICP.Candid.Crypto
 {
     public class SHA224
     {

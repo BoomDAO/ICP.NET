@@ -1,7 +1,7 @@
-﻿using ICP.Candid;
-using ICP.Candid.Models;
-using ICP.Candid.Models.Types;
-using ICP.Candid.Models.Values;
+﻿using EdjCase.ICP.Candid;
+using EdjCase.ICP.Candid.Models;
+using EdjCase.ICP.Candid.Models.Types;
+using EdjCase.ICP.Candid.Models.Values;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 using System;
@@ -11,7 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace ICP.ClientGenerator
+namespace EdjCase.ICP.ClientGenerator
 {
     [Generator]
     public class ClientGenerator : ISourceGenerator

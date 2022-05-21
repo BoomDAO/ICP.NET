@@ -1,7 +1,7 @@
 ﻿using Dahomey.Cbor.ObjectModel;
 using System;
 
-namespace ICP.Agent.Responses
+namespace EdjCase.ICP.Agent.Responses
 {
     public class ReadStateResponse
     {

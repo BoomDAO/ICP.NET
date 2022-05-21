@@ -1,8 +1,8 @@
-﻿using ICP.Candid.Crypto;
+﻿using EdjCase.ICP.Candid.Crypto;
 using System;
 using System.Text;
 
-namespace ICP.Candid.Models
+namespace EdjCase.ICP.Candid.Models
 {
     public class PathSegment : IHashable
     {

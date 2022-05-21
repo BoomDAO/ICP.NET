@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ICP.Candid.Crypto
+namespace EdjCase.ICP.Candid.Crypto
 {
     public class CRC32
     {

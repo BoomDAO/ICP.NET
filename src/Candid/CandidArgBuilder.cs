@@ -4,12 +4,12 @@ using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Text;
-using ICP.Candid.Encodings;
-using ICP.Candid.Models;
-using ICP.Candid.Models.Types;
-using ICP.Candid.Models.Values;
+using EdjCase.ICP.Candid.Encodings;
+using EdjCase.ICP.Candid.Models;
+using EdjCase.ICP.Candid.Models.Types;
+using EdjCase.ICP.Candid.Models.Values;
 
-namespace ICP.Candid
+namespace EdjCase.ICP.Candid
 {
     public class CandidArgBuilder
     {

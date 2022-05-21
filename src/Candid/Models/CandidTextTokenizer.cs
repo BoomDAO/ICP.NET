@@ -1,9 +1,9 @@
-﻿using ICP.Candid.Exceptions;
+﻿using EdjCase.ICP.Candid.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ICP.Candid.Models
+namespace EdjCase.ICP.Candid.Models
 {
     public class CandidTextTokenHelper
     {

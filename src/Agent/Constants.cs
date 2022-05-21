@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ICP.Agent
+namespace EdjCase.ICP.Agent
 {
 	public static class Constants
 	{

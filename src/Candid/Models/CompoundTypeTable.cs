@@ -1,12 +1,12 @@
-﻿using ICP.Candid.Encodings;
-using ICP.Candid.Models.Types;
+﻿using EdjCase.ICP.Candid.Encodings;
+using EdjCase.ICP.Candid.Models.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ICP.Candid.Models
+namespace EdjCase.ICP.Candid.Models
 {
     public class CompoundTypeTable
     {

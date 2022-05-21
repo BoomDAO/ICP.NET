@@ -1,15 +1,15 @@
-﻿using ICP.Candid.Models;
+﻿using EdjCase.ICP.Candid.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
-using ICP.Candid.Models.Values;
-using ICP.Candid.Models.Types;
-using ICP.Candid;
+using EdjCase.ICP.Candid.Models.Values;
+using EdjCase.ICP.Candid.Models.Types;
+using EdjCase.ICP.Candid;
 
-namespace ICP.Candid.Tests
+namespace EdjCase.ICP.Candid.Tests
 {
     public static class TestUtil
 	{

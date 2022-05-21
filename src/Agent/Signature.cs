@@ -1,8 +1,8 @@
-﻿using ICP.Candid.Crypto;
-using ICP.Candid.Models;
+﻿using EdjCase.ICP.Candid.Crypto;
+using EdjCase.ICP.Candid.Models;
 using System;
 
-namespace ICP.Agent
+namespace EdjCase.ICP.Agent
 {
 	public class Signature : IHashable
 	{

@@ -1,9 +1,9 @@
-﻿using ICP.Candid.Encodings;
+﻿using EdjCase.ICP.Candid.Encodings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ICP.Candid.Models.Values
+namespace EdjCase.ICP.Candid.Models.Values
 {
 	public class CandidVector : CandidValue
 	{

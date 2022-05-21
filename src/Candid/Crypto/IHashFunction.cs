@@ -1,7 +1,7 @@
 using System;
 using System.Security.Cryptography;
 
-namespace ICP.Candid.Crypto
+namespace EdjCase.ICP.Candid.Crypto
 {
     public interface IHashFunction
     {

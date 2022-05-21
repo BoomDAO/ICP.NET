@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ICP.Candid.Models.Values
+namespace EdjCase.ICP.Candid.Models.Values
 {
     public static class StringUtil
     {

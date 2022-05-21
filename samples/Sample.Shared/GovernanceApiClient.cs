@@ -1,8 +1,8 @@
-﻿using ICP.Agent.Agents;
-using ICP.Agent.Responses;
-using ICP.Candid.Models;
-using ICP.Candid.Models.Types;
-using ICP.Candid.Models.Values;
+﻿using EdjCase.ICP.Agent.Agents;
+using EdjCase.ICP.Agent.Responses;
+using EdjCase.ICP.Candid.Models;
+using EdjCase.ICP.Candid.Models.Types;
+using EdjCase.ICP.Candid.Models.Values;
 using Sample.Shared.Models;
 using System;
 using System.Collections.Generic;

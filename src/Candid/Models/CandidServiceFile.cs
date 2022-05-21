@@ -1,11 +1,11 @@
-﻿using ICP.Candid.Models;
-using ICP.Candid.Models.Types;
-using ICP.Candid.Parsers;
+﻿using EdjCase.ICP.Candid.Models;
+using EdjCase.ICP.Candid.Models.Types;
+using EdjCase.ICP.Candid.Parsers;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ICP.Candid.Models
+namespace EdjCase.ICP.Candid.Models
 {
     public class CandidServiceFile
     {

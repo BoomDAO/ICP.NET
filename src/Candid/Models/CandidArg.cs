@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using ICP.Candid.Crypto;
-using ICP.Candid.Encodings;
-using ICP.Candid.Models.Values;
-using ICP.Candid.Models.Types;
-using ICP.Candid.Parsers;
+using EdjCase.ICP.Candid.Crypto;
+using EdjCase.ICP.Candid.Encodings;
+using EdjCase.ICP.Candid.Models.Values;
+using EdjCase.ICP.Candid.Models.Types;
+using EdjCase.ICP.Candid.Parsers;
 
-namespace ICP.Candid.Models
+namespace EdjCase.ICP.Candid.Models
 {
     public class CandidArg : IHashable, IEquatable<CandidArg>
     {

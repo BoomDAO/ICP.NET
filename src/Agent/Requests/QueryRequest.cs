@@ -1,9 +1,9 @@
-﻿using ICP.Candid.Crypto;
-using ICP.Candid.Models;
+﻿using EdjCase.ICP.Candid.Crypto;
+using EdjCase.ICP.Candid.Models;
 using System;
 using System.Collections.Generic;
 
-namespace ICP.Agent.Requests
+namespace EdjCase.ICP.Agent.Requests
 {
     public class QueryRequest : IRepresentationIndependentHashItem
     {

@@ -13,7 +13,7 @@ using System.Collections.Immutable;
 using Microsoft.CodeAnalysis.Text;
 using System.Threading;
 
-namespace ICP.Candid.Tests.Generators
+namespace EdjCase.ICP.Candid.Tests.Generators
 {
     [UsesVerify]
     public class ClientGeneratorTests

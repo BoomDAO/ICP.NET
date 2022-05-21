@@ -4,13 +4,13 @@
 	  <TargetFramework>netstandard2.0</TargetFramework>
 	  <Nullable>enable</Nullable>
 	  <LangVersion>latest</LangVersion>
-	  <RootNamespace>ICP.Candid</RootNamespace>
+	  <RootNamespace>EdjCase.ICP.Candid</RootNamespace>
 	  <RepositoryUrl>https://github.com/Gekctek/ICP.NET</RepositoryUrl>
 	  <RepositoryType>git</RepositoryType>
 	  <PackageTags>.net;blazor;ICP;IC</PackageTags>
 	  <PackageReadmeFile>README.md</PackageReadmeFile>
 	  <PackageProjectUrl>https://github.com/Gekctek/ICP.NET</PackageProjectUrl>
-	  <Product>ICP.Candid</Product>
+	  <Product>EdjCase.ICP.Candid</Product>
 	  <Company>Edjcase</Company>
 	  <Authors>Gekctek</Authors>
 	  <PackageId>EdjCase.ICP.Candid</PackageId>

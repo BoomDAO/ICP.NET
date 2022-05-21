@@ -1,4 +1,4 @@
-﻿using ICP.Candid.Utilities;
+﻿using EdjCase.ICP.Candid.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +6,7 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ICP.Candid
+namespace EdjCase.ICP.Candid
 {
 	public class UnboundedUInt : IComparable<UnboundedUInt>, IEquatable<UnboundedUInt>
 	{

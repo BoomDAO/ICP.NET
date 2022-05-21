@@ -1,12 +1,12 @@
-﻿using ICP.Agent.Auth;
-using ICP.Agent.Responses;
-using ICP.Candid.Models;
+﻿using EdjCase.ICP.Agent.Auth;
+using EdjCase.ICP.Agent.Responses;
+using EdjCase.ICP.Candid.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ICP.Agent.Agents
+namespace EdjCase.ICP.Agent.Agents
 {
     public interface IAgent
     {

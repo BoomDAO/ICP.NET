@@ -1,7 +1,7 @@
 ﻿using System;
-using ICP.Candid.Models;
+using EdjCase.ICP.Candid.Models;
 
-namespace ICP.Candid.Models
+namespace EdjCase.ICP.Candid.Models
 {
     public interface IPublicKey
     {

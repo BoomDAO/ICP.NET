@@ -1,14 +1,14 @@
-﻿using ICP.Candid.Exceptions;
-using ICP.Candid.Models;
-using ICP.Candid.Models.Types;
-using ICP.Candid.Models.Values;
+﻿using EdjCase.ICP.Candid.Exceptions;
+using EdjCase.ICP.Candid.Models;
+using EdjCase.ICP.Candid.Models.Types;
+using EdjCase.ICP.Candid.Models.Values;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ICP.Candid.Parsers
+namespace EdjCase.ICP.Candid.Parsers
 {
     public static class CandidTextParser
     {

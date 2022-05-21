@@ -1,8 +1,8 @@
-﻿using ICP.Candid.Models.Types;
-using ICP.Candid.Models.Values;
+﻿using EdjCase.ICP.Candid.Models.Types;
+using EdjCase.ICP.Candid.Models.Values;
 using System;
 
-namespace ICP.Candid.Models
+namespace EdjCase.ICP.Candid.Models
 {
     public class CandidValueWithType
     {
