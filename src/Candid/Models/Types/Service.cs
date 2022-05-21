@@ -12,10 +12,10 @@ namespace ICP.Candid.Models.Types
 		public override CandidTypeCode Type { get; } = CandidTypeCode.Service;
 
 		public CandidId? Id { get; }
-		public IReadOnlyDictionary<string, CandidFuncType> Methods { get; }
+		public IReadOnlyDictionary<CandidId, CandidFuncType> Methods { get; }
 
 
-        public CandidServiceType(IReadOnlyDictionary<string, CandidFuncType> methods, CandidId? id, CandidId? recursiveId = null) : base(recursiveId)
+        public CandidServiceType(IReadOnlyDictionary<CandidId, CandidFuncType> methods, CandidId? id, CandidId? recursiveId = null) : base(recursiveId)
 		{
 			this.Methods = methods;
 			this.Id = id;
@@ -28,7 +28,7 @@ namespace ICP.Candid.Models.Types
 				.OrderBy(m => m.Key) // Ordered by method name
 				.SelectMany(m =>
 				{
-					byte[] encodedName = Encoding.UTF8.GetBytes(m.Key);
+					byte[] encodedName = Encoding.UTF8.GetBytes(m.Key.ToString());
 					byte[] encodedNameLength = LEB128.EncodeSigned(encodedName.Length);
 					return encodedNameLength
 					.Concat(encodedName)

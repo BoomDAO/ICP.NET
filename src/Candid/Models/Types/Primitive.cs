@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ICP.Candid.Models.Types
 {
-    public class CandidPrimitiveType : CandidType
+    public class CandidPrimitiveType : CandidKnownType
     {
         public override CandidTypeCode Type { get; }
         public PrimitiveType PrimitiveType { get; }

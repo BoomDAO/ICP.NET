@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ICP.Candid.Models.Types
 {
-	public abstract class CandidCompoundType : CandidType
+	public abstract class CandidCompoundType : CandidKnownType
 	{
 		public CandidId? RecursiveId { get; set; }
 

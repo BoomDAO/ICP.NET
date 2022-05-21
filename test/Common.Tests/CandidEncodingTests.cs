@@ -419,7 +419,7 @@ namespace ICP.Candid.Tests
             {
                 {
                     CandidTag.FromName("selfRef"),
-                    new CandidOptType(new CandidReferenceType(referenceId, CandidTypeCode.Record))
+                    new CandidOptType(new CandidReferenceType(referenceId))
                 }
             }, referenceId);
             var expectedArg = CandidArg.FromCandid(new List<CandidValueWithType>

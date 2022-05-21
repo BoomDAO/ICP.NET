@@ -10,9 +10,13 @@ using System.Threading.Tasks;
 
 namespace ICP.Candid.Models.Types
 {
-    public abstract class CandidType : IEquatable<CandidType>
+    public abstract class CandidKnownType : CandidType
     {
         public abstract CandidTypeCode Type { get; }
+    }
+
+    public abstract class CandidType : IEquatable<CandidType>
+    {
 
         public abstract override bool Equals(object? obj);
 

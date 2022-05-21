@@ -37,15 +37,27 @@ namespace ICP.Candid.Tests.Generators
             var generator = new ClientGenerator.ClientGenerator();
             var additionalTexts = new List<AdditionalText>
             {
-                new GovernanceDidFile()
+                new GovernanceDidFile(),
+                new DefiDappDidFile()
             };
             GeneratorDriver driver = CSharpGeneratorDriver.Create(new[] { generator }, additionalTexts);
 
             driver = driver.RunGeneratorsAndUpdateCompilation(compilation,
                 out Compilation outputCompilation,
                 out ImmutableArray<Diagnostic> diagnostics);
-            IEnumerable<string> fileOutputs = outputCompilation.SyntaxTrees
-                .Select(t => t.GetText().ToString());
+
+            IEnumerable<string> fileOutputs;
+            if (diagnostics.Any(d => d.Severity >= DiagnosticSeverity.Error))
+            {
+                fileOutputs = diagnostics
+                    .Where(d => d.Severity >= DiagnosticSeverity.Error)
+                    .Select(d => d.ToString());
+            }
+            else
+            {
+                fileOutputs = outputCompilation.SyntaxTrees
+                    .Select(t => t.GetText().ToString());
+            }
             await Verifier
                 .Verify(fileOutputs)
                 .UseDirectory("Snapshots");
@@ -53,7 +65,6 @@ namespace ICP.Candid.Tests.Generators
 
 
     }
-
     public class GovernanceDidFile : AdditionalText
     {
         public override string Path => "Governance.did";
@@ -411,6 +422,92 @@ service : (Governance) -> {
   update_node_provider : (UpdateNodeProvider) -> (Result);
 }
 ");
+        }
+    }
+    public class DefiDappDidFile : AdditionalText
+    {
+        public override string Path => "defi_dapp.did";
+
+        public override SourceText? GetText(CancellationToken cancellationToken = default)
+        {
+            return SourceText.From(
+    @"
+    type WithdrawReceipt = 
+ variant {
+   Err: WithdrawErr;
+   Ok: nat;
+ };
+type WithdrawErr = 
+ variant {
+   BalanceLow;
+   TransferFailure;
+ };
+type Token = principal;
+type OrderPlacementReceipt = 
+ variant {
+   Err: OrderPlacementErr;
+   Ok: opt Order;
+ };
+type OrderPlacementErr = 
+ variant {
+   InvalidOrder;
+   OrderBookFull;
+ };
+type OrderId = nat32;
+type Order = 
+ record {
+   from: Token;
+   fromAmount: nat;
+   id: OrderId;
+   owner: principal;
+   to: Token;
+   toAmount: nat;
+ };
+type Dex = 
+ service {
+   cancelOrder: (OrderId) -> (CancelOrderReceipt);
+   clear: () -> () oneway;
+   credit: (principal, Token, nat) -> () oneway;
+   deposit: (Token) -> (DepositReceipt);
+   getAllBalances: () -> (vec Balance) query;
+   getBalance: (Token) -> (nat) query;
+   getBalances: () -> (vec Balance) query;
+   getDepositAddress: () -> (blob);
+   getOrder: (OrderId) -> (opt Order);
+   getOrders: () -> (vec Order);
+   getSymbol: (Token) -> (text);
+   placeOrder: (Token, nat, Token, nat) -> (OrderPlacementReceipt);
+   whoami: () -> (principal) query;
+   withdraw: (Token, nat, principal) -> (WithdrawReceipt);
+ };
+type DepositReceipt = 
+ variant {
+   Err: DepositErr;
+   Ok: nat;
+ };
+type DepositErr = 
+ variant {
+   BalanceLow;
+   TransferFailure;
+ };
+type CancelOrderReceipt = 
+ variant {
+   Err: CancelOrderErr;
+   Ok: OrderId;
+ };
+type CancelOrderErr = 
+ variant {
+   NotAllowed;
+   NotExistingOrder;
+ };
+type Balance = 
+ record {
+   amount: nat;
+   owner: principal;
+   token: Token;
+ };
+service : (ledger: opt principal) -> Dex
+    ");
         }
     }
 }

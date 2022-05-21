@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ICP.Candid
+namespace ICP.Candid.Parsers
 {
     public static class CandidTextParser
     {
@@ -22,10 +22,6 @@ namespace ICP.Candid
         {
             CandidTextTokenHelper helper = CandidTextTokenizer.Tokenize(text);
             CandidType def = ParseInternal(helper);
-            if (def.GetType() != typeof(T))
-            {
-                throw new InvalidOperationException($"Cannot convert parsed type '{def.GetType().Name}' to type '{typeof(T).Name}'");
-            }
             return (T)def;
         }
 
@@ -55,6 +51,10 @@ namespace ICP.Candid
             {
                 CandidType t = ParseInternal(helper);
                 argTypes.Add(t);
+                if(helper.CurrentToken.Type == CandidTextTokenType.Comma)
+                {
+                    helper.MoveNextOrThrow();
+                }
             }
 
             helper.MoveNextOrThrow();
@@ -72,11 +72,19 @@ namespace ICP.Candid
             {
                 CandidType t = ParseInternal(helper);
                 returnTypes.Add(t);
+                if(helper.CurrentToken.Type == CandidTextTokenType.Comma)
+                {
+                    helper.MoveNextOrThrow();
+                }
             }
 
             var modes = new List<FuncMode>();
             while (helper.MoveNext())
             {
+                if(helper.CurrentToken.Type == CandidTextTokenType.SemiColon)
+                {
+                    break;
+                }
                 string rawMode = helper.CurrentToken.GetTextValueOrThrow();
                 FuncMode mode = rawMode switch
                 {
@@ -122,7 +130,7 @@ namespace ICP.Candid
                 }
                 fields.Add(label, fieldType);
             }
-            helper.MoveNextOrThrow();
+            helper.MoveNext(); // May be end of file
             return new CandidRecordType(fields, recursiveId);
         }
 
@@ -145,6 +153,7 @@ namespace ICP.Candid
                 if (helper.CurrentToken.Type == CandidTextTokenType.SemiColon)
                 {
                     fieldType = new CandidPrimitiveType(PrimitiveType.Null);
+                    helper.MoveNextOrThrow();
                 }
                 else
                 {
@@ -154,14 +163,31 @@ namespace ICP.Candid
                 }
                 options.Add(CandidTag.FromName(label), fieldType);
             }
-            helper.MoveNextOrThrow();
+            helper.MoveNext();
             return new CandidVariantType(options, recursiveId);
         }
 
         private static CandidServiceType GetService(CandidTextTokenHelper helper, CandidId? recursiveId)
         {
-            // TODO
-            throw new NotImplementedException();
+            Dictionary<CandidId, CandidFuncType> methods = new();
+            helper.CurrentToken.ValidateType(CandidTextTokenType.OpenCurlyBrace);
+            helper.MoveNextOrThrow();
+            while (helper.CurrentToken.Type != CandidTextTokenType.CloseCurlyBrace)
+            {
+                string label = helper.CurrentToken.GetTextValueOrThrow();
+                helper.MoveNextOrThrow();
+                helper.CurrentToken.ValidateType(CandidTextTokenType.Colon);
+                helper.MoveNextOrThrow();
+                CandidFuncType methodType = GetFunc(helper);
+                methods.Add(CandidId.Parse(label), methodType);
+                if(helper.CurrentToken.Type == CandidTextTokenType.SemiColon)
+                {
+                    helper.MoveNext();
+                }
+            }
+            helper.MoveNext();
+
+            return new CandidServiceType(methods, recursiveId);
         }
 
         private static CandidType GetNamedType(CandidTextTokenHelper helper)
@@ -177,7 +203,8 @@ namespace ICP.Candid
                 helper.MoveNextOrThrow();
                 type = helper.CurrentToken.GetTextValueOrThrow();
             }
-            helper.MoveNextOrThrow();
+
+            helper.MoveNext();
 
             CandidType t = CandidTextParser.GetNamedType(type, helper, recursiveId);
             if (helper.CurrentToken.Type == CandidTextTokenType.SemiColon)
@@ -189,6 +216,7 @@ namespace ICP.Candid
 
         private static CandidType GetNamedType(string type, CandidTextTokenHelper helper, CandidId? recursiveId)
         {
+
             switch (type)
             {
                 case "opt":
@@ -255,7 +283,7 @@ namespace ICP.Candid
                     ThrowIfRecursiveIdSet();
                     return new CandidPrimitiveType(PrimitiveType.Null);
                 default:
-                    return new CandidReferenceType(CandidId.Parse(type), () => throw new NotImplementedException()); // TODO
+                    return new CandidReferenceType(CandidId.Parse(type));
             };
 
             void ThrowIfRecursiveIdSet()

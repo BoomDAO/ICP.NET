@@ -7,6 +7,7 @@ using ICP.Candid.Crypto;
 using ICP.Candid.Encodings;
 using ICP.Candid.Models.Values;
 using ICP.Candid.Models.Types;
+using ICP.Candid.Parsers;
 
 namespace ICP.Candid.Models
 {
@@ -33,7 +34,7 @@ namespace ICP.Candid.Models
 
         public static CandidArg FromBytes(byte[] value)
         {
-            return CandidByteReader.Read(value);
+            return CandidByteParser.Parse(value);
         }
 
         public static CandidArg FromCandid(List<CandidValueWithType> args, byte[]? opaqueReferencesBytes = null)

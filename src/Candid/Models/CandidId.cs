@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ICP.Candid.Models
 {
-    public class CandidId : IEquatable<CandidId>, IEquatable<string>
+    public class CandidId : IEquatable<CandidId>, IEquatable<string>, IComparable<CandidId>
     {
         private readonly static Regex idRegex = new Regex("^[a-zA-Z_][a-zA-Z0-9_]*$", RegexOptions.Compiled);
         public string Value { get; }
@@ -75,6 +75,11 @@ namespace ICP.Candid.Models
         public override string ToString()
         {
             return this.Value.ToString();
+        }
+
+        public int CompareTo(CandidId? other)
+        {
+            return this.Value.CompareTo(other?.Value);
         }
     }
 }

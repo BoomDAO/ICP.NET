@@ -1,6 +1,7 @@
 ﻿using ICP.Candid.Models;
 using ICP.Candid.Models.Types;
 using ICP.Candid.Models.Values;
+using ICP.Candid.Parsers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -562,7 +563,7 @@ namespace ICP.Candid.Tests
                                                                         },
                                                                         {
                                                                             CandidTag.FromName("MakeProposal"),
-                                                                            new CandidReferenceType(proposalReferenceId, CandidTypeCode.Record)
+                                                                            new CandidReferenceType(proposalReferenceId)
                                                                         },
                                                                         {
                                                                             CandidTag.FromName("MergeMaturity"),

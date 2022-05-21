@@ -1,9 +1,0 @@
-﻿[  
-public class GovernanceApiClient
-{
-public void one()
-{
-}
-}
-
-]

@@ -12,11 +12,11 @@ using System.Threading.Tasks;
 using ICP.Candid.Models.Types;
 using ICP.Candid.Models.Values;
 
-namespace ICP.Candid
+namespace ICP.Candid.Parsers
 {
-    public static class CandidByteReader
+    public static class CandidByteParser
     {
-        public static CandidArg Read(byte[] value)
+        public static CandidArg Parse(byte[] value)
         {
             var helper = new ByteHelper(value);
             helper.ReadMagicNumber();
@@ -161,7 +161,7 @@ namespace ICP.Candid
                             typeInfo.RecursiveId = CandidId.Parse($"rec_{++this.referenceCount}"); // Create a new reference to mark parent object
                             this.Tracer.RecursiveReference(typeInfo.RecursiveId);
                             // Give func to resolve the type which WILL be resolved, but not yet
-                            return new CandidReferenceType(typeInfo.RecursiveId, () => typeInfo.ResolvedType!.Type);
+                            return new CandidReferenceType(typeInfo.RecursiveId);
                         case DefintionOrReferenceType.Compound:
                             return defOrRef.DefinitionFunc!(this);
                         case DefintionOrReferenceType.Primitive:
@@ -416,17 +416,17 @@ namespace ICP.Candid
                             return new CandidFuncType(m, a, r);
                         });
                     case CandidTypeCode.Service:
-                        List<(string Name, DefintionOrReference Type)> methods = this.ReadVectorInner(() =>
+                        List<(CandidId Name, DefintionOrReference Type)> methods = this.ReadVectorInner(() =>
                         {
                             string name = this.ReadText();
                             DefintionOrReference type = this.ReadType();
-                            return (name, type);
+                            return (CandidId.Parse(name), type);
                         });
                         return DefintionOrReference.CompoundDefintion(resolver =>
                         {
                             resolver.Tracer.StartCompound("Service");
 
-                            IReadOnlyDictionary<string, CandidFuncType> m = methods
+                            IReadOnlyDictionary<CandidId, CandidFuncType> m = methods
                                 .ToDictionary(m => m.Name, m =>
                                 {
                                     var type = resolver.Resolve(m.Type);

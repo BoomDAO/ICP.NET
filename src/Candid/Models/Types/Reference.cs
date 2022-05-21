@@ -9,21 +9,11 @@ namespace ICP.Candid.Models.Types
 {
 	public class CandidReferenceType : CandidType
 	{
-		public override CandidTypeCode Type => this.getTypeFunc();
-
-		private readonly Func<CandidTypeCode> getTypeFunc;
 		public CandidId Id { get; }
 
-		public CandidReferenceType(CandidId id, Func<CandidTypeCode> getTypeFunc)
+		public CandidReferenceType(CandidId id)
 		{
 			this.Id = id;
-			this.getTypeFunc = getTypeFunc;
-		}
-
-		public CandidReferenceType(CandidId id, CandidTypeCode type)
-		{
-			this.Id = id;
-			this.getTypeFunc = () => type;
 		}
 
 		public override byte[] Encode(CompoundTypeTable compoundTypeTable)
@@ -47,7 +37,7 @@ namespace ICP.Candid.Models.Types
 
 		public override int GetHashCode()
 		{
-			return HashCode.Combine(this.Type, this.Id);
+			return HashCode.Combine(this.Id);
 		}
 	}
 }

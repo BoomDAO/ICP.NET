@@ -51,9 +51,20 @@ namespace ICP.Candid.Models
             while (index < textSpan.Length)
             {
                 char c = textSpan[index];
+                bool end = false;
                 while (char.IsWhiteSpace(c))
                 {
-                    c = textSpan[++index];
+                    index++;
+                    if(index >= textSpan.Length)
+                    {
+                        end = true;
+                        break;
+                    }
+                    c = textSpan[index];
+                }
+                if (end)
+                {
+                    break;
                 }
                 CandidTextTokenType tokenType = GetType(c);
                 string? text = null;
@@ -98,6 +109,7 @@ namespace ICP.Candid.Models
                 ':' => CandidTextTokenType.Colon,
                 ';' => CandidTextTokenType.SemiColon,
                 '.' => CandidTextTokenType.Period,
+                ',' => CandidTextTokenType.Comma,
                 _ => CandidTextTokenType.Text,
             };
         }
@@ -137,6 +149,7 @@ namespace ICP.Candid.Models
         Colon,
         SemiColon,
         Text,
-        Period
+        Period,
+        Comma
     }
 }

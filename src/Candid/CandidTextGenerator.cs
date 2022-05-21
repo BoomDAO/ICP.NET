@@ -99,7 +99,7 @@ namespace ICP.Candid
         {
             // TODO dynamic single vs multi line based on width
             List<KeyValueTextComponent> methods = s.Methods
-                .Select(f => new KeyValueTextComponent(f.Key, GenerateInternal(f.Value)))
+                .Select(f => new KeyValueTextComponent(f.Key.ToString(), GenerateInternal(f.Value)))
                 .ToList();
             var type = new KeyValueTextComponent("service", new ConstantTextComponent($"({s.Id})"));
             return new CompoundTypeTextComponent(type, " -> ", new CurlyBraceTypeTextComponent<KeyValueTextComponent>(methods), s.RecursiveId);
