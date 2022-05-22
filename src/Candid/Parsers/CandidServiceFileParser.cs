@@ -45,19 +45,22 @@ namespace EdjCase.ICP.Candid.Parsers
                 textReader.ReadNextWord("->");
 
                 textReader.SkipWhitespace();
+                CandidId? serviceReferenceId;
                 CandidServiceType service;
                 if (textReader.PeekOrThrow() == '{')
                 {
                     string serviceBody = textReader.ReadToEnd();
+                    serviceReferenceId = null;
                     service = CandidTextParser.Parse<CandidServiceType>("service " + serviceBody);
                 }
                 else
                 {
                     var reference = CandidTextParser.Parse<CandidReferenceType>(textReader.ReadNextWord()!);
+                    serviceReferenceId = reference.Id;
                     service = (CandidServiceType)declaredTypes[reference.Id];
                 }
 
-                return new CandidServiceFile(service, declaredTypes);
+                return new CandidServiceFile(serviceReferenceId, service, declaredTypes);
             }
         }
 

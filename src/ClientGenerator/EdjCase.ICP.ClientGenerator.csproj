@@ -32,8 +32,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\Agent\EdjCase.ICP.Agent.csproj" />
-	  <ProjectReference Include="..\Candid\EdjCase.ICP.Candid.csproj" />
+	  <ProjectReference Include="..\Agent\EdjCase.ICP.Agent.csproj" PrivateAssets="all" />
+	  <ProjectReference Include="..\Candid\EdjCase.ICP.Candid.csproj" PrivateAssets="all" />
 	</ItemGroup>
 
 </Project>
