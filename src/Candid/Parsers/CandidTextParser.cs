@@ -225,6 +225,8 @@ namespace EdjCase.ICP.Candid.Parsers
                     return CandidTextParser.GetRecord(helper, recursiveId);
                 case "vec":
                     return CandidTextParser.GetVec(helper, recursiveId);
+                case "blob": // Shorthand
+                    return new CandidVectorType(new CandidPrimitiveType(PrimitiveType.Nat8));
                 case "variant":
                     return CandidTextParser.GetVariant(helper, recursiveId);
                 case "service":

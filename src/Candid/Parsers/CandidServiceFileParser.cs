@@ -73,7 +73,6 @@ namespace EdjCase.ICP.Candid.Parsers
             while (!bracesStarted || bracesLeft > 0)
             {
                 char c = textReader.ReadOrThrow();
-                stringBuilder.Append(c);
                 if (c == '{')
                 {
                     bracesStarted = true;
@@ -83,6 +82,12 @@ namespace EdjCase.ICP.Candid.Parsers
                 {
                     bracesLeft--;
                 }
+                // end of type alias
+                else if (!bracesStarted && c == ';')
+                {
+                    break;
+                }
+                stringBuilder.Append(c);
             }
             if (textReader.PeekOrDefault() == ';')
             {

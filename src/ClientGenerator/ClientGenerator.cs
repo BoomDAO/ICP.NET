@@ -53,13 +53,21 @@ namespace EdjCase.ICP.ClientGenerator
                 return;
             }
 
-            Dictionary<CandidId, string>;
-            List<(string FileName, string Source)> files = SourceGenerationHelper.GenerateSourceCode(serviceFile, didFileName);
-            foreach ((string fileName, string source) in files)
-            {
-                context.AddSource(fileName, SourceText.From(source, Encoding.UTF8));
-            }
+            (List<DeclaredTypeSourceDescriptor> descriptors, Dictionary<string, string> aliases) = TypeSourceConverter.Build(serviceFile, didFileName);
 
+            foreach (DeclaredTypeSourceDescriptor type in descriptors)
+            {
+                (string fileName, string source) = TypeSourceGenerator.GenerateSourceCode(type);
+
+                AddSourceFile(fileName, source);
+            }
+            string aliasSource = TypeSourceGenerator.GenerateAliasSourceCode(aliases);
+            AddSourceFile("Aliases", aliasSource);
+
+            void AddSourceFile(string fileName, string source)
+            {
+                context.AddSource($"{didFileName}_{fileName}", SourceText.From(source, Encoding.UTF8));
+            }
         }
 
         private IEnumerable<AdditionalText> GetDidFiles(GeneratorExecutionContext context)
