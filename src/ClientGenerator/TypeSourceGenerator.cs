@@ -96,8 +96,8 @@ namespace ICP.ClientGenerator
                     builder,
                     inner: () =>
                     {
-                        builder.AppendLine("this.CanisterId = canisterId ?? throw new ArgumentNullException(nameof(canisterId));");
                         builder.AppendLine("this.Agent = agent ?? throw new ArgumentNullException(nameof(agent));");
+                        builder.AppendLine("this.CanisterId = canisterId ?? throw new ArgumentNullException(nameof(canisterId));");
                     },
                     access: "public",
                     isStatic: false,
