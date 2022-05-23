@@ -12,10 +12,10 @@ namespace EdjCase.ICP.Candid.Models.Types
 		public override CandidTypeCode Type { get; } = CandidTypeCode.Service;
 
 		public CandidId? Id { get; }
-		public IReadOnlyDictionary<CandidId, CandidFuncType> Methods { get; }
+		public Dictionary<CandidId, CandidFuncType> Methods { get; }
 
 
-        public CandidServiceType(IReadOnlyDictionary<CandidId, CandidFuncType> methods, CandidId? id, CandidId? recursiveId = null) : base(recursiveId)
+        public CandidServiceType(Dictionary<CandidId, CandidFuncType> methods, CandidId? id, CandidId? recursiveId = null) : base(recursiveId)
 		{
 			this.Methods = methods;
 			this.Id = id;

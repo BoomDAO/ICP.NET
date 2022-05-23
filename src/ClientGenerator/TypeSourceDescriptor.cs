@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EdjCase.ICP.Candid.Models.Types;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -81,23 +82,37 @@ namespace ICP.ClientGenerator
         public class Method
         {
             public string Name { get; }
+            public string UnmodifiedName { get; }
             public bool IsFireAndForget { get; }
             public bool IsQuery { get; }
-            public List<(string Name, string FullTypeName)> Parameters { get; }
-            public List<(string Name, string FullTypeName)> ReturnParameters { get; }
+            public List<ParameterInfo> Parameters { get; }
+            public List<ParameterInfo> ReturnParameters { get; }
 
             public Method(
                 string name,
+                string unmodifiedName,
                 bool isFireAndForget,
                 bool isQuery,
-                List<(string Name, string FullTypeName)> parameters,
-                List<(string Name, string FullTypeName)> returnParameters)
+                List<ParameterInfo> parameters,
+                List<ParameterInfo> returnParameters)
             {
                 this.Name = name ?? throw new ArgumentNullException(nameof(name));
+                this.UnmodifiedName = unmodifiedName ?? throw new ArgumentNullException(nameof(unmodifiedName));
                 this.IsFireAndForget = isFireAndForget;
                 this.IsQuery = isQuery;
                 this.Parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
                 this.ReturnParameters = returnParameters ?? throw new ArgumentNullException(nameof(returnParameters));
+            }
+
+            public class ParameterInfo
+            {
+                public string VariableName { get; }
+                public (string FullTypeName, CandidType Type)? TypeInfo { get; }
+                public ParameterInfo(string variableName, (string FullTypeName, CandidType Type)? info)
+                {
+                    this.VariableName = variableName ?? throw new ArgumentNullException(nameof(variableName));
+                    this.TypeInfo = info;
+                }
             }
         }
     }

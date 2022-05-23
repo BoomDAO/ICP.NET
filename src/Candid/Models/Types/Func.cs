@@ -16,9 +16,9 @@ namespace EdjCase.ICP.Candid.Models.Types
 	{
 		public override CandidTypeCode Type { get; } = CandidTypeCode.Func;
 
-		public IReadOnlyList<FuncMode> Modes { get; }
-		public IReadOnlyList<CandidType> ArgTypes { get; }
-		public IReadOnlyList<CandidType> ReturnTypes { get; }
+		public List<FuncMode> Modes { get; }
+		public List<CandidType> ArgTypes { get; }
+		public List<CandidType> ReturnTypes { get; }
 
 		public CandidFuncType(
 			List<FuncMode> modes,

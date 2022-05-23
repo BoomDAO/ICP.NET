@@ -174,17 +174,18 @@ namespace EdjCase.ICP.ClientGenerator
                 .Select(f =>
                 {
                     string funcName = this.ConvertNameCase(f.Key);
-                    (ServiceSourceDescriptor.Method method, List<TypeSourceDescriptor> innerSubTypesToCreate) = this.ResolveFunc(funcName, f.Value, declaredFullTypeNames);
+                    string unmodifiedName = f.Key.ToString();
+                    (ServiceSourceDescriptor.Method method, List<TypeSourceDescriptor> innerSubTypesToCreate) = this.ResolveFunc(funcName, unmodifiedName, f.Value, declaredFullTypeNames);
                     subTypesToCreate.AddRange(innerSubTypesToCreate);
                     return method;
                 })
                 .ToList();
             return new ServiceSourceDescriptor(name, resolvedMethods, subTypesToCreate);
         }
-        private (ServiceSourceDescriptor.Method Method, List<TypeSourceDescriptor> SubTypesToCreate) ResolveFunc(string name, CandidFuncType type, Dictionary<CandidId, TypeName> declaredFullTypeNames)
+        private (ServiceSourceDescriptor.Method Method, List<TypeSourceDescriptor> SubTypesToCreate) ResolveFunc(string name, string unmodifiedName, CandidFuncType type, Dictionary<CandidId, TypeName> declaredFullTypeNames)
         {
             var subTypesToCreate = new List<TypeSourceDescriptor>();
-            List<(string Name, string FullTypeName)> resolvedParameters = type.ArgTypes
+            List<ServiceSourceDescriptor.Method.ParameterInfo> resolvedParameters = type.ArgTypes
                 .Select((f, i) =>
                 {
                     string argName = $"arg{i}"; // TODO better naming
@@ -193,12 +194,15 @@ namespace EdjCase.ICP.ClientGenerator
                     {
                         subTypesToCreate.Add(subTypeToCreate);
                     }
-                    return (argName, typeName?.FullTypeName);
+                    (string FullTypeName, CandidType Type)? info = null;
+                    if (typeName != null)
+                    {
+                        info = (typeName.FullTypeName, f);
+                    }
+                    return new ServiceSourceDescriptor.Method.ParameterInfo(argName, info);
                 })
-                .Where(f => f.FullTypeName != null)
-                .Select(f => (f.argName, f.FullTypeName!))
                 .ToList();
-            List<(string Name, string FullTypeName)> resolvedReturnParameters = type.ReturnTypes
+            List<ServiceSourceDescriptor.Method.ParameterInfo> resolvedReturnParameters = type.ReturnTypes
                 .Select((f, i) =>
                 {
                     string argName = $"R{i}"; // TODO better naming
@@ -207,14 +211,17 @@ namespace EdjCase.ICP.ClientGenerator
                     {
                         subTypesToCreate.Add(subTypeToCreate);
                     }
-                    return (argName, typeName?.FullTypeName);
+                    (string FullTypeName, CandidType Type)? info = null;
+                    if (typeName != null)
+                    {
+                        info = (typeName.FullTypeName, f);
+                    }
+                    return new ServiceSourceDescriptor.Method.ParameterInfo(argName, info);
                 })
-                .Where(f => f.FullTypeName != null)
-                .Select(f => (f.argName, f.FullTypeName!))
                 .ToList();
             bool isFireAndForget = type.Modes.Contains(FuncMode.Oneway);
             bool isQuery = type.Modes.Contains(FuncMode.Query);
-            var method = new ServiceSourceDescriptor.Method(name, isFireAndForget, isQuery, resolvedParameters, resolvedReturnParameters);
+            var method = new ServiceSourceDescriptor.Method(name, unmodifiedName, isFireAndForget, isQuery, resolvedParameters, resolvedReturnParameters);
             return (method, subTypesToCreate);
         }
 

@@ -426,7 +426,7 @@ namespace EdjCase.ICP.Candid.Parsers
                         {
                             resolver.Tracer.StartCompound("Service");
 
-                            IReadOnlyDictionary<CandidId, CandidFuncType> m = methods
+                            Dictionary<CandidId, CandidFuncType> m = methods
                                 .ToDictionary(m => m.Name, m =>
                                 {
                                     var type = resolver.Resolve(m.Type);

@@ -33,7 +33,7 @@ namespace EdjCase.ICP.Candid.Models.Types
 		public override abstract CandidTypeCode Type { get; }
 		protected abstract string TypeString { get; }
 
-		public IReadOnlyDictionary<CandidTag, CandidType> Fields { get; }
+		public Dictionary<CandidTag, CandidType> Fields { get; }
 
 		protected CandidRecordOrVariantType(Dictionary<CandidTag, CandidType> fields, CandidId? recursiveId) : base(recursiveId)
 		{
