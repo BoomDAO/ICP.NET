@@ -182,6 +182,22 @@ namespace EdjCase.ICP.Candid.Mappers
 			}
 			else if (typeof(ICandidVariantValue).IsAssignableFrom(objType))
 			{
+				ICandidVariantValue variant = (ICandidVariantValue)Activator.CreateInstance(objType);
+				Dictionary<CandidTag, Type?> optionTypes = variant.GetOptions();
+				Dictionary<CandidTag, MappingInfo?> optionMappingMap = optionTypes
+					.ToDictionary(
+						t => t.Key,
+						t => t.Value == null
+							? null
+							: GetMappingInfoFromType(t.Value, converter)
+					);
+				Dictionary<CandidTag, CandidType> options = optionMappingMap
+					.ToDictionary(
+						t => t.Key,
+						t => t.Value == null
+							? new CandidPrimitiveType(PrimitiveType.Null)
+							: t.Value.Type
+					);
 				type = new CandidVariantType(options);
 				mapFromObjectFunc = o =>
 				{
@@ -206,7 +222,9 @@ namespace EdjCase.ICP.Candid.Mappers
 				{
 					CandidVariant variant = v.AsVariant();
 					ICandidVariantValue obj = (ICandidVariantValue)Activator.CreateInstance(objType);
-					obj.SetValue(variant.Tag, variant.Value);
+					MappingInfo? optionMappingInfo = optionMappingMap[variant.Tag];
+					object? variantValue = optionMappingInfo?.MapToObjectFunc(variant.Value);
+					obj.SetValue(variant.Tag, variantValue);
 					return obj;
 				};
 			}

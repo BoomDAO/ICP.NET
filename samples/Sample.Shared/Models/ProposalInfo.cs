@@ -60,20 +60,15 @@ namespace Sample.Shared.Models
 			public ActionVariant? Action { get; set; }
 			public string Summary { get; set; }
 		}
-		public class ActionVariant : ICandidVariantValue
+		public class ActionVariant : CandidVariantValueBase<ActionVariantType>
 		{
-			public ActionVariantType Type { get; private set; }
-			private object value;
-
-			private ActionVariant()
+			public ActionVariant() : base()
 			{
 
 			}
 
-			private ActionVariant(ActionVariantType type, object value)
+			private ActionVariant(ActionVariantType type, object value) : base(type, value)
 			{
-				this.Type = type;
-				this.value = value;
 			}
 
 			public static ActionVariant RegisterKnownNeuron(RegisterKnownNeuronInfo info)
@@ -169,33 +164,6 @@ namespace Sample.Shared.Models
 				return (MotionInfo)this.value;
 			}
 
-			private void ValidateType(ActionVariantType type)
-			{
-				if (this.Type != type)
-				{
-					throw new InvalidOperationException($"Cannot cast '{this.Type}' to type '{type}'");
-				}
-			}
-
-			public (CandidTag Tag, object Value) GetValue()
-			{
-				return (CandidTag.FromName(this.Type.ToString()), this.value);
-			}
-
-			public void SetValue(CandidTag tag, object value)
-			{
-				ActionVariantType type;
-				if(tag.Name != null)
-				{
-					type = Enum.Parse<ActionVariantType>(tag.Name);
-				}
-				else
-				{
-					type = (ActionVariantType)tag.Id;
-				}
-				this.Type = type;
-				this.value = value;
-			}
 
 			public class RegisterKnownNeuronInfo
 			{
@@ -596,15 +564,25 @@ namespace Sample.Shared.Models
 
 		public enum ActionVariantType
 		{
+			[VariantOptionType(typeof(ActionVariant.RegisterKnownNeuronInfo))]
 			RegisterKnownNeuron,
+			[VariantOptionType(typeof(ActionVariant.ManageNeuronInfo))]
 			ManageNeuron,
+			[VariantOptionType(typeof(ActionVariant.ExecuteNnsFunctionInfo))]
 			ExecuteNnsFunction,
+			[VariantOptionType(typeof(ActionVariant.RewardNodeProviderInfo))]
 			RewardNodeProvider,
+			[VariantOptionType(typeof(ActionVariant.SetDefaultFolloweesInfo))]
 			SetDefaultFollowees,
+			[VariantOptionType(typeof(ActionVariant.RewardNodeProvidersInfo))]
 			RewardNodeProviders,
+			[VariantOptionType(typeof(ActionVariant.ManageNetworkEconomicsInfo))]
 			ManageNetworkEconomics,
+			[VariantOptionType(typeof(ActionVariant.ApproveGenesisKycInfo))]
 			ApproveGenesisKyc,
+			[VariantOptionType(typeof(ActionVariant.AddOrRemoveNodeProviderInfo))]
 			AddOrRemoveNodeProvider,
+			[VariantOptionType(typeof(ActionVariant.MotionInfo))]
 			Motion
 		}
 
