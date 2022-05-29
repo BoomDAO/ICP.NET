@@ -10,35 +10,35 @@ namespace EdjCase.ICP.Candid.Models.Types
 	{
 		public override CandidTypeCode Type { get; } = CandidTypeCode.Vector;
 
-		public CandidType Value { get; }
+		public CandidType InnerType { get; }
 
-		public CandidVectorType(CandidType value, CandidId? recursiveId = null) : base(recursiveId)
+		public CandidVectorType(CandidType innerType, CandidId? recursiveId = null) : base(recursiveId)
 		{
-			this.Value = value ?? throw new ArgumentNullException(nameof(value));
+			this.InnerType = innerType ?? throw new ArgumentNullException(nameof(innerType));
 		}
 
 		internal override byte[] EncodeInnerTypes(CompoundTypeTable compoundTypeTable)
 		{
-			return this.Value.Encode(compoundTypeTable);
+			return this.InnerType.Encode(compoundTypeTable);
 		}
 
 		internal override IEnumerable<CandidType> GetInnerTypes()
 		{
-			yield return this.Value;
+			yield return this.InnerType;
 		}
 
 		public override bool Equals(object? obj)
 		{
 			if (obj is CandidVectorType def)
 			{
-				return this.Value == def.Value;
+				return this.InnerType == def.InnerType;
 			}
 			return false;
 		}
 
 		public override int GetHashCode()
 		{
-			return HashCode.Combine(CandidTypeCode.Vector, this.Value);
+			return HashCode.Combine(CandidTypeCode.Vector, this.InnerType);
 		}
 	}
 }

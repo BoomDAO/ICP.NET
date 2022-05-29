@@ -235,7 +235,7 @@ namespace EdjCase.ICP.Candid.Tests
             string expectedPrefix = "016E7C";
             var candidValue = new CandidOptional(null);
             string expectedHex = "010000";
-            var typeDef = new CandidOptType(new CandidPrimitiveType(PrimitiveType.Int)); // opt int
+            var typeDef = new CandidOptionalType(new CandidPrimitiveType(PrimitiveType.Int)); // opt int
             TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidValue, typeDef);
 
             candidValue = new CandidOptional(CandidPrimitive.Int(UnboundedInt.FromInt64(42)));
@@ -249,7 +249,7 @@ namespace EdjCase.ICP.Candid.Tests
             //expectedHex = "010001012A";
             expectedPrefix = "026E7C6E00";
             expectedHex = "010101012A";
-            typeDef = new CandidOptType(typeDef); // opt opt int
+            typeDef = new CandidOptionalType(typeDef); // opt opt int
             TestUtil.AssertEncodedCandid(expectedHex, expectedPrefix, candidValue, typeDef);
         }
 
@@ -419,7 +419,7 @@ namespace EdjCase.ICP.Candid.Tests
             {
                 {
                     CandidTag.FromName("selfRef"),
-                    new CandidOptType(new CandidReferenceType(referenceId))
+                    new CandidOptionalType(new CandidReferenceType(referenceId))
                 }
             }, referenceId);
             var expectedArg = CandidArg.FromCandid(new List<CandidValueWithType>

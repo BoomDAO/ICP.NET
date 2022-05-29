@@ -1,4 +1,5 @@
 ﻿using EdjCase.ICP.Candid.Encodings;
+using EdjCase.ICP.Candid.Models.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,6 +55,6 @@ namespace EdjCase.ICP.Candid.Models.Values
 			IEnumerable<string> values = this.Values.Select(v => v.ToString());
 			return $"[{string.Join(", ", values)}]";
         }
-    }
+	}
 
 }

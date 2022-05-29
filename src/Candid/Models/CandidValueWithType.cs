@@ -13,13 +13,23 @@ namespace EdjCase.ICP.Candid.Models
         {
             this.Value = value ?? throw new ArgumentNullException(nameof(value));
             this.Type = type ?? throw new ArgumentNullException(nameof(type));
-        }
+		}
+		public T? ToObject<T>(CandidConverter? converter = null)
+		{
+			return (converter ?? CandidConverter.Default).ToObject<T>(this.Value);
+		}
 
-        public static CandidValueWithType FromValueAndType(CandidValue value, CandidType type)
+		public static CandidValueWithType FromValueAndType(CandidValue value, CandidType type)
         {
             // TODO validate
             return new CandidValueWithType(value, type);
 		}
+
+		public static CandidValueWithType FromObject<T>(T obj, CandidConverter? converter = null)
+		{
+			return (converter ?? CandidConverter.Default).FromObject(obj);
+		}
+
 
 		public bool Equals(CandidValueWithType? other)
 		{
@@ -30,7 +40,8 @@ namespace EdjCase.ICP.Candid.Models
 			return this.Value == other.Value && this.Type == other.Type;
 		}
 
-		public override bool Equals(object? obj)
+
+        public override bool Equals(object? obj)
 		{
 			return this.Equals(obj as CandidValueWithType);
 		}
@@ -56,6 +67,13 @@ namespace EdjCase.ICP.Candid.Models
 				return object.ReferenceEquals(v2, null);
 			}
 			return !v1.Equals(v2);
+		}
+
+		public static CandidValueWithType Null()
+		{
+            CandidPrimitive value = CandidPrimitive.Null();
+            CandidPrimitiveType type = new CandidPrimitiveType(PrimitiveType.Null);
+			return new CandidValueWithType(value, type);
 		}
 	}
 }

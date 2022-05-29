@@ -52,7 +52,7 @@ namespace EdjCase.ICP.Candid
             return t switch
             {
                 CandidFuncType f => GenerateFunc(f),
-                CandidOptType o => GenerateOpt(o),
+                CandidOptionalType o => GenerateOpt(o),
                 CandidVectorType ve => GenerateVec(ve),
                 CandidRecordType r => GenerateRecord(r),
                 CandidVariantType va => GenerateVariant(va),
@@ -145,11 +145,11 @@ namespace EdjCase.ICP.Candid
 
         private static CompoundTypeTextComponent GenerateVec(CandidVectorType ve)
         {
-            TextComponentBase innerValue = GenerateInternal(ve.Value);
+            TextComponentBase innerValue = GenerateInternal(ve.InnerType);
             return new CompoundTypeTextComponent(new ConstantTextComponent("vec"), " ", innerValue, ve.RecursiveId);
         }
 
-        private static CompoundTypeTextComponent GenerateOpt(CandidOptType o)
+        private static CompoundTypeTextComponent GenerateOpt(CandidOptionalType o)
         {
             TextComponentBase innerValue = GenerateInternal(o.Value);
             return new CompoundTypeTextComponent(new ConstantTextComponent("opt"), " ", innerValue, o.RecursiveId);

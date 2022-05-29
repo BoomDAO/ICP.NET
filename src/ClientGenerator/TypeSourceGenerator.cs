@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using static EdjCase.ICP.ClientGenerator.TypeSourceConverter;
 
 namespace ICP.ClientGenerator
 {
@@ -97,7 +98,7 @@ namespace ICP.ClientGenerator
                     inner: () =>
                     {
                         builder.AppendLine("this.Agent = agent ?? throw new ArgumentNullException(nameof(agent));");
-                        builder.AppendLine("this.CanisterId = canisterId ?? throw new ArgumentNullException(nameof(canisterId));");
+                        builder.AppendLine("this.Can`isterId = canisterId ?? throw new ArgumentNullException(nameof(canisterId));");
                     },
                     access: "public",
                     isStatic: false,
@@ -111,8 +112,8 @@ namespace ICP.ClientGenerator
                 foreach (ServiceSourceDescriptor.Method func in service.Methods)
                 {
                     (string, string)[] args = func.Parameters
-                        .Where(p => p.TypeInfo != null) // exclude null/empty/reserved
-                        .Select((a, i) => (a.TypeInfo!.Value.FullTypeName, a.VariableName))
+                        .Where(p => p.Type != null) // exclude null/empty/reserved
+                        .Select((a, i) => (a.Type!.FullTypeName, a.VariableName))
                         .ToArray();
                     List<(string Type, string Param)> returnTypes;
                     if (func.IsFireAndForget)
@@ -123,8 +124,8 @@ namespace ICP.ClientGenerator
                     else
                     {
                         returnTypes = func.ReturnParameters
-                            .Where(p => p.TypeInfo != null) // exclude null/empty/reserved
-                            .Select(p => (p.TypeInfo!.Value.FullTypeName, p.VariableName))
+                            .Where(p => p.Type != null) // exclude null/empty/reserved
+                            .Select(p => (p.Type!.FullTypeName, p.VariableName))
                             .ToList();
                     }
                     WriteMethod(
@@ -136,22 +137,18 @@ namespace ICP.ClientGenerator
                             var parameterVariables = new List<string>();
                             foreach (ServiceSourceDescriptor.Method.ParameterInfo parameter in func.Parameters)
                             {
-                                string value, type;
-                                if (parameter.TypeInfo != null)
+                                int index = parameterVariables.Count;
+                                string variableName = "p" + index;
+                                string valueWithType;
+                                if (parameter.Type != null)
                                 {
-                                    value = BuildParameterValueString(parameter.TypeInfo.Value.Type);
-                                    type = BuildParameterTypeString(parameter.TypeInfo.Value.Type);
+                                    valueWithType = $"CandidValueWithType.FromObject<{parameter.Type.FullTypeName}>({parameter.VariableName})";
                                 }
                                 else
                                 {
-                                    value = "CandidPrimitive.Null()";
-                                    type = "new CandidPrimitiveType(PrimitiveType.Null)";
+                                    valueWithType = "CandidValueWithType.Null()";
                                 }
-                                int index = parameterVariables.Count;
-                                builder.AppendLine($"CandidValue value{index} = {value};");
-                                builder.AppendLine($"CandidType type{index} = {type};");
-                                string variableName = "p" + index;
-                                builder.AppendLine($"var {variableName} = CandidValueWithType.FromValueAndType(value{index}, type{index});");
+                                builder.AppendLine($"CandidValueWithType {variableName} = {valueWithType};");
                                 parameterVariables.Add(variableName);
                             }
 
@@ -176,41 +173,16 @@ namespace ICP.ClientGenerator
                                 foreach (ServiceSourceDescriptor.Method.ParameterInfo parameter in func.ReturnParameters)
                                 {
                                     // Only include non null/empty/reserved params
-                                    if (parameter.TypeInfo != null)
+                                    if (parameter.Type != null)
                                     {
                                         string variableName = "r" + i;
-                                        builder.AppendLine($"{parameter.TypeInfo.Value.FullTypeName} {variableName} = Map{parameter.VariableName}(reply.Arg.Values[{i}]);");
+                                        builder.AppendLine($"{parameter.Type.FullTypeName} {variableName} = reply.Arg.Values[{i}].ToObject<{parameter.Type.FullTypeName}>();");
                                         returnParamVariables.Add(variableName);
                                     }
                                     i++;
                                 }
                                 string returnString = string.Join(", ", returnParamVariables);
                                 builder.AppendLine($"return ({returnString});");
-                            }
-
-
-
-
-                            foreach (ServiceSourceDescriptor.Method.ParameterInfo parameter in func.ReturnParameters)
-                            {
-                                // Only include non null/empty/reserved params
-                                if (parameter.TypeInfo != null)
-                                {
-                                    WriteMethod(
-                                        builder,
-                                        () =>
-                                        {
-                                            // TODO
-                                        },
-                                        access: null,
-                                        isStatic: true,
-                                        isAsync: false,
-                                        isConstructor: false,
-                                        returnType: parameter.TypeInfo.Value.FullTypeName,
-                                        name: "Map" + parameter.VariableName,
-                                        ("CandidValueWithType", "model")
-                                    );
-                                }
                             }
 
                         },
@@ -227,65 +199,6 @@ namespace ICP.ClientGenerator
             });
         }
 
-        private static string BuildParameterTypeString(CandidType type)
-        {
-            switch (type)
-            {
-                case CandidFuncType f:
-                    IEnumerable<string> modes = f.Modes
-                        .Select(m => m.ToString());
-                    string modesString = BuildListString("FuncMode", modes);
-                    IEnumerable<string> argTypes = f.ArgTypes
-                        .Select(m => BuildParameterTypeString(m));
-                    string argTypesString = BuildListString("CandidType", argTypes);
-                    IEnumerable<string> returnTypes = f.ReturnTypes
-                        .Select(m => BuildParameterTypeString(m));
-                    string returnTypesString = BuildListString("CandidType", returnTypes);
-                    return $"new CandidFuncType({modesString}, {argTypesString}, {returnTypesString})";
-                case CandidOptType o:
-                    {
-                        string innerType = BuildParameterTypeString(o.Value);
-                        return $"new CandidOptType({innerType})";
-                    }
-                case CandidPrimitiveType p:
-                    {
-                        return $"new CandidPrimitiveType(PrimitiveType.{p.PrimitiveType})";
-                    }
-                case CandidRecordType r:
-                    {
-                        IEnumerable<(string, string)> innerTypes = r.Fields
-                            .Select(f => (BuildCandidTag(f.Key), BuildParameterTypeString(f.Value)));
-
-                        string fieldsString = BuildDictionaryString("CandidTag", "CandidType", innerTypes);
-                        return $"new CandidRecordType({fieldsString})";
-                    }
-                case CandidReferenceType re:
-                    {
-                        return $"new CandidReferenceType({BuildCandidId(re.Id)})";
-                    }
-                case CandidServiceType s:
-                    {
-                        IEnumerable<(string, string)> methods = s.Methods
-                            .Select(m => (BuildCandidId(m.Key), BuildParameterTypeString(m.Value)));
-                        string methodsString = BuildDictionaryString("CandidId", "CandidFuncType", methods);
-                        return $"new CandidServiceType({methodsString}, {BuildCandidId(s.Id)})";
-                    }
-                case CandidVariantType v:
-                    {
-                        IEnumerable<(string, string)> innerTypes = v.Fields
-                            .Select(f => (BuildCandidTag(f.Key), BuildParameterTypeString(f.Value)));
-
-                        string optionsString = BuildDictionaryString("CandidTag", "CandidType", innerTypes);
-                        return $"new CandidVariantType({optionsString})";
-                    }
-                case CandidVectorType ve:
-                    {
-                        return $"new CandidVectorType({BuildParameterTypeString(ve.Value)})";
-                    }
-                default:
-                    throw new NotImplementedException();
-            }
-        }
 
         private static string BuildCandidId(CandidId? id)
         {
@@ -311,33 +224,6 @@ namespace ICP.ClientGenerator
         {
             string valuesString = string.Join(", ", values);
             return $"new List<{genericType}> {{ {valuesString} }}";
-        }
-
-        private static string BuildParameterValueString(CandidType type)
-        {
-            // TODO
-            //switch (parameter.TypeInfo.Value.Type)
-            //{
-            //    case CandidFuncType f:
-            //        // TODO
-            //        throw new NotImplementedException();
-            //    //value = CandidFunc.TrasparentReference();
-            //    //type = "new CandidFuncType(modes, argTypes, returnTypes)";
-            //    //break;
-            //    case CandidOptType o:
-            //        value = ;
-            //        type = ;
-            //        break;
-            //    case CandidPrimitiveType p:
-            //    case CandidRecordType r:
-            //    case CandidReferenceType re:
-            //    case CandidServiceType s:
-            //    case CandidVariantType v:
-            //    case CandidVectorType ve:
-            //    default:
-            //        throw new NotImplementedException();
-            //}
-            return "null";
         }
 
         private static void WriteRecord(IndentedStringBuilder builder, RecordSourceDescriptor record)

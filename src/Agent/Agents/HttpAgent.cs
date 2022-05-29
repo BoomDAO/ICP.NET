@@ -75,13 +75,13 @@ namespace EdjCase.ICP.Agent.Agents
             return await this.SendAsync<StatusResponse>("/api/v2/status");
         }
 
-        public async Task<QueryResponse> QueryAsync(Principal canisterId, string method, CandidArg encodedArgument, IIdentity? identityOverride = null)
+        public async Task<QueryResponse> QueryAsync(Principal canisterId, string method, CandidArg arg, IIdentity? identityOverride = null)
         {
             return await this.SendAsync<QueryRequest, QueryResponse>($"/api/v2/canister/{canisterId.ToText()}/query", BuildRequest, identityOverride);
 
             QueryRequest BuildRequest(Principal sender, ICTimestamp now)
             {
-                return new QueryRequest(canisterId, method, encodedArgument, sender, now);
+                return new QueryRequest(canisterId, method, arg, sender, now);
             }
         }
 

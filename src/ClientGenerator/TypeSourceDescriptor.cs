@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using static EdjCase.ICP.ClientGenerator.TypeSourceConverter;
 
 namespace ICP.ClientGenerator
 {
@@ -107,11 +108,11 @@ namespace ICP.ClientGenerator
             public class ParameterInfo
             {
                 public string VariableName { get; }
-                public (string FullTypeName, CandidType Type)? TypeInfo { get; }
-                public ParameterInfo(string variableName, (string FullTypeName, CandidType Type)? info)
+                public TypeInfo? Type { get; }
+                public ParameterInfo(string variableName, TypeInfo? type)
                 {
                     this.VariableName = variableName ?? throw new ArgumentNullException(nameof(variableName));
-                    this.TypeInfo = info;
+                    this.Type = type;
                 }
             }
         }

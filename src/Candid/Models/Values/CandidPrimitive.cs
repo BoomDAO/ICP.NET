@@ -405,7 +405,7 @@ namespace EdjCase.ICP.Candid.Models.Values
         {
             return new CandidPrimitive(PrimitiveType.Bool, value);
         }
-        public static CandidPrimitive Pricipal(Principal? value)
+        public static CandidPrimitive Principal(Principal? value)
         {
             return new CandidPrimitive(PrimitiveType.Principal, value);
         }

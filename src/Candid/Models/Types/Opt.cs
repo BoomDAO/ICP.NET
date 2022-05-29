@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace EdjCase.ICP.Candid.Models.Types
 {
-	public class CandidOptType : CandidCompoundType
+	public class CandidOptionalType : CandidCompoundType
 	{
 		public override CandidTypeCode Type { get; } = CandidTypeCode.Opt;
 		public CandidType Value { get; }
 
-		public CandidOptType(CandidType value, CandidId? recursiveId = null) : base(recursiveId)
+		public CandidOptionalType(CandidType value, CandidId? recursiveId = null) : base(recursiveId)
 		{
 			this.Value = value ?? throw new ArgumentNullException(nameof(value));
 		}
@@ -28,7 +28,7 @@ namespace EdjCase.ICP.Candid.Models.Types
 
 		public override bool Equals(object? obj)
 		{
-			if (obj is CandidOptType def)
+			if (obj is CandidOptionalType def)
 			{
 				return this.Value == def.Value;
 			}

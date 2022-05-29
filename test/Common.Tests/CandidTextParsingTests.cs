@@ -256,13 +256,13 @@ namespace EdjCase.ICP.Candid.Tests
             };
             List<CandidType> expectedReturnTypes = new()
             {
-                new CandidOptType(
+                new CandidOptionalType(
                     new CandidRecordType(
                         new Dictionary<CandidTag, CandidType>
                         {
                             {
                                 CandidTag.FromName("id"),
-                                new CandidOptType(
+                                new CandidOptionalType(
                                     new CandidRecordType(
                                         new Dictionary<CandidTag, CandidType>
                                         {
@@ -281,7 +281,7 @@ namespace EdjCase.ICP.Candid.Tests
                             },
                             {
                                 CandidTag.FromName("failure_reason"),
-                                new CandidOptType(
+                                new CandidOptionalType(
                                     new CandidRecordType(
                                         new Dictionary<CandidTag, CandidType>
                                         {
@@ -324,7 +324,7 @@ namespace EdjCase.ICP.Candid.Tests
                             },
                             {
                                 CandidTag.FromName("deadline_timestamp_seconds"),
-                                new CandidOptType(new CandidPrimitiveType(PrimitiveType.Nat64))
+                                new CandidOptionalType(new CandidPrimitiveType(PrimitiveType.Nat64))
                             },
                             {
                                 CandidTag.FromName("failed_timestamp_seconds"),
@@ -336,7 +336,7 @@ namespace EdjCase.ICP.Candid.Tests
                             },
                             {
                                 CandidTag.FromName("latest_tally"),
-                                new CandidOptType(
+                                new CandidOptionalType(
                                     new CandidRecordType(new Dictionary<CandidTag, CandidType>
                                     {
                                         { CandidTag.FromName("no"), new CandidPrimitiveType(PrimitiveType.Nat64) },
@@ -356,7 +356,7 @@ namespace EdjCase.ICP.Candid.Tests
                             },
                             {
                                 CandidTag.FromName("proposal"),
-                                new CandidOptType(
+                                new CandidOptionalType(
                                     new CandidRecordType(new Dictionary<CandidTag, CandidType>
                                     {
                                         {
@@ -365,11 +365,11 @@ namespace EdjCase.ICP.Candid.Tests
                                         },
                                         {
                                             CandidTag.FromName("title"),
-                                            new CandidOptType(new CandidPrimitiveType(PrimitiveType.Text))
+                                            new CandidOptionalType(new CandidPrimitiveType(PrimitiveType.Text))
                                         },
                                         {
                                             CandidTag.FromName("action"),
-                                            new CandidOptType(
+                                            new CandidOptionalType(
                                                 new CandidVariantType(new Dictionary<CandidTag, CandidType>
                                                 {
                                                     {
@@ -378,7 +378,7 @@ namespace EdjCase.ICP.Candid.Tests
                                                         {
                                                             {
                                                                 CandidTag.FromName("id"),
-                                                                new CandidOptType(
+                                                                new CandidOptionalType(
                                                                     new CandidRecordType(new Dictionary<CandidTag, CandidType>
                                                                     {
                                                                         { CandidTag.FromName("id"), new CandidPrimitiveType(PrimitiveType.Nat64) }
@@ -387,11 +387,11 @@ namespace EdjCase.ICP.Candid.Tests
                                                             },
                                                             {
                                                                 CandidTag.FromName("known_neuron_data"),
-                                                                new CandidOptType(
+                                                                new CandidOptionalType(
                                                                     new CandidRecordType(new Dictionary<CandidTag, CandidType>
                                                                     {
                                                                         { CandidTag.FromName("name"), new CandidPrimitiveType(PrimitiveType.Text) },
-                                                                        { CandidTag.FromName("description"), new CandidOptType(new CandidPrimitiveType(PrimitiveType.Text)) }
+                                                                        { CandidTag.FromName("description"), new CandidOptionalType(new CandidPrimitiveType(PrimitiveType.Text)) }
                                                                     })
                                                                 )
                                                             }
@@ -403,7 +403,7 @@ namespace EdjCase.ICP.Candid.Tests
                                                         {
                                                             {
                                                                 CandidTag.FromName("id"),
-                                                                new CandidOptType(
+                                                                new CandidOptionalType(
                                                                     new CandidRecordType(new Dictionary<CandidTag, CandidType>
                                                                     {
                                                                         { CandidTag.FromName("id"), new CandidPrimitiveType(PrimitiveType.Nat64) }
@@ -412,16 +412,16 @@ namespace EdjCase.ICP.Candid.Tests
                                                             },
                                                             {
                                                                 CandidTag.FromName("command"),
-                                                                new CandidOptType(
+                                                                new CandidOptionalType(
                                                                     new CandidVariantType(new Dictionary<CandidTag, CandidType>
                                                                     {
                                                                         {
                                                                             CandidTag.FromName("Spawn"),
                                                                             new CandidRecordType(new Dictionary<CandidTag, CandidType>
                                                                             {
-                                                                                { CandidTag.FromName("percentage_to_spawn"), new CandidOptType(new CandidPrimitiveType(PrimitiveType.Nat32)) },
-                                                                                { CandidTag.FromName("new_controller"), new CandidOptType(new CandidPrimitiveType(PrimitiveType.Principal)) },
-                                                                                { CandidTag.FromName("nonce"), new CandidOptType(new CandidPrimitiveType(PrimitiveType.Nat64)) },
+                                                                                { CandidTag.FromName("percentage_to_spawn"), new CandidOptionalType(new CandidPrimitiveType(PrimitiveType.Nat32)) },
+                                                                                { CandidTag.FromName("new_controller"), new CandidOptionalType(new CandidPrimitiveType(PrimitiveType.Principal)) },
+                                                                                { CandidTag.FromName("nonce"), new CandidOptionalType(new CandidPrimitiveType(PrimitiveType.Nat64)) },
                                                                             })
                                                                         },
                                                                         {
@@ -451,14 +451,14 @@ namespace EdjCase.ICP.Candid.Tests
                                                                             {
                                                                                 {
                                                                                     CandidTag.FromName("by"),
-                                                                                    new CandidOptType(new CandidVariantType(new Dictionary<CandidTag, CandidType>
+                                                                                    new CandidOptionalType(new CandidVariantType(new Dictionary<CandidTag, CandidType>
                                                                                     {
                                                                                         { CandidTag.FromName("NeuronIdOrSubaccount"), new CandidRecordType(new Dictionary<CandidTag, CandidType>()) },
                                                                                         {
                                                                                             CandidTag.FromName("MemoAndController"),
                                                                                             new CandidRecordType(new Dictionary<CandidTag, CandidType>
                                                                                             {
-                                                                                                { CandidTag.FromName("controller"), new CandidOptType(new CandidPrimitiveType(PrimitiveType.Principal)) },
+                                                                                                { CandidTag.FromName("controller"), new CandidOptionalType(new CandidPrimitiveType(PrimitiveType.Principal)) },
                                                                                                 { CandidTag.FromName("memo"), new CandidPrimitiveType(PrimitiveType.Nat64) }
                                                                                             })
                                                                                         },
@@ -473,20 +473,20 @@ namespace EdjCase.ICP.Candid.Tests
                                                                             {
                                                                                 {
                                                                                     CandidTag.FromName("operation"),
-                                                                                    new CandidOptType(new CandidVariantType(new Dictionary<CandidTag, CandidType>
+                                                                                    new CandidOptionalType(new CandidVariantType(new Dictionary<CandidTag, CandidType>
                                                                                     {
                                                                                         {
                                                                                             CandidTag.FromName("RemoveHotKey"),
                                                                                             new CandidRecordType(new Dictionary<CandidTag, CandidType>
                                                                                             {
-                                                                                                { CandidTag.FromName("hot_key_to_remove"), new CandidOptType(new CandidPrimitiveType(PrimitiveType.Principal)) }
+                                                                                                { CandidTag.FromName("hot_key_to_remove"), new CandidOptionalType(new CandidPrimitiveType(PrimitiveType.Principal)) }
                                                                                             })
                                                                                         },
                                                                                         {
                                                                                             CandidTag.FromName("AddHotKey"),
                                                                                             new CandidRecordType(new Dictionary<CandidTag, CandidType>
                                                                                             {
-                                                                                                { CandidTag.FromName("new_hot_key"), new CandidOptType(new CandidPrimitiveType(PrimitiveType.Principal)) }
+                                                                                                { CandidTag.FromName("new_hot_key"), new CandidOptionalType(new CandidPrimitiveType(PrimitiveType.Principal)) }
                                                                                             })
                                                                                         },
                                                                                         {
@@ -526,7 +526,7 @@ namespace EdjCase.ICP.Candid.Tests
                                                                                 { CandidTag.FromName("vote"), new CandidPrimitiveType(PrimitiveType.Int32) },
                                                                                 {
                                                                                     CandidTag.FromName("proposal"),
-                                                                                    new CandidOptType(
+                                                                                    new CandidOptionalType(
                                                                                         new CandidRecordType(new Dictionary<CandidTag, CandidType>
                                                                                         {
                                                                                             { CandidTag.FromName("id"), new CandidPrimitiveType(PrimitiveType.Nat64) }
@@ -541,7 +541,7 @@ namespace EdjCase.ICP.Candid.Tests
                                                                             {
                                                                                 {
                                                                                     CandidTag.FromName("source_neuron_id"),
-                                                                                    new CandidOptType(
+                                                                                    new CandidOptionalType(
                                                                                         new CandidRecordType(new Dictionary<CandidTag, CandidType>
                                                                                         {
                                                                                             { CandidTag.FromName("id"), new CandidPrimitiveType(PrimitiveType.Nat64) }
@@ -557,7 +557,7 @@ namespace EdjCase.ICP.Candid.Tests
                                                                                 { CandidTag.FromName("dissolve_delay_seconds"), new CandidPrimitiveType(PrimitiveType.Nat64) },
                                                                                 { CandidTag.FromName("kyc_verified"), new CandidPrimitiveType(PrimitiveType.Bool) },
                                                                                 { CandidTag.FromName("amount_e8s"), new CandidPrimitiveType(PrimitiveType.Nat64) },
-                                                                                { CandidTag.FromName("new_controller"), new CandidOptType(new CandidPrimitiveType(PrimitiveType.Principal)) },
+                                                                                { CandidTag.FromName("new_controller"), new CandidOptionalType(new CandidPrimitiveType(PrimitiveType.Principal)) },
                                                                                 { CandidTag.FromName("nonce"), new CandidPrimitiveType(PrimitiveType.Nat64) },
                                                                             })
                                                                         },
@@ -578,7 +578,7 @@ namespace EdjCase.ICP.Candid.Tests
                                                                             {
                                                                                 {
                                                                                     CandidTag.FromName("to_account"),
-                                                                                    new CandidOptType(
+                                                                                    new CandidOptionalType(
                                                                                         new CandidRecordType(new Dictionary<CandidTag, CandidType>
                                                                                         {
                                                                                             { CandidTag.FromName("hash"), new CandidVectorType(new CandidPrimitiveType(PrimitiveType.Nat8)) }
@@ -587,7 +587,7 @@ namespace EdjCase.ICP.Candid.Tests
                                                                                 },
                                                                                 {
                                                                                     CandidTag.FromName("amount"),
-                                                                                    new CandidOptType(
+                                                                                    new CandidOptionalType(
                                                                                         new CandidRecordType(new Dictionary<CandidTag, CandidType>
                                                                                         {
                                                                                             { CandidTag.FromName("e8s"), new CandidPrimitiveType(PrimitiveType.Nat64) }
@@ -601,7 +601,7 @@ namespace EdjCase.ICP.Candid.Tests
                                                             },
                                                             {
                                                                 CandidTag.FromName("neuron_id_or_subaccount"),
-                                                                new CandidOptType(
+                                                                new CandidOptionalType(
                                                                     new CandidVariantType(new Dictionary<CandidTag, CandidType>
                                                                     {
                                                                         { CandidTag.FromName("Subaccount"), new CandidVectorType(new CandidPrimitiveType(PrimitiveType.Nat8)) },
@@ -637,13 +637,13 @@ namespace EdjCase.ICP.Candid.Tests
                                                         {
                                                             {
                                                                 CandidTag.FromName("node_provider"),
-                                                                new CandidOptType(
+                                                                new CandidOptionalType(
                                                                     new CandidRecordType(new Dictionary<CandidTag, CandidType>
                                                                     {
-                                                                        { CandidTag.FromName("id"), new CandidOptType(new CandidPrimitiveType(PrimitiveType.Principal)) },
+                                                                        { CandidTag.FromName("id"), new CandidOptionalType(new CandidPrimitiveType(PrimitiveType.Principal)) },
                                                                         {
                                                                             CandidTag.FromName("reward_account"),
-                                                                            new CandidOptType(new CandidRecordType(new Dictionary<CandidTag, CandidType>
+                                                                            new CandidOptionalType(new CandidRecordType(new Dictionary<CandidTag, CandidType>
                                                                             {
                                                                                 { CandidTag.FromName("hash"), new CandidVectorType(new CandidPrimitiveType(PrimitiveType.Nat8)) }
                                                                             }))
@@ -653,7 +653,7 @@ namespace EdjCase.ICP.Candid.Tests
                                                             },
                                                             {
                                                                 CandidTag.FromName("reward_mode"),
-                                                                new CandidOptType(
+                                                                new CandidOptionalType(
                                                                     new CandidVariantType(new Dictionary<CandidTag, CandidType>
                                                                     {
                                                                         {
@@ -669,7 +669,7 @@ namespace EdjCase.ICP.Candid.Tests
                                                                             {
                                                                                 {
                                                                                     CandidTag.FromName("to_account"),
-                                                                                    new CandidOptType(new CandidRecordType(new Dictionary<CandidTag, CandidType>
+                                                                                    new CandidOptionalType(new CandidRecordType(new Dictionary<CandidTag, CandidType>
                                                                                     {
                                                                                         { CandidTag.FromName("hash"), new CandidVectorType(new CandidPrimitiveType(PrimitiveType.Nat8)) }
                                                                                     }))
@@ -720,7 +720,7 @@ namespace EdjCase.ICP.Candid.Tests
                                                         CandidTag.FromName("RewardNodeProviders"),
                                                         new CandidRecordType(new Dictionary<CandidTag, CandidType>
                                                         {
-                                                            { CandidTag.FromName("use_registry_derived_rewards"), new CandidOptType(new CandidPrimitiveType(PrimitiveType.Bool)) },
+                                                            { CandidTag.FromName("use_registry_derived_rewards"), new CandidOptionalType(new CandidPrimitiveType(PrimitiveType.Bool)) },
                                                             {
                                                                 CandidTag.FromName("rewards"),
                                                                 new CandidVectorType(
@@ -728,13 +728,13 @@ namespace EdjCase.ICP.Candid.Tests
                                                                     {
                                                                         {
                                                                             CandidTag.FromName("node_provider"),
-                                                                            new CandidOptType(
+                                                                            new CandidOptionalType(
                                                                                 new CandidRecordType(new Dictionary<CandidTag, CandidType>
                                                                                 {
-                                                                                    { CandidTag.FromName("id"), new CandidOptType(new CandidPrimitiveType(PrimitiveType.Principal)) },
+                                                                                    { CandidTag.FromName("id"), new CandidOptionalType(new CandidPrimitiveType(PrimitiveType.Principal)) },
                                                                                     {
                                                                                         CandidTag.FromName("reward_account"),
-                                                                                        new CandidOptType(new CandidRecordType(new Dictionary<CandidTag, CandidType>
+                                                                                        new CandidOptionalType(new CandidRecordType(new Dictionary<CandidTag, CandidType>
                                                                                         {
                                                                                             { CandidTag.FromName("hash"), new CandidVectorType(new CandidPrimitiveType(PrimitiveType.Nat8)) }
                                                                                         }))
@@ -744,7 +744,7 @@ namespace EdjCase.ICP.Candid.Tests
                                                                         },
                                                                         {
                                                                             CandidTag.FromName("reward_mode"),
-                                                                            new CandidOptType(
+                                                                            new CandidOptionalType(
                                                                                 new CandidVariantType(new Dictionary<CandidTag, CandidType>
                                                                                 {
                                                                                     {
@@ -760,7 +760,7 @@ namespace EdjCase.ICP.Candid.Tests
                                                                                         {
                                                                                             {
                                                                                                 CandidTag.FromName("to_account"),
-                                                                                                new CandidOptType(new CandidRecordType(new Dictionary<CandidTag, CandidType>
+                                                                                                new CandidOptionalType(new CandidRecordType(new Dictionary<CandidTag, CandidType>
                                                                                                 {
                                                                                                     { CandidTag.FromName("hash"), new CandidVectorType(new CandidPrimitiveType(PrimitiveType.Nat8)) }
                                                                                                 }))
@@ -803,17 +803,17 @@ namespace EdjCase.ICP.Candid.Tests
                                                         {
                                                             {
                                                                 CandidTag.FromName("change"),
-                                                                new CandidOptType(
+                                                                new CandidOptionalType(
                                                                     new CandidVariantType(new Dictionary<CandidTag, CandidType>
                                                                     {
                                                                         {
                                                                             CandidTag.FromName("ToRemove"),
                                                                             new CandidRecordType(new Dictionary<CandidTag, CandidType>
                                                                             {
-                                                                                { CandidTag.FromName("id"), new CandidOptType(new CandidPrimitiveType(PrimitiveType.Principal)) },
+                                                                                { CandidTag.FromName("id"), new CandidOptionalType(new CandidPrimitiveType(PrimitiveType.Principal)) },
                                                                                 {
                                                                                     CandidTag.FromName("reward_account"),
-                                                                                    new CandidOptType(
+                                                                                    new CandidOptionalType(
                                                                                         new CandidRecordType(new Dictionary<CandidTag, CandidType>
                                                                                         {
                                                                                             { CandidTag.FromName("hash"), new CandidVectorType(new CandidPrimitiveType(PrimitiveType.Nat8)) }
@@ -826,10 +826,10 @@ namespace EdjCase.ICP.Candid.Tests
                                                                             CandidTag.FromName("ToAdd"),
                                                                             new CandidRecordType(new Dictionary<CandidTag, CandidType>
                                                                             {
-                                                                                { CandidTag.FromName("id"), new CandidOptType(new CandidPrimitiveType(PrimitiveType.Principal)) },
+                                                                                { CandidTag.FromName("id"), new CandidOptionalType(new CandidPrimitiveType(PrimitiveType.Principal)) },
                                                                                 {
                                                                                     CandidTag.FromName("reward_account"),
-                                                                                    new CandidOptType(
+                                                                                    new CandidOptionalType(
                                                                                         new CandidRecordType(new Dictionary<CandidTag, CandidType>
                                                                                         {
                                                                                             { CandidTag.FromName("hash"), new CandidVectorType(new CandidPrimitiveType(PrimitiveType.Nat8)) }
@@ -862,7 +862,7 @@ namespace EdjCase.ICP.Candid.Tests
                             },
                             {
                                 CandidTag.FromName("proposer"),
-                                new CandidOptType(
+                                new CandidOptionalType(
                                     new CandidRecordType(new Dictionary<CandidTag, CandidType>
                                     {
                                         { CandidTag.FromName("id"), new CandidPrimitiveType(PrimitiveType.Nat64) }

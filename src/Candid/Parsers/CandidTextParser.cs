@@ -96,10 +96,10 @@ namespace EdjCase.ICP.Candid.Parsers
             }
             return new CandidFuncType(modes, argTypes, returnTypes);
         }
-        private static CandidOptType GetOpt(CandidTextTokenHelper helper, CandidId? recursiveId)
+        private static CandidOptionalType GetOpt(CandidTextTokenHelper helper, CandidId? recursiveId)
         {
             CandidType innerValue = ParseInternal(helper);
-            return new CandidOptType(innerValue, recursiveId);
+            return new CandidOptionalType(innerValue, recursiveId);
         }
 
         private static CandidRecordType GetRecord(CandidTextTokenHelper helper, CandidId? recursiveId)

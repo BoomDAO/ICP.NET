@@ -342,7 +342,7 @@ namespace EdjCase.ICP.Candid.Parsers
                             resolver.Tracer.StartCompound("Opt");
                             CandidType t = resolver.Resolve(innerType);
                             resolver.Tracer.EndCompound("Opt");
-                            return new CandidOptType(t);
+                            return new CandidOptionalType(t);
                         });
                     case CandidTypeCode.Record:
                         UnboundedUInt size = this.ReadNat();
@@ -524,8 +524,8 @@ namespace EdjCase.ICP.Candid.Parsers
                 }
                 return c switch
                 {
-                    CandidOptType o => this.ReadOptValue(o.Value, recursiveTypes),
-                    CandidVectorType ve => this.ReadVectorValue(ve.Value, recursiveTypes),
+                    CandidOptionalType o => this.ReadOptValue(o.Value, recursiveTypes),
+                    CandidVectorType ve => this.ReadVectorValue(ve.InnerType, recursiveTypes),
                     CandidRecordType r => this.ReadRecordValue(r.Fields.ToDictionary(f => f.Key, f => f.Value), recursiveTypes),
                     CandidVariantType va => this.ReadVariantValue(va.Fields.ToDictionary(f => f.Key, f => f.Value), recursiveTypes),
                     CandidServiceType s => this.ReadServiceValue(),
@@ -562,7 +562,7 @@ namespace EdjCase.ICP.Candid.Parsers
                     PrimitiveType.Float32 => CandidPrimitive.Float32(BitConverter.ToSingle(this.Reader.ReadBytes(4), 0)),
                     PrimitiveType.Float64 => CandidPrimitive.Float64(BitConverter.ToDouble(this.Reader.ReadBytes(8), 0)),
                     PrimitiveType.Bool => CandidPrimitive.Bool(this.Reader.ReadByte() > 0),
-                    PrimitiveType.Principal => CandidPrimitive.Pricipal(this.ReadPrincipal()),
+                    PrimitiveType.Principal => CandidPrimitive.Principal(this.ReadPrincipal()),
                     PrimitiveType.Reserved => CandidPrimitive.Reserved(),
                     PrimitiveType.Empty => CandidPrimitive.Empty(),
                     PrimitiveType.Null => CandidPrimitive.Null(),

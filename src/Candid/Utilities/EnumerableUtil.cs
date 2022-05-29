@@ -1,40 +1,51 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
 namespace EdjCase.ICP.Candid.Utilities
 {
-    public static class EnumerableUtil
-    {
+	public static class EnumerableUtil
+	{
 
-        public static IEnumerable<T[]> Chunk<T>(this IEnumerable<T> source, int size)
-        {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-            using IEnumerator<T> e = source.GetEnumerator();
+		public static IEnumerable<T[]> Chunk<T>(this IEnumerable<T> source, int size)
+		{
+			if (source == null)
+			{
+				throw new ArgumentNullException(nameof(source));
+			}
+			using IEnumerator<T> e = source.GetEnumerator();
 
-            if (e.MoveNext())
-            {
-                List<T> chunkBuilder = new();
-                while (true)
-                {
-                    do
-                    {
-                        chunkBuilder.Add(e.Current);
-                    }
-                    while (chunkBuilder.Count < size && e.MoveNext());
+			if (e.MoveNext())
+			{
+				List<T> chunkBuilder = new();
+				while (true)
+				{
+					do
+					{
+						chunkBuilder.Add(e.Current);
+					}
+					while (chunkBuilder.Count < size && e.MoveNext());
 
-                    yield return chunkBuilder.ToArray();
+					yield return chunkBuilder.ToArray();
 
-                    if (chunkBuilder.Count < size || !e.MoveNext())
-                    {
-                        yield break;
-                    }
-                    chunkBuilder.Clear();
-                }
-            }
-        }
-    }
+					if (chunkBuilder.Count < size || !e.MoveNext())
+					{
+						yield break;
+					}
+					chunkBuilder.Clear();
+				}
+			}
+		}
+
+		public static IEnumerable<T> Select<T>(this IEnumerable source, Func<object, T> func)
+		{
+			IEnumerator enumerator = source.GetEnumerator();
+
+			while (enumerator.MoveNext())
+			{
+				yield return func(enumerator.Current);
+			}
+		}
+	}
 }
