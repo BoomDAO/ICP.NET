@@ -40,7 +40,7 @@ namespace EdjCase.ICP.Candid
 	public interface ICandidVariantValue
 	{
 		Dictionary<CandidTag, Type?> GetOptions();
-		(CandidTag Tag, object Value) GetValue();
+		(CandidTag Tag, object? Value) GetValue();
 		void SetValue(CandidTag tag, object? value);
 	}
 
@@ -79,7 +79,7 @@ namespace EdjCase.ICP.Candid
 				);
 		}
 
-		public (CandidTag Tag, object Value) GetValue()
+		public (CandidTag Tag, object? Value) GetValue()
 		{
 			return (CandidTag.FromName(this.Type.ToString()), this.value);
 		}

@@ -15,7 +15,7 @@ using System.Text;
 namespace EdjCase.ICP.ClientGenerator
 {
     [Generator]
-    public class ClientGenerator : ISourceGenerator
+    public class ClientSourceGenerator : ISourceGenerator
     {
         public void Execute(GeneratorExecutionContext context)
         {
@@ -39,6 +39,7 @@ namespace EdjCase.ICP.ClientGenerator
             }
             string value = sourceText.ToString();
             string didFileName = Path.GetFileNameWithoutExtension(didFile.Path);
+
             CandidServiceFile serviceFile;
             try
             {
@@ -52,17 +53,19 @@ namespace EdjCase.ICP.ClientGenerator
                 context.ReportDiagnostic(Diagnostic.Create(descriptor, location));
                 return;
             }
+            ClientSource clientSource = ClientSourceUtil.FromServiceFile(didFileName, serviceFile);
+            AddSourceFile("Client", clientSource.ClientFile);
 
-            (List<DeclaredTypeSourceDescriptor> descriptors, Dictionary<string, string> aliases) = TypeSourceConverter.Build(serviceFile, didFileName);
 
-            foreach (DeclaredTypeSourceDescriptor type in descriptors)
+            foreach ((string name, string sourceCode) in clientSource.TypeFiles)
             {
-                (string fileName, string source) = TypeSourceGenerator.GenerateSourceCode(type);
-
-                AddSourceFile(fileName, source);
+                AddSourceFile(name, sourceCode);
             }
-            string aliasSource = TypeSourceGenerator.GenerateAliasSourceCode(aliases);
-            AddSourceFile("Aliases", aliasSource);
+
+            if (clientSource.AliasFile != null)
+            {
+                AddSourceFile("Aliases", clientSource.AliasFile);
+            }
 
             void AddSourceFile(string fileName, string source)
             {

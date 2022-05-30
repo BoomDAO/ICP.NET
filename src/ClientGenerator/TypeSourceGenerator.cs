@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using static EdjCase.ICP.ClientGenerator.TypeSourceConverter;
 
 namespace ICP.ClientGenerator
 {
@@ -29,6 +28,12 @@ namespace ICP.ClientGenerator
             { typeof(bool), "bool" }
         };
 
+        public static string GenerateClientSourceCode(ServiceSourceDescriptor desc)
+        {
+            IndentedStringBuilder builder = new();
+            WriteService(builder, desc);
+            return builder.ToString();
+        }
         public static (string FileName, string SourceCode) GenerateSourceCode(DeclaredTypeSourceDescriptor type)
         {
             IndentedStringBuilder builder = new();
