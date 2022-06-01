@@ -14,10 +14,9 @@
 	  <Product>EdjCase.ICP.ClientGenerator</Product>
 	  <Company>Edjcase</Company>
 	  <Authors>Gekctek</Authors>
-	  <Version>0.0.1-beta.14</Version>
 	  <PackageId>EdjCase.ICP.ClientGenerator</PackageId>
 	  <PackAsTool>true</PackAsTool>
-	  <ToolCommandName>candid-generator</ToolCommandName>
+	  <ToolCommandName>candid-client-generator</ToolCommandName>
 	  <PackageOutputPath>./nupkg</PackageOutputPath>
   </PropertyGroup>
 
