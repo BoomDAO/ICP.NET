@@ -8,13 +8,14 @@ using System.Threading.Tasks;
 
 namespace EdjCase.ICP.Agent.Auth
 {
-    public class AnonymousIdentity : IIdentity
-    {
-        public Principal Principal { get; } = Principal.Anonymous();
+	public class AnonymousIdentity : IIdentity
+	{
 
-        public SignedContent CreateSignedContent(Dictionary<string, IHashable> request)
-        {
-            return new SignedContent(request, null, null);
-        }
-    }
+		public SignedContent CreateSignedContent(Dictionary<string, IHashable> request)
+		{
+			return new SignedContent(request, null, null);
+		}
+
+		public Principal GetPrincipal() => Principal.Anonymous();
+	}
 }

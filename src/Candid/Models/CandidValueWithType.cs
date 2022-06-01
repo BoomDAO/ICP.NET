@@ -14,7 +14,7 @@ namespace EdjCase.ICP.Candid.Models
             this.Value = value ?? throw new ArgumentNullException(nameof(value));
             this.Type = type ?? throw new ArgumentNullException(nameof(type));
 		}
-		public T? ToObject<T>(CandidConverter? converter = null)
+		public T ToObject<T>(CandidConverter? converter = null)
 		{
 			return (converter ?? CandidConverter.Default).ToObject<T>(this.Value);
 		}

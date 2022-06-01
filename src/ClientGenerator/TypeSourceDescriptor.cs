@@ -7,18 +7,6 @@ using static EdjCase.ICP.ClientGenerator.TypeSourceConverter;
 
 namespace ICP.ClientGenerator
 {
-    internal class DeclaredTypeSourceDescriptor
-    {
-        public string Namespace { get; }
-        public TypeSourceDescriptor Type { get; }
-
-        public DeclaredTypeSourceDescriptor(string @namespace, TypeSourceDescriptor type)
-        {
-            this.Namespace = @namespace ?? throw new ArgumentNullException(nameof(@namespace));
-            this.Type = type ?? throw new ArgumentNullException(nameof(type));
-        }
-    }
-
     internal abstract class TypeSourceDescriptor
     {
         public string Name { get; }
@@ -46,7 +34,7 @@ namespace ICP.ClientGenerator
 
         public VariantSourceDescriptor(
             string name,
-            List<(string Name, string? InfoFullTypeName)> options,
+            List<(string Name, string? InfoTypeName)> options,
             List<TypeSourceDescriptor> subTypesToCreate)
             : base(name, subTypesToCreate)
         {
@@ -108,11 +96,11 @@ namespace ICP.ClientGenerator
             public class ParameterInfo
             {
                 public string VariableName { get; }
-                public TypeInfo? Type { get; }
-                public ParameterInfo(string variableName, TypeInfo? type)
+                public string? TypeName { get; }
+                public ParameterInfo(string variableName, string? typeName)
                 {
                     this.VariableName = variableName ?? throw new ArgumentNullException(nameof(variableName));
-                    this.Type = type;
+                    this.TypeName = typeName;
                 }
             }
         }

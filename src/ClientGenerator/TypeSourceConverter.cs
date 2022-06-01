@@ -13,9 +13,9 @@ namespace EdjCase.ICP.ClientGenerator
 	{
 		public string Name { get; }
 		public ServiceSourceDescriptor Service { get; }
-		public List<DeclaredTypeSourceDescriptor> Types { get; }
+		public List<TypeSourceDescriptor> Types { get; }
 		public Dictionary<string, string> Aliases { get; }
-		public ServiceSourceInfo(string name, ServiceSourceDescriptor service, List<DeclaredTypeSourceDescriptor> types, Dictionary<string, string> aliases)
+		public ServiceSourceInfo(string name, ServiceSourceDescriptor service, List<TypeSourceDescriptor> types, Dictionary<string, string> aliases)
 		{
 			this.Name = name ?? throw new ArgumentNullException(nameof(name));
 			this.Service = service ?? throw new ArgumentNullException(nameof(service));
@@ -25,7 +25,7 @@ namespace EdjCase.ICP.ClientGenerator
 	}
 	internal class TypeSourceConverter
 	{
-		public static ServiceSourceInfo ConvertService(string serviceName, CandidServiceFile file)
+		public static ServiceSourceInfo ConvertService(string serviceName, string baseNamespace, CandidServiceFile file)
 		{
 			Dictionary<CandidId, CandidType> declaredTypes = file.DeclaredTypes.ToDictionary(t => t.Key, t => t.Value);
 			
@@ -36,89 +36,69 @@ namespace EdjCase.ICP.ClientGenerator
 			}
 
 
-			Dictionary<CandidId, TypeInfo> declaredFullTypeNames = declaredTypes
-				.ToDictionary(t => t.Key, t =>
-				{
-					string name = StringUtil.ToPascalCase(t.Key.ToString());
-					string? @namespace = t.Value switch
-					{
-						CandidRecordType r => "EdjCase.ICP.Clients.Models",
-						CandidVariantType v => "EdjCase.ICP.Clients.Models",
-						CandidServiceType s => "EdjCase.ICP.Clients",
-						CandidPrimitiveType p => null,
-						CandidReferenceType p => null,
-						_ => throw new NotImplementedException(),
-					};
-					return new TypeInfo(name, @namespace);
-				});
+			Dictionary<CandidId, string> declaredTypeNames = declaredTypes
+				.ToDictionary(t => t.Key, t => StringUtil.ToPascalCase(t.Key.ToString()));
 
-			List<DeclaredTypeSourceDescriptor> resolvedTypes = new();
+			List<TypeSourceDescriptor> resolvedTypes = new();
 			Dictionary<string, string> aliases = new();
 
 			foreach ((CandidId id, CandidType type) in declaredTypes)
 			{
-				TypeInfo typeName = declaredFullTypeNames[id];
+				string typeName = declaredTypeNames[id];
 				switch (type)
 				{
 					case CandidPrimitiveType p:
 						{
 							// Primitive alias declaration
 							// ex: type A = nat8
-							AddAlias("Primitive", typeName.Name, p);
+							AddAlias("Primitive", typeName, p);
 							break;
 						}
 					case CandidReferenceType r:
 						{
 							// Reference alias declaration
 							// ex: type A = B
-							AddAlias("Reference", typeName.Name, r);
+							AddAlias("Reference", typeName, r);
 							break;
 						}
 					case CandidVectorType v:
 						{
 							// Vector alias declaration
 							// ex: type A = vec nat8
-							AddAlias("Item", typeName.Name, v);
+							AddAlias("Item", typeName, v);
 							break;
 						}
 					case CandidOptionalType o:
 						{
 							// Opt alias declaration
 							// ex: type A = opt nat8
-							AddAlias("Value", typeName.Name, o);
+							AddAlias("Value", typeName, o);
 							break;
 						}
 					default:
 						{
-							// Normal type declaration
-							// ex: type A = record {}
-							if (typeName.Namespace == null)
-							{
-								// TODO
-								throw new Exception();
-							}
 							TypeSourceDescriptor resolvedType = type switch
 							{
-								CandidRecordType r => ResolveRecord(typeName.Name, r, declaredFullTypeNames),
-								CandidVariantType v => ResolveVariant(typeName.Name, v, declaredFullTypeNames),
-								CandidServiceType s => ResolveService(typeName.Name, s, declaredFullTypeNames),
+								CandidRecordType r => ResolveRecord(typeName, r, declaredTypeNames),
+								CandidVariantType v => ResolveVariant(typeName, v, declaredTypeNames),
+								CandidServiceType s => ResolveService(typeName, s, declaredTypeNames),
 								_ => throw new NotImplementedException()
 							};
-							resolvedTypes.Add(new DeclaredTypeSourceDescriptor(typeName.Namespace, resolvedType));
+							resolvedTypes.Add(resolvedType);
 							break;
 						}
 				}
 			}
 
-			ServiceSourceDescriptor serviceSourceDesc = ResolveService(serviceName.ToString(), file.Service, declaredFullTypeNames);
+			ServiceSourceDescriptor serviceSourceDesc = ResolveService(serviceName.ToString(), file.Service, declaredTypeNames);
 
 
 			return new ServiceSourceInfo(serviceName, serviceSourceDesc, resolvedTypes, aliases);
 
 			void AddAlias(string variableName, string typeName, CandidType type)
 			{
-				TypeInfo? innerFullTypeName = ResolveInnerTypeName(variableName, type, declaredFullTypeNames, out TypeSourceDescriptor? subTypeToCreate);
-				if (innerFullTypeName == null)
+				string? innerTypeName = ResolveInnerTypeName(variableName, type, declaredTypeNames, out TypeSourceDescriptor? subTypeToCreate);
+				if (innerTypeName == null)
 				{
 					// TOOD
 					throw new Exception();
@@ -128,17 +108,17 @@ namespace EdjCase.ICP.ClientGenerator
 					// TOOD
 					throw new Exception();
 				}
-				aliases.Add(typeName, innerFullTypeName.FullTypeName);
+				aliases.Add(typeName, innerTypeName);
 			}
 		}
 
 
 
 
-		private static RecordSourceDescriptor ResolveRecord(string name, CandidRecordType type, Dictionary<CandidId, TypeInfo> declaredFullTypeNames)
+		private static RecordSourceDescriptor ResolveRecord(string name, CandidRecordType type, Dictionary<CandidId, string> declaredFullTypeNames)
 		{
 			var subTypesToCreate = new List<TypeSourceDescriptor>();
-			List<(string Name, string FullTypeName)> resolvedFields = type.Fields
+			List<(string Name, string TypeName)> resolvedFields = type.Fields
 				.Select(f =>
 				{
 					string unmodifiedFieldName = f.Key.Name ?? "F" + f.Key.Id;
@@ -148,7 +128,7 @@ namespace EdjCase.ICP.ClientGenerator
 						// TODO how to handle property and class name collision?
 						fieldName += "_";
 					}
-					TypeInfo? typeName = ResolveInnerTypeName(fieldName + "Info", f.Value, declaredFullTypeNames, out TypeSourceDescriptor? subTypeToCreate);
+					string? typeName = ResolveInnerTypeName(fieldName + "Info", f.Value, declaredFullTypeNames, out TypeSourceDescriptor? subTypeToCreate);
 					if (subTypeToCreate != null)
 					{
 						subTypesToCreate.Add(subTypeToCreate);
@@ -156,32 +136,32 @@ namespace EdjCase.ICP.ClientGenerator
 					return (fieldName, typeName);
 				})
 				.Where(f => f.typeName != null)
-				.Select(f => (f.fieldName, f.typeName!.FullTypeName))
+				.Select(f => (f.fieldName, f.typeName!))
 				.ToList();
 			return new RecordSourceDescriptor(name, resolvedFields, subTypesToCreate);
 		}
 
 
-		private static VariantSourceDescriptor ResolveVariant(string name, CandidVariantType type, Dictionary<CandidId, TypeInfo> declaredFullTypeNames)
+		private static VariantSourceDescriptor ResolveVariant(string name, CandidVariantType type, Dictionary<CandidId, string> declaredFullTypeNames)
 		{
 			var subTypesToCreate = new List<TypeSourceDescriptor>();
-			List<(string Name, string? InfoFullTypeName)> resolvedOptions = type.Fields
+			List<(string Name, string? InfoTypeName)> resolvedOptions = type.Fields
 				.Select(f =>
 				{
 					string unmodifiedFieldName = f.Key.Name ?? "O" + f.Key.Id;
 					string fieldName = StringUtil.ToPascalCase(unmodifiedFieldName);
-					TypeInfo? typeName = ResolveInnerTypeName(fieldName + "Info", f.Value, declaredFullTypeNames, out TypeSourceDescriptor? subTypeToCreate);
+					string? typeName = ResolveInnerTypeName(fieldName + "Info", f.Value, declaredFullTypeNames, out TypeSourceDescriptor? subTypeToCreate);
 					if (subTypeToCreate != null)
 					{
 						subTypesToCreate.Add(subTypeToCreate);
 					}
-					return (fieldName, typeName?.FullTypeName);
+					return (fieldName, typeName);
 				})
 				.ToList();
 			return new VariantSourceDescriptor(name, resolvedOptions, subTypesToCreate);
 		}
 
-		private static ServiceSourceDescriptor ResolveService(string name, CandidServiceType type, Dictionary<CandidId, TypeInfo> declaredFullTypeNames)
+		private static ServiceSourceDescriptor ResolveService(string name, CandidServiceType type, Dictionary<CandidId, string> declaredFullTypeNames)
 		{
 			var subTypesToCreate = new List<TypeSourceDescriptor>();
 			List<ServiceSourceDescriptor.Method> resolvedMethods = type.Methods
@@ -196,14 +176,14 @@ namespace EdjCase.ICP.ClientGenerator
 				.ToList();
 			return new ServiceSourceDescriptor(name, resolvedMethods, subTypesToCreate);
 		}
-		private static (ServiceSourceDescriptor.Method Method, List<TypeSourceDescriptor> SubTypesToCreate) ResolveFunc(string name, string unmodifiedName, CandidFuncType type, Dictionary<CandidId, TypeInfo> declaredFullTypeNames)
+		private static (ServiceSourceDescriptor.Method Method, List<TypeSourceDescriptor> SubTypesToCreate) ResolveFunc(string name, string unmodifiedName, CandidFuncType type, Dictionary<CandidId, string> declaredFullTypeNames)
 		{
 			var subTypesToCreate = new List<TypeSourceDescriptor>();
 			List<ServiceSourceDescriptor.Method.ParameterInfo> resolvedParameters = type.ArgTypes
 				.Select((f, i) =>
 				{
 					string argName = $"arg{i}"; // TODO better naming
-					TypeInfo? typeName = ResolveInnerTypeName(argName, f, declaredFullTypeNames, out TypeSourceDescriptor? subTypeToCreate);
+					string? typeName = ResolveInnerTypeName(argName, f, declaredFullTypeNames, out TypeSourceDescriptor? subTypeToCreate);
 					if (subTypeToCreate != null)
 					{
 						subTypesToCreate.Add(subTypeToCreate);
@@ -215,7 +195,7 @@ namespace EdjCase.ICP.ClientGenerator
 				.Select((f, i) =>
 				{
 					string argName = $"R{i}"; // TODO better naming
-					TypeInfo? typeName = ResolveInnerTypeName(argName, f, declaredFullTypeNames, out TypeSourceDescriptor? subTypeToCreate);
+					string? typeName = ResolveInnerTypeName(argName, f, declaredFullTypeNames, out TypeSourceDescriptor? subTypeToCreate);
 					if (subTypeToCreate != null)
 					{
 						subTypesToCreate.Add(subTypeToCreate);
@@ -229,7 +209,7 @@ namespace EdjCase.ICP.ClientGenerator
 			return (method, subTypesToCreate);
 		}
 
-		private static TypeInfo? ResolvePrimitive(PrimitiveType type)
+		private static string? ResolvePrimitive(PrimitiveType type)
 		{
 			Type? t = type switch
 			{
@@ -257,14 +237,14 @@ namespace EdjCase.ICP.ClientGenerator
 			{
 				return null;
 			}
-			return new TypeInfo(t.Name, t.Namespace);
+			return t.FullName;
 		}
 
 
-		private static TypeInfo? ResolveInnerTypeName(
+		private static string? ResolveInnerTypeName(
 			string variableName,
 			CandidType type,
-			Dictionary<CandidId, TypeInfo> declaredFullTypeNames,
+			Dictionary<CandidId, string> declaredFullTypeNames,
 			out TypeSourceDescriptor? subTypeToCreate)
 		{
 			switch (type)
@@ -277,60 +257,45 @@ namespace EdjCase.ICP.ClientGenerator
 					return ResolvePrimitive(p.PrimitiveType);
 				case CandidVectorType v:
 					{
-						TypeInfo? innerTypeName = ResolveInnerTypeName(variableName, v.InnerType, declaredFullTypeNames, out subTypeToCreate);
+						string? innerTypeName = ResolveInnerTypeName(variableName, v.InnerType, declaredFullTypeNames, out subTypeToCreate);
 						if (innerTypeName == null)
 						{
 							// TODO
 							throw new Exception();
 						}
-						return new TypeInfo($"List<{innerTypeName.FullTypeName}>", "System.Collections.Generic");
+						return $"List<{innerTypeName}>";
 					}
 				case CandidOptionalType o:
 					{
 
-						TypeInfo? innerTypeName = ResolveInnerTypeName(variableName, o.Value, declaredFullTypeNames, out subTypeToCreate);
+						string? innerTypeName = ResolveInnerTypeName(variableName, o.Value, declaredFullTypeNames, out subTypeToCreate);
 						if (innerTypeName == null)
 						{
 							// TODO
 							throw new Exception();
 						}
-						return new TypeInfo($"{innerTypeName.FullTypeName}?", null);
+						return $"{innerTypeName}?";
 					}
 				case CandidRecordType r:
 					{
 						RecordSourceDescriptor record = ResolveRecord(variableName, r, declaredFullTypeNames);
 						subTypeToCreate = record;
-						return new TypeInfo(record.Name, null);
+						return record.Name;
 					}
 				case CandidVariantType v:
 					{
 						VariantSourceDescriptor variant = ResolveVariant(variableName, v, declaredFullTypeNames);
 						subTypeToCreate = variant;
-						return new TypeInfo(variant.Name, null);
+						return variant.Name;
 					}
 				case CandidServiceType s:
 					{
 						ServiceSourceDescriptor service = ResolveService(variableName, s, declaredFullTypeNames);
 						subTypeToCreate = service;
-						return new TypeInfo(service.Name, null);
+						return service.Name;
 					}
 				default:
 					throw new NotImplementedException();
-			}
-		}
-
-
-		public class TypeInfo
-		{
-			public string Name { get; }
-			public string? Namespace { get; }
-
-			public string FullTypeName => this.Namespace == null ? this.Name : $"{this.Namespace}.{this.Name}";
-
-			public TypeInfo(string name, string? @namespace)
-			{
-				this.Name = name ?? throw new ArgumentNullException(nameof(name));
-				this.Namespace = @namespace;
 			}
 		}
 

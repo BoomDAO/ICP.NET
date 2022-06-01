@@ -5,7 +5,7 @@ namespace EdjCase.ICP.Agent.Auth
 {
 	public interface IIdentity
 	{
-		Principal Principal { get; }
+		Principal GetPrincipal();
 
 		SignedContent CreateSignedContent(Dictionary<string, IHashable> content);
 	}

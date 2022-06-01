@@ -28,51 +28,43 @@ namespace ICP.ClientGenerator
             { typeof(bool), "bool" }
         };
 
-        public static string GenerateClientSourceCode(ServiceSourceDescriptor desc)
+        public static string GenerateClientSourceCode(string baseNamespace, ServiceSourceDescriptor desc)
         {
             IndentedStringBuilder builder = new();
             builder.AppendLine("using EdjCase.ICP.Agent.Agents;");
             builder.AppendLine("using EdjCase.ICP.Agent.Responses;");
+            builder.AppendLine("using EdjCase.ICP.Agent.Auth;");
             builder.AppendLine("using EdjCase.ICP.Candid.Models;");
+            builder.AppendLine($"using {baseNamespace}.Models;");
+            builder.AppendLine("");
 
-            WriteNamespace(builder, "EdjCase.ICP.Clients", () =>
+            WriteNamespace(builder, baseNamespace, () =>
             {
                 WriteService(builder, desc);
             });
-            return builder.ToString();
+            return BuildSourceWithShorthands(builder);
         }
-        public static (string FileName, string SourceCode) GenerateSourceCode(DeclaredTypeSourceDescriptor type)
+        public static (string FileName, string SourceCode) GenerateTypeSourceCode(string baseNamespace, TypeSourceDescriptor type)
         {
             IndentedStringBuilder builder = new();
-            if (type.Namespace == null)
-            {
-                // TODO
-                throw new Exception();
-            }
 
 
-            WriteNamespace(builder, type.Namespace, () =>
+            WriteNamespace(builder, baseNamespace + ".Models", () =>
             {
-                WriteType(builder, type.Type);
+                WriteType(builder, type);
             });
-            string source = builder.ToString();
-            foreach ((Type systemType, string shortHand) in systemTypeShorthands)
-            {
-                // Convert system types to shorten versions
-                string fullTypeName = systemType.FullName ?? throw new Exception($"Type '{systemType}' has no full name");
-                source = source.Replace(fullTypeName, shortHand);
-            }
-            return (type.Type.Name, source);
+            string source = BuildSourceWithShorthands(builder);
+            return (type.Name, source);
         }
 
-        public static string GenerateAliasSourceCode(Dictionary<string, string> aliases)
+		public static string GenerateAliasSourceCode(Dictionary<string, string> aliases)
         {
             IndentedStringBuilder builder = new();
             foreach ((string id, string aliasedType) in aliases)
             {
                 builder.AppendLine($"global using {id} = {aliasedType};");
             }
-            return builder.ToString();
+            return BuildSourceWithShorthands(builder);
         }
 
         private static void WriteType(IndentedStringBuilder builder, TypeSourceDescriptor type)
@@ -91,6 +83,18 @@ namespace ICP.ClientGenerator
                 default:
                     throw new NotImplementedException();
             };
+        }
+
+        private static string BuildSourceWithShorthands(IndentedStringBuilder builder)
+        {
+            string source = builder.ToString();
+            foreach ((Type systemType, string shortHand) in systemTypeShorthands)
+            {
+                // Convert system types to shorten versions
+                string fullTypeName = systemType.FullName ?? throw new Exception($"Type '{systemType}' has no full name");
+                source = source.Replace(fullTypeName, shortHand);
+            }
+            return source;
         }
 
         private static void WriteService(IndentedStringBuilder builder, ServiceSourceDescriptor service)
@@ -119,10 +123,11 @@ namespace ICP.ClientGenerator
                 );
                 foreach (ServiceSourceDescriptor.Method func in service.Methods)
                 {
-                    (string, string)[] args = func.Parameters
-                        .Where(p => p.Type != null) // exclude null/empty/reserved
-                        .Select((a, i) => (a.Type!.FullTypeName, a.VariableName))
-                        .ToArray();
+                    List<(string TypeName, string VariableName)> args = func.Parameters
+                        .Where(p => p.TypeName != null) // exclude null/empty/reserved
+                        .Select((a, i) => (a.TypeName!, a.VariableName))
+                        .ToList();
+                    args.Add(("IIdentity?", "identityOverride = null"));
                     List<(string Type, string Param)> returnTypes;
                     if (func.IsFireAndForget)
                     {
@@ -132,8 +137,8 @@ namespace ICP.ClientGenerator
                     else
                     {
                         returnTypes = func.ReturnParameters
-                            .Where(p => p.Type != null) // exclude null/empty/reserved
-                            .Select(p => (p.Type!.FullTypeName, p.VariableName))
+                            .Where(p => p.TypeName != null) // exclude null/empty/reserved
+                            .Select(p => (p.TypeName!, p.VariableName))
                             .ToList();
                     }
                     WriteMethod(
@@ -148,9 +153,9 @@ namespace ICP.ClientGenerator
                                 int index = parameterVariables.Count;
                                 string variableName = "p" + index;
                                 string valueWithType;
-                                if (parameter.Type != null)
+                                if (parameter.TypeName != null)
                                 {
-                                    valueWithType = $"CandidValueWithType.FromObject<{parameter.Type.FullTypeName}>({parameter.VariableName})";
+                                    valueWithType = $"CandidValueWithType.FromObject<{parameter.TypeName}>({parameter.VariableName})";
                                 }
                                 else
                                 {
@@ -181,10 +186,10 @@ namespace ICP.ClientGenerator
                                 foreach (ServiceSourceDescriptor.Method.ParameterInfo parameter in func.ReturnParameters)
                                 {
                                     // Only include non null/empty/reserved params
-                                    if (parameter.Type != null)
+                                    if (parameter.TypeName != null)
                                     {
                                         string variableName = "r" + i;
-                                        builder.AppendLine($"{parameter.Type.FullTypeName} {variableName} = reply.Arg.Values[{i}].ToObject<{parameter.Type.FullTypeName}>();");
+                                        builder.AppendLine($"{parameter.TypeName} {variableName} = reply.Arg.Values[{i}].ToObject<{parameter.TypeName}>();");
                                         returnParamVariables.Add(variableName);
                                     }
                                     i++;
@@ -199,8 +204,8 @@ namespace ICP.ClientGenerator
                         isAsync: true,
                         isConstructor: false,
                         returnTypes: returnTypes,
-                        name: func.Name,
-                        args
+                        name: func.Name + "Async",
+                        args.ToArray()
                     );
 
                 }

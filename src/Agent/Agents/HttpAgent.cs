@@ -60,7 +60,7 @@ namespace EdjCase.ICP.Agent.Agents
 
         public Principal GetPrincipal()
         {
-            return this.Identity.Principal;
+            return this.Identity.GetPrincipal();
         }
 
         public async Task<Key> GetRootKeyAsync()
@@ -134,7 +134,7 @@ namespace EdjCase.ICP.Agent.Agents
             {
                 identityOverride = this.Identity;
             }
-            TRequest request = getRequest(identityOverride.Principal, ICTimestamp.Now());
+            TRequest request = getRequest(identityOverride.GetPrincipal(), ICTimestamp.Now());
             Dictionary<string, IHashable> content = request.BuildHashableItem();
             SignedContent signedContent = identityOverride.CreateSignedContent(content);
 

@@ -21,14 +21,4 @@
     </Compile>
   </ItemGroup>
 
-
-  <ItemGroup>
-    <None Update="Dex.did">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Governance.did">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>

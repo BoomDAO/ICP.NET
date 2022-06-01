@@ -53,20 +53,26 @@ namespace EdjCase.ICP.Candid
 			return mapper.TryGetMappingInfo(objType, this, out mappingInfo);
 		}
 
-		public T? ToObject<T>(CandidValue value)
+		public T ToObject<T>(CandidValue value)
 		{
 			object? obj = this.ToObject(typeof(T), value);
-			return (T?)obj;
+			return (T)obj;
 		}
 
-		public object? ToObject(Type objType, CandidValue value)
+		public object ToObject(Type objType, CandidValue value)
 		{
 			if (!this.TryGetMappingInfo(objType, out MappingInfo? mappingInfo))
 			{
 				// TODO
 				throw new Exception();
 			}
-			return mappingInfo!.MapToObjectFunc(value);
+			object? obj = mappingInfo!.MapToObjectFunc(value);
+			if(obj == null)
+			{
+				// TODO
+				throw new Exception();
+			}
+			return obj;
 		}
 
 	}

@@ -1,7 +1,9 @@
 ﻿using CommandLine;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -22,19 +24,41 @@ namespace EdjCase.ICP.ClientGenerator
 			[Option('o', "output-directory", Required = true, HelpText = "Set the directory to generate the client files")]
 			public string OutputDirectory { get; set; }
 
-			[Option('n', "client-name", Required = false, HelpText = "Set the name of the client to generate. Otherwise will automatically be generated")]
+			[Option('n', "namespace", Required = true, HelpText = "Set the base namespace for the generated code")]
+			public string Namespace { get; set; }
+
+			[Option('c', "client-name", Required = false, HelpText = "Set the name of the client to generate. Otherwise will automatically be generated")]
 			public string? ClientName { get; set; }
 		}
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
 
 		public static void Main(string[] args)
-        {
-            Parser.Default.ParseArguments<Options>(args)
-                   .WithParsed<Options>(o =>
-                   {
-					   ClientFileGenerator.WriteClientFiles(o.CandidFilePath, o.OutputDirectory, o.ClientName);
-                   });
-        }
+		{
+#if DEBUG
+			Console.WriteLine("FileName: ");
+			string fileName = Console.ReadLine()!;
+			if (fileName.EndsWith(".did"))
+			{
+				fileName = fileName.Substring(0, fileName.Length - 4);
+			}
+			string projectPath = Directory.GetParent(Assembly.GetExecutingAssembly().Location)!.Parent!.Parent!.Parent!.FullName;
+			string sampleCliPath = Path.Combine(projectPath, "../../samples/Sample.Shared/");
+			args = new string[]
+			{
+				"-o",
+				Path.Combine(sampleCliPath, fileName),
+				"-f",
+				Path.Combine(sampleCliPath, fileName + ".did"),
+				"-n",
+				$"Sample.Shared.{fileName}"
+			};
+#endif
+			Parser.Default.ParseArguments<Options>(args)
+				   .WithParsed<Options>(o =>
+				   {
+					   ClientFileGenerator.WriteClientFiles(o.CandidFilePath, o.OutputDirectory, o.Namespace, o.ClientName);
+				   });
+		}
 	}
 }

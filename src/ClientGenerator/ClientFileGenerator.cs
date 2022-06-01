@@ -10,7 +10,7 @@ namespace EdjCase.ICP.ClientGenerator
 {
 	public static class ClientFileGenerator
 	{
-		public static void WriteClientFiles(string candidFilePath, string outputDirectory, string? clientName = null)
+		public static void WriteClientFiles(string candidFilePath, string outputDirectory, string baseNamespace, string? clientName = null)
 		{
 			Console.WriteLine($"Reading text from {candidFilePath}...");
 			string fileText = File.ReadAllText(candidFilePath);
@@ -23,16 +23,16 @@ namespace EdjCase.ICP.ClientGenerator
 			CandidServiceFile serviceFile = CandidServiceFile.Parse(fileText);
 
 			Console.WriteLine($"Generating client '{clientName}' from parse candid file...");
-			ClientCodeResult result = ClientCodeGenerator.FromServiceFile(clientName, serviceFile);
+			ClientCodeResult result = ClientCodeGenerator.FromServiceFile(clientName, baseNamespace, serviceFile);
 
 			Console.WriteLine($"Writing client file ./{result.Name}.cs...");
 			WriteFile(null, result.Name, result.ClientFile);
 
 
-			foreach ((string name, string sourceCode) in result.TypeFiles)
+			foreach ((string name, string sourceCode) in result.DataModelFiles)
 			{
-				Console.WriteLine($"Writing type file ./Types/{name}.cs...");
-				WriteFile("Types", name, sourceCode);
+				Console.WriteLine($"Writing data model file ./Models/{name}.cs...");
+				WriteFile("Models", name, sourceCode);
 			}
 
 			if (result.AliasFile != null)

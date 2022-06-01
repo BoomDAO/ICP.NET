@@ -16,8 +16,9 @@ namespace EdjCase.ICP.Candid.Tests.Generators
 		public void GenerateClients(string serviceName)
 		{
 			string fileText = GetFileText(serviceName + ".did");
+			string baseNamespace = "Test";
 			CandidServiceFile serviceFile = CandidServiceFile.Parse(fileText);
-			ClientCodeResult source = ClientGenerator.ClientCodeGenerator.FromServiceFile(serviceName, serviceFile);
+			ClientCodeResult source = ClientGenerator.ClientCodeGenerator.FromServiceFile(serviceName, baseNamespace, serviceFile);
 			Snapshot.Match(source, serviceName);
 		}
 

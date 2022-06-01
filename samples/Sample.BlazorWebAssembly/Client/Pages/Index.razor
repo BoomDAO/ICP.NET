@@ -1,6 +1,6 @@
 ﻿@page "/"
-@using System.Text.Json
-@inject Sample.Shared.GovernanceApiClient Client
+
+@inject Sample.Shared.Governance.GovernanceApiClient Client
 @inject System.Net.Http.HttpClient Http
 
 
@@ -37,7 +37,7 @@
         {
             switch (this.Info.Proposal.Action.Type)
             {
-                case ProposalInfo.ActionVariantType.Motion:
+                case ActionType.Motion:
                     <h2>Motion: @this.Info.Proposal.Action.AsMotion().MotionText</h2>
                     break;
             }

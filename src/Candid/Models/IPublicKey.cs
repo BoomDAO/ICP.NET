@@ -3,8 +3,8 @@ using EdjCase.ICP.Candid.Models;
 
 namespace EdjCase.ICP.Candid.Models
 {
-    public interface IPublicKey
-    {
-        DerEncodedPublicKey GetDerEncodedBytes();
-    }
+	public interface IPublicKey
+	{
+		DerEncodedPublicKey GetDerEncodedBytes();
+	}
 }

@@ -24,6 +24,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Chaos.NaCl.Standard" Version="1.0.0" />
 		<PackageReference Include="Dahomey.Cbor" Version="1.16.1" />
 	</ItemGroup>
 

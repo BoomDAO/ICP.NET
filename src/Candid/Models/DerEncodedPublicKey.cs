@@ -8,23 +8,23 @@ using EdjCase.ICP.Candid.Crypto;
 
 namespace EdjCase.ICP.Candid.Models
 {
-    public class DerEncodedPublicKey : IHashable, IPublicKey
-    {
-        public byte[] Value { get; }
+	public class DerEncodedPublicKey : IHashable, IPublicKey
+	{
+		public byte[] Value { get; }
 
-        public DerEncodedPublicKey(byte[] value)
-        {
-            this.Value = value ?? throw new ArgumentNullException(nameof(value));
-        }
+		public DerEncodedPublicKey(byte[] value)
+		{
+			this.Value = value ?? throw new ArgumentNullException(nameof(value));
+		}
 
-        public byte[] ComputeHash(IHashFunction hashFunction)
-        {
-            return hashFunction.ComputeHash(this.Value);
-        }
+		public byte[] ComputeHash(IHashFunction hashFunction)
+		{
+			return hashFunction.ComputeHash(this.Value);
+		}
 
 		public DerEncodedPublicKey GetDerEncodedBytes()
 		{
-            return this;
+			return this;
 		}
 	}
 }

@@ -18,29 +18,29 @@ namespace EdjCase.ICP.ClientGenerator
     {
 		public string Name { get; }
         public string ClientFile { get; }
-        public List<(string Name, string SourceCode)> TypeFiles { get; }
+        public List<(string Name, string SourceCode)> DataModelFiles { get; }
         public string? AliasFile { get; }
 
         public ClientCodeResult(string name, string clientFile, List<(string Name, string SourceCode)> typeFiles, string? aliasFile)
         {
             this.Name = name ?? throw new ArgumentNullException(nameof(name));
             this.ClientFile = clientFile ?? throw new ArgumentNullException(nameof(clientFile));
-            this.TypeFiles = typeFiles ?? throw new ArgumentNullException(nameof(typeFiles));
+            this.DataModelFiles = typeFiles ?? throw new ArgumentNullException(nameof(typeFiles));
             this.AliasFile = aliasFile;
         }
     }
     public static class ClientCodeGenerator
     {
-        public static ClientCodeResult FromServiceFile(string serviceName, CandidServiceFile serviceFile)
+        public static ClientCodeResult FromServiceFile(string serviceName, string baseNamespace, CandidServiceFile serviceFile)
         {
-			ServiceSourceInfo service = TypeSourceConverter.ConvertService(serviceName, serviceFile);
+			ServiceSourceInfo service = TypeSourceConverter.ConvertService(serviceName, baseNamespace, serviceFile);
 
-            string clientSource = TypeSourceGenerator.GenerateClientSourceCode(service.Service);
+            string clientSource = TypeSourceGenerator.GenerateClientSourceCode(baseNamespace, service.Service);
 
             var typeFiles = new List<(string Name, string SourceCode)>();
-            foreach (DeclaredTypeSourceDescriptor type in service.Types)
+            foreach (TypeSourceDescriptor type in service.Types)
             {
-                (string fileName, string source) = TypeSourceGenerator.GenerateSourceCode(type);
+                (string fileName, string source) = TypeSourceGenerator.GenerateTypeSourceCode(baseNamespace, type);
 
                 typeFiles.Add((fileName, source));
             }
@@ -49,7 +49,7 @@ namespace EdjCase.ICP.ClientGenerator
             {
                 aliasFile = TypeSourceGenerator.GenerateAliasSourceCode(service.Aliases);
             }
-            return new ClientCodeResult(service.Name, clientSource, typeFiles, aliasFile);
+            return new ClientCodeResult(service.Name + "ApiClient", clientSource, typeFiles, aliasFile);
         }
 
     }

@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Sample.Shared;
+using Sample.Shared.Governance;
+using Sample.Shared.Governance.Models;
 
 namespace Sample.RestAPI.Controllers
 {
@@ -17,7 +19,7 @@ namespace Sample.RestAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> GetProposalInfo(ulong id)
         {
-            Shared.Models.ProposalInfo? info = await this.Client.GetProposalInfoAsync(id);
+            ProposalInfo? info = await this.Client.GetProposalInfoAsync(id);
             return this.Ok(info);
         }
     }

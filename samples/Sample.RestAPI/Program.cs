@@ -1,6 +1,7 @@
 using EdjCase.ICP.Agent.Agents;
 using EdjCase.ICP.Agent.Auth;
 using Sample.Shared;
+using Sample.Shared.Governance;
 
 var builder = WebApplication.CreateBuilder(args);
 

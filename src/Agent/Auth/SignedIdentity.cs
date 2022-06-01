@@ -8,14 +8,9 @@ using System.Threading.Tasks;
 
 namespace EdjCase.ICP.Agent.Auth
 {
-	public abstract class SignIdentity : IIdentity
+	public abstract class SigningIdentityBase : IIdentity
 	{
-		public Principal Principal { get; }
-
-		public SignIdentity(Principal principal)
-		{
-			this.Principal = principal;
-		}
+		public abstract Principal GetPrincipal();
 
 		public abstract IPublicKey GetPublicKey();
 
