@@ -14,14 +14,14 @@ using System.Text;
 
 namespace EdjCase.ICP.ClientGenerator
 {
-    public class ClientSource
+    public class ClientCodeResult
     {
 		public string Name { get; }
         public string ClientFile { get; }
         public List<(string Name, string SourceCode)> TypeFiles { get; }
         public string? AliasFile { get; }
 
-        public ClientSource(string name, string clientFile, List<(string Name, string SourceCode)> typeFiles, string? aliasFile)
+        public ClientCodeResult(string name, string clientFile, List<(string Name, string SourceCode)> typeFiles, string? aliasFile)
         {
             this.Name = name ?? throw new ArgumentNullException(nameof(name));
             this.ClientFile = clientFile ?? throw new ArgumentNullException(nameof(clientFile));
@@ -29,9 +29,9 @@ namespace EdjCase.ICP.ClientGenerator
             this.AliasFile = aliasFile;
         }
     }
-    public static class ClientSourceUtil
+    public static class ClientCodeGenerator
     {
-        public static ClientSource FromServiceFile(string serviceName, CandidServiceFile serviceFile)
+        public static ClientCodeResult FromServiceFile(string serviceName, CandidServiceFile serviceFile)
         {
 			ServiceSourceInfo service = TypeSourceConverter.ConvertService(serviceName, serviceFile);
 
@@ -49,7 +49,7 @@ namespace EdjCase.ICP.ClientGenerator
             {
                 aliasFile = TypeSourceGenerator.GenerateAliasSourceCode(service.Aliases);
             }
-            return new ClientSource(service.Name, clientSource, typeFiles, aliasFile);
+            return new ClientCodeResult(service.Name, clientSource, typeFiles, aliasFile);
         }
 
     }

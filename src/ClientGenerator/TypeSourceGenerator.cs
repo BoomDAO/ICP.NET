@@ -31,7 +31,14 @@ namespace ICP.ClientGenerator
         public static string GenerateClientSourceCode(ServiceSourceDescriptor desc)
         {
             IndentedStringBuilder builder = new();
-            WriteService(builder, desc);
+            builder.AppendLine("using EdjCase.ICP.Agent.Agents;");
+            builder.AppendLine("using EdjCase.ICP.Agent.Responses;");
+            builder.AppendLine("using EdjCase.ICP.Candid.Models;");
+
+            WriteNamespace(builder, "EdjCase.ICP.Clients", () =>
+            {
+                WriteService(builder, desc);
+            });
             return builder.ToString();
         }
         public static (string FileName, string SourceCode) GenerateSourceCode(DeclaredTypeSourceDescriptor type)
@@ -48,18 +55,14 @@ namespace ICP.ClientGenerator
             {
                 WriteType(builder, type.Type);
             });
-            string filePrefix = type.Type switch
-            {
-                ServiceSourceDescriptor s => "Client_",
-                _ => "Type_",
-            };
             string source = builder.ToString();
             foreach ((Type systemType, string shortHand) in systemTypeShorthands)
             {
                 // Convert system types to shorten versions
-                source = source.Replace(systemType.FullName, shortHand);
+                string fullTypeName = systemType.FullName ?? throw new Exception($"Type '{systemType}' has no full name");
+                source = source.Replace(fullTypeName, shortHand);
             }
-            return (filePrefix + type.Type.Name, source);
+            return (type.Type.Name, source);
         }
 
         public static string GenerateAliasSourceCode(Dictionary<string, string> aliases)
@@ -103,7 +106,7 @@ namespace ICP.ClientGenerator
                     inner: () =>
                     {
                         builder.AppendLine("this.Agent = agent ?? throw new ArgumentNullException(nameof(agent));");
-                        builder.AppendLine("this.Can`isterId = canisterId ?? throw new ArgumentNullException(nameof(canisterId));");
+                        builder.AppendLine("this.CanisterId = canisterId ?? throw new ArgumentNullException(nameof(canisterId));");
                     },
                     access: "public",
                     isStatic: false,
