@@ -13,15 +13,14 @@ namespace Sample.Shared.Governance.Models
 		AddOrRemoveNodeProvider,
 		Motion,
 	}
-	public class Action
+	public class Action : EdjCase.ICP.Candid.CandidVariantValueBase<ActionType>
 	{
-		public ActionType Type { get; }
-		private readonly object? value;
-		
-		public Action(ActionType type, object? value)
+		public Action(ActionType type, object? value)  : base(type, value)
 		{
-			this.Type = type;
-			this.value = value;
+		}
+		
+		protected Action()
+		{
 		}
 		
 		public static Action RegisterKnownNeuron(KnownNeuron info)
@@ -134,12 +133,5 @@ namespace Sample.Shared.Governance.Models
 			return (Motion)this.value!;
 		}
 		
-		private void ValidateType(ActionType type)
-		{
-			if (this.Type != type)
-			{
-				throw new InvalidOperationException($"Cannot cast '{this.Type}' to type '{type}'");
-			}
-		}
 	}
 }

@@ -1,4 +1,4 @@
-﻿using EdjCase.ICP.Candid.Models;
+using EdjCase.ICP.Candid.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -65,7 +65,12 @@ namespace EdjCase.ICP.Candid.Models.Values
                 .ToList();
         }
 
-        public CandidRecord AsRecord()
+		public bool IsNull()
+		{
+			return this is CandidPrimitive p && p.ValueType == PrimitiveType.Null;
+		}
+
+		public CandidRecord AsRecord()
         {
             this.ValidateType(CandidValueType.Record);
             return (CandidRecord)this;

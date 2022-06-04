@@ -15,15 +15,14 @@ namespace Sample.Shared.Governance.Models
 		MergeMaturity,
 		Disburse,
 	}
-	public class Command1
+	public class Command1 : EdjCase.ICP.Candid.CandidVariantValueBase<Command1Type>
 	{
-		public Command1Type Type { get; }
-		private readonly object? value;
-		
-		public Command1(Command1Type type, object? value)
+		public Command1(Command1Type type, object? value)  : base(type, value)
 		{
-			this.Type = type;
-			this.value = value;
+		}
+		
+		protected Command1()
+		{
 		}
 		
 		public static Command1 Error(GovernanceError info)
@@ -158,13 +157,6 @@ namespace Sample.Shared.Governance.Models
 			return (DisburseResponse)this.value!;
 		}
 		
-		private void ValidateType(Command1Type type)
-		{
-			if (this.Type != type)
-			{
-				throw new InvalidOperationException($"Cannot cast '{this.Type}' to type '{type}'");
-			}
-		}
 		public class FollowInfo
 		{
 		}

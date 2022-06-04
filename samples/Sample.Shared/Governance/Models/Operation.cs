@@ -10,15 +10,14 @@ namespace Sample.Shared.Governance.Models
 		JoinCommunityFund,
 		SetDissolveTimestamp,
 	}
-	public class Operation
+	public class Operation : EdjCase.ICP.Candid.CandidVariantValueBase<OperationType>
 	{
-		public OperationType Type { get; }
-		private readonly object? value;
-		
-		public Operation(OperationType type, object? value)
+		public Operation(OperationType type, object? value)  : base(type, value)
 		{
-			this.Type = type;
-			this.value = value;
+		}
+		
+		protected Operation()
+		{
 		}
 		
 		public static Operation RemoveHotKey(RemoveHotKey info)
@@ -98,13 +97,6 @@ namespace Sample.Shared.Governance.Models
 			return (SetDissolveTimestamp)this.value!;
 		}
 		
-		private void ValidateType(OperationType type)
-		{
-			if (this.Type != type)
-			{
-				throw new InvalidOperationException($"Cannot cast '{this.Type}' to type '{type}'");
-			}
-		}
 		public class StopDissolvingInfo
 		{
 		}

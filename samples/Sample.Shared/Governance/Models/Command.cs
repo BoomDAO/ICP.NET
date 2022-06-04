@@ -14,15 +14,14 @@ namespace Sample.Shared.Governance.Models
 		MergeMaturity,
 		Disburse,
 	}
-	public class Command
+	public class Command : EdjCase.ICP.Candid.CandidVariantValueBase<CommandType>
 	{
-		public CommandType Type { get; }
-		private readonly object? value;
-		
-		public Command(CommandType type, object? value)
+		public Command(CommandType type, object? value)  : base(type, value)
 		{
-			this.Type = type;
-			this.value = value;
+		}
+		
+		protected Command()
+		{
 		}
 		
 		public static Command Spawn(Spawn info)
@@ -146,12 +145,5 @@ namespace Sample.Shared.Governance.Models
 			return (Disburse)this.value!;
 		}
 		
-		private void ValidateType(CommandType type)
-		{
-			if (this.Type != type)
-			{
-				throw new InvalidOperationException($"Cannot cast '{this.Type}' to type '{type}'");
-			}
-		}
 	}
 }

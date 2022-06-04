@@ -5,15 +5,14 @@ namespace Sample.Shared.Governance.Models
 		Subaccount,
 		NeuronId,
 	}
-	public class NeuronIdOrSubaccount
+	public class NeuronIdOrSubaccount : EdjCase.ICP.Candid.CandidVariantValueBase<NeuronIdOrSubaccountType>
 	{
-		public NeuronIdOrSubaccountType Type { get; }
-		private readonly object? value;
-		
-		public NeuronIdOrSubaccount(NeuronIdOrSubaccountType type, object? value)
+		public NeuronIdOrSubaccount(NeuronIdOrSubaccountType type, object? value)  : base(type, value)
 		{
-			this.Type = type;
-			this.value = value;
+		}
+		
+		protected NeuronIdOrSubaccount()
+		{
 		}
 		
 		public static NeuronIdOrSubaccount Subaccount(List<byte> info)
@@ -38,12 +37,5 @@ namespace Sample.Shared.Governance.Models
 			return (NeuronId)this.value!;
 		}
 		
-		private void ValidateType(NeuronIdOrSubaccountType type)
-		{
-			if (this.Type != type)
-			{
-				throw new InvalidOperationException($"Cannot cast '{this.Type}' to type '{type}'");
-			}
-		}
 	}
 }

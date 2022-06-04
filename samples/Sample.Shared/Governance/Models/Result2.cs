@@ -5,15 +5,14 @@ namespace Sample.Shared.Governance.Models
 		Ok,
 		Err,
 	}
-	public class Result2
+	public class Result2 : EdjCase.ICP.Candid.CandidVariantValueBase<Result2Type>
 	{
-		public Result2Type Type { get; }
-		private readonly object? value;
-		
-		public Result2(Result2Type type, object? value)
+		public Result2(Result2Type type, object? value)  : base(type, value)
 		{
-			this.Type = type;
-			this.value = value;
+		}
+		
+		protected Result2()
+		{
 		}
 		
 		public static Result2 Ok(Neuron info)
@@ -38,12 +37,5 @@ namespace Sample.Shared.Governance.Models
 			return (GovernanceError)this.value!;
 		}
 		
-		private void ValidateType(Result2Type type)
-		{
-			if (this.Type != type)
-			{
-				throw new InvalidOperationException($"Cannot cast '{this.Type}' to type '{type}'");
-			}
-		}
 	}
 }

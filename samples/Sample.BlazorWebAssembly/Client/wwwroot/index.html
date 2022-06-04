@@ -23,7 +23,18 @@
         <a class="dismiss">🗙</a>
     </div>
     <script src="_framework/blazor.webassembly.js"></script>
+    <script src="js/index.bundle.js"></script>
     <script>navigator.serviceWorker.register('service-worker.js');</script>
+
+    <script>
+        window.authClientLogin = function (dotNetObject) {
+            window.authClient.login({
+                onSuccess: () => {
+                    dotNetObject.invokeMethodAsync('OnLoginSuccess');
+                }
+            })
+        };
+    </script>
 </body>
 
 </html>

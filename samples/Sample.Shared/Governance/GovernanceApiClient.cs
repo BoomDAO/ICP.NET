@@ -26,7 +26,7 @@ namespace Sample.Shared.Governance
 				p1,
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride: null);
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride);
 			QueryReply reply = response.ThrowOrGetReply();
 			Result r0 = reply.Arg.Values[0].ToObject<Result>();
 			return (r0);
@@ -40,7 +40,7 @@ namespace Sample.Shared.Governance
 				p0,
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride: null);
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride);
 			QueryReply reply = response.ThrowOrGetReply();
 			ClaimOrRefreshNeuronFromAccountResponse r0 = reply.Arg.Values[0].ToObject<ClaimOrRefreshNeuronFromAccountResponse>();
 			return (r0);
@@ -52,7 +52,7 @@ namespace Sample.Shared.Governance
 			{
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride: null);
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride);
 			QueryReply reply = response.ThrowOrGetReply();
 			string r0 = reply.Arg.Values[0].ToObject<string>();
 			return (r0);
@@ -66,7 +66,7 @@ namespace Sample.Shared.Governance
 				p0,
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride: null);
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride);
 			QueryReply reply = response.ThrowOrGetReply();
 			Result2 r0 = reply.Arg.Values[0].ToObject<Result2>();
 			return (r0);
@@ -80,7 +80,7 @@ namespace Sample.Shared.Governance
 				p0,
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride: null);
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride);
 			QueryReply reply = response.ThrowOrGetReply();
 			Result2 r0 = reply.Arg.Values[0].ToObject<Result2>();
 			return (r0);
@@ -92,7 +92,7 @@ namespace Sample.Shared.Governance
 			{
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride: null);
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride);
 			QueryReply reply = response.ThrowOrGetReply();
 			Result3 r0 = reply.Arg.Values[0].ToObject<Result3>();
 			return (r0);
@@ -104,7 +104,7 @@ namespace Sample.Shared.Governance
 			{
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride: null);
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride);
 			QueryReply reply = response.ThrowOrGetReply();
 			NetworkEconomics r0 = reply.Arg.Values[0].ToObject<NetworkEconomics>();
 			return (r0);
@@ -116,7 +116,7 @@ namespace Sample.Shared.Governance
 			{
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride: null);
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride);
 			QueryReply reply = response.ThrowOrGetReply();
 			List<ulong> r0 = reply.Arg.Values[0].ToObject<List<ulong>>();
 			return (r0);
@@ -130,7 +130,7 @@ namespace Sample.Shared.Governance
 				p0,
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride: null);
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride);
 			QueryReply reply = response.ThrowOrGetReply();
 			Result4 r0 = reply.Arg.Values[0].ToObject<Result4>();
 			return (r0);
@@ -144,7 +144,7 @@ namespace Sample.Shared.Governance
 				p0,
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride: null);
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride);
 			QueryReply reply = response.ThrowOrGetReply();
 			Result4 r0 = reply.Arg.Values[0].ToObject<Result4>();
 			return (r0);
@@ -158,7 +158,7 @@ namespace Sample.Shared.Governance
 				p0,
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride: null);
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride);
 			QueryReply reply = response.ThrowOrGetReply();
 			Result5 r0 = reply.Arg.Values[0].ToObject<Result5>();
 			return (r0);
@@ -170,7 +170,7 @@ namespace Sample.Shared.Governance
 			{
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride: null);
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride);
 			QueryReply reply = response.ThrowOrGetReply();
 			List<ProposalInfo> r0 = reply.Arg.Values[0].ToObject<List<ProposalInfo>>();
 			return (r0);
@@ -184,9 +184,9 @@ namespace Sample.Shared.Governance
 				p0,
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride: null);
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride);
 			QueryReply reply = response.ThrowOrGetReply();
-			ProposalInfo? r0 = reply.Arg.Values[0].ToObject<ProposalInfo?>();
+			ProposalInfo? r0 = reply.Arg.Values[0].ToObjectOrDefault<ProposalInfo?>();
 			return (r0);
 		}
 		public async Task<ListKnownNeuronsResponse> ListKnownNeuronsAsync(IIdentity? identityOverride = null)
@@ -196,7 +196,7 @@ namespace Sample.Shared.Governance
 			{
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride: null);
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride);
 			QueryReply reply = response.ThrowOrGetReply();
 			ListKnownNeuronsResponse r0 = reply.Arg.Values[0].ToObject<ListKnownNeuronsResponse>();
 			return (r0);
@@ -210,7 +210,7 @@ namespace Sample.Shared.Governance
 				p0,
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride: null);
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride);
 			QueryReply reply = response.ThrowOrGetReply();
 			ListNeuronsResponse r0 = reply.Arg.Values[0].ToObject<ListNeuronsResponse>();
 			return (r0);
@@ -222,7 +222,7 @@ namespace Sample.Shared.Governance
 			{
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride: null);
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride);
 			QueryReply reply = response.ThrowOrGetReply();
 			ListNodeProvidersResponse r0 = reply.Arg.Values[0].ToObject<ListNodeProvidersResponse>();
 			return (r0);
@@ -236,7 +236,7 @@ namespace Sample.Shared.Governance
 				p0,
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride: null);
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride);
 			QueryReply reply = response.ThrowOrGetReply();
 			ListProposalInfoResponse r0 = reply.Arg.Values[0].ToObject<ListProposalInfoResponse>();
 			return (r0);
@@ -250,7 +250,7 @@ namespace Sample.Shared.Governance
 				p0,
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride: null);
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride);
 			QueryReply reply = response.ThrowOrGetReply();
 			ManageNeuronResponse r0 = reply.Arg.Values[0].ToObject<ManageNeuronResponse>();
 			return (r0);
@@ -266,7 +266,7 @@ namespace Sample.Shared.Governance
 				p1,
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride: null);
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride);
 			QueryReply reply = response.ThrowOrGetReply();
 			Result r0 = reply.Arg.Values[0].ToObject<Result>();
 			return (r0);
@@ -280,7 +280,7 @@ namespace Sample.Shared.Governance
 				p0,
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride: null);
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride);
 			QueryReply reply = response.ThrowOrGetReply();
 			Result r0 = reply.Arg.Values[0].ToObject<Result>();
 			return (r0);

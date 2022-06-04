@@ -1,4 +1,4 @@
-﻿using Chaos.NaCl;
+using Chaos.NaCl;
 using EdjCase.ICP.Agent.Auth;
 using EdjCase.ICP.Candid.Models;
 using System;
@@ -23,7 +23,7 @@ namespace EdjCase.ICP.Agent.Identity
 
 		public override IPublicKey GetPublicKey()
 		{
-			return Ed25519.PublicKeyFromSeed(this.PrivateKey);
+			return new RawPublicKey(Ed25519.PublicKeyFromSeed(this.PrivateKey));
 		}
 
 		public override Signature Sign(byte[] message)
@@ -35,7 +35,7 @@ namespace EdjCase.ICP.Agent.Identity
 
 		public static ED25519Identity FromPem(byte[] pemBytes)
 		{
-
+			throw new NotImplementedException();
 		}
 	}
 }

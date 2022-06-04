@@ -1,5 +1,11 @@
-﻿@page "/"
+@page "/"
+@using EdjCase.ICP.Agent
+@using EdjCase.ICP.Agent.Auth
+@using EdjCase.ICP.Agent.Identity
+@using EdjCase.ICP.Candid.Models
+@using System.Text.Json.Serialization
 
+@inject IJSRuntime JSRuntime
 @inject Sample.Shared.Governance.GovernanceApiClient Client
 @inject System.Net.Http.HttpClient Http
 
@@ -13,6 +19,10 @@
 <button @onclick="ReloadProposalInfo">Fetch using WebAssembly</button>
 <button @onclick="ServerReloadProposalInfo">Fetch using Server Api</button>
 
+@if (this.Identity == null)
+{
+    <button @onclick="Login">Login</button>
+}
 @if (this.Info != null)
 {
     <h2>Id: @this.Info.Id?.Id</h2>
@@ -27,7 +37,7 @@
             <li>Total: @this.Info.LatestTally.Total</li>
         </ul>
     }
-    if(this.Info.Proposal != null)
+    if (this.Info.Proposal != null)
     {
         <h1>Proposal</h1>
         <h2>Title: @this.Info.Proposal.Title</h2>
@@ -46,21 +56,37 @@
     <pre>
         @JsonSerializer.Serialize(this.Info, new JsonSerializerOptions{WriteIndented=true});
     </pre>
+
+}
+else if(this.MadeCall && this.ProposalId != null)
+{
+    <h2>Id: @this.ProposalId</h2>
+    <h2>Proposal Not Found</h2>
 }
 
 @code {
     public ulong? ProposalId { get; set; }
+    public bool MadeCall { get; set; }
     public ProposalInfo? Info { get; set; }
+    public IIdentity? Identity { get; set; }
 
     public async Task ReloadProposalInfo()
     {
         if (this.ProposalId != null)
         {
-            this.Info = await this.Client.GetProposalInfoAsync(this.ProposalId.Value);
+            // TODO pass identity
+            this.Info = await this.Client.GetProposalInfoAsync(this.ProposalId.Value, identityOverride: null);
+            this.MadeCall = true;
         }
     }
 
-    
+    public async Task Login()
+    {
+        var dotNetReference = DotNetObjectReference.Create(this);
+        await JSRuntime.InvokeVoidAsync("window.authClientLogin", dotNetReference);
+    }
+
+
     public async Task ServerReloadProposalInfo()
     {
         if (this.ProposalId != null)
@@ -68,6 +94,89 @@
             HttpResponseMessage response = await this.Http.GetAsync($"api/Governance/GetProposalInfo/{this.ProposalId.Value}");
             response.EnsureSuccessStatusCode();
             this.Info = await response.Content.ReadFromJsonAsync<ProposalInfo?>();
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await this.SetIdentityAsync();
+    }
+
+    [JSInvokable("OnLoginSuccess")] // This is required in order to JS be able to execute it
+    public async Task OnLoginSuccessAsync()
+    {
+        await this.SetIdentityAsync();
+
+    }
+
+    public async Task SetIdentityAsync()
+    {
+        List<string>? identitySeeds = await this.GetLocalStorageValueAsync<List<string>>("ic-identity");
+        DelegationChainModel? chainModel = await this.GetLocalStorageValueAsync<DelegationChainModel>("ic-delegation");
+        if (identitySeeds != null && chainModel != null)
+        {
+            byte[] seed = identitySeeds.Select(s => Convert.FromHexString(s)).First();
+            var identity = new ED25519Identity(seed);
+            DelegationChain chain = chainModel.ToCommon();
+            this.Identity = new DelegationIdentity(identity, chain);
+        }
+    }
+
+    public async Task<T?> GetLocalStorageValueAsync<T>(string key)
+    {
+        JsonElement storageJsonElement = await JSRuntime.InvokeAsync<JsonElement>("localStorage.getItem", key);
+        string? json = storageJsonElement.GetString();
+        if (json == null)
+        {
+            return default;
+        }
+        return JsonSerializer.Deserialize<T>(json)!;
+    }
+
+    public class DelegationChainModel
+    {
+        [JsonPropertyName("delegations")]
+        public List<SignedDelegationModel> Delegations { get; set; } = new List<SignedDelegationModel>();
+        [JsonPropertyName("publicKey")]
+        public string PublicKey { get; set; }
+
+        public DelegationChain ToCommon()
+        {
+            List<SignedDelegation> delegations = this.Delegations
+                .Select(d => d.ToCommon())
+                .ToList();
+            DerEncodedPublicKey publicKey = new DerEncodedPublicKey(Convert.FromHexString(this.PublicKey));
+            return new DelegationChain(publicKey, delegations);
+        }
+    }
+
+    public class SignedDelegationModel
+    {
+        [JsonPropertyName("delegation")]
+        public DelegationModel Delegation { get; set; }
+        [JsonPropertyName("signature")]
+        public string Signature { get; set; }
+
+        public SignedDelegation ToCommon()
+        {
+            Delegation delegation = this.Delegation.ToCommon();
+            Signature signature = new Signature(Convert.FromHexString(this.Signature));
+            return new SignedDelegation(delegation, signature);
+        }
+    }
+
+    public class DelegationModel
+    {
+        [JsonPropertyName("expiration")]
+        public string Expiration { get; set; }
+        [JsonPropertyName("pubkey")]
+        public string PubKey { get; set; }
+
+        public Delegation ToCommon()
+        {
+            DerEncodedPublicKey publicKey = new RawPublicKey(Convert.FromHexString(this.PubKey)).GetDerEncodedBytes();
+            ICTimestamp expiration = ICTimestamp.Now(); // TODO
+            return new Delegation(publicKey, expiration, targets: null);
         }
     }
 }

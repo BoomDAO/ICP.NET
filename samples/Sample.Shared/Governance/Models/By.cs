@@ -6,15 +6,14 @@ namespace Sample.Shared.Governance.Models
 		MemoAndController,
 		Memo,
 	}
-	public class By
+	public class By : EdjCase.ICP.Candid.CandidVariantValueBase<ByType>
 	{
-		public ByType Type { get; }
-		private readonly object? value;
-		
-		public By(ByType type, object? value)
+		public By(ByType type, object? value)  : base(type, value)
 		{
-			this.Type = type;
-			this.value = value;
+		}
+		
+		protected By()
+		{
 		}
 		
 		public static By NeuronIdOrSubaccount(NeuronIdOrSubaccountInfo info)
@@ -50,13 +49,6 @@ namespace Sample.Shared.Governance.Models
 			return (ulong)this.value!;
 		}
 		
-		private void ValidateType(ByType type)
-		{
-			if (this.Type != type)
-			{
-				throw new InvalidOperationException($"Cannot cast '{this.Type}' to type '{type}'");
-			}
-		}
 		public class NeuronIdOrSubaccountInfo
 		{
 		}

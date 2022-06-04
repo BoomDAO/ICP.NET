@@ -5,15 +5,14 @@ namespace Sample.Shared.Governance.Models
 		RewardToNeuron,
 		RewardToAccount,
 	}
-	public class RewardMode
+	public class RewardMode : EdjCase.ICP.Candid.CandidVariantValueBase<RewardModeType>
 	{
-		public RewardModeType Type { get; }
-		private readonly object? value;
-		
-		public RewardMode(RewardModeType type, object? value)
+		public RewardMode(RewardModeType type, object? value)  : base(type, value)
 		{
-			this.Type = type;
-			this.value = value;
+		}
+		
+		protected RewardMode()
+		{
 		}
 		
 		public static RewardMode RewardToNeuron(RewardToNeuron info)
@@ -38,12 +37,5 @@ namespace Sample.Shared.Governance.Models
 			return (RewardToAccount)this.value!;
 		}
 		
-		private void ValidateType(RewardModeType type)
-		{
-			if (this.Type != type)
-			{
-				throw new InvalidOperationException($"Cannot cast '{this.Type}' to type '{type}'");
-			}
-		}
 	}
 }

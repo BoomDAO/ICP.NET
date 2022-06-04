@@ -5,15 +5,14 @@ namespace Sample.Shared.Governance.Models
 		DissolveDelaySeconds,
 		WhenDissolvedTimestampSeconds,
 	}
-	public class DissolveState
+	public class DissolveState : EdjCase.ICP.Candid.CandidVariantValueBase<DissolveStateType>
 	{
-		public DissolveStateType Type { get; }
-		private readonly object? value;
-		
-		public DissolveState(DissolveStateType type, object? value)
+		public DissolveState(DissolveStateType type, object? value)  : base(type, value)
 		{
-			this.Type = type;
-			this.value = value;
+		}
+		
+		protected DissolveState()
+		{
 		}
 		
 		public static DissolveState DissolveDelaySeconds(ulong info)
@@ -38,12 +37,5 @@ namespace Sample.Shared.Governance.Models
 			return (ulong)this.value!;
 		}
 		
-		private void ValidateType(DissolveStateType type)
-		{
-			if (this.Type != type)
-			{
-				throw new InvalidOperationException($"Cannot cast '{this.Type}' to type '{type}'");
-			}
-		}
 	}
 }

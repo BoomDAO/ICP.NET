@@ -1,4 +1,4 @@
-﻿using EdjCase.ICP.Candid.Models;
+using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid.Models.Types;
 using EdjCase.ICP.Candid.Models.Values;
 using EdjCase.ICP.Candid.Utilities;
@@ -182,7 +182,7 @@ namespace EdjCase.ICP.Candid.Mappers
 			}
 			else if (typeof(ICandidVariantValue).IsAssignableFrom(objType))
 			{
-				ICandidVariantValue variant = (ICandidVariantValue)Activator.CreateInstance(objType);
+				ICandidVariantValue variant = (ICandidVariantValue)Activator.CreateInstance(objType, nonPublic: true);
 				Dictionary<CandidTag, Type?> optionTypes = variant.GetOptions();
 				Dictionary<CandidTag, MappingInfo?> optionMappingMap = optionTypes
 					.ToDictionary(
@@ -221,7 +221,7 @@ namespace EdjCase.ICP.Candid.Mappers
 				mapToObjectFunc = v =>
 				{
 					CandidVariant variant = v.AsVariant();
-					ICandidVariantValue obj = (ICandidVariantValue)Activator.CreateInstance(objType);
+					ICandidVariantValue obj = (ICandidVariantValue)Activator.CreateInstance(objType, nonPublic: true);
 					MappingInfo? optionMappingInfo = optionMappingMap[variant.Tag];
 					object? variantValue = optionMappingInfo?.MapToObjectFunc(variant.Value);
 					obj.SetValue(variant.Tag, variantValue);

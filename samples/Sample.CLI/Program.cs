@@ -1,4 +1,4 @@
-﻿using EdjCase.ICP.Agent.Agents;
+using EdjCase.ICP.Agent.Agents;
 using EdjCase.ICP.Agent.Auth;
 using EdjCase.ICP.Agent.Identity;
 using EdjCase.ICP.Agent.Responses;
@@ -15,8 +15,9 @@ IAgent agent = new HttpAgent(identity, url);
 
 
 var client = new GovernanceApiClient(agent, Principal.FromText("rrkah-fqaaa-aaaaa-aaaaq-cai"));
-var ident = new ED25519Identity(null);
-var info = await client.GetProposalInfoAsync(62143, ident);
+
+
+var info = await client.GetProposalInfoAsync(62143, null);
 
 
 int a = 1;

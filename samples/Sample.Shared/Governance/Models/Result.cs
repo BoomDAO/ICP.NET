@@ -5,15 +5,14 @@ namespace Sample.Shared.Governance.Models
 		Ok,
 		Err,
 	}
-	public class Result
+	public class Result : EdjCase.ICP.Candid.CandidVariantValueBase<ResultType>
 	{
-		public ResultType Type { get; }
-		private readonly object? value;
-		
-		public Result(ResultType type, object? value)
+		public Result(ResultType type, object? value)  : base(type, value)
 		{
-			this.Type = type;
-			this.value = value;
+		}
+		
+		protected Result()
+		{
 		}
 		
 		public static Result Ok()
@@ -32,12 +31,5 @@ namespace Sample.Shared.Governance.Models
 			return (GovernanceError)this.value!;
 		}
 		
-		private void ValidateType(ResultType type)
-		{
-			if (this.Type != type)
-			{
-				throw new InvalidOperationException($"Cannot cast '{this.Type}' to type '{type}'");
-			}
-		}
 	}
 }

@@ -5,15 +5,14 @@ namespace Sample.Shared.Governance.Models
 		ToRemove,
 		ToAdd,
 	}
-	public class Change
+	public class Change : EdjCase.ICP.Candid.CandidVariantValueBase<ChangeType>
 	{
-		public ChangeType Type { get; }
-		private readonly object? value;
-		
-		public Change(ChangeType type, object? value)
+		public Change(ChangeType type, object? value)  : base(type, value)
 		{
-			this.Type = type;
-			this.value = value;
+		}
+		
+		protected Change()
+		{
 		}
 		
 		public static Change ToRemove(NodeProvider info)
@@ -38,12 +37,5 @@ namespace Sample.Shared.Governance.Models
 			return (NodeProvider)this.value!;
 		}
 		
-		private void ValidateType(ChangeType type)
-		{
-			if (this.Type != type)
-			{
-				throw new InvalidOperationException($"Cannot cast '{this.Type}' to type '{type}'");
-			}
-		}
 	}
 }

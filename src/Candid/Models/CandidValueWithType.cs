@@ -1,4 +1,4 @@
-﻿using EdjCase.ICP.Candid.Models.Types;
+using EdjCase.ICP.Candid.Models.Types;
 using EdjCase.ICP.Candid.Models.Values;
 using System;
 
@@ -14,9 +14,14 @@ namespace EdjCase.ICP.Candid.Models
             this.Value = value ?? throw new ArgumentNullException(nameof(value));
             this.Type = type ?? throw new ArgumentNullException(nameof(type));
 		}
-		public T ToObject<T>(CandidConverter? converter = null)
+		public T? ToObjectOrDefault<T>(CandidConverter? converter = null)
 		{
 			return (converter ?? CandidConverter.Default).ToObject<T>(this.Value);
+		}
+
+		public T ToObject<T>(CandidConverter? converter = null)
+		{
+			return this.ToObjectOrDefault<T>(converter) ?? throw new Exception("Candid value is null");
 		}
 
 		public static CandidValueWithType FromValueAndType(CandidValue value, CandidType type)
