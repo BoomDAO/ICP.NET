@@ -12,7 +12,7 @@ namespace EdjCase.ICP.Candid.Models
 	{
 		private static byte[] ED25519_OID = new byte[]
 		{
-			0x30, 0x05, // SEQUENCE
+			0x30, 0x05, // SEQUENCE of 5 bytes
 			0x06, 0x03, // OID with 3 bytes
 			0x2b, 0x65, 0x70 // id-Ed25519 OID
 		};
@@ -32,55 +32,14 @@ namespace EdjCase.ICP.Candid.Models
 
 		public DerEncodedPublicKey GetDerEncodedBytes()
 		{
-			// The Bit String header needs to include the unused bit count byte in its length
-			byte[] encodedKeyLength = EncodeLengthValue(this.Value.Length + 1);
-
-			int totalByteLength = ED25519_OID.Length + encodedKeyLength.Length + 2 + this.Value.Length;
-			byte[] encodedTotalByteLength = EncodeLengthValue(totalByteLength);
-
-			var bytes = new List<byte>();
-			bytes.Add(0x30); // Type: Sequence
-			bytes.AddRange(encodedTotalByteLength); // Sequence Length
-			bytes.AddRange(ED25519_OID); // OID
-			bytes.Add(0x03); // Type: Bit String
-			bytes.AddRange(encodedKeyLength);
-			bytes.Add(0x00); // 0 padding
-			bytes.AddRange(this.Value);
-
-			return new DerEncodedPublicKey(bytes.ToArray());
+			return DerEncodedPublicKey.Encode(this.Value, ED25519_OID);
 		}
 
 		public static ED25519PublicKey FromDer(DerEncodedPublicKey der)
 		{
-			byte[] value = DecodeDerPublicKey(der);
+			byte[] value = der.Decode(ED25519_OID);
 			return new ED25519PublicKey(value);
 		}
 
-		public static byte[] DecodeDerPublicKey(DerEncodedPublicKey der)
-		{
-			// TODO 
-			throw new NotImplementedException();
-		}
-
-		private static byte[] EncodeLengthValue(int number)
-		{
-			if (number <= 0b0111_1111)
-			{
-				return new byte[] { (byte)number };
-			}
-			if (number <= 0b1111_1111)
-			{
-				return new byte[] { 0x81, (byte)number };
-			}
-			if (number <= 0b1111_1111_1111_1111)
-			{
-				return new byte[] { 0x82, (byte)(number >> 8), (byte)number };
-			}
-			if (number <= 0b1111_1111_1111_1111_1111_1111)
-			{
-				return new byte[] { 0x83, (byte)(number >> 16), (byte)(number >> 8), (byte)number };
-			}
-			throw new Exception("Length too long (> 4 bytes)");
-		}
 	}
 }

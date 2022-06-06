@@ -1,4 +1,4 @@
-﻿using EdjCase.ICP.Candid.Crypto;
+using EdjCase.ICP.Candid.Crypto;
 using EdjCase.ICP.Candid.Utilities;
 using System;
 using System.Linq;
@@ -8,7 +8,7 @@ namespace EdjCase.ICP.Candid.Models
 	public class Principal : IHashable, IEquatable<Principal>
     {
         private const byte anonymousSuffix = 4;
-        private const byte selfAuthenticatingSuffix = 4;
+		private const byte selfAuthenticatingSuffix = 2;
 
         public byte[] Raw { get; }
         public Principal(byte[] raw)
@@ -63,6 +63,7 @@ namespace EdjCase.ICP.Candid.Models
 
         public static Principal FromHex(string hex)
         {
+			// TODO validation
             byte[] bytes = ByteUtil.FromHexString(hex);
             return new Principal(bytes);
         }
@@ -72,9 +73,9 @@ namespace EdjCase.ICP.Candid.Models
             return new Principal(new byte[] { anonymousSuffix });
         }
 
-        public static Principal SelfAuthenticating(byte[] publicKey)
+        public static Principal SelfAuthenticating(DerEncodedPublicKey publicKey)
         {
-            byte[] digest = new SHA224().GenerateDigest(publicKey);
+            byte[] digest = new SHA224().GenerateDigest(publicKey.Value);
 
             // bytes = digest + selfAuthenticatingSuffix
             byte[] bytes = new byte[digest.Length + 1];
@@ -101,19 +102,19 @@ namespace EdjCase.ICP.Candid.Models
             string parsedText = principal.ToText();
             if (parsedText != text)
             {
-                throw new Exception($"Principal '${parsedText}' does not have a valid checksum.");
+                throw new Exception($"Principal '{parsedText}' does not have a valid checksum.");
             }
 
             return principal;
-        }
+		}
 
-        public static Principal FromRaw(byte[] raw)
-        {
-            // TODO any validation?
-            return new Principal(raw);
-        }
+		public static Principal FromRaw(byte[] raw)
+		{
+			// TODO any validation?
+			return new Principal(raw);
+		}
 
-        public byte[] ComputeHash(IHashFunction hashFunction)
+		public byte[] ComputeHash(IHashFunction hashFunction)
         {
             return hashFunction.ComputeHash(this.Raw);
         }

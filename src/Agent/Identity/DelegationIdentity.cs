@@ -1,4 +1,4 @@
-﻿using EdjCase.ICP.Agent;
+using EdjCase.ICP.Agent;
 using EdjCase.ICP.Agent.Auth;
 using EdjCase.ICP.Candid.Crypto;
 using EdjCase.ICP.Candid.Models;
@@ -29,11 +29,6 @@ namespace EdjCase.ICP.Agent.Identity
 		public override Signature Sign(byte[] blob)
 		{
 			return this.Identity.Sign(blob);
-		}
-
-		public override Principal GetPrincipal()
-		{
-			return this.Identity.GetPrincipal();
 		}
 	}
 

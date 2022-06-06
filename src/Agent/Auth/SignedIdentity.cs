@@ -1,5 +1,6 @@
-﻿using EdjCase.ICP.Candid.Crypto;
+using EdjCase.ICP.Candid.Crypto;
 using EdjCase.ICP.Candid.Models;
+using EdjCase.ICP.Candid.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,11 +11,15 @@ namespace EdjCase.ICP.Agent.Auth
 {
 	public abstract class SigningIdentityBase : IIdentity
 	{
-		public abstract Principal GetPrincipal();
-
 		public abstract IPublicKey GetPublicKey();
 
 		public abstract Signature Sign(byte[] sign);
+
+		public Principal GetPrincipal()
+		{
+			DerEncodedPublicKey publicKey = this.GetPublicKey().GetDerEncodedBytes();
+			return Principal.SelfAuthenticating(publicKey);
+		}
 
 		public SignedContent CreateSignedContent(Dictionary<string, IHashable> content)
 		{

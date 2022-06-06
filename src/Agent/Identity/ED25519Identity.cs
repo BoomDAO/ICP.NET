@@ -1,6 +1,7 @@
 using Chaos.NaCl;
 using EdjCase.ICP.Agent.Auth;
 using EdjCase.ICP.Candid.Models;
+using EdjCase.ICP.Candid.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -19,11 +20,6 @@ namespace EdjCase.ICP.Agent.Identity
 			this.PrivateKey = privateKey;
 		}
 
-		public override Principal GetPrincipal()
-		{
-			byte[] publicKey = this.GetPublicKey().GetDerEncodedBytes().Value;
-			return Principal.SelfAuthenticating(publicKey);
-		}
 
 		public override IPublicKey GetPublicKey()
 		{

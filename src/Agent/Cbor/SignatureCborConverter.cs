@@ -1,4 +1,5 @@
-﻿using Dahomey.Cbor.Serialization;
+using Dahomey.Cbor;
+using Dahomey.Cbor.Serialization;
 using Dahomey.Cbor.Serialization.Converters;
 using EdjCase.ICP.Agent;
 using EdjCase.ICP.Candid.Models;
@@ -14,10 +15,14 @@ namespace Agent.Cbor
 	{
 		public override Signature? Read(ref CborReader reader)
 		{
-			if(reader.GetCurrentDataItemType() == CborDataItemType.Null)
-            {
+			if (reader.GetCurrentDataItemType() == CborDataItemType.Null)
+			{
 				return null;
-            }
+			}
+			if (!reader.TryReadSemanticTag(out ulong tag) && tag != 55799)
+			{
+				throw new CborException($"Expected semantic tag '{55799}' for signature, got '{tag}'");
+			}
 			ReadOnlySpan<byte> bytes = reader.ReadByteString();
 
 			return new Signature(bytes.ToArray());
@@ -25,11 +30,12 @@ namespace Agent.Cbor
 
 		public override void Write(ref CborWriter writer, Signature? value)
 		{
-			if(value == null)
-            {
+			if (value == null)
+			{
 				writer.WriteNull();
 				return;
-            }
+			}
+			writer.WriteSemanticTag(55799); // Self-Describe
 			writer.WriteByteString(value.Value);
 		}
 	}

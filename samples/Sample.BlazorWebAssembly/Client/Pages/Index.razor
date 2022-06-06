@@ -24,6 +24,10 @@
 {
     <button @onclick="Login">Login</button>
 }
+else
+{
+    <button @onclick="Logout">Logout</button>
+}
 @if (this.Info != null)
 {
     <h2>Id: @this.Info.Id?.Id</h2>
@@ -86,6 +90,12 @@ else if(this.MadeCall && this.ProposalId != null)
         await JSRuntime.InvokeVoidAsync("window.authClientLogin", dotNetReference);
     }
 
+    public async Task Logout()
+    {
+        await JSRuntime.InvokeVoidAsync("window.authClientLogout");
+        this.StateHasChanged();
+    }
+
 
     public async Task ServerReloadProposalInfo()
     {
@@ -122,6 +132,7 @@ else if(this.MadeCall && this.ProposalId != null)
             DelegationChain chain = chainModel.ToCommon();
             this.Identity = new DelegationIdentity(identity, chain);
         }
+        this.StateHasChanged();
     }
 
     public async Task<T?> GetLocalStorageValueAsync<T>(string key)

@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Xunit;
 using EdjCase.ICP.ClientGenerator;
 using EdjCase.ICP.Candid.Models;
@@ -18,7 +18,7 @@ namespace EdjCase.ICP.Candid.Tests.Generators
 			string fileText = GetFileText(serviceName + ".did");
 			string baseNamespace = "Test";
 			CandidServiceFile serviceFile = CandidServiceFile.Parse(fileText);
-			ClientCodeResult source = ClientGenerator.ClientCodeGenerator.FromServiceFile(serviceName, baseNamespace, serviceFile);
+			ClientCodeResult source = ClientCodeGenerator.FromServiceFile(serviceName, baseNamespace, serviceFile);
 			Snapshot.Match(source, serviceName);
 		}
 

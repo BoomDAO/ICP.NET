@@ -1,6 +1,7 @@
-﻿using EdjCase.ICP.Candid.Models;
+using EdjCase.ICP.Candid.Models;
 using System;
 using System.Collections.Generic;
+using EdjCase.ICP.Candid.Models;
 
 namespace EdjCase.ICP.Agent.Auth
 {
@@ -8,11 +9,15 @@ namespace EdjCase.ICP.Agent.Auth
 	{
 		[Dahomey.Cbor.Attributes.CborProperty("content")]
 		public Dictionary<string, IHashable> Content { get; }
+
 		[Dahomey.Cbor.Attributes.CborProperty("sender_pubkey")]
 		public DerEncodedPublicKey? SenderPublicKey { get; }
+
+		[Dahomey.Cbor.Attributes.CborProperty("sender_delegation")]
+		public List<Delegation>? SenderDelegations { get; }
+
 		[Dahomey.Cbor.Attributes.CborProperty("sender_sig")]
 		public Signature? SenderSignature { get; }
-		// TODO `? sender_delegation: [*4 signed-delegation]`
 
 		public SignedContent(Dictionary<string, IHashable> content, DerEncodedPublicKey? senderPublicKey, Signature? senderSignature)
 		{
@@ -34,6 +39,10 @@ namespace EdjCase.ICP.Agent.Auth
 			if (this.SenderSignature != null)
 			{
 				properties.Add("sender_sig", this.SenderSignature);
+			}
+			if (this.SenderDelegations != null)
+			{
+				properties.Add("sender_delegation", this.SenderDelegations.ToHashable());
 			}
 			return properties;
 		}

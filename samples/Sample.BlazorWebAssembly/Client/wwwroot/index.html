@@ -27,12 +27,30 @@
     <script>navigator.serviceWorker.register('service-worker.js');</script>
 
     <script>
+        function toHexString(byteArray) {
+            return byteArray.reduce((output, elem) =>
+                (output + ('0' + elem.toString(16)).slice(-2)),
+                '');
+        }
         window.authClientLogin = function (dotNetObject) {
             window.authClient.login({
                 onSuccess: () => {
+                    try {
+                        const identity = window.authClient.getIdentity();
+                        const principalText = identity.getPrincipal().toText();
+                        console.log("Pricipal Text" + principalText);
+                        const publicKey = identity.getPublicKey().toDer();
+                        const publicKeyHex = toHexString(new Uint8Array(publicKey));
+                        console.log("Der Public Key Hex: " + publicKeyHex);
+                    } catch (e) {
+                        console.log(e);
+                    }
                     dotNetObject.invokeMethodAsync('OnLoginSuccess');
                 }
-            })
+            });
+        };
+        window.authClientLogout = function () {
+            window.authClient.logout();
         };
     </script>
 </body>
