@@ -9,9 +9,13 @@ namespace EdjCase.ICP.Agent.Identity
 {
 	public class ED25519Identity : SigningIdentityBase
 	{
+		public ED25519PublicKey PublicKey { get; }
 		public byte[] PrivateKey { get; }
-		public ED25519Identity(byte[] privateKey)
+
+		public ED25519Identity(ED25519PublicKey publicKey, byte[] privateKey)
 		{
+			// TODO validate that pub+priv match
+			this.PublicKey = publicKey;
 			this.PrivateKey = privateKey;
 		}
 
@@ -23,19 +27,14 @@ namespace EdjCase.ICP.Agent.Identity
 
 		public override IPublicKey GetPublicKey()
 		{
-			return new RawPublicKey(Ed25519.PublicKeyFromSeed(this.PrivateKey));
+			return this.PublicKey;
 		}
+
 
 		public override Signature Sign(byte[] message)
 		{
-			byte[] expandedPrivateKey = Ed25519.ExpandedPrivateKeyFromSeed(this.PrivateKey);
-			byte[] signatureBytes = Ed25519.Sign(message, expandedPrivateKey);
+			byte[] signatureBytes = Ed25519.Sign(message, this.PrivateKey);
 			return new Signature(signatureBytes);
-		}
-
-		public static ED25519Identity FromPem(byte[] pemBytes)
-		{
-			throw new NotImplementedException();
 		}
 	}
 }
