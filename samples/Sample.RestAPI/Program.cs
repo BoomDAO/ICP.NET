@@ -1,5 +1,6 @@
 using EdjCase.ICP.Agent.Agents;
 using EdjCase.ICP.Agent.Auth;
+using EdjCase.ICP.Candid.Models;
 using Sample.Shared;
 using Sample.Shared.Governance;
 
@@ -13,7 +14,7 @@ Uri url = new Uri($"https://ic0.app");
 var identity = new AnonymousIdentity();
 builder.Services.AddSingleton<IAgent>(sp => new HttpAgent(identity, url));
 
-builder.Services.AddSingleton<GovernanceApiClient>();
+builder.Services.AddSingleton(sp => ActivatorUtilities.CreateInstance<GovernanceApiClient>(sp, Principal.FromText("rrkah-fqaaa-aaaaa-aaaaq-cai")));
 
 var app = builder.Build();
 

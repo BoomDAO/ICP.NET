@@ -163,7 +163,6 @@ namespace EdjCase.ICP.Agent.Agents
 			HttpRequestMessage request;
 			if (cborBody != null)
 			{
-				Console.WriteLine(ByteUtil.ToHexString(cborBody));
 				var content = new ByteArrayContent(cborBody);
 				content.Headers.Remove("Content-Type");
 				content.Headers.Add("Content-Type", CBOR_CONTENT_TYPE);

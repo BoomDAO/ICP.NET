@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using EdjCase.ICP.Candid.Crypto;
 using EdjCase.ICP.Candid.Encodings;
 using EdjCase.ICP.Candid.Models.Values;
@@ -16,7 +16,12 @@ namespace EdjCase.ICP.Candid.Models
 			this.NanoSeconds = nanoSeconds ?? throw new ArgumentNullException(nameof(nanoSeconds));
 		}
 
-		public static ICTimestamp FromEpochNanoSeconds(ulong nanosecondsFromNow)
+		public static ICTimestamp FromNanoSeconds(ulong nanosecondsSinceEpoch)
+		{
+			return new ICTimestamp(nanosecondsSinceEpoch.ToUnbounded());
+		}
+
+		public static ICTimestamp FromNanoSecondsInFuture(ulong nanosecondsFromNow)
 		{
 			ulong futureDate = EpochNowInNanoseconds() + nanosecondsFromNow;
 			return new ICTimestamp(futureDate.ToUnbounded());
@@ -29,7 +34,7 @@ namespace EdjCase.ICP.Candid.Models
 
 		public static ICTimestamp Now()
 		{
-			return FromEpochNanoSeconds(0);
+			return FromNanoSecondsInFuture(0);
 		}
 
 		public byte[] ComputeHash(IHashFunction hashFunction)

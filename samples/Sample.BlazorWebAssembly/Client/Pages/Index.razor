@@ -17,8 +17,7 @@
 
 <input type="number" @bind-value="this.ProposalId" @bind-value:event="oninput" />
 
-<button @onclick="ReloadProposalInfo">Fetch using WebAssembly</button>
-<button @onclick="ServerReloadProposalInfo">Fetch using Server Api</button>
+<button @onclick="ReloadProposalInfo">Fetch</button>
 
 @if (this.Identity == null)
 {
@@ -79,7 +78,6 @@ else if(this.MadeCall && this.ProposalId != null)
     {
         if (this.ProposalId != null)
         {
-            await JSRuntime.InvokeVoidAsync("window.getProposalInfo");
             this.Info = await this.Client.GetProposalInfoAsync(this.ProposalId.Value, identityOverride: this.Identity);
             this.MadeCall = true;
         }
@@ -95,17 +93,6 @@ else if(this.MadeCall && this.ProposalId != null)
     {
         await JSRuntime.InvokeVoidAsync("window.authClientLogout");
         this.StateHasChanged();
-    }
-
-
-    public async Task ServerReloadProposalInfo()
-    {
-        if (this.ProposalId != null)
-        {
-            HttpResponseMessage response = await this.Http.GetAsync($"api/Governance/GetProposalInfo/{this.ProposalId.Value}");
-            response.EnsureSuccessStatusCode();
-            this.Info = await response.Content.ReadFromJsonAsync<ProposalInfo?>();
-        }
     }
 
     protected override async Task OnInitializedAsync()
@@ -190,7 +177,7 @@ else if(this.MadeCall && this.ProposalId != null)
         {
             var publicKey = new ED25519PublicKey(Convert.FromHexString(this.PubKey));
             ulong nanosecondsFromNow = (ulong)ByteUtil.FromHexString(this.Expiration).ToBigInteger(isUnsigned: true, isBigEndian: true);
-            ICTimestamp expiration = ICTimestamp.FromEpochNanoSeconds(nanosecondsFromNow);
+            ICTimestamp expiration = ICTimestamp.FromNanoSeconds(nanosecondsFromNow);
             return new Delegation(publicKey.GetRawBytes(), expiration, targets: null);
         }
     }
