@@ -39,7 +39,8 @@ namespace ICP.Candid.Tests
 		{
 			var principal = Principal.FromText(principalText);
 			byte[] publicKeyBytes = ByteUtil.FromHexString(publicKeyHex);
-			var publicKeyPrincipal = Principal.SelfAuthenticating(new DerEncodedPublicKey(publicKeyBytes));
+			ED25519PublicKey publicKey = ED25519PublicKey.FromDer(publicKeyBytes);
+			var publicKeyPrincipal = Principal.SelfAuthenticating(publicKey);
 			Assert.Equal(principal, publicKeyPrincipal);
 		}
 	}

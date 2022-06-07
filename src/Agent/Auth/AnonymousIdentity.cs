@@ -1,4 +1,4 @@
-﻿using EdjCase.ICP.Candid.Crypto;
+using EdjCase.ICP.Candid.Crypto;
 using EdjCase.ICP.Candid.Models;
 using System;
 using System.Collections.Generic;
@@ -13,7 +13,7 @@ namespace EdjCase.ICP.Agent.Auth
 
 		public SignedContent CreateSignedContent(Dictionary<string, IHashable> request)
 		{
-			return new SignedContent(request, null, null);
+			return new SignedContent(request, null, null, null);
 		}
 
 		public Principal GetPrincipal() => Principal.Anonymous();

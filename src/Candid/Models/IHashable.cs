@@ -41,8 +41,8 @@ namespace EdjCase.ICP.Candid.Models
 
 					return (Key: keyDigest, Value: valueDigest);
 				}) // Hash key and value bytes
-				.Where(o => o.Value == null) // Remove empty/null ones
-				.OrderBy(o => o.Key) // Keys in order
+				.Where(o => o.Value != null) // Remove empty/null ones
+				.OrderBy(o => o.Key, new HashComparer()) // Keys in order
 				.SelectMany(o => o.Key.Concat(o.Value))
 				.ToArray(); // Create single byte[] by concatinating them all together
 			return hashFunction.ComputeHash(requestIdBytes); // Hash concatinated bytes
@@ -56,6 +56,25 @@ namespace EdjCase.ICP.Candid.Models
 		IEnumerator IEnumerable.GetEnumerator()
 		{
 			return this.Properties.GetEnumerator();
+		}
+	}
+
+	internal class HashComparer : IComparer<byte[]>
+	{
+		public int Compare(byte[] x, byte[] y)
+		{
+			if (x.Length != y.Length)
+			{
+				return x.Length - y.Length;
+			}
+			for(int i = 0; i < x.Length; i++)
+			{
+				if(x[i] != y[i])
+				{
+					return x[i] - y[i];
+				}
+			}
+			return 0;
 		}
 	}
 

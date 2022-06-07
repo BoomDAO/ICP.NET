@@ -19,8 +19,8 @@ namespace ICP.Candid.Tests
 		{
 			byte[] publicKeyBytes = ByteUtil.FromHexString(publicKeyHex);
 			var key = new ED25519PublicKey(publicKeyBytes);
-			DerEncodedPublicKey derEncoded = key.GetDerEncodedBytes();
-			Snapshot.Match(derEncoded.Value);
+			byte[] derEncoded = key.GetDerEncodedBytes();
+			Snapshot.Match(derEncoded);
 		}
 		[Theory]
 		[InlineData("302a300506032b65700321005987fc68902ecf4644fe6c7d82b9f0e957817a8f9f8c58da5d2c9d3d19915229", "d8c5d3d2bcb82f16b399d40ed6ff1801bc5eb31fc301dc1ad517e2ed8c3f268e5987fc68902ecf4644fe6c7d82b9f0e957817a8f9f8c58da5d2c9d3d19915229")]

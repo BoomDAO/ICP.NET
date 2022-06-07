@@ -1,7 +1,7 @@
+using EdjCase.ICP.Agent.Identity;
 using EdjCase.ICP.Candid.Models;
 using System;
 using System.Collections.Generic;
-using EdjCase.ICP.Candid.Models;
 
 namespace EdjCase.ICP.Agent.Auth
 {
@@ -10,19 +10,23 @@ namespace EdjCase.ICP.Agent.Auth
 		[Dahomey.Cbor.Attributes.CborProperty("content")]
 		public Dictionary<string, IHashable> Content { get; }
 
+		[Dahomey.Cbor.Attributes.CborIgnoreIfDefault]
 		[Dahomey.Cbor.Attributes.CborProperty("sender_pubkey")]
-		public DerEncodedPublicKey? SenderPublicKey { get; }
+		public byte[]? SenderPublicKey { get; }
 
+		[Dahomey.Cbor.Attributes.CborIgnoreIfDefault]
 		[Dahomey.Cbor.Attributes.CborProperty("sender_delegation")]
-		public List<Delegation>? SenderDelegations { get; }
+		public List<SignedDelegation>? SenderDelegations { get; }
 
+		[Dahomey.Cbor.Attributes.CborIgnoreIfDefault]
 		[Dahomey.Cbor.Attributes.CborProperty("sender_sig")]
 		public Signature? SenderSignature { get; }
 
-		public SignedContent(Dictionary<string, IHashable> content, DerEncodedPublicKey? senderPublicKey, Signature? senderSignature)
+		public SignedContent(Dictionary<string, IHashable> content, byte[]? senderPublicKey, List<SignedDelegation>? delegations, Signature? senderSignature)
 		{
 			this.Content = content ?? throw new ArgumentNullException(nameof(content));
 			this.SenderPublicKey = senderPublicKey;
+			this.SenderDelegations = delegations;
 			this.SenderSignature = senderSignature;
 		}
 
@@ -34,7 +38,7 @@ namespace EdjCase.ICP.Agent.Auth
 			};
 			if (this.SenderPublicKey != null)
 			{
-				properties.Add("sender_pubkey", this.SenderPublicKey);
+				properties.Add("sender_pubkey", this.SenderPublicKey.ToHashable());
 			}
 			if (this.SenderSignature != null)
 			{

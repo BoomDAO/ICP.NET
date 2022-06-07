@@ -35,7 +35,6 @@ namespace Agent.Cbor
 				writer.WriteNull();
 				return;
 			}
-			writer.WriteSemanticTag(55799); // Self-Describe
 			writer.WriteByteString(value.Value);
 		}
 	}

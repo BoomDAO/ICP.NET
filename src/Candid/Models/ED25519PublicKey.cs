@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using EdjCase.ICP.Candid.Crypto;
+using EdjCase.ICP.Candid.Utilities;
 
 namespace EdjCase.ICP.Candid.Models
 {
@@ -30,16 +31,25 @@ namespace EdjCase.ICP.Candid.Models
 			return hashFunction.ComputeHash(this.Value);
 		}
 
-		public DerEncodedPublicKey GetDerEncodedBytes()
+		public byte[] GetDerEncodedBytes()
 		{
-			return DerEncodedPublicKey.Encode(this.Value, ED25519_OID);
+			return DerEncodingUtil.EncodePublicKey(this.Value, ED25519_OID);
 		}
 
-		public static ED25519PublicKey FromDer(DerEncodedPublicKey der)
+		public static ED25519PublicKey FromDer(byte[] derEncodedPublicKey)
 		{
-			byte[] value = der.Decode(ED25519_OID);
+			byte[] value = DerEncodingUtil.DecodePublicKey(derEncodedPublicKey, ED25519_OID);
 			return new ED25519PublicKey(value);
 		}
 
+		public byte[] GetRawBytes()
+		{
+			return this.Value;
+		}
+
+		public byte[] GetOid()
+		{
+			return ED25519_OID;
+		}
 	}
 }

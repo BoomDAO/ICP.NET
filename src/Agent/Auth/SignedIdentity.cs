@@ -1,3 +1,4 @@
+using EdjCase.ICP.Agent.Identity;
 using EdjCase.ICP.Candid.Crypto;
 using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid.Utilities;
@@ -12,23 +13,28 @@ namespace EdjCase.ICP.Agent.Auth
 	public abstract class SigningIdentityBase : IIdentity
 	{
 		public abstract IPublicKey GetPublicKey();
+		public virtual List<SignedDelegation>? GetSenderDelegations()
+		{
+			return null;
+		}
 
 		public abstract Signature Sign(byte[] sign);
 
 		public Principal GetPrincipal()
 		{
-			DerEncodedPublicKey publicKey = this.GetPublicKey().GetDerEncodedBytes();
+			IPublicKey publicKey = this.GetPublicKey();
 			return Principal.SelfAuthenticating(publicKey);
 		}
 
 		public SignedContent CreateSignedContent(Dictionary<string, IHashable> content)
 		{
-			DerEncodedPublicKey senderPublicKey = this.GetPublicKey().GetDerEncodedBytes();
+			IPublicKey senderPublicKey = this.GetPublicKey();
 			byte[] domainSeparator = Encoding.UTF8.GetBytes("\x0Aic-request");
 			var sha256 = SHA256HashFunction.Create();
 			byte[] contentHash = content.ToHashable().ComputeHash(sha256);
 			Signature senderSignature = this.Sign(domainSeparator.Concat(contentHash).ToArray());
-			return new SignedContent(content, senderPublicKey, senderSignature);
+			List<SignedDelegation>? senderDelegations = this.GetSenderDelegations();
+			return new SignedContent(content, senderPublicKey.GetRawBytes(), senderDelegations, senderSignature);
 		}
 	}
 }

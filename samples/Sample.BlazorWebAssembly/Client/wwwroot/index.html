@@ -32,22 +32,38 @@
                 (output + ('0' + elem.toString(16)).slice(-2)),
                 '');
         }
+        function hexToBytes(hex) {
+            for (var bytes = [], c = 0; c < hex.length; c += 2)
+                bytes.push(parseInt(hex.substr(c, 2), 16));
+            return bytes;
+        }
         window.authClientLogin = function (dotNetObject) {
             window.authClient.login({
                 onSuccess: () => {
-                    try {
-                        const identity = window.authClient.getIdentity();
-                        const principalText = identity.getPrincipal().toText();
-                        console.log("Pricipal Text" + principalText);
-                        const publicKey = identity.getPublicKey().toDer();
-                        const publicKeyHex = toHexString(new Uint8Array(publicKey));
-                        console.log("Der Public Key Hex: " + publicKeyHex);
-                    } catch (e) {
-                        console.log(e);
-                    }
                     dotNetObject.invokeMethodAsync('OnLoginSuccess');
                 }
             });
+        };
+        window.getProposalInfo = async function () {
+            const identity = await window.authClient.getIdentity();
+
+            const canisterId = "rrkah-fqaaa-aaaaa-aaaaq-cai";
+            console.log(window);
+            let agent = new window.HttpAgentType({
+                host: "https://ic0.app",
+                identity,
+                fetch: (url, options) => {
+                    console.log(options)
+                    console.log(toHexString(new Uint8Array(options.body)));
+                }
+            });
+            let arg = "4449444C000178BFF2000000000000";
+            let fields = {
+                methodName: "get_proposal_info",
+                arg: hexToBytes(arg)
+            };
+            agent.query(canisterId, fields, identity)
+            .then(() => console.log("done"))
         };
         window.authClientLogout = function () {
             window.authClient.logout();

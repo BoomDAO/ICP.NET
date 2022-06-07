@@ -19,10 +19,9 @@ namespace ICP.Candid.Tests
 		{
 			byte[] publicKeyBytes = ByteUtil.FromHexString(publicKeyHex);
 			var publicKey = new ED25519PublicKey(publicKeyBytes);
-			DerEncodedPublicKey actualDer = publicKey.GetDerEncodedBytes();
+			byte[] actualDer = publicKey.GetDerEncodedBytes();
 
-			byte[] derEncodedPublicKeyBytes = ByteUtil.FromHexString(derEncodedPublicKeyHex);
-			DerEncodedPublicKey expectedDer = new DerEncodedPublicKey(derEncodedPublicKeyBytes);
+			byte[] expectedDer = ByteUtil.FromHexString(derEncodedPublicKeyHex);
 
 			Assert.Equal(expectedDer, actualDer);
 		}

@@ -1,66 +1,16 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using EdjCase.ICP.Candid.Crypto;
-using EdjCase.ICP.Candid.Utilities;
 
-namespace EdjCase.ICP.Candid.Models
+namespace EdjCase.ICP.Candid.Utilities
 {
-	public class DerEncodedPublicKey : IHashable, IPublicKey, IEquatable<DerEncodedPublicKey>
+	public static class DerEncodingUtil
 	{
-		public byte[] Value { get; }
-
-		public DerEncodedPublicKey(byte[] value)
+		public static byte[] DecodePublicKey(byte[] derEncodedPublicKey, byte[] oid)
 		{
-			this.Value = value ?? throw new ArgumentNullException(nameof(value));
-		}
-
-		public byte[] ComputeHash(IHashFunction hashFunction)
-		{
-			return hashFunction.ComputeHash(this.Value);
-		}
-
-		public DerEncodedPublicKey GetDerEncodedBytes()
-		{
-			return this;
-		}
-
-		public bool Equals(DerEncodedPublicKey? other)
-		{
-			if (other == null)
-			{
-				return false;
-			}
-			return this.Value.SequenceEqual(other.Value);
-		}
-
-
-		public override bool Equals(object obj)
-		{
-			if (obj is DerEncodedPublicKey k)
-			{
-				return this.Equals(k);
-			}
-			return false;
-		}
-
-		public override int GetHashCode()
-		{
-			return HashCode.Combine(this.Value);
-		}
-
-		public override string ToString()
-		{
-			return ByteUtil.ToHexString(this.Value);
-		}
-
-		public byte[] Decode(byte[] oid)
-		{
-			using (var stream = new MemoryStream(oid))
+			using (var stream = new MemoryStream(derEncodedPublicKey))
 			{
 				using (var reader = new BinaryReader(stream))
 				{
@@ -94,12 +44,12 @@ namespace EdjCase.ICP.Candid.Models
 			}
 		}
 
-		public static DerEncodedPublicKey Encode(byte[] publicKey, byte[] oid)
+		public static byte[] EncodePublicKey(byte[] rawPublicKey, byte[] oid)
 		{
 			// The Bit String header needs to include the unused bit count byte in its length
-			byte[] encodedKeyLength = EncodeLengthValue(publicKey.Length + 1);
+			byte[] encodedKeyLength = EncodeLengthValue(rawPublicKey.Length + 1);
 
-			int totalByteLength = oid.Length + encodedKeyLength.Length + 2 + publicKey.Length;
+			int totalByteLength = oid.Length + encodedKeyLength.Length + 2 + rawPublicKey.Length;
 			byte[] encodedTotalByteLength = EncodeLengthValue(totalByteLength);
 
 			var bytes = new List<byte>();
@@ -109,9 +59,9 @@ namespace EdjCase.ICP.Candid.Models
 			bytes.Add(0x03); // Type: Bit String
 			bytes.AddRange(encodedKeyLength);
 			bytes.Add(0x00); // 0 padding
-			bytes.AddRange(publicKey);
+			bytes.AddRange(rawPublicKey);
 
-			return new DerEncodedPublicKey(bytes.ToArray());
+			return bytes.ToArray();
 		}
 
 		private static byte[] EncodeLengthValue(int number)
@@ -142,11 +92,11 @@ namespace EdjCase.ICP.Candid.Models
 			{
 				return firstByte;
 			}
-			if(firstByte == 0x80)
+			if (firstByte == 0x80)
 			{
 				throw new InvalidDataException("Invalid length 0");
 			}
-			if(firstByte == 0x81)
+			if (firstByte == 0x81)
 			{
 				byte secondByte = reader.ReadByte();
 				return secondByte;

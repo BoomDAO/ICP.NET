@@ -1,4 +1,4 @@
-﻿using Dahomey.Cbor.Serialization;
+using Dahomey.Cbor.Serialization;
 using Dahomey.Cbor.Serialization.Converters;
 using EdjCase.ICP.Agent;
 using EdjCase.ICP.Candid.Models;
@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Agent.Cbor
 {
-	internal class EncodedArgumentCborConverter : CborConverterBase<CandidArg?>
+	internal class CandidArgCborConverter : CborConverterBase<CandidArg?>
 	{
 		public override CandidArg? Read(ref CborReader reader)
 		{

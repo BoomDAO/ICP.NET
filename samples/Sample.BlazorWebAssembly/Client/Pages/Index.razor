@@ -79,6 +79,7 @@ else if(this.MadeCall && this.ProposalId != null)
     {
         if (this.ProposalId != null)
         {
+            await JSRuntime.InvokeVoidAsync("window.getProposalInfo");
             this.Info = await this.Client.GetProposalInfoAsync(this.ProposalId.Value, identityOverride: this.Identity);
             this.MadeCall = true;
         }
@@ -158,7 +159,7 @@ else if(this.MadeCall && this.ProposalId != null)
             List<SignedDelegation> delegations = this.Delegations
                 .Select(d => d.ToCommon())
                 .ToList();
-            DerEncodedPublicKey publicKey = new DerEncodedPublicKey(Convert.FromHexString(this.PublicKey));
+            ED25519PublicKey publicKey = new ED25519PublicKey(Convert.FromHexString(this.PublicKey));
             return new DelegationChain(publicKey, delegations);
         }
     }
@@ -187,10 +188,10 @@ else if(this.MadeCall && this.ProposalId != null)
 
         public Delegation ToCommon()
         {
-            DerEncodedPublicKey publicKey = new ED25519PublicKey(Convert.FromHexString(this.PubKey)).GetDerEncodedBytes();
+            var publicKey = new ED25519PublicKey(Convert.FromHexString(this.PubKey));
             ulong nanosecondsFromNow = (ulong)ByteUtil.FromHexString(this.Expiration).ToBigInteger(isUnsigned: true, isBigEndian: true);
             ICTimestamp expiration = ICTimestamp.FromEpochNanoSeconds(nanosecondsFromNow);
-            return new Delegation(publicKey, expiration, targets: null);
+            return new Delegation(publicKey.GetRawBytes(), expiration, targets: null);
         }
     }
 }
