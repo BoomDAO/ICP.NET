@@ -123,7 +123,7 @@ string text = CandidTextGenerator.Generator(type, IndentType.Tab);
 ## Usage (Code)
 ```cs
     // Location of the `*.did` file to parse from
-    string candidFilePath = "location/to/file.did";
+    string candidFilePath = "location/to/service.did";
 
     // Directory to create *.cs source code.
     string outputDirectory = "location/to/output";
@@ -137,8 +137,13 @@ string text = CandidTextGenerator.Generator(type, IndentType.Tab);
 ```
 
 ## Usage (dotnet tool)
+### Install with dotnet tools
 ```
-dotnet candid-client-generator -f "location/to/file.did" -o "location/to/output" -n "My.Namespace.IC" -c "MyClient"
+dotnet tool install EdjCase.ICP.ClientGenerator --version 1.0.1
+```
+### Run tool
+```
+dotnet candid-client-generator -f "location/to/service.did" -o "location/to/output" -n "My.Namespace.IC" -c "MyClient"
 ```
 
 # Links
