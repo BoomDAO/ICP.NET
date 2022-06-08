@@ -139,11 +139,11 @@ string text = CandidTextGenerator.Generator(type, IndentType.Tab);
 ## Usage (dotnet tool)
 ### Install with dotnet tools
 ```
-dotnet tool install EdjCase.ICP.ClientGenerator --version 1.0.1
+dotnet tool install -g EdjCase.ICP.ClientGenerator
 ```
 ### Run tool
 ```
-dotnet candid-client-generator -f "location/to/service.did" -o "location/to/output" -n "My.Namespace.IC" -c "MyClient"
+candid-client-generator -f "location/to/service.did" -o "location/to/output" -n "My.Namespace.IC" -c "MyClient"
 ```
 
 # Links
