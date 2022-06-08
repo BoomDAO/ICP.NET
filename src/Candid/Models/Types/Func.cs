@@ -1,4 +1,4 @@
-﻿using EdjCase.ICP.Candid.Encodings;
+using EdjCase.ICP.Candid.Encodings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,13 +17,28 @@ namespace EdjCase.ICP.Candid.Models.Types
 		public override CandidTypeCode Type { get; } = CandidTypeCode.Func;
 
 		public List<FuncMode> Modes { get; }
-		public List<CandidType> ArgTypes { get; }
-		public List<CandidType> ReturnTypes { get; }
+		public List<(CandidId? Name, CandidType Type)> ArgTypes { get; }
+		public List<(CandidId? Name, CandidType Type)> ReturnTypes { get; }
 
 		public CandidFuncType(
 			List<FuncMode> modes,
 			List<CandidType> argTypes,
 			List<CandidType> returnTypes,
+			CandidId? recursiveId = null)
+			: this(
+				  modes,
+				  argTypes.Select(t => ((CandidId?)null, t)).ToList(),
+				  returnTypes.Select(t => ((CandidId?)null, t)).ToList(),
+				  recursiveId
+			)
+		{
+
+		}
+
+		public CandidFuncType(
+			List<FuncMode> modes,
+			List<(CandidId? Name, CandidType Type)> argTypes,
+			List<(CandidId? Name, CandidType Type)> returnTypes,
 			CandidId? recursiveId = null)
 			: base(recursiveId)
 		{
@@ -37,12 +52,12 @@ namespace EdjCase.ICP.Candid.Models.Types
 			byte[] argsCount = LEB128.EncodeSigned(this.ArgTypes.Count);
 
 			IEnumerable<byte> argTypes = this.ArgTypes
-				.SelectMany(a => a.Encode(compoundTypeTable));
+				.SelectMany(a => a.Type.Encode(compoundTypeTable));
 
 			byte[] returnsCount = LEB128.EncodeSigned(this.ReturnTypes.Count);
 
 			IEnumerable<byte> returnTypes = this.ReturnTypes
-				.SelectMany(a => a.Encode(compoundTypeTable));
+				.SelectMany(a => a.Type.Encode(compoundTypeTable));
 
 			byte[] modesCount = LEB128.EncodeSigned(this.Modes.Count);
 
@@ -60,7 +75,9 @@ namespace EdjCase.ICP.Candid.Models.Types
 
 		internal override IEnumerable<CandidType> GetInnerTypes()
 		{
-			return this.ArgTypes.Concat(this.ReturnTypes);
+			return this.ArgTypes
+				.Select(t => t.Type)
+				.Concat(this.ReturnTypes.Select(t => t.Type));
 		}
 
 		public override bool Equals(object? obj)

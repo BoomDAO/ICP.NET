@@ -1,3 +1,4 @@
+using EdjCase.ICP.Candid;
 using EdjCase.ICP.Candid.Crypto;
 using EdjCase.ICP.Candid.Models;
 using System;
@@ -5,6 +6,7 @@ using System.Collections.Generic;
 
 namespace EdjCase.ICP.Agent.Requests
 {
+
 	public class QueryRequest : IRepresentationIndependentHashItem
 	{
 		[Dahomey.Cbor.Attributes.CborProperty(Properties.REQUEST_TYPE)]

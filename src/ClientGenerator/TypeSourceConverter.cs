@@ -1,4 +1,4 @@
-﻿using EdjCase.ICP.Candid;
+using EdjCase.ICP.Candid;
 using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid.Models.Types;
 using EdjCase.ICP.Candid.Models.Values;
@@ -182,8 +182,8 @@ namespace EdjCase.ICP.ClientGenerator
 			List<ServiceSourceDescriptor.Method.ParameterInfo> resolvedParameters = type.ArgTypes
 				.Select((f, i) =>
 				{
-					string argName = $"arg{i}"; // TODO better naming
-					string? typeName = ResolveInnerTypeName(argName, f, declaredFullTypeNames, out TypeSourceDescriptor? subTypeToCreate);
+					string argName = f.Name?.Value ?? $"arg{i}"; // TODO better naming
+					string? typeName = ResolveInnerTypeName(argName, f.Type, declaredFullTypeNames, out TypeSourceDescriptor? subTypeToCreate);
 					if (subTypeToCreate != null)
 					{
 						subTypesToCreate.Add(subTypeToCreate);
@@ -194,8 +194,8 @@ namespace EdjCase.ICP.ClientGenerator
 			List<ServiceSourceDescriptor.Method.ParameterInfo> resolvedReturnParameters = type.ReturnTypes
 				.Select((f, i) =>
 				{
-					string argName = $"R{i}"; // TODO better naming
-					string? typeName = ResolveInnerTypeName(argName, f, declaredFullTypeNames, out TypeSourceDescriptor? subTypeToCreate);
+					string argName = f.Name?.Value ?? $"R{i}"; // TODO better naming
+					string? typeName = ResolveInnerTypeName(argName, f.Type, declaredFullTypeNames, out TypeSourceDescriptor? subTypeToCreate);
 					if (subTypeToCreate != null)
 					{
 						subTypesToCreate.Add(subTypeToCreate);

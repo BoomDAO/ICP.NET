@@ -1,4 +1,4 @@
-﻿using EdjCase.ICP.Candid.Models;
+using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid.Models.Types;
 using EdjCase.ICP.Candid.Models.Values;
 using System;
@@ -47,23 +47,33 @@ namespace EdjCase.ICP.Candid
 
         }
 
-        private static TextComponentBase GenerateInternal(CandidType t)
-        {
-            return t switch
-            {
-                CandidFuncType f => GenerateFunc(f),
-                CandidOptionalType o => GenerateOpt(o),
-                CandidVectorType ve => GenerateVec(ve),
-                CandidRecordType r => GenerateRecord(r),
-                CandidVariantType va => GenerateVariant(va),
-                CandidServiceType s => GenerateService(s),
-                CandidReferenceType r => GenerateRecursive(r),
-                CandidPrimitiveType p => GeneratePrimitive(p),
-                _ => throw new NotImplementedException()
-            };
-        }
+		private static TextComponentBase GenerateInternal(CandidId? name, CandidType t)
+		{
+			TextComponentBase typeComponent = GenerateInternal(t);
+			if (name == null)
+			{
+				return typeComponent;
+			}
+			return new KeyValueTextComponent(name.Value, typeComponent);
+		}
 
-        private static ConstantTextComponent GenerateRecursive(CandidReferenceType r)
+
+		private static TextComponentBase GenerateInternal(CandidType t)
+		{
+			return t switch
+			{
+				CandidFuncType f => GenerateFunc(f),
+				CandidOptionalType o => GenerateOpt(o),
+				CandidVectorType ve => GenerateVec(ve),
+				CandidRecordType r => GenerateRecord(r),
+				CandidVariantType va => GenerateVariant(va),
+				CandidServiceType s => GenerateService(s),
+				CandidReferenceType r => GenerateRecursive(r),
+				CandidPrimitiveType p => GeneratePrimitive(p),
+				_ => throw new NotImplementedException()
+			};
+		}
+		private static ConstantTextComponent GenerateRecursive(CandidReferenceType r)
         {
             return new ConstantTextComponent(r.Id.ToString());
         }
@@ -158,10 +168,10 @@ namespace EdjCase.ICP.Candid
         private static CompoundTypeTextComponent GenerateFunc(CandidFuncType func)
         {
             List<TextComponentBase> argTypes = func.ArgTypes
-                .Select(t => CandidTextGenerator.GenerateInternal(t))
+                .Select(t => CandidTextGenerator.GenerateInternal(t.Name, t.Type))
                 .ToList();
             List<TextComponentBase> returnTypes = func.ReturnTypes
-                .Select(t => CandidTextGenerator.GenerateInternal(t))
+                .Select(t => CandidTextGenerator.GenerateInternal(t.Name, t.Type))
                 .ToList();
 
             List<string> modes = func.Modes

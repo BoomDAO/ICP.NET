@@ -1,4 +1,4 @@
-﻿using EdjCase.ICP.Candid.Exceptions;
+using EdjCase.ICP.Candid.Exceptions;
 using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid.Models.Types;
 using EdjCase.ICP.Candid.Models.Values;
@@ -21,36 +21,50 @@ namespace EdjCase.ICP.Candid.Parsers
             where T : CandidType
         {
             CandidTextTokenHelper helper = CandidTextTokenizer.Tokenize(text);
-            CandidType def = ParseInternal(helper);
+            CandidType def = ParseType(helper);
             return (T)def;
         }
 
 
-        private static CandidType ParseInternal(CandidTextTokenHelper helper)
-        {
-            switch (helper.CurrentToken.Type)
-            {
-                case CandidTextTokenType.Text:
-                    CandidType typeDef = GetNamedType(helper);
-                    return typeDef;
-                case CandidTextTokenType.OpenParenthesis:
-                    return CandidTextParser.GetFunc(helper);
-                default:
-                    // TODO
-                    throw new NotImplementedException();
-            }
-        }
+		private static (CandidId? Name, CandidType Type) ParseArgType(CandidTextTokenHelper helper)
+		{
+			CandidId? name = null;
+			if(helper.NextToken?.Type == CandidTextTokenType.Colon)
+			{
+				string rawName = helper.CurrentToken.GetTextValueOrThrow();
+				name = CandidId.Parse(rawName);
+				helper.MoveNextOrThrow(); // :
+				helper.MoveNextOrThrow(); // type
+			}
+			CandidType type = ParseType(helper);
+			return (name, type);
+		}
 
-        private static CandidFuncType GetFunc(CandidTextTokenHelper helper)
+
+		private static CandidType ParseType(CandidTextTokenHelper helper)
+		{
+			switch (helper.CurrentToken.Type)
+			{
+				case CandidTextTokenType.Text:
+					CandidType typeDef = GetNamedType(helper);
+					return typeDef;
+				case CandidTextTokenType.OpenParenthesis:
+					return CandidTextParser.GetFunc(helper);
+				default:
+					// TODO
+					throw new NotImplementedException();
+			}
+		}
+		private static CandidFuncType GetFunc(CandidTextTokenHelper helper)
         {
             helper.CurrentToken.ValidateType(CandidTextTokenType.OpenParenthesis);
 
             helper.MoveNextOrThrow();
-            var argTypes = new List<CandidType>();
+            var argTypes = new List<(CandidId? Name, CandidType Type)>();
             while (helper.CurrentToken.Type != CandidTextTokenType.CloseParenthesis)
             {
-                CandidType t = ParseInternal(helper);
-                argTypes.Add(t);
+                (CandidId? name, CandidType t) = ParseArgType(helper);
+                argTypes.Add((name, t));
                 if(helper.CurrentToken.Type == CandidTextTokenType.Comma)
                 {
                     helper.MoveNextOrThrow();
@@ -67,11 +81,11 @@ namespace EdjCase.ICP.Candid.Parsers
             helper.CurrentToken.ValidateType(CandidTextTokenType.OpenParenthesis);
 
             helper.MoveNextOrThrow();
-            var returnTypes = new List<CandidType>();
+            var returnTypes = new List<(CandidId? Name, CandidType Type)>();
             while (helper.CurrentToken.Type != CandidTextTokenType.CloseParenthesis)
             {
-                CandidType t = ParseInternal(helper);
-                returnTypes.Add(t);
+				(CandidId? name, CandidType t) = ParseArgType(helper);
+                returnTypes.Add((name, t));
                 if(helper.CurrentToken.Type == CandidTextTokenType.Comma)
                 {
                     helper.MoveNextOrThrow();
@@ -98,7 +112,7 @@ namespace EdjCase.ICP.Candid.Parsers
         }
         private static CandidOptionalType GetOpt(CandidTextTokenHelper helper, CandidId? recursiveId)
         {
-            CandidType innerValue = ParseInternal(helper);
+            CandidType innerValue = ParseType(helper);
             return new CandidOptionalType(innerValue, recursiveId);
         }
 
@@ -120,13 +134,13 @@ namespace EdjCase.ICP.Candid.Parsers
                     helper.MoveNextOrThrow();
                     helper.CurrentToken.ValidateType(CandidTextTokenType.Colon);
                     helper.MoveNextOrThrow();
-                    fieldType = ParseInternal(helper);
+                    fieldType = ParseType(helper);
                 }
                 else
                 {
                     // `type` (based on position/index)
                     label = CandidTag.FromId(index++);
-                    fieldType = ParseInternal(helper);
+                    fieldType = ParseType(helper);
                 }
                 fields.Add(label, fieldType);
             }
@@ -136,7 +150,7 @@ namespace EdjCase.ICP.Candid.Parsers
 
         private static CandidVectorType GetVec(CandidTextTokenHelper helper, CandidId? recursiveId)
         {
-            CandidType innerValue = ParseInternal(helper);
+            CandidType innerValue = ParseType(helper);
             return new CandidVectorType(innerValue, recursiveId);
         }
 
@@ -159,7 +173,7 @@ namespace EdjCase.ICP.Candid.Parsers
                 {
                     helper.CurrentToken.ValidateType(CandidTextTokenType.Colon);
                     helper.MoveNextOrThrow();
-                    fieldType = ParseInternal(helper);
+                    fieldType = ParseType(helper);
                 }
                 options.Add(CandidTag.FromName(label), fieldType);
             }

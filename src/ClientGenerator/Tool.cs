@@ -36,20 +36,21 @@ namespace EdjCase.ICP.ClientGenerator
 		public static void Main(string[] args)
 		{
 #if DEBUG
-			Console.WriteLine("FileName: ");
-			string fileName = Console.ReadLine()!;
+			Console.WriteLine("File Path: ");
+			string filePath = Console.ReadLine()!;
+			string fileName = Path.GetFileName(filePath);
 			if (fileName.EndsWith(".did"))
 			{
 				fileName = fileName.Substring(0, fileName.Length - 4);
 			}
-			string projectPath = Directory.GetParent(Assembly.GetExecutingAssembly().Location)!.Parent!.Parent!.Parent!.FullName;
-			string sampleCliPath = Path.Combine(projectPath, "../../samples/Sample.Shared/");
+			Console.WriteLine("Output Directory: ");
+			string outputDirectory = Console.ReadLine()!;
 			args = new string[]
 			{
 				"-o",
-				Path.Combine(sampleCliPath, fileName),
+				Path.Combine(outputDirectory, fileName),
 				"-f",
-				Path.Combine(sampleCliPath, fileName + ".did"),
+				filePath,
 				"-n",
 				$"Sample.Shared.{fileName}"
 			};
