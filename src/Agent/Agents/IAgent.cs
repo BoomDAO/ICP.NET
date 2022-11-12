@@ -1,4 +1,4 @@
-﻿using EdjCase.ICP.Agent.Auth;
+using EdjCase.ICP.Agent.Auth;
 using EdjCase.ICP.Agent.Responses;
 using EdjCase.ICP.Candid.Models;
 using System;
@@ -25,7 +25,7 @@ namespace EdjCase.ICP.Agent.Agents
 		* @param effectiveCanisterId A Canister ID related to this call.
 		* @param options The options for this call.
 		*/
-        Task<ReadStateResponse> ReadStateAsync(Principal canisterId, List<PathSegment> paths, IIdentity? identityOverride = null);
+        Task<ReadStateResponse> ReadStateAsync(Principal canisterId, List<List<PathSegment>> paths, IIdentity? identityOverride = null);
 
         Task CallAsync(Principal canisterId, string method, CandidArg encodedArgument, Principal? effectiveCanisterId = null, IIdentity? identityOverride = null);
 
