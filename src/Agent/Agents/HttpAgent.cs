@@ -87,13 +87,13 @@ namespace EdjCase.ICP.Agent.Agents
 			}
 		}
 
-		public async Task<ReadStateResponse> ReadStateAsync(Principal canisterId, List<PathSegment> path, IIdentity? identityOverride)
+		public async Task<ReadStateResponse> ReadStateAsync(Principal canisterId, List<List<PathSegment>> paths, IIdentity? identityOverride)
 		{
 			return await this.SendAsync<ReadStateRequest, ReadStateResponse>($"/api/v2/canister/{canisterId.ToText()}/read_state", BuildRequest, identityOverride);
 
 			ReadStateRequest BuildRequest(Principal sender, ICTimestamp now)
 			{
-				return new ReadStateRequest(path, sender, now);
+				return new ReadStateRequest(paths, sender, now);
 			}
 		}
 
@@ -142,6 +142,9 @@ namespace EdjCase.ICP.Agent.Agents
 
 
 			byte[] cborBody = this.SerializeSignedContent(signedContent);
+#if DEBUG
+			string hex = ByteUtil.ToHexString(cborBody);
+#endif
 			return await this.SendRawAsync(url, cborBody);
 
 		}

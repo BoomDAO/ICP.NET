@@ -1,4 +1,4 @@
-﻿using EdjCase.ICP.Candid.Models;
+using EdjCase.ICP.Candid.Models;
 using System;
 using System.Collections.Generic;
 
@@ -9,13 +9,13 @@ namespace EdjCase.ICP.Agent.Requests
         [Dahomey.Cbor.Attributes.CborProperty(Properties.REQUEST_TYPE)]
         public string REQUEST_TYPE { get; } = "query";
         [Dahomey.Cbor.Attributes.CborProperty(Properties.PATHS)]
-        public List<PathSegment> Paths { get; }
+        public List<List<PathSegment>> Paths { get; }
         [Dahomey.Cbor.Attributes.CborProperty(Properties.SENDER)]
         public Principal Sender { get; }
         [Dahomey.Cbor.Attributes.CborProperty(Properties.INGRESS_EXPIRY)]
         public ICTimestamp IngressExpiry { get; }
 
-        public ReadStateRequest(List<PathSegment> paths, Principal sender, ICTimestamp ingressExpiry)
+        public ReadStateRequest(List<List<PathSegment>> paths, Principal sender, ICTimestamp ingressExpiry)
         {
             this.Paths = paths ?? throw new ArgumentNullException(nameof(paths));
             this.IngressExpiry = ingressExpiry ?? throw new ArgumentNullException(nameof(ingressExpiry));
@@ -26,8 +26,8 @@ namespace EdjCase.ICP.Agent.Requests
         {
             return new Dictionary<string, IHashable>
             {
-                {Properties.REQUEST_TYPE, "call".ToHashable()},
-                {Properties.PATHS, this.Paths.ToHashable()},
+                {Properties.REQUEST_TYPE, "read_state".ToHashable()},
+                {Properties.PATHS, this.Paths.ToHashable(p => p.ToHashable())},
                 {Properties.SENDER, this.Sender},
                 {Properties.INGRESS_EXPIRY, this.IngressExpiry},
             };

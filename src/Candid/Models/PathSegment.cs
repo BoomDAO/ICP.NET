@@ -1,5 +1,8 @@
-﻿using EdjCase.ICP.Candid.Crypto;
+using EdjCase.ICP.Candid.Crypto;
+using EdjCase.ICP.Candid.Utilities;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace EdjCase.ICP.Candid.Models
@@ -22,13 +25,20 @@ namespace EdjCase.ICP.Candid.Models
             return hashFunction.ComputeHash(this.Value);
         }
 
-        public static PathSegment FromString(string segment)
-        {
-            if (string.IsNullOrEmpty(segment))
-            {
-                throw new ArgumentException("Segment string value must have a value", nameof(segment));
-            }
-            return new PathSegment(Encoding.UTF8.GetBytes(segment));
-        }
-    }
+		public static PathSegment FromString(string segment)
+		{
+			if (string.IsNullOrEmpty(segment))
+			{
+				throw new ArgumentException("Segment string value must have a value", nameof(segment));
+			}
+			return new PathSegment(Encoding.UTF8.GetBytes(segment));
+		}
+
+		public static List<PathSegment> FromMultiString(params string[] segments)
+		{
+			return segments
+				.Select(PathSegment.FromString)
+				.ToList();
+		}
+	}
 }
