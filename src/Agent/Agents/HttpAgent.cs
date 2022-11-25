@@ -52,7 +52,7 @@ namespace EdjCase.ICP.Agent.Agents
 			{
 				targetCanisterOverride = canisterId;
 			}
-			await this.SendWithNoResponseAsync($"/api/v2/canister/{targetCanisterOverride.ToText()}/query", BuildRequest, identityOverride);
+			await this.SendWithNoResponseAsync($"/api/v2/canister/{targetCanisterOverride.ToText()}/call", BuildRequest, identityOverride);
 
 			CallRequest BuildRequest(Principal sender, ICTimestamp now)
 			{
