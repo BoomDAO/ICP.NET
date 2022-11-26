@@ -46,5 +46,13 @@ namespace EdjCase.ICP.Candid.Models
 		{
 			return CandidPrimitive.Nat(this.NanoSeconds);
 		}
+
+		public override string ToString()
+		{
+			TimeSpan offset = TimeSpan.FromMilliseconds((double)this.NanoSeconds.ToBigInteger() / 1000);
+			return epoch
+				.Add(offset)
+				.ToLongDateString();
+		}
 	}
 }
