@@ -1,4 +1,4 @@
-﻿using EdjCase.ICP.Candid.Encodings;
+using EdjCase.ICP.Candid.Encodings;
 using EdjCase.ICP.Candid.Models.Types;
 using System;
 using System.Collections.Generic;
@@ -62,17 +62,17 @@ namespace EdjCase.ICP.Candid.Models
             return table;
         }
 
-        public uint GetRecursiveReferenceIndex(CandidId recursiveId)
-        {
-            uint? index = this.CompoundTypeIndexMap
-                .Where(c => c.Key.RecursiveId == recursiveId)
-                .Select(c => (uint?)c.Value)
-                .SingleOrDefault();
-            if (index == null)
-            {
-                throw new Exception($"Unable to find type with recursive id '{recursiveId}'");
-            }
-            return index.Value;
-        }
-    }
+		public (CandidCompoundType Type, uint Index) GetReferenceById(CandidId referenceId)
+		{
+			(CandidCompoundType Type, uint Index)? reference = this.CompoundTypeIndexMap
+				.Where(c => c.Key.RecursiveId == referenceId)
+				.Select(c => (c.Key, c.Value))
+				.SingleOrDefault();
+			if (reference == null)
+			{
+				throw new Exception($"Unable to find type with reference id '{referenceId}'");
+			}
+			return reference.Value;
+		}
+	}
 }

@@ -75,13 +75,21 @@ namespace EdjCase.ICP.Candid.Models.Values
 			return new CandidRecord(hashedDict);
 		}
 
-		public override byte[] EncodeValue(CandidType type)
+		public override byte[] EncodeValue(CandidType type, Func<CandidId, CandidCompoundType> getReferencedType)
 		{
-			CandidRecordType t = (CandidRecordType)type;
+			CandidRecordType t;
+			if (type is CandidReferenceType r)
+			{
+				t = (CandidRecordType)getReferencedType(r.Id);
+			}
+			else
+			{
+				t = (CandidRecordType)type;
+			}
 			// bytes = ordered keys by hash hashes added together
 			return t.Fields
 				.OrderBy(l => l.Key)
-				.SelectMany(v => this.Fields[v.Key].EncodeValue(v.Value))
+				.SelectMany(v => this.Fields[v.Key].EncodeValue(v.Value, getReferencedType))
 				.ToArray();
 		}
 		public override int GetHashCode()

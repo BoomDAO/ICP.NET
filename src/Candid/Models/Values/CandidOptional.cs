@@ -1,4 +1,4 @@
-﻿using EdjCase.ICP.Candid.Models.Types;
+using EdjCase.ICP.Candid.Models.Types;
 using System;
 using System.Linq;
 
@@ -14,16 +14,24 @@ namespace EdjCase.ICP.Candid.Models.Values
 			this.Value = value ?? CandidPrimitive.Null();
 		}
 
-		public override byte[] EncodeValue(CandidType type)
+		public override byte[] EncodeValue(CandidType type, Func<CandidId, CandidCompoundType> getReferencedType)
 		{
-			CandidOptionalType t = (CandidOptionalType)type;
-			if(this.Value.Type == CandidValueType.Primitive
+			CandidOptionalType t;
+			if (type is CandidReferenceType r)
+			{
+				t = (CandidOptionalType)getReferencedType(r.Id);
+			}
+			else
+			{
+				t = (CandidOptionalType)type;
+			}
+			if (this.Value.Type == CandidValueType.Primitive
 				&& this.Value.AsPrimitive().ValueType == PrimitiveType.Null)
 			{
 				return new byte[] { 0 };
 			}
 			return new byte[] { 1 }
-				.Concat(this.Value.EncodeValue(t.Value))
+				.Concat(this.Value.EncodeValue(t.Value, getReferencedType))
 				.ToArray();
 		}
 		public override int GetHashCode()

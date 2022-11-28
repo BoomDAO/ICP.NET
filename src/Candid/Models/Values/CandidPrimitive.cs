@@ -143,7 +143,7 @@ namespace EdjCase.ICP.Candid.Models.Values
 
 
 
-        public override byte[] EncodeValue(CandidType type)
+        public override byte[] EncodeValue(CandidType type, Func<CandidId, CandidCompoundType> getReferencedType)
         {
             return this.ValueType switch
             {

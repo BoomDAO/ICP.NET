@@ -22,11 +22,19 @@ namespace EdjCase.ICP.Candid.Models.Values
 			this.Values = values;
 		}
 
-		public override byte[] EncodeValue(CandidType type)
+		public override byte[] EncodeValue(CandidType type, Func<CandidId, CandidCompoundType> getReferencedType)
 		{
-			CandidVectorType t = (CandidVectorType)type;
+			CandidVectorType t;
+			if (type is CandidReferenceType r)
+			{
+				t = (CandidVectorType)getReferencedType(r.Id);
+			}
+			else
+			{
+				t = (CandidVectorType)type;
+			}
 			byte[] valueListBytes = this.Values
-				.SelectMany(v => v.EncodeValue(t.InnerType))
+				.SelectMany(v => v.EncodeValue(t.InnerType, getReferencedType))
 				.ToArray();
 			byte[] valueCountBytes = LEB128.EncodeSigned(this.Values.Length);
 			return valueCountBytes

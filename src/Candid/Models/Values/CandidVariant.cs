@@ -20,9 +20,17 @@ namespace EdjCase.ICP.Candid.Models.Values
 			this.Value = value ?? CandidPrimitive.Null();
 		}
 
-		public override byte[] EncodeValue(CandidType type)
+		public override byte[] EncodeValue(CandidType type, Func<CandidId, CandidCompoundType> getReferencedType)
 		{
-			CandidVariantType t = (CandidVariantType)type;
+			CandidVariantType t;
+			if (type is CandidReferenceType r)
+			{
+				t = (CandidVariantType)getReferencedType(r.Id);
+			}
+			else
+			{
+				t = (CandidVariantType)type;
+			}
 			int index = t.Fields.AsEnumerable()
 				.OrderBy(f => f.Key)
 				.ToList()
@@ -33,7 +41,7 @@ namespace EdjCase.ICP.Candid.Models.Values
 			}
 			// bytes = index (LEB128) + encoded value
 			return LEB128.EncodeUnsigned((uint)index)
-				.Concat(this.Value.EncodeValue(t.Fields[this.Tag]))
+				.Concat(this.Value.EncodeValue(t.Fields[this.Tag], getReferencedType))
 				.ToArray();
 		}
 

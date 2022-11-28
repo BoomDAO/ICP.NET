@@ -1,4 +1,4 @@
-﻿using EdjCase.ICP.Candid.Encodings;
+using EdjCase.ICP.Candid.Encodings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +18,7 @@ namespace EdjCase.ICP.Candid.Models.Types
 
 		public override byte[] Encode(CompoundTypeTable compoundTypeTable)
 		{
-			uint index = compoundTypeTable.GetRecursiveReferenceIndex(this.Id);
+			uint index = compoundTypeTable.GetReferenceById(this.Id).Index;
 			return LEB128.EncodeUnsigned(index);
 		}
 

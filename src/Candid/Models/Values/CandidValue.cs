@@ -22,7 +22,7 @@ namespace EdjCase.ICP.Candid.Models.Values
     {
         public abstract CandidValueType Type { get; }
 
-        public abstract byte[] EncodeValue(CandidType type);
+        public abstract byte[] EncodeValue(CandidType type, Func<CandidId, CandidCompoundType> getReferencedType);
         public abstract override int GetHashCode();
         public abstract bool Equals(CandidValue? other);
         public abstract override string ToString();
