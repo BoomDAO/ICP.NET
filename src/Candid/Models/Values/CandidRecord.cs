@@ -1,4 +1,4 @@
-﻿using EdjCase.ICP.Candid.Models;
+using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid.Models.Types;
 using System;
 using System.Collections.Generic;
@@ -75,12 +75,13 @@ namespace EdjCase.ICP.Candid.Models.Values
 			return new CandidRecord(hashedDict);
 		}
 
-		public override byte[] EncodeValue()
+		public override byte[] EncodeValue(CandidType type)
 		{
+			CandidRecordType t = (CandidRecordType)type;
 			// bytes = ordered keys by hash hashes added together
-			return this.Fields
+			return t.Fields
 				.OrderBy(l => l.Key)
-				.SelectMany(v => v.Value.EncodeValue())
+				.SelectMany(v => this.Fields[v.Key].EncodeValue(v.Value))
 				.ToArray();
 		}
 		public override int GetHashCode()

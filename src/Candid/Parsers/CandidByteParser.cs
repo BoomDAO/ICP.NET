@@ -1,4 +1,4 @@
-﻿using EdjCase.ICP.Candid.Models;
+using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid.Encodings;
 using EdjCase.ICP.Candid.Exceptions;
 using System;
@@ -389,7 +389,7 @@ namespace EdjCase.ICP.Candid.Parsers
                                 CandidType type = resolver.Resolve(defOrRef);
                                 map.Add(field, type);
                             }
-                            resolver.Tracer.StartCompound("Variant");
+                            resolver.Tracer.EndCompound("Variant");
                             return new CandidVariantType(map);
                         });
                     case CandidTypeCode.Func:

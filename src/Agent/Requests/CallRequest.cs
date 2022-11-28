@@ -1,4 +1,4 @@
-﻿using EdjCase.ICP.Candid.Models;
+using EdjCase.ICP.Candid.Models;
 using System;
 using System.Collections.Generic;
 
@@ -37,13 +37,14 @@ namespace EdjCase.ICP.Agent.Requests
 		[Dahomey.Cbor.Attributes.CborProperty(Properties.NONCE)]
 		public byte[]? Nonce { get; }
 
-		public CallRequest(Principal canisterId, string method, CandidArg encodedArgument, Principal sender, ICTimestamp ingressExpiry)
+		public CallRequest(Principal canisterId, string method, CandidArg encodedArgument, Principal sender, ICTimestamp ingressExpiry, byte[]? nonce = null)
 		{
 			this.CanisterId = canisterId ?? throw new ArgumentNullException(nameof(canisterId));
 			this.Method = method ?? throw new ArgumentNullException(nameof(method));
 			this.EncodedArgument = encodedArgument ?? throw new ArgumentNullException(nameof(encodedArgument));
 			this.Sender = sender ?? throw new ArgumentNullException(nameof(sender));
 			this.IngressExpiry = ingressExpiry ?? throw new ArgumentNullException(nameof(ingressExpiry));
+			this.Nonce = nonce;
 		}
 
 		public Dictionary<string, IHashable> BuildHashableItem()

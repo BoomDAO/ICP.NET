@@ -1,4 +1,4 @@
-﻿using EdjCase.ICP.Candid.Encodings;
+using EdjCase.ICP.Candid.Encodings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,6 +44,7 @@ namespace EdjCase.ICP.Candid.Models.Types
 		{
 			byte[] fieldCount = LEB128.EncodeSigned(this.Fields.Count);
 			IEnumerable<byte> fieldTypes = this.Fields
+				.OrderBy(f => f.Key)
 				.SelectMany(f =>
 				{
 					return LEB128.EncodeUnsigned(f.Key.Id)

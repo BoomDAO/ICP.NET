@@ -1,5 +1,6 @@
-﻿using EdjCase.ICP.Candid.Encodings;
+using EdjCase.ICP.Candid.Encodings;
 using EdjCase.ICP.Candid.Models;
+using EdjCase.ICP.Candid.Models.Types;
 using EdjCase.ICP.Candid.Utilities;
 using System;
 using System.Collections.Generic;
@@ -142,7 +143,7 @@ namespace EdjCase.ICP.Candid.Models.Values
 
 
 
-        public override byte[] EncodeValue()
+        public override byte[] EncodeValue(CandidType type)
         {
             return this.ValueType switch
             {
@@ -197,9 +198,10 @@ namespace EdjCase.ICP.Candid.Models.Values
         private byte[] EncodeText()
         {
             string value = this.AsText();
-            // bytes = Length (LEB128) + text (UTF8)
-            return LEB128.EncodeSigned(value.Length)
-                       .Concat(Encoding.UTF8.GetBytes(value))
+			byte[] bytes = Encoding.UTF8.GetBytes(value);
+			// bytes = Length (LEB128) + text (UTF8)
+			return LEB128.EncodeSigned(bytes.Length)
+                       .Concat(bytes)
                        .ToArray();
         }
 

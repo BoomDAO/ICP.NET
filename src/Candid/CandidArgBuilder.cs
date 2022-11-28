@@ -33,7 +33,7 @@ namespace EdjCase.ICP.Candid
         {
             byte[] encodedType = value.Type.Encode(this.compoundTypeTable);
             this.EncodedTypes.Add(encodedType);
-            byte[] encodedValue = value.Value.EncodeValue();
+            byte[] encodedValue = value.Value.EncodeValue(value.Type);
             this.EncodedValues.Add(encodedValue);
         }
 

@@ -1,8 +1,9 @@
-﻿using EdjCase.ICP.Candid.Models;
+using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid.Encodings;
 using System;
 using System.Linq;
 using EdjCase.ICP.Candid.Models.Types;
+using EdjCase.ICP.Candid.Exceptions;
 
 namespace EdjCase.ICP.Candid.Models.Values
 {
@@ -19,11 +20,20 @@ namespace EdjCase.ICP.Candid.Models.Values
 			this.Value = value ?? CandidPrimitive.Null();
 		}
 
-		public override byte[] EncodeValue()
+		public override byte[] EncodeValue(CandidType type)
 		{
+			CandidVariantType t = (CandidVariantType)type;
+			int index = t.Fields.AsEnumerable()
+				.OrderBy(f => f.Key)
+				.ToList()
+				.FindIndex(f => f.Key == this.Tag);
+			if (index < 0)
+			{
+				throw new CandidSerializationEncodingException($"Variant option '{this.Tag}' was not found in the type");
+			}
 			// bytes = index (LEB128) + encoded value
-			return LEB128.EncodeUnsigned(this.Tag.Id)
-				.Concat(this.Value.EncodeValue())
+			return LEB128.EncodeUnsigned((uint)index)
+				.Concat(this.Value.EncodeValue(t.Fields[this.Tag]))
 				.ToArray();
 		}
 

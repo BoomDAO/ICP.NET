@@ -16,7 +16,7 @@ namespace EdjCase.ICP.Candid.Models
 			this.RawValue = rawValue;
 		}
 
-		public static RequestId FromObject(IDictionary<string, IHashable?> properties, IHashFunction hashFunction)
+		public static RequestId FromObject(IDictionary<string, IHashable> properties, IHashFunction hashFunction)
 		{
 			var orderedProperties = properties
 				.Where(o => o.Value != null) // Remove empty/null ones

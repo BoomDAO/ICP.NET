@@ -6,7 +6,7 @@ using System.Text;
 
 namespace EdjCase.ICP.Candid.Models
 {
-	public class Blob
+	public class Blob : IEquatable<Blob>
 	{
 		public byte[] Value { get; set; }
 		public Blob(byte[] value)
@@ -28,6 +28,64 @@ namespace EdjCase.ICP.Candid.Models
 		{
 			return this.AsUtf8();
 		}
+
+		public override bool Equals(object? obj)
+		{
+			if (obj is Blob b)
+			{
+				return this.Equals(b);
+			}
+			if(obj is string s)
+			{
+				return this.AsUtf8() == s;
+			}
+			if(obj is byte[] by)
+			{
+				return this.Equals(by);
+			}
+			return false;
+		}
+
+		public bool Equals(Blob? other)
+		{
+			return this.Equals(other?.Value);
+		}
+
+		public bool Equals(byte[]? other)
+		{
+			if (object.ReferenceEquals(other, null))
+			{
+				return false;
+			};
+			return this.Value.AsSpan().SequenceEqual(other);
+		}
+		public override int GetHashCode()
+		{
+			return this.Value.GetHashCode();
+		}
+
+		public static bool operator ==(Blob? v1, Blob? v2)
+		{
+			if (object.ReferenceEquals(v1, null))
+			{
+				return object.ReferenceEquals(v2, null);
+			}
+			return v1.Equals(v2);
+		}
+
+		public static bool operator !=(Blob? v1, Blob? v2)
+		{
+			if (object.ReferenceEquals(v1, null))
+			{
+				return object.ReferenceEquals(v2, null);
+			}
+			return !v1.Equals(v2);
+		}
+
+
+
+
+
 
 		public static implicit operator byte[](Blob blob)
 		{
@@ -98,22 +156,16 @@ namespace EdjCase.ICP.Candid.Models
 			return new HashTree(NodeType.Fork, (left, right));
 		}
 
-		public static HashTree Labeled(string label, HashTree tree)
+		public static HashTree Labeled(Blob label, HashTree tree)
 		{
-			byte[] labelBytes = Encoding.UTF8.GetBytes(label);
-			return HashTree.Labeled(labelBytes, tree);
+			return new HashTree(NodeType.Labeled, (label, tree));
 		}
-
-		public static HashTree Labeled(byte[] label, HashTree tree)
-		{
-			return new HashTree(NodeType.Labeled, (new Blob(label), tree));
-		}
-		public static HashTree Leaf(byte[] value)
+		public static HashTree Leaf(Blob value)
 		{
 			return new HashTree(NodeType.Leaf, value);
 		}
 
-		public static HashTree Pruned(byte[] blob)
+		public static HashTree Pruned(Blob blob)
 		{
 			return new HashTree(NodeType.Pruned, blob);
 		}
@@ -125,8 +177,9 @@ namespace EdjCase.ICP.Candid.Models
 				return this;
 			}
 			HashTree currentTree = this;
-			foreach (PathSegment segment in path.Segments)
+			for (int i = 0; i < path.Segments.Count; i++)
 			{
+				PathSegment segment = path.Segments[i];
 				HashTree newTree;
 				switch (currentTree.Type)
 				{
@@ -134,7 +187,7 @@ namespace EdjCase.ICP.Candid.Models
 						return null;
 					case NodeType.Labeled:
 						(Blob label, HashTree tree) = currentTree.AsLabeled();
-						bool areEqual = label.Value.AsSpan().SequenceEqual(segment.Value);
+						bool areEqual = label == segment.Value;
 						if (!areEqual)
 						{
 							return null;
@@ -147,17 +200,16 @@ namespace EdjCase.ICP.Candid.Models
 						return null;
 					case NodeType.Fork:
 						(HashTree left, HashTree right) = currentTree.AsFork();
-						HashTree? l = left.GetValue(path);
+						var remainingPath = new Path(path.Segments.Skip(i));
+						HashTree? l = left.GetValue(remainingPath);
 						if (l != null)
 						{
-							newTree = l;
-							break;
+							return l;
 						}
-						HashTree? r = right.GetValue(path);
+						HashTree? r = right.GetValue(remainingPath);
 						if (r != null)
 						{
-							newTree = r;
-							break;
+							return r;
 						}
 						return null;
 					default:

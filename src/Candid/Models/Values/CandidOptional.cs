@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EdjCase.ICP.Candid.Models.Types;
+using System;
 using System.Linq;
 
 namespace EdjCase.ICP.Candid.Models.Values
@@ -13,15 +14,16 @@ namespace EdjCase.ICP.Candid.Models.Values
 			this.Value = value ?? CandidPrimitive.Null();
 		}
 
-		public override byte[] EncodeValue()
+		public override byte[] EncodeValue(CandidType type)
 		{
+			CandidOptionalType t = (CandidOptionalType)type;
 			if(this.Value.Type == CandidValueType.Primitive
 				&& this.Value.AsPrimitive().ValueType == PrimitiveType.Null)
 			{
 				return new byte[] { 0 };
 			}
 			return new byte[] { 1 }
-				.Concat(this.Value.EncodeValue())
+				.Concat(this.Value.EncodeValue(t.Value))
 				.ToArray();
 		}
 		public override int GetHashCode()

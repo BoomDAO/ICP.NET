@@ -1,4 +1,5 @@
-﻿using EdjCase.ICP.Candid.Models;
+using EdjCase.ICP.Candid.Models;
+using EdjCase.ICP.Candid.Models.Types;
 using System;
 using System.Linq;
 
@@ -32,7 +33,7 @@ namespace EdjCase.ICP.Candid.Models.Values
 			return this.principalId!;
 		}
 
-		public override byte[] EncodeValue()
+		public override byte[] EncodeValue(CandidType type)
 		{
             if (this.IsOpqaueReference)
             {

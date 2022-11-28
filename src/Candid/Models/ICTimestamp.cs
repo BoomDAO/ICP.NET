@@ -49,10 +49,10 @@ namespace EdjCase.ICP.Candid.Models
 
 		public override string ToString()
 		{
-			TimeSpan offset = TimeSpan.FromMilliseconds((double)this.NanoSeconds.ToBigInteger() / 1000);
+			TimeSpan offset = TimeSpan.FromMilliseconds((double)this.NanoSeconds.ToBigInteger() / 1000000);
 			return epoch
 				.Add(offset)
-				.ToLongDateString();
+				.ToString("s");
 		}
 	}
 }

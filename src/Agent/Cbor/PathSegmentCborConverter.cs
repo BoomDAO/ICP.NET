@@ -34,7 +34,7 @@ namespace EdjCase.ICP.Agent.Cbor
 			writer.WriteBeginArray(value.Segments.Count);
 			foreach(PathSegment segment in value.Segments)
 			{
-				writer.WriteByteString(segment.Value);
+				writer.WriteByteString(segment.Value.Value);
 			}
 		}
 	}
@@ -57,7 +57,7 @@ namespace EdjCase.ICP.Agent.Cbor
 				writer.WriteNull();
 				return;
 			}
-			writer.WriteByteString(value.Value);
+			writer.WriteByteString(value.Value.Value);
 		}
 	}
 }

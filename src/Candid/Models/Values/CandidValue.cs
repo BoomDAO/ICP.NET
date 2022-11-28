@@ -1,4 +1,5 @@
 using EdjCase.ICP.Candid.Models;
+using EdjCase.ICP.Candid.Models.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +22,7 @@ namespace EdjCase.ICP.Candid.Models.Values
     {
         public abstract CandidValueType Type { get; }
 
-        public abstract byte[] EncodeValue();
+        public abstract byte[] EncodeValue(CandidType type);
         public abstract override int GetHashCode();
         public abstract bool Equals(CandidValue? other);
         public abstract override string ToString();

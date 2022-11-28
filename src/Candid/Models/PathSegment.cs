@@ -35,7 +35,7 @@ namespace EdjCase.ICP.Candid.Models
 
     public class PathSegment : IHashable
     {
-		public byte[] Value { get; }
+		public Blob Value { get; }
 
         public PathSegment(byte[] value)
         {
@@ -68,6 +68,11 @@ namespace EdjCase.ICP.Candid.Models
 		public static implicit operator PathSegment(byte[] value)
 		{
 			return new PathSegment(value);
+		}
+
+		public static implicit operator PathSegment(string value)
+		{
+			return PathSegment.FromString(value);
 		}
 	}
 }
