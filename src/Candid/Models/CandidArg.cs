@@ -40,14 +40,19 @@ namespace EdjCase.ICP.Candid.Models
         public static CandidArg FromCandid(List<CandidValueWithType> args, byte[]? opaqueReferencesBytes = null)
         {
             return new CandidArg(args, opaqueReferencesBytes);
-        }
+		}
 
-        public static CandidArg FromCandid(params CandidValueWithType[] args)
-        {
-            return new CandidArg(args.ToList(), null);
-        }
+		public static CandidArg FromCandid(params CandidValueWithType[] args)
+		{
+			return new CandidArg(args.ToList(), null);
+		}
 
-        public override string ToString()
+		public static CandidArg Empty()
+		{
+			return new CandidArg(new List<CandidValueWithType>(), null);
+		}
+
+		public override string ToString()
         {
             IEnumerable<string> args = this.Values.Select(v => v.Value.ToString()!);
             return $"({string.Join(",", args)})";
