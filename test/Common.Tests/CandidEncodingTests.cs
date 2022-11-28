@@ -311,9 +311,7 @@ namespace EdjCase.ICP.Candid.Tests
                 {CandidTag.FromName("bar"), CandidPrimitive.Bool(true) }
             });
             string expectedPrefix = "";
-            // TODO ordering of types again
-            //string expectedHex = "016C02D3E3AA027E868EB7027C0100012A";
-            string expectedHex = "016C02868EB7027CD3E3AA027E0100012A";
+			string expectedHex = "016C02D3E3AA027E868EB7027C0100012A";
             var typeDef = new CandidRecordType(new Dictionary<CandidTag, CandidType>
             {
                 {CandidTag.FromName("foo"), new CandidPrimitiveType(PrimitiveType.Int) },
