@@ -7,9 +7,35 @@ using System.Text;
 
 namespace EdjCase.ICP.Candid.Models
 {
+	public class Path : IHashable
+	{
+		public IReadOnlyList<PathSegment> Segments { get; }
+		public Path(IEnumerable<PathSegment> segments)
+		{
+			this.Segments = segments.ToList();
+		}
+
+
+		public static Path FromSegments(params PathSegment[] segments)
+		{
+			return new Path(segments);
+		}
+		public static Path FromMultiString(params string[] segments)
+		{
+			return new Path(segments.Select(PathSegment.FromString));
+		}
+
+		public byte[] ComputeHash(IHashFunction hashFunction)
+		{
+			return this.Segments
+				.ToHashable()
+				.ComputeHash(hashFunction);
+		}
+	}
+
     public class PathSegment : IHashable
     {
-		public byte[] Value { get; }
+		public Blob Value { get; }
 
         public PathSegment(byte[] value)
         {
@@ -34,11 +60,19 @@ namespace EdjCase.ICP.Candid.Models
 			return new PathSegment(Encoding.UTF8.GetBytes(segment));
 		}
 
-		public static List<PathSegment> FromMultiString(params string[] segments)
+		public static implicit operator byte[](PathSegment value)
 		{
-			return segments
-				.Select(PathSegment.FromString)
-				.ToList();
+			return value.Value;
+		}
+
+		public static implicit operator PathSegment(byte[] value)
+		{
+			return new PathSegment(value);
+		}
+
+		public static implicit operator PathSegment(string value)
+		{
+			return PathSegment.FromString(value);
 		}
 	}
 }

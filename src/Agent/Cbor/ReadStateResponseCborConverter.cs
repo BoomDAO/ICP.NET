@@ -137,9 +137,8 @@ namespace Agent.Cbor
 					return HashTree.Fork(left, right);
 				case 2:
 					byte[] labelBytes = reader.ReadByteString().ToArray();
-					string label = Encoding.UTF8.GetString(labelBytes);
 					HashTree tree = ReadTree(ref reader);
-					return HashTree.Labeled(label, tree);
+					return HashTree.Labeled(labelBytes, tree);
 				case 3:
 					{
 						byte[] value = reader.ReadByteString().ToArray();

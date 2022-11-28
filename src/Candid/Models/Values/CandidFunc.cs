@@ -1,4 +1,5 @@
-﻿using EdjCase.ICP.Candid.Models;
+using EdjCase.ICP.Candid.Models;
+using EdjCase.ICP.Candid.Models.Types;
 using System;
 using System.Linq;
 using System.Text;
@@ -24,15 +25,24 @@ namespace EdjCase.ICP.Candid.Models.Values
 			this.serviceInfo = null;
 		}
 
-		public override byte[] EncodeValue()
+		public override byte[] EncodeValue(CandidType type, Func<CandidId, CandidCompoundType> getReferencedType)
 		{
-            if (this.IsOpaqueReference)
+			CandidFuncType t;
+			if (type is CandidReferenceType r)
+			{
+				t = (CandidFuncType)getReferencedType(r.Id);
+			}
+			else
+			{
+				t = (CandidFuncType)type;
+			}
+			if (this.IsOpaqueReference)
             {
 				return new byte[] { 0 };
             }
 			(CandidService service, string method) = this.serviceInfo!.Value;
 			return new byte[] { 1 }
-				.Concat(service.EncodeValue())
+				.Concat(service.EncodeValue(t, getReferencedType))
 				.Concat(Encoding.UTF8.GetBytes(method))
 				.ToArray();
 		}

@@ -33,19 +33,8 @@ namespace EdjCase.ICP.Candid.Models
 
 		public byte[] ComputeHash(IHashFunction hashFunction)
 		{
-			byte[] requestIdBytes = this.Properties
-				.Select(o =>
-				{
-					byte[] keyDigest = o.Key.ToHashable().ComputeHash(hashFunction);
-					byte[] valueDigest = o.Value.ComputeHash(hashFunction);
-
-					return (Key: keyDigest, Value: valueDigest);
-				}) // Hash key and value bytes
-				.Where(o => o.Value != null) // Remove empty/null ones
-				.OrderBy(o => o.Key, new HashComparer()) // Keys in order
-				.SelectMany(o => o.Key.Concat(o.Value))
-				.ToArray(); // Create single byte[] by concatinating them all together
-			return hashFunction.ComputeHash(requestIdBytes); // Hash concatinated bytes
+			RequestId requestId = RequestId.FromObject(this.Properties, hashFunction);
+			return requestId.RawValue;
 		}
 
 		public IEnumerator<KeyValuePair<string, IHashable>> GetEnumerator()
@@ -89,9 +78,9 @@ namespace EdjCase.ICP.Candid.Models
 
 		public byte[] ComputeHash(IHashFunction hashFunction)
 		{
-			return this.Items
+			return hashFunction.ComputeHash(this.Items
 				.SelectMany(i => i.ComputeHash(hashFunction))
-				.ToArray();
+				.ToArray());
 		}
 	}
 
@@ -128,6 +117,10 @@ namespace EdjCase.ICP.Candid.Models
 		public override byte[] GetRawValue()
 		{
 			return Encoding.UTF8.GetBytes(this.Value);
+		}
+		public override string ToString()
+		{
+			return this.Value;
 		}
 	}
 

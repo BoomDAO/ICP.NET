@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -55,7 +55,7 @@ namespace EdjCase.ICP.Candid.Models
 
         public bool Equals(CandidArg? other)
         {
-            if(other == null)
+            if(object.ReferenceEquals(other, null))
             {
                 return false;
             }

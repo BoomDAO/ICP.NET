@@ -7,6 +7,37 @@ using System.Text;
 
 namespace EdjCase.ICP.Agent.Cbor
 {
+	public class PathCborConverter : CborConverterBase<Path?>
+	{
+		public override Path? Read(ref CborReader reader)
+		{
+			if (reader.GetCurrentDataItemType() == CborDataItemType.Null)
+			{
+				return null;
+			}
+			List<PathSegment> value = CborReaderUtil.ReadArray(ref reader, this.GetArrayValue);
+			return new Path(value);
+		}
+
+		private PathSegment GetArrayValue(ref CborReader reader)
+		{
+			return new PathSegment(reader.ReadByteString().ToArray());
+		}
+
+		public override void Write(ref CborWriter writer, Path? value)
+		{
+			if (value == null)
+			{
+				writer.WriteNull();
+				return;
+			}
+			writer.WriteBeginArray(value.Segments.Count);
+			foreach(PathSegment segment in value.Segments)
+			{
+				writer.WriteByteString(segment.Value.Value);
+			}
+		}
+	}
 	public class PathSegmentCborConverter : CborConverterBase<PathSegment?>
 	{
 		public override PathSegment? Read(ref CborReader reader)
@@ -26,7 +57,7 @@ namespace EdjCase.ICP.Agent.Cbor
 				writer.WriteNull();
 				return;
 			}
-			writer.WriteByteString(value.Value);
+			writer.WriteByteString(value.Value.Value);
 		}
 	}
 }

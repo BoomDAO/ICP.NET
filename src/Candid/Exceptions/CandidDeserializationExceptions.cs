@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,9 +8,25 @@ using System.Threading.Tasks;
 namespace EdjCase.ICP.Candid.Exceptions
 {
     public abstract class CandidSerializationException : Exception
-    {
+	{
+		public CandidSerializationException()
+		{
 
-    }
+		}
+
+		public CandidSerializationException(string message) : base(message)
+		{
+
+		}
+	}
+
+	public class CandidSerializationEncodingException : CandidSerializationException
+	{
+		public CandidSerializationEncodingException(string message): base(message)
+		{
+
+		}
+	}
 
     public class CandidSerializationParseException : CandidSerializationException
     {

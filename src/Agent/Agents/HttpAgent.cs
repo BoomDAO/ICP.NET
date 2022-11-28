@@ -5,6 +5,7 @@ using Dahomey.Cbor.Util;
 using EdjCase.ICP.Agent.Auth;
 using EdjCase.ICP.Agent.Requests;
 using EdjCase.ICP.Agent.Responses;
+using EdjCase.ICP.Candid.Crypto;
 using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid.Utilities;
 using System;
@@ -14,6 +15,7 @@ using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Path = EdjCase.ICP.Candid.Models.Path;
 
 namespace EdjCase.ICP.Agent.Agents
 {
@@ -46,13 +48,13 @@ namespace EdjCase.ICP.Agent.Agents
 				.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(CBOR_CONTENT_TYPE));
 		}
 
-		public async Task CallAsync(Principal canisterId, string method, CandidArg encodedArgument, Principal? targetCanisterOverride = null, IIdentity? identityOverride = null)
+		public async Task<RequestId> CallAsync(Principal canisterId, string method, CandidArg encodedArgument, Principal? targetCanisterOverride = null, IIdentity? identityOverride = null)
 		{
 			if (targetCanisterOverride == null)
 			{
 				targetCanisterOverride = canisterId;
 			}
-			await this.SendWithNoResponseAsync($"/api/v2/canister/{targetCanisterOverride.ToText()}/call", BuildRequest, identityOverride);
+			return await this.SendWithNoResponseAsync($"/api/v2/canister/{targetCanisterOverride.ToText()}/call", BuildRequest, identityOverride);
 
 			CallRequest BuildRequest(Principal sender, ICTimestamp now)
 			{
@@ -87,7 +89,7 @@ namespace EdjCase.ICP.Agent.Agents
 			}
 		}
 
-		public async Task<ReadStateResponse> ReadStateAsync(Principal canisterId, List<List<PathSegment>> paths, IIdentity? identityOverride)
+		public async Task<ReadStateResponse> ReadStateAsync(Principal canisterId, List<Path> paths, IIdentity? identityOverride = null)
 		{
 			return await this.SendAsync<ReadStateRequest, ReadStateResponse>($"/api/v2/canister/{canisterId.ToText()}/read_state", BuildRequest, identityOverride);
 
@@ -98,10 +100,12 @@ namespace EdjCase.ICP.Agent.Agents
 		}
 
 
-		private async Task SendWithNoResponseAsync<TRequest>(string url, Func<Principal, ICTimestamp, TRequest> getRequest, IIdentity? identityOverride)
+		private async Task<RequestId> SendWithNoResponseAsync<TRequest>(string url, Func<Principal, ICTimestamp, TRequest> getRequest, IIdentity? identityOverride)
 			where TRequest : IRepresentationIndependentHashItem
 		{
-			_ = await this.SendInternalAsync(url, getRequest, identityOverride);
+			(Func<Task<Stream>> streamFunc, RequestId requestId) = await this.SendInternalAsync(url, getRequest, identityOverride);
+
+			return requestId;
 		}
 
 		private async Task<TResponse> SendAsync<TResponse>(string url)
@@ -114,7 +118,7 @@ namespace EdjCase.ICP.Agent.Agents
 		private async Task<TResponse> SendAsync<TRequest, TResponse>(string url, Func<Principal, ICTimestamp, TRequest> getRequest, IIdentity? identityOverride)
 			where TRequest : IRepresentationIndependentHashItem
 		{
-			Func<Task<Stream>> streamFunc = await this.SendInternalAsync(url, getRequest, identityOverride);
+			(Func<Task<Stream>> streamFunc, RequestId requestId) = await this.SendInternalAsync(url, getRequest, identityOverride);
 			Stream stream = await streamFunc();
 #if DEBUG
 			string cborHex;
@@ -129,7 +133,7 @@ namespace EdjCase.ICP.Agent.Agents
 			return await Dahomey.Cbor.Cbor.DeserializeAsync<TResponse>(stream, HttpAgent.cborOptionsLazy.Value);
 		}
 
-		private async Task<Func<Task<Stream>>> SendInternalAsync<TRequest>(string url, Func<Principal, ICTimestamp, TRequest> getRequest, IIdentity? identityOverride)
+		private async Task<(Func<Task<Stream>> ResponseFunc, RequestId RequestId)> SendInternalAsync<TRequest>(string url, Func<Principal, ICTimestamp, TRequest> getRequest, IIdentity? identityOverride)
 			where TRequest : IRepresentationIndependentHashItem
 		{
 			if (identityOverride == null)
@@ -145,7 +149,10 @@ namespace EdjCase.ICP.Agent.Agents
 #if DEBUG
 			string hex = ByteUtil.ToHexString(cborBody);
 #endif
-			return await this.SendRawAsync(url, cborBody);
+			Func<Task<Stream>> responseFunc = await this.SendRawAsync(url, cborBody);
+			var sha256 = SHA256HashFunction.Create();
+			RequestId requestId = RequestId.FromObject(content, sha256); // TODO this is redundant, `CreateSignedContent` hashes it too
+			return (responseFunc, requestId);
 
 		}
 

@@ -1,13 +1,15 @@
-﻿using EdjCase.ICP.Candid;
+using EdjCase.ICP.Candid;
 using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid.Models.Types;
 using EdjCase.ICP.Candid.Models.Values;
 using EdjCase.ICP.Candid.Utilities;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Text;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -309,9 +311,7 @@ namespace EdjCase.ICP.Candid.Tests
                 {CandidTag.FromName("bar"), CandidPrimitive.Bool(true) }
             });
             string expectedPrefix = "";
-            // TODO ordering of types again
-            //string expectedHex = "016C02D3E3AA027E868EB7027C0100012A";
-            string expectedHex = "016C02868EB7027CD3E3AA027E0100012A";
+			string expectedHex = "016C02D3E3AA027E868EB7027C0100012A";
             var typeDef = new CandidRecordType(new Dictionary<CandidTag, CandidType>
             {
                 {CandidTag.FromName("foo"), new CandidPrimitiveType(PrimitiveType.Int) },
@@ -435,5 +435,123 @@ namespace EdjCase.ICP.Candid.Tests
             Assert.Equal(expectedHex, actualHex);
             Assert.Equal(expectedArg, actualArg);
         }
+
+		[Fact]
+		public void EncodeDecode_1()
+		{
+			var content = new CandidRecord(new Dictionary<CandidTag, CandidValue>
+			{
+				{
+					CandidTag.FromName("title"),
+					CandidPrimitive.Text("The Title")
+				},
+				{
+					CandidTag.FromName("imageLink"),
+					new CandidOptional(CandidPrimitive.Text("https://google.com"))
+				},
+				{
+					CandidTag.FromName("body"),
+					new CandidRecord(new Dictionary<CandidTag, CandidValue>
+					{
+						{
+							CandidTag.FromName("value"),
+							CandidPrimitive.Text("<h1>Hello</h1>")
+						},
+						{
+							CandidTag.FromName("format"),
+							new CandidOptional(CandidPrimitive.Text("text/html"))
+						}
+					})
+				},
+				{
+					CandidTag.FromName("date"),
+					CandidPrimitive.Int(0)
+				},
+				{
+					CandidTag.FromName("link"),
+					CandidPrimitive.Text("https://google.com")
+				},
+				{
+					CandidTag.FromName("language"),
+					new CandidOptional(CandidPrimitive.Text("en-us"))
+				},
+				{
+					CandidTag.FromName("authors"),
+					new CandidVector(new CandidValue[]
+					{
+						new CandidVariant("name", CandidPrimitive.Text("author1")),
+						new CandidVariant("name", CandidPrimitive.Text("author2"))
+					})
+				}
+			});
+			var contentType = new CandidRecordType(new Dictionary<CandidTag, CandidType>
+			{
+				{
+					CandidTag.FromName("title"),
+					new CandidPrimitiveType(PrimitiveType.Text)
+				},
+				{
+					CandidTag.FromName("imageLink"),
+					new CandidOptionalType(new CandidPrimitiveType(PrimitiveType.Text))
+				},
+				{
+					CandidTag.FromName("body"),
+					new CandidRecordType(new Dictionary<CandidTag, CandidType>
+					{
+						{
+							CandidTag.FromName("value"),
+							new CandidPrimitiveType(PrimitiveType.Text)
+						},
+						{
+							CandidTag.FromName("format"),
+							new CandidOptionalType(new CandidPrimitiveType(PrimitiveType.Text))
+						}
+					})
+				},
+				{
+					CandidTag.FromName("date"),
+					new CandidPrimitiveType(PrimitiveType.Int)
+				},
+				{
+					CandidTag.FromName("link"),
+					new CandidPrimitiveType(PrimitiveType.Text)
+				},
+				{
+					CandidTag.FromName("language"),
+					new CandidOptionalType(new CandidPrimitiveType(PrimitiveType.Text))
+				},
+				{
+					CandidTag.FromName("authors"),
+					new CandidVectorType(new CandidVariantType(new Dictionary<CandidTag, CandidType>
+					{
+						{
+							CandidTag.FromName("name"),
+							new CandidPrimitiveType(PrimitiveType.Text)
+						},
+						{
+							CandidTag.FromName("identity"),
+							new CandidPrimitiveType(PrimitiveType.Principal)
+						},
+						{
+							CandidTag.FromName("handle"),
+							new CandidPrimitiveType(PrimitiveType.Text)
+						}
+					}))
+				}
+			});
+			var arg = CandidArg.FromCandid(
+				CandidValueWithType.FromValueAndType(
+					CandidPrimitive.Text("https://www.theverge.com/rss/index.xml"),
+					new CandidPrimitiveType(PrimitiveType.Text)
+				),
+				CandidValueWithType.FromValueAndType(content, contentType)
+			);
+			
+			byte[] encodedBytes = arg.Encode();
+			CandidArg decodedArg = CandidArg.FromBytes(encodedBytes);
+
+			Assert.Equal(arg, decodedArg);
+
+		}
     }
 }

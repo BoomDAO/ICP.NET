@@ -1,4 +1,4 @@
-﻿using EdjCase.ICP.Candid.Encodings;
+using EdjCase.ICP.Candid.Encodings;
 using EdjCase.ICP.Candid.Models.Types;
 using System;
 using System.Collections.Generic;
@@ -22,13 +22,22 @@ namespace EdjCase.ICP.Candid.Models.Values
 			this.Values = values;
 		}
 
-		public override byte[] EncodeValue()
+		public override byte[] EncodeValue(CandidType type, Func<CandidId, CandidCompoundType> getReferencedType)
 		{
+			CandidVectorType t;
+			if (type is CandidReferenceType r)
+			{
+				t = (CandidVectorType)getReferencedType(r.Id);
+			}
+			else
+			{
+				t = (CandidVectorType)type;
+			}
 			byte[] valueListBytes = this.Values
-				.SelectMany(v => v.EncodeValue())
+				.SelectMany(v => v.EncodeValue(t.InnerType, getReferencedType))
 				.ToArray();
-			byte[] encodedByteLength = LEB128.EncodeSigned(valueListBytes.Length);
-			return encodedByteLength
+			byte[] valueCountBytes = LEB128.EncodeSigned(this.Values.Length);
+			return valueCountBytes
 				.Concat(valueListBytes)
 				.ToArray();
 		}

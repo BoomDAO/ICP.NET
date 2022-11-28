@@ -1,10 +1,11 @@
-﻿using EdjCase.ICP.Candid.Models;
+using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.ClientGenerator;
 using Microsoft.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using Path = System.IO.Path;
 
 namespace EdjCase.ICP.ClientGenerator
 {

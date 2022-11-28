@@ -29,9 +29,9 @@ namespace EdjCase.ICP.Agent.Auth
 		public SignedContent CreateSignedContent(Dictionary<string, IHashable> content)
 		{
 			IPublicKey senderPublicKey = this.GetPublicKey();
-			byte[] domainSeparator = Encoding.UTF8.GetBytes("\x0Aic-request");
 			var sha256 = SHA256HashFunction.Create();
 			byte[] contentHash = content.ToHashable().ComputeHash(sha256);
+			byte[] domainSeparator = Encoding.UTF8.GetBytes("\x0Aic-request");
 			Signature senderSignature = this.Sign(domainSeparator.Concat(contentHash).ToArray());
 			List<SignedDelegation>? senderDelegations = this.GetSenderDelegations();
 			return new SignedContent(content, senderPublicKey.GetRawBytes(), senderDelegations, senderSignature);
