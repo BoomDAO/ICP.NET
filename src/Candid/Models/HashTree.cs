@@ -170,6 +170,11 @@ namespace EdjCase.ICP.Candid.Models
 			return new HashTree(NodeType.Pruned, blob);
 		}
 
+		public HashTree? GetValue(PathSegment path)
+		{
+			return this.GetValue(new Path(new List<PathSegment> { path }));
+		}
+
 		public HashTree? GetValue(Path path)
 		{
 			if (!path.Segments.Any())

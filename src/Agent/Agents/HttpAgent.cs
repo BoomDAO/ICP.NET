@@ -5,6 +5,7 @@ using Dahomey.Cbor.Util;
 using EdjCase.ICP.Agent.Auth;
 using EdjCase.ICP.Agent.Requests;
 using EdjCase.ICP.Agent.Responses;
+using EdjCase.ICP.Candid;
 using EdjCase.ICP.Candid.Crypto;
 using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid.Utilities;
@@ -14,6 +15,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Path = EdjCase.ICP.Candid.Models.Path;
 
@@ -59,6 +61,49 @@ namespace EdjCase.ICP.Agent.Agents
 			CallRequest BuildRequest(Principal sender, ICTimestamp now)
 			{
 				return new CallRequest(canisterId, method, encodedArgument, sender, now);
+			}
+		}
+		public async Task<CandidArg> CallAndWaitAsync(
+			Principal canisterId,
+			string method,
+			CandidArg encodedArgument,
+			Principal? targetCanisterOverride = null,
+			IIdentity? identityOverride = null,
+			CancellationToken? cancellationToken = null)
+		{
+			RequestId id = await this.CallAsync(canisterId, method, encodedArgument, targetCanisterOverride, identityOverride);
+			var pathRequestStatus = Path.FromSegments("request_status", id.RawValue);
+			var paths = new List<Path> { pathRequestStatus };
+			while (true)
+			{
+				ReadStateResponse response = await this.ReadStateAsync(canisterId, paths);
+				HashTree? requestStatus = response.Certificate.Tree.GetValue(pathRequestStatus);
+				if (requestStatus != null)
+				{
+					string? status = requestStatus.GetValue("status")?.AsLeaf().AsUtf8();
+					//received, processing, replied, rejected or done
+					switch (status)
+					{
+						case null:
+						case "received":
+						case "processing":
+							continue; // Still processing
+						case "replied":
+							Blob r = requestStatus.GetValue("reply")!.AsLeaf();
+							return CandidArg.FromBytes(r.Value);
+						case "rejected":
+							UnboundedUInt code = requestStatus.GetValue("reject_code")!.AsLeaf().AsNat();
+							string message = requestStatus.GetValue("reject_message")!.AsLeaf().AsUtf8();
+							string? errorCode = requestStatus.GetValue("error_code")?.AsLeaf().AsUtf8();
+							throw new CallRejectedException(code, message, errorCode);
+						case "done":
+							return CandidArg.Empty();
+						default:
+							throw new NotImplementedException($"Invalid request status '{status}'");
+					}
+				}
+				await Task.Delay(100, cancellationToken ?? CancellationToken.None);
+				cancellationToken?.ThrowIfCancellationRequested();
 			}
 		}
 

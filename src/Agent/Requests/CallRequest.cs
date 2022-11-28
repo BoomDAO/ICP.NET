@@ -1,3 +1,4 @@
+using EdjCase.ICP.Candid;
 using EdjCase.ICP.Candid.Models;
 using System;
 using System.Collections.Generic;
@@ -74,6 +75,19 @@ namespace EdjCase.ICP.Agent.Requests
 			public const string SENDER = "sender";
 			public const string INGRESS_EXPIRY = "ingress_expiry";
 			public const string NONCE = "nonce";
+		}
+	}
+
+	public class CallRejectedException : Exception
+	{
+		public UnboundedUInt RejectCode { get; } 
+		public string RejectMessage { get; }
+		public string? ErrorCode { get; }
+		public CallRejectedException(UnboundedUInt rejectCode, string rejectMessage, string? errorCode)
+		{
+			this.RejectCode = rejectCode;
+			this.RejectMessage = rejectMessage;
+			this.ErrorCode = errorCode;
 		}
 	}
 }
