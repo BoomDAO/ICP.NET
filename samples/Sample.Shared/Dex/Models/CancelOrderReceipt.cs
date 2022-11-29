@@ -5,15 +5,14 @@ namespace Sample.Shared.Dex.Models
 		Err,
 		Ok,
 	}
-	public class CancelOrderReceipt
+	public class CancelOrderReceipt : EdjCase.ICP.Candid.CandidVariantValueBase<CancelOrderReceiptType>
 	{
-		public CancelOrderReceiptType Type { get; }
-		private readonly object? value;
-		
-		public CancelOrderReceipt(CancelOrderReceiptType type, object? value)
+		public CancelOrderReceipt(CancelOrderReceiptType type, object? value)  : base(type, value)
 		{
-			this.Type = type;
-			this.value = value;
+		}
+		
+		protected CancelOrderReceipt()
+		{
 		}
 		
 		public static CancelOrderReceipt Err(CancelOrderErr info)
@@ -38,12 +37,5 @@ namespace Sample.Shared.Dex.Models
 			return (OrderId)this.value!;
 		}
 		
-		private void ValidateType(CancelOrderReceiptType type)
-		{
-			if (this.Type != type)
-			{
-				throw new InvalidOperationException($"Cannot cast '{this.Type}' to type '{type}'");
-			}
-		}
 	}
 }

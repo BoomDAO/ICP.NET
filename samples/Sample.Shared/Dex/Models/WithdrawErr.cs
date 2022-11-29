@@ -5,15 +5,14 @@ namespace Sample.Shared.Dex.Models
 		BalanceLow,
 		TransferFailure,
 	}
-	public class WithdrawErr
+	public class WithdrawErr : EdjCase.ICP.Candid.CandidVariantValueBase<WithdrawErrType>
 	{
-		public WithdrawErrType Type { get; }
-		private readonly object? value;
-		
-		public WithdrawErr(WithdrawErrType type, object? value)
+		public WithdrawErr(WithdrawErrType type, object? value)  : base(type, value)
 		{
-			this.Type = type;
-			this.value = value;
+		}
+		
+		protected WithdrawErr()
+		{
 		}
 		
 		public static WithdrawErr BalanceLow()
@@ -26,12 +25,5 @@ namespace Sample.Shared.Dex.Models
 			return new WithdrawErr(WithdrawErrType.TransferFailure, null);
 		}
 		
-		private void ValidateType(WithdrawErrType type)
-		{
-			if (this.Type != type)
-			{
-				throw new InvalidOperationException($"Cannot cast '{this.Type}' to type '{type}'");
-			}
-		}
 	}
 }

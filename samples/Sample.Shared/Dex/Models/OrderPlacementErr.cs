@@ -5,15 +5,14 @@ namespace Sample.Shared.Dex.Models
 		InvalidOrder,
 		OrderBookFull,
 	}
-	public class OrderPlacementErr
+	public class OrderPlacementErr : EdjCase.ICP.Candid.CandidVariantValueBase<OrderPlacementErrType>
 	{
-		public OrderPlacementErrType Type { get; }
-		private readonly object? value;
-		
-		public OrderPlacementErr(OrderPlacementErrType type, object? value)
+		public OrderPlacementErr(OrderPlacementErrType type, object? value)  : base(type, value)
 		{
-			this.Type = type;
-			this.value = value;
+		}
+		
+		protected OrderPlacementErr()
+		{
 		}
 		
 		public static OrderPlacementErr InvalidOrder()
@@ -26,12 +25,5 @@ namespace Sample.Shared.Dex.Models
 			return new OrderPlacementErr(OrderPlacementErrType.OrderBookFull, null);
 		}
 		
-		private void ValidateType(OrderPlacementErrType type)
-		{
-			if (this.Type != type)
-			{
-				throw new InvalidOperationException($"Cannot cast '{this.Type}' to type '{type}'");
-			}
-		}
 	}
 }

@@ -5,15 +5,14 @@ namespace Sample.Shared.Dex.Models
 		Err,
 		Ok,
 	}
-	public class WithdrawReceipt
+	public class WithdrawReceipt : EdjCase.ICP.Candid.CandidVariantValueBase<WithdrawReceiptType>
 	{
-		public WithdrawReceiptType Type { get; }
-		private readonly object? value;
-		
-		public WithdrawReceipt(WithdrawReceiptType type, object? value)
+		public WithdrawReceipt(WithdrawReceiptType type, object? value)  : base(type, value)
 		{
-			this.Type = type;
-			this.value = value;
+		}
+		
+		protected WithdrawReceipt()
+		{
 		}
 		
 		public static WithdrawReceipt Err(WithdrawErr info)
@@ -38,12 +37,5 @@ namespace Sample.Shared.Dex.Models
 			return (EdjCase.ICP.Candid.UnboundedUInt)this.value!;
 		}
 		
-		private void ValidateType(WithdrawReceiptType type)
-		{
-			if (this.Type != type)
-			{
-				throw new InvalidOperationException($"Cannot cast '{this.Type}' to type '{type}'");
-			}
-		}
 	}
 }

@@ -65,7 +65,7 @@ namespace ICP.ClientGenerator
 			{
 				builder.AppendLine($"global using {id} = {aliasedType};");
 			}
-			return BuildSourceWithShorthands(builder);
+			return builder.ToString();
 		}
 
 		private static void WriteType(IndentedStringBuilder builder, TypeSourceDescriptor type)
@@ -187,8 +187,8 @@ namespace ICP.ClientGenerator
 							}
 							else
 							{
-								builder.AppendLine("CandidArg arg = await this.Agent.CallAndWaitAsync(this.CanisterId, method, arg, null, identityOverride);");
-								argVariableName = "arg";
+								builder.AppendLine("CandidArg responseArg = await this.Agent.CallAndWaitAsync(this.CanisterId, method, arg, null, identityOverride);");
+								argVariableName = "responseArg";
 							}
 
 							if (returnTypes.Any())

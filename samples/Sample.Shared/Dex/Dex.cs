@@ -1,5 +1,6 @@
 using EdjCase.ICP.Agent.Agents;
 using EdjCase.ICP.Agent.Responses;
+using EdjCase.ICP.Agent.Auth;
 using EdjCase.ICP.Candid.Models;
 using Sample.Shared.Dex.Models;
 
@@ -14,7 +15,7 @@ namespace Sample.Shared.Dex
 			this.Agent = agent ?? throw new ArgumentNullException(nameof(agent));
 			this.CanisterId = canisterId ?? throw new ArgumentNullException(nameof(canisterId));
 		}
-		public async Task<CancelOrderReceipt> CancelOrder(OrderId arg0)
+		public async Task<CancelOrderReceipt> CancelOrderAsync(OrderId arg0, IIdentity? identityOverride = null)
 		{
 			string method = "cancelOrder";
 			CandidValueWithType p0 = CandidValueWithType.FromObject<OrderId>(arg0);
@@ -23,22 +24,20 @@ namespace Sample.Shared.Dex
 				p0,
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride: null);
-			QueryReply reply = response.ThrowOrGetReply();
-			CancelOrderReceipt r0 = reply.Arg.Values[0].ToObject<CancelOrderReceipt>();
+			CandidArg responseArg = await this.Agent.CallAndWaitAsync(this.CanisterId, method, arg, null, identityOverride);
+			CancelOrderReceipt r0 = responseArg.Values[0].ToObject<CancelOrderReceipt>();
 			return (r0);
 		}
-		public async Task Clear()
+		public async Task ClearAsync(IIdentity? identityOverride = null)
 		{
 			string method = "clear";
 			var candidArgs = new List<CandidValueWithType>
 			{
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride: null);
-			QueryReply reply = response.ThrowOrGetReply();
+			CandidArg responseArg = await this.Agent.CallAndWaitAsync(this.CanisterId, method, arg, null, identityOverride);
 		}
-		public async Task Credit(EdjCase.ICP.Candid.Models.Principal arg0, Token arg1, EdjCase.ICP.Candid.UnboundedUInt arg2)
+		public async Task CreditAsync(EdjCase.ICP.Candid.Models.Principal arg0, Token arg1, EdjCase.ICP.Candid.UnboundedUInt arg2, IIdentity? identityOverride = null)
 		{
 			string method = "credit";
 			CandidValueWithType p0 = CandidValueWithType.FromObject<EdjCase.ICP.Candid.Models.Principal>(arg0);
@@ -51,10 +50,9 @@ namespace Sample.Shared.Dex
 				p2,
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride: null);
-			QueryReply reply = response.ThrowOrGetReply();
+			CandidArg responseArg = await this.Agent.CallAndWaitAsync(this.CanisterId, method, arg, null, identityOverride);
 		}
-		public async Task<DepositReceipt> Deposit(Token arg0)
+		public async Task<DepositReceipt> DepositAsync(Token arg0, IIdentity? identityOverride = null)
 		{
 			string method = "deposit";
 			CandidValueWithType p0 = CandidValueWithType.FromObject<Token>(arg0);
@@ -63,24 +61,23 @@ namespace Sample.Shared.Dex
 				p0,
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride: null);
-			QueryReply reply = response.ThrowOrGetReply();
-			DepositReceipt r0 = reply.Arg.Values[0].ToObject<DepositReceipt>();
+			CandidArg responseArg = await this.Agent.CallAndWaitAsync(this.CanisterId, method, arg, null, identityOverride);
+			DepositReceipt r0 = responseArg.Values[0].ToObject<DepositReceipt>();
 			return (r0);
 		}
-		public async Task<List<Balance>> GetAllBalances()
+		public async Task<List<Balance>> GetAllBalancesAsync(IIdentity? identityOverride = null)
 		{
 			string method = "getAllBalances";
 			var candidArgs = new List<CandidValueWithType>
 			{
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride: null);
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride);
 			QueryReply reply = response.ThrowOrGetReply();
 			List<Balance> r0 = reply.Arg.Values[0].ToObject<List<Balance>>();
 			return (r0);
 		}
-		public async Task<EdjCase.ICP.Candid.UnboundedUInt> GetBalance(Token arg0)
+		public async Task<EdjCase.ICP.Candid.UnboundedUInt> GetBalanceAsync(Token arg0, IIdentity? identityOverride = null)
 		{
 			string method = "getBalance";
 			CandidValueWithType p0 = CandidValueWithType.FromObject<Token>(arg0);
@@ -89,36 +86,35 @@ namespace Sample.Shared.Dex
 				p0,
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride: null);
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride);
 			QueryReply reply = response.ThrowOrGetReply();
 			EdjCase.ICP.Candid.UnboundedUInt r0 = reply.Arg.Values[0].ToObject<EdjCase.ICP.Candid.UnboundedUInt>();
 			return (r0);
 		}
-		public async Task<List<Balance>> GetBalances()
+		public async Task<List<Balance>> GetBalancesAsync(IIdentity? identityOverride = null)
 		{
 			string method = "getBalances";
 			var candidArgs = new List<CandidValueWithType>
 			{
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride: null);
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride);
 			QueryReply reply = response.ThrowOrGetReply();
 			List<Balance> r0 = reply.Arg.Values[0].ToObject<List<Balance>>();
 			return (r0);
 		}
-		public async Task<List<System.Byte>> GetDepositAddress()
+		public async Task<List<byte>> GetDepositAddressAsync(IIdentity? identityOverride = null)
 		{
 			string method = "getDepositAddress";
 			var candidArgs = new List<CandidValueWithType>
 			{
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride: null);
-			QueryReply reply = response.ThrowOrGetReply();
-			List<System.Byte> r0 = reply.Arg.Values[0].ToObject<List<System.Byte>>();
+			CandidArg responseArg = await this.Agent.CallAndWaitAsync(this.CanisterId, method, arg, null, identityOverride);
+			List<byte> r0 = responseArg.Values[0].ToObject<List<byte>>();
 			return (r0);
 		}
-		public async Task<Order?> GetOrder(OrderId arg0)
+		public async Task<Order?> GetOrderAsync(OrderId arg0, IIdentity? identityOverride = null)
 		{
 			string method = "getOrder";
 			CandidValueWithType p0 = CandidValueWithType.FromObject<OrderId>(arg0);
@@ -127,24 +123,22 @@ namespace Sample.Shared.Dex
 				p0,
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride: null);
-			QueryReply reply = response.ThrowOrGetReply();
-			Order? r0 = reply.Arg.Values[0].ToObject<Order?>();
+			CandidArg responseArg = await this.Agent.CallAndWaitAsync(this.CanisterId, method, arg, null, identityOverride);
+			Order? r0 = responseArg.Values[0].ToObjectOrDefault<Order?>();
 			return (r0);
 		}
-		public async Task<List<Order>> GetOrders()
+		public async Task<List<Order>> GetOrdersAsync(IIdentity? identityOverride = null)
 		{
 			string method = "getOrders";
 			var candidArgs = new List<CandidValueWithType>
 			{
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride: null);
-			QueryReply reply = response.ThrowOrGetReply();
-			List<Order> r0 = reply.Arg.Values[0].ToObject<List<Order>>();
+			CandidArg responseArg = await this.Agent.CallAndWaitAsync(this.CanisterId, method, arg, null, identityOverride);
+			List<Order> r0 = responseArg.Values[0].ToObject<List<Order>>();
 			return (r0);
 		}
-		public async Task<System.String> GetSymbol(Token arg0)
+		public async Task<string> GetSymbolAsync(Token arg0, IIdentity? identityOverride = null)
 		{
 			string method = "getSymbol";
 			CandidValueWithType p0 = CandidValueWithType.FromObject<Token>(arg0);
@@ -153,12 +147,11 @@ namespace Sample.Shared.Dex
 				p0,
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride: null);
-			QueryReply reply = response.ThrowOrGetReply();
-			System.String r0 = reply.Arg.Values[0].ToObject<System.String>();
+			CandidArg responseArg = await this.Agent.CallAndWaitAsync(this.CanisterId, method, arg, null, identityOverride);
+			string r0 = responseArg.Values[0].ToObject<string>();
 			return (r0);
 		}
-		public async Task<OrderPlacementReceipt> PlaceOrder(Token arg0, EdjCase.ICP.Candid.UnboundedUInt arg1, Token arg2, EdjCase.ICP.Candid.UnboundedUInt arg3)
+		public async Task<OrderPlacementReceipt> PlaceOrderAsync(Token arg0, EdjCase.ICP.Candid.UnboundedUInt arg1, Token arg2, EdjCase.ICP.Candid.UnboundedUInt arg3, IIdentity? identityOverride = null)
 		{
 			string method = "placeOrder";
 			CandidValueWithType p0 = CandidValueWithType.FromObject<Token>(arg0);
@@ -173,24 +166,23 @@ namespace Sample.Shared.Dex
 				p3,
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride: null);
-			QueryReply reply = response.ThrowOrGetReply();
-			OrderPlacementReceipt r0 = reply.Arg.Values[0].ToObject<OrderPlacementReceipt>();
+			CandidArg responseArg = await this.Agent.CallAndWaitAsync(this.CanisterId, method, arg, null, identityOverride);
+			OrderPlacementReceipt r0 = responseArg.Values[0].ToObject<OrderPlacementReceipt>();
 			return (r0);
 		}
-		public async Task<EdjCase.ICP.Candid.Models.Principal> Whoami()
+		public async Task<EdjCase.ICP.Candid.Models.Principal> WhoamiAsync(IIdentity? identityOverride = null)
 		{
 			string method = "whoami";
 			var candidArgs = new List<CandidValueWithType>
 			{
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride: null);
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride);
 			QueryReply reply = response.ThrowOrGetReply();
 			EdjCase.ICP.Candid.Models.Principal r0 = reply.Arg.Values[0].ToObject<EdjCase.ICP.Candid.Models.Principal>();
 			return (r0);
 		}
-		public async Task<WithdrawReceipt> Withdraw(Token arg0, EdjCase.ICP.Candid.UnboundedUInt arg1, EdjCase.ICP.Candid.Models.Principal arg2)
+		public async Task<WithdrawReceipt> WithdrawAsync(Token arg0, EdjCase.ICP.Candid.UnboundedUInt arg1, EdjCase.ICP.Candid.Models.Principal arg2, IIdentity? identityOverride = null)
 		{
 			string method = "withdraw";
 			CandidValueWithType p0 = CandidValueWithType.FromObject<Token>(arg0);
@@ -203,9 +195,8 @@ namespace Sample.Shared.Dex
 				p2,
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride: null);
-			QueryReply reply = response.ThrowOrGetReply();
-			WithdrawReceipt r0 = reply.Arg.Values[0].ToObject<WithdrawReceipt>();
+			CandidArg responseArg = await this.Agent.CallAndWaitAsync(this.CanisterId, method, arg, null, identityOverride);
+			WithdrawReceipt r0 = responseArg.Values[0].ToObject<WithdrawReceipt>();
 			return (r0);
 		}
 	}

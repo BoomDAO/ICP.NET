@@ -5,15 +5,14 @@ namespace Sample.Shared.Dex.Models
 		Err,
 		Ok,
 	}
-	public class DepositReceipt
+	public class DepositReceipt : EdjCase.ICP.Candid.CandidVariantValueBase<DepositReceiptType>
 	{
-		public DepositReceiptType Type { get; }
-		private readonly object? value;
-		
-		public DepositReceipt(DepositReceiptType type, object? value)
+		public DepositReceipt(DepositReceiptType type, object? value)  : base(type, value)
 		{
-			this.Type = type;
-			this.value = value;
+		}
+		
+		protected DepositReceipt()
+		{
 		}
 		
 		public static DepositReceipt Err(DepositErr info)
@@ -38,12 +37,5 @@ namespace Sample.Shared.Dex.Models
 			return (EdjCase.ICP.Candid.UnboundedUInt)this.value!;
 		}
 		
-		private void ValidateType(DepositReceiptType type)
-		{
-			if (this.Type != type)
-			{
-				throw new InvalidOperationException($"Cannot cast '{this.Type}' to type '{type}'");
-			}
-		}
 	}
 }

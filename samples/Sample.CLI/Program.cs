@@ -14,7 +14,7 @@ Principal canisterId = Principal.FromText("rrkah-fqaaa-aaaaa-aaaaq-cai");
 var client = new GovernanceApiClient(agent, canisterId);
 
 
-var info = await client.GetProposalInfoAsync(62143, null);
+var info = await client.GetProposalInfoAsync(94182, null);
 
 var paths = new List<Path>
 {
