@@ -1,3 +1,4 @@
+using EdjCase.ICP.Agent.Responses;
 using EdjCase.ICP.Candid;
 using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid.Models.Types;
@@ -377,7 +378,7 @@ namespace EdjCase.ICP.Candid.Tests
             var expectedArg = CandidArg.FromCandid(new List<CandidValueWithType>
             {
                 CandidValueWithType.FromValueAndType(value1, type1)
-            }, null); ;
+            });
 
             byte[] actualBytes = ByteUtil.FromHexString(hex);
             CandidArg actualArg = CandidArg.FromBytes(actualBytes);

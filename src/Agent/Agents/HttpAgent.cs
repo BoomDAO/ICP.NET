@@ -72,40 +72,45 @@ namespace EdjCase.ICP.Agent.Agents
 			CancellationToken? cancellationToken = null)
 		{
 			RequestId id = await this.CallAsync(canisterId, method, encodedArgument, targetCanisterOverride, identityOverride);
-			var pathRequestStatus = Path.FromSegments("request_status", id.RawValue);
-			var paths = new List<Path> { pathRequestStatus };
+			
 			while (true)
 			{
-				ReadStateResponse response = await this.ReadStateAsync(canisterId, paths);
-				HashTree? requestStatus = response.Certificate.Tree.GetValue(pathRequestStatus);
-				if (requestStatus != null)
-				{
-					string? status = requestStatus.GetValue("status")?.AsLeaf().AsUtf8();
-					//received, processing, replied, rejected or done
-					switch (status)
-					{
-						case null:
-						case "received":
-						case "processing":
-							continue; // Still processing
-						case "replied":
-							Blob r = requestStatus.GetValue("reply")!.AsLeaf();
-							return CandidArg.FromBytes(r.Value);
-						case "rejected":
-							UnboundedUInt code = requestStatus.GetValue("reject_code")!.AsLeaf().AsNat();
-							string message = requestStatus.GetValue("reject_message")!.AsLeaf().AsUtf8();
-							string? errorCode = requestStatus.GetValue("error_code")?.AsLeaf().AsUtf8();
-							throw new CallRejectedException(code, message, errorCode);
-						case "done":
-							return CandidArg.Empty();
-						default:
-							throw new NotImplementedException($"Invalid request status '{status}'");
-					}
-				}
-				await Task.Delay(100, cancellationToken ?? CancellationToken.None);
-				cancellationToken?.ThrowIfCancellationRequested();
+				
 			}
 		}
+
+		//public async Task<RequestStatus?> GetRequestStatus(RequestId id)
+		//{
+		//	var pathRequestStatus = Path.FromSegments("request_status", id.RawValue);
+		//	var paths = new List<Path> { pathRequestStatus }; ReadStateResponse response = await this.ReadStateAsync(canisterId, paths);
+		//	HashTree? requestStatus = response.Certificate.Tree.GetValue(pathRequestStatus);
+		//	if (requestStatus != null)
+		//	{
+		//		string? status = requestStatus.GetValue("status")?.AsLeaf().AsUtf8();
+		//		//received, processing, replied, rejected or done
+		//		switch (status)
+		//		{
+		//			case null:
+		//			case "received":
+		//			case "processing":
+		//				continue; // Still processing
+		//			case "replied":
+		//				Blob r = requestStatus.GetValue("reply")!.AsLeaf();
+		//				return CandidArg.FromBytes(r.Value);
+		//			case "rejected":
+		//				UnboundedUInt code = requestStatus.GetValue("reject_code")!.AsLeaf().AsNat();
+		//				string message = requestStatus.GetValue("reject_message")!.AsLeaf().AsUtf8();
+		//				string? errorCode = requestStatus.GetValue("error_code")?.AsLeaf().AsUtf8();
+		//				throw new CallRejectedException(code, message, errorCode);
+		//			case "done":
+		//				return CandidArg.Empty();
+		//			default:
+		//				throw new NotImplementedException($"Invalid request status '{status}'");
+		//		}
+		//	}
+		//	await Task.Delay(100, cancellationToken ?? CancellationToken.None);
+		//	cancellationToken?.ThrowIfCancellationRequested();
+		//}
 
 		public Principal GetPrincipal()
 		{

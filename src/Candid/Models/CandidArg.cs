@@ -14,12 +14,10 @@ namespace EdjCase.ICP.Candid.Models
     public class CandidArg : IHashable, IEquatable<CandidArg>
     {
         public List<CandidValueWithType> Values { get; }
-        public byte[] OpaqueReferenceBytes { get; }
 
-        public CandidArg(List<CandidValueWithType> values, byte[]? opaqueReferencesBytes = null)
+        public CandidArg(List<CandidValueWithType> values)
         {
             this.Values = values;
-            this.OpaqueReferenceBytes = opaqueReferencesBytes ?? new byte[0];
         }
 
         public byte[] ComputeHash(IHashFunction hashFunction)
@@ -37,19 +35,19 @@ namespace EdjCase.ICP.Candid.Models
             return CandidByteParser.Parse(value);
         }
 
-        public static CandidArg FromCandid(List<CandidValueWithType> args, byte[]? opaqueReferencesBytes = null)
+        public static CandidArg FromCandid(List<CandidValueWithType> args)
         {
-            return new CandidArg(args, opaqueReferencesBytes);
+            return new CandidArg(args);
 		}
 
 		public static CandidArg FromCandid(params CandidValueWithType[] args)
 		{
-			return new CandidArg(args.ToList(), null);
+			return new CandidArg(args.ToList());
 		}
 
 		public static CandidArg Empty()
 		{
-			return new CandidArg(new List<CandidValueWithType>(), null);
+			return new CandidArg(new List<CandidValueWithType>());
 		}
 
 		public override string ToString()
