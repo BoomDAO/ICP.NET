@@ -63,47 +63,34 @@ namespace EdjCase.ICP.Agent.Agents
 				return new CallRequest(canisterId, method, encodedArgument, sender, now);
 			}
 		}
-		public async Task<CandidArg> CallAndWaitAsync(
-			Principal canisterId,
-			string method,
-			CandidArg encodedArgument,
-			Principal? targetCanisterOverride = null,
-			IIdentity? identityOverride = null,
-			CancellationToken? cancellationToken = null)
+
+		public async Task<RequestStatus?> GetRequestStatusAsync(Principal canisterId, RequestId id)
 		{
-			RequestId id = await this.CallAsync(canisterId, method, encodedArgument, targetCanisterOverride, identityOverride);
 			var pathRequestStatus = Path.FromSegments("request_status", id.RawValue);
-			var paths = new List<Path> { pathRequestStatus };
-			while (true)
+			var paths = new List<Path> { pathRequestStatus }; ReadStateResponse response = await this.ReadStateAsync(canisterId, paths);
+			HashTree? requestStatus = response.Certificate.Tree.GetValue(pathRequestStatus);
+			string? status = requestStatus?.GetValue("status")?.AsLeaf().AsUtf8();
+			//received, processing, replied, rejected or done
+			switch (status)
 			{
-				ReadStateResponse response = await this.ReadStateAsync(canisterId, paths);
-				HashTree? requestStatus = response.Certificate.Tree.GetValue(pathRequestStatus);
-				if (requestStatus != null)
-				{
-					string? status = requestStatus.GetValue("status")?.AsLeaf().AsUtf8();
-					//received, processing, replied, rejected or done
-					switch (status)
-					{
-						case null:
-						case "received":
-						case "processing":
-							continue; // Still processing
-						case "replied":
-							Blob r = requestStatus.GetValue("reply")!.AsLeaf();
-							return CandidArg.FromBytes(r.Value);
-						case "rejected":
-							UnboundedUInt code = requestStatus.GetValue("reject_code")!.AsLeaf().AsNat();
-							string message = requestStatus.GetValue("reject_message")!.AsLeaf().AsUtf8();
-							string? errorCode = requestStatus.GetValue("error_code")?.AsLeaf().AsUtf8();
-							throw new CallRejectedException(code, message, errorCode);
-						case "done":
-							return CandidArg.Empty();
-						default:
-							throw new NotImplementedException($"Invalid request status '{status}'");
-					}
-				}
-				await Task.Delay(100, cancellationToken ?? CancellationToken.None);
-				cancellationToken?.ThrowIfCancellationRequested();
+				case null:
+					return null;
+				case "received":
+					return RequestStatus.Received();
+				case "processing":
+					return RequestStatus.Processing();
+				case "replied":
+					Blob r = requestStatus!.GetValue("reply")!.AsLeaf();
+					return RequestStatus.Replied(CandidArg.FromBytes(r.Value));
+				case "rejected":
+					UnboundedUInt code = requestStatus!.GetValue("reject_code")!.AsLeaf().AsNat();
+					string message = requestStatus.GetValue("reject_message")!.AsLeaf().AsUtf8();
+					string? errorCode = requestStatus.GetValue("error_code")?.AsLeaf().AsUtf8();
+					return RequestStatus.Rejected(code, message, errorCode);
+				case "done":
+					return RequestStatus.Done();
+				default:
+					throw new NotImplementedException($"Invalid request status '{status}'");
 			}
 		}
 

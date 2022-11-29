@@ -5,15 +5,14 @@ namespace Sample.Shared.Dex.Models
 		BalanceLow,
 		TransferFailure,
 	}
-	public class DepositErr
+	public class DepositErr : EdjCase.ICP.Candid.CandidVariantValueBase<DepositErrType>
 	{
-		public DepositErrType Type { get; }
-		private readonly object? value;
-		
-		public DepositErr(DepositErrType type, object? value)
+		public DepositErr(DepositErrType type, object? value)  : base(type, value)
 		{
-			this.Type = type;
-			this.value = value;
+		}
+		
+		protected DepositErr()
+		{
 		}
 		
 		public static DepositErr BalanceLow()
@@ -26,12 +25,5 @@ namespace Sample.Shared.Dex.Models
 			return new DepositErr(DepositErrType.TransferFailure, null);
 		}
 		
-		private void ValidateType(DepositErrType type)
-		{
-			if (this.Type != type)
-			{
-				throw new InvalidOperationException($"Cannot cast '{this.Type}' to type '{type}'");
-			}
-		}
 	}
 }

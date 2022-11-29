@@ -1,4 +1,4 @@
-﻿using EdjCase.ICP.Candid.Models;
+using EdjCase.ICP.Candid.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,7 +30,6 @@ namespace EdjCase.ICP.Candid.Tests
 			// Decode test
             CandidArg args = CandidArg.FromBytes(actualBytes);
 			CandidValueWithType actual = Assert.Single(args.Values);
-			Assert.Empty(args.OpaqueReferenceBytes);
 
 			Assert.Equal(value, actual.Value);
 			Assert.Equal(typeDef, actual.Type);

@@ -48,12 +48,8 @@ namespace EdjCase.ICP.Candid.Parsers
                     .Select(t => CandidValueWithType.FromValueAndType(helper.ReadValue(t, recursiveTypes), t))
                     .ToList();
 
-                // Remaining bytes are opaque reference bytes
-                byte[] opaqueReferenceBytes = value
-                    .AsMemory()
-                    .Slice((int)helper.Reader.BaseStream.Position)
-                    .ToArray();
-                return CandidArg.FromCandid(args, opaqueReferenceBytes);
+                // TODO Remaining bytes are opaque reference bytes
+                return CandidArg.FromCandid(args);
             }
             catch (Exception ex) when (ex is not CandidSerializationException)
             {

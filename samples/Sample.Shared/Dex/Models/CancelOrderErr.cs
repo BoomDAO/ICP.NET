@@ -5,15 +5,14 @@ namespace Sample.Shared.Dex.Models
 		NotAllowed,
 		NotExistingOrder,
 	}
-	public class CancelOrderErr
+	public class CancelOrderErr : EdjCase.ICP.Candid.CandidVariantValueBase<CancelOrderErrType>
 	{
-		public CancelOrderErrType Type { get; }
-		private readonly object? value;
-		
-		public CancelOrderErr(CancelOrderErrType type, object? value)
+		public CancelOrderErr(CancelOrderErrType type, object? value)  : base(type, value)
 		{
-			this.Type = type;
-			this.value = value;
+		}
+		
+		protected CancelOrderErr()
+		{
 		}
 		
 		public static CancelOrderErr NotAllowed()
@@ -26,12 +25,5 @@ namespace Sample.Shared.Dex.Models
 			return new CancelOrderErr(CancelOrderErrType.NotExistingOrder, null);
 		}
 		
-		private void ValidateType(CancelOrderErrType type)
-		{
-			if (this.Type != type)
-			{
-				throw new InvalidOperationException($"Cannot cast '{this.Type}' to type '{type}'");
-			}
-		}
 	}
 }

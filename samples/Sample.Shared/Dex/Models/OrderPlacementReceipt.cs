@@ -5,15 +5,14 @@ namespace Sample.Shared.Dex.Models
 		Err,
 		Ok,
 	}
-	public class OrderPlacementReceipt
+	public class OrderPlacementReceipt : EdjCase.ICP.Candid.CandidVariantValueBase<OrderPlacementReceiptType>
 	{
-		public OrderPlacementReceiptType Type { get; }
-		private readonly object? value;
-		
-		public OrderPlacementReceipt(OrderPlacementReceiptType type, object? value)
+		public OrderPlacementReceipt(OrderPlacementReceiptType type, object? value)  : base(type, value)
 		{
-			this.Type = type;
-			this.value = value;
+		}
+		
+		protected OrderPlacementReceipt()
+		{
 		}
 		
 		public static OrderPlacementReceipt Err(OrderPlacementErr info)
@@ -38,12 +37,5 @@ namespace Sample.Shared.Dex.Models
 			return (Order?)this.value!;
 		}
 		
-		private void ValidateType(OrderPlacementReceiptType type)
-		{
-			if (this.Type != type)
-			{
-				throw new InvalidOperationException($"Cannot cast '{this.Type}' to type '{type}'");
-			}
-		}
 	}
 }
