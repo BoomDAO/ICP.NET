@@ -3,6 +3,7 @@ using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid.Models.Types;
 using EdjCase.ICP.Candid.Models.Values;
 using EdjCase.ICP.ClientGenerator;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -177,8 +178,18 @@ namespace ICP.ClientGenerator
 							}
 							builder.AppendLine("};");
 							builder.AppendLine("CandidArg arg = CandidArg.FromCandid(candidArgs);");
-							builder.AppendLine("QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride);");
-							builder.AppendLine("QueryReply reply = response.ThrowOrGetReply();");
+							string argVariableName;
+							if (func.IsQuery)
+							{
+								builder.AppendLine("QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, identityOverride);");
+								builder.AppendLine("QueryReply reply = response.ThrowOrGetReply();");
+								argVariableName = "reply.Arg";
+							}
+							else
+							{
+								builder.AppendLine("CandidArg arg = await this.Agent.CallAndWaitAsync(this.CanisterId, method, arg, null, identityOverride);");
+								argVariableName = "arg";
+							}
 
 							if (returnTypes.Any())
 							{
@@ -191,7 +202,7 @@ namespace ICP.ClientGenerator
 									{
 										string variableName = "r" + i;
 										string? orDefault = parameter.TypeName.EndsWith("?") ? "OrDefault" : null; // TODO better detection of optional
-										builder.AppendLine($"{parameter.TypeName} {variableName} = reply.Arg.Values[{i}].ToObject{orDefault}<{parameter.TypeName}>();");
+										builder.AppendLine($"{parameter.TypeName} {variableName} = {argVariableName}.Values[{i}].ToObject{orDefault}<{parameter.TypeName}>();");
 										returnParamVariables.Add(variableName);
 									}
 									i++;
@@ -199,7 +210,6 @@ namespace ICP.ClientGenerator
 								string returnString = string.Join(", ", returnParamVariables);
 								builder.AppendLine($"return ({returnString});");
 							}
-
 						},
 						access: "public",
 						isStatic: false,

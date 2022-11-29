@@ -63,44 +63,8 @@ namespace EdjCase.ICP.Agent.Agents
 				return new CallRequest(canisterId, method, encodedArgument, sender, now);
 			}
 		}
-		public async Task<CandidArg> CallAndWaitAsync(
-			Principal canisterId,
-			string method,
-			CandidArg encodedArgument,
-			Principal? targetCanisterOverride = null,
-			IIdentity? identityOverride = null,
-			CancellationToken? cancellationToken = null)
-		{
-			RequestId id = await this.CallAsync(canisterId, method, encodedArgument, targetCanisterOverride, identityOverride);
-			
-			while (true)
-			{
-				await Task.Delay(100, cancellationToken ?? CancellationToken.None);
 
-				cancellationToken?.ThrowIfCancellationRequested();
-
-				RequestStatus? requestStatus = await this.GetRequestStatusAsync(id);
-
-				cancellationToken?.ThrowIfCancellationRequested();
-
-				switch (requestStatus?.Type)
-				{
-					case null:
-					case RequestStatus.StatusType.Received:
-					case RequestStatus.StatusType.Processing:
-						continue; // Still processing
-					case RequestStatus.StatusType.Replied:
-						return requestStatus.AsReplied();
-					case RequestStatus.StatusType.Rejected:
-						(UnboundedUInt code, string message, string? errorCode) = requestStatus.AsRejected();
-						throw new CallRejectedException(code, message, errorCode);
-					case RequestStatus.StatusType.Done:
-						throw new RequestCleanedUpExcpetion();
-				}
-			}
-		}
-
-		public async Task<RequestStatus?> GetRequestStatusAsync(RequestId id)
+		public async Task<RequestStatus?> GetRequestStatusAsync(Principal canisterId, RequestId id)
 		{
 			var pathRequestStatus = Path.FromSegments("request_status", id.RawValue);
 			var paths = new List<Path> { pathRequestStatus }; ReadStateResponse response = await this.ReadStateAsync(canisterId, paths);
