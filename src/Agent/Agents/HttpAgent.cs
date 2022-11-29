@@ -75,42 +75,60 @@ namespace EdjCase.ICP.Agent.Agents
 			
 			while (true)
 			{
-				
+				await Task.Delay(100, cancellationToken ?? CancellationToken.None);
+
+				cancellationToken?.ThrowIfCancellationRequested();
+
+				RequestStatus? requestStatus = await this.GetRequestStatusAsync(id);
+
+				cancellationToken?.ThrowIfCancellationRequested();
+
+				switch (requestStatus?.Type)
+				{
+					case null:
+					case RequestStatus.StatusType.Received:
+					case RequestStatus.StatusType.Processing:
+						continue; // Still processing
+					case RequestStatus.StatusType.Replied:
+						return requestStatus.AsReplied();
+					case RequestStatus.StatusType.Rejected:
+						(UnboundedUInt code, string message, string? errorCode) = requestStatus.AsRejected();
+						throw new CallRejectedException(code, message, errorCode);
+					case RequestStatus.StatusType.Done:
+						throw new RequestCleanedUpExcpetion();
+				}
 			}
 		}
 
-		//public async Task<RequestStatus?> GetRequestStatus(RequestId id)
-		//{
-		//	var pathRequestStatus = Path.FromSegments("request_status", id.RawValue);
-		//	var paths = new List<Path> { pathRequestStatus }; ReadStateResponse response = await this.ReadStateAsync(canisterId, paths);
-		//	HashTree? requestStatus = response.Certificate.Tree.GetValue(pathRequestStatus);
-		//	if (requestStatus != null)
-		//	{
-		//		string? status = requestStatus.GetValue("status")?.AsLeaf().AsUtf8();
-		//		//received, processing, replied, rejected or done
-		//		switch (status)
-		//		{
-		//			case null:
-		//			case "received":
-		//			case "processing":
-		//				continue; // Still processing
-		//			case "replied":
-		//				Blob r = requestStatus.GetValue("reply")!.AsLeaf();
-		//				return CandidArg.FromBytes(r.Value);
-		//			case "rejected":
-		//				UnboundedUInt code = requestStatus.GetValue("reject_code")!.AsLeaf().AsNat();
-		//				string message = requestStatus.GetValue("reject_message")!.AsLeaf().AsUtf8();
-		//				string? errorCode = requestStatus.GetValue("error_code")?.AsLeaf().AsUtf8();
-		//				throw new CallRejectedException(code, message, errorCode);
-		//			case "done":
-		//				return CandidArg.Empty();
-		//			default:
-		//				throw new NotImplementedException($"Invalid request status '{status}'");
-		//		}
-		//	}
-		//	await Task.Delay(100, cancellationToken ?? CancellationToken.None);
-		//	cancellationToken?.ThrowIfCancellationRequested();
-		//}
+		public async Task<RequestStatus?> GetRequestStatusAsync(RequestId id)
+		{
+			var pathRequestStatus = Path.FromSegments("request_status", id.RawValue);
+			var paths = new List<Path> { pathRequestStatus }; ReadStateResponse response = await this.ReadStateAsync(canisterId, paths);
+			HashTree? requestStatus = response.Certificate.Tree.GetValue(pathRequestStatus);
+			string? status = requestStatus?.GetValue("status")?.AsLeaf().AsUtf8();
+			//received, processing, replied, rejected or done
+			switch (status)
+			{
+				case null:
+					return null;
+				case "received":
+					return RequestStatus.Received();
+				case "processing":
+					return RequestStatus.Processing();
+				case "replied":
+					Blob r = requestStatus!.GetValue("reply")!.AsLeaf();
+					return RequestStatus.Replied(CandidArg.FromBytes(r.Value));
+				case "rejected":
+					UnboundedUInt code = requestStatus!.GetValue("reject_code")!.AsLeaf().AsNat();
+					string message = requestStatus.GetValue("reject_message")!.AsLeaf().AsUtf8();
+					string? errorCode = requestStatus.GetValue("error_code")?.AsLeaf().AsUtf8();
+					return RequestStatus.Rejected(code, message, errorCode);
+				case "done":
+					return RequestStatus.Done();
+				default:
+					throw new NotImplementedException($"Invalid request status '{status}'");
+			}
+		}
 
 		public Principal GetPrincipal()
 		{
