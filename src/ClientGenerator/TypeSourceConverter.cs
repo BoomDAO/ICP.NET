@@ -79,7 +79,7 @@ namespace EdjCase.ICP.ClientGenerator
 						{
 							// Func alias declaration
 							// ex: type A = func
-							aliases.Add(typeName, typeof(CandidFunc).FullName);
+							aliases.Add(typeName, typeof(CandidFunc).FullName!);
 							break;
 						}
 					default:
