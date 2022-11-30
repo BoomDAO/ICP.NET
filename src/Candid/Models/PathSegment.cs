@@ -20,10 +20,6 @@ namespace EdjCase.ICP.Candid.Models
 		{
 			return new Path(segments);
 		}
-		public static Path FromMultiString(params string[] segments)
-		{
-			return new Path(segments.Select(PathSegment.FromString));
-		}
 
 		public byte[] ComputeHash(IHashFunction hashFunction)
 		{

@@ -18,8 +18,8 @@ var info = await client.GetProposalInfoAsync(94182, null);
 
 var paths = new List<Path>
 {
-	Path.FromMultiString("time"),
-	Path.FromMultiString("canister", "az5sd-cqaaa-aaaae-aaarq-cai", "module_hash"),
+	Path.FromSegments("time"),
+	Path.FromSegments("canister", "az5sd-cqaaa-aaaae-aaarq-cai", "module_hash"),
 };
 var a = await agent.ReadStateAsync(Principal.FromText("az5sd-cqaaa-aaaae-aaarq-cai"), paths);
 
