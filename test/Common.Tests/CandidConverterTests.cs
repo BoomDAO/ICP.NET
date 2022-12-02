@@ -1,4 +1,4 @@
-﻿using EdjCase.ICP.Candid;
+using EdjCase.ICP.Candid;
 using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid.Models.Types;
 using EdjCase.ICP.Candid.Models.Values;
@@ -85,8 +85,8 @@ namespace ICP.Candid.Tests
 				StringField = "StringValue",
 				IntField = 2
 			};
-			CandidTag stringFieldName = CandidTag.FromName("string_field");
-			CandidTag intFieldName = CandidTag.FromName("int_field");
+			CandidTag stringFieldName = CandidTag.FromName("StringField");
+			CandidTag intFieldName = CandidTag.FromName("IntField");
 			var fields = new Dictionary<CandidTag, CandidValue>
 			{
 				{stringFieldName, CandidPrimitive.Text("StringValue")},
@@ -104,6 +104,8 @@ namespace ICP.Candid.Tests
 
 			this.Test(values, expected);
 		}
+
+
 
 
 
