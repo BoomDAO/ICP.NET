@@ -25,14 +25,14 @@ namespace EdjCase.ICP.ClientGenerator
 	}
 	internal class TypeSourceConverter
 	{
-		public static ServiceSourceInfo ConvertService(string serviceName, string baseNamespace, CandidServiceDescription file)
+		public static ServiceSourceInfo ConvertService(string serviceName, CandidServiceDescription service)
 		{
-			Dictionary<CandidId, CandidType> declaredTypes = file.DeclaredTypes.ToDictionary(t => t.Key, t => t.Value);
+			Dictionary<CandidId, CandidType> declaredTypes = service.DeclaredTypes.ToDictionary(t => t.Key, t => t.Value);
 			
-			if (file.ServiceReferenceId != null)
+			if (service.ServiceReferenceId != null)
 			{
 				// If there is a reference to the service type. Remove it to not process it as a type
-				declaredTypes.Remove(file.ServiceReferenceId); 
+				declaredTypes.Remove(service.ServiceReferenceId); 
 			}
 
 
@@ -100,7 +100,7 @@ namespace EdjCase.ICP.ClientGenerator
 				}
 			}
 
-			ServiceSourceDescriptor serviceSourceDesc = ResolveService(serviceName.ToString(), file.Service, declaredTypeNames);
+			ServiceSourceDescriptor serviceSourceDesc = ResolveService(serviceName.ToString(), service.Service, declaredTypeNames);
 
 
 			return new ServiceSourceInfo(serviceName, serviceSourceDesc, resolvedTypes, aliases);

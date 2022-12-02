@@ -219,7 +219,7 @@ namespace ICP.ClientGenerator
 						isAsync: true,
 						isConstructor: false,
 						returnTypes: returnTypes,
-						name: StringUtil.ToPascalCase(func.Name) + "Async",
+						name: func.Name,
 						baseConstructorParams: null,
 						args.ToArray()
 					);
@@ -230,45 +230,13 @@ namespace ICP.ClientGenerator
 
 
 
-		private static string BuildCandidId(CandidId? id)
-		{
-			if (id == null)
-			{
-				return "null";
-			}
-			return $"CandidId.Parse(\"{id}\")";
-		}
-
-		private static string BuildCandidTag(CandidTag tag)
-		{
-			return $"new CandidTag(\"{tag.Id}\", {$"\"tag.Name\"" ?? "null"})";
-		}
-
-		private static string BuildDictionaryString(string genericType1, string genericType2, IEnumerable<(string, string)> values)
-		{
-			string valuesString = string.Join(", ", values.Select(v => $"{{ {v.Item1}, {v.Item2} }}"));
-			return $"new Dictionary<CandidTag, CandidType > {{ {valuesString} }}";
-		}
-
-		private static string BuildListString(string genericType, IEnumerable<string> values)
-		{
-			string valuesString = string.Join(", ", values);
-			return $"new List<{genericType}> {{ {valuesString} }}";
-		}
-
 		private static void WriteRecord(IndentedStringBuilder builder, RecordSourceDescriptor record)
 		{
-			string className = record.Name;
-			WriteClass(builder, className, () =>
+			WriteClass(builder, record.Name, () =>
 			{
-				foreach ((string fieldName, string fieldFullTypeName) in record.Fields)
+				foreach ((string field, string fieldFullTypeName) in record.Fields)
 				{
-					var propertyName = StringUtil.ToPascalCase(fieldName);
-					if(propertyName != fieldName)
-					{
-						builder.AppendLine($"[CandidPropertyName(\"{fieldName}\")]");
-					}
-					builder.AppendLine($"public {fieldFullTypeName} {propertyName} {{ get; set; }}");
+					builder.AppendLine($"public {fieldFullTypeName} {field} {{ get; set; }}");
 					builder.AppendLine("");
 				}
 
@@ -283,8 +251,9 @@ namespace ICP.ClientGenerator
 
 		private static void WriteVariant(IndentedStringBuilder builder, VariantSourceDescriptor variant)
 		{
-			string enumName = $"{variant.Name}Type";
+
 			string className = variant.Name;
+			string enumName = $"{className}Type";
 			List<string> enumValues = variant.Options
 				.Select(o => o.Name)
 				.ToList();
@@ -293,7 +262,7 @@ namespace ICP.ClientGenerator
 			{
 				$"EdjCase.ICP.Candid.CandidVariantValueBase<{enumName}>"
 			};
-			WriteClass(builder, className, () =>
+			WriteClass(builder, variant.Name, () =>
 			{
 				// Constrcutor
 				WriteMethod(
@@ -331,8 +300,9 @@ namespace ICP.ClientGenerator
 
 
 
-				foreach ((string optionName, string? infoFullTypeName) in variant.Options)
+				foreach ((string option, string? infoFullTypeName) in variant.Options)
 				{
+					string optionName = option;
 					if (infoFullTypeName == null)
 					{
 						WriteMethod(
@@ -514,12 +484,7 @@ namespace ICP.ClientGenerator
 			{
 				foreach (string v in values)
 				{
-					var fixedV = StringUtil.ToPascalCase(v);
-					if (fixedV != v)
-					{
-						builder.AppendLine($"[CandidVariantName(\"{v}\")]");
-					}
-					builder.AppendLine(fixedV + ",");
+					builder.AppendLine(v + ",");
 				}
 			}
 			builder.AppendLine("}");

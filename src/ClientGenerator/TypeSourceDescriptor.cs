@@ -1,9 +1,10 @@
 using EdjCase.ICP.Candid.Models.Types;
+using EdjCase.ICP.Candid.Models.Values;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using static EdjCase.ICP.ClientGenerator.TypeSourceConverter;
+
 namespace ICP.ClientGenerator
 {
     internal abstract class TypeSourceDescriptor
@@ -27,12 +28,12 @@ namespace ICP.ClientGenerator
         }
     }
 
-    internal class VariantSourceDescriptor : TypeSourceDescriptor
+	internal class VariantSourceDescriptor : TypeSourceDescriptor
     {
         public List<(string Name, string? InfoFullTypeName)> Options { get; }
 
         public VariantSourceDescriptor(
-            string name,
+			string name,
             List<(string Name, string? InfoTypeName)> options,
             List<TypeSourceDescriptor> subTypesToCreate)
             : base(name, subTypesToCreate)

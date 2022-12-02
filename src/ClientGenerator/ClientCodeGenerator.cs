@@ -38,7 +38,7 @@ namespace EdjCase.ICP.ClientGenerator
     {
         public static ClientCodeResult FromService(string serviceName, string baseNamespace, CandidServiceDescription serviceFile)
         {
-			ServiceSourceInfo service = TypeSourceConverter.ConvertService(serviceName, baseNamespace, serviceFile);
+			ServiceSourceInfo service = TypeSourceConverter.ConvertService(serviceName, serviceFile);
 
 			return FromServiceInfo(serviceName, baseNamespace, service);
         }
