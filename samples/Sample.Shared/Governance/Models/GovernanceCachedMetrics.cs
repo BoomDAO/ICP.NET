@@ -2,60 +2,60 @@ namespace Sample.Shared.Governance.Models
 {
 	public class GovernanceCachedMetrics
 	{
-		public List<NotDissolvingNeuronsE8sBucketsInfo> NotDissolvingNeuronsE8sBuckets { get; set; }
+		public List<not_dissolving_neurons_e8s_bucketsInfo> not_dissolving_neurons_e8s_buckets { get; set; }
 		
-		public ulong GarbageCollectableNeuronsCount { get; set; }
+		public ulong garbage_collectable_neurons_count { get; set; }
 		
-		public ulong NeuronsWithInvalidStakeCount { get; set; }
+		public ulong neurons_with_invalid_stake_count { get; set; }
 		
-		public List<NotDissolvingNeuronsCountBucketsInfo> NotDissolvingNeuronsCountBuckets { get; set; }
+		public List<not_dissolving_neurons_count_bucketsInfo> not_dissolving_neurons_count_buckets { get; set; }
 		
-		public ulong TotalSupplyIcp { get; set; }
+		public ulong total_supply_icp { get; set; }
 		
-		public ulong NeuronsWithLessThan6MonthsDissolveDelayCount { get; set; }
+		public ulong neurons_with_less_than_6_months_dissolve_delay_count { get; set; }
 		
-		public ulong DissolvedNeuronsCount { get; set; }
+		public ulong dissolved_neurons_count { get; set; }
 		
-		public ulong TotalStakedE8s { get; set; }
+		public ulong total_staked_e8s { get; set; }
 		
-		public ulong NotDissolvingNeuronsCount { get; set; }
+		public ulong not_dissolving_neurons_count { get; set; }
 		
-		public ulong DissolvedNeuronsE8s { get; set; }
+		public ulong dissolved_neurons_e8s { get; set; }
 		
-		public ulong NeuronsWithLessThan6MonthsDissolveDelayE8s { get; set; }
+		public ulong neurons_with_less_than_6_months_dissolve_delay_e8s { get; set; }
 		
-		public List<DissolvingNeuronsCountBucketsInfo> DissolvingNeuronsCountBuckets { get; set; }
+		public List<dissolving_neurons_count_bucketsInfo> dissolving_neurons_count_buckets { get; set; }
 		
-		public ulong DissolvingNeuronsCount { get; set; }
+		public ulong dissolving_neurons_count { get; set; }
 		
-		public List<DissolvingNeuronsE8sBucketsInfo> DissolvingNeuronsE8sBuckets { get; set; }
+		public List<dissolving_neurons_e8s_bucketsInfo> dissolving_neurons_e8s_buckets { get; set; }
 		
-		public ulong CommunityFundTotalStakedE8s { get; set; }
+		public ulong community_fund_total_staked_e8s { get; set; }
 		
-		public ulong TimestampSeconds { get; set; }
+		public ulong timestamp_seconds { get; set; }
 		
-		public class NotDissolvingNeuronsE8sBucketsInfo
+		public class not_dissolving_neurons_e8s_bucketsInfo
 		{
 			public ulong F0 { get; set; }
 			
 			public double F1 { get; set; }
 			
 		}
-		public class NotDissolvingNeuronsCountBucketsInfo
+		public class not_dissolving_neurons_count_bucketsInfo
 		{
 			public ulong F0 { get; set; }
 			
 			public ulong F1 { get; set; }
 			
 		}
-		public class DissolvingNeuronsCountBucketsInfo
+		public class dissolving_neurons_count_bucketsInfo
 		{
 			public ulong F0 { get; set; }
 			
 			public ulong F1 { get; set; }
 			
 		}
-		public class DissolvingNeuronsE8sBucketsInfo
+		public class dissolving_neurons_e8s_bucketsInfo
 		{
 			public ulong F0 { get; set; }
 			

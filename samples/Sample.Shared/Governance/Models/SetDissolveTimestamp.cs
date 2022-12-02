@@ -2,7 +2,7 @@ namespace Sample.Shared.Governance.Models
 {
 	public class SetDissolveTimestamp
 	{
-		public ulong DissolveTimestampSeconds { get; set; }
+		public ulong dissolve_timestamp_seconds { get; set; }
 		
 	}
 }

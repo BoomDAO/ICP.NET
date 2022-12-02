@@ -2,7 +2,7 @@ namespace Sample.Shared.Governance.Models
 {
 	public class MakeProposalResponse
 	{
-		public NeuronId? ProposalId { get; set; }
+		public NeuronId? proposal_id { get; set; }
 		
 	}
 }

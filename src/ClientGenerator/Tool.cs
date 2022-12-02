@@ -44,7 +44,8 @@ namespace EdjCase.ICP.ClientGenerator
 			string fileName;
 			string? filePath = null;
 			string? baseUrl = null;
-			if (canisterId == null)
+			bool useFile = string.IsNullOrWhiteSpace(canisterId);
+			if (useFile)
 			{
 				Console.WriteLine("File Path: ");
 				filePath = Console.ReadLine()!;
@@ -63,7 +64,7 @@ namespace EdjCase.ICP.ClientGenerator
 			}
 			Console.WriteLine("Output Directory: ");
 			string outputDirectory = Console.ReadLine()!;
-			if (canisterId == null)
+			if (useFile)
 			{
 				args = new string[]
 				{
@@ -82,7 +83,7 @@ namespace EdjCase.ICP.ClientGenerator
 					"-o",
 					System.IO.Path.Combine(outputDirectory, fileName),
 					"-i",
-					canisterId,
+					canisterId!,
 					"-n",
 					$"Sample.Shared.{fileName}",
 					"-u",
@@ -93,7 +94,7 @@ namespace EdjCase.ICP.ClientGenerator
 			await Parser.Default.ParseArguments<Options>(args)
 				.WithParsedAsync<Options>(async o =>
 				{
-					if (o.CanisterId == null)
+					if (string.IsNullOrWhiteSpace(o.CanisterId))
 					{
 						ClientFileGenerator.GenerateClientFromFile(o.CandidFilePath!, o.OutputDirectory, o.Namespace, o.ClientName);
 					}

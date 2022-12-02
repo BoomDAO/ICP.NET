@@ -2,13 +2,13 @@ namespace Sample.Shared.Governance.Models
 {
 	public class Proposal
 	{
-		public string Url { get; set; }
+		public string url { get; set; }
 		
-		public string? Title { get; set; }
+		public string? title { get; set; }
 		
-		public Action? Action { get; set; }
+		public Action? action { get; set; }
 		
-		public string Summary { get; set; }
+		public string summary { get; set; }
 		
 	}
 }

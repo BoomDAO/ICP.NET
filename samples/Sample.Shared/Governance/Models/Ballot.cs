@@ -2,9 +2,9 @@ namespace Sample.Shared.Governance.Models
 {
 	public class Ballot
 	{
-		public int Vote { get; set; }
+		public int vote { get; set; }
 		
-		public ulong VotingPower { get; set; }
+		public ulong voting_power { get; set; }
 		
 	}
 }
