@@ -2,19 +2,19 @@ namespace Sample.Shared.Governance.Models
 {
 	public class NeuronStakeTransfer
 	{
-		public List<byte> ToSubaccount { get; set; }
+		public List<byte> to_subaccount { get; set; }
 		
-		public ulong NeuronStakeE8s { get; set; }
+		public ulong neuron_stake_e8s { get; set; }
 		
-		public EdjCase.ICP.Candid.Models.Principal? From { get; set; }
+		public EdjCase.ICP.Candid.Models.Principal? from { get; set; }
 		
-		public ulong Memo { get; set; }
+		public ulong memo { get; set; }
 		
-		public List<byte> FromSubaccount { get; set; }
+		public List<byte> from_subaccount { get; set; }
 		
-		public ulong TransferTimestamp { get; set; }
+		public ulong transfer_timestamp { get; set; }
 		
-		public ulong BlockHeight { get; set; }
+		public ulong block_height { get; set; }
 		
 	}
 }

@@ -2,7 +2,7 @@ namespace Sample.Shared.Governance.Models
 {
 	public class Motion
 	{
-		public string MotionText { get; set; }
+		public string motion_text { get; set; }
 		
 	}
 }

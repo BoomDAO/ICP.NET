@@ -268,7 +268,7 @@ namespace EdjCase.ICP.Candid.Mappers
 					// Ignore property
 					continue;
 				}
-				CandidPropertyNameAttribute? propertyAttribute = property.GetCustomAttribute<CandidPropertyNameAttribute>();
+				CandidNameAttribute? propertyAttribute = property.GetCustomAttribute<CandidNameAttribute>();
 				string propertyName;
 				if (propertyAttribute != null)
 				{
@@ -276,7 +276,7 @@ namespace EdjCase.ICP.Candid.Mappers
 				}
 				else
 				{
-					propertyName = StringUtil.ToSnakeCase(property.Name);
+					propertyName = property.Name;
 				}
 				CandidTag tag = CandidTag.FromName(propertyName);
 				CustomMapperAttribute? customMapperAttribute = property.GetCustomAttribute<CustomMapperAttribute>();
@@ -333,10 +333,10 @@ namespace EdjCase.ICP.Candid.Mappers
 	}
 
 	[AttributeUsage(AttributeTargets.Property)]
-	public class CandidPropertyNameAttribute : Attribute
+	public class CandidNameAttribute : Attribute
 	{
 		public string Name { get; }
-		public CandidPropertyNameAttribute(string name)
+		public CandidNameAttribute(string name)
 		{
 			this.Name = name;
 		}

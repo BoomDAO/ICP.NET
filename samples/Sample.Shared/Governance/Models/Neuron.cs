@@ -2,41 +2,41 @@ namespace Sample.Shared.Governance.Models
 {
 	public class Neuron
 	{
-		public NeuronId? Id { get; set; }
+		public NeuronId? id { get; set; }
 		
-		public EdjCase.ICP.Candid.Models.Principal? Controller { get; set; }
+		public EdjCase.ICP.Candid.Models.Principal? controller { get; set; }
 		
-		public List<BallotInfo> RecentBallots { get; set; }
+		public List<BallotInfo> recent_ballots { get; set; }
 		
-		public bool KycVerified { get; set; }
+		public bool kyc_verified { get; set; }
 		
-		public bool NotForProfit { get; set; }
+		public bool not_for_profit { get; set; }
 		
-		public ulong MaturityE8sEquivalent { get; set; }
+		public ulong maturity_e8s_equivalent { get; set; }
 		
-		public ulong CachedNeuronStakeE8s { get; set; }
+		public ulong cached_neuron_stake_e8s { get; set; }
 		
-		public ulong CreatedTimestampSeconds { get; set; }
+		public ulong created_timestamp_seconds { get; set; }
 		
-		public ulong AgingSinceTimestampSeconds { get; set; }
+		public ulong aging_since_timestamp_seconds { get; set; }
 		
-		public List<EdjCase.ICP.Candid.Models.Principal> HotKeys { get; set; }
+		public List<EdjCase.ICP.Candid.Models.Principal> hot_keys { get; set; }
 		
-		public List<byte> Account { get; set; }
+		public List<byte> account { get; set; }
 		
-		public ulong? JoinedCommunityFundTimestampSeconds { get; set; }
+		public ulong? joined_community_fund_timestamp_seconds { get; set; }
 		
-		public DissolveState? DissolveState { get; set; }
+		public DissolveState? dissolve_state { get; set; }
 		
-		public List<FolloweesInfo> Followees { get; set; }
+		public List<followeesInfo> followees { get; set; }
 		
-		public ulong NeuronFeesE8s { get; set; }
+		public ulong neuron_fees_e8s { get; set; }
 		
-		public NeuronStakeTransfer? Transfer { get; set; }
+		public NeuronStakeTransfer? transfer { get; set; }
 		
-		public KnownNeuronData? KnownNeuronData { get; set; }
+		public KnownNeuronData? known_neuron_data { get; set; }
 		
-		public class FolloweesInfo
+		public class followeesInfo
 		{
 			public int F0 { get; set; }
 			

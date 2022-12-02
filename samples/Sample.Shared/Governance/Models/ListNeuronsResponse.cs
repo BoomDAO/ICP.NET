@@ -2,11 +2,11 @@ namespace Sample.Shared.Governance.Models
 {
 	public class ListNeuronsResponse
 	{
-		public List<NeuronInfosInfo> NeuronInfos { get; set; }
+		public List<neuron_infosInfo> neuron_infos { get; set; }
 		
-		public List<Neuron> FullNeurons { get; set; }
+		public List<Neuron> full_neurons { get; set; }
 		
-		public class NeuronInfosInfo
+		public class neuron_infosInfo
 		{
 			public ulong F0 { get; set; }
 			

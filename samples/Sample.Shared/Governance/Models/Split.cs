@@ -2,7 +2,7 @@ namespace Sample.Shared.Governance.Models
 {
 	public class Split
 	{
-		public ulong AmountE8s { get; set; }
+		public ulong amount_e8s { get; set; }
 		
 	}
 }

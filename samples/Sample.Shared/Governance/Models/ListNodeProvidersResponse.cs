@@ -2,7 +2,7 @@ namespace Sample.Shared.Governance.Models
 {
 	public class ListNodeProvidersResponse
 	{
-		public List<NodeProvider> NodeProviders { get; set; }
+		public List<NodeProvider> node_providers { get; set; }
 		
 	}
 }

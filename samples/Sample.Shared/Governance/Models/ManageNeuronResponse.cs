@@ -2,7 +2,7 @@ namespace Sample.Shared.Governance.Models
 {
 	public class ManageNeuronResponse
 	{
-		public Command1? Command { get; set; }
+		public Command_1? command { get; set; }
 		
 	}
 }

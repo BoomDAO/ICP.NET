@@ -2,9 +2,9 @@ namespace Sample.Shared.Governance.Models
 {
 	public class BallotInfo
 	{
-		public int Vote { get; set; }
+		public int vote { get; set; }
 		
-		public NeuronId? ProposalId { get; set; }
+		public NeuronId? proposal_id { get; set; }
 		
 	}
 }

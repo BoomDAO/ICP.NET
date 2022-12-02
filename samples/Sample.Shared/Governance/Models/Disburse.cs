@@ -2,9 +2,9 @@ namespace Sample.Shared.Governance.Models
 {
 	public class Disburse
 	{
-		public AccountIdentifier? ToAccount { get; set; }
+		public AccountIdentifier? to_account { get; set; }
 		
-		public Amount? Amount { get; set; }
+		public Amount? amount { get; set; }
 		
 	}
 }

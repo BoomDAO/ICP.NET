@@ -81,6 +81,9 @@ namespace ICP.ClientGenerator
 				case ServiceSourceDescriptor s:
 					WriteService(builder, s);
 					break;
+				case FuncSourceDescriptor f:
+					// Func is CandidFunc, no need to create another definition
+					break;
 				default:
 					throw new NotImplementedException();
 			};
@@ -123,7 +126,7 @@ namespace ICP.ClientGenerator
 					("IAgent", "agent"),
 					("Principal", "canisterId")
 				);
-				foreach (ServiceSourceDescriptor.Method func in service.Methods)
+				foreach ((string name, FuncSourceDescriptor func) in service.Methods)
 				{
 					List<(string TypeName, string VariableName)> args = func.Parameters
 						.Where(p => p.TypeName != null) // exclude null/empty/reserved
@@ -147,10 +150,10 @@ namespace ICP.ClientGenerator
 						builder,
 						() =>
 						{
-							builder.AppendLine($"string method = \"{func.UnmodifiedName}\";");
+							builder.AppendLine($"string method = \"{func.Name}\";");
 
 							var parameterVariables = new List<string>();
-							foreach (ServiceSourceDescriptor.Method.ParameterInfo parameter in func.Parameters)
+							foreach (FuncSourceDescriptor.ParameterInfo parameter in func.Parameters)
 							{
 								int index = parameterVariables.Count;
 								string variableName = "p" + index;
@@ -195,7 +198,7 @@ namespace ICP.ClientGenerator
 							{
 								var returnParamVariables = new List<string>();
 								int i = 0;
-								foreach (ServiceSourceDescriptor.Method.ParameterInfo parameter in func.ReturnParameters)
+								foreach (FuncSourceDescriptor.ParameterInfo parameter in func.ReturnParameters)
 								{
 									// Only include non null/empty/reserved params
 									if (parameter.TypeName != null)
@@ -216,7 +219,7 @@ namespace ICP.ClientGenerator
 						isAsync: true,
 						isConstructor: false,
 						returnTypes: returnTypes,
-						name: func.Name + "Async",
+						name: func.Name,
 						baseConstructorParams: null,
 						args.ToArray()
 					);
@@ -226,40 +229,14 @@ namespace ICP.ClientGenerator
 		}
 
 
-		private static string BuildCandidId(CandidId? id)
-		{
-			if (id == null)
-			{
-				return "null";
-			}
-			return $"CandidId.Parse(\"{id}\")";
-		}
-
-		private static string BuildCandidTag(CandidTag tag)
-		{
-			return $"new CandidTag(\"{tag.Id}\", {$"\"tag.Name\"" ?? "null"})";
-		}
-
-		private static string BuildDictionaryString(string genericType1, string genericType2, IEnumerable<(string, string)> values)
-		{
-			string valuesString = string.Join(", ", values.Select(v => $"{{ {v.Item1}, {v.Item2} }}"));
-			return $"new Dictionary<CandidTag, CandidType > {{ {valuesString} }}";
-		}
-
-		private static string BuildListString(string genericType, IEnumerable<string> values)
-		{
-			string valuesString = string.Join(", ", values);
-			return $"new List<{genericType}> {{ {valuesString} }}";
-		}
 
 		private static void WriteRecord(IndentedStringBuilder builder, RecordSourceDescriptor record)
 		{
-			string className = record.Name;
-			WriteClass(builder, className, () =>
+			WriteClass(builder, record.Name, () =>
 			{
-				foreach ((string fieldName, string fieldFullTypeName) in record.Fields)
+				foreach ((string field, string fieldFullTypeName) in record.Fields)
 				{
-					builder.AppendLine($"public {fieldFullTypeName} {fieldName} {{ get; set; }}");
+					builder.AppendLine($"public {fieldFullTypeName} {field} {{ get; set; }}");
 					builder.AppendLine("");
 				}
 
@@ -274,8 +251,9 @@ namespace ICP.ClientGenerator
 
 		private static void WriteVariant(IndentedStringBuilder builder, VariantSourceDescriptor variant)
 		{
-			string enumName = $"{variant.Name}Type";
+
 			string className = variant.Name;
+			string enumName = $"{className}Type";
 			List<string> enumValues = variant.Options
 				.Select(o => o.Name)
 				.ToList();
@@ -284,7 +262,7 @@ namespace ICP.ClientGenerator
 			{
 				$"EdjCase.ICP.Candid.CandidVariantValueBase<{enumName}>"
 			};
-			WriteClass(builder, className, () =>
+			WriteClass(builder, variant.Name, () =>
 			{
 				// Constrcutor
 				WriteMethod(
@@ -322,8 +300,9 @@ namespace ICP.ClientGenerator
 
 
 
-				foreach ((string optionName, string? infoFullTypeName) in variant.Options)
+				foreach ((string option, string? infoFullTypeName) in variant.Options)
 				{
+					string optionName = option;
 					if (infoFullTypeName == null)
 					{
 						WriteMethod(
