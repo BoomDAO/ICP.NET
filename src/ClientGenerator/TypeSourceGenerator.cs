@@ -263,7 +263,12 @@ namespace ICP.ClientGenerator
 			{
 				foreach ((string fieldName, string fieldFullTypeName) in record.Fields)
 				{
-					builder.AppendLine($"public {fieldFullTypeName} {fieldName} {{ get; set; }}");
+					var propertyName = StringUtil.ToPascalCase(fieldName);
+					if(propertyName != fieldName)
+					{
+						builder.AppendLine($"[CandidPropertyName(\"{fieldName}\")]");
+					}
+					builder.AppendLine($"public {fieldFullTypeName} {propertyName} {{ get; set; }}");
 					builder.AppendLine("");
 				}
 
@@ -509,7 +514,12 @@ namespace ICP.ClientGenerator
 			{
 				foreach (string v in values)
 				{
-					builder.AppendLine(v + ",");
+					var fixedV = StringUtil.ToPascalCase(v);
+					if (fixedV != v)
+					{
+						builder.AppendLine($"[CandidVariantName(\"{v}\")]");
+					}
+					builder.AppendLine(fixedV + ",");
 				}
 			}
 			builder.AppendLine("}");

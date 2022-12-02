@@ -37,7 +37,7 @@ namespace EdjCase.ICP.ClientGenerator
 
 
 			Dictionary<CandidId, string> declaredTypeNames = declaredTypes
-				.ToDictionary(t => t.Key, t => StringUtil.ToPascalCase(t.Key.ToString()));
+				.ToDictionary(t => t.Key, t => t.Key.ToString());
 
 			List<TypeSourceDescriptor> resolvedTypes = new();
 			Dictionary<string, string> aliases = new();
@@ -131,8 +131,7 @@ namespace EdjCase.ICP.ClientGenerator
 			List<(string Name, string TypeName)> resolvedFields = type.Fields
 				.Select(f =>
 				{
-					string unmodifiedFieldName = f.Key.Name ?? "F" + f.Key.Id;
-					string fieldName = StringUtil.ToPascalCase(unmodifiedFieldName);
+					string fieldName = f.Key.Name ?? "F" + f.Key.Id;
 					if (fieldName == name)
 					{
 						// TODO how to handle property and class name collision?
@@ -158,8 +157,7 @@ namespace EdjCase.ICP.ClientGenerator
 			List<(string Name, string? InfoTypeName)> resolvedOptions = type.Fields
 				.Select(f =>
 				{
-					string unmodifiedFieldName = f.Key.Name ?? "O" + f.Key.Id;
-					string fieldName = StringUtil.ToPascalCase(unmodifiedFieldName);
+					string fieldName = f.Key.Name ?? "O" + f.Key.Id;
 					string? typeName = ResolveInnerTypeName(fieldName + "Info", f.Value, declaredFullTypeNames, out TypeSourceDescriptor? subTypeToCreate);
 					if (subTypeToCreate != null)
 					{

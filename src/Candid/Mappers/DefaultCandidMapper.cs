@@ -276,7 +276,7 @@ namespace EdjCase.ICP.Candid.Mappers
 				}
 				else
 				{
-					propertyName = StringUtil.ToSnakeCase(property.Name);
+					propertyName = StringUtil.ToCamelCase(property.Name);
 				}
 				CandidTag tag = CandidTag.FromName(propertyName);
 				CustomMapperAttribute? customMapperAttribute = property.GetCustomAttribute<CustomMapperAttribute>();
@@ -337,6 +337,16 @@ namespace EdjCase.ICP.Candid.Mappers
 	{
 		public string Name { get; }
 		public CandidPropertyNameAttribute(string name)
+		{
+			this.Name = name;
+		}
+	}
+
+	[AttributeUsage(AttributeTargets.Field)]
+	public class CandidVariantNameAttribute : Attribute
+	{
+		public string Name { get; }
+		public CandidVariantNameAttribute(string name)
 		{
 			this.Name = name;
 		}
