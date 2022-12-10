@@ -7,66 +7,66 @@ using System.Text;
 
 namespace ICP.ClientGenerator
 {
-    internal abstract class TypeSourceDescriptor
-    {
-        public string Name { get; }
-        public List<TypeSourceDescriptor> SubTypesToCreate { get; }
+	internal abstract class TypeSourceDescriptor
+	{
+		public string Name { get; }
+		public List<TypeSourceDescriptor> SubTypesToCreate { get; }
 
-        protected TypeSourceDescriptor(string name, TypeSourceDescriptor? subTypesToCreate)
-        {
-            this.Name = name ?? throw new ArgumentNullException(nameof(name));
-            this.SubTypesToCreate = new List<TypeSourceDescriptor>();
-            if (subTypesToCreate != null)
-            {
-                this.SubTypesToCreate.Add(subTypesToCreate);
-            }
-        }
-        protected TypeSourceDescriptor(string name, List<TypeSourceDescriptor> subTypesToCreate)
-        {
-            this.Name = name ?? throw new ArgumentNullException(nameof(name));
-            this.SubTypesToCreate = subTypesToCreate ?? throw new ArgumentNullException(nameof(subTypesToCreate));
-        }
-    }
+		protected TypeSourceDescriptor(string name, TypeSourceDescriptor? subTypesToCreate)
+		{
+			this.Name = name ?? throw new ArgumentNullException(nameof(name));
+			this.SubTypesToCreate = new List<TypeSourceDescriptor>();
+			if (subTypesToCreate != null)
+			{
+				this.SubTypesToCreate.Add(subTypesToCreate);
+			}
+		}
+		protected TypeSourceDescriptor(string name, List<TypeSourceDescriptor> subTypesToCreate)
+		{
+			this.Name = name ?? throw new ArgumentNullException(nameof(name));
+			this.SubTypesToCreate = subTypesToCreate ?? throw new ArgumentNullException(nameof(subTypesToCreate));
+		}
+	}
 
 	internal class VariantSourceDescriptor : TypeSourceDescriptor
-    {
-        public List<(string Name, string? InfoFullTypeName)> Options { get; }
+	{
+		public List<(string Name, string? InfoFullTypeName)> Options { get; }
 
-        public VariantSourceDescriptor(
+		public VariantSourceDescriptor(
 			string name,
-            List<(string Name, string? InfoTypeName)> options,
-            List<TypeSourceDescriptor> subTypesToCreate)
-            : base(name, subTypesToCreate)
-        {
-            if (options?.Any() != true)
-            {
-                throw new ArgumentNullException(nameof(options));
-            }
-            this.Options = options;
-        }
-    }
+			List<(string Name, string? InfoTypeName)> options,
+			List<TypeSourceDescriptor> subTypesToCreate)
+			: base(name, subTypesToCreate)
+		{
+			if (options?.Any() != true)
+			{
+				throw new ArgumentNullException(nameof(options));
+			}
+			this.Options = options;
+		}
+	}
 
-    internal class RecordSourceDescriptor : TypeSourceDescriptor
-    {
-        public List<(string Name, string FullTypeName)> Fields { get; }
+	internal class RecordSourceDescriptor : TypeSourceDescriptor
+	{
+		public List<(string Name, string FullTypeName)> Fields { get; }
 
-        public RecordSourceDescriptor(string name, List<(string Name, string FullTypeName)> fields, List<TypeSourceDescriptor> subTypesToCreate)
-            : base(name, subTypesToCreate)
-        {
-            this.Fields = fields ?? throw new ArgumentNullException(nameof(fields));
-        }
-    }
+		public RecordSourceDescriptor(string name, List<(string Name, string FullTypeName)> fields, List<TypeSourceDescriptor> subTypesToCreate)
+			: base(name, subTypesToCreate)
+		{
+			this.Fields = fields ?? throw new ArgumentNullException(nameof(fields));
+		}
+	}
 
-    internal class ServiceSourceDescriptor : TypeSourceDescriptor
-    {
-        public Dictionary<string, FuncSourceDescriptor> Methods { get; }
+	internal class ServiceSourceDescriptor : TypeSourceDescriptor
+	{
+		public Dictionary<string, FuncSourceDescriptor> Methods { get; }
 
-        public ServiceSourceDescriptor(string name, Dictionary<string, FuncSourceDescriptor> methods, List<TypeSourceDescriptor> subTypesToCreate)
-            : base(name, subTypesToCreate)
-        {
-            this.Methods = methods ?? throw new ArgumentNullException(nameof(methods));
-        }
-    }
+		public ServiceSourceDescriptor(string name, Dictionary<string, FuncSourceDescriptor> methods, List<TypeSourceDescriptor> subTypesToCreate)
+			: base(name, subTypesToCreate)
+		{
+			this.Methods = methods ?? throw new ArgumentNullException(nameof(methods));
+		}
+	}
 
 	internal class FuncSourceDescriptor : TypeSourceDescriptor
 	{
@@ -95,10 +95,12 @@ namespace ICP.ClientGenerator
 		{
 			public string VariableName { get; }
 			public string? TypeName { get; }
-			public ParameterInfo(string variableName, string? typeName)
+			public bool IsOpt { get; }
+			public ParameterInfo(string variableName, string? typeName, bool isOpt)
 			{
 				this.VariableName = variableName ?? throw new ArgumentNullException(nameof(variableName));
 				this.TypeName = typeName;
+				this.IsOpt = isOpt;
 			}
 		}
 	}

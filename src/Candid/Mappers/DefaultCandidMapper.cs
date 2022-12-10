@@ -16,11 +16,14 @@ namespace EdjCase.ICP.Candid.Mappers
 	{
 		private ConcurrentDictionary<Type, MappingInfo?> _typeMapCache = new();
 
-
 		public bool TryGetMappingInfo(Type objType, CandidConverter converter, out MappingInfo? mappingInfo)
 		{
 			mappingInfo = this._typeMapCache.GetOrAdd(objType, t => GetMappingInfoFromType(t, converter));
-			return mappingInfo != null;
+			if (mappingInfo == null)
+			{
+				return false;
+			}
+			return true;
 		}
 
 		private static MappingInfo GetMappingInfoFromType(Type objType, CandidConverter converter)
@@ -183,37 +186,51 @@ namespace EdjCase.ICP.Candid.Mappers
 			else if (typeof(ICandidVariantValue).IsAssignableFrom(objType))
 			{
 				ICandidVariantValue variant = (ICandidVariantValue)Activator.CreateInstance(objType, nonPublic: true);
-				Dictionary<CandidTag, Type?> optionTypes = variant.GetOptions();
+				Dictionary<CandidTag, (Type Type, bool IsOpt)?> optionTypes = variant.GetOptions();
 				Dictionary<CandidTag, MappingInfo?> optionMappingMap = optionTypes
 					.ToDictionary(
 						t => t.Key,
-						t => t.Value == null
-							? null
-							: GetMappingInfoFromType(t.Value, converter)
+						t =>
+						{
+							if (t.Value == null)
+							{
+								return null;
+							}
+							var mappingInfo = GetMappingInfoFromType(t.Value.Value.Type, converter);
+							if (t.Value.Value.IsOpt)
+							{
+								mappingInfo = mappingInfo.ToOpt();
+							}
+							return mappingInfo;
+						}
 					);
 				Dictionary<CandidTag, CandidType> options = optionMappingMap
 					.ToDictionary(
 						t => t.Key,
-						t => t.Value == null
-							? new CandidPrimitiveType(PrimitiveType.Null)
-							: t.Value.Type
-					);
+						t =>
+						{
+							if(t.Value == null)
+							{
+								return new CandidPrimitiveType(PrimitiveType.Null);
+							}
+							return t.Value.Type;
+						});
 				type = new CandidVariantType(options);
 				mapFromObjectFunc = o =>
 				{
 					ICandidVariantValue v = (ICandidVariantValue)o;
 					(CandidTag innerTag, object? innerObj) = v.GetValue();
+
+					MappingInfo? innerMappingInfo = optionMappingMap[innerTag];
+					CandidType innerType = options[innerTag];
 					CandidValue innerValue;
-					if (innerObj != null)
+					if (innerMappingInfo != null)
 					{
-						MappingInfo info = GetMappingInfoFromType(innerObj.GetType(), converter);
-						innerValue = info.MapFromObjectFunc(innerObj);
-						type = info.Type;
+						innerValue = innerMappingInfo.MapFromObjectFunc(innerObj);
 					}
 					else
 					{
 						innerValue = CandidPrimitive.Null();
-						type = new CandidPrimitiveType(PrimitiveType.Null);
 					}
 					return new CandidVariant(innerTag, innerValue);
 				};
@@ -234,22 +251,6 @@ namespace EdjCase.ICP.Candid.Mappers
 				type = info.Type;
 				mapFromObjectFunc = info.MapFromObjectFunc;
 				mapToObjectFunc = info.MapToObjectFunc;
-			}
-			if (objType.IsClass)
-			{
-				var oldMap = mapToObjectFunc;
-				mapToObjectFunc = v =>
-				{
-					if (v is CandidOptional o)
-					{
-						if (o.Value == CandidPrimitive.Null())
-						{
-							return null;
-						}
-						v = o.Value;
-					}
-					return oldMap(v);
-				};
 			}
 			return new MappingInfo(type, mapFromObjectFunc, mapToObjectFunc);
 		}
@@ -295,6 +296,11 @@ namespace EdjCase.ICP.Candid.Mappers
 				else
 				{
 					fieldMappingInfo = GetMappingInfoFromType(property.PropertyType, converter);
+				}
+				bool isOpt = TypeUtil.IsNullable(property);
+				if (isOpt)
+				{
+					fieldMappingInfo = fieldMappingInfo.ToOpt();
 				}
 				propertyMetaDataMap.Add(tag, (property, fieldMappingInfo));
 			}

@@ -50,7 +50,7 @@ namespace EdjCase.ICP.Candid.Models.Values
 
         public override string ToString()
         {
-			return this.Value.ToString();
+			return $"opt {this.Value}";
         }
     }
 }

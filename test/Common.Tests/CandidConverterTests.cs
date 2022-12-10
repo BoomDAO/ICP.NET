@@ -21,7 +21,7 @@ namespace ICP.Candid.Tests
 			CandidType expectedType = new CandidPrimitiveType(PrimitiveType.Text);
 			CandidValueWithType expected = CandidValueWithType.FromValueAndType(expectedValue, expectedType);
 
-			this.Test(value, expected);
+			this.Test(value, expected, (x, y) => x == y);
 		}
 
 		[Fact]
@@ -37,7 +37,7 @@ namespace ICP.Candid.Tests
 			CandidType expectedType = new CandidVectorType(new CandidPrimitiveType(PrimitiveType.Text));
 			CandidValueWithType expected = CandidValueWithType.FromValueAndType(expectedValue, expectedType);
 
-			this.Test(values, expected);
+			this.Test(values, expected, Enumerable.SequenceEqual);
 		}
 
 		[Fact]
@@ -53,7 +53,7 @@ namespace ICP.Candid.Tests
 			CandidType expectedType = new CandidVectorType(new CandidPrimitiveType(PrimitiveType.Text));
 			CandidValueWithType expected = CandidValueWithType.FromValueAndType(expectedValue, expectedType);
 
-			this.Test(values, expected);
+			this.Test(values, expected, Enumerable.SequenceEqual);
 		}
 
 		public class RecordClass
@@ -102,7 +102,60 @@ namespace ICP.Candid.Tests
 			CandidType expectedType = new CandidRecordType(fieldTypes);
 			CandidValueWithType expected = CandidValueWithType.FromValueAndType(expectedValue, expectedType);
 
-			this.Test(values, expected);
+			this.Test(values, expected, (x, y) =>
+			{
+				return x.IntField == y.IntField
+					&& x.StringField == y.StringField;
+			});
+		}
+
+
+
+		public class VariantValueClass : ICandidVariantValue
+		{
+			public (CandidTag tag, object? value) Value { get; set; }
+			public Dictionary<CandidTag, (Type Type, bool IsOpt)?> GetOptions()
+			{
+				return new Dictionary<CandidTag, (Type Type, bool IsOpt)?>
+				{
+					{ CandidTag.FromName("v1"), null },
+					{ CandidTag.FromName("v2"), (typeof(string), false) },
+					{ CandidTag.FromName("v3"), (typeof(int), false) },
+					{ CandidTag.FromName("v4"), (typeof(string), true) },
+				};
+			}
+
+			public (CandidTag Tag, object? Value) GetValue()
+			{
+				return this.Value;
+			}
+
+			public void SetValue(CandidTag tag, object? value)
+			{
+				this.Value = (tag, value);
+			}
+		}
+
+		[Fact]
+		public void Variant_From_Class()
+		{
+			var variant = new VariantValueClass
+			{
+				Value = (CandidTag.FromName("v4"), "text")
+			};
+			CandidValue expectedValue = new CandidVariant("v4", new CandidOptional(CandidPrimitive.Text("text")));
+
+			var optionTypes = new Dictionary<CandidTag, CandidType>
+			{
+				{CandidTag.FromName("v1"), new CandidPrimitiveType(PrimitiveType.Null)},
+				{CandidTag.FromName("v2"), new CandidPrimitiveType(PrimitiveType.Text)},
+				{CandidTag.FromName("v3"), new CandidPrimitiveType(PrimitiveType.Int32)},
+				{CandidTag.FromName("v4"), new CandidOptionalType(new CandidPrimitiveType(PrimitiveType.Text))}
+			};
+			CandidType expectedType = new CandidVariantType(optionTypes);
+			CandidValueWithType expected = CandidValueWithType.FromValueAndType(expectedValue, expectedType);
+
+			this.Test(variant, expected, (x, y) => x.Value == y.Value);
 		}
 
 
@@ -110,16 +163,15 @@ namespace ICP.Candid.Tests
 
 
 
-
-
-		private void Test<T>(T raw, CandidValueWithType candid)
+		private void Test<T>(T raw, CandidValueWithType candid, Func<T, T, bool> areEqual)
 		{
-			CandidValueWithType actual = CandidConverter.Default.FromObject(raw);
+			CandidValueWithType actual = CandidConverter.Default.FromObject(raw, false);
 			Assert.Equal(candid, actual);
 
 
 			T? obj = CandidConverter.Default.ToObject<T>(candid.Value);
-			Assert.Equal(raw, obj);
+			Assert.NotNull(obj);
+			Assert.True(areEqual(raw, obj!));
 		}
 	}
 }

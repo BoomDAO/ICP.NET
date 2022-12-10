@@ -184,28 +184,30 @@ namespace EdjCase.ICP.ClientGenerator
 		private static FuncSourceDescriptor ResolveFunc(string name, CandidFuncType type, Dictionary<CandidId, string> declaredFullTypeNames)
 		{
 			var subTypesToCreate = new List<TypeSourceDescriptor>();
+
+			FuncSourceDescriptor.ParameterInfo BuildParam(string argName, CandidType paramType)
+			{
+				string? typeName = ResolveInnerTypeName(argName, paramType, declaredFullTypeNames, out TypeSourceDescriptor? subTypeToCreate);
+				bool isOpt = paramType is CandidOptionalType;
+				if (subTypeToCreate != null)
+				{
+					subTypesToCreate.Add(subTypeToCreate);
+				}
+				return new FuncSourceDescriptor.ParameterInfo(argName, typeName, isOpt);
+			}
+
 			List<FuncSourceDescriptor.ParameterInfo> resolvedParameters = type.ArgTypes
 				.Select((f, i) =>
 				{
 					string argName = f.Name?.Value ?? $"arg{i}"; // TODO better naming
-					string? typeName = ResolveInnerTypeName(argName, f.Type, declaredFullTypeNames, out TypeSourceDescriptor? subTypeToCreate);
-					if (subTypeToCreate != null)
-					{
-						subTypesToCreate.Add(subTypeToCreate);
-					}
-					return new FuncSourceDescriptor.ParameterInfo(argName, typeName);
+					return BuildParam(argName, f.Type);
 				})
 				.ToList();
 			List<FuncSourceDescriptor.ParameterInfo> resolvedReturnParameters = type.ReturnTypes
 				.Select((f, i) =>
 				{
 					string argName = f.Name?.Value ?? $"R{i}"; // TODO better naming
-					string? typeName = ResolveInnerTypeName(argName, f.Type, declaredFullTypeNames, out TypeSourceDescriptor? subTypeToCreate);
-					if (subTypeToCreate != null)
-					{
-						subTypesToCreate.Add(subTypeToCreate);
-					}
-					return new FuncSourceDescriptor.ParameterInfo(argName, typeName);
+					return BuildParam(argName, f.Type);
 				})
 				.ToList();
 			bool isFireAndForget = type.Modes.Contains(FuncMode.Oneway);
