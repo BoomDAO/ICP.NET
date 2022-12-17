@@ -101,7 +101,7 @@ namespace EdjCase.ICP.ClientGenerator
 					else
 					{
 						Principal canisterId = Principal.FromText(o.CanisterId);
-						Uri? baseUrl = o.BaseUrl == null ? null : new Uri(o.BaseUrl);
+						Uri? baseUrl = string.IsNullOrWhiteSpace(o.BaseUrl) ? null : new Uri(o.BaseUrl);
 						await ClientFileGenerator.GenerateClientFromCanisterAsync(canisterId, o.OutputDirectory, o.Namespace, o.ClientName, baseUrl);
 					}
 				});
