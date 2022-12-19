@@ -2,24 +2,50 @@ name: .NET
 
 on:
   push:
-    branches: [ main ]
+    branches: [main, versions/*]
   pull_request:
-    branches: [ main ]
+    branches: [main, versions/*]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v2
-      with:
-        dotnet-version: 6.0.x
-    - name: Restore dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+      - uses: actions/checkout@v3
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: 6.0.x
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore
+      - name: Test
+        run: dotnet test --no-build --verbosity normal
+
+      - name: Publish Candid Dlls
+        run: dotnet publish ./src/Candid --no-restore -c Release -o ./publish-candid
+
+      - name: Upload Candid Binaries Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: binaries-candid
+          path: publish-candid
+
+      - name: Publish Agent Dlls
+        run: dotnet publish ./src/Agent --no-restore -c Release -o ./publish-agent
+
+      - name: Upload Agent Binaries Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: binaries-agent
+          path: publish-agent
+
+      - name: Publish ClientGenerator Dlls
+        run: dotnet publish ./src/ClientGenerator --no-restore -c Release -o ./publish-clientgenerator
+
+      - name: Upload ClientGenerator Binaries Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: binaries-clientgenerator
+          path: publish-clientgenerator
