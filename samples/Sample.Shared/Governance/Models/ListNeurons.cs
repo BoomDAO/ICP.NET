@@ -2,9 +2,9 @@ namespace Sample.Shared.Governance.Models
 {
 	public class ListNeurons
 	{
-		public List<ulong> NeuronIds { get; set; }
+		public List<ulong> neuron_ids { get; set; }
 		
-		public bool IncludeNeuronsReadableByCaller { get; set; }
+		public bool include_neurons_readable_by_caller { get; set; }
 		
 	}
 }

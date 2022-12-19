@@ -21,24 +21,29 @@ namespace EdjCase.ICP.Candid
 			this.Options = options ?? CandidConverterOptions.Default;
 		}
 
-		public CandidValueWithType FromObject<T>(T obj)
+		public CandidValueWithType FromObject<T>(T obj, bool isOpt)
 		{
-			return this.FromObject(obj as object);
+			return this.FromObject(obj as object, isOpt);
 		}
 
-		public CandidValueWithType FromObject(object? obj)
+		public CandidValueWithType FromObject(object? obj, bool isOpt)
 		{
 			if (object.ReferenceEquals(obj, null))
 			{
 				return CandidValueWithType.Null();
 			}
-			if(!this.TryGetMappingInfo(obj.GetType(), out MappingInfo? mappingInfo))
+			if (!this.TryGetMappingInfo(obj.GetType(), out MappingInfo? mappingInfo))
 			{
 				// TODO
 				throw new Exception();
 			}
+			if (isOpt)
+			{
+				mappingInfo = mappingInfo!.ToOpt();
+			}
 
 			CandidValue value = mappingInfo!.MapFromObjectFunc(obj);
+
 			return CandidValueWithType.FromValueAndType(value, mappingInfo.Type);
 		}
 
@@ -65,10 +70,25 @@ namespace EdjCase.ICP.Candid
 			{
 				return null;
 			}
+			bool isOpt = false;
+			if (value is CandidOptional o)
+			{
+				if (o.Value.IsNull())
+				{
+					// If is null, no mapping needed
+					return null;
+				}
+				isOpt = true;
+				value = o.Value; // Set the inner type as the type
+			}
 			if (!this.TryGetMappingInfo(objType, out MappingInfo? mappingInfo))
 			{
 				// TODO
 				throw new Exception("No valid mapper");
+			}
+			if (isOpt)
+			{
+				mappingInfo = mappingInfo!.ToOpt();
 			}
 			return mappingInfo!.MapToObjectFunc(value);
 		}

@@ -25,19 +25,19 @@ namespace EdjCase.ICP.ClientGenerator
 	}
 	internal class TypeSourceConverter
 	{
-		public static ServiceSourceInfo ConvertService(string serviceName, string baseNamespace, CandidServiceFile file)
+		public static ServiceSourceInfo ConvertService(string serviceName, CandidServiceDescription service)
 		{
-			Dictionary<CandidId, CandidType> declaredTypes = file.DeclaredTypes.ToDictionary(t => t.Key, t => t.Value);
+			Dictionary<CandidId, CandidType> declaredTypes = service.DeclaredTypes.ToDictionary(t => t.Key, t => t.Value);
 			
-			if (file.ServiceReferenceId != null)
+			if (service.ServiceReferenceId != null)
 			{
 				// If there is a reference to the service type. Remove it to not process it as a type
-				declaredTypes.Remove(file.ServiceReferenceId); 
+				declaredTypes.Remove(service.ServiceReferenceId); 
 			}
 
 
 			Dictionary<CandidId, string> declaredTypeNames = declaredTypes
-				.ToDictionary(t => t.Key, t => StringUtil.ToPascalCase(t.Key.ToString()));
+				.ToDictionary(t => t.Key, t => t.Key.ToString());
 
 			List<TypeSourceDescriptor> resolvedTypes = new();
 			Dictionary<string, string> aliases = new();
@@ -75,22 +75,32 @@ namespace EdjCase.ICP.ClientGenerator
 							AddAlias("Value", typeName, o);
 							break;
 						}
+					case CandidFuncType f:
+						{
+							// Func alias declaration
+							// ex: type A = func
+							aliases.Add(typeName, typeof(CandidFunc).FullName!);
+							break;
+						}
 					default:
 						{
-							TypeSourceDescriptor resolvedType = type switch
+							TypeSourceDescriptor? resolvedType = type switch
 							{
 								CandidRecordType r => ResolveRecord(typeName, r, declaredTypeNames),
 								CandidVariantType v => ResolveVariant(typeName, v, declaredTypeNames),
 								CandidServiceType s => ResolveService(typeName, s, declaredTypeNames),
 								_ => throw new NotImplementedException()
 							};
-							resolvedTypes.Add(resolvedType);
+							if (resolvedType != null)
+							{
+								resolvedTypes.Add(resolvedType);
+							}
 							break;
 						}
 				}
 			}
 
-			ServiceSourceDescriptor serviceSourceDesc = ResolveService(serviceName.ToString(), file.Service, declaredTypeNames);
+			ServiceSourceDescriptor serviceSourceDesc = ResolveService(serviceName.ToString(), service.Service, declaredTypeNames);
 
 
 			return new ServiceSourceInfo(serviceName, serviceSourceDesc, resolvedTypes, aliases);
@@ -121,8 +131,7 @@ namespace EdjCase.ICP.ClientGenerator
 			List<(string Name, string TypeName)> resolvedFields = type.Fields
 				.Select(f =>
 				{
-					string unmodifiedFieldName = f.Key.Name ?? "F" + f.Key.Id;
-					string fieldName = StringUtil.ToPascalCase(unmodifiedFieldName);
+					string fieldName = f.Key.Name ?? "F" + f.Key.Id;
 					if (fieldName == name)
 					{
 						// TODO how to handle property and class name collision?
@@ -148,8 +157,7 @@ namespace EdjCase.ICP.ClientGenerator
 			List<(string Name, string? InfoTypeName)> resolvedOptions = type.Fields
 				.Select(f =>
 				{
-					string unmodifiedFieldName = f.Key.Name ?? "O" + f.Key.Id;
-					string fieldName = StringUtil.ToPascalCase(unmodifiedFieldName);
+					string fieldName = f.Key.Name ?? "O" + f.Key.Id;
 					string? typeName = ResolveInnerTypeName(fieldName + "Info", f.Value, declaredFullTypeNames, out TypeSourceDescriptor? subTypeToCreate);
 					if (subTypeToCreate != null)
 					{
@@ -164,49 +172,47 @@ namespace EdjCase.ICP.ClientGenerator
 		private static ServiceSourceDescriptor ResolveService(string name, CandidServiceType type, Dictionary<CandidId, string> declaredFullTypeNames)
 		{
 			var subTypesToCreate = new List<TypeSourceDescriptor>();
-			List<ServiceSourceDescriptor.Method> resolvedMethods = type.Methods
-				.Select(f =>
+			Dictionary<string, FuncSourceDescriptor> resolvedMethods = type.Methods
+				.ToDictionary(f => f.Key.ToString(), f =>
 				{
-					string unmodifiedName = f.Key.ToString();
-					string funcName = StringUtil.ToPascalCase(unmodifiedName);
-					(ServiceSourceDescriptor.Method method, List<TypeSourceDescriptor> innerSubTypesToCreate) = ResolveFunc(funcName, unmodifiedName, f.Value, declaredFullTypeNames);
-					subTypesToCreate.AddRange(innerSubTypesToCreate);
-					return method;
-				})
-				.ToList();
+					FuncSourceDescriptor func = ResolveFunc(f.Key.ToString(), f.Value, declaredFullTypeNames);
+					subTypesToCreate.AddRange(func.SubTypesToCreate);
+					return func;
+				});
 			return new ServiceSourceDescriptor(name, resolvedMethods, subTypesToCreate);
 		}
-		private static (ServiceSourceDescriptor.Method Method, List<TypeSourceDescriptor> SubTypesToCreate) ResolveFunc(string name, string unmodifiedName, CandidFuncType type, Dictionary<CandidId, string> declaredFullTypeNames)
+		private static FuncSourceDescriptor ResolveFunc(string name, CandidFuncType type, Dictionary<CandidId, string> declaredFullTypeNames)
 		{
 			var subTypesToCreate = new List<TypeSourceDescriptor>();
-			List<ServiceSourceDescriptor.Method.ParameterInfo> resolvedParameters = type.ArgTypes
+
+			FuncSourceDescriptor.ParameterInfo BuildParam(string argName, CandidType paramType)
+			{
+				string? typeName = ResolveInnerTypeName(argName, paramType, declaredFullTypeNames, out TypeSourceDescriptor? subTypeToCreate);
+				bool isOpt = paramType is CandidOptionalType;
+				if (subTypeToCreate != null)
+				{
+					subTypesToCreate.Add(subTypeToCreate);
+				}
+				return new FuncSourceDescriptor.ParameterInfo(argName, typeName, isOpt);
+			}
+
+			List<FuncSourceDescriptor.ParameterInfo> resolvedParameters = type.ArgTypes
 				.Select((f, i) =>
 				{
 					string argName = f.Name?.Value ?? $"arg{i}"; // TODO better naming
-					string? typeName = ResolveInnerTypeName(argName, f.Type, declaredFullTypeNames, out TypeSourceDescriptor? subTypeToCreate);
-					if (subTypeToCreate != null)
-					{
-						subTypesToCreate.Add(subTypeToCreate);
-					}
-					return new ServiceSourceDescriptor.Method.ParameterInfo(argName, typeName);
+					return BuildParam(argName, f.Type);
 				})
 				.ToList();
-			List<ServiceSourceDescriptor.Method.ParameterInfo> resolvedReturnParameters = type.ReturnTypes
+			List<FuncSourceDescriptor.ParameterInfo> resolvedReturnParameters = type.ReturnTypes
 				.Select((f, i) =>
 				{
 					string argName = f.Name?.Value ?? $"R{i}"; // TODO better naming
-					string? typeName = ResolveInnerTypeName(argName, f.Type, declaredFullTypeNames, out TypeSourceDescriptor? subTypeToCreate);
-					if (subTypeToCreate != null)
-					{
-						subTypesToCreate.Add(subTypeToCreate);
-					}
-					return new ServiceSourceDescriptor.Method.ParameterInfo(argName, typeName);
+					return BuildParam(argName, f.Type);
 				})
 				.ToList();
 			bool isFireAndForget = type.Modes.Contains(FuncMode.Oneway);
 			bool isQuery = type.Modes.Contains(FuncMode.Query);
-			var method = new ServiceSourceDescriptor.Method(name, unmodifiedName, isFireAndForget, isQuery, resolvedParameters, resolvedReturnParameters);
-			return (method, subTypesToCreate);
+			return  new FuncSourceDescriptor(name, isFireAndForget, isQuery, resolvedParameters, resolvedReturnParameters, subTypesToCreate);
 		}
 
 		private static string? ResolvePrimitive(PrimitiveType type)
@@ -293,6 +299,11 @@ namespace EdjCase.ICP.ClientGenerator
 						ServiceSourceDescriptor service = ResolveService(variableName, s, declaredFullTypeNames);
 						subTypeToCreate = service;
 						return service.Name;
+					}
+				case CandidFuncType func:
+					{
+						subTypeToCreate = null;
+						return "(Principal CanisterId, string Method)";
 					}
 				default:
 					throw new NotImplementedException();

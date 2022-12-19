@@ -2,7 +2,7 @@ namespace Sample.Shared.Governance.Models
 {
 	public class UpdateNodeProvider
 	{
-		public AccountIdentifier? RewardAccount { get; set; }
+		public AccountIdentifier? reward_account { get; set; }
 		
 	}
 }

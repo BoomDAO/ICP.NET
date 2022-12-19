@@ -2,9 +2,9 @@ namespace Sample.Shared.Governance.Models
 {
 	public class NeuronInFlightCommand
 	{
-		public Command2? Command { get; set; }
+		public Command_2? command { get; set; }
 		
-		public ulong Timestamp { get; set; }
+		public ulong timestamp { get; set; }
 		
 	}
 }

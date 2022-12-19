@@ -2,15 +2,15 @@ namespace Sample.Shared.Governance.Models
 {
 	public class ListProposalInfo
 	{
-		public List<int> IncludeRewardStatus { get; set; }
+		public List<int> include_reward_status { get; set; }
 		
-		public NeuronId? BeforeProposal { get; set; }
+		public NeuronId? before_proposal { get; set; }
 		
-		public uint Limit { get; set; }
+		public uint limit { get; set; }
 		
-		public List<int> ExcludeTopic { get; set; }
+		public List<int> exclude_topic { get; set; }
 		
-		public List<int> IncludeStatus { get; set; }
+		public List<int> include_status { get; set; }
 		
 	}
 }

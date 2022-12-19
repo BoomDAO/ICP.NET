@@ -29,30 +29,30 @@ else
 }
 @if (this.Info != null)
 {
-    <h2>Id: @this.Info.Id?.Id</h2>
-    <h2>Status: @this.Info.Status</h2>
-    <h2>Topic: @this.Info.Topic</h2>
-    if (this.Info.LatestTally != null)
+    <h2>Id: @this.Info.id?.id</h2>
+    <h2>Status: @this.Info.status</h2>
+    <h2>Topic: @this.Info.topic</h2>
+    if (this.Info.latest_tally != null)
     {
         <h1>Votes</h1>
         <ul>
-            <li>Yes: @this.Info.LatestTally.Yes</li>
-            <li>No: @this.Info.LatestTally.No</li>
-            <li>Total: @this.Info.LatestTally.Total</li>
+            <li>Yes: @this.Info.latest_tally.yes</li>
+            <li>No: @this.Info.latest_tally.no</li>
+            <li>Total: @this.Info.latest_tally.total</li>
         </ul>
     }
-    if (this.Info.Proposal != null)
+    if (this.Info.proposal != null)
     {
         <h1>Proposal</h1>
-        <h2>Title: @this.Info.Proposal.Title</h2>
-        <h2>Summary: @this.Info.Proposal.Summary</h2>
-        <h2>Url: @this.Info.Proposal.Url</h2>
-        if (this.Info.Proposal.Action != null)
+        <h2>Title: @this.Info.proposal.title</h2>
+        <h2>Summary: @this.Info.proposal.summary</h2>
+        <h2>Url: @this.Info.proposal.url</h2>
+        if (this.Info.proposal.action != null)
         {
-            switch (this.Info.Proposal.Action.Type)
+            switch (this.Info.proposal.action.Type)
             {
                 case ActionType.Motion:
-                    <h2>Motion: @this.Info.Proposal.Action.AsMotion().MotionText</h2>
+                    <h2>Motion: @this.Info.proposal.action.AsMotion().motion_text</h2>
                     break;
             }
         }
@@ -78,7 +78,7 @@ else if(this.MadeCall && this.ProposalId != null)
     {
         if (this.ProposalId != null)
         {
-            this.Info = await this.Client.GetProposalInfoAsync(this.ProposalId.Value, identityOverride: this.Identity);
+            this.Info = await this.Client.get_proposal_info(this.ProposalId.Value, identityOverride: this.Identity);
             this.MadeCall = true;
         }
     }

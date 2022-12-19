@@ -2,9 +2,9 @@ namespace Sample.Shared.Governance.Models
 {
 	public class SetDefaultFollowees
 	{
-		public List<DefaultFolloweesInfo> DefaultFollowees { get; set; }
+		public List<default_followeesInfo> default_followees { get; set; }
 		
-		public class DefaultFolloweesInfo
+		public class default_followeesInfo
 		{
 			public int F0 { get; set; }
 			

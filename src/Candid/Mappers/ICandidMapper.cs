@@ -17,13 +17,42 @@ namespace EdjCase.ICP.Candid
 	public class MappingInfo
 	{
 		public CandidType Type { get; }
-		public Func<object, CandidValue> MapFromObjectFunc { get; }
+		public Func<object?, CandidValue> MapFromObjectFunc { get; }
 		public Func<CandidValue, object?> MapToObjectFunc { get; }
-		public MappingInfo(CandidType type, Func<object, CandidValue> mapFromObjectFunc, Func<CandidValue, object?> mapToObjectFunc)
+		public MappingInfo(CandidType type, Func<object?, CandidValue> mapFromObjectFunc, Func<CandidValue, object?> mapToObjectFunc)
 		{
 			this.Type = type ?? throw new ArgumentNullException(nameof(type));
 			this.MapFromObjectFunc = mapFromObjectFunc ?? throw new ArgumentNullException(nameof(mapFromObjectFunc));
 			this.MapToObjectFunc = mapToObjectFunc ?? throw new ArgumentNullException(nameof(mapToObjectFunc));
+		}
+
+		public MappingInfo ToOpt()
+		{
+			var optType = new CandidOptionalType(this.Type);
+			Func<object?, CandidValue> oldMapFromObjectFunc = this.MapFromObjectFunc;
+			Func<object?, CandidValue> mapFromObjectFunc = (obj) =>
+			{
+				if (obj == null)
+				{
+					return new CandidOptional(null);
+				}
+				CandidValue v = oldMapFromObjectFunc(obj);
+				return new CandidOptional(v);
+			};
+			Func<CandidValue, object?> oldMapToObjectFunc = this.MapToObjectFunc;
+			Func<CandidValue, object?> mapToObjectFunc = (v) =>
+			{
+				if (v is CandidOptional o)
+				{
+					if (o.Value == CandidPrimitive.Null())
+					{
+						return null;
+					}
+					v = o.Value;
+				}
+				return oldMapToObjectFunc(v);
+			};
+			return new MappingInfo(optType, mapFromObjectFunc, mapToObjectFunc);
 		}
 	}
 
@@ -39,7 +68,7 @@ namespace EdjCase.ICP.Candid
 
 	public interface ICandidVariantValue
 	{
-		Dictionary<CandidTag, Type?> GetOptions();
+		Dictionary<CandidTag, (Type Type, bool IsOpt)?> GetOptions();
 		(CandidTag Tag, object? Value) GetValue();
 		void SetValue(CandidTag tag, object? value);
 	}
@@ -47,7 +76,7 @@ namespace EdjCase.ICP.Candid
 	public abstract class CandidVariantValueBase<TEnum> : ICandidVariantValue
 		where TEnum : struct, Enum
 	{
-		private Lazy<Dictionary<TEnum, Type?>> lazyOptions = new Lazy<Dictionary<TEnum, Type?>>(BuildOptions);
+		private Lazy<Dictionary<TEnum, (Type Type, bool IsOpt)?>> lazyOptions = new(BuildOptions);
 
 		public TEnum Type { get; private set; }
 		protected object? value;
@@ -63,19 +92,27 @@ namespace EdjCase.ICP.Candid
 		}
 
 
-		public Dictionary<CandidTag, Type?> GetOptions()
+		public Dictionary<CandidTag, (Type Type, bool IsOpt)?> GetOptions()
 		{
 			return this.lazyOptions.Value
 				.ToDictionary(v => CandidTag.FromName(v.Key.ToString()), v => v.Value);
 		}
 
-		private static Dictionary<TEnum, Type?> BuildOptions()
+		private static Dictionary<TEnum, (Type Type, bool IsOpt)?> BuildOptions()
 		{
 			return typeof(TEnum)
 				.GetMembers(BindingFlags.Public | BindingFlags.Static)
 				.ToDictionary(
 					m => (TEnum)Enum.Parse(typeof(TEnum), m.Name),
-					m => m.GetCustomAttribute<VariantOptionTypeAttribute>()?.Type
+					m =>
+					{
+						var attribute = m.GetCustomAttribute<VariantOptionTypeAttribute>();
+						if (attribute == null)
+						{
+							return (ValueTuple<Type, bool>?)null;
+						}
+						return (attribute.Type, attribute.IsOpt);
+					}
 				);
 		}
 
@@ -100,24 +137,24 @@ namespace EdjCase.ICP.Candid
 
 		private void ValidateValue(TEnum e, object? value)
 		{
-			if (!this.lazyOptions.Value.TryGetValue(e, out Type? type))
+			if (!this.lazyOptions.Value.TryGetValue(e, out (Type Type, bool IsOpt)? info))
 			{
 				throw new NotImplementedException($"No implementation of enum type '{typeof(TEnum)}' with value '{e}' has a type mapping");
 			}
 			if (value == null)
 			{
-				if (type == null)
+				if (info == null || info.Value.IsOpt)
 				{
 					// Valid if both are null
 					return;
 				}
 			}
-			else if (type == value.GetType())
+			else if (info?.Type == value.GetType())
 			{
 				// Valid if both the same type
 				return;
 			}
-			throw new InvalidOperationException($"Invalid value type '{value?.GetType().FullName ?? "null"}' being set for variant option '{e}'. Expected value type '{type?.FullName ?? "null"}'");
+			throw new InvalidOperationException($"Invalid value type '{value?.GetType().FullName ?? "null"}' being set for variant option '{e}'. Expected value type '{info?.Type.FullName ?? "null"}'");
 		}
 
 
@@ -126,10 +163,10 @@ namespace EdjCase.ICP.Candid
 			if (tag.Name == null)
 			{
 				// TODO cache
-				foreach(string name in Enum.GetNames(typeof(TEnum)))
+				foreach (string name in Enum.GetNames(typeof(TEnum)))
 				{
 					CandidTag t = CandidTag.FromName(name);
-					if(t.Id == tag.Id)
+					if (t.Id == tag.Id)
 					{
 						tag = t;
 						break;
@@ -156,9 +193,11 @@ namespace EdjCase.ICP.Candid
 	public class VariantOptionTypeAttribute : Attribute
 	{
 		public Type Type { get; }
-		public VariantOptionTypeAttribute(Type type)
+		public bool IsOpt { get; }
+		public VariantOptionTypeAttribute(Type type, bool isOpt = false)
 		{
 			this.Type = type;
+			this.IsOpt = isOpt;
 		}
 	}
 }

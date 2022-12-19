@@ -1,4 +1,4 @@
-﻿using EdjCase.ICP.Candid.Models;
+using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid.Models.Types;
 using EdjCase.ICP.Candid.Parsers;
 using System;
@@ -7,13 +7,13 @@ using System.Text;
 
 namespace EdjCase.ICP.Candid.Models
 {
-    public class CandidServiceFile
+    public class CandidServiceDescription
     {
         public CandidId? ServiceReferenceId { get; }
         public CandidServiceType Service { get; }
         public Dictionary<CandidId, CandidType> DeclaredTypes { get; }
 
-        public CandidServiceFile(
+        public CandidServiceDescription(
             CandidId? serviceReferenceId,
             CandidServiceType service,
             Dictionary<CandidId, CandidType> declaredTypes)
@@ -23,7 +23,7 @@ namespace EdjCase.ICP.Candid.Models
             this.DeclaredTypes = declaredTypes ?? throw new ArgumentNullException(nameof(declaredTypes));
         }
 
-        public static CandidServiceFile Parse(string text)
+        public static CandidServiceDescription Parse(string text)
         {
             return CandidServiceFileParser.Parse(text);
         }

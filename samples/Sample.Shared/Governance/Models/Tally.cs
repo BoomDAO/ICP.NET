@@ -2,13 +2,13 @@ namespace Sample.Shared.Governance.Models
 {
 	public class Tally
 	{
-		public ulong No { get; set; }
+		public ulong no { get; set; }
 		
-		public ulong Yes { get; set; }
+		public ulong yes { get; set; }
 		
-		public ulong Total { get; set; }
+		public ulong total { get; set; }
 		
-		public ulong TimestampSeconds { get; set; }
+		public ulong timestamp_seconds { get; set; }
 		
 	}
 }

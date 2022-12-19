@@ -2,9 +2,9 @@ namespace Sample.Shared.Governance.Models
 {
 	public class GovernanceError
 	{
-		public string ErrorMessage { get; set; }
+		public string error_message { get; set; }
 		
-		public int ErrorType { get; set; }
+		public int error_type { get; set; }
 		
 	}
 }

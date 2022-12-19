@@ -2,52 +2,52 @@ namespace Sample.Shared.Governance.Models
 {
 	public class Governance
 	{
-		public List<DefaultFolloweesInfo> DefaultFollowees { get; set; }
+		public List<default_followeesInfo> default_followees { get; set; }
 		
-		public ulong WaitForQuietThresholdSeconds { get; set; }
+		public ulong wait_for_quiet_threshold_seconds { get; set; }
 		
-		public GovernanceCachedMetrics? Metrics { get; set; }
+		public GovernanceCachedMetrics? metrics { get; set; }
 		
-		public List<NodeProvider> NodeProviders { get; set; }
+		public List<NodeProvider> node_providers { get; set; }
 		
-		public NetworkEconomics? Economics { get; set; }
+		public NetworkEconomics? economics { get; set; }
 		
-		public RewardEvent? LatestRewardEvent { get; set; }
+		public RewardEvent? latest_reward_event { get; set; }
 		
-		public List<NeuronStakeTransfer> ToClaimTransfers { get; set; }
+		public List<NeuronStakeTransfer> to_claim_transfers { get; set; }
 		
-		public ulong ShortVotingPeriodSeconds { get; set; }
+		public ulong short_voting_period_seconds { get; set; }
 		
-		public List<ProposalsInfo> Proposals { get; set; }
+		public List<proposalsInfo> proposals { get; set; }
 		
-		public List<InFlightCommandsInfo> InFlightCommands { get; set; }
+		public List<in_flight_commandsInfo> in_flight_commands { get; set; }
 		
-		public List<NeuronsInfo> Neurons { get; set; }
+		public List<neuronsInfo> neurons { get; set; }
 		
-		public ulong GenesisTimestampSeconds { get; set; }
+		public ulong genesis_timestamp_seconds { get; set; }
 		
-		public class DefaultFolloweesInfo
+		public class default_followeesInfo
 		{
 			public int F0 { get; set; }
 			
 			public Followees F1 { get; set; }
 			
 		}
-		public class ProposalsInfo
+		public class proposalsInfo
 		{
 			public ulong F0 { get; set; }
 			
 			public ProposalData F1 { get; set; }
 			
 		}
-		public class InFlightCommandsInfo
+		public class in_flight_commandsInfo
 		{
 			public ulong F0 { get; set; }
 			
 			public NeuronInFlightCommand F1 { get; set; }
 			
 		}
-		public class NeuronsInfo
+		public class neuronsInfo
 		{
 			public ulong F0 { get; set; }
 			

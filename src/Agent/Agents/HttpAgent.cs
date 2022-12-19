@@ -43,7 +43,7 @@ namespace EdjCase.ICP.Agent.Agents
 			this.Identity = identity;
 			this.httpClient = new HttpClient
 			{
-				BaseAddress = boundryCanisterUrl
+				BaseAddress = boundryCanisterUrl ?? new Uri("https://ic0.app/")
 			};
 			this.httpClient.DefaultRequestHeaders
 				.Accept

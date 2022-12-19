@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Sample.Shared;
 using Sample.Shared.Governance;
 using Sample.Shared.Governance.Models;
@@ -19,7 +19,7 @@ namespace Sample.RestAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> GetProposalInfo(ulong id)
         {
-            ProposalInfo? info = await this.Client.GetProposalInfoAsync(id);
+            ProposalInfo? info = await this.Client.get_proposal_info(id);
             return this.Ok(info);
         }
     }

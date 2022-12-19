@@ -11,7 +11,7 @@ namespace EdjCase.ICP.Candid.Parsers
 {
 	public static class CandidServiceFileParser
 	{
-		public static CandidServiceFile Parse(string text)
+		public static CandidServiceDescription Parse(string text)
 		{
 			using (var textReader = new StringReader(text))
 			{
@@ -70,7 +70,7 @@ namespace EdjCase.ICP.Candid.Parsers
 					service = (CandidServiceType)declaredTypes[reference.Id];
 				}
 
-				return new CandidServiceFile(serviceReferenceId, service, declaredTypes);
+				return new CandidServiceDescription(serviceReferenceId, service, declaredTypes);
 			}
 		}
 

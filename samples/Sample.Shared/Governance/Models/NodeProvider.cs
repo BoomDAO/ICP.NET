@@ -2,9 +2,9 @@ namespace Sample.Shared.Governance.Models
 {
 	public class NodeProvider
 	{
-		public EdjCase.ICP.Candid.Models.Principal? Id { get; set; }
+		public EdjCase.ICP.Candid.Models.Principal? id { get; set; }
 		
-		public AccountIdentifier? RewardAccount { get; set; }
+		public AccountIdentifier? reward_account { get; set; }
 		
 	}
 }

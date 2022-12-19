@@ -4,7 +4,7 @@ using System;
 
 namespace EdjCase.ICP.Candid.Models
 {
-    public class CandidValueWithType
+    public class CandidValueWithType : IEquatable<CandidValueWithType>
     {
         public CandidValue Value { get; }
         public CandidType Type { get; }
@@ -30,9 +30,9 @@ namespace EdjCase.ICP.Candid.Models
             return new CandidValueWithType(value, type);
 		}
 
-		public static CandidValueWithType FromObject<T>(T obj, CandidConverter? converter = null)
+		public static CandidValueWithType FromObject<T>(T obj, bool isOpt, CandidConverter? converter = null)
 		{
-			return (converter ?? CandidConverter.Default).FromObject(obj);
+			return (converter ?? CandidConverter.Default).FromObject(obj, isOpt);
 		}
 
 
