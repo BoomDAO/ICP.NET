@@ -237,7 +237,8 @@ namespace ICP.ClientGenerator
 			{
 				foreach ((string field, string fieldFullTypeName) in record.Fields)
 				{
-					builder.AppendLine($"public {fieldFullTypeName} {field} {{ get; set; }}");
+					EscapeSafeString escapedName = FixNameEscape(field);
+					builder.AppendLine($"public {fieldFullTypeName} {escapedName.Get()} {{ get; set; }}");
 					builder.AppendLine("");
 				}
 
@@ -250,13 +251,48 @@ namespace ICP.ClientGenerator
 
 		}
 
+		private class EscapeSafeString
+		{
+			public bool Escaped { get; }
+			private string value { get; }
+
+			public EscapeSafeString(bool escaped, string value)
+			{
+				this.Escaped = escaped;
+				this.value = value;
+			}
+
+			public string Get(bool prefixIfEscaped = true)
+			{
+				if (!this.Escaped)
+				{
+					return this.value;
+				}
+				if (prefixIfEscaped)
+				{
+					return "@" + this.value;
+				}
+				return this.value;
+			}
+		}
+
+		private static EscapeSafeString FixNameEscape(string value)
+		{
+			bool isEscaped = value.StartsWith("\"") && value.EndsWith("\"");
+			if (isEscaped)
+			{
+				value = value.Trim('"');
+			}
+			return new EscapeSafeString(isEscaped, value);
+		}
+
 		private static void WriteVariant(IndentedStringBuilder builder, VariantSourceDescriptor variant)
 		{
 
 			string className = variant.Name;
 			string enumName = $"{className}Type";
 			List<string> enumValues = variant.Options
-				.Select(o => o.Name)
+				.Select(o => FixNameEscape(o.Name).Get())
 				.ToList();
 			WriteEnum(builder, enumName, enumValues);
 			var implementationTypes = new List<string>
@@ -303,21 +339,21 @@ namespace ICP.ClientGenerator
 
 				foreach ((string option, string? infoFullTypeName) in variant.Options)
 				{
-					string optionName = option;
+					EscapeSafeString escapedOption = FixNameEscape(option);
 					if (infoFullTypeName == null)
 					{
 						WriteMethod(
 							builder,
 							inner: () =>
 							{
-								builder.AppendLine($"return new {className}({enumName}.{optionName}, null);");
+								builder.AppendLine($"return new {className}({enumName}.{escapedOption.Get()}, null);");
 							},
 							access: "public",
 							isStatic: true,
 							isAsync: false,
 							isConstructor: false,
 							returnType: className,
-							name: optionName
+							name: escapedOption.Get()
 						);
 					}
 					else
@@ -326,14 +362,14 @@ namespace ICP.ClientGenerator
 							builder,
 							inner: () =>
 							{
-								builder.AppendLine($"return new {className}({enumName}.{optionName}, info);");
+								builder.AppendLine($"return new {className}({enumName}.{escapedOption.Get()}, info);");
 							},
 							access: "public",
 							isStatic: true,
 							isAsync: false,
 							isConstructor: false,
 							returnType: className,
-							name: optionName,
+							name: escapedOption.Get(),
 					baseConstructorParams: null,
 							(infoFullTypeName, "info")
 						);
@@ -343,7 +379,7 @@ namespace ICP.ClientGenerator
 							builder,
 							inner: () =>
 							{
-								builder.AppendLine($"this.ValidateType({enumName}.{optionName});");
+								builder.AppendLine($"this.ValidateType({enumName}.{escapedOption.Get()});");
 								builder.AppendLine($"return ({infoFullTypeName})this.value!;");
 							},
 							access: "public",
@@ -351,7 +387,7 @@ namespace ICP.ClientGenerator
 							isAsync: false,
 							isConstructor: false,
 							returnType: infoFullTypeName,
-							name: "As" + optionName
+							name: "As" + escapedOption.Get(prefixIfEscaped: false)
 						);
 					}
 					builder.AppendLine("");

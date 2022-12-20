@@ -115,8 +115,7 @@ namespace EdjCase.ICP.ClientGenerator
 				}
 				if (subTypeToCreate != null)
 				{
-					// TOOD
-					throw new Exception();
+					resolvedTypes.Add(subTypeToCreate);
 				}
 				aliases.Add(typeName, innerTypeName);
 			}
@@ -300,7 +299,7 @@ namespace EdjCase.ICP.ClientGenerator
 						subTypeToCreate = service;
 						return service.Name;
 					}
-				case CandidFuncType func:
+				case CandidFuncType:
 					{
 						subTypeToCreate = null;
 						return "(Principal CanisterId, string Method)";
