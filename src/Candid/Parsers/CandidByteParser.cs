@@ -44,8 +44,8 @@ namespace EdjCase.ICP.Candid.Parsers
                 Dictionary<CandidId, CandidCompoundType> recursiveTypes = new();
 
                 // Get an arg value for each type
-                List<CandidValueWithType> args = types
-                    .Select(t => CandidValueWithType.FromValueAndType(helper.ReadValue(t, recursiveTypes), t))
+                List<CandidTypedValue> args = types
+                    .Select(t => CandidTypedValue.FromValueAndType(helper.ReadValue(t, recursiveTypes), t))
                     .ToList();
 
                 // TODO Remaining bytes are opaque reference bytes

@@ -4,12 +4,12 @@ using System;
 
 namespace EdjCase.ICP.Candid.Models
 {
-    public class CandidValueWithType : IEquatable<CandidValueWithType>
+    public class CandidTypedValue : IEquatable<CandidTypedValue>
     {
         public CandidValue Value { get; }
         public CandidType Type { get; }
 
-        private CandidValueWithType(CandidValue value, CandidType type)
+        public CandidTypedValue(CandidValue value, CandidType type)
         {
             this.Value = value ?? throw new ArgumentNullException(nameof(value));
             this.Type = type ?? throw new ArgumentNullException(nameof(type));
@@ -24,19 +24,18 @@ namespace EdjCase.ICP.Candid.Models
 			return this.ToObjectOrDefault<T>(converter) ?? throw new Exception("Candid value is null");
 		}
 
-		public static CandidValueWithType FromValueAndType(CandidValue value, CandidType type)
+		public static CandidTypedValue FromValueAndType(CandidValue value, CandidType type)
         {
-            // TODO validate
-            return new CandidValueWithType(value, type);
+            return new CandidTypedValue(value, type);
 		}
 
-		public static CandidValueWithType FromObject<T>(T obj, bool isOpt, CandidConverter? converter = null)
+		public static CandidTypedValue FromObject<T>(T obj, bool isOpt, CandidConverter? converter = null)
 		{
 			return (converter ?? CandidConverter.Default).FromObject(obj, isOpt);
 		}
 
 
-		public bool Equals(CandidValueWithType? other)
+		public bool Equals(CandidTypedValue? other)
 		{
 			if(object.ReferenceEquals(other, null))
             {
@@ -48,7 +47,7 @@ namespace EdjCase.ICP.Candid.Models
 
         public override bool Equals(object? obj)
 		{
-			return this.Equals(obj as CandidValueWithType);
+			return this.Equals(obj as CandidTypedValue);
 		}
 
 		public override int GetHashCode()
@@ -56,7 +55,7 @@ namespace EdjCase.ICP.Candid.Models
 			return HashCode.Combine(this.Value, this.Type);
 		}
 
-		public static bool operator ==(CandidValueWithType? v1, CandidValueWithType? v2)
+		public static bool operator ==(CandidTypedValue? v1, CandidTypedValue? v2)
 		{
 			if (object.ReferenceEquals(v1, null))
 			{
@@ -65,7 +64,7 @@ namespace EdjCase.ICP.Candid.Models
 			return v1.Equals(v2);
 		}
 
-		public static bool operator !=(CandidValueWithType? v1, CandidValueWithType? v2)
+		public static bool operator !=(CandidTypedValue? v1, CandidTypedValue? v2)
 		{
 			if (object.ReferenceEquals(v1, null))
 			{
@@ -74,11 +73,20 @@ namespace EdjCase.ICP.Candid.Models
 			return !v1.Equals(v2);
 		}
 
-		public static CandidValueWithType Null()
+		public static CandidTypedValue Null()
 		{
             CandidPrimitive value = CandidPrimitive.Null();
             CandidPrimitiveType type = new CandidPrimitiveType(PrimitiveType.Null);
-			return new CandidValueWithType(value, type);
+			return new CandidTypedValue(value, type);
 		}
+
+		public static CandidTypedValue Opt(CandidTypedValue typedValue)
+		{
+			return new CandidTypedValue(
+				new CandidOptional(typedValue.Value),
+				new CandidOptionalType(typedValue.Type)
+			);
+		}
+
 	}
 }

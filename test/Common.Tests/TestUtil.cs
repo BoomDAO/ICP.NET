@@ -17,7 +17,7 @@ namespace EdjCase.ICP.Candid.Tests
 		{
 			// Encode test
 			var builder = new CandidArgBuilder();
-			builder.Add(CandidValueWithType.FromValueAndType(value, typeDef));
+			builder.Add(CandidTypedValue.FromValueAndType(value, typeDef));
 			byte[] actualBytes = builder.Encode();
 			string actualHex = Convert.ToHexString(actualBytes);
 			const string didlPrefix = "4449444C";
@@ -29,7 +29,7 @@ namespace EdjCase.ICP.Candid.Tests
 
 			// Decode test
             CandidArg args = CandidArg.FromBytes(actualBytes);
-			CandidValueWithType actual = Assert.Single(args.Values);
+			CandidTypedValue actual = Assert.Single(args.Values);
 
 			Assert.Equal(value, actual.Value);
 			Assert.Equal(typeDef, actual.Type);

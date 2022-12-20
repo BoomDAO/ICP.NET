@@ -18,9 +18,9 @@ namespace Sample.Shared.Governance
 		public async Task<Result> claim_gtc_neurons(EdjCase.ICP.Candid.Models.Principal arg0, List<NeuronId> arg1, IIdentity? identityOverride = null)
 		{
 			string method = "claim_gtc_neurons";
-			CandidValueWithType p0 = CandidValueWithType.FromObject<EdjCase.ICP.Candid.Models.Principal>(arg0, false);
-			CandidValueWithType p1 = CandidValueWithType.FromObject<List<NeuronId>>(arg1, false);
-			var candidArgs = new List<CandidValueWithType>
+			CandidTypedValue p0 = CandidTypedValue.FromObject<EdjCase.ICP.Candid.Models.Principal>(arg0, false);
+			CandidTypedValue p1 = CandidTypedValue.FromObject<List<NeuronId>>(arg1, false);
+			var candidArgs = new List<CandidTypedValue>
 			{
 				p0,
 				p1,
@@ -33,8 +33,8 @@ namespace Sample.Shared.Governance
 		public async Task<ClaimOrRefreshNeuronFromAccountResponse> claim_or_refresh_neuron_from_account(ClaimOrRefreshNeuronFromAccount arg0, IIdentity? identityOverride = null)
 		{
 			string method = "claim_or_refresh_neuron_from_account";
-			CandidValueWithType p0 = CandidValueWithType.FromObject<ClaimOrRefreshNeuronFromAccount>(arg0, false);
-			var candidArgs = new List<CandidValueWithType>
+			CandidTypedValue p0 = CandidTypedValue.FromObject<ClaimOrRefreshNeuronFromAccount>(arg0, false);
+			var candidArgs = new List<CandidTypedValue>
 			{
 				p0,
 			};
@@ -46,7 +46,7 @@ namespace Sample.Shared.Governance
 		public async Task<string> get_build_metadata(IIdentity? identityOverride = null)
 		{
 			string method = "get_build_metadata";
-			var candidArgs = new List<CandidValueWithType>
+			var candidArgs = new List<CandidTypedValue>
 			{
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
@@ -58,8 +58,8 @@ namespace Sample.Shared.Governance
 		public async Task<Result_2> get_full_neuron(ulong arg0, IIdentity? identityOverride = null)
 		{
 			string method = "get_full_neuron";
-			CandidValueWithType p0 = CandidValueWithType.FromObject<ulong>(arg0, false);
-			var candidArgs = new List<CandidValueWithType>
+			CandidTypedValue p0 = CandidTypedValue.FromObject<ulong>(arg0, false);
+			var candidArgs = new List<CandidTypedValue>
 			{
 				p0,
 			};
@@ -72,8 +72,8 @@ namespace Sample.Shared.Governance
 		public async Task<Result_2> get_full_neuron_by_id_or_subaccount(NeuronIdOrSubaccount arg0, IIdentity? identityOverride = null)
 		{
 			string method = "get_full_neuron_by_id_or_subaccount";
-			CandidValueWithType p0 = CandidValueWithType.FromObject<NeuronIdOrSubaccount>(arg0, false);
-			var candidArgs = new List<CandidValueWithType>
+			CandidTypedValue p0 = CandidTypedValue.FromObject<NeuronIdOrSubaccount>(arg0, false);
+			var candidArgs = new List<CandidTypedValue>
 			{
 				p0,
 			};
@@ -86,7 +86,7 @@ namespace Sample.Shared.Governance
 		public async Task<Result_3> get_monthly_node_provider_rewards(IIdentity? identityOverride = null)
 		{
 			string method = "get_monthly_node_provider_rewards";
-			var candidArgs = new List<CandidValueWithType>
+			var candidArgs = new List<CandidTypedValue>
 			{
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
@@ -97,7 +97,7 @@ namespace Sample.Shared.Governance
 		public async Task<NetworkEconomics> get_network_economics_parameters(IIdentity? identityOverride = null)
 		{
 			string method = "get_network_economics_parameters";
-			var candidArgs = new List<CandidValueWithType>
+			var candidArgs = new List<CandidTypedValue>
 			{
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
@@ -109,7 +109,7 @@ namespace Sample.Shared.Governance
 		public async Task<List<ulong>> get_neuron_ids(IIdentity? identityOverride = null)
 		{
 			string method = "get_neuron_ids";
-			var candidArgs = new List<CandidValueWithType>
+			var candidArgs = new List<CandidTypedValue>
 			{
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
@@ -121,8 +121,8 @@ namespace Sample.Shared.Governance
 		public async Task<Result_4> get_neuron_info(ulong arg0, IIdentity? identityOverride = null)
 		{
 			string method = "get_neuron_info";
-			CandidValueWithType p0 = CandidValueWithType.FromObject<ulong>(arg0, false);
-			var candidArgs = new List<CandidValueWithType>
+			CandidTypedValue p0 = CandidTypedValue.FromObject<ulong>(arg0, false);
+			var candidArgs = new List<CandidTypedValue>
 			{
 				p0,
 			};
@@ -135,8 +135,8 @@ namespace Sample.Shared.Governance
 		public async Task<Result_4> get_neuron_info_by_id_or_subaccount(NeuronIdOrSubaccount arg0, IIdentity? identityOverride = null)
 		{
 			string method = "get_neuron_info_by_id_or_subaccount";
-			CandidValueWithType p0 = CandidValueWithType.FromObject<NeuronIdOrSubaccount>(arg0, false);
-			var candidArgs = new List<CandidValueWithType>
+			CandidTypedValue p0 = CandidTypedValue.FromObject<NeuronIdOrSubaccount>(arg0, false);
+			var candidArgs = new List<CandidTypedValue>
 			{
 				p0,
 			};
@@ -149,8 +149,8 @@ namespace Sample.Shared.Governance
 		public async Task<Result_5> get_node_provider_by_caller(IIdentity? identityOverride = null)
 		{
 			string method = "get_node_provider_by_caller";
-			CandidValueWithType p0 = CandidValueWithType.Null();
-			var candidArgs = new List<CandidValueWithType>
+			CandidTypedValue p0 = CandidTypedValue.Null();
+			var candidArgs = new List<CandidTypedValue>
 			{
 				p0,
 			};
@@ -163,7 +163,7 @@ namespace Sample.Shared.Governance
 		public async Task<List<ProposalInfo>> get_pending_proposals(IIdentity? identityOverride = null)
 		{
 			string method = "get_pending_proposals";
-			var candidArgs = new List<CandidValueWithType>
+			var candidArgs = new List<CandidTypedValue>
 			{
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
@@ -175,8 +175,8 @@ namespace Sample.Shared.Governance
 		public async Task<ProposalInfo?> get_proposal_info(ulong arg0, IIdentity? identityOverride = null)
 		{
 			string method = "get_proposal_info";
-			CandidValueWithType p0 = CandidValueWithType.FromObject<ulong>(arg0, false);
-			var candidArgs = new List<CandidValueWithType>
+			CandidTypedValue p0 = CandidTypedValue.FromObject<ulong>(arg0, false);
+			var candidArgs = new List<CandidTypedValue>
 			{
 				p0,
 			};
@@ -189,7 +189,7 @@ namespace Sample.Shared.Governance
 		public async Task<ListKnownNeuronsResponse> list_known_neurons(IIdentity? identityOverride = null)
 		{
 			string method = "list_known_neurons";
-			var candidArgs = new List<CandidValueWithType>
+			var candidArgs = new List<CandidTypedValue>
 			{
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
@@ -201,8 +201,8 @@ namespace Sample.Shared.Governance
 		public async Task<ListNeuronsResponse> list_neurons(ListNeurons arg0, IIdentity? identityOverride = null)
 		{
 			string method = "list_neurons";
-			CandidValueWithType p0 = CandidValueWithType.FromObject<ListNeurons>(arg0, false);
-			var candidArgs = new List<CandidValueWithType>
+			CandidTypedValue p0 = CandidTypedValue.FromObject<ListNeurons>(arg0, false);
+			var candidArgs = new List<CandidTypedValue>
 			{
 				p0,
 			};
@@ -215,7 +215,7 @@ namespace Sample.Shared.Governance
 		public async Task<ListNodeProvidersResponse> list_node_providers(IIdentity? identityOverride = null)
 		{
 			string method = "list_node_providers";
-			var candidArgs = new List<CandidValueWithType>
+			var candidArgs = new List<CandidTypedValue>
 			{
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
@@ -227,8 +227,8 @@ namespace Sample.Shared.Governance
 		public async Task<ListProposalInfoResponse> list_proposals(ListProposalInfo arg0, IIdentity? identityOverride = null)
 		{
 			string method = "list_proposals";
-			CandidValueWithType p0 = CandidValueWithType.FromObject<ListProposalInfo>(arg0, false);
-			var candidArgs = new List<CandidValueWithType>
+			CandidTypedValue p0 = CandidTypedValue.FromObject<ListProposalInfo>(arg0, false);
+			var candidArgs = new List<CandidTypedValue>
 			{
 				p0,
 			};
@@ -241,8 +241,8 @@ namespace Sample.Shared.Governance
 		public async Task<ManageNeuronResponse> manage_neuron(ManageNeuron arg0, IIdentity? identityOverride = null)
 		{
 			string method = "manage_neuron";
-			CandidValueWithType p0 = CandidValueWithType.FromObject<ManageNeuron>(arg0, false);
-			var candidArgs = new List<CandidValueWithType>
+			CandidTypedValue p0 = CandidTypedValue.FromObject<ManageNeuron>(arg0, false);
+			var candidArgs = new List<CandidTypedValue>
 			{
 				p0,
 			};
@@ -254,9 +254,9 @@ namespace Sample.Shared.Governance
 		public async Task<Result> transfer_gtc_neuron(NeuronId arg0, NeuronId arg1, IIdentity? identityOverride = null)
 		{
 			string method = "transfer_gtc_neuron";
-			CandidValueWithType p0 = CandidValueWithType.FromObject<NeuronId>(arg0, false);
-			CandidValueWithType p1 = CandidValueWithType.FromObject<NeuronId>(arg1, false);
-			var candidArgs = new List<CandidValueWithType>
+			CandidTypedValue p0 = CandidTypedValue.FromObject<NeuronId>(arg0, false);
+			CandidTypedValue p1 = CandidTypedValue.FromObject<NeuronId>(arg1, false);
+			var candidArgs = new List<CandidTypedValue>
 			{
 				p0,
 				p1,
@@ -269,8 +269,8 @@ namespace Sample.Shared.Governance
 		public async Task<Result> update_node_provider(UpdateNodeProvider arg0, IIdentity? identityOverride = null)
 		{
 			string method = "update_node_provider";
-			CandidValueWithType p0 = CandidValueWithType.FromObject<UpdateNodeProvider>(arg0, false);
-			var candidArgs = new List<CandidValueWithType>
+			CandidTypedValue p0 = CandidTypedValue.FromObject<UpdateNodeProvider>(arg0, false);
+			var candidArgs = new List<CandidTypedValue>
 			{
 				p0,
 			};

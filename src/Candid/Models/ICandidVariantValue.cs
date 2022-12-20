@@ -1,71 +1,11 @@
-using EdjCase.ICP.Candid.Models;
-using EdjCase.ICP.Candid.Models.Types;
-using EdjCase.ICP.Candid.Models.Values;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 
-namespace EdjCase.ICP.Candid
+namespace EdjCase.ICP.Candid.Models
 {
-	public interface ICandidMapper
-	{
-		bool TryGetMappingInfo(Type objType, CandidConverter converter, out MappingInfo? mappingInfo);
-	}
-
-	public class MappingInfo
-	{
-		public CandidType Type { get; }
-		public Func<object?, CandidValue> MapFromObjectFunc { get; }
-		public Func<CandidValue, object?> MapToObjectFunc { get; }
-		public MappingInfo(CandidType type, Func<object?, CandidValue> mapFromObjectFunc, Func<CandidValue, object?> mapToObjectFunc)
-		{
-			this.Type = type ?? throw new ArgumentNullException(nameof(type));
-			this.MapFromObjectFunc = mapFromObjectFunc ?? throw new ArgumentNullException(nameof(mapFromObjectFunc));
-			this.MapToObjectFunc = mapToObjectFunc ?? throw new ArgumentNullException(nameof(mapToObjectFunc));
-		}
-
-		public MappingInfo ToOpt()
-		{
-			var optType = new CandidOptionalType(this.Type);
-			Func<object?, CandidValue> oldMapFromObjectFunc = this.MapFromObjectFunc;
-			Func<object?, CandidValue> mapFromObjectFunc = (obj) =>
-			{
-				if (obj == null)
-				{
-					return new CandidOptional(null);
-				}
-				CandidValue v = oldMapFromObjectFunc(obj);
-				return new CandidOptional(v);
-			};
-			Func<CandidValue, object?> oldMapToObjectFunc = this.MapToObjectFunc;
-			Func<CandidValue, object?> mapToObjectFunc = (v) =>
-			{
-				if (v is CandidOptional o)
-				{
-					if (o.Value == CandidPrimitive.Null())
-					{
-						return null;
-					}
-					v = o.Value;
-				}
-				return oldMapToObjectFunc(v);
-			};
-			return new MappingInfo(optType, mapFromObjectFunc, mapToObjectFunc);
-		}
-	}
-
-	public abstract class CandidMapperBase<T> : ICandidMapper
-	{
-		public virtual bool CanMap(Type type)
-		{
-			return type == typeof(T);
-		}
-
-		public abstract bool TryGetMappingInfo(Type objType, CandidConverter converter, out MappingInfo? mappingInfo);
-	}
-
 	public interface ICandidVariantValue
 	{
 		Dictionary<CandidTag, (Type Type, bool IsOpt)?> GetOptions();

@@ -18,8 +18,8 @@ namespace Sample.Shared.Dex
 		public async Task<CancelOrderReceipt> cancelOrder(OrderId arg0, IIdentity? identityOverride = null)
 		{
 			string method = "cancelOrder";
-			CandidValueWithType p0 = CandidValueWithType.FromObject<OrderId>(arg0, false);
-			var candidArgs = new List<CandidValueWithType>
+			CandidTypedValue p0 = CandidTypedValue.FromObject<OrderId>(arg0, false);
+			var candidArgs = new List<CandidTypedValue>
 			{
 				p0,
 			};
@@ -31,7 +31,7 @@ namespace Sample.Shared.Dex
 		public async Task clear(IIdentity? identityOverride = null)
 		{
 			string method = "clear";
-			var candidArgs = new List<CandidValueWithType>
+			var candidArgs = new List<CandidTypedValue>
 			{
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
@@ -40,10 +40,10 @@ namespace Sample.Shared.Dex
 		public async Task credit(EdjCase.ICP.Candid.Models.Principal arg0, Token arg1, EdjCase.ICP.Candid.UnboundedUInt arg2, IIdentity? identityOverride = null)
 		{
 			string method = "credit";
-			CandidValueWithType p0 = CandidValueWithType.FromObject<EdjCase.ICP.Candid.Models.Principal>(arg0, false);
-			CandidValueWithType p1 = CandidValueWithType.FromObject<Token>(arg1, false);
-			CandidValueWithType p2 = CandidValueWithType.FromObject<EdjCase.ICP.Candid.UnboundedUInt>(arg2, false);
-			var candidArgs = new List<CandidValueWithType>
+			CandidTypedValue p0 = CandidTypedValue.FromObject<EdjCase.ICP.Candid.Models.Principal>(arg0, false);
+			CandidTypedValue p1 = CandidTypedValue.FromObject<Token>(arg1, false);
+			CandidTypedValue p2 = CandidTypedValue.FromObject<EdjCase.ICP.Candid.UnboundedUInt>(arg2, false);
+			var candidArgs = new List<CandidTypedValue>
 			{
 				p0,
 				p1,
@@ -55,8 +55,8 @@ namespace Sample.Shared.Dex
 		public async Task<DepositReceipt> deposit(Token arg0, IIdentity? identityOverride = null)
 		{
 			string method = "deposit";
-			CandidValueWithType p0 = CandidValueWithType.FromObject<Token>(arg0, false);
-			var candidArgs = new List<CandidValueWithType>
+			CandidTypedValue p0 = CandidTypedValue.FromObject<Token>(arg0, false);
+			var candidArgs = new List<CandidTypedValue>
 			{
 				p0,
 			};
@@ -68,7 +68,7 @@ namespace Sample.Shared.Dex
 		public async Task<List<Balance>> getAllBalances(IIdentity? identityOverride = null)
 		{
 			string method = "getAllBalances";
-			var candidArgs = new List<CandidValueWithType>
+			var candidArgs = new List<CandidTypedValue>
 			{
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
@@ -80,8 +80,8 @@ namespace Sample.Shared.Dex
 		public async Task<EdjCase.ICP.Candid.UnboundedUInt> getBalance(Token arg0, IIdentity? identityOverride = null)
 		{
 			string method = "getBalance";
-			CandidValueWithType p0 = CandidValueWithType.FromObject<Token>(arg0, false);
-			var candidArgs = new List<CandidValueWithType>
+			CandidTypedValue p0 = CandidTypedValue.FromObject<Token>(arg0, false);
+			var candidArgs = new List<CandidTypedValue>
 			{
 				p0,
 			};
@@ -94,7 +94,7 @@ namespace Sample.Shared.Dex
 		public async Task<List<Balance>> getBalances(IIdentity? identityOverride = null)
 		{
 			string method = "getBalances";
-			var candidArgs = new List<CandidValueWithType>
+			var candidArgs = new List<CandidTypedValue>
 			{
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
@@ -106,7 +106,7 @@ namespace Sample.Shared.Dex
 		public async Task<List<byte>> getDepositAddress(IIdentity? identityOverride = null)
 		{
 			string method = "getDepositAddress";
-			var candidArgs = new List<CandidValueWithType>
+			var candidArgs = new List<CandidTypedValue>
 			{
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
@@ -117,8 +117,8 @@ namespace Sample.Shared.Dex
 		public async Task<Order?> getOrder(OrderId arg0, IIdentity? identityOverride = null)
 		{
 			string method = "getOrder";
-			CandidValueWithType p0 = CandidValueWithType.FromObject<OrderId>(arg0, false);
-			var candidArgs = new List<CandidValueWithType>
+			CandidTypedValue p0 = CandidTypedValue.FromObject<OrderId>(arg0, false);
+			var candidArgs = new List<CandidTypedValue>
 			{
 				p0,
 			};
@@ -130,7 +130,7 @@ namespace Sample.Shared.Dex
 		public async Task<List<Order>> getOrders(IIdentity? identityOverride = null)
 		{
 			string method = "getOrders";
-			var candidArgs = new List<CandidValueWithType>
+			var candidArgs = new List<CandidTypedValue>
 			{
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
@@ -141,8 +141,8 @@ namespace Sample.Shared.Dex
 		public async Task<string> getSymbol(Token arg0, IIdentity? identityOverride = null)
 		{
 			string method = "getSymbol";
-			CandidValueWithType p0 = CandidValueWithType.FromObject<Token>(arg0, false);
-			var candidArgs = new List<CandidValueWithType>
+			CandidTypedValue p0 = CandidTypedValue.FromObject<Token>(arg0, false);
+			var candidArgs = new List<CandidTypedValue>
 			{
 				p0,
 			};
@@ -154,11 +154,11 @@ namespace Sample.Shared.Dex
 		public async Task<OrderPlacementReceipt> placeOrder(Token arg0, EdjCase.ICP.Candid.UnboundedUInt arg1, Token arg2, EdjCase.ICP.Candid.UnboundedUInt arg3, IIdentity? identityOverride = null)
 		{
 			string method = "placeOrder";
-			CandidValueWithType p0 = CandidValueWithType.FromObject<Token>(arg0, false);
-			CandidValueWithType p1 = CandidValueWithType.FromObject<EdjCase.ICP.Candid.UnboundedUInt>(arg1, false);
-			CandidValueWithType p2 = CandidValueWithType.FromObject<Token>(arg2, false);
-			CandidValueWithType p3 = CandidValueWithType.FromObject<EdjCase.ICP.Candid.UnboundedUInt>(arg3, false);
-			var candidArgs = new List<CandidValueWithType>
+			CandidTypedValue p0 = CandidTypedValue.FromObject<Token>(arg0, false);
+			CandidTypedValue p1 = CandidTypedValue.FromObject<EdjCase.ICP.Candid.UnboundedUInt>(arg1, false);
+			CandidTypedValue p2 = CandidTypedValue.FromObject<Token>(arg2, false);
+			CandidTypedValue p3 = CandidTypedValue.FromObject<EdjCase.ICP.Candid.UnboundedUInt>(arg3, false);
+			var candidArgs = new List<CandidTypedValue>
 			{
 				p0,
 				p1,
@@ -173,7 +173,7 @@ namespace Sample.Shared.Dex
 		public async Task<EdjCase.ICP.Candid.Models.Principal> whoami(IIdentity? identityOverride = null)
 		{
 			string method = "whoami";
-			var candidArgs = new List<CandidValueWithType>
+			var candidArgs = new List<CandidTypedValue>
 			{
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
@@ -185,10 +185,10 @@ namespace Sample.Shared.Dex
 		public async Task<WithdrawReceipt> withdraw(Token arg0, EdjCase.ICP.Candid.UnboundedUInt arg1, EdjCase.ICP.Candid.Models.Principal arg2, IIdentity? identityOverride = null)
 		{
 			string method = "withdraw";
-			CandidValueWithType p0 = CandidValueWithType.FromObject<Token>(arg0, false);
-			CandidValueWithType p1 = CandidValueWithType.FromObject<EdjCase.ICP.Candid.UnboundedUInt>(arg1, false);
-			CandidValueWithType p2 = CandidValueWithType.FromObject<EdjCase.ICP.Candid.Models.Principal>(arg2, false);
-			var candidArgs = new List<CandidValueWithType>
+			CandidTypedValue p0 = CandidTypedValue.FromObject<Token>(arg0, false);
+			CandidTypedValue p1 = CandidTypedValue.FromObject<EdjCase.ICP.Candid.UnboundedUInt>(arg1, false);
+			CandidTypedValue p2 = CandidTypedValue.FromObject<EdjCase.ICP.Candid.Models.Principal>(arg2, false);
+			var candidArgs = new List<CandidTypedValue>
 			{
 				p0,
 				p1,

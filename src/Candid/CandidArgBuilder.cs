@@ -29,7 +29,7 @@ namespace EdjCase.ICP.Candid
         private readonly List<byte[]> EncodedValues = new List<byte[]>();
 
 
-        public void Add(CandidValueWithType value)
+        public void Add(CandidTypedValue value)
         {
             byte[] encodedType = value.Type.Encode(this.compoundTypeTable);
             this.EncodedTypes.Add(encodedType);
@@ -37,10 +37,10 @@ namespace EdjCase.ICP.Candid
             this.EncodedValues.Add(encodedValue);
         }
 
-        public static CandidArgBuilder FromArgs(IEnumerable<CandidValueWithType> values)
+        public static CandidArgBuilder FromArgs(IEnumerable<CandidTypedValue> values)
         {
             var builder = new CandidArgBuilder();
-            foreach (CandidValueWithType vwt in values)
+            foreach (CandidTypedValue vwt in values)
             {
                 builder.Add(vwt);
             }

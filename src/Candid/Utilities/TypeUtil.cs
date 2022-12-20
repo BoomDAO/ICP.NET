@@ -27,9 +27,11 @@ namespace EdjCase.ICP.Candid.Utilities
 		private static bool IsNullableHelper(Type memberType, MemberInfo? declaringType, IEnumerable<CustomAttributeData> customAttributes)
 		{
 			if (memberType.IsValueType)
+			{
 				return Nullable.GetUnderlyingType(memberType) != null;
+			}
 
-			var nullable = customAttributes
+			CustomAttributeData nullable = customAttributes
 				.FirstOrDefault(x => x.AttributeType.FullName == "System.Runtime.CompilerServices.NullableAttribute");
 			if (nullable != null && nullable.ConstructorArguments.Count == 1)
 			{
@@ -48,7 +50,7 @@ namespace EdjCase.ICP.Candid.Utilities
 				}
 			}
 
-			for (var type = declaringType; type != null; type = type.DeclaringType)
+			for (MemberInfo? type = declaringType; type != null; type = type.DeclaringType)
 			{
 				var context = type.CustomAttributes
 					.FirstOrDefault(x => x.AttributeType.FullName == "System.Runtime.CompilerServices.NullableContextAttribute");
