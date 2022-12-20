@@ -161,7 +161,7 @@ namespace ICP.ClientGenerator
 								if (parameter.TypeName != null)
 								{
 									string isOptString = parameter.IsOpt ? "true" : "false";
-									valueWithType = $"CandidValueWithType.FromObject<{parameter.TypeName}>({parameter.VariableName}, {isOptString})";
+									valueWithType = $"CandidValueWithType.FromObject({parameter.VariableName}, {isOptString})";
 								}
 								else
 								{

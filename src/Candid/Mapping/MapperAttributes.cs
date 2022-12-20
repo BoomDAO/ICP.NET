@@ -27,8 +27,8 @@ namespace EdjCase.ICP.Candid.Mapping
 	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Property)]
 	public class CustomMapperAttribute : Attribute
 	{
-		public ICustomCandidMapper Mapper { get; }
-		public CustomMapperAttribute(ICustomCandidMapper mapper)
+		public IObjectMapper Mapper { get; }
+		public CustomMapperAttribute(IObjectMapper mapper)
 		{
 			this.Mapper = mapper ?? throw new NotImplementedException();
 		}

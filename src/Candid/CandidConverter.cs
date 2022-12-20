@@ -23,16 +23,17 @@ namespace EdjCase.ICP.Candid
 			this.Options = options ?? CandidConverterOptions.Default;
 		}
 
-		public CandidValue FromObject(object obj, bool isOpt)
+		public CandidTypedValue FromObject(object? obj)
 		{
 			if (object.ReferenceEquals(obj, null))
 			{
 				throw new ArgumentNullException(nameof(obj));
 			}
-			ICustomCandidMapper mapper = this.Options.ResolveMapper(obj.GetType());
+			IObjectMapper mapper = this.Options.ResolveMapper(obj.GetType());
 
-			CandidValue value = mapper!.Map(obj, this.Options);
-			return isOpt ? new CandidOptional(value) : value;
+			CandidTypedValue value = mapper!.Map(obj, this.Options);
+
+			return value;
 		}
 
 		public T ToObject<T>(CandidValue value)
@@ -56,7 +57,7 @@ namespace EdjCase.ICP.Candid
 			{
 				return null; // Handle null here for all mappers
 			}
-			ICustomCandidMapper mapper = this.Options.ResolveMapper(objType);
+			IObjectMapper mapper = this.Options.ResolveMapper(objType);
 			return mapper!.Map(value, this.Options);
 		}
 
@@ -64,42 +65,42 @@ namespace EdjCase.ICP.Candid
 
 	public class CandidConverterOptions
 	{
-		public IReadOnlyList<ICustomCandidMapper> CustomMappers { get; }
+		public IReadOnlyList<IObjectMapper> CustomMappers { get; }
 		public ICaseConverter? CaseConverter { get; }
 
-		private readonly ConcurrentDictionary<Type, ICustomCandidMapper> _typeToMapperCache;
+		private readonly ConcurrentDictionary<Type, IObjectMapper> _typeToMapperCache;
 
 		public CandidConverterOptions(
-			IEnumerable<ICustomCandidMapper> mappers,
+			IEnumerable<IObjectMapper> mappers,
 			ICaseConverter? caseConverter = null)
 		{
 			this.CaseConverter = caseConverter;
 			this.CustomMappers = mappers?.ToList() ?? throw new ArgumentNullException(nameof(mappers));
-			this._typeToMapperCache = new ConcurrentDictionary<Type, ICustomCandidMapper>();
+			this._typeToMapperCache = new ConcurrentDictionary<Type, IObjectMapper>();
 		}
 
 		public static CandidConverterOptions Default { get; } = new CandidConverterOptions(
-			mappers: Enumerable.Empty<ICustomCandidMapper>(),
+			mappers: Enumerable.Empty<IObjectMapper>(),
 			caseConverter: null
 		);
 
-		public ICustomCandidMapper ResolveMapper(Type type)
+		public IObjectMapper ResolveMapper(Type type)
 		{
 			return this._typeToMapperCache.GetOrAdd(type, this.ResolveUncached);
 		}
 
-		private ICustomCandidMapper ResolveUncached(Type type)
+		private IObjectMapper ResolveUncached(Type type)
 		{
 			CustomMapperAttribute? mapperAttr = type.GetCustomAttribute<CustomMapperAttribute>();
 			if (mapperAttr != null)
 			{
 				return mapperAttr.Mapper;
 			}
-			ICustomCandidMapper? mapper = this.CustomMappers
+			IObjectMapper? mapper = this.CustomMappers
 				.FirstOrDefault(m => m.CanMap(type));
 			return mapper == null
 				// Create a dynamic mapper if no custom one
-				? CatchAllMapperFactory.GetMappingInfoFromType(type, this)
+				? CatchAllMapperFactory.Build(type, this)
 				: mapper;
 		}
 	}

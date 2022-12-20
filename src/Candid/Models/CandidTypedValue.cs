@@ -14,6 +14,7 @@ namespace EdjCase.ICP.Candid.Models
             this.Value = value ?? throw new ArgumentNullException(nameof(value));
             this.Type = type ?? throw new ArgumentNullException(nameof(type));
 		}
+
 		public T? ToObjectOrDefault<T>(CandidConverter? converter = null)
 		{
 			return (converter ?? CandidConverter.Default).ToObject<T>(this.Value);
@@ -29,9 +30,9 @@ namespace EdjCase.ICP.Candid.Models
             return new CandidTypedValue(value, type);
 		}
 
-		public static CandidTypedValue FromObject<T>(T obj, bool isOpt, CandidConverter? converter = null)
+		public static CandidTypedValue FromObject(object obj, CandidConverter? converter = null)
 		{
-			return (converter ?? CandidConverter.Default).FromObject(obj, isOpt);
+			return (converter ?? CandidConverter.Default).FromObject(obj);
 		}
 
 

@@ -9,10 +9,10 @@ using System.Reflection;
 
 namespace EdjCase.ICP.Candid.Mapping
 {
-	public interface ICustomCandidMapper
+	public interface IObjectMapper
 	{
 		bool CanMap(Type type);
 		object Map(CandidValue value, CandidConverterOptions options);
-		CandidValue Map(object obj, CandidConverterOptions options);
+		CandidTypedValue Map(object obj, CandidConverterOptions options);
 	}
 }

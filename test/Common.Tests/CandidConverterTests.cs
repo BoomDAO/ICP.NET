@@ -114,14 +114,14 @@ namespace ICP.Candid.Tests
 		public class VariantValueClass : ICandidVariantValue
 		{
 			public (CandidTag tag, object? value) Value { get; set; }
-			public Dictionary<CandidTag, (Type Type, bool IsOpt)?> GetOptions()
+			public Dictionary<CandidTag, Type?> GetOptions()
 			{
-				return new Dictionary<CandidTag, (Type Type, bool IsOpt)?>
+				return new Dictionary<CandidTag, Type?>
 				{
 					{ CandidTag.FromName("v1"), null },
-					{ CandidTag.FromName("v2"), (typeof(string), false) },
-					{ CandidTag.FromName("v3"), (typeof(int), false) },
-					{ CandidTag.FromName("v4"), (typeof(string), true) },
+					{ CandidTag.FromName("v2"), typeof(string) },
+					{ CandidTag.FromName("v3"), typeof(int) },
+					{ CandidTag.FromName("v4"), typeof(OptionalType<string>) },
 				};
 			}
 
@@ -165,7 +165,7 @@ namespace ICP.Candid.Tests
 
 		private void Test<T>(T raw, CandidTypedValue candid, Func<T, T, bool> areEqual)
 		{
-			CandidTypedValue actual = CandidConverter.Default.FromObject(raw, false);
+			CandidTypedValue actual = CandidConverter.Default.FromObject(raw!);
 			Assert.Equal(candid, actual);
 
 

@@ -13,246 +13,303 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 {
 	internal static class CatchAllMapperFactory
 	{
-		public static CatchAllMapper GetCatchAllMapperFromType(Type objType, CandidConverterOptions options)
+		public static CatchAllMapper Build(Type objType, CandidConverterOptions options)
 		{
-			CandidType type;
-			Func<CandidValue, object> mapToObjectFunc;
-			Func<object, CandidValue> innerMapFromObjectFunc;
-			if (objType == typeof(string))
-			{
-				type = new CandidPrimitiveType(PrimitiveType.Text);
-				innerMapFromObjectFunc = o => CandidPrimitive.Text((string)o);
-				mapToObjectFunc = v => v.AsText();
-			}
-			else if (objType == typeof(byte))
-			{
-				type = new CandidPrimitiveType(PrimitiveType.Nat8);
-				innerMapFromObjectFunc = o => CandidPrimitive.Nat8((byte)o);
-				mapToObjectFunc = v => v.AsNat8();
-			}
-			else if (objType == typeof(ushort))
-			{
-				type = new CandidPrimitiveType(PrimitiveType.Nat16);
-				innerMapFromObjectFunc = o => CandidPrimitive.Nat16((ushort)o);
-				mapToObjectFunc = v => v.AsNat16();
-			}
-			else if (objType == typeof(uint))
-			{
-				type = new CandidPrimitiveType(PrimitiveType.Nat32);
-				innerMapFromObjectFunc = o => CandidPrimitive.Nat32((uint)o);
-				mapToObjectFunc = v => v.AsNat32();
-			}
-			else if (objType == typeof(ulong))
-			{
-				type = new CandidPrimitiveType(PrimitiveType.Nat64);
-				innerMapFromObjectFunc = o => CandidPrimitive.Nat64((ulong)o);
-				mapToObjectFunc = v => v.AsNat64();
-			}
-			else if (objType == typeof(UnboundedUInt))
-			{
-				type = new CandidPrimitiveType(PrimitiveType.Nat);
-				innerMapFromObjectFunc = o => CandidPrimitive.Nat((UnboundedUInt)o);
-				mapToObjectFunc = v => v.AsNat();
-			}
-			else if (objType == typeof(sbyte))
-			{
-				type = new CandidPrimitiveType(PrimitiveType.Int8);
-				innerMapFromObjectFunc = o => CandidPrimitive.Int8((sbyte)o);
-				mapToObjectFunc = v => v.AsInt8();
-			}
-			else if (objType == typeof(short))
-			{
-				type = new CandidPrimitiveType(PrimitiveType.Int16);
-				innerMapFromObjectFunc = o => CandidPrimitive.Int16((short)o);
-				mapToObjectFunc = v => v.AsInt16();
-			}
-			else if (objType == typeof(int))
-			{
-				type = new CandidPrimitiveType(PrimitiveType.Int32);
-				innerMapFromObjectFunc = o => CandidPrimitive.Int32((int)o);
-				mapToObjectFunc = v => v.AsInt32();
-			}
-			else if (objType == typeof(long))
-			{
-				type = new CandidPrimitiveType(PrimitiveType.Int64);
-				innerMapFromObjectFunc = o => CandidPrimitive.Int64((long)o);
-				mapToObjectFunc = v => v.AsInt64();
-			}
-			else if (objType == typeof(UnboundedInt))
-			{
-				type = new CandidPrimitiveType(PrimitiveType.Int);
-				innerMapFromObjectFunc = o => CandidPrimitive.Int((UnboundedInt)o);
-				mapToObjectFunc = v => v.AsInt();
-			}
-			else if (objType == typeof(double))
-			{
-				type = new CandidPrimitiveType(PrimitiveType.Float64);
-				innerMapFromObjectFunc = o => CandidPrimitive.Float64((double)o);
-				mapToObjectFunc = v => v.AsFloat64();
-			}
-			else if (objType == typeof(decimal))
-			{
-				// TODO is this the best way to convert a decimal?
-				type = new CandidPrimitiveType(PrimitiveType.Float64);
-				innerMapFromObjectFunc = o => CandidPrimitive.Float64((double)o);
-				mapToObjectFunc = v => (decimal)v.AsFloat64();
-			}
-			else if (objType == typeof(Principal))
-			{
-				type = new CandidPrimitiveType(PrimitiveType.Principal);
-				innerMapFromObjectFunc = o => CandidPrimitive.Principal((Principal)o);
-				mapToObjectFunc = v => v.AsPrincipal()!; // TODO null?
-			}
-			else if (genericTypeDefintion == typeof(Nullable<>))
-			{
-				Type innerType = objType.GenericTypeArguments[0];
-				CatchAllMapper innerCatchAllMapper = GetCatchAllMapperFromType(innerType, converter);
-				type = new CandidOptionalType(innerCatchAllMapper.Type);
-				PropertyInfo valueProp = objType.GetProperty("Value");
-				innerMapFromObjectFunc = o =>
-				{
-					object innerValue = valueProp.GetValue(o);
-					return innerCatchAllMapper.MapFromObjectFunc(innerValue);
-				};
-				mapToObjectFunc = v =>
-				{
-					CandidOptional opt = v.AsOptional();
-					return innerCatchAllMapper.MapToObjectFunc(opt.Value);
-				};
-			}
-			else if (genericTypeDefintion == typeof(List<>))
-			{
-				Type innerType = objType.GenericTypeArguments[0];
-				CatchAllMapper innerCatchAllMapper = GetCatchAllMapperFromType(innerType!, converter);
-				type = new CandidVectorType(innerCatchAllMapper.Type);
-				innerMapFromObjectFunc = o =>
-				{
-					CandidValue[] values = ((IEnumerable)o).Select(v => innerCatchAllMapper.MapFromObjectFunc(v)).ToArray();
-					return new CandidVector(values);
-				};
-
-				mapToObjectFunc = v =>
-				{
-					IList list = (IList)Activator.CreateInstance(objType);
-					foreach (CandidValue innerValue in v.AsVector().Values)
-					{
-						list.Add(innerCatchAllMapper.MapToObjectFunc(innerValue));
-					}
-					return list;
-				};
-			}
-			else if (objType.IsArray)
-			{
-				Type innerType = objType.GetElementType();
-				CatchAllMapper innerCatchAllMapper = GetCatchAllMapperFromType(innerType!, converter);
-				type = new CandidVectorType(innerCatchAllMapper.Type);
-				innerMapFromObjectFunc = o =>
-				{
-					CandidValue[] values = ((IEnumerable)o).Select(v => innerCatchAllMapper.MapFromObjectFunc(v)).ToArray();
-					return new CandidVector(values);
-				};
-
-				mapToObjectFunc = v =>
-				{
-					CandidVector vector = v.AsVector();
-					Array array = Array.CreateInstance(innerType, vector.Values.Length);
-					for (int i = 0; i < vector.Values.Length; i++)
-					{
-						CandidValue innerValue = vector.Values[i];
-						object? innerObj = innerCatchAllMapper.MapToObjectFunc(innerValue);
-						array.SetValue(innerObj, i);
-					}
-					return array;
-				};
-			}
-			else if (typeof(ICandidVariantValue).IsAssignableFrom(objType))
-			{
-				ICandidVariantValue variant = (ICandidVariantValue)Activator.CreateInstance(objType, nonPublic: true);
-				Dictionary<CandidTag, (Type Type, bool IsOpt)?> optionTypes = variant.GetOptions();
-				Dictionary<CandidTag, CatchAllMapper?> optionMappingMap = optionTypes
-					.ToDictionary(
-						t => t.Key,
-						t =>
-						{
-							if (t.Value == null)
-							{
-								return null;
-							}
-							CatchAllMapper CatchAllMapper = GetCatchAllMapperFromType(t.Value.Value.Type, options);
-							if (t.Value.Value.IsOpt)
-							{
-								CatchAllMapper = CatchAllMapper.ToOpt();
-							}
-							return CatchAllMapper;
-						}
-					);
-				Dictionary<CandidTag, CandidType> options = optionMappingMap
-					.ToDictionary(
-						t => t.Key,
-						t =>
-						{
-							if (t.Value == null)
-							{
-								return new CandidPrimitiveType(PrimitiveType.Null);
-							}
-							return t.Value.Type;
-						});
-				type = new CandidVariantType(options);
-				innerMapFromObjectFunc = o =>
-				{
-					ICandidVariantValue v = (ICandidVariantValue)o;
-					(CandidTag innerTag, object? innerObj) = v.GetValue();
-
-					CatchAllMapper? innerCatchAllMapper = optionMappingMap[innerTag];
-					CandidType innerType = options[innerTag];
-					CandidValue innerValue;
-					if (innerCatchAllMapper != null)
-					{
-						innerValue = innerCatchAllMapper.MapFromObjectFunc(innerObj);
-					}
-					else
-					{
-						innerValue = CandidPrimitive.Null();
-					}
-					return new CandidVariant(innerTag, innerValue);
-				};
-
-				mapToObjectFunc = v =>
-				{
-					CandidVariant variant = v.AsVariant();
-					ICandidVariantValue obj = (ICandidVariantValue)Activator.CreateInstance(objType, nonPublic: true);
-					CatchAllMapper? optionCatchAllMapper = optionMappingMap[variant.Tag];
-					object? variantValue = optionCatchAllMapper?.MapToObjectFunc(variant.Value);
-					obj.SetValue(variant.Tag, variantValue);
-					return obj;
-				};
-			}
-			else
-			{
-				CatchAllMapper info = GetRecordCatchAllMapper(objType, converter);
-				type = info.Type;
-				innerMapFromObjectFunc = info.MapFromObjectFunc;
-				mapToObjectFunc = info.MapToObjectFunc;
-			}
-			Func<object?, CandidValue> mapFromObjectFunc = o =>
-			{
-				if (o == null)
-				{
-					return CandidPrimitive.Null();
-				}
-				return innerMapFromObjectFunc(o);
-			};
-			return new CatchAllMapper(mapFromObjectFunc, mapToObjectFunc);
+			return BuildInternal(objType, options).Mapper;
 		}
 
+		private static (CatchAllMapper Mapper, CandidType Type) BuildInternal(Type objType, CandidConverterOptions options)
+		{
+			if (objType == typeof(string))
+			{
+				return BuildPrimitive(
+					new CandidPrimitiveType(PrimitiveType.Text),
+					o => CandidPrimitive.Text((string)o),
+					v => v.AsText()
+				);
+			}
+			if (objType == typeof(byte))
+			{
+				return BuildPrimitive(
+					new CandidPrimitiveType(PrimitiveType.Nat8),
+					o => CandidPrimitive.Nat8((byte)o),
+					v => v.AsNat8()
+				);
+			}
+			if (objType == typeof(ushort))
+			{
+				return BuildPrimitive(
+					new CandidPrimitiveType(PrimitiveType.Nat16),
+					o => CandidPrimitive.Nat16((ushort)o),
+					v => v.AsNat16()
+				);
+			}
+			if (objType == typeof(uint))
+			{
+				return BuildPrimitive(
+					new CandidPrimitiveType(PrimitiveType.Nat32),
+					o => CandidPrimitive.Nat32((uint)o),
+					v => v.AsNat32()
+				);
+			}
+			if (objType == typeof(ulong))
+			{
+				return BuildPrimitive(
+					new CandidPrimitiveType(PrimitiveType.Nat64),
+					o => CandidPrimitive.Nat64((ulong)o),
+					v => v.AsNat64()
+				);
+			}
+			if (objType == typeof(UnboundedUInt))
+			{
+				return BuildPrimitive(
+					new CandidPrimitiveType(PrimitiveType.Nat),
+					o => CandidPrimitive.Nat((UnboundedUInt)o),
+					v => v.AsNat()
+				);
+			}
+			if (objType == typeof(sbyte))
+			{
+				return BuildPrimitive(
+					new CandidPrimitiveType(PrimitiveType.Int8),
+					o => CandidPrimitive.Int8((sbyte)o),
+					v => v.AsInt8()
+				);
+			}
+			if (objType == typeof(short))
+			{
+				return BuildPrimitive(
+					new CandidPrimitiveType(PrimitiveType.Int16),
+					o => CandidPrimitive.Int16((short)o),
+					v => v.AsInt16()
+				);
+			}
+			if (objType == typeof(int))
+			{
+				return BuildPrimitive(
+					new CandidPrimitiveType(PrimitiveType.Int32),
+					o => CandidPrimitive.Int32((int)o),
+					v => v.AsInt32()
+				);
+			}
+			if (objType == typeof(long))
+			{
+				return BuildPrimitive(
+					new CandidPrimitiveType(PrimitiveType.Int64),
+					o => CandidPrimitive.Int64((long)o),
+					v => v.AsInt64()
+				);
+			}
+			if (objType == typeof(UnboundedInt))
+			{
+				return BuildPrimitive(
+					new CandidPrimitiveType(PrimitiveType.Int),
+					o => CandidPrimitive.Int((UnboundedInt)o),
+					v => v.AsInt()
+				);
+			}
+			if (objType == typeof(double))
+			{
+				return BuildPrimitive(
+					new CandidPrimitiveType(PrimitiveType.Float64),
+					o => CandidPrimitive.Float64((double)o),
+					v => v.AsFloat64()
+				);
+			}
+			if (objType == typeof(decimal))
+			{
+				// TODO is this the best way to convert a decimal?
+				return BuildPrimitive(
+					new CandidPrimitiveType(PrimitiveType.Float64),
+					o => CandidPrimitive.Float64((double)o),
+					v => (decimal)v.AsFloat64()
+				);
+			}
+			if (objType == typeof(Principal))
+			{
+				return BuildPrimitive(
+					new CandidPrimitiveType(PrimitiveType.Principal),
+					o => CandidPrimitive.Principal((Principal)o),
+					v => v.AsPrincipal()
+				);
+			}
+			if (objType.IsArray)
+			{
+				return BuildVector(objType, options);
+			}
+			if (typeof(ICandidVariantValue).IsAssignableFrom(objType))
+			{
+				return BuildVariant(objType, options);
+			}
+			// Generics
+			Type? genericTypeDefinition = objType.GetGenericTypeDefinition();
+			if (genericTypeDefinition == typeof(OptionalValue<>))
+			{
+				return BuildOpt(objType, options);
+			}
+			if (genericTypeDefinition == typeof(List<>))
+			{
+				return BuildVector(objType, options);
+			}
+			// Assume anything else is a record
+			return BuildRecord(objType, options);
+		}
 
+		private static (CatchAllMapper Mapper, CandidType Type) BuildPrimitive(
+			CandidType type,
+			Func<object, CandidValue> toCandid,
+			Func<CandidValue, object> fromCandid)
+		{
+			var mapper = new CatchAllMapper(
+				o =>
+				{
+					CandidValue value = toCandid(o);
+					return new CandidTypedValue(value, type);
+				},
+				fromCandid
+			);
+			return (mapper, type);
+		}
 
-		private static CatchAllMapper GetRecordCatchAllMapper(Type objType, CandidConverterOptions options)
+		private static (CatchAllMapper Mapper, CandidType Type) BuildOpt(Type objType, CandidConverterOptions options)
+		{
+			Type innerType = objType.GenericTypeArguments[0];
+			(CatchAllMapper innerCatchAllMapper, CandidType t) = BuildInternal(innerType, options);
+			type = new CandidOptionalType(t);
+			PropertyInfo hasValueProp = objType.GetProperty("HasValue");
+			PropertyInfo valueProp = objType.GetProperty("Value");
+			innerMapFromObjectFunc = o =>
+			{
+				bool hasValue = (bool)hasValueProp.GetValue(o);
+				CandidValue? v;
+				if (!hasValue)
+				{
+					v = null;
+				}
+				else
+				{
+					object innerValue = valueProp.GetValue(o);
+					v = innerCatchAllMapper.ToCandidFunc(innerValue).Value;
+				}
+				return new CandidOptional(v);
+			};
+			mapToObjectFunc = v =>
+			{
+				CandidOptional opt = v.AsOptional();
+				var obj = innerCatchAllMapper.FromCandidFunc(opt.Value);
+				return Activator.CreateInstance(objType, true, obj);
+			};
+		}
+
+		private static (CatchAllMapper Mapper, CandidType Type) BuildVector(Type objType, CandidConverterOptions options)
+		{
+
+			Type innerType = objType.GenericTypeArguments[0];
+			(CatchAllMapper innerCatchAllMapper, CandidType t) = BuildInternal(innerType!, options);
+			type = new CandidVectorType(t);
+			innerMapFromObjectFunc = o =>
+			{
+				CandidValue[] values = ((IEnumerable)o).Select(v => innerCatchAllMapper.ToCandidFunc(v).Value).ToArray();
+				return new CandidVector(values);
+			};
+
+			mapToObjectFunc = v =>
+			{
+				IList list = (IList)Activator.CreateInstance(objType);
+				foreach (CandidValue innerValue in v.AsVector().Values)
+				{
+					list.Add(innerCatchAllMapper.FromCandidFunc(innerValue));
+				}
+				return list;
+			};
+			////
+			Type innerType = objType.GetElementType();
+			(CatchAllMapper innerCatchAllMapper, CandidType t) = BuildInternal(innerType!, options);
+			type = new CandidVectorType(t);
+			innerMapFromObjectFunc = o =>
+			{
+				CandidValue[] values = ((IEnumerable)o).Select(v => innerCatchAllMapper.ToCandidFunc(v).Value).ToArray();
+				return new CandidVector(values);
+			};
+
+			mapToObjectFunc = v =>
+			{
+				CandidVector vector = v.AsVector();
+				Array array = Array.CreateInstance(innerType, vector.Values.Length);
+				for (int i = 0; i < vector.Values.Length; i++)
+				{
+					CandidValue innerValue = vector.Values[i];
+					object? innerObj = innerCatchAllMapper.FromCandidFunc(innerValue);
+					array.SetValue(innerObj, i);
+				}
+				return array;
+			};
+		}
+
+		private static (CatchAllMapper info, CandidType t) BuildVariant(Type objType, CandidConverterOptions options)
+		{
+			ICandidVariantValue variant = (ICandidVariantValue)Activator.CreateInstance(objType, nonPublic: true);
+			Dictionary<CandidTag, Type?> optionTypes = variant.GetOptions();
+			Dictionary<CandidTag, (CatchAllMapper Mapper, CandidType Type)?> optionMappingMap = optionTypes
+				.ToDictionary(
+					t => t.Key,
+					t =>
+					{
+						if (t.Value == null)
+						{
+							return (ValueTuple<CatchAllMapper, CandidType>?)null;
+						}
+						return BuildInternal(t.Value, options);
+					}
+				);
+			Dictionary<CandidTag, CandidType> variantOptions = optionMappingMap
+				.ToDictionary(
+					t => t.Key,
+					t =>
+					{
+						if (t.Value == null)
+						{
+							return new CandidPrimitiveType(PrimitiveType.Null);
+						}
+						return t.Value.Value.Type;
+					});
+			type = new CandidVariantType(variantOptions);
+			innerMapFromObjectFunc = o =>
+			{
+				ICandidVariantValue v = (ICandidVariantValue)o;
+				(CandidTag innerTag, object? innerObj) = v.GetValue();
+
+				CatchAllMapper? mapper = optionMappingMap[innerTag]?.Mapper;
+				CandidType innerType = variantOptions[innerTag];
+				CandidValue innerValue;
+				if (mapper != null && innerObj != null)
+				{
+					innerValue = mapper.ToCandidFunc(innerObj).Value;
+				}
+				else
+				{
+					innerValue = CandidPrimitive.Null();
+				}
+				return new CandidVariant(innerTag, innerValue);
+			};
+
+			mapToObjectFunc = v =>
+			{
+				CandidVariant variant = v.AsVariant();
+				ICandidVariantValue obj = (ICandidVariantValue)Activator.CreateInstance(objType, nonPublic: true);
+				CatchAllMapper? optionCatchAllMapper = optionMappingMap[variant.Tag]?.Mapper;
+				object? variantValue = optionCatchAllMapper?.FromCandidFunc(variant.Value);
+				obj.SetValue(variant.Tag, variantValue);
+				return obj;
+			};
+		}
+
+		private static (CatchAllMapper Mapper, CandidRecordType Type) BuildRecord(Type objType, CandidConverterOptions options)
 		{
 			List<PropertyInfo> properties = objType
 				.GetProperties(BindingFlags.Instance | BindingFlags.Public)
 				.ToList();
-			var propertyMetaDataMap = new Dictionary<CandidTag, (PropertyInfo Property, ICustomCandidMapper Mapper)>();
+			var propertyMetaDataMap = new Dictionary<CandidTag, (PropertyInfo Property, IObjectMapper Mapper)>();
 			foreach (PropertyInfo property in properties)
 			{
 				CandidIgnoreAttribute? ignoreAttribute = property.GetCustomAttribute<CandidIgnoreAttribute>();
@@ -274,45 +331,45 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 				CandidTag tag = CandidTag.FromName(propertyName);
 				CustomMapperAttribute? customMapperAttribute = property.GetCustomAttribute<CustomMapperAttribute>();
 
-				ICustomCandidMapper mapper;
+				IObjectMapper m;
 				if (customMapperAttribute != null)
 				{
-					mapper = customMapperAttribute.Mapper!;
+					m = customMapperAttribute.Mapper!;
 				}
 				else
 				{
-					mapper = options.ResolveMapper(property.PropertyType);
+					m = options.ResolveMapper(property.PropertyType);
 				}
-				bool isOpt = TypeUtil.IsNullable(property);
-				if (isOpt)
-				{
-					// TODO
-					//mapper = 
-				}
-				propertyMetaDataMap.Add(tag, (property, mapper));
+				propertyMetaDataMap.Add(tag, (property, m));
 			}
 
+			Dictionary<CandidTag, CandidType> fields = propertyMetaDataMap
+				.ToDictionary(
+					p => p.Key,
+					p => p.Value
+				);
 
-			Func<object, CandidValue> mapFromObjectFunc = (obj) =>
+			CandidRecordType type = new CandidRecordType(fields);
+			Func<object, CandidTypedValue> mapFromObjectFunc = (obj) =>
 			{
-				if (obj == null)
-				{
-					return CandidPrimitive.Null();
-				}
 				Dictionary<CandidTag, CandidValue> fields = new();
-				foreach ((CandidTag tag, (PropertyInfo property, ICustomCandidMapper mapper)) in propertyMetaDataMap)
+				foreach ((CandidTag tag, (PropertyInfo property, IObjectMapper mapper)) in propertyMetaDataMap)
 				{
 					object propValue = property.GetValue(obj);
-					CandidValue v = mapper.Map(propValue, options);
-					fields.Add(tag, v);
+					CandidTypedValue v = mapper.Map(propValue, options);
+					fields.Add(tag, v.Value);
 				}
-				return new CandidRecord(fields);
+				var r = new CandidRecord(fields);
+				return new CandidTypedValue(
+					r,
+					type
+				);
 			};
 			Func<CandidValue, object> mapToObjectFunc = (v) =>
 			{
 				CandidRecord t = v.AsRecord();
 				object obj = Activator.CreateInstance(objType);
-				foreach ((CandidTag tag, (PropertyInfo property, ICustomCandidMapper mapper)) in propertyMetaDataMap)
+				foreach ((CandidTag tag, (PropertyInfo property, IObjectMapper mapper)) in propertyMetaDataMap)
 				{
 					CandidValue fieldCandidValue = t.Fields[tag];
 					object? fieldValue = mapper.Map(fieldCandidValue, options);
@@ -321,21 +378,22 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 				return obj;
 			};
 
-			return new CatchAllMapper(mapFromObjectFunc, mapToObjectFunc);
+			var mapper = new CatchAllMapper(mapFromObjectFunc, mapToObjectFunc);
+			return (mapper, type);
 		}
 
 
 	}
-	internal class CatchAllMapper : ICustomCandidMapper
+	internal class CatchAllMapper : IObjectMapper
 	{
-		public Func<object, CandidValue> MapFromObjectFunc { get; }
-		public Func<CandidValue, object> MapToObjectFunc { get; }
+		public Func<object, CandidTypedValue> ToCandidFunc { get; }
+		public Func<CandidValue, object> FromCandidFunc { get; }
 		public CatchAllMapper(
-			Func<object, CandidValue> mapFromObjectFunc,
-			Func<CandidValue, object> mapToObjectFunc)
+			Func<object, CandidTypedValue> toCandidFunc,
+			Func<CandidValue, object> fromCandidFunc)
 		{
-			this.MapFromObjectFunc = mapFromObjectFunc ?? throw new ArgumentNullException(nameof(mapFromObjectFunc));
-			this.MapToObjectFunc = mapToObjectFunc ?? throw new ArgumentNullException(nameof(mapToObjectFunc));
+			this.ToCandidFunc = toCandidFunc ?? throw new ArgumentNullException(nameof(toCandidFunc));
+			this.FromCandidFunc = fromCandidFunc ?? throw new ArgumentNullException(nameof(fromCandidFunc));
 		}
 
 		public bool CanMap(Type type)
@@ -345,12 +403,12 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 
 		public object Map(CandidValue value, CandidConverterOptions options)
 		{
-			return this.MapToObjectFunc(value);
+			return this.FromCandidFunc(value);
 		}
 
-		public CandidValue Map(object obj, CandidConverterOptions options)
+		public CandidTypedValue Map(object obj, CandidConverterOptions options)
 		{
-			return this.MapFromObjectFunc(obj);
+			return this.ToCandidFunc(obj);
 		}
 	}
 }
