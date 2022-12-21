@@ -29,42 +29,75 @@ namespace ICP.ClientGenerator
 			{ typeof(bool), "bool" }
 		};
 
-		public static string GenerateClientSourceCode(string baseNamespace, ServiceSourceDescriptor desc)
+		public static string GenerateClientSourceCode(string baseNamespace, ServiceSourceDescriptor desc, List<string>? importedNamespaces = null)
 		{
 			IndentedStringBuilder builder = new();
+
+			WriteNamespace(builder, baseNamespace, () =>
+			{
+				WriteService(builder, desc);
+			});
+			string source = BuildSourceWithShorthands(builder);
+
+			// Dont apply shorthands to namespaces by adding them to top after
+			builder = new();
+			if (importedNamespaces != null)
+			{
+				foreach (string n in importedNamespaces)
+				{
+					builder.AppendLine($"using {n};");
+				}
+			}
 			builder.AppendLine("using EdjCase.ICP.Agent.Agents;");
 			builder.AppendLine("using EdjCase.ICP.Agent.Responses;");
 			builder.AppendLine("using EdjCase.ICP.Agent.Auth;");
 			builder.AppendLine("using EdjCase.ICP.Candid.Models;");
 			builder.AppendLine($"using {baseNamespace}.Models;");
 			builder.AppendLine("");
-
-			WriteNamespace(builder, baseNamespace, () =>
-			{
-				WriteService(builder, desc);
-			});
-			return BuildSourceWithShorthands(builder);
+			builder.AppendLine(source);
+			return builder.ToString();
 		}
-		public static (string FileName, string SourceCode) GenerateTypeSourceCode(string baseNamespace, TypeSourceDescriptor type)
+		public static (string FileName, string SourceCode) GenerateTypeSourceCode(
+			string baseNamespace,
+			TypeSourceDescriptor type,
+			List<string>? importedNamespaces = null)
 		{
 			IndentedStringBuilder builder = new();
-
 
 			WriteNamespace(builder, baseNamespace + ".Models", () =>
 			{
 				WriteType(builder, type);
 			});
 			string source = BuildSourceWithShorthands(builder);
+
+
+			if (importedNamespaces != null)
+			{
+				// Append before source to avoid shorthand replacement
+				builder = new();
+				foreach (string n in importedNamespaces)
+				{
+					builder.AppendLine($"using {n};");
+				}
+				builder.AppendLine("");
+				builder.AppendLine(source);
+				source= builder.ToString();
+			}
+
 			return (type.Name, source);
 		}
 
-		public static string GenerateAliasSourceCode(Dictionary<string, string> aliases)
+		public static string GenerateAliasSourceCode(string baseNamespace, Dictionary<string, string> aliases, bool useGlobal)
 		{
 			IndentedStringBuilder builder = new();
+			string? prefix = useGlobal ? "global " : null;
 			foreach ((string id, string aliasedType) in aliases)
 			{
-				builder.AppendLine($"global using {id} = {aliasedType};");
+				builder.AppendLine($"{prefix}using {id} = {aliasedType};");
 			}
+			builder.AppendLine("");
+			builder.AppendLine($"namespace {baseNamespace}.Models;");
+
 			return builder.ToString();
 		}
 
@@ -225,6 +258,12 @@ namespace ICP.ClientGenerator
 						args.ToArray()
 					);
 
+				}
+
+
+				foreach (TypeSourceDescriptor paramType in service.SubTypesToCreate)
+				{
+					WriteType(builder, paramType);
 				}
 			});
 		}

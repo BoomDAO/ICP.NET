@@ -1,3 +1,9 @@
+using Token = EdjCase.ICP.Candid.Models.Principal;
+using OrderId = System.UInt32;
+using System;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+
 namespace Sample.Shared.Dex.Models
 {
 	public enum CancelOrderErrType
@@ -27,3 +33,4 @@ namespace Sample.Shared.Dex.Models
 		
 	}
 }
+
