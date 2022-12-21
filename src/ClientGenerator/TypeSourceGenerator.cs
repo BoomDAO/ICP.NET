@@ -29,42 +29,75 @@ namespace ICP.ClientGenerator
 			{ typeof(bool), "bool" }
 		};
 
-		public static string GenerateClientSourceCode(string baseNamespace, ServiceSourceDescriptor desc)
+		public static string GenerateClientSourceCode(string baseNamespace, ServiceSourceDescriptor desc, List<string>? importedNamespaces = null)
 		{
 			IndentedStringBuilder builder = new();
+
+			WriteNamespace(builder, baseNamespace, () =>
+			{
+				WriteService(builder, desc);
+			});
+			string source = BuildSourceWithShorthands(builder);
+
+			// Dont apply shorthands to namespaces by adding them to top after
+			builder = new();
+			if (importedNamespaces != null)
+			{
+				foreach (string n in importedNamespaces)
+				{
+					builder.AppendLine($"using {n};");
+				}
+			}
 			builder.AppendLine("using EdjCase.ICP.Agent.Agents;");
 			builder.AppendLine("using EdjCase.ICP.Agent.Responses;");
 			builder.AppendLine("using EdjCase.ICP.Agent.Auth;");
 			builder.AppendLine("using EdjCase.ICP.Candid.Models;");
 			builder.AppendLine($"using {baseNamespace}.Models;");
 			builder.AppendLine("");
-
-			WriteNamespace(builder, baseNamespace, () =>
-			{
-				WriteService(builder, desc);
-			});
-			return BuildSourceWithShorthands(builder);
+			builder.AppendLine(source);
+			return builder.ToString();
 		}
-		public static (string FileName, string SourceCode) GenerateTypeSourceCode(string baseNamespace, TypeSourceDescriptor type)
+		public static (string FileName, string SourceCode) GenerateTypeSourceCode(
+			string baseNamespace,
+			TypeSourceDescriptor type,
+			List<string>? importedNamespaces = null)
 		{
 			IndentedStringBuilder builder = new();
-
 
 			WriteNamespace(builder, baseNamespace + ".Models", () =>
 			{
 				WriteType(builder, type);
 			});
 			string source = BuildSourceWithShorthands(builder);
+
+
+			if (importedNamespaces != null)
+			{
+				// Append before source to avoid shorthand replacement
+				builder = new();
+				foreach (string n in importedNamespaces)
+				{
+					builder.AppendLine($"using {n};");
+				}
+				builder.AppendLine("");
+				builder.AppendLine(source);
+				source = builder.ToString();
+			}
+
 			return (type.Name, source);
 		}
 
-		public static string GenerateAliasSourceCode(Dictionary<string, string> aliases)
+		public static string GenerateAliasSourceCode(string baseNamespace, Dictionary<string, string> aliases, bool useGlobal)
 		{
 			IndentedStringBuilder builder = new();
+			string? prefix = useGlobal ? "global " : null;
 			foreach ((string id, string aliasedType) in aliases)
 			{
-				builder.AppendLine($"global using {id} = {aliasedType};");
+				builder.AppendLine($"{prefix}using {id} = {aliasedType};");
 			}
+			builder.AppendLine("");
+			builder.AppendLine($"namespace {baseNamespace}.Models;");
+
 			return builder.ToString();
 		}
 
@@ -226,6 +259,12 @@ namespace ICP.ClientGenerator
 					);
 
 				}
+
+
+				foreach (TypeSourceDescriptor paramType in service.SubTypesToCreate)
+				{
+					WriteType(builder, paramType);
+				}
 			});
 		}
 
@@ -237,7 +276,12 @@ namespace ICP.ClientGenerator
 			{
 				foreach ((string field, string fieldFullTypeName) in record.Fields)
 				{
-					builder.AppendLine($"public {fieldFullTypeName} {field} {{ get; set; }}");
+					EscapeSafeString escapedName = EscapeSafeString.Build(field);
+					if (escapedName.NameChanged)
+					{
+						builder.AppendLine($"[CandidName(\"{escapedName.CandidName}\")]");
+					}
+					builder.AppendLine($"public {fieldFullTypeName} {escapedName.SafeCsharpName} {{ get; set; }}");
 					builder.AppendLine("");
 				}
 
@@ -250,13 +294,73 @@ namespace ICP.ClientGenerator
 
 		}
 
+		private class EscapeSafeString
+		{
+
+			public string CandidName { get; }
+			public string CsharpName { get; }
+			public bool NeedsPrefix { get; }
+			public string SafeCsharpName => this.NeedsPrefix ? "@" + this.CsharpName : this.CsharpName;
+			public bool NameChanged => this.CandidName != this.CsharpName;
+
+			private EscapeSafeString(string candidName, string csharpName, bool needsPrefix)
+			{
+				this.CandidName = candidName ?? throw new ArgumentNullException(nameof(candidName));
+				this.CsharpName = csharpName ?? throw new ArgumentNullException(nameof(csharpName));
+				this.NeedsPrefix = needsPrefix;
+			}
+
+			public static EscapeSafeString Build(string value)
+			{
+				bool isQuoted = value.StartsWith("\"") && value.EndsWith("\"");
+				if (isQuoted)
+				{
+					value = value.Trim('"');
+				}
+				string escapedValue = value;
+				bool needsPrefix;
+				if (char.IsNumber(escapedValue[0]))
+				{
+					// If Its a number, prefix it
+					escapedValue = "F" + escapedValue;
+					needsPrefix = false;
+				}
+				else
+				{
+					// TODO better way to check for reserved names
+					bool isReserved;
+					switch (value)
+					{
+						case "short":
+						case "int":
+						case "long":
+						case "ushort":
+						case "uint":
+						case "ulong":
+						case "string":
+						case "new":
+						case "bool":
+							isReserved = true;
+							break;
+						default:
+							isReserved = false;
+							break;
+					}
+					needsPrefix = isReserved;
+				}
+
+				return new EscapeSafeString(value, escapedValue, needsPrefix);
+			}
+		}
+
+
 		private static void WriteVariant(IndentedStringBuilder builder, VariantSourceDescriptor variant)
 		{
 
 			string className = variant.Name;
 			string enumName = $"{className}Type";
 			List<string> enumValues = variant.Options
-				.Select(o => o.Name)
+				.Select(o => EscapeSafeString.Build(o.Name).SafeCsharpName)
 				.ToList();
 			WriteEnum(builder, enumName, enumValues);
 			var implementationTypes = new List<string>
@@ -301,23 +405,23 @@ namespace ICP.ClientGenerator
 
 
 
-				foreach ((string option, string? infoFullTypeName) in variant.Options)
+				foreach ((string unescapedOption, string? infoFullTypeName) in variant.Options)
 				{
-					string optionName = option;
+					EscapeSafeString escapedOption = EscapeSafeString.Build(unescapedOption);
 					if (infoFullTypeName == null)
 					{
 						WriteMethod(
 							builder,
 							inner: () =>
 							{
-								builder.AppendLine($"return new {className}({enumName}.{optionName}, null);");
+								builder.AppendLine($"return new {className}({enumName}.{escapedOption.SafeCsharpName}, null);");
 							},
 							access: "public",
 							isStatic: true,
 							isAsync: false,
 							isConstructor: false,
 							returnType: className,
-							name: optionName
+							name: escapedOption.SafeCsharpName
 						);
 					}
 					else
@@ -326,14 +430,14 @@ namespace ICP.ClientGenerator
 							builder,
 							inner: () =>
 							{
-								builder.AppendLine($"return new {className}({enumName}.{optionName}, info);");
+								builder.AppendLine($"return new {className}({enumName}.{escapedOption.SafeCsharpName}, info);");
 							},
 							access: "public",
 							isStatic: true,
 							isAsync: false,
 							isConstructor: false,
 							returnType: className,
-							name: optionName,
+							name: escapedOption.SafeCsharpName,
 					baseConstructorParams: null,
 							(infoFullTypeName, "info")
 						);
@@ -343,7 +447,7 @@ namespace ICP.ClientGenerator
 							builder,
 							inner: () =>
 							{
-								builder.AppendLine($"this.ValidateType({enumName}.{optionName});");
+								builder.AppendLine($"this.ValidateType({enumName}.{escapedOption.SafeCsharpName});");
 								builder.AppendLine($"return ({infoFullTypeName})this.value!;");
 							},
 							access: "public",
@@ -351,7 +455,7 @@ namespace ICP.ClientGenerator
 							isAsync: false,
 							isConstructor: false,
 							returnType: infoFullTypeName,
-							name: "As" + optionName
+							name: "As" + escapedOption.CsharpName
 						);
 					}
 					builder.AppendLine("");

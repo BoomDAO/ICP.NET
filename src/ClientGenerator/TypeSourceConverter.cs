@@ -25,7 +25,7 @@ namespace EdjCase.ICP.ClientGenerator
 	}
 	internal class TypeSourceConverter
 	{
-		public static ServiceSourceInfo ConvertService(string serviceName, CandidServiceDescription service)
+		public static ServiceSourceInfo ConvertService(string serviceName, string baseNamespace, CandidServiceDescription service)
 		{
 			Dictionary<CandidId, CandidType> declaredTypes = service.DeclaredTypes.ToDictionary(t => t.Key, t => t.Value);
 			
@@ -86,9 +86,9 @@ namespace EdjCase.ICP.ClientGenerator
 						{
 							TypeSourceDescriptor? resolvedType = type switch
 							{
-								CandidRecordType r => ResolveRecord(typeName, r, declaredTypeNames),
-								CandidVariantType v => ResolveVariant(typeName, v, declaredTypeNames),
-								CandidServiceType s => ResolveService(typeName, s, declaredTypeNames),
+								CandidRecordType r => ResolveRecord(typeName, r, declaredTypeNames, baseNamespace, false),
+								CandidVariantType v => ResolveVariant(typeName, v, declaredTypeNames, baseNamespace, false),
+								CandidServiceType s => ResolveService(typeName, s, declaredTypeNames, baseNamespace, false),
 								_ => throw new NotImplementedException()
 							};
 							if (resolvedType != null)
@@ -100,14 +100,14 @@ namespace EdjCase.ICP.ClientGenerator
 				}
 			}
 
-			ServiceSourceDescriptor serviceSourceDesc = ResolveService(serviceName.ToString(), service.Service, declaredTypeNames);
+			ServiceSourceDescriptor serviceSourceDesc = ResolveService(serviceName.ToString(), service.Service, declaredTypeNames, baseNamespace, false);
 
 
 			return new ServiceSourceInfo(serviceName, serviceSourceDesc, resolvedTypes, aliases);
 
-			void AddAlias(string variableName, string typeName, CandidType type)
+			void AddAlias(string innerTypeSuffix, string typeName, CandidType type)
 			{
-				string? innerTypeName = ResolveInnerTypeName(variableName, type, declaredTypeNames, out TypeSourceDescriptor? subTypeToCreate);
+				string? innerTypeName = ResolveInnerTypeName($"{typeName}{innerTypeSuffix}", type, declaredTypeNames, baseNamespace, true, out TypeSourceDescriptor? subTypeToCreate);
 				if (innerTypeName == null)
 				{
 					// TOOD
@@ -115,8 +115,7 @@ namespace EdjCase.ICP.ClientGenerator
 				}
 				if (subTypeToCreate != null)
 				{
-					// TOOD
-					throw new Exception();
+					resolvedTypes.Add(subTypeToCreate);
 				}
 				aliases.Add(typeName, innerTypeName);
 			}
@@ -125,19 +124,24 @@ namespace EdjCase.ICP.ClientGenerator
 
 
 
-		private static RecordSourceDescriptor ResolveRecord(string name, CandidRecordType type, Dictionary<CandidId, string> declaredFullTypeNames)
+		private static RecordSourceDescriptor ResolveRecord(
+			string name,
+			CandidRecordType type,
+			Dictionary<CandidId, string> declaredFullTypeNames,
+			string baseNamespace,
+			bool fullyNamespaceTypes)
 		{
 			var subTypesToCreate = new List<TypeSourceDescriptor>();
 			List<(string Name, string TypeName)> resolvedFields = type.Fields
 				.Select(f =>
 				{
-					string fieldName = f.Key.Name ?? "F" + f.Key.Id;
+					string fieldName = f.Key.Name ?? f.Key.Id.ToString();
 					if (fieldName == name)
 					{
 						// TODO how to handle property and class name collision?
-						fieldName += "_";
+						fieldName = "@" + fieldName;
 					}
-					string? typeName = ResolveInnerTypeName(fieldName + "Info", f.Value, declaredFullTypeNames, out TypeSourceDescriptor? subTypeToCreate);
+					string? typeName = ResolveInnerTypeName(fieldName + "Info", f.Value, declaredFullTypeNames, baseNamespace, fullyNamespaceTypes, out TypeSourceDescriptor? subTypeToCreate);
 					if (subTypeToCreate != null)
 					{
 						subTypesToCreate.Add(subTypeToCreate);
@@ -151,14 +155,19 @@ namespace EdjCase.ICP.ClientGenerator
 		}
 
 
-		private static VariantSourceDescriptor ResolveVariant(string name, CandidVariantType type, Dictionary<CandidId, string> declaredFullTypeNames)
+		private static VariantSourceDescriptor ResolveVariant(
+			string name,
+			CandidVariantType type,
+			Dictionary<CandidId, string> declaredFullTypeNames,
+			string baseNamespace,
+			bool fullyNamespaceTypes)
 		{
 			var subTypesToCreate = new List<TypeSourceDescriptor>();
 			List<(string Name, string? InfoTypeName)> resolvedOptions = type.Fields
 				.Select(f =>
 				{
 					string fieldName = f.Key.Name ?? "O" + f.Key.Id;
-					string? typeName = ResolveInnerTypeName(fieldName + "Info", f.Value, declaredFullTypeNames, out TypeSourceDescriptor? subTypeToCreate);
+					string? typeName = ResolveInnerTypeName(fieldName + "Info", f.Value, declaredFullTypeNames, baseNamespace, fullyNamespaceTypes, out TypeSourceDescriptor? subTypeToCreate);
 					if (subTypeToCreate != null)
 					{
 						subTypesToCreate.Add(subTypeToCreate);
@@ -169,25 +178,35 @@ namespace EdjCase.ICP.ClientGenerator
 			return new VariantSourceDescriptor(name, resolvedOptions, subTypesToCreate);
 		}
 
-		private static ServiceSourceDescriptor ResolveService(string name, CandidServiceType type, Dictionary<CandidId, string> declaredFullTypeNames)
+		private static ServiceSourceDescriptor ResolveService(
+			string name,
+			CandidServiceType type,
+			Dictionary<CandidId, string> declaredFullTypeNames,
+			string baseNamespace,
+			bool fullyNamespaceTypes)
 		{
 			var subTypesToCreate = new List<TypeSourceDescriptor>();
 			Dictionary<string, FuncSourceDescriptor> resolvedMethods = type.Methods
 				.ToDictionary(f => f.Key.ToString(), f =>
 				{
-					FuncSourceDescriptor func = ResolveFunc(f.Key.ToString(), f.Value, declaredFullTypeNames);
+					FuncSourceDescriptor func = ResolveFunc(f.Key.ToString(), f.Value, declaredFullTypeNames, baseNamespace, fullyNamespaceTypes);
 					subTypesToCreate.AddRange(func.SubTypesToCreate);
 					return func;
 				});
 			return new ServiceSourceDescriptor(name, resolvedMethods, subTypesToCreate);
 		}
-		private static FuncSourceDescriptor ResolveFunc(string name, CandidFuncType type, Dictionary<CandidId, string> declaredFullTypeNames)
+		private static FuncSourceDescriptor ResolveFunc(
+			string name,
+			CandidFuncType type,
+			Dictionary<CandidId, string> declaredFullTypeNames,
+			string baseNamespace,
+			bool fullyNamespaceTypes)
 		{
 			var subTypesToCreate = new List<TypeSourceDescriptor>();
 
 			FuncSourceDescriptor.ParameterInfo BuildParam(string argName, CandidType paramType)
 			{
-				string? typeName = ResolveInnerTypeName(argName, paramType, declaredFullTypeNames, out TypeSourceDescriptor? subTypeToCreate);
+				string? typeName = ResolveInnerTypeName(argName, paramType, declaredFullTypeNames, baseNamespace, fullyNamespaceTypes, out TypeSourceDescriptor? subTypeToCreate);
 				bool isOpt = paramType is CandidOptionalType;
 				if (subTypeToCreate != null)
 				{
@@ -206,7 +225,7 @@ namespace EdjCase.ICP.ClientGenerator
 			List<FuncSourceDescriptor.ParameterInfo> resolvedReturnParameters = type.ReturnTypes
 				.Select((f, i) =>
 				{
-					string argName = f.Name?.Value ?? $"R{i}"; // TODO better naming
+					string argName = f.Name?.Value ?? $"{name}_R{i}"; // TODO better naming
 					return BuildParam(argName, f.Type);
 				})
 				.ToList();
@@ -251,59 +270,87 @@ namespace EdjCase.ICP.ClientGenerator
 			string variableName,
 			CandidType type,
 			Dictionary<CandidId, string> declaredFullTypeNames,
+			string baseNamespace,
+			bool fullyNamespaceTypes,
 			out TypeSourceDescriptor? subTypeToCreate)
 		{
 			switch (type)
 			{
 				case CandidReferenceType r:
 					subTypeToCreate = null;
-					return declaredFullTypeNames[r.Id];
+					string t = declaredFullTypeNames[r.Id];
+
+					return fullyNamespaceTypes ? $"{baseNamespace}.Models.{t}" : t;
 				case CandidPrimitiveType p:
 					subTypeToCreate = null;
 					return ResolvePrimitive(p.PrimitiveType);
 				case CandidVectorType v:
 					{
-						string? innerTypeName = ResolveInnerTypeName(variableName, v.InnerType, declaredFullTypeNames, out subTypeToCreate);
+						string? innerTypeName = ResolveInnerTypeName(variableName, v.InnerType, declaredFullTypeNames, baseNamespace, fullyNamespaceTypes, out subTypeToCreate);
 						if (innerTypeName == null)
 						{
 							// TODO
 							throw new Exception();
 						}
-						return $"List<{innerTypeName}>";
+						string? prefix = null;
+						if (fullyNamespaceTypes)
+						{
+							prefix = "System.Collections.Generic.";
+						}
+						return $"{prefix}List<{innerTypeName}>";
 					}
 				case CandidOptionalType o:
 					{
 
-						string? innerTypeName = ResolveInnerTypeName(variableName, o.Value, declaredFullTypeNames, out subTypeToCreate);
+						string? innerTypeName = ResolveInnerTypeName(variableName, o.Value, declaredFullTypeNames, baseNamespace, fullyNamespaceTypes, out subTypeToCreate);
 						if (innerTypeName == null)
 						{
 							// TODO
 							throw new Exception();
 						}
+						// TODO OptionalValue<T>
 						return $"{innerTypeName}?";
 					}
 				case CandidRecordType r:
 					{
-						RecordSourceDescriptor record = ResolveRecord(variableName, r, declaredFullTypeNames);
+						RecordSourceDescriptor record = ResolveRecord(variableName, r, declaredFullTypeNames, baseNamespace, fullyNamespaceTypes);
 						subTypeToCreate = record;
+
+						if (fullyNamespaceTypes)
+						{
+							return $"{baseNamespace}.Models.{record.Name}";
+						}
 						return record.Name;
 					}
 				case CandidVariantType v:
 					{
-						VariantSourceDescriptor variant = ResolveVariant(variableName, v, declaredFullTypeNames);
+						VariantSourceDescriptor variant = ResolveVariant(variableName, v, declaredFullTypeNames, baseNamespace, fullyNamespaceTypes);
 						subTypeToCreate = variant;
+						if (fullyNamespaceTypes)
+						{
+							return $"{baseNamespace}.Models.{variant.Name}";
+						}
 						return variant.Name;
 					}
 				case CandidServiceType s:
 					{
-						ServiceSourceDescriptor service = ResolveService(variableName, s, declaredFullTypeNames);
+						ServiceSourceDescriptor service = ResolveService(variableName, s, declaredFullTypeNames, baseNamespace, fullyNamespaceTypes);
 						subTypeToCreate = service;
+						if (fullyNamespaceTypes)
+						{
+							return $"{baseNamespace}.Models.{service.Name}";
+						}
 						return service.Name;
 					}
-				case CandidFuncType func:
+				case CandidFuncType:
 					{
 						subTypeToCreate = null;
-						return "(Principal CanisterId, string Method)";
+						string? prefix = null;
+						if (fullyNamespaceTypes)
+						{
+							prefix = "EdjCase.ICP.Candid.Models.";
+						}
+						return $"({prefix}Principal CanisterId, string Method)";
 					}
 				default:
 					throw new NotImplementedException();

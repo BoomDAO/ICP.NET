@@ -1,3 +1,7 @@
+using System;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+
 namespace Sample.Shared.Governance.Models
 {
 	public enum ResultType
@@ -33,3 +37,4 @@ namespace Sample.Shared.Governance.Models
 		
 	}
 }
+

@@ -38,26 +38,46 @@ namespace EdjCase.ICP.ClientGenerator
     {
         public static ClientCodeResult FromService(string serviceName, string baseNamespace, CandidServiceDescription serviceFile)
         {
-			ServiceSourceInfo service = TypeSourceConverter.ConvertService(serviceName, serviceFile);
+			ServiceSourceInfo service = TypeSourceConverter.ConvertService(serviceName, baseNamespace, serviceFile);
 
 			return FromServiceInfo(serviceName, baseNamespace, service);
         }
 
 		internal static ClientCodeResult FromServiceInfo(string serviceName, string baseNamespace, ServiceSourceInfo service)
 		{
-			string clientSource = TypeSourceGenerator.GenerateClientSourceCode(baseNamespace, service.Service);
+			int csharpVersion = 9; // TODO configurable
+
+			List<string>? importedNamespaces = null;
+			if (csharpVersion < 10)
+			{
+				// If global usings feature doesnt exist, import per file
+				importedNamespaces = service.Aliases
+					.Select(a => $"{a.Key} = {a.Value}")
+					.Concat(new List<string>
+					{
+						"System",
+						"System.Threading.Tasks",
+						"System.Collections.Generic",
+						"EdjCase.ICP.Candid.Mappers"
+					})
+					.ToList();
+			}
+
+			string clientSource = TypeSourceGenerator.GenerateClientSourceCode(baseNamespace, service.Service, importedNamespaces);
+
 
 			var typeFiles = new List<(string Name, string SourceCode)>();
 			foreach (TypeSourceDescriptor type in service.Types)
 			{
-				(string fileName, string source) = TypeSourceGenerator.GenerateTypeSourceCode(baseNamespace, type);
+				(string fileName, string source) = TypeSourceGenerator.GenerateTypeSourceCode(baseNamespace, type, importedNamespaces);
 
 				typeFiles.Add((fileName, source));
 			}
 			string? aliasFile = null;
 			if (service.Aliases.Any())
 			{
-				aliasFile = TypeSourceGenerator.GenerateAliasSourceCode(service.Aliases);
+				bool useGlobal = csharpVersion >= 10;
+				aliasFile = TypeSourceGenerator.GenerateAliasSourceCode(baseNamespace, service.Aliases, useGlobal);
 			}
 			return new ClientCodeResult(service.Name + "ApiClient", clientSource, typeFiles, aliasFile);
 		}

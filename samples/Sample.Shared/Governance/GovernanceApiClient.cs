@@ -1,3 +1,6 @@
+using System;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 using EdjCase.ICP.Agent.Agents;
 using EdjCase.ICP.Agent.Responses;
 using EdjCase.ICP.Agent.Auth;
@@ -281,3 +284,4 @@ namespace Sample.Shared.Governance
 		}
 	}
 }
+

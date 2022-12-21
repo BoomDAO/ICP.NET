@@ -45,8 +45,4 @@
 		<ProjectReference Include="..\..\src\ClientGenerator\EdjCase.ICP.ClientGenerator.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Generators\__snapshots__\" />
-	</ItemGroup>
-
 </Project>

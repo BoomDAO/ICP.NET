@@ -1,2 +1,4 @@
-global using Token = EdjCase.ICP.Candid.Models.Principal;
-global using OrderId = System.UInt32;
+using Token = EdjCase.ICP.Candid.Models.Principal;
+using OrderId = System.UInt32;
+
+namespace Sample.Shared.Dex.Models;
