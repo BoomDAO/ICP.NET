@@ -81,7 +81,7 @@ namespace ICP.ClientGenerator
 				}
 				builder.AppendLine("");
 				builder.AppendLine(source);
-				source= builder.ToString();
+				source = builder.ToString();
 			}
 
 			return (type.Name, source);
@@ -276,8 +276,12 @@ namespace ICP.ClientGenerator
 			{
 				foreach ((string field, string fieldFullTypeName) in record.Fields)
 				{
-					EscapeSafeString escapedName = FixNameEscape(field);
-					builder.AppendLine($"public {fieldFullTypeName} {escapedName.Get()} {{ get; set; }}");
+					EscapeSafeString escapedName = EscapeSafeString.Build(field);
+					if (escapedName.NameChanged)
+					{
+						builder.AppendLine($"[CandidName(\"{escapedName.CandidName}\")]");
+					}
+					builder.AppendLine($"public {fieldFullTypeName} {escapedName.SafeCsharpName} {{ get; set; }}");
 					builder.AppendLine("");
 				}
 
@@ -292,38 +296,63 @@ namespace ICP.ClientGenerator
 
 		private class EscapeSafeString
 		{
-			public bool Escaped { get; }
-			private string value { get; }
 
-			public EscapeSafeString(bool escaped, string value)
+			public string CandidName { get; }
+			public string CsharpName { get; }
+			public bool NeedsPrefix { get; }
+			public string SafeCsharpName => this.NeedsPrefix ? "@" + this.CsharpName : this.CsharpName;
+			public bool NameChanged => this.CandidName != this.CsharpName;
+
+			private EscapeSafeString(string candidName, string csharpName, bool needsPrefix)
 			{
-				this.Escaped = escaped;
-				this.value = value;
+				this.CandidName = candidName ?? throw new ArgumentNullException(nameof(candidName));
+				this.CsharpName = csharpName ?? throw new ArgumentNullException(nameof(csharpName));
+				this.NeedsPrefix = needsPrefix;
 			}
 
-			public string Get(bool prefixIfEscaped = true)
+			public static EscapeSafeString Build(string value)
 			{
-				if (!this.Escaped)
+				bool isQuoted = value.StartsWith("\"") && value.EndsWith("\"");
+				if (isQuoted)
 				{
-					return this.value;
+					value = value.Trim('"');
 				}
-				if (prefixIfEscaped)
+				string escapedValue = value;
+				bool needsPrefix;
+				if (char.IsNumber(escapedValue[0]))
 				{
-					return "@" + this.value;
+					// If Its a number, prefix it
+					escapedValue = "F" + escapedValue;
+					needsPrefix = false;
 				}
-				return this.value;
+				else
+				{
+					// TODO better way to check for reserved names
+					bool isReserved;
+					switch (value)
+					{
+						case "short":
+						case "int":
+						case "long":
+						case "ushort":
+						case "uint":
+						case "ulong":
+						case "string":
+						case "new":
+						case "bool":
+							isReserved = true;
+							break;
+						default:
+							isReserved = false;
+							break;
+					}
+					needsPrefix = isReserved;
+				}
+
+				return new EscapeSafeString(value, escapedValue, needsPrefix);
 			}
 		}
 
-		private static EscapeSafeString FixNameEscape(string value)
-		{
-			bool isEscaped = value.StartsWith("\"") && value.EndsWith("\"");
-			if (isEscaped)
-			{
-				value = value.Trim('"');
-			}
-			return new EscapeSafeString(isEscaped, value);
-		}
 
 		private static void WriteVariant(IndentedStringBuilder builder, VariantSourceDescriptor variant)
 		{
@@ -331,7 +360,7 @@ namespace ICP.ClientGenerator
 			string className = variant.Name;
 			string enumName = $"{className}Type";
 			List<string> enumValues = variant.Options
-				.Select(o => FixNameEscape(o.Name).Get())
+				.Select(o => EscapeSafeString.Build(o.Name).SafeCsharpName)
 				.ToList();
 			WriteEnum(builder, enumName, enumValues);
 			var implementationTypes = new List<string>
@@ -376,23 +405,23 @@ namespace ICP.ClientGenerator
 
 
 
-				foreach ((string option, string? infoFullTypeName) in variant.Options)
+				foreach ((string unescapedOption, string? infoFullTypeName) in variant.Options)
 				{
-					EscapeSafeString escapedOption = FixNameEscape(option);
+					EscapeSafeString escapedOption = EscapeSafeString.Build(unescapedOption);
 					if (infoFullTypeName == null)
 					{
 						WriteMethod(
 							builder,
 							inner: () =>
 							{
-								builder.AppendLine($"return new {className}({enumName}.{escapedOption.Get()}, null);");
+								builder.AppendLine($"return new {className}({enumName}.{escapedOption.SafeCsharpName}, null);");
 							},
 							access: "public",
 							isStatic: true,
 							isAsync: false,
 							isConstructor: false,
 							returnType: className,
-							name: escapedOption.Get()
+							name: escapedOption.SafeCsharpName
 						);
 					}
 					else
@@ -401,14 +430,14 @@ namespace ICP.ClientGenerator
 							builder,
 							inner: () =>
 							{
-								builder.AppendLine($"return new {className}({enumName}.{escapedOption.Get()}, info);");
+								builder.AppendLine($"return new {className}({enumName}.{escapedOption.SafeCsharpName}, info);");
 							},
 							access: "public",
 							isStatic: true,
 							isAsync: false,
 							isConstructor: false,
 							returnType: className,
-							name: escapedOption.Get(),
+							name: escapedOption.SafeCsharpName,
 					baseConstructorParams: null,
 							(infoFullTypeName, "info")
 						);
@@ -418,7 +447,7 @@ namespace ICP.ClientGenerator
 							builder,
 							inner: () =>
 							{
-								builder.AppendLine($"this.ValidateType({enumName}.{escapedOption.Get()});");
+								builder.AppendLine($"this.ValidateType({enumName}.{escapedOption.SafeCsharpName});");
 								builder.AppendLine($"return ({infoFullTypeName})this.value!;");
 							},
 							access: "public",
@@ -426,7 +455,7 @@ namespace ICP.ClientGenerator
 							isAsync: false,
 							isConstructor: false,
 							returnType: infoFullTypeName,
-							name: "As" + escapedOption.Get(prefixIfEscaped: false)
+							name: "As" + escapedOption.CsharpName
 						);
 					}
 					builder.AppendLine("");

@@ -135,11 +135,11 @@ namespace EdjCase.ICP.ClientGenerator
 			List<(string Name, string TypeName)> resolvedFields = type.Fields
 				.Select(f =>
 				{
-					string fieldName = f.Key.Name ?? "F" + f.Key.Id;
+					string fieldName = f.Key.Name ?? f.Key.Id.ToString();
 					if (fieldName == name)
 					{
 						// TODO how to handle property and class name collision?
-						fieldName += "_";
+						fieldName = "@" + fieldName;
 					}
 					string? typeName = ResolveInnerTypeName(fieldName + "Info", f.Value, declaredFullTypeNames, baseNamespace, fullyNamespaceTypes, out TypeSourceDescriptor? subTypeToCreate);
 					if (subTypeToCreate != null)
