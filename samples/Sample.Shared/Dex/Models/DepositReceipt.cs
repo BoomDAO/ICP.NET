@@ -3,17 +3,23 @@ using OrderId = System.UInt32;
 using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid;
 
 namespace Sample.Shared.Dex.Models
 {
 	public enum DepositReceiptType
 	{
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Err")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(DepositErr))]
 		Err,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Ok")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(EdjCase.ICP.Candid.UnboundedUInt))]
 		Ok,
 	}
-	public class DepositReceipt : EdjCase.ICP.Candid.CandidVariantValueBase<DepositReceiptType>
+	public class DepositReceipt : EdjCase.ICP.Candid.Models.CandidVariantValueBase<DepositReceiptType>
 	{
-		public DepositReceipt(DepositReceiptType type, object? value)  : base(type, value)
+		public DepositReceipt(DepositReceiptType type, System.Object? value)  : base(type, value)
 		{
 		}
 		

@@ -14,7 +14,7 @@ using System.Text;
 namespace EdjCase.ICP.Candid.Mapping
 {
 
-	[AttributeUsage(AttributeTargets.Property)]
+	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
 	public class CandidNameAttribute : Attribute
 	{
 		public string Name { get; }

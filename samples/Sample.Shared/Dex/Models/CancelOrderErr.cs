@@ -3,17 +3,21 @@ using OrderId = System.UInt32;
 using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid;
 
 namespace Sample.Shared.Dex.Models
 {
 	public enum CancelOrderErrType
 	{
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("NotAllowed")]
 		NotAllowed,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("NotExistingOrder")]
 		NotExistingOrder,
 	}
-	public class CancelOrderErr : EdjCase.ICP.Candid.CandidVariantValueBase<CancelOrderErrType>
+	public class CancelOrderErr : EdjCase.ICP.Candid.Models.CandidVariantValueBase<CancelOrderErrType>
 	{
-		public CancelOrderErr(CancelOrderErrType type, object? value)  : base(type, value)
+		public CancelOrderErr(CancelOrderErrType type, System.Object? value)  : base(type, value)
 		{
 		}
 		

@@ -1,6 +1,6 @@
 using EdjCase.ICP.Agent.Auth;
 using EdjCase.ICP.Candid;
-using EdjCase.ICP.Candid.Mappers;
+using EdjCase.ICP.Candid.Mapping;
 using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid.Models.Types;
 using EdjCase.ICP.Candid.Models.Values;
@@ -195,18 +195,17 @@ namespace ICP.ClientGenerator
 								string valueWithType;
 								if (param.Type != null)
 								{
-									string isOptString = param.IsOpt ? "true" : "false";
-									valueWithType = $"CandidValueWithType.FromObject<{param.Type.GetNamespacedName()}>({param.Name.VariableName}, {isOptString})";
+									valueWithType = $"CandidTypedValue.FromObject({param.Name.VariableName})";
 								}
 								else
 								{
-									valueWithType = "CandidValueWithType.Null()";
+									valueWithType = "CandidTypedValue.Null()";
 								}
-								builder.AppendLine($"CandidValueWithType {variableName} = {valueWithType};");
+								builder.AppendLine($"CandidTypedValue {variableName} = {valueWithType};");
 								parameterVariables.Add(variableName);
 							}
 
-							builder.AppendLine("var candidArgs = new List<CandidValueWithType>");
+							builder.AppendLine("var candidArgs = new List<CandidTypedValue>");
 							builder.AppendLine("{");
 							using (builder.Indent())
 							{
@@ -287,7 +286,7 @@ namespace ICP.ClientGenerator
 			WriteEnum(builder, enumName, variant.Options);
 			var implementationTypes = new List<TypeName>
 			{
-				new TypeName("CandidVariantValueBase", "EdjCase.ICP.Candid", enumName)
+				new TypeName("CandidVariantValueBase", "EdjCase.ICP.Candid.Models", enumName)
 			};
 			WriteClass(builder, variantName, () =>
 			{
@@ -305,7 +304,7 @@ namespace ICP.ClientGenerator
 					name: variantName.GetName(),
 					baseConstructorParams: new List<string> { "type", "value" },
 					TypedParam.FromType(enumName, ValueName.Default("type")),
-					TypedParam.FromType(TypeName.Optional(new TypeName("Object", "System")), ValueName.Default("value"))
+					TypedParam.FromType(new TypeName("Object?", "System"), ValueName.Default("value"))
 				);
 				builder.AppendLine("");
 

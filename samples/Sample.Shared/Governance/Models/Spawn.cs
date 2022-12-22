@@ -1,16 +1,21 @@
 using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid;
 
 namespace Sample.Shared.Governance.Models
 {
 	public class Spawn
 	{
-		public uint? percentage_to_spawn { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("percentage_to_spawn")]
+		public EdjCase.ICP.Candid.Models.OptionalValue<uint> PercentageToSpawn { get; set; }
 		
-		public EdjCase.ICP.Candid.Models.Principal? new_controller { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("new_controller")]
+		public EdjCase.ICP.Candid.Models.OptionalValue<EdjCase.ICP.Candid.Models.Principal> NewController { get; set; }
 		
-		public ulong? nonce { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("nonce")]
+		public EdjCase.ICP.Candid.Models.OptionalValue<ulong> Nonce { get; set; }
 		
 	}
 }

@@ -1,17 +1,23 @@
 using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid;
 
 namespace Sample.Shared.Governance.Models
 {
 	public enum RewardModeType
 	{
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("RewardToNeuron")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(RewardToNeuron))]
 		RewardToNeuron,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("RewardToAccount")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(RewardToAccount))]
 		RewardToAccount,
 	}
-	public class RewardMode : EdjCase.ICP.Candid.CandidVariantValueBase<RewardModeType>
+	public class RewardMode : EdjCase.ICP.Candid.Models.CandidVariantValueBase<RewardModeType>
 	{
-		public RewardMode(RewardModeType type, object? value)  : base(type, value)
+		public RewardMode(RewardModeType type, System.Object? value)  : base(type, value)
 		{
 		}
 		

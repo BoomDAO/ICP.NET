@@ -1,17 +1,23 @@
 using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid;
 
 namespace Sample.Shared.Governance.Models
 {
 	public enum Result_2Type
 	{
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Ok")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(Neuron))]
 		Ok,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Err")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(GovernanceError))]
 		Err,
 	}
-	public class Result_2 : EdjCase.ICP.Candid.CandidVariantValueBase<Result_2Type>
+	public class Result_2 : EdjCase.ICP.Candid.Models.CandidVariantValueBase<Result_2Type>
 	{
-		public Result_2(Result_2Type type, object? value)  : base(type, value)
+		public Result_2(Result_2Type type, System.Object? value)  : base(type, value)
 		{
 		}
 		

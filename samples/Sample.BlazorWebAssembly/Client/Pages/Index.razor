@@ -27,38 +27,42 @@ else
 {
     <button @onclick="Logout">Logout</button>
 }
-@if (this.Info != null)
+@if (this.Info.HasValue)
 {
-    <h2>Id: @this.Info.id?.id</h2>
-    <h2>Status: @this.Info.status</h2>
-    <h2>Topic: @this.Info.topic</h2>
-    if (this.Info.latest_tally != null)
+    ProposalInfo info = this.Info.GetValueOrThrow();
+    <h2>Id: @info.Id.GetValueOrDefault()</h2>
+    <h2>Status: @info.Status</h2>
+    <h2>Topic: @info.Topic</h2>
+    if (info.LatestTally.HasValue)
     {
+        Tally latestTally = info.LatestTally.GetValueOrThrow();
         <h1>Votes</h1>
         <ul>
-            <li>Yes: @this.Info.latest_tally.yes</li>
-            <li>No: @this.Info.latest_tally.no</li>
-            <li>Total: @this.Info.latest_tally.total</li>
+            <li>Yes: @latestTally.Yes</li>
+            <li>No: @latestTally.No</li>
+            <li>Total: @latestTally.Total</li>
         </ul>
     }
-    if (this.Info.proposal != null)
+    if (info.Proposal.HasValue)
     {
+        Proposal proposal = info.Proposal.GetValueOrThrow();
         <h1>Proposal</h1>
-        <h2>Title: @this.Info.proposal.title</h2>
-        <h2>Summary: @this.Info.proposal.summary</h2>
-        <h2>Url: @this.Info.proposal.url</h2>
-        if (this.Info.proposal.action != null)
+        <h2>Title: @proposal.Title</h2>
+        <h2>Summary: @proposal.Summary</h2>
+        <h2>Url: @proposal.Url</h2>
+        if (proposal.Action.HasValue)
         {
-            switch (this.Info.proposal.action.Type)
+            var action = proposal.Action.GetValueOrThrow();
+            switch (action.Type)
             {
                 case ActionType.Motion:
-                    <h2>Motion: @this.Info.proposal.action.AsMotion().motion_text</h2>
+                    <h2>Motion: @action.AsMotion().MotionText</h2>
                     break;
             }
         }
     }
     <pre>
-        @JsonSerializer.Serialize(this.Info, new JsonSerializerOptions{WriteIndented=true});
+        @JsonSerializer.Serialize(info, new JsonSerializerOptions{WriteIndented=true});
     </pre>
 
 }
@@ -71,7 +75,7 @@ else if(this.MadeCall && this.ProposalId != null)
 @code {
     public ulong? ProposalId { get; set; }
     public bool MadeCall { get; set; }
-    public ProposalInfo? Info { get; set; }
+    public OptionalValue<ProposalInfo> Info { get; set; }
     public IIdentity? Identity { get; set; }
 
     public async Task ReloadProposalInfo()

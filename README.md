@@ -31,7 +31,7 @@ IAgent agent = new HttpAgent(identity);
 // Create Candid arg to send in request
 ulong proposalId = 1234;
 CandidArg arg = CandidArg.FromCandid(
-    CandidValueWithType.FromObject(proposalId)
+    CandidTypedValue.FromObject(proposalId)
 );
 
 // Make request to IC
@@ -95,7 +95,7 @@ MyObj obj = new MyObj
     Title = "Title 1",
     IsGoodTitle = false
 };
-CandidValueWithType value = CandidValueWithType.FromObject(obj);
+CandidTypedValue value = CandidTypedValue.FromObject(obj);
 ```
 ## Parse from Text
 ```cs

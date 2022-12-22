@@ -1,71 +1,61 @@
 using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid;
 
 namespace Sample.Shared.Governance.Models
 {
 	public class GovernanceCachedMetrics
 	{
-		public List<not_dissolving_neurons_e8s_bucketsInfo> not_dissolving_neurons_e8s_buckets { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("not_dissolving_neurons_e8s_buckets")]
+		public System.Collections.Generic.List<GovernanceCachedMetrics> NotDissolvingNeuronsE8sBuckets { get; set; }
 		
-		public ulong garbage_collectable_neurons_count { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("garbage_collectable_neurons_count")]
+		public ulong GarbageCollectableNeuronsCount { get; set; }
 		
-		public ulong neurons_with_invalid_stake_count { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("neurons_with_invalid_stake_count")]
+		public ulong NeuronsWithInvalidStakeCount { get; set; }
 		
-		public List<not_dissolving_neurons_count_bucketsInfo> not_dissolving_neurons_count_buckets { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("not_dissolving_neurons_count_buckets")]
+		public System.Collections.Generic.List<GovernanceCachedMetrics> NotDissolvingNeuronsCountBuckets { get; set; }
 		
-		public ulong total_supply_icp { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("total_supply_icp")]
+		public ulong TotalSupplyIcp { get; set; }
 		
-		public ulong neurons_with_less_than_6_months_dissolve_delay_count { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("neurons_with_less_than_6_months_dissolve_delay_count")]
+		public ulong NeuronsWithLessThan6MonthsDissolveDelayCount { get; set; }
 		
-		public ulong dissolved_neurons_count { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("dissolved_neurons_count")]
+		public ulong DissolvedNeuronsCount { get; set; }
 		
-		public ulong total_staked_e8s { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("total_staked_e8s")]
+		public ulong TotalStakedE8s { get; set; }
 		
-		public ulong not_dissolving_neurons_count { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("not_dissolving_neurons_count")]
+		public ulong NotDissolvingNeuronsCount { get; set; }
 		
-		public ulong dissolved_neurons_e8s { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("dissolved_neurons_e8s")]
+		public ulong DissolvedNeuronsE8s { get; set; }
 		
-		public ulong neurons_with_less_than_6_months_dissolve_delay_e8s { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("neurons_with_less_than_6_months_dissolve_delay_e8s")]
+		public ulong NeuronsWithLessThan6MonthsDissolveDelayE8s { get; set; }
 		
-		public List<dissolving_neurons_count_bucketsInfo> dissolving_neurons_count_buckets { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("dissolving_neurons_count_buckets")]
+		public System.Collections.Generic.List<GovernanceCachedMetrics> DissolvingNeuronsCountBuckets { get; set; }
 		
-		public ulong dissolving_neurons_count { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("dissolving_neurons_count")]
+		public ulong DissolvingNeuronsCount { get; set; }
 		
-		public List<dissolving_neurons_e8s_bucketsInfo> dissolving_neurons_e8s_buckets { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("dissolving_neurons_e8s_buckets")]
+		public System.Collections.Generic.List<GovernanceCachedMetrics> DissolvingNeuronsE8sBuckets { get; set; }
 		
-		public ulong community_fund_total_staked_e8s { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("community_fund_total_staked_e8s")]
+		public ulong CommunityFundTotalStakedE8s { get; set; }
 		
-		public ulong timestamp_seconds { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("timestamp_seconds")]
+		public ulong TimestampSeconds { get; set; }
 		
-		public class not_dissolving_neurons_e8s_bucketsInfo
-		{
-			public ulong F0 { get; set; }
-			
-			public double F1 { get; set; }
-			
-		}
-		public class not_dissolving_neurons_count_bucketsInfo
-		{
-			public ulong F0 { get; set; }
-			
-			public ulong F1 { get; set; }
-			
-		}
-		public class dissolving_neurons_count_bucketsInfo
-		{
-			public ulong F0 { get; set; }
-			
-			public ulong F1 { get; set; }
-			
-		}
-		public class dissolving_neurons_e8s_bucketsInfo
-		{
-			public ulong F0 { get; set; }
-			
-			public double F1 { get; set; }
-			
-		}
 	}
 }
 

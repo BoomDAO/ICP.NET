@@ -3,17 +3,23 @@ using OrderId = System.UInt32;
 using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid;
 
 namespace Sample.Shared.Dex.Models
 {
 	public enum OrderPlacementReceiptType
 	{
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Err")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(OrderPlacementErr))]
 		Err,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Ok")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(EdjCase.ICP.Candid.Models.OptionalValue<Order>))]
 		Ok,
 	}
-	public class OrderPlacementReceipt : EdjCase.ICP.Candid.CandidVariantValueBase<OrderPlacementReceiptType>
+	public class OrderPlacementReceipt : EdjCase.ICP.Candid.Models.CandidVariantValueBase<OrderPlacementReceiptType>
 	{
-		public OrderPlacementReceipt(OrderPlacementReceiptType type, object? value)  : base(type, value)
+		public OrderPlacementReceipt(OrderPlacementReceiptType type, System.Object? value)  : base(type, value)
 		{
 		}
 		
@@ -32,15 +38,15 @@ namespace Sample.Shared.Dex.Models
 			return (OrderPlacementErr)this.value!;
 		}
 		
-		public static OrderPlacementReceipt Ok(Order? info)
+		public static OrderPlacementReceipt Ok(EdjCase.ICP.Candid.Models.OptionalValue<Order> info)
 		{
 			return new OrderPlacementReceipt(OrderPlacementReceiptType.Ok, info);
 		}
 		
-		public Order? AsOk()
+		public EdjCase.ICP.Candid.Models.OptionalValue<Order> AsOk()
 		{
 			this.ValidateType(OrderPlacementReceiptType.Ok);
-			return (Order?)this.value!;
+			return (EdjCase.ICP.Candid.Models.OptionalValue<Order>)this.value!;
 		}
 		
 	}

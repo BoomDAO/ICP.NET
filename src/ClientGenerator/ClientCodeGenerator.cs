@@ -58,7 +58,7 @@ namespace EdjCase.ICP.ClientGenerator
 						"System",
 						"System.Threading.Tasks",
 						"System.Collections.Generic",
-						"EdjCase.ICP.Candid.Mappers",
+						"EdjCase.ICP.Candid.Mapping",
 						"EdjCase.ICP.Candid"
 					})
 					.ToList();

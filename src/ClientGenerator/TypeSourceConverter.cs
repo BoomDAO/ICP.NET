@@ -54,7 +54,7 @@ namespace EdjCase.ICP.ClientGenerator
 						type = new TypeName("List", "System.Collections.Generic", v.InnerType);
 						break;
 					case OptionalSourceDescriptor o:
-						type = new TypeName("Optional", "EdjCase.ICP.Candid", o.InnerType);
+						type = new TypeName("OptionalValue", "EdjCase.ICP.Candid.Models", o.InnerType);
 						break;
 					case VariantSourceDescriptor va:
 						type = new TypeName(parentName, null);
@@ -131,6 +131,11 @@ namespace EdjCase.ICP.ClientGenerator
 				.Select(f =>
 				{
 					ValueName fieldName = ValueName.Default(f.Key); // Get field name or id
+					if (string.Equals(parentName, fieldName.PropertyName, StringComparison.OrdinalIgnoreCase))
+					{
+						// Cant match the class name
+						fieldName = ValueName.Default(fieldName.PropertyName + "Item");
+					}
 					TypeSourceDescriptor desc = ResolveDescriptor(f.Value, baseNamespace, parentName, addTypeFunc);
 					TypeName? fieldTypeId = addTypeFunc(desc, parentName);
 					return (fieldName, fieldTypeId);
@@ -251,7 +256,7 @@ namespace EdjCase.ICP.ClientGenerator
 			{
 				case CandidReferenceType r:
 					{
-						TypeName typeName = new (r.Id.Value, $"{baseNamespace}.Models"); // TODO?
+						TypeName typeName = new (r.Id.Value, null); // TODO?
 						return new ReferenceSourceDescriptor(typeName);
 					}
 				case CandidPrimitiveType p:

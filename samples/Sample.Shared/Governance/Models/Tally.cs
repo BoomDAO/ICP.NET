@@ -1,18 +1,24 @@
 using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid;
 
 namespace Sample.Shared.Governance.Models
 {
 	public class Tally
 	{
-		public ulong no { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("no")]
+		public ulong No { get; set; }
 		
-		public ulong yes { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("yes")]
+		public ulong Yes { get; set; }
 		
-		public ulong total { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("total")]
+		public ulong Total { get; set; }
 		
-		public ulong timestamp_seconds { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("timestamp_seconds")]
+		public ulong TimestampSeconds { get; set; }
 		
 	}
 }

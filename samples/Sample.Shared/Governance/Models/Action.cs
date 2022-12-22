@@ -1,25 +1,47 @@
 using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid;
 
 namespace Sample.Shared.Governance.Models
 {
 	public enum ActionType
 	{
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("RegisterKnownNeuron")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(KnownNeuron))]
 		RegisterKnownNeuron,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("ManageNeuron")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(ManageNeuron))]
 		ManageNeuron,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("ExecuteNnsFunction")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(ExecuteNnsFunction))]
 		ExecuteNnsFunction,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("RewardNodeProvider")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(RewardNodeProvider))]
 		RewardNodeProvider,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("SetDefaultFollowees")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(SetDefaultFollowees))]
 		SetDefaultFollowees,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("RewardNodeProviders")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(RewardNodeProviders))]
 		RewardNodeProviders,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("ManageNetworkEconomics")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(NetworkEconomics))]
 		ManageNetworkEconomics,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("ApproveGenesisKyc")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(ApproveGenesisKyc))]
 		ApproveGenesisKyc,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("AddOrRemoveNodeProvider")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(AddOrRemoveNodeProvider))]
 		AddOrRemoveNodeProvider,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Motion")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(Motion))]
 		Motion,
 	}
-	public class Action : EdjCase.ICP.Candid.CandidVariantValueBase<ActionType>
+	public class Action : EdjCase.ICP.Candid.Models.CandidVariantValueBase<ActionType>
 	{
-		public Action(ActionType type, object? value)  : base(type, value)
+		public Action(ActionType type, System.Object? value)  : base(type, value)
 		{
 		}
 		

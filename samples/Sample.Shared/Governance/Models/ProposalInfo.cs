@@ -1,50 +1,61 @@
 using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid;
 
 namespace Sample.Shared.Governance.Models
 {
 	public class ProposalInfo
 	{
-		public NeuronId? id { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("id")]
+		public EdjCase.ICP.Candid.Models.OptionalValue<NeuronId> Id { get; set; }
 		
-		public int status { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("status")]
+		public int Status { get; set; }
 		
-		public int topic { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("topic")]
+		public int Topic { get; set; }
 		
-		public GovernanceError? failure_reason { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("failure_reason")]
+		public EdjCase.ICP.Candid.Models.OptionalValue<GovernanceError> FailureReason { get; set; }
 		
-		public List<ballotsInfo> ballots { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("ballots")]
+		public System.Collections.Generic.List<ProposalInfo> Ballots { get; set; }
 		
-		public ulong proposal_timestamp_seconds { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("proposal_timestamp_seconds")]
+		public ulong ProposalTimestampSeconds { get; set; }
 		
-		public ulong reward_event_round { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("reward_event_round")]
+		public ulong RewardEventRound { get; set; }
 		
-		public ulong? deadline_timestamp_seconds { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("deadline_timestamp_seconds")]
+		public EdjCase.ICP.Candid.Models.OptionalValue<ulong> DeadlineTimestampSeconds { get; set; }
 		
-		public ulong failed_timestamp_seconds { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("failed_timestamp_seconds")]
+		public ulong FailedTimestampSeconds { get; set; }
 		
-		public ulong reject_cost_e8s { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("reject_cost_e8s")]
+		public ulong RejectCostE8s { get; set; }
 		
-		public Tally? latest_tally { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("latest_tally")]
+		public EdjCase.ICP.Candid.Models.OptionalValue<Tally> LatestTally { get; set; }
 		
-		public int reward_status { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("reward_status")]
+		public int RewardStatus { get; set; }
 		
-		public ulong decided_timestamp_seconds { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("decided_timestamp_seconds")]
+		public ulong DecidedTimestampSeconds { get; set; }
 		
-		public Proposal? proposal { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("proposal")]
+		public EdjCase.ICP.Candid.Models.OptionalValue<Proposal> Proposal { get; set; }
 		
-		public NeuronId? proposer { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("proposer")]
+		public EdjCase.ICP.Candid.Models.OptionalValue<NeuronId> Proposer { get; set; }
 		
-		public ulong executed_timestamp_seconds { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("executed_timestamp_seconds")]
+		public ulong ExecutedTimestampSeconds { get; set; }
 		
-		public class ballotsInfo
-		{
-			public ulong F0 { get; set; }
-			
-			public Ballot F1 { get; set; }
-			
-		}
 	}
 }
 

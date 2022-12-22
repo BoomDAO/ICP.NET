@@ -1,16 +1,21 @@
 using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid;
 
 namespace Sample.Shared.Governance.Models
 {
 	public class RewardNodeProvider
 	{
-		public NodeProvider? node_provider { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("node_provider")]
+		public EdjCase.ICP.Candid.Models.OptionalValue<NodeProvider> NodeProvider { get; set; }
 		
-		public RewardMode? reward_mode { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("reward_mode")]
+		public EdjCase.ICP.Candid.Models.OptionalValue<RewardMode> RewardMode { get; set; }
 		
-		public ulong amount_e8s { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("amount_e8s")]
+		public ulong AmountE8s { get; set; }
 		
 	}
 }

@@ -135,7 +135,22 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 			}
 			if (objType.IsArray)
 			{
-				return BuildVector(objType, options);
+				Type innerType = objType.GetElementType();
+				return BuildVector(
+					innerType,
+					options,
+					o => ((IList)o).Cast<object>(),
+					v =>
+					{
+						object[] objArray = v.ToArray();
+						Array array = Array.CreateInstance(innerType, objArray.Length);
+						for (int i = 0; i < objArray.Length; i++)
+						{
+							array.SetValue(objArray[i], i);
+						}
+						return array;
+					}
+				);
 			}
 			if (typeof(ICandidVariantValue).IsAssignableFrom(objType))
 			{
@@ -149,7 +164,21 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 			}
 			if (genericTypeDefinition == typeof(List<>))
 			{
-				return BuildVector(objType, options);
+				Type innerType = objType.GenericTypeArguments[0];
+				return BuildVector(
+					innerType,
+					options,
+					o => ((IList)o).Cast<object>(),
+					v =>
+					{
+						IList list = (IList)Activator.CreateInstance(objType);
+						foreach (object innerValue in v)
+						{
+							list.Add(innerValue);
+						}
+						return list;
+					}
+				);
 			}
 			// Assume anything else is a record
 			return BuildRecord(objType, options);
@@ -175,75 +204,62 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 		{
 			Type innerType = objType.GenericTypeArguments[0];
 			(CatchAllMapper innerCatchAllMapper, CandidType t) = BuildInternal(innerType, options);
-			type = new CandidOptionalType(t);
+			var type = new CandidOptionalType(t);
 			PropertyInfo hasValueProp = objType.GetProperty("HasValue");
 			PropertyInfo valueProp = objType.GetProperty("Value");
-			innerMapFromObjectFunc = o =>
-			{
-				bool hasValue = (bool)hasValueProp.GetValue(o);
-				CandidValue? v;
-				if (!hasValue)
+			var mapper = new CatchAllMapper(
+				o =>
 				{
-					v = null;
-				}
-				else
+					bool hasValue = (bool)hasValueProp.GetValue(o);
+					CandidValue? v;
+					if (!hasValue)
+					{
+						v = null;
+					}
+					else
+					{
+						object innerValue = valueProp.GetValue(o);
+						v = innerCatchAllMapper.ToCandidFunc(innerValue).Value;
+					}
+					return new CandidTypedValue(new CandidOptional(v), type);
+				},
+				v =>
 				{
-					object innerValue = valueProp.GetValue(o);
-					v = innerCatchAllMapper.ToCandidFunc(innerValue).Value;
+					CandidOptional opt = v.AsOptional();
+					var obj = innerCatchAllMapper.FromCandidFunc(opt.Value);
+					return Activator.CreateInstance(objType, true, obj);
 				}
-				return new CandidOptional(v);
-			};
-			mapToObjectFunc = v =>
-			{
-				CandidOptional opt = v.AsOptional();
-				var obj = innerCatchAllMapper.FromCandidFunc(opt.Value);
-				return Activator.CreateInstance(objType, true, obj);
-			};
+			);
+			return (mapper, type);
 		}
 
-		private static (CatchAllMapper Mapper, CandidType Type) BuildVector(Type objType, CandidConverterOptions options)
+		private static (CatchAllMapper Mapper, CandidType Type) BuildVector(
+			Type innerType,
+			CandidConverterOptions options,
+			Func<object, IEnumerable<object>> toEnumerableFunc,
+			Func<IEnumerable<object>, object> fromEnumerableFunc)
 		{
-
-			Type innerType = objType.GenericTypeArguments[0];
 			(CatchAllMapper innerCatchAllMapper, CandidType t) = BuildInternal(innerType!, options);
-			type = new CandidVectorType(t);
-			innerMapFromObjectFunc = o =>
-			{
-				CandidValue[] values = ((IEnumerable)o).Select(v => innerCatchAllMapper.ToCandidFunc(v).Value).ToArray();
-				return new CandidVector(values);
-			};
+			var type = new CandidVectorType(t);
 
-			mapToObjectFunc = v =>
-			{
-				IList list = (IList)Activator.CreateInstance(objType);
-				foreach (CandidValue innerValue in v.AsVector().Values)
+			var mapper = new CatchAllMapper(
+				o =>
 				{
-					list.Add(innerCatchAllMapper.FromCandidFunc(innerValue));
-				}
-				return list;
-			};
-			////
-			Type innerType = objType.GetElementType();
-			(CatchAllMapper innerCatchAllMapper, CandidType t) = BuildInternal(innerType!, options);
-			type = new CandidVectorType(t);
-			innerMapFromObjectFunc = o =>
-			{
-				CandidValue[] values = ((IEnumerable)o).Select(v => innerCatchAllMapper.ToCandidFunc(v).Value).ToArray();
-				return new CandidVector(values);
-			};
+					CandidValue[] values = toEnumerableFunc(o)
+						.Select(v => innerCatchAllMapper.ToCandidFunc(v).Value)
+						.ToArray();
+					return new CandidTypedValue(new CandidVector(values), type);
+				},
+				v =>
+				{
+					CandidVector vector = v.AsVector();
+					IEnumerable<object> objEnumerable = vector.Values
+						.Select(v => innerCatchAllMapper.FromCandidFunc(v));
 
-			mapToObjectFunc = v =>
-			{
-				CandidVector vector = v.AsVector();
-				Array array = Array.CreateInstance(innerType, vector.Values.Length);
-				for (int i = 0; i < vector.Values.Length; i++)
-				{
-					CandidValue innerValue = vector.Values[i];
-					object? innerObj = innerCatchAllMapper.FromCandidFunc(innerValue);
-					array.SetValue(innerObj, i);
+					return fromEnumerableFunc(objEnumerable);
 				}
-				return array;
-			};
+			);
+			return (mapper, type);
 		}
 
 		private static (CatchAllMapper info, CandidType t) BuildVariant(Type objType, CandidConverterOptions options)
@@ -273,35 +289,38 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 						}
 						return t.Value.Value.Type;
 					});
-			type = new CandidVariantType(variantOptions);
-			innerMapFromObjectFunc = o =>
-			{
-				ICandidVariantValue v = (ICandidVariantValue)o;
-				(CandidTag innerTag, object? innerObj) = v.GetValue();
+			var type = new CandidVariantType(variantOptions);
 
-				CatchAllMapper? mapper = optionMappingMap[innerTag]?.Mapper;
-				CandidType innerType = variantOptions[innerTag];
-				CandidValue innerValue;
-				if (mapper != null && innerObj != null)
+			var mapper = new CatchAllMapper(
+				o =>
 				{
-					innerValue = mapper.ToCandidFunc(innerObj).Value;
-				}
-				else
-				{
-					innerValue = CandidPrimitive.Null();
-				}
-				return new CandidVariant(innerTag, innerValue);
-			};
+					ICandidVariantValue v = (ICandidVariantValue)o;
+					(CandidTag innerTag, object? innerObj) = v.GetValue();
 
-			mapToObjectFunc = v =>
-			{
-				CandidVariant variant = v.AsVariant();
-				ICandidVariantValue obj = (ICandidVariantValue)Activator.CreateInstance(objType, nonPublic: true);
-				CatchAllMapper? optionCatchAllMapper = optionMappingMap[variant.Tag]?.Mapper;
-				object? variantValue = optionCatchAllMapper?.FromCandidFunc(variant.Value);
-				obj.SetValue(variant.Tag, variantValue);
-				return obj;
-			};
+					CatchAllMapper? mapper = optionMappingMap[innerTag]?.Mapper;
+					CandidType innerType = variantOptions[innerTag];
+					CandidValue innerValue;
+					if (mapper != null && innerObj != null)
+					{
+						innerValue = mapper.ToCandidFunc(innerObj).Value;
+					}
+					else
+					{
+						innerValue = CandidPrimitive.Null();
+					}
+					return new CandidTypedValue(new CandidVariant(innerTag, innerValue), type);
+				},
+				v =>
+				{
+					CandidVariant variant = v.AsVariant();
+					ICandidVariantValue obj = (ICandidVariantValue)Activator.CreateInstance(objType, nonPublic: true);
+					CatchAllMapper? optionCatchAllMapper = optionMappingMap[variant.Tag]?.Mapper;
+					object? variantValue = optionCatchAllMapper?.FromCandidFunc(variant.Value);
+					obj.SetValue(variant.Tag, variantValue);
+					return obj;
+				}
+			);
+			return (mapper, type);
 		}
 
 		private static (CatchAllMapper Mapper, CandidRecordType Type) BuildRecord(Type objType, CandidConverterOptions options)
@@ -309,7 +328,7 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 			List<PropertyInfo> properties = objType
 				.GetProperties(BindingFlags.Instance | BindingFlags.Public)
 				.ToList();
-			var propertyMetaDataMap = new Dictionary<CandidTag, (PropertyInfo Property, IObjectMapper Mapper)>();
+			var propertyMetaDataMap = new Dictionary<CandidTag, (PropertyInfo Property, IObjectMapper Mapper, CandidType Type)>();
 			foreach (PropertyInfo property in properties)
 			{
 				CandidIgnoreAttribute? ignoreAttribute = property.GetCustomAttribute<CandidIgnoreAttribute>();
@@ -331,29 +350,25 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 				CandidTag tag = CandidTag.FromName(propertyName);
 				CustomMapperAttribute? customMapperAttribute = property.GetCustomAttribute<CustomMapperAttribute>();
 
-				IObjectMapper m;
+				(IObjectMapper fieldMapper, CandidType fieldType) = BuildInternal(property.PropertyType, options);
 				if (customMapperAttribute != null)
 				{
-					m = customMapperAttribute.Mapper!;
+					fieldMapper = customMapperAttribute.Mapper!;
 				}
-				else
-				{
-					m = options.ResolveMapper(property.PropertyType);
-				}
-				propertyMetaDataMap.Add(tag, (property, m));
+				propertyMetaDataMap.Add(tag, (property, fieldMapper, fieldType));
 			}
 
 			Dictionary<CandidTag, CandidType> fields = propertyMetaDataMap
 				.ToDictionary(
 					p => p.Key,
-					p => p.Value
+					p => p.Value.Type
 				);
 
 			CandidRecordType type = new CandidRecordType(fields);
 			Func<object, CandidTypedValue> mapFromObjectFunc = (obj) =>
 			{
 				Dictionary<CandidTag, CandidValue> fields = new();
-				foreach ((CandidTag tag, (PropertyInfo property, IObjectMapper mapper)) in propertyMetaDataMap)
+				foreach ((CandidTag tag, (PropertyInfo property, IObjectMapper mapper, CandidType resultType)) in propertyMetaDataMap)
 				{
 					object propValue = property.GetValue(obj);
 					CandidTypedValue v = mapper.Map(propValue, options);
@@ -369,7 +384,7 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 			{
 				CandidRecord t = v.AsRecord();
 				object obj = Activator.CreateInstance(objType);
-				foreach ((CandidTag tag, (PropertyInfo property, IObjectMapper mapper)) in propertyMetaDataMap)
+				foreach ((CandidTag tag, (PropertyInfo property, IObjectMapper mapper, CandidType type)) in propertyMetaDataMap)
 				{
 					CandidValue fieldCandidValue = t.Fields[tag];
 					object? fieldValue = mapper.Map(fieldCandidValue, options);

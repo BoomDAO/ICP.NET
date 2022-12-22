@@ -1,12 +1,15 @@
 using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid;
 
 namespace Sample.Shared.Governance.Models
 {
 	public class ManageNeuronResponse
 	{
-		public Command_1? command { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("command")]
+		public EdjCase.ICP.Candid.Models.OptionalValue<Command_1> Command { get; set; }
 		
 	}
 }

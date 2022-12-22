@@ -121,7 +121,7 @@ namespace ICP.Candid.Tests
 					{ CandidTag.FromName("v1"), null },
 					{ CandidTag.FromName("v2"), typeof(string) },
 					{ CandidTag.FromName("v3"), typeof(int) },
-					{ CandidTag.FromName("v4"), typeof(OptionalType<string>) },
+					{ CandidTag.FromName("v4"), typeof(OptionalValue<string>) },
 				};
 			}
 

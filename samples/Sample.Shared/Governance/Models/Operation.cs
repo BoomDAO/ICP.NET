@@ -1,22 +1,38 @@
 using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid;
 
 namespace Sample.Shared.Governance.Models
 {
 	public enum OperationType
 	{
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("RemoveHotKey")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(RemoveHotKey))]
 		RemoveHotKey,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("AddHotKey")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(AddHotKey))]
 		AddHotKey,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("StopDissolving")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(Operation))]
 		StopDissolving,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("StartDissolving")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(Operation))]
 		StartDissolving,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("IncreaseDissolveDelay")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(IncreaseDissolveDelay))]
 		IncreaseDissolveDelay,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("JoinCommunityFund")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(Operation))]
 		JoinCommunityFund,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("SetDissolveTimestamp")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(SetDissolveTimestamp))]
 		SetDissolveTimestamp,
 	}
-	public class Operation : EdjCase.ICP.Candid.CandidVariantValueBase<OperationType>
+	public class Operation : EdjCase.ICP.Candid.Models.CandidVariantValueBase<OperationType>
 	{
-		public Operation(OperationType type, object? value)  : base(type, value)
+		public Operation(OperationType type, System.Object? value)  : base(type, value)
 		{
 		}
 		
@@ -46,26 +62,26 @@ namespace Sample.Shared.Governance.Models
 			return (AddHotKey)this.value!;
 		}
 		
-		public static Operation StopDissolving(StopDissolvingInfo info)
+		public static Operation StopDissolving(Operation info)
 		{
 			return new Operation(OperationType.StopDissolving, info);
 		}
 		
-		public StopDissolvingInfo AsStopDissolving()
+		public Operation AsStopDissolving()
 		{
 			this.ValidateType(OperationType.StopDissolving);
-			return (StopDissolvingInfo)this.value!;
+			return (Operation)this.value!;
 		}
 		
-		public static Operation StartDissolving(StartDissolvingInfo info)
+		public static Operation StartDissolving(Operation info)
 		{
 			return new Operation(OperationType.StartDissolving, info);
 		}
 		
-		public StartDissolvingInfo AsStartDissolving()
+		public Operation AsStartDissolving()
 		{
 			this.ValidateType(OperationType.StartDissolving);
-			return (StartDissolvingInfo)this.value!;
+			return (Operation)this.value!;
 		}
 		
 		public static Operation IncreaseDissolveDelay(IncreaseDissolveDelay info)
@@ -79,15 +95,15 @@ namespace Sample.Shared.Governance.Models
 			return (IncreaseDissolveDelay)this.value!;
 		}
 		
-		public static Operation JoinCommunityFund(JoinCommunityFundInfo info)
+		public static Operation JoinCommunityFund(Operation info)
 		{
 			return new Operation(OperationType.JoinCommunityFund, info);
 		}
 		
-		public JoinCommunityFundInfo AsJoinCommunityFund()
+		public Operation AsJoinCommunityFund()
 		{
 			this.ValidateType(OperationType.JoinCommunityFund);
-			return (JoinCommunityFundInfo)this.value!;
+			return (Operation)this.value!;
 		}
 		
 		public static Operation SetDissolveTimestamp(SetDissolveTimestamp info)
@@ -101,15 +117,6 @@ namespace Sample.Shared.Governance.Models
 			return (SetDissolveTimestamp)this.value!;
 		}
 		
-		public class StopDissolvingInfo
-		{
-		}
-		public class StartDissolvingInfo
-		{
-		}
-		public class JoinCommunityFundInfo
-		{
-		}
 	}
 }
 

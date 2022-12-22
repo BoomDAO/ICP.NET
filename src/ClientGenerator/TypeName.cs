@@ -78,10 +78,9 @@ namespace EdjCase.ICP.ClientGenerator
 
 		public static TypeName Optional(TypeName type)
 		{
-			// TODO Optional<T>
 			return new TypeName(
-				"Optional",
-				"EdjCase.ICP.Candid",
+				"OptionalValue",
+				"EdjCase.ICP.Candid.Models",
 				type
 			);
 		}

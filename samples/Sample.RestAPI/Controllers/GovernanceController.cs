@@ -1,3 +1,4 @@
+using EdjCase.ICP.Candid.Models;
 using Microsoft.AspNetCore.Mvc;
 using Sample.Shared;
 using Sample.Shared.Governance;
@@ -19,7 +20,7 @@ namespace Sample.RestAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> GetProposalInfo(ulong id)
         {
-            ProposalInfo? info = await this.Client.get_proposal_info(id);
+            OptionalValue<ProposalInfo> info = await this.Client.get_proposal_info(id);
             return this.Ok(info);
         }
     }

@@ -1,23 +1,41 @@
 using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid;
 
 namespace Sample.Shared.Governance.Models
 {
 	public enum Command_2Type
 	{
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Spawn")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(Spawn))]
 		Spawn,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Split")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(Split))]
 		Split,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Configure")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(Configure))]
 		Configure,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Merge")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(Merge))]
 		Merge,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("DisburseToNeuron")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(DisburseToNeuron))]
 		DisburseToNeuron,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("ClaimOrRefreshNeuron")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(ClaimOrRefresh))]
 		ClaimOrRefreshNeuron,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("MergeMaturity")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(MergeMaturity))]
 		MergeMaturity,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Disburse")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(Disburse))]
 		Disburse,
 	}
-	public class Command_2 : EdjCase.ICP.Candid.CandidVariantValueBase<Command_2Type>
+	public class Command_2 : EdjCase.ICP.Candid.Models.CandidVariantValueBase<Command_2Type>
 	{
-		public Command_2(Command_2Type type, object? value)  : base(type, value)
+		public Command_2(Command_2Type type, System.Object? value)  : base(type, value)
 		{
 		}
 		

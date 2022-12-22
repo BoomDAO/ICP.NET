@@ -1,27 +1,53 @@
 using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid;
 
 namespace Sample.Shared.Governance.Models
 {
 	public enum Command_1Type
 	{
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Error")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(GovernanceError))]
 		Error,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Spawn")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(SpawnResponse))]
 		Spawn,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Split")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(SpawnResponse))]
 		Split,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Follow")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(Command_1))]
 		Follow,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("ClaimOrRefresh")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(ClaimOrRefreshResponse))]
 		ClaimOrRefresh,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Configure")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(Command_1))]
 		Configure,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("RegisterVote")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(Command_1))]
 		RegisterVote,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Merge")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(Command_1))]
 		Merge,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("DisburseToNeuron")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(SpawnResponse))]
 		DisburseToNeuron,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("MakeProposal")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(MakeProposalResponse))]
 		MakeProposal,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("MergeMaturity")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(MergeMaturityResponse))]
 		MergeMaturity,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Disburse")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(DisburseResponse))]
 		Disburse,
 	}
-	public class Command_1 : EdjCase.ICP.Candid.CandidVariantValueBase<Command_1Type>
+	public class Command_1 : EdjCase.ICP.Candid.Models.CandidVariantValueBase<Command_1Type>
 	{
-		public Command_1(Command_1Type type, object? value)  : base(type, value)
+		public Command_1(Command_1Type type, System.Object? value)  : base(type, value)
 		{
 		}
 		
@@ -62,15 +88,15 @@ namespace Sample.Shared.Governance.Models
 			return (SpawnResponse)this.value!;
 		}
 		
-		public static Command_1 Follow(FollowInfo info)
+		public static Command_1 Follow(Command_1 info)
 		{
 			return new Command_1(Command_1Type.Follow, info);
 		}
 		
-		public FollowInfo AsFollow()
+		public Command_1 AsFollow()
 		{
 			this.ValidateType(Command_1Type.Follow);
-			return (FollowInfo)this.value!;
+			return (Command_1)this.value!;
 		}
 		
 		public static Command_1 ClaimOrRefresh(ClaimOrRefreshResponse info)
@@ -84,37 +110,37 @@ namespace Sample.Shared.Governance.Models
 			return (ClaimOrRefreshResponse)this.value!;
 		}
 		
-		public static Command_1 Configure(ConfigureInfo info)
+		public static Command_1 Configure(Command_1 info)
 		{
 			return new Command_1(Command_1Type.Configure, info);
 		}
 		
-		public ConfigureInfo AsConfigure()
+		public Command_1 AsConfigure()
 		{
 			this.ValidateType(Command_1Type.Configure);
-			return (ConfigureInfo)this.value!;
+			return (Command_1)this.value!;
 		}
 		
-		public static Command_1 RegisterVote(RegisterVoteInfo info)
+		public static Command_1 RegisterVote(Command_1 info)
 		{
 			return new Command_1(Command_1Type.RegisterVote, info);
 		}
 		
-		public RegisterVoteInfo AsRegisterVote()
+		public Command_1 AsRegisterVote()
 		{
 			this.ValidateType(Command_1Type.RegisterVote);
-			return (RegisterVoteInfo)this.value!;
+			return (Command_1)this.value!;
 		}
 		
-		public static Command_1 Merge(MergeInfo info)
+		public static Command_1 Merge(Command_1 info)
 		{
 			return new Command_1(Command_1Type.Merge, info);
 		}
 		
-		public MergeInfo AsMerge()
+		public Command_1 AsMerge()
 		{
 			this.ValidateType(Command_1Type.Merge);
-			return (MergeInfo)this.value!;
+			return (Command_1)this.value!;
 		}
 		
 		public static Command_1 DisburseToNeuron(SpawnResponse info)
@@ -161,18 +187,6 @@ namespace Sample.Shared.Governance.Models
 			return (DisburseResponse)this.value!;
 		}
 		
-		public class FollowInfo
-		{
-		}
-		public class ConfigureInfo
-		{
-		}
-		public class RegisterVoteInfo
-		{
-		}
-		public class MergeInfo
-		{
-		}
 	}
 }
 
