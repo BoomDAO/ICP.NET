@@ -40,10 +40,10 @@ namespace EdjCase.ICP.ClientGenerator
         {
 			ServiceSourceInfo service = TypeSourceConverter.ConvertService(serviceName, baseNamespace, serviceFile);
 
-			return FromServiceInfo(serviceName, baseNamespace, service);
+			return FromServiceInfo(baseNamespace, service);
         }
 
-		internal static ClientCodeResult FromServiceInfo(string serviceName, string baseNamespace, ServiceSourceInfo service)
+		internal static ClientCodeResult FromServiceInfo(string baseNamespace, ServiceSourceInfo service)
 		{
 			int csharpVersion = 9; // TODO configurable
 
@@ -58,7 +58,8 @@ namespace EdjCase.ICP.ClientGenerator
 						"System",
 						"System.Threading.Tasks",
 						"System.Collections.Generic",
-						"EdjCase.ICP.Candid.Mappers"
+						"EdjCase.ICP.Candid.Mappers",
+						"EdjCase.ICP.Candid"
 					})
 					.ToList();
 			}

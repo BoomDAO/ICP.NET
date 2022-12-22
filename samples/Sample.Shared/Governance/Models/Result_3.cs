@@ -1,12 +1,15 @@
 using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using EdjCase.ICP.Candid;
 
 namespace Sample.Shared.Governance.Models
 {
 	public enum Result_3Type
 	{
+		[VariantOptionType(typeof(RewardNodeProviders))]
 		Ok,
+		[VariantOptionType(typeof(GovernanceError))]
 		Err,
 	}
 	public class Result_3 : EdjCase.ICP.Candid.CandidVariantValueBase<Result_3Type>

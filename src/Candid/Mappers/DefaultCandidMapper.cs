@@ -338,7 +338,7 @@ namespace EdjCase.ICP.Candid.Mappers
 		}
 	}
 
-	[AttributeUsage(AttributeTargets.Property)]
+	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
 	public class CandidNameAttribute : Attribute
 	{
 		public string Name { get; }

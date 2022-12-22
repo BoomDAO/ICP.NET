@@ -1,5 +1,7 @@
+using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid.Models.Types;
 using EdjCase.ICP.Candid.Models.Values;
+using EdjCase.ICP.ClientGenerator;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,60 +11,75 @@ namespace ICP.ClientGenerator
 {
 	internal abstract class TypeSourceDescriptor
 	{
-		public string Name { get; }
-		public List<TypeSourceDescriptor> SubTypesToCreate { get; }
+	}
 
-		protected TypeSourceDescriptor(string name, TypeSourceDescriptor? subTypesToCreate)
+	internal abstract class GenericSourceDescriptor : TypeSourceDescriptor
+	{
+		public TypeName InnerType { get; set; }
+		public GenericSourceDescriptor(TypeName innerType)
 		{
-			this.Name = name ?? throw new ArgumentNullException(nameof(name));
-			this.SubTypesToCreate = new List<TypeSourceDescriptor>();
-			if (subTypesToCreate != null)
-			{
-				this.SubTypesToCreate.Add(subTypesToCreate);
-			}
+			this.InnerType = innerType;
 		}
-		protected TypeSourceDescriptor(string name, List<TypeSourceDescriptor> subTypesToCreate)
+	}
+	internal abstract class FieldOptionSourceDescriptor : TypeSourceDescriptor
+	{
+		public List<(ValueName Name, TypeName Type)> Options { get; }
+
+		public FieldOptionSourceDescriptor(List<(ValueName Name, TypeName Type)> options)
 		{
-			this.Name = name ?? throw new ArgumentNullException(nameof(name));
-			this.SubTypesToCreate = subTypesToCreate ?? throw new ArgumentNullException(nameof(subTypesToCreate));
+			this.Options = options ?? new();
 		}
 	}
 
-	internal class VariantSourceDescriptor : TypeSourceDescriptor
+	internal class PrimitiveSourceDescriptor : TypeSourceDescriptor
 	{
-		public List<(string Name, string? InfoFullTypeName)> Options { get; }
-
-		public VariantSourceDescriptor(
-			string name,
-			List<(string Name, string? InfoTypeName)> options,
-			List<TypeSourceDescriptor> subTypesToCreate)
-			: base(name, subTypesToCreate)
+		public TypeName? Type { get; set; } // Null means empty, reserved or null
+		public PrimitiveSourceDescriptor(TypeName? type)
 		{
-			if (options?.Any() != true)
-			{
-				throw new ArgumentNullException(nameof(options));
-			}
-			this.Options = options;
+			this.Type = type;
+		}
+	}
+	internal class ReferenceSourceDescriptor : TypeSourceDescriptor
+	{
+		public TypeName Reference { get; set; }
+		public ReferenceSourceDescriptor(TypeName reference)
+		{
+			this.Reference = reference;
+		}
+	}
+	internal class VectorSourceDescriptor : GenericSourceDescriptor
+	{
+		public VectorSourceDescriptor(TypeName innerType) : base(innerType)
+		{
 		}
 	}
 
-	internal class RecordSourceDescriptor : TypeSourceDescriptor
+	internal class OptionalSourceDescriptor : GenericSourceDescriptor
 	{
-		public List<(string Name, string FullTypeName)> Fields { get; }
-
-		public RecordSourceDescriptor(string name, List<(string Name, string FullTypeName)> fields, List<TypeSourceDescriptor> subTypesToCreate)
-			: base(name, subTypesToCreate)
+		public OptionalSourceDescriptor(TypeName innerType) : base(innerType)
 		{
-			this.Fields = fields ?? throw new ArgumentNullException(nameof(fields));
+		}
+	}
+
+	internal class VariantSourceDescriptor : FieldOptionSourceDescriptor
+	{
+		public VariantSourceDescriptor(List<(ValueName Name, TypeName Type)> options) : base(options)
+		{
+		}
+	}
+
+	internal class RecordSourceDescriptor : FieldOptionSourceDescriptor
+	{
+		public RecordSourceDescriptor(List<(ValueName Name, TypeName Type)> options) : base(options)
+		{
 		}
 	}
 
 	internal class ServiceSourceDescriptor : TypeSourceDescriptor
 	{
-		public Dictionary<string, FuncSourceDescriptor> Methods { get; }
+		public Dictionary<string, TypeName> Methods { get; }
 
-		public ServiceSourceDescriptor(string name, Dictionary<string, FuncSourceDescriptor> methods, List<TypeSourceDescriptor> subTypesToCreate)
-			: base(name, subTypesToCreate)
+		public ServiceSourceDescriptor(Dictionary<string, TypeName> methods)
 		{
 			this.Methods = methods ?? throw new ArgumentNullException(nameof(methods));
 		}
@@ -71,13 +88,10 @@ namespace ICP.ClientGenerator
 	internal class FuncSourceDescriptor : TypeSourceDescriptor
 	{
 		public FuncSourceDescriptor(
-			string name,
 			bool isFireAndForget,
 			bool isQuery,
 			List<ParameterInfo> parameters,
-			List<ParameterInfo> returnParameters,
-			List<TypeSourceDescriptor> subTypesToCreate)
-			: base(name, subTypesToCreate)
+			List<ParameterInfo> returnParameters)
 		{
 			this.IsFireAndForget = isFireAndForget;
 			this.IsQuery = isQuery;
@@ -90,16 +104,16 @@ namespace ICP.ClientGenerator
 		public List<ParameterInfo> Parameters { get; }
 		public List<ParameterInfo> ReturnParameters { get; }
 
-		//(ServiceSourceDescriptor.Method Method, List<TypeSourceDescriptor> SubTypesToCreate)
+
 		public class ParameterInfo
 		{
-			public string VariableName { get; }
-			public string? TypeName { get; }
+			public ValueName? Name { get; }
+			public TypeName Type { get; }
 			public bool IsOpt { get; }
-			public ParameterInfo(string variableName, string? typeName, bool isOpt)
+			public ParameterInfo(ValueName? name, TypeName type, bool isOpt)
 			{
-				this.VariableName = variableName ?? throw new ArgumentNullException(nameof(variableName));
-				this.TypeName = typeName;
+				this.Name = name;
+				this.Type = type ?? throw new ArgumentNullException(nameof(type));
 				this.IsOpt = isOpt;
 			}
 		}
