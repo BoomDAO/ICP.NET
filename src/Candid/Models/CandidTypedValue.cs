@@ -4,30 +4,30 @@ using System;
 
 namespace EdjCase.ICP.Candid.Models
 {
-    public class CandidTypedValue : IEquatable<CandidTypedValue>
-    {
-        public CandidValue Value { get; }
-        public CandidType Type { get; }
+	public class CandidTypedValue : IEquatable<CandidTypedValue>
+	{
+		public CandidValue Value { get; }
+		public CandidType Type { get; }
 
-        public CandidTypedValue(CandidValue value, CandidType type)
-        {
-            this.Value = value ?? throw new ArgumentNullException(nameof(value));
-            this.Type = type ?? throw new ArgumentNullException(nameof(type));
+		public CandidTypedValue(CandidValue value, CandidType type)
+		{
+			this.Value = value ?? throw new ArgumentNullException(nameof(value));
+			this.Type = type ?? throw new ArgumentNullException(nameof(type));
 		}
 
-		public T? ToObjectOrDefault<T>(CandidConverter? converter = null)
+		public OptionalValue<T> ToOptionalObject<T>(CandidConverter? converter = null)
 		{
-			return (converter ?? CandidConverter.Default).ToObject<T>(this.Value);
+			return (converter ?? CandidConverter.Default).ToOptionalObject<T>(this.Value);
 		}
 
 		public T ToObject<T>(CandidConverter? converter = null)
 		{
-			return this.ToObjectOrDefault<T>(converter) ?? throw new Exception("Candid value is null");
+			return this.ToOptionalObject<T>(converter).GetValueOrThrow();
 		}
 
 		public static CandidTypedValue FromValueAndType(CandidValue value, CandidType type)
-        {
-            return new CandidTypedValue(value, type);
+		{
+			return new CandidTypedValue(value, type);
 		}
 
 		public static CandidTypedValue FromObject(object obj, CandidConverter? converter = null)
@@ -38,15 +38,15 @@ namespace EdjCase.ICP.Candid.Models
 
 		public bool Equals(CandidTypedValue? other)
 		{
-			if(object.ReferenceEquals(other, null))
-            {
+			if (object.ReferenceEquals(other, null))
+			{
 				return false;
-            }
+			}
 			return this.Value == other.Value && this.Type == other.Type;
 		}
 
 
-        public override bool Equals(object? obj)
+		public override bool Equals(object? obj)
 		{
 			return this.Equals(obj as CandidTypedValue);
 		}
@@ -76,8 +76,8 @@ namespace EdjCase.ICP.Candid.Models
 
 		public static CandidTypedValue Null()
 		{
-            CandidPrimitive value = CandidPrimitive.Null();
-            CandidPrimitiveType type = new CandidPrimitiveType(PrimitiveType.Null);
+			CandidPrimitive value = CandidPrimitive.Null();
+			CandidPrimitiveType type = new CandidPrimitiveType(PrimitiveType.Null);
 			return new CandidTypedValue(value, type);
 		}
 

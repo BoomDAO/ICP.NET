@@ -141,7 +141,7 @@ namespace ICP.Candid.Tests
 		{
 			var variant = new VariantValueClass
 			{
-				Value = (CandidTag.FromName("v4"), "text")
+				Value = (CandidTag.FromName("v4"), OptionalValue<string>.WithValue("text"))
 			};
 			CandidValue expectedValue = new CandidVariant("v4", new CandidOptional(CandidPrimitive.Text("text")));
 
@@ -155,7 +155,20 @@ namespace ICP.Candid.Tests
 			CandidType expectedType = new CandidVariantType(optionTypes);
 			CandidTypedValue expected = CandidTypedValue.FromValueAndType(expectedValue, expectedType);
 
-			this.Test(variant, expected, (x, y) => x.Value == y.Value);
+			this.Test(
+				variant,
+				expected,
+				(x, y) =>
+				{
+					if (!object.ReferenceEquals(x.Value.value, null))
+					{
+						if(!object.ReferenceEquals(y.Value.value, null))
+						{
+							return x.Value.tag == y.Value.tag && x.Value.value!.Equals(y.Value.value);
+						}
+					}
+					return false;
+				});
 		}
 
 

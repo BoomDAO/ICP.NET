@@ -41,24 +41,25 @@ namespace EdjCase.ICP.Candid
 			return (T)this.ToObject(typeof(T), value);
 		}
 
-		public T? ToObjectOrNull<T>(CandidValue value)
+		public OptionalValue<T> ToOptionalObject<T>(CandidValue value)
 		{
-			return (T?)this.ToObjectOrNull(typeof(T), value);
+			return this.ToOptionalObject(typeof(T), value).Cast<T>();
 		}
 
 		public object ToObject(Type objType, CandidValue value)
 		{
-			return this.ToObjectOrNull(objType, value) ?? throw new InvalidOperationException("Value cannot be null");
+			return this.ToOptionalObject(objType, value).GetValueOrThrow();
 		}
 
-		public object? ToObjectOrNull(Type objType, CandidValue value)
+		public OptionalValue<object> ToOptionalObject(Type objType, CandidValue value)
 		{
 			if (value.IsNull())
 			{
-				return null; // Handle null here for all mappers
+				return OptionalValue<object>.Null(); // Handle null here for all mappers
 			}
 			IObjectMapper mapper = this.Options.ResolveMapper(objType);
-			return mapper!.Map(value, this.Options);
+			object v = mapper!.Map(value, this.Options);
+			return new OptionalValue<object>(true, v);
 		}
 
 	}

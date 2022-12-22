@@ -188,7 +188,7 @@ namespace Sample.Shared.Governance
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, null);
 			QueryReply reply = response.ThrowOrGetReply();
-			EdjCase.ICP.Candid.Models.OptionalValue<ProposalInfo> r0 = reply.Arg.Values[0].ToObjectOrDefault<EdjCase.ICP.Candid.Models.OptionalValue<ProposalInfo>>();
+			EdjCase.ICP.Candid.Models.OptionalValue<ProposalInfo> r0 = reply.Arg.Values[0].ToOptionalObject<EdjCase.ICP.Candid.Models.OptionalValue<ProposalInfo>>();
 			return (r0);
 		}
 		public async Task<ListKnownNeuronsResponse> list_known_neurons(EdjCase.ICP.Agent.Auth.IIdentity? identityOverride = null)

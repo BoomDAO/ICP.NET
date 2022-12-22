@@ -41,7 +41,7 @@ QueryResponse response = await agent.QueryAsync(governanceCanisterId, method, ar
 
 QueryReply reply = response.ThrowOrGetReply();
 // Convert to custom class
-ProposalInfo? info = reply.Arg.Values[0].ToObjectOrDefault<ProposalInfo>()
+ProposalInfo? info = reply.Arg.Values[0].ToOptionalObject<ProposalInfo>()
 ```
 
 ## Usage (w/ Client Generator)

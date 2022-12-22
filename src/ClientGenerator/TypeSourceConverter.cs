@@ -192,9 +192,14 @@ namespace EdjCase.ICP.ClientGenerator
 
 			FuncSourceDescriptor.ParameterInfo BuildParam(ValueName argName, CandidType paramType)
 			{
+				bool isOpt = false;
+				if (paramType is CandidOptionalType o)
+				{
+					paramType = o.Value;
+					isOpt = true;
+				}
 				TypeSourceDescriptor desc = ResolveDescriptor(paramType, baseNamespace, parentName, addTypeFunc);
 				TypeName? typeId = addTypeFunc(desc, parentName);
-				bool isOpt = paramType is CandidOptionalType;
 				return new FuncSourceDescriptor.ParameterInfo(argName, typeId, isOpt);
 			}
 
@@ -256,7 +261,7 @@ namespace EdjCase.ICP.ClientGenerator
 			{
 				case CandidReferenceType r:
 					{
-						TypeName typeName = new (r.Id.Value, null); // TODO?
+						TypeName typeName = new(r.Id.Value, null); // TODO?
 						return new ReferenceSourceDescriptor(typeName);
 					}
 				case CandidPrimitiveType p:

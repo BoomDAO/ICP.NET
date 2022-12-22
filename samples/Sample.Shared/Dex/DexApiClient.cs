@@ -131,7 +131,7 @@ namespace Sample.Shared.Dex
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
 			CandidArg responseArg = await this.Agent.CallAndWaitAsync(this.CanisterId, method, arg, null, null);
-			EdjCase.ICP.Candid.Models.OptionalValue<Order> r0 = responseArg.Values[0].ToObjectOrDefault<EdjCase.ICP.Candid.Models.OptionalValue<Order>>();
+			EdjCase.ICP.Candid.Models.OptionalValue<Order> r0 = responseArg.Values[0].ToOptionalObject<EdjCase.ICP.Candid.Models.OptionalValue<Order>>();
 			return (r0);
 		}
 		public async Task<System.Collections.Generic.List<Order>> getOrders(EdjCase.ICP.Agent.Auth.IIdentity? identityOverride = null)

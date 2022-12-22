@@ -157,28 +157,31 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 				return BuildVariant(objType, options);
 			}
 			// Generics
-			Type? genericTypeDefinition = objType.GetGenericTypeDefinition();
-			if (genericTypeDefinition == typeof(OptionalValue<>))
+			if (objType.IsGenericType)
 			{
-				return BuildOpt(objType, options);
-			}
-			if (genericTypeDefinition == typeof(List<>))
-			{
-				Type innerType = objType.GenericTypeArguments[0];
-				return BuildVector(
-					innerType,
-					options,
-					o => ((IList)o).Cast<object>(),
-					v =>
-					{
-						IList list = (IList)Activator.CreateInstance(objType);
-						foreach (object innerValue in v)
+				Type genericTypeDefinition = objType.GetGenericTypeDefinition();
+				if (genericTypeDefinition == typeof(OptionalValue<>))
+				{
+					return BuildOpt(objType, options);
+				}
+				if (genericTypeDefinition == typeof(List<>))
+				{
+					Type innerType = objType.GenericTypeArguments[0];
+					return BuildVector(
+						innerType,
+						options,
+						o => ((IList)o).Cast<object>(),
+						v =>
 						{
-							list.Add(innerValue);
+							IList list = (IList)Activator.CreateInstance(objType);
+							foreach (object innerValue in v)
+							{
+								list.Add(innerValue);
+							}
+							return list;
 						}
-						return list;
-					}
-				);
+					);
+				}
 			}
 			// Assume anything else is a record
 			return BuildRecord(objType, options);
@@ -205,8 +208,8 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 			Type innerType = objType.GenericTypeArguments[0];
 			(CatchAllMapper innerCatchAllMapper, CandidType t) = BuildInternal(innerType, options);
 			var type = new CandidOptionalType(t);
-			PropertyInfo hasValueProp = objType.GetProperty("HasValue");
-			PropertyInfo valueProp = objType.GetProperty("Value");
+			PropertyInfo hasValueProp = objType.GetProperty(nameof(OptionalValue<object>.HasValue));
+			MethodInfo valueGetFunc = objType.GetMethod(nameof(OptionalValue<object>.GetValueOrThrow));
 			var mapper = new CatchAllMapper(
 				o =>
 				{
@@ -218,7 +221,7 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 					}
 					else
 					{
-						object innerValue = valueProp.GetValue(o);
+						object innerValue = valueGetFunc.Invoke(o, new object[0]);
 						v = innerCatchAllMapper.ToCandidFunc(innerValue).Value;
 					}
 					return new CandidTypedValue(new CandidOptional(v), type);

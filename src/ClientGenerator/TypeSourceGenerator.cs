@@ -239,8 +239,8 @@ namespace ICP.ClientGenerator
 									if (parameter.Type != null)
 									{
 										string variableName = "r" + i;
-										string? orDefault = parameter.IsOpt ? "OrDefault" : null;
-										builder.AppendLine($"{parameter.Type.GetNamespacedName()} {variableName} = {argVariableName}.Values[{i}].ToObject{orDefault}<{parameter.Type.GetNamespacedName()}>();");
+										string? optionalString = parameter.IsOpt ? "Optional" : null;
+										builder.AppendLine($"{parameter.Type.GetNamespacedName()} {variableName} = {argVariableName}.Values[{i}].To{optionalString}Object<{parameter.Type.GetNamespacedName()}>();");
 										returnParamVariables.Add(variableName);
 									}
 									i++;
