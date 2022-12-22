@@ -21,15 +21,6 @@ namespace ICP.ClientGenerator
 			this.InnerType = innerType;
 		}
 	}
-	internal abstract class FieldOptionSourceDescriptor : TypeSourceDescriptor
-	{
-		public List<(ValueName Name, TypeName Type)> Options { get; }
-
-		public FieldOptionSourceDescriptor(List<(ValueName Name, TypeName Type)> options)
-		{
-			this.Options = options ?? new();
-		}
-	}
 
 	internal class PrimitiveSourceDescriptor : TypeSourceDescriptor
 	{
@@ -61,25 +52,31 @@ namespace ICP.ClientGenerator
 		}
 	}
 
-	internal class VariantSourceDescriptor : FieldOptionSourceDescriptor
+	internal class VariantSourceDescriptor : TypeSourceDescriptor
 	{
-		public VariantSourceDescriptor(List<(ValueName Name, TypeName Type)> options) : base(options)
+		public List<(ValueName Name, TypeName? Type)> Options { get; }
+
+		public VariantSourceDescriptor(List<(ValueName Name, TypeName? Type)> options)
 		{
+			this.Options = options ?? new();
 		}
 	}
 
-	internal class RecordSourceDescriptor : FieldOptionSourceDescriptor
+	internal class RecordSourceDescriptor : TypeSourceDescriptor
 	{
-		public RecordSourceDescriptor(List<(ValueName Name, TypeName Type)> options) : base(options)
+		public List<(ValueName Name, TypeName Type)> Fields { get; }
+
+		public RecordSourceDescriptor(List<(ValueName Name, TypeName Type)> fields)
 		{
+			this.Fields = fields ?? new();
 		}
 	}
 
 	internal class ServiceSourceDescriptor : TypeSourceDescriptor
 	{
-		public Dictionary<string, TypeName> Methods { get; }
+		public List<(string Name, TypeName FuncType, FuncSourceDescriptor FuncDesc)> Methods { get; }
 
-		public ServiceSourceDescriptor(Dictionary<string, TypeName> methods)
+		public ServiceSourceDescriptor(List<(string Name, TypeName FuncType, FuncSourceDescriptor FuncDesc)> methods)
 		{
 			this.Methods = methods ?? throw new ArgumentNullException(nameof(methods));
 		}
@@ -107,13 +104,13 @@ namespace ICP.ClientGenerator
 
 		public class ParameterInfo
 		{
-			public ValueName? Name { get; }
-			public TypeName Type { get; }
+			public ValueName Name { get; }
+			public TypeName? Type { get; }
 			public bool IsOpt { get; }
-			public ParameterInfo(ValueName? name, TypeName type, bool isOpt)
+			public ParameterInfo(ValueName name, TypeName? type, bool isOpt)
 			{
-				this.Name = name;
-				this.Type = type ?? throw new ArgumentNullException(nameof(type));
+				this.Name = name ?? throw new ArgumentNullException(nameof(name));
+				this.Type = type;
 				this.IsOpt = isOpt;
 			}
 		}

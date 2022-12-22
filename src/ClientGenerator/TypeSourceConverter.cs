@@ -14,9 +14,9 @@ namespace EdjCase.ICP.ClientGenerator
 	{
 		public string Name { get; }
 		public ServiceSourceDescriptor Service { get; }
-		public List<TypeSourceDescriptor> Types { get; }
-		public Dictionary<string, string> Aliases { get; }
-		public ServiceSourceInfo(string name, ServiceSourceDescriptor service, List<TypeSourceDescriptor> types, Dictionary<string, string> aliases)
+		public List<(TypeName Name, TypeSourceDescriptor Desc)> Types { get; }
+		public List<(string Alias, TypeName Type)> Aliases { get; }
+		public ServiceSourceInfo(string name, ServiceSourceDescriptor service, List<(TypeName Name, TypeSourceDescriptor Desc)> types, List<(string Alias, TypeName Type)> aliases)
 		{
 			this.Name = name ?? throw new ArgumentNullException(nameof(name));
 			this.Service = service ?? throw new ArgumentNullException(nameof(service));
@@ -57,16 +57,19 @@ namespace EdjCase.ICP.ClientGenerator
 						type = new TypeName("Optional", "EdjCase.ICP.Candid", o.InnerType);
 						break;
 					case VariantSourceDescriptor va:
-						type = new TypeName($"{parentName}Variant", null);
+						type = new TypeName(parentName, null);
 						break;
 					case RecordSourceDescriptor re:
-						type = new TypeName($"{parentName}Record", null);
+						type = new TypeName(parentName, null);
 						break;
 					case FuncSourceDescriptor f:
 						// Func alias declaration
 						// ex: type A = func
 						// using A = Edjcase.ICP.Candid.Models.Values.CandidFunc;
 						type = TypeName.FromType<CandidFunc>();
+						break;
+					case ReferenceSourceDescriptor re:
+						type = re.Reference; // TODO
 						break;
 					default:
 						throw new NotImplementedException();
@@ -83,34 +86,36 @@ namespace EdjCase.ICP.ClientGenerator
 				return type;
 			}
 
-			Dictionary<string, TypeName> aliases = new();
+			List<(TypeName Name, TypeSourceDescriptor Desc)> customTypes = new();
+			List<(string Alias, TypeName Type)> aliases = new();
 			foreach ((CandidId id, CandidType type) in declaredTypes)
 			{
 				string name = id.ToString();
 				TypeSourceDescriptor desc = ResolveDescriptor(type, baseNamespace, name, AddType);
 
 				TypeName? typeName = GetType(desc, name);
-				if (typeName != null)
+				if (typeName == null)
 				{
-					switch (desc)
-					{
-						case FuncSourceDescriptor f:
-						case PrimitiveSourceDescriptor p:
-						case ReferenceSourceDescriptor r:
-						case VectorSourceDescriptor v:
-						case OptionalSourceDescriptor o:
-							aliases.Add(name, typeName);
-							break;
-						default:
-							resolvedDeclaredTypes.Add(typeName, desc);
-							break;
-					}
-
+					// Skip empty, reserved and null
+					continue;
+				}
+				switch (desc)
+				{
+					case FuncSourceDescriptor f:
+					case PrimitiveSourceDescriptor p:
+					case ReferenceSourceDescriptor r:
+					case VectorSourceDescriptor v:
+					case OptionalSourceDescriptor o:
+						aliases.Add((name, typeName));
+						break;
+					default:
+						customTypes.Add((typeName, desc));
+						break;
 				}
 			}
 
 
-			ServiceSourceDescriptor serviceSourceDesc = ResolveService(service.Service, baseNamespace, AddType);
+			ServiceSourceDescriptor serviceSourceDesc = ResolveService(service.Service, baseNamespace, serviceName, AddType);
 
 
 			return new ServiceSourceInfo(serviceName, serviceSourceDesc, customTypes, aliases);
@@ -126,7 +131,7 @@ namespace EdjCase.ICP.ClientGenerator
 				.Select(f =>
 				{
 					ValueName fieldName = ValueName.Default(f.Key); // Get field name or id
-					TypeSourceDescriptor desc = ResolveDescriptor(type, baseNamespace, parentName, addTypeFunc);
+					TypeSourceDescriptor desc = ResolveDescriptor(f.Value, baseNamespace, parentName, addTypeFunc);
 					TypeName? fieldTypeId = addTypeFunc(desc, parentName);
 					return (fieldName, fieldTypeId);
 				})
@@ -143,16 +148,14 @@ namespace EdjCase.ICP.ClientGenerator
 			string parentName,
 			Func<TypeSourceDescriptor, string, TypeName?> addTypeFunc)
 		{
-			List<(ValueName Name, TypeName Type)> resolvedOptions = type.Fields
+			List<(ValueName Name, TypeName? Type)> resolvedOptions = type.Fields
 				.Select(f =>
 				{
 					ValueName fieldName = ValueName.Default(f.Key);
-					TypeSourceDescriptor desc = ResolveDescriptor(type, baseNamespace, parentName, addTypeFunc);
+					TypeSourceDescriptor desc = ResolveDescriptor(f.Value, baseNamespace, parentName, addTypeFunc);
 					TypeName? fieldTypeId = addTypeFunc(desc, parentName);
 					return (fieldName, fieldTypeId);
 				})
-				.Where(f => f.fieldTypeId != null)
-				.Select(f => (f.fieldName, f.fieldTypeId!))
 				.ToList();
 			return new VariantSourceDescriptor(resolvedOptions);
 		}
@@ -160,27 +163,32 @@ namespace EdjCase.ICP.ClientGenerator
 		private static ServiceSourceDescriptor ResolveService(
 			CandidServiceType type,
 			string baseNamespace,
+			string parentName,
 			Func<TypeSourceDescriptor, string, TypeName?> addTypeFunc)
 		{
-			Dictionary<string, TypeName> resolvedMethods = type.Methods
-				.ToDictionary(f => f.Key.ToString(), f =>
+			List<(string Name, TypeName FuncType, FuncSourceDescriptor FuncDesc)> resolvedMethods = type.Methods
+				.Select(f =>
 				{
-					FuncSourceDescriptor func = ResolveFunc(f.Value, baseNamespace, addTypeFunc);
-					return addTypeFunc(func, f.Key.ToString())!;
-				});
+					FuncSourceDescriptor func = ResolveFunc(f.Value, baseNamespace, parentName, addTypeFunc);
+					string methodName = f.Key.ToString();
+					TypeName funcType = addTypeFunc(func, methodName)!;
+					return (methodName, funcType, func);
+				})
+				.ToList();
 			return new ServiceSourceDescriptor(resolvedMethods);
 		}
 		private static FuncSourceDescriptor ResolveFunc(
 			CandidFuncType type,
 			string baseNamespace,
-			Func<TypeSourceDescriptor, string, TypeName> addTypeFunc)
+			string parentName,
+			Func<TypeSourceDescriptor, string, TypeName?> addTypeFunc)
 		{
 			var subTypesToCreate = new List<TypeSourceDescriptor>();
 
-			FuncSourceDescriptor.ParameterInfo BuildParam(ValueName? argName, CandidType paramType)
+			FuncSourceDescriptor.ParameterInfo BuildParam(ValueName argName, CandidType paramType)
 			{
-				TypeSourceDescriptor desc = ResolveDescriptor(type, baseNamespace, addTypeFunc);
-				TypeName? typeId = addTypeFunc(desc, context);
+				TypeSourceDescriptor desc = ResolveDescriptor(paramType, baseNamespace, parentName, addTypeFunc);
+				TypeName? typeId = addTypeFunc(desc, parentName);
 				bool isOpt = paramType is CandidOptionalType;
 				return new FuncSourceDescriptor.ParameterInfo(argName, typeId, isOpt);
 			}
@@ -188,14 +196,14 @@ namespace EdjCase.ICP.ClientGenerator
 			List<FuncSourceDescriptor.ParameterInfo> resolvedParameters = type.ArgTypes
 				.Select((f, i) =>
 				{
-					ValueName? argName = f.Name == null ? null : ValueName.Default(f.Name.Value);
+					ValueName argName = ValueName.Default(f.Name == null ? $"arg{i}" : f.Name.Value);
 					return BuildParam(argName, f.Type);
 				})
 				.ToList();
 			List<FuncSourceDescriptor.ParameterInfo> resolvedReturnParameters = type.ReturnTypes
 				.Select((f, i) =>
 				{
-					ValueName? argName = f.Name == null ? null : ValueName.Default(f.Name.Value);
+					ValueName argName = ValueName.Default(f.Name == null ? $"r{i}" : f.Name.Value);
 					return BuildParam(argName, f.Type);
 				})
 				.ToList();
@@ -243,7 +251,8 @@ namespace EdjCase.ICP.ClientGenerator
 			{
 				case CandidReferenceType r:
 					{
-						return new ReferenceSourceDescriptor(r.Id);
+						TypeName typeName = new (r.Id.Value, $"{baseNamespace}.Models"); // TODO?
+						return new ReferenceSourceDescriptor(typeName);
 					}
 				case CandidPrimitiveType p:
 					{
@@ -251,7 +260,7 @@ namespace EdjCase.ICP.ClientGenerator
 					}
 				case CandidVectorType v:
 					{
-						TypeSourceDescriptor desc = ResolveDescriptor(type, baseNamespace, parentName, addTypeFunc);
+						TypeSourceDescriptor desc = ResolveDescriptor(v.InnerType, baseNamespace, parentName, addTypeFunc);
 						TypeName? innerId = addTypeFunc(desc, parentName);
 						if (innerId == null)
 						{
@@ -262,7 +271,7 @@ namespace EdjCase.ICP.ClientGenerator
 					}
 				case CandidOptionalType o:
 					{
-						TypeSourceDescriptor desc = ResolveDescriptor(type, baseNamespace, parentName, addTypeFunc);
+						TypeSourceDescriptor desc = ResolveDescriptor(o.Value, baseNamespace, parentName, addTypeFunc);
 						TypeName? innerId = addTypeFunc(desc, parentName);
 						if (innerId == null)
 						{
@@ -273,19 +282,19 @@ namespace EdjCase.ICP.ClientGenerator
 					}
 				case CandidRecordType r:
 					{
-						return ResolveRecord(r, baseNamespace, addTypeFunc);
+						return ResolveRecord(r, baseNamespace, parentName, addTypeFunc);
 					}
 				case CandidVariantType v:
 					{
-						return ResolveVariant(v, baseNamespace, addTypeFunc);
+						return ResolveVariant(v, baseNamespace, parentName, addTypeFunc);
 					}
 				case CandidServiceType s:
 					{
-						return ResolveService(s, baseNamespace, addTypeFunc);
+						return ResolveService(s, baseNamespace, parentName, addTypeFunc);
 					}
 				case CandidFuncType f:
 					{
-						return ResolveFunc(f, baseNamespace, addTypeFunc);
+						return ResolveFunc(f, baseNamespace, parentName, addTypeFunc);
 					}
 				default:
 					throw new NotImplementedException();

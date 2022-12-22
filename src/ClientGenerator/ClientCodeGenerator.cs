@@ -21,12 +21,12 @@ namespace EdjCase.ICP.ClientGenerator
 {
     public class ClientCodeResult
     {
-		public string Name { get; }
+		public TypeName Name { get; }
         public string ClientFile { get; }
         public List<(string Name, string SourceCode)> DataModelFiles { get; }
         public string? AliasFile { get; }
 
-        public ClientCodeResult(string name, string clientFile, List<(string Name, string SourceCode)> typeFiles, string? aliasFile)
+        public ClientCodeResult(TypeName name, string clientFile, List<(string Name, string SourceCode)> typeFiles, string? aliasFile)
         {
             this.Name = name ?? throw new ArgumentNullException(nameof(name));
             this.ClientFile = clientFile ?? throw new ArgumentNullException(nameof(clientFile));
@@ -52,7 +52,7 @@ namespace EdjCase.ICP.ClientGenerator
 			{
 				// If global usings feature doesnt exist, import per file
 				importedNamespaces = service.Aliases
-					.Select(a => $"{a.Key} = {a.Value}")
+					.Select(a => $"{a.Alias} = {a.Type.GetNamespacedName()}")
 					.Concat(new List<string>
 					{
 						"System",
@@ -64,13 +64,14 @@ namespace EdjCase.ICP.ClientGenerator
 					.ToList();
 			}
 
-			string clientSource = TypeSourceGenerator.GenerateClientSourceCode(baseNamespace, service.Service, importedNamespaces);
+			TypeName clientName = new TypeName(service.Name + "ApiClient", baseNamespace);
+			string clientSource = TypeSourceGenerator.GenerateClientSourceCode(clientName, baseNamespace, service.Service, importedNamespaces);
 
 
 			var typeFiles = new List<(string Name, string SourceCode)>();
-			foreach (TypeSourceDescriptor type in service.Types)
+			foreach ((TypeName name, TypeSourceDescriptor desc) in service.Types)
 			{
-				(string fileName, string source) = TypeSourceGenerator.GenerateTypeSourceCode(baseNamespace, type, importedNamespaces);
+				(string fileName, string source) = TypeSourceGenerator.GenerateTypeSourceCode(name, baseNamespace, desc, importedNamespaces);
 
 				typeFiles.Add((fileName, source));
 			}
@@ -80,7 +81,7 @@ namespace EdjCase.ICP.ClientGenerator
 				bool useGlobal = csharpVersion >= 10;
 				aliasFile = TypeSourceGenerator.GenerateAliasSourceCode(baseNamespace, service.Aliases, useGlobal);
 			}
-			return new ClientCodeResult(service.Name + "ApiClient", clientSource, typeFiles, aliasFile);
+			return new ClientCodeResult(clientName, clientSource, typeFiles, aliasFile);
 		}
 
     }

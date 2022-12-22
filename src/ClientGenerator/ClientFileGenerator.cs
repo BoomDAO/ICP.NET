@@ -55,7 +55,7 @@ namespace EdjCase.ICP.ClientGenerator
 
 
 			Console.WriteLine($"Writing client file ./{result.Name}.cs...");
-			WriteFile(null, result.Name, result.ClientFile);
+			WriteFile(null, result.Name.GetName(), result.ClientFile);
 
 
 			foreach ((string name, string sourceCode) in result.DataModelFiles)
