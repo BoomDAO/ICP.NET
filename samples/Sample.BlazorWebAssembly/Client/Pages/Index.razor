@@ -27,7 +27,7 @@ else
 {
     <button @onclick="Logout">Logout</button>
 }
-@if (this.Info.HasValue)
+@if (this.Info?.HasValue == true)
 {
     ProposalInfo info = this.Info.GetValueOrThrow();
     <h2>Id: @info.Id.GetValueOrDefault()</h2>
@@ -75,7 +75,7 @@ else if(this.MadeCall && this.ProposalId != null)
 @code {
     public ulong? ProposalId { get; set; }
     public bool MadeCall { get; set; }
-    public OptionalValue<ProposalInfo> Info { get; set; }
+    public OptionalValue<ProposalInfo>? Info { get; set; }
     public IIdentity? Identity { get; set; }
 
     public async Task ReloadProposalInfo()
