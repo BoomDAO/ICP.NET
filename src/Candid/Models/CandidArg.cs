@@ -13,9 +13,9 @@ namespace EdjCase.ICP.Candid.Models
 {
     public class CandidArg : IHashable, IEquatable<CandidArg>
     {
-        public List<CandidValueWithType> Values { get; }
+        public List<CandidTypedValue> Values { get; }
 
-        public CandidArg(List<CandidValueWithType> values)
+        public CandidArg(List<CandidTypedValue> values)
         {
             this.Values = values;
         }
@@ -35,19 +35,19 @@ namespace EdjCase.ICP.Candid.Models
             return CandidByteParser.Parse(value);
         }
 
-        public static CandidArg FromCandid(List<CandidValueWithType> args)
+        public static CandidArg FromCandid(List<CandidTypedValue> args)
         {
             return new CandidArg(args);
 		}
 
-		public static CandidArg FromCandid(params CandidValueWithType[] args)
+		public static CandidArg FromCandid(params CandidTypedValue[] args)
 		{
 			return new CandidArg(args.ToList());
 		}
 
 		public static CandidArg Empty()
 		{
-			return new CandidArg(new List<CandidValueWithType>());
+			return new CandidArg(new List<CandidTypedValue>());
 		}
 
 		public override string ToString()

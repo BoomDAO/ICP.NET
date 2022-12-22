@@ -18,11 +18,11 @@ namespace ICP.Candid.Tests
 		public void RequestId_Dict()
 		{
 			var arg = CandidArg.FromCandid(
-				CandidValueWithType.FromValueAndType(
+				CandidTypedValue.FromValueAndType(
 					CandidPrimitive.Text("https://www.theverge.com/rss/index.xml"),
 					new CandidPrimitiveType(PrimitiveType.Text)
 				),
-				CandidValueWithType.FromValueAndType(
+				CandidTypedValue.FromValueAndType(
 					new CandidRecord(new Dictionary<CandidTag, CandidValue>
 					{
 							{

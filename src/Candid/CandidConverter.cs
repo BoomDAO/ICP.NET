@@ -1,4 +1,5 @@
-using EdjCase.ICP.Candid.Mappers;
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid.Mapping.Mappers;
 using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid.Models.Types;
 using EdjCase.ICP.Candid.Models.Values;
@@ -6,6 +7,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace EdjCase.ICP.Candid
@@ -21,124 +23,85 @@ namespace EdjCase.ICP.Candid
 			this.Options = options ?? CandidConverterOptions.Default;
 		}
 
-		public CandidValueWithType FromObject<T>(T obj, bool isOpt)
-		{
-			return this.FromObject(obj as object, isOpt);
-		}
-
-		public CandidValueWithType FromObject(object? obj, bool isOpt)
+		public CandidTypedValue FromObject(object? obj)
 		{
 			if (object.ReferenceEquals(obj, null))
 			{
-				return CandidValueWithType.Null();
+				throw new ArgumentNullException(nameof(obj));
 			}
-			if (!this.TryGetMappingInfo(obj.GetType(), out MappingInfo? mappingInfo))
-			{
-				// TODO
-				throw new Exception();
-			}
-			if (isOpt)
-			{
-				mappingInfo = mappingInfo!.ToOpt();
-			}
+			IObjectMapper mapper = this.Options.ResolveMapper(obj.GetType());
 
-			CandidValue value = mappingInfo!.MapFromObjectFunc(obj);
+			CandidTypedValue value = mapper!.Map(obj, this.Options);
 
-			return CandidValueWithType.FromValueAndType(value, mappingInfo.Type);
+			return value;
 		}
 
-		public bool TryGetMappingInfo<T>(out MappingInfo? mappingInfo)
+		public T ToObject<T>(CandidValue value)
 		{
-			return this.TryGetMappingInfo(typeof(T), out mappingInfo);
+			return (T)this.ToObject(typeof(T), value);
 		}
 
-		public bool TryGetMappingInfo(Type objType, out MappingInfo? mappingInfo)
+		public T? ToObjectOrNull<T>(CandidValue value)
 		{
-			ICandidMapper mapper = this.Options.ResolveMapper(objType, this);
-			return mapper.TryGetMappingInfo(objType, this, out mappingInfo);
+			return (T?)this.ToObjectOrNull(typeof(T), value);
 		}
 
-		public T? ToObject<T>(CandidValue value)
+		public object ToObject(Type objType, CandidValue value)
 		{
-			object? obj = this.ToObject(typeof(T), value);
-			return (T?)obj;
+			return this.ToObjectOrNull(objType, value) ?? throw new InvalidOperationException("Value cannot be null");
 		}
 
-		public object? ToObject(Type objType, CandidValue value)
+		public object? ToObjectOrNull(Type objType, CandidValue value)
 		{
 			if (value.IsNull())
 			{
-				return null;
+				return null; // Handle null here for all mappers
 			}
-			bool isOpt = false;
-			if (value is CandidOptional o)
-			{
-				if (o.Value.IsNull())
-				{
-					// If is null, no mapping needed
-					return null;
-				}
-				isOpt = true;
-				value = o.Value; // Set the inner type as the type
-			}
-			if (!this.TryGetMappingInfo(objType, out MappingInfo? mappingInfo))
-			{
-				// TODO
-				throw new Exception("No valid mapper");
-			}
-			if (isOpt)
-			{
-				mappingInfo = mappingInfo!.ToOpt();
-			}
-			return mappingInfo!.MapToObjectFunc(value);
+			IObjectMapper mapper = this.Options.ResolveMapper(objType);
+			return mapper!.Map(value, this.Options);
 		}
 
 	}
 
 	public class CandidConverterOptions
 	{
-		public IReadOnlyList<ICandidMapper> Mappers { get; }
-		public CandidMappingSettings Settings { get; }
+		public IReadOnlyList<IObjectMapper> CustomMappers { get; }
+		public ICaseConverter? CaseConverter { get; }
 
-		private readonly ConcurrentDictionary<Type, ICandidMapper> _typeToMapperCache;
+		private readonly ConcurrentDictionary<Type, IObjectMapper> _typeToMapperCache;
 
-		public CandidConverterOptions(CandidMappingSettings settings, params ICandidMapper[] mappers) : this(settings, (IEnumerable<ICandidMapper>)mappers)
+		public CandidConverterOptions(
+			IEnumerable<IObjectMapper> mappers,
+			ICaseConverter? caseConverter = null)
 		{
-
-		}
-		public CandidConverterOptions(CandidMappingSettings settings, IEnumerable<ICandidMapper> mappers)
-		{
-			this.Settings = settings;
-			this.Mappers = mappers?.ToList() ?? throw new ArgumentNullException(nameof(mappers));
-			this._typeToMapperCache = new ConcurrentDictionary<Type, ICandidMapper>();
+			this.CaseConverter = caseConverter;
+			this.CustomMappers = mappers?.ToList() ?? throw new ArgumentNullException(nameof(mappers));
+			this._typeToMapperCache = new ConcurrentDictionary<Type, IObjectMapper>();
 		}
 
 		public static CandidConverterOptions Default { get; } = new CandidConverterOptions(
-			settings: CandidMappingSettings.Default,
-			new DefaultCandidMapper()
+			mappers: Enumerable.Empty<IObjectMapper>(),
+			caseConverter: null
 		);
 
-		internal ICandidMapper ResolveMapper(Type type, CandidConverter converter)
+		public IObjectMapper ResolveMapper(Type type)
 		{
-			return this._typeToMapperCache.GetOrAdd(type, t => this.ResolveUncached(t, converter));
+			return this._typeToMapperCache.GetOrAdd(type, this.ResolveUncached);
 		}
 
-		private ICandidMapper ResolveUncached(Type type, CandidConverter converter)
+		private IObjectMapper ResolveUncached(Type type)
 		{
-			ICandidMapper? mapper = this.Mappers
-				.FirstOrDefault(m => m.TryGetMappingInfo(type, converter, out _));
-			if (mapper == null)
+			CustomMapperAttribute? mapperAttr = type.GetCustomAttribute<CustomMapperAttribute>();
+			if (mapperAttr != null)
 			{
-				// TODO
-				throw new Exception();
+				return mapperAttr.Mapper;
 			}
-			return mapper;
+			IObjectMapper? mapper = this.CustomMappers
+				.FirstOrDefault(m => m.CanMap(type));
+			return mapper == null
+				// Create a dynamic mapper if no custom one
+				? CatchAllMapperFactory.Build(type, this)
+				: mapper;
 		}
-	}
-
-	public class CandidMappingSettings
-	{
-		public static CandidMappingSettings Default { get; } = new CandidMappingSettings(
-		);
 	}
 }
