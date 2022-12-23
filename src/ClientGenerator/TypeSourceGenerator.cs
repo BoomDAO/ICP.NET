@@ -31,7 +31,7 @@ namespace ICP.ClientGenerator
 			{ typeof(bool), "bool" }
 		};
 
-		public static string GenerateClientSourceCode(TypeName clientName, string baseNamespace, ServiceSourceDescriptor desc, List<string>? importedNamespaces = null)
+		public static string GenerateClientSourceCode(TypeName clientName, string baseNamespace, ServiceSourceInfo.ServiceTypeInfo desc, List<string>? importedNamespaces = null)
 		{
 			IndentedStringBuilder builder = new();
 
@@ -60,16 +60,16 @@ namespace ICP.ClientGenerator
 			return builder.ToString();
 		}
 		public static (string FileName, string SourceCode) GenerateTypeSourceCode(
-			TypeName typeName,
+			CandidId id,
 			string baseNamespace,
-			TypeSourceDescriptor type,
+			ServiceSourceInfo.TypeInfo type,
 			List<string>? importedNamespaces = null)
 		{
 			IndentedStringBuilder builder = new();
 
 			WriteNamespace(builder, baseNamespace + ".Models", () =>
 			{
-				WriteType(builder, typeName, type);
+				WriteType(builder, type);
 			});
 			string source = BuildSourceWithShorthands(builder);
 
@@ -87,14 +87,14 @@ namespace ICP.ClientGenerator
 				source = builder.ToString();
 			}
 
-			return (typeName.GetName(), source);
+			return (type.Name.GetName(), source);
 		}
 
-		public static string GenerateAliasSourceCode(string baseNamespace, List<(string Alias, TypeName Type)> aliases, bool useGlobal)
+		public static string GenerateAliasSourceCode(string baseNamespace, List<(CandidId Alias, TypeName Type)> aliases, bool useGlobal)
 		{
 			IndentedStringBuilder builder = new();
 			string? prefix = useGlobal ? "global " : null;
-			foreach ((string id, TypeName aliasedType) in aliases)
+			foreach ((CandidId id, TypeName aliasedType) in aliases)
 			{
 				builder.AppendLine($"{prefix}using {id} = {aliasedType.GetNamespacedName()};");
 			}
@@ -104,7 +104,7 @@ namespace ICP.ClientGenerator
 			return builder.ToString();
 		}
 
-		private static void WriteType(IndentedStringBuilder builder, TypeName typeName, TypeSourceDescriptor type)
+		private static void WriteType(IndentedStringBuilder builder, ServiceSourceInfo.TypeInfo type)
 		{
 			switch (type)
 			{
@@ -178,7 +178,14 @@ namespace ICP.ClientGenerator
 					{
 						returnTypes = funcDesc.ReturnParameters
 							.Where(p => p.Type != null) // exclude null/empty/reserved
-							.Select((p, i) => new TypedValueName(p.Type!, p.Name ?? ValueName.Default($"R{i}")))
+							.Select((p, i) =>
+							{
+								TypeName typeName = p.IsOpt
+									? new TypeName("OptionalValue", "EdjCase.ICP.Candid.Models", p.Type!)
+									: p.Type!;
+								ValueName valueName = p.Name ?? ValueName.Default($"R{i}");
+								return new TypedValueName(typeName, valueName);
+							})
 							.ToList();
 					}
 					WriteMethod(
@@ -195,7 +202,7 @@ namespace ICP.ClientGenerator
 								string valueWithType;
 								if (param.Type != null)
 								{
-									valueWithType = $"CandidTypedValue.FromObject({param.Name.VariableName})";
+									valueWithType = $"CandidTypedValue.FromObject({param.Name.CamelCaseValue})";
 								}
 								else
 								{
@@ -239,8 +246,14 @@ namespace ICP.ClientGenerator
 									if (parameter.Type != null)
 									{
 										string variableName = "r" + i;
-										string? optionalString = parameter.IsOpt ? "Optional" : null;
-										builder.AppendLine($"{parameter.Type.GetNamespacedName()} {variableName} = {argVariableName}.Values[{i}].To{optionalString}Object<{parameter.Type.GetNamespacedName()}>();");
+										string? optionalString = null;
+										string variableTypeName = parameter.Type.GetNamespacedName();
+										if (parameter.IsOpt)
+										{
+											optionalString = "Optional";
+											variableTypeName = $"EdjCase.ICP.Candid.Models.OptionalValue<{variableTypeName}>";
+										}
+										builder.AppendLine($"{variableTypeName} {variableName} = {argVariableName}.Values[{i}].To{optionalString}Object<{parameter.Type.GetNamespacedName()}>();");
 										returnParamVariables.Add(variableName);
 									}
 									i++;
@@ -267,12 +280,18 @@ namespace ICP.ClientGenerator
 
 		private static void WriteRecord(IndentedStringBuilder builder, TypeName recordName, RecordSourceDescriptor record)
 		{
-			WriteClass(builder, recordName, () =>
+			WriteClass(builder, record.Name, () =>
 			{
-				foreach ((ValueName field, TypeName fieldFullTypeName) in record.Fields)
+				foreach ((ValueName fieldName, TypeName fieldType) in record.Fields)
 				{
-					builder.AppendLine($"[{typeof(CandidNameAttribute).FullName}(\"{field.CandidName}\")]");
-					builder.AppendLine($"public {fieldFullTypeName.GetNamespacedName()} {field.PropertyName} {{ get; set; }}");
+					string propertyName = fieldName.PascalCaseValue;
+					if(propertyName == record.Name.GetName())
+					{
+						// Cant match the class name
+						propertyName = propertyName + "_"; // TODO best way to escape it. @ does not work
+					}
+					builder.AppendLine($"[{typeof(CandidNameAttribute).FullName}(\"{fieldName.CandidName}\")]");
+					builder.AppendLine($"public {fieldType.GetNamespacedName()} {propertyName} {{ get; set; }}");
 					builder.AppendLine("");
 				}
 			});
@@ -282,13 +301,13 @@ namespace ICP.ClientGenerator
 
 		private static void WriteVariant(IndentedStringBuilder builder, TypeName variantName, VariantSourceDescriptor variant)
 		{
-			TypeName enumName = new TypeName(variantName.GetName() + "Type", null);
+			TypeName enumName = new TypeName(variant.Name.GetName() + "Type", null);
 			WriteEnum(builder, enumName, variant.Options);
 			var implementationTypes = new List<TypeName>
 			{
 				new TypeName("CandidVariantValueBase", "EdjCase.ICP.Candid.Models", enumName)
 			};
-			WriteClass(builder, variantName, () =>
+			WriteClass(builder, variant.Name, () =>
 			{
 				// Constrcutor
 				WriteMethod(
@@ -301,7 +320,7 @@ namespace ICP.ClientGenerator
 					isAsync: false,
 					isConstructor: true,
 					returnType: null,
-					name: variantName.GetName(),
+					name: variant.Name.GetName(),
 					baseConstructorParams: new List<string> { "type", "value" },
 					TypedParam.FromType(enumName, ValueName.Default("type")),
 					TypedParam.FromType(new TypeName("Object?", "System"), ValueName.Default("value"))
@@ -319,7 +338,7 @@ namespace ICP.ClientGenerator
 					isAsync: false,
 					isConstructor: true,
 					returnType: null,
-					name: variantName.GetName(),
+					name: variant.Name.GetName(),
 					baseConstructorParams: null
 				);
 				builder.AppendLine("");
@@ -334,14 +353,14 @@ namespace ICP.ClientGenerator
 							builder,
 							inner: () =>
 							{
-								builder.AppendLine($"return new {variantName.GetNamespacedName()}({enumName.GetNamespacedName()}.{valueName.PropertyName}, null);");
+								builder.AppendLine($"return new {variant.Name.GetNamespacedName()}({enumName.GetNamespacedName()}.{valueName.PascalCaseValue}, null);");
 							},
 							access: "public",
 							isStatic: true,
 							isAsync: false,
 							isConstructor: false,
-							returnType: new TypedValueName(variantName, valueName),
-							name: valueName.PropertyName
+							returnType: new TypedValueName(variant.Name, valueName),
+							name: valueName.PascalCaseValue
 						);
 					}
 					else
@@ -351,14 +370,14 @@ namespace ICP.ClientGenerator
 							builder,
 							inner: () =>
 							{
-								builder.AppendLine($"return new {variantName.GetNamespacedName()}({enumName.GetNamespacedName()}.{valueName.PropertyName}, {paramName.VariableName});");
+								builder.AppendLine($"return new {variant.Name.GetNamespacedName()}({enumName.GetNamespacedName()}.{valueName.PascalCaseValue}, {paramName.CamelCaseValue});");
 							},
 							access: "public",
 							isStatic: true,
 							isAsync: false,
 							isConstructor: false,
-							returnType: new TypedValueName(variantName, ValueName.Default("type")),
-							name: valueName.PropertyName,
+							returnType: new TypedValueName(variant.Name, ValueName.Default("type")),
+							name: valueName.PascalCaseValue,
 							baseConstructorParams: null,
 							TypedParam.FromType(typeName, paramName)
 						);
@@ -368,7 +387,7 @@ namespace ICP.ClientGenerator
 							builder,
 							inner: () =>
 							{
-								builder.AppendLine($"this.ValidateType({enumName.GetNamespacedName()}.{valueName.PropertyName});");
+								builder.AppendLine($"this.ValidateType({enumName.GetNamespacedName()}.{valueName.PascalCaseValue});");
 								builder.AppendLine($"return ({typeName.GetNamespacedName()})this.value!;");
 							},
 							access: "public",
@@ -376,7 +395,7 @@ namespace ICP.ClientGenerator
 							isAsync: false,
 							isConstructor: false,
 							returnType: new TypedValueName(typeName, valueName),
-							name: "As" + valueName.PropertyName
+							name: "As" + valueName.PascalCaseValue
 						);
 					}
 					builder.AppendLine("");
@@ -402,7 +421,7 @@ namespace ICP.ClientGenerator
 
 			public static TypedParam FromType(TypeName type, ValueName name)
 			{
-				return new TypedParam(type.GetNamespacedName(), name.VariableName);
+				return new TypedParam(type.GetNamespacedName(), name.CamelCaseValue);
 			}
 		}
 
@@ -475,7 +494,7 @@ namespace ICP.ClientGenerator
 				}
 				else
 				{
-					returnValue = $"({string.Join(", ", returnTypes.Select(r => $"{r.Type.GetNamespacedName()} {r.Value.PropertyName}"))})";
+					returnValue = $"({string.Join(", ", returnTypes.Select(r => $"{r.Type.GetNamespacedName()} {r.Value.PascalCaseValue}"))})";
 				}
 				if (isAsync)
 				{
@@ -526,7 +545,7 @@ namespace ICP.ClientGenerator
 					{
 						builder.AppendLine($"[{typeof(VariantOptionTypeAttribute).FullName}(typeof({type.GetNamespacedName()}))]");
 					}
-					builder.AppendLine(v.PropertyName + ",");
+					builder.AppendLine(v.PascalCaseValue + ",");
 				}
 			}
 			builder.AppendLine("}");

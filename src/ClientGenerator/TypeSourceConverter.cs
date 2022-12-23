@@ -14,15 +14,20 @@ namespace EdjCase.ICP.ClientGenerator
 	{
 		public string Name { get; }
 		public ServiceSourceDescriptor Service { get; }
-		public List<(TypeName Name, TypeSourceDescriptor Desc)> Types { get; }
-		public List<(string Alias, TypeName Type)> Aliases { get; }
-		public ServiceSourceInfo(string name, ServiceSourceDescriptor service, List<(TypeName Name, TypeSourceDescriptor Desc)> types, List<(string Alias, TypeName Type)> aliases)
+		public List<(CandidId Id, ITypeSourceDescriptor Type)> Types { get; }
+		public List<(CandidId Alias, TypeName Type)> Aliases { get; }
+		public ServiceSourceInfo(
+			string name,
+			ServiceSourceDescriptor service,
+			List<(CandidId Name, ITypeSourceDescriptor Info)> types,
+			List<(CandidId Alias, TypeName Type)> aliases)
 		{
 			this.Name = name ?? throw new ArgumentNullException(nameof(name));
 			this.Service = service ?? throw new ArgumentNullException(nameof(service));
 			this.Types = types ?? throw new ArgumentNullException(nameof(types));
 			this.Aliases = aliases ?? throw new ArgumentNullException(nameof(aliases));
 		}
+
 	}
 	internal class TypeSourceConverter
 	{
@@ -30,7 +35,8 @@ namespace EdjCase.ICP.ClientGenerator
 		{
 			// Mapping of A => Type
 			// where candid is: type A = Type;
-			Dictionary<CandidId, CandidType> declaredTypes = service.DeclaredTypes.ToDictionary(t => t.Key, t => t.Value);
+			Dictionary<CandidId, CandidType> declaredTypes = service.DeclaredTypes
+				.ToDictionary(t => t.Key, t => t.Value);
 
 			if (service.ServiceReferenceId != null)
 			{
@@ -39,277 +45,289 @@ namespace EdjCase.ICP.ClientGenerator
 			}
 
 
-			Dictionary<TypeName, TypeSourceDescriptor> resolvedDeclaredTypes = new();
 
-			TypeName? GetType(TypeSourceDescriptor desc, string parentName)
+			TypeHelper typeHelper = TypeHelper.Load(declaredTypes);
+			foreach ((CandidId id, CandidType type) in declaredTypes)
 			{
-				// Id is null if empty, reserved or null
-				TypeName? type;
-				switch (desc)
+				var a = typeHelper.Resolve(type);
+				switch (type)
 				{
-					case PrimitiveSourceDescriptor p:
-						type = p.Type;
+					case CandidFuncType f:
+						{
+							// Func alias declaration
+							// ex: type A = func
+							// using A = Edjcase.ICP.Candid.Models.Values.CandidFunc;
+							TypeName typeName = TypeName.FromType<CandidFunc>();
+							aliases.Add((id, typeName));
+							break;
+						}
+					case CandidPrimitiveType p:
+						{
+							TypeName typeName = p.Type;
+							aliases.Add((id, typeName));
+							break;
+						}
+					case CandidReferenceType r:
+						{
+							TypeName typeName = new TypeName(r.Id.ToString(), $"{baseNamespace}.Models");
+							aliases.Add((id, typeName));
+							break;
+						}
+					case CandidVectorType v:
+						{
+							TypeName innerType = v.InnerType;
+							TypeName typeName = new TypeName("List", "System.Collections.Generic", innerType);
+							break;
+						}
+					case CandidOptionalType o:
+						{
+							TypeName typeName = new TypeName("OptionalValue", "EdjCase.ICP.Candid.Models", o.InnerType);
+							aliases.Add((id, typeName));
+							break;
+						}
 						break;
-					case VectorSourceDescriptor v:
-						type = new TypeName("List", "System.Collections.Generic", v.InnerType);
-						break;
-					case OptionalSourceDescriptor o:
-						type = new TypeName("OptionalValue", "EdjCase.ICP.Candid.Models", o.InnerType);
-						break;
-					case VariantSourceDescriptor va:
-						type = new TypeName(parentName, null);
-						break;
-					case RecordSourceDescriptor re:
-						type = new TypeName(parentName, null);
-						break;
-					case FuncSourceDescriptor f:
-						// Func alias declaration
-						// ex: type A = func
-						// using A = Edjcase.ICP.Candid.Models.Values.CandidFunc;
-						type = TypeName.FromType<CandidFunc>();
-						break;
-					case ReferenceSourceDescriptor re:
-						type = re.Reference; // TODO
-						break;
+					default:
+						{
+							types.Add((id, desc));
+							break;
+						}
+				}
+			}
+
+
+
+			ServiceSourceDescriptor serviceSourceDesc = helper.ResolveService(service.Service);
+
+
+			return new ServiceSourceInfo(serviceName, serviceSourceDesc, types, aliases);
+		}
+
+
+
+
+
+		private class TypeHelper
+		{
+			public class TypeInfo
+			{
+				public CandidId? Id { get; }
+				public CandidType Type { get; }
+
+				public TypeInfo(CandidType type)
+				{
+					this.Type = type;
+				}
+			}
+
+			private Dictionary<CandidId, TypeInfo> types = new();
+			public TypeHelper(Dictionary<CandidId, TypeInfo> types)
+			{
+				this.types = types;
+			}
+
+			public static TypeHelper Load(Dictionary<CandidId, CandidType> declaredTypes)
+			{
+				List<TypeInfo> types = new();
+				foreach ((CandidId id, CandidType type) in declaredTypes)
+				{
+					L(type);
+				}
+			}
+
+			private static void L(CandidId id, CandidType type, Dictionary<CandidId, TypeInfo> types)
+			{
+				var typeInfo = new TypeInfo(type);
+				t.Add(id, typeInfo);
+
+			}
+
+			private static void M(Dictionary<CandidId, TypeInfo> types)
+			{
+				switch (type)
+				{
+					case CandidReferenceType r:
+						{
+							types.Add()
+							return new ReferenceSourceDescriptor(r.Id);
+						}
+					case CandidPrimitiveType p:
+						{
+							return ResolvePrimitive(p.PrimitiveType);
+						}
+					case CandidVectorType v:
+						{
+							ITypeSourceDescriptor desc = this.Resolve(v.InnerType);
+							return new VectorSourceDescriptor(desc);
+						}
+					case CandidOptionalType o:
+						{
+							ITypeSourceDescriptor desc = this.Resolve(o.Value);
+							return new OptionalSourceDescriptor(desc);
+						}
+					case CandidRecordType r:
+						{
+							return ResolveRecord(r);
+						}
+					case CandidVariantType v:
+						{
+							return ResolveVariant(v);
+						}
+					case CandidServiceType s:
+						{
+							return ResolveService(s);
+						}
+					case CandidFuncType f:
+						{
+							return ResolveFunc(f);
+						}
 					default:
 						throw new NotImplementedException();
 				}
-				return type;
-			}
-			TypeName? AddType(TypeSourceDescriptor desc, string parentName)
-			{
-				TypeName? type = GetType(desc, parentName);
-				if (type != null)
-				{
-					resolvedDeclaredTypes.Add(type, desc);
-				}
-				return type;
 			}
 
-			List<(TypeName Name, TypeSourceDescriptor Desc)> customTypes = new();
-			List<(string Alias, TypeName Type)> aliases = new();
-			foreach ((CandidId id, CandidType type) in declaredTypes)
+			public ITypeSourceDescriptor Resolve(CandidType type)
 			{
-				string name = id.ToString();
-				TypeSourceDescriptor desc = ResolveDescriptor(type, baseNamespace, name, AddType);
-
-				TypeName? typeName = GetType(desc, name);
-				if (typeName == null)
+				switch (type)
 				{
-					// Skip empty, reserved and null
-					continue;
-				}
-				switch (desc)
-				{
-					case FuncSourceDescriptor f:
-					case PrimitiveSourceDescriptor p:
-					case ReferenceSourceDescriptor r:
-					case VectorSourceDescriptor v:
-					case OptionalSourceDescriptor o:
-						aliases.Add((name, typeName));
-						break;
+					case CandidReferenceType r:
+						{
+							return new ReferenceSourceDescriptor(r.Id);
+						}
+					case CandidPrimitiveType p:
+						{
+							return ResolvePrimitive(p.PrimitiveType);
+						}
+					case CandidVectorType v:
+						{
+							ITypeSourceDescriptor desc = this.Resolve(v.InnerType);
+							return new VectorSourceDescriptor(desc);
+						}
+					case CandidOptionalType o:
+						{
+							ITypeSourceDescriptor desc = this.Resolve(o.Value);
+							return new OptionalSourceDescriptor(desc);
+						}
+					case CandidRecordType r:
+						{
+							return ResolveRecord(r);
+						}
+					case CandidVariantType v:
+						{
+							return ResolveVariant(v);
+						}
+					case CandidServiceType s:
+						{
+							return ResolveService(s);
+						}
+					case CandidFuncType f:
+						{
+							return ResolveFunc(f);
+						}
 					default:
-						customTypes.Add((typeName, desc));
-						break;
+						throw new NotImplementedException();
 				}
 			}
 
-
-			ServiceSourceDescriptor serviceSourceDesc = ResolveService(service.Service, baseNamespace, serviceName, AddType);
-
-
-			return new ServiceSourceInfo(serviceName, serviceSourceDesc, customTypes, aliases);
-		}
-
-		private static RecordSourceDescriptor ResolveRecord(
-			CandidRecordType type,
-			string baseNamespace,
-			string parentName,
-			Func<TypeSourceDescriptor, string, TypeName?> addTypeFunc)
-		{
-			List<(ValueName Name, TypeName Type)> resolvedFields = type.Fields
-				.Select(f =>
-				{
-					ValueName fieldName = ValueName.Default(f.Key); // Get field name or id
-					if (string.Equals(parentName, fieldName.PropertyName, StringComparison.OrdinalIgnoreCase))
-					{
-						// Cant match the class name
-						fieldName = ValueName.Default(fieldName.PropertyName + "Item");
-					}
-					TypeSourceDescriptor desc = ResolveDescriptor(f.Value, baseNamespace, parentName, addTypeFunc);
-					TypeName? fieldTypeId = addTypeFunc(desc, parentName);
-					return (fieldName, fieldTypeId);
-				})
-				.Where(f => f.fieldTypeId != null)
-				.Select(f => (f.fieldName, f.fieldTypeId!))
-				.ToList();
-			return new RecordSourceDescriptor(resolvedFields);
-		}
-
-
-		private static VariantSourceDescriptor ResolveVariant(
-			CandidVariantType type,
-			string baseNamespace,
-			string parentName,
-			Func<TypeSourceDescriptor, string, TypeName?> addTypeFunc)
-		{
-			List<(ValueName Name, TypeName? Type)> resolvedOptions = type.Fields
-				.Select(f =>
-				{
-					ValueName fieldName = ValueName.Default(f.Key);
-					TypeSourceDescriptor desc = ResolveDescriptor(f.Value, baseNamespace, parentName, addTypeFunc);
-					TypeName? fieldTypeId = addTypeFunc(desc, parentName);
-					return (fieldName, fieldTypeId);
-				})
-				.ToList();
-			return new VariantSourceDescriptor(resolvedOptions);
-		}
-
-		private static ServiceSourceDescriptor ResolveService(
-			CandidServiceType type,
-			string baseNamespace,
-			string parentName,
-			Func<TypeSourceDescriptor, string, TypeName?> addTypeFunc)
-		{
-			List<(string Name, TypeName FuncType, FuncSourceDescriptor FuncDesc)> resolvedMethods = type.Methods
-				.Select(f =>
-				{
-					FuncSourceDescriptor func = ResolveFunc(f.Value, baseNamespace, parentName, addTypeFunc);
-					string methodName = f.Key.ToString();
-					TypeName funcType = addTypeFunc(func, methodName)!;
-					return (methodName, funcType, func);
-				})
-				.ToList();
-			return new ServiceSourceDescriptor(resolvedMethods);
-		}
-		private static FuncSourceDescriptor ResolveFunc(
-			CandidFuncType type,
-			string baseNamespace,
-			string parentName,
-			Func<TypeSourceDescriptor, string, TypeName?> addTypeFunc)
-		{
-			var subTypesToCreate = new List<TypeSourceDescriptor>();
-
-			FuncSourceDescriptor.ParameterInfo BuildParam(ValueName argName, CandidType paramType)
+			private RecordSourceDescriptor ResolveRecord(CandidRecordType type)
 			{
-				bool isOpt = false;
-				if (paramType is CandidOptionalType o)
+				List<(ValueName Name, ITypeSourceDescriptor Type)> resolvedFields = type.Fields
+					.Select(f =>
+					{
+						ValueName fieldName = ValueName.Default(f.Key); // Get field name or id
+
+						ITypeSourceDescriptor desc = this.Resolve(f.Value);
+						return (fieldName, desc);
+					})
+					.Select(f => (f.fieldName, f.desc))
+					.ToList();
+				return new RecordSourceDescriptor(resolvedFields);
+			}
+
+
+			private VariantSourceDescriptor ResolveVariant(CandidVariantType type)
+			{
+				List<(ValueName Name, ITypeSourceDescriptor Type)> resolvedOptions = type.Fields
+					.Select(f =>
+					{
+						ValueName fieldName = ValueName.Default(f.Key);
+						ITypeSourceDescriptor desc = this.Resolve(f.Value);
+						return (fieldName, desc);
+					})
+					.ToList();
+				return new VariantSourceDescriptor(resolvedOptions);
+			}
+
+			private ServiceSourceDescriptor ResolveService(CandidServiceType type)
+			{
+				List<(string Name, FuncSourceDescriptor FuncDesc)> resolvedMethods = type.Methods
+					.Select(f =>
+					{
+						FuncSourceDescriptor func = this.ResolveFunc(f.Value);
+						string methodName = f.Key.ToString();
+						return (methodName, func);
+					})
+					.ToList();
+				return new ServiceSourceDescriptor(resolvedMethods);
+			}
+			private FuncSourceDescriptor ResolveFunc(CandidFuncType type)
+			{
+				var subTypesToCreate = new List<ITypeSourceDescriptor>();
+
+				FuncSourceDescriptor.ParameterInfo BuildParam(ValueName argName, CandidType paramType)
 				{
-					paramType = o.Value;
-					isOpt = true;
+					if (paramType is CandidOptionalType o)
+					{
+						paramType = o.Value;
+					}
+					ITypeSourceDescriptor desc = this.Resolve(paramType);
+					return new FuncSourceDescriptor.ParameterInfo(argName, desc);
 				}
-				TypeSourceDescriptor desc = ResolveDescriptor(paramType, baseNamespace, parentName, addTypeFunc);
-				TypeName? typeId = addTypeFunc(desc, parentName);
-				return new FuncSourceDescriptor.ParameterInfo(argName, typeId, isOpt);
+
+				List<FuncSourceDescriptor.ParameterInfo> resolvedParameters = type.ArgTypes
+					.Select((f, i) =>
+					{
+						ValueName argName = ValueName.Default(f.Name == null ? $"arg{i}" : f.Name.Value);
+						return BuildParam(argName, f.Type);
+					})
+					.ToList();
+				List<FuncSourceDescriptor.ParameterInfo> resolvedReturnParameters = type.ReturnTypes
+					.Select((f, i) =>
+					{
+						ValueName argName = ValueName.Default(f.Name == null ? $"r{i}" : f.Name.Value);
+						return BuildParam(argName, f.Type);
+					})
+					.ToList();
+				bool isFireAndForget = type.Modes.Contains(FuncMode.Oneway);
+				bool isQuery = type.Modes.Contains(FuncMode.Query);
+				return new FuncSourceDescriptor(isFireAndForget, isQuery, resolvedParameters, resolvedReturnParameters);
 			}
 
-			List<FuncSourceDescriptor.ParameterInfo> resolvedParameters = type.ArgTypes
-				.Select((f, i) =>
-				{
-					ValueName argName = ValueName.Default(f.Name == null ? $"arg{i}" : f.Name.Value);
-					return BuildParam(argName, f.Type);
-				})
-				.ToList();
-			List<FuncSourceDescriptor.ParameterInfo> resolvedReturnParameters = type.ReturnTypes
-				.Select((f, i) =>
-				{
-					ValueName argName = ValueName.Default(f.Name == null ? $"r{i}" : f.Name.Value);
-					return BuildParam(argName, f.Type);
-				})
-				.ToList();
-			bool isFireAndForget = type.Modes.Contains(FuncMode.Oneway);
-			bool isQuery = type.Modes.Contains(FuncMode.Query);
-			return new FuncSourceDescriptor(isFireAndForget, isQuery, resolvedParameters, resolvedReturnParameters);
-		}
-
-		private static PrimitiveSourceDescriptor ResolvePrimitive(PrimitiveType type)
-		{
-			TypeName? t = type switch
+			private static PrimitiveSourceDescriptor ResolvePrimitive(PrimitiveType type)
 			{
-				PrimitiveType.Text => TypeName.FromType<string>(),
-				PrimitiveType.Nat => TypeName.FromType<UnboundedUInt>(),
-				PrimitiveType.Nat8 => TypeName.FromType<byte>(),
-				PrimitiveType.Nat16 => TypeName.FromType<ushort>(),
-				PrimitiveType.Nat32 => TypeName.FromType<uint>(),
-				PrimitiveType.Nat64 => TypeName.FromType<ulong>(),
-				PrimitiveType.Int => TypeName.FromType<UnboundedInt>(),
-				PrimitiveType.Int8 => TypeName.FromType<sbyte>(),
-				PrimitiveType.Int16 => TypeName.FromType<short>(),
-				PrimitiveType.Int32 => TypeName.FromType<int>(),
-				PrimitiveType.Int64 => TypeName.FromType<long>(),
-				PrimitiveType.Float32 => TypeName.FromType<float>(),
-				PrimitiveType.Float64 => TypeName.FromType<double>(),
-				PrimitiveType.Bool => TypeName.FromType<bool>(),
-				PrimitiveType.Principal => TypeName.FromType<Principal>(),
-				PrimitiveType.Reserved => null,
-				PrimitiveType.Empty => null,
-				PrimitiveType.Null => null,
-				_ => throw new NotImplementedException(),
-			};
-			return new PrimitiveSourceDescriptor(t);
-		}
-
-
-
-		private static TypeSourceDescriptor ResolveDescriptor(
-			CandidType type,
-			string baseNamespace,
-			string parentName,
-			Func<TypeSourceDescriptor, string, TypeName?> addTypeFunc)
-		{
-			switch (type)
-			{
-				case CandidReferenceType r:
-					{
-						TypeName typeName = new(r.Id.Value, null); // TODO?
-						return new ReferenceSourceDescriptor(typeName);
-					}
-				case CandidPrimitiveType p:
-					{
-						return ResolvePrimitive(p.PrimitiveType);
-					}
-				case CandidVectorType v:
-					{
-						TypeSourceDescriptor desc = ResolveDescriptor(v.InnerType, baseNamespace, parentName, addTypeFunc);
-						TypeName? innerId = addTypeFunc(desc, parentName);
-						if (innerId == null)
-						{
-							// TODO?
-							throw new NotImplementedException("Empty, reserved or null in a vector");
-						}
-						return new VectorSourceDescriptor(innerId);
-					}
-				case CandidOptionalType o:
-					{
-						TypeSourceDescriptor desc = ResolveDescriptor(o.Value, baseNamespace, parentName, addTypeFunc);
-						TypeName? innerId = addTypeFunc(desc, parentName);
-						if (innerId == null)
-						{
-							// TODO?
-							throw new NotImplementedException("Empty, reserved or null in a vector");
-						}
-						return new OptionalSourceDescriptor(innerId);
-					}
-				case CandidRecordType r:
-					{
-						return ResolveRecord(r, baseNamespace, parentName, addTypeFunc);
-					}
-				case CandidVariantType v:
-					{
-						return ResolveVariant(v, baseNamespace, parentName, addTypeFunc);
-					}
-				case CandidServiceType s:
-					{
-						return ResolveService(s, baseNamespace, parentName, addTypeFunc);
-					}
-				case CandidFuncType f:
-					{
-						return ResolveFunc(f, baseNamespace, parentName, addTypeFunc);
-					}
-				default:
-					throw new NotImplementedException();
+				TypeName? t = type switch
+				{
+					PrimitiveType.Text => TypeName.FromType<string>(),
+					PrimitiveType.Nat => TypeName.FromType<UnboundedUInt>(),
+					PrimitiveType.Nat8 => TypeName.FromType<byte>(),
+					PrimitiveType.Nat16 => TypeName.FromType<ushort>(),
+					PrimitiveType.Nat32 => TypeName.FromType<uint>(),
+					PrimitiveType.Nat64 => TypeName.FromType<ulong>(),
+					PrimitiveType.Int => TypeName.FromType<UnboundedInt>(),
+					PrimitiveType.Int8 => TypeName.FromType<sbyte>(),
+					PrimitiveType.Int16 => TypeName.FromType<short>(),
+					PrimitiveType.Int32 => TypeName.FromType<int>(),
+					PrimitiveType.Int64 => TypeName.FromType<long>(),
+					PrimitiveType.Float32 => TypeName.FromType<float>(),
+					PrimitiveType.Float64 => TypeName.FromType<double>(),
+					PrimitiveType.Bool => TypeName.FromType<bool>(),
+					PrimitiveType.Principal => TypeName.FromType<Principal>(),
+					PrimitiveType.Reserved => null,
+					PrimitiveType.Empty => null,
+					PrimitiveType.Null => null,
+					_ => throw new NotImplementedException(),
+				};
+				return new PrimitiveSourceDescriptor(t);
 			}
 		}
-
 	}
 }

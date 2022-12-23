@@ -69,9 +69,9 @@ namespace EdjCase.ICP.ClientGenerator
 
 
 			var typeFiles = new List<(string Name, string SourceCode)>();
-			foreach ((TypeName name, TypeSourceDescriptor desc) in service.Types)
+			foreach ((CandidId id, ServiceSourceInfo.TypeInfo typeInfo) in service.Types)
 			{
-				(string fileName, string source) = TypeSourceGenerator.GenerateTypeSourceCode(name, baseNamespace, desc, importedNamespaces);
+				(string fileName, string source) = TypeSourceGenerator.GenerateTypeSourceCode(id, baseNamespace, typeInfo, importedNamespaces);
 
 				typeFiles.Add((fileName, source));
 			}

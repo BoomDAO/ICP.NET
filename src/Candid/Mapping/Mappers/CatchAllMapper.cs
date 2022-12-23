@@ -4,6 +4,7 @@ using EdjCase.ICP.Candid.Models.Values;
 using EdjCase.ICP.Candid.Utilities;
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -13,12 +14,18 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 {
 	internal static class CatchAllMapperFactory
 	{
+		private static ConcurrentDictionary<(Type, CandidConverterOptions), (CatchAllMapper, CandidType)> _cache = new();
 		public static CatchAllMapper Build(Type objType, CandidConverterOptions options)
 		{
 			return BuildInternal(objType, options).Mapper;
 		}
 
 		private static (CatchAllMapper Mapper, CandidType Type) BuildInternal(Type objType, CandidConverterOptions options)
+		{
+			return _cache.GetOrAdd((objType, options), (a) => BuildInternalNoCache(a.Item1, a.Item2));
+		}
+
+		private static (CatchAllMapper Mapper, CandidType Type) BuildInternalNoCache(Type objType, CandidConverterOptions options)
 		{
 			if (objType == typeof(string))
 			{
@@ -229,8 +236,20 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 				v =>
 				{
 					CandidOptional opt = v.AsOptional();
-					var obj = innerCatchAllMapper.FromCandidFunc(opt.Value);
-					return Activator.CreateInstance(objType, true, obj);
+
+					object? innerValue;
+					bool hasValue;
+					if (opt.Value != CandidPrimitive.Null())
+					{
+						innerValue = innerCatchAllMapper.FromCandidFunc(opt.Value);
+						hasValue = true;
+					}
+					else
+					{
+						innerValue = null;
+						hasValue = false;
+					}
+					return Activator.CreateInstance(objType, hasValue, innerValue);
 				}
 			);
 			return (mapper, type);

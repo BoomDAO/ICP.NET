@@ -10,14 +10,14 @@ namespace EdjCase.ICP.ClientGenerator
 {
 	public class ValueName
 	{
-		public string PropertyName { get; }
-		public string VariableName { get; }
+		public string PascalCaseValue { get; }
+		public string CamelCaseValue { get; }
 		public string CandidName { get; }
 
 		private ValueName(string propertyName, string variableName, string candidName)
 		{
-			this.PropertyName = propertyName;
-			this.VariableName = variableName;
+			this.PascalCaseValue = propertyName;
+			this.CamelCaseValue = variableName;
 			this.CandidName = candidName;
 		}
 
