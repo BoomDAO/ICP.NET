@@ -22,4 +22,10 @@
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
 	</ItemGroup>
+
+
+	<ItemGroup>
+	  <Folder Include="Dex\" />
+	  <Folder Include="Governance\" />
+	</ItemGroup>
 </Project>

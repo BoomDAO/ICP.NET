@@ -6,30 +6,6 @@ using EdjCase.ICP.Candid;
 
 namespace Sample.Shared.Governance.Models
 {
-	public enum OperationType
-	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("RemoveHotKey")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(RemoveHotKey))]
-		RemoveHotKey,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("AddHotKey")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(AddHotKey))]
-		AddHotKey,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("StopDissolving")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(Operation))]
-		StopDissolving,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("StartDissolving")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(Operation))]
-		StartDissolving,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("IncreaseDissolveDelay")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(IncreaseDissolveDelay))]
-		IncreaseDissolveDelay,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("JoinCommunityFund")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(Operation))]
-		JoinCommunityFund,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("SetDissolveTimestamp")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(SetDissolveTimestamp))]
-		SetDissolveTimestamp,
-	}
 	public class Operation : EdjCase.ICP.Candid.Models.CandidVariantValueBase<OperationType>
 	{
 		public Operation(OperationType type, System.Object? value)  : base(type, value)
@@ -62,26 +38,32 @@ namespace Sample.Shared.Governance.Models
 			return (AddHotKey)this.value!;
 		}
 		
-		public static Operation StopDissolving(Operation info)
+		public class O2
+		{
+		}
+		public static Operation StopDissolving(Operation.O2 info)
 		{
 			return new Operation(OperationType.StopDissolving, info);
 		}
 		
-		public Operation AsStopDissolving()
+		public Operation.O2 AsStopDissolving()
 		{
 			this.ValidateType(OperationType.StopDissolving);
-			return (Operation)this.value!;
+			return (Operation.O2)this.value!;
 		}
 		
-		public static Operation StartDissolving(Operation info)
+		public class O3
+		{
+		}
+		public static Operation StartDissolving(Operation.O3 info)
 		{
 			return new Operation(OperationType.StartDissolving, info);
 		}
 		
-		public Operation AsStartDissolving()
+		public Operation.O3 AsStartDissolving()
 		{
 			this.ValidateType(OperationType.StartDissolving);
-			return (Operation)this.value!;
+			return (Operation.O3)this.value!;
 		}
 		
 		public static Operation IncreaseDissolveDelay(IncreaseDissolveDelay info)
@@ -95,15 +77,18 @@ namespace Sample.Shared.Governance.Models
 			return (IncreaseDissolveDelay)this.value!;
 		}
 		
-		public static Operation JoinCommunityFund(Operation info)
+		public class O5
+		{
+		}
+		public static Operation JoinCommunityFund(Operation.O5 info)
 		{
 			return new Operation(OperationType.JoinCommunityFund, info);
 		}
 		
-		public Operation AsJoinCommunityFund()
+		public Operation.O5 AsJoinCommunityFund()
 		{
 			this.ValidateType(OperationType.JoinCommunityFund);
-			return (Operation)this.value!;
+			return (Operation.O5)this.value!;
 		}
 		
 		public static Operation SetDissolveTimestamp(SetDissolveTimestamp info)
@@ -117,6 +102,30 @@ namespace Sample.Shared.Governance.Models
 			return (SetDissolveTimestamp)this.value!;
 		}
 		
+	}
+	public enum OperationType
+	{
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("RemoveHotKey")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(RemoveHotKey))]
+		RemoveHotKey,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("AddHotKey")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(AddHotKey))]
+		AddHotKey,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("StopDissolving")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(Operation.O2))]
+		StopDissolving,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("StartDissolving")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(Operation.O3))]
+		StartDissolving,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("IncreaseDissolveDelay")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(IncreaseDissolveDelay))]
+		IncreaseDissolveDelay,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("JoinCommunityFund")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(Operation.O5))]
+		JoinCommunityFund,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("SetDissolveTimestamp")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(SetDissolveTimestamp))]
+		SetDissolveTimestamp,
 	}
 }
 

@@ -54,7 +54,7 @@ namespace EdjCase.ICP.ClientGenerator
 			ClientCodeResult result = ClientCodeGenerator.FromService(clientName, baseNamespace, serviceFile);
 
 
-			Console.WriteLine($"Writing client file ./{result.Name}.cs...");
+			Console.WriteLine($"Writing client file ./{result.Name.GetName()}.cs...");
 			WriteFile(null, result.Name.GetName(), result.ClientFile);
 
 
@@ -66,7 +66,7 @@ namespace EdjCase.ICP.ClientGenerator
 
 			if (result.AliasFile != null)
 			{
-				Console.WriteLine($"Writing aliases file ./{result.Name}.cs...");
+				Console.WriteLine($"Writing aliases file ./Aliases.cs...");
 				WriteFile(null, "Aliases", result.AliasFile);
 			}
 			else

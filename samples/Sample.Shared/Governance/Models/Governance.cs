@@ -8,8 +8,17 @@ namespace Sample.Shared.Governance.Models
 {
 	public class Governance
 	{
+		public class R0V0
+		{
+			[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("0")]
+			public int F0 { get; set; }
+			
+			[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("1")]
+			public Followees F1 { get; set; }
+			
+		}
 		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("default_followees")]
-		public System.Collections.Generic.List<Governance> DefaultFollowees { get; set; }
+		public System.Collections.Generic.List<R0V0> DefaultFollowees { get; set; }
 		
 		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("wait_for_quiet_threshold_seconds")]
 		public ulong WaitForQuietThresholdSeconds { get; set; }
@@ -32,14 +41,41 @@ namespace Sample.Shared.Governance.Models
 		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("short_voting_period_seconds")]
 		public ulong ShortVotingPeriodSeconds { get; set; }
 		
+		public class R8V0
+		{
+			[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("0")]
+			public ulong F0 { get; set; }
+			
+			[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("1")]
+			public ProposalData F1 { get; set; }
+			
+		}
 		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("proposals")]
-		public System.Collections.Generic.List<Governance> Proposals { get; set; }
+		public System.Collections.Generic.List<R8V0> Proposals { get; set; }
 		
+		public class R9V0
+		{
+			[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("0")]
+			public ulong F0 { get; set; }
+			
+			[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("1")]
+			public NeuronInFlightCommand F1 { get; set; }
+			
+		}
 		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("in_flight_commands")]
-		public System.Collections.Generic.List<Governance> InFlightCommands { get; set; }
+		public System.Collections.Generic.List<R9V0> InFlightCommands { get; set; }
 		
+		public class R10V0
+		{
+			[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("0")]
+			public ulong F0 { get; set; }
+			
+			[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("1")]
+			public Neuron F1 { get; set; }
+			
+		}
 		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("neurons")]
-		public System.Collections.Generic.List<Governance> Neurons { get; set; }
+		public System.Collections.Generic.List<R10V0> Neurons { get; set; }
 		
 		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("genesis_timestamp_seconds")]
 		public ulong GenesisTimestampSeconds { get; set; }

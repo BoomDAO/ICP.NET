@@ -31,7 +31,7 @@ namespace ICP.ClientGenerator
 			{ typeof(bool), "bool" }
 		};
 
-		public static string GenerateClientSourceCode(TypeName clientName, string baseNamespace, ServiceSourceInfo.ServiceTypeInfo desc, List<string>? importedNamespaces = null)
+		public static string GenerateClientSourceCode(TypeName clientName, string baseNamespace, ServiceSourceCodeType desc, List<string>? importedNamespaces = null)
 		{
 			IndentedStringBuilder builder = new();
 
@@ -60,16 +60,16 @@ namespace ICP.ClientGenerator
 			return builder.ToString();
 		}
 		public static (string FileName, string SourceCode) GenerateTypeSourceCode(
-			CandidId id,
+			ValueName id,
 			string baseNamespace,
-			ServiceSourceInfo.TypeInfo type,
+			Action<IndentedStringBuilder> writeType,
 			List<string>? importedNamespaces = null)
 		{
 			IndentedStringBuilder builder = new();
 
 			WriteNamespace(builder, baseNamespace + ".Models", () =>
 			{
-				WriteType(builder, type);
+				writeType(builder);
 			});
 			string source = BuildSourceWithShorthands(builder);
 
@@ -87,42 +87,7 @@ namespace ICP.ClientGenerator
 				source = builder.ToString();
 			}
 
-			return (type.Name.GetName(), source);
-		}
-
-		public static string GenerateAliasSourceCode(string baseNamespace, List<(CandidId Alias, TypeName Type)> aliases, bool useGlobal)
-		{
-			IndentedStringBuilder builder = new();
-			string? prefix = useGlobal ? "global " : null;
-			foreach ((CandidId id, TypeName aliasedType) in aliases)
-			{
-				builder.AppendLine($"{prefix}using {id} = {aliasedType.GetNamespacedName()};");
-			}
-			builder.AppendLine("");
-			builder.AppendLine($"namespace {baseNamespace}.Models;");
-
-			return builder.ToString();
-		}
-
-		private static void WriteType(IndentedStringBuilder builder, ServiceSourceInfo.TypeInfo type)
-		{
-			switch (type)
-			{
-				case VariantSourceDescriptor v:
-					WriteVariant(builder, typeName, v);
-					break;
-				case RecordSourceDescriptor r:
-					WriteRecord(builder, typeName, r);
-					break;
-				case ServiceSourceDescriptor s:
-					WriteService(builder, typeName, s);
-					break;
-				case FuncSourceDescriptor:
-					// Func is CandidFunc, no need to create another definition
-					break;
-				default:
-					throw new NotImplementedException();
-			};
+			return (id.PascalCaseValue, source);
 		}
 
 		private static string BuildSourceWithShorthands(IndentedStringBuilder builder)
@@ -137,7 +102,7 @@ namespace ICP.ClientGenerator
 			return source;
 		}
 
-		private static void WriteService(IndentedStringBuilder builder, TypeName serviceName, ServiceSourceDescriptor service)
+		private static void WriteService(IndentedStringBuilder builder, TypeName serviceName, ServiceSourceCodeType service)
 		{
 			WriteClass(builder, serviceName, () =>
 			{
@@ -161,48 +126,34 @@ namespace ICP.ClientGenerator
 					TypedParam.FromType(new TypeName("IAgent", "EdjCase.ICP.Agent.Agents"), ValueName.Default("agent")),
 					TypedParam.FromType(new TypeName("Principal", "EdjCase.ICP.Candid.Models"), ValueName.Default("canisterId"))
 				);
-				foreach ((string methodName, TypeName funcName, FuncSourceDescriptor funcDesc) in service.Methods)
+				foreach ((ValueName methodName, ServiceSourceCodeType.Func funcDesc) in service.Methods)
 				{
-					List<TypedParam> args = funcDesc.Parameters
-						.Where(p => p.Type != null) // exclude null/empty/reserved
-						.Select((a, i) => TypedParam.FromType(a.Type!, a.Name))
+					List<TypedValueName> resolvedArgTypes = ResolveTypes(builder, funcDesc.ArgTypes);
+
+					List<TypedValueName> resolvedReturnTypes = funcDesc.IsFireAndForget
+						? new() // TODO confirm no return types, or even not async?
+						: ResolveTypes(builder, funcDesc.ReturnTypes);
+
+					List<TypedParam> argsForMethod = resolvedArgTypes
+						.Select((a, i) => TypedParam.FromType(a.Type, a.Value))
 						.ToList();
-					args.Add(new TypedParam($"{typeof(IIdentity).FullName!}?", "identityOverride", "null"));
-					List<TypedValueName> returnTypes;
-					if (funcDesc.IsFireAndForget)
-					{
-						// TODO confirm no return types, or even not async?
-						returnTypes = new();
-					}
-					else
-					{
-						returnTypes = funcDesc.ReturnParameters
-							.Where(p => p.Type != null) // exclude null/empty/reserved
-							.Select((p, i) =>
-							{
-								TypeName typeName = p.IsOpt
-									? new TypeName("OptionalValue", "EdjCase.ICP.Candid.Models", p.Type!)
-									: p.Type!;
-								ValueName valueName = p.Name ?? ValueName.Default($"R{i}");
-								return new TypedValueName(typeName, valueName);
-							})
-							.ToList();
-					}
+					argsForMethod.Add(new TypedParam($"{typeof(IIdentity).FullName!}?", "identityOverride", "null"));
+
 					WriteMethod(
 						builder,
 						() =>
 						{
-							builder.AppendLine($"string method = \"{methodName}\";");
+							builder.AppendLine($"string method = \"{methodName.CandidName}\";");
 
 							var parameterVariables = new List<string>();
-							foreach (FuncSourceDescriptor.ParameterInfo param in funcDesc.Parameters)
+							foreach (TypedValueName param in resolvedArgTypes)
 							{
 								int index = parameterVariables.Count;
 								string variableName = "p" + index;
 								string valueWithType;
 								if (param.Type != null)
 								{
-									valueWithType = $"CandidTypedValue.FromObject({param.Name.CamelCaseValue})";
+									valueWithType = $"CandidTypedValue.FromObject({param.Value.CamelCaseValue})";
 								}
 								else
 								{
@@ -236,11 +187,11 @@ namespace ICP.ClientGenerator
 								argVariableName = "responseArg";
 							}
 
-							if (returnTypes.Any())
+							if (!funcDesc.IsFireAndForget && resolvedReturnTypes.Any())
 							{
 								var returnParamVariables = new List<string>();
 								int i = 0;
-								foreach (FuncSourceDescriptor.ParameterInfo parameter in funcDesc.ReturnParameters)
+								foreach (TypedValueName parameter in resolvedReturnTypes)
 								{
 									// Only include non null/empty/reserved params
 									if (parameter.Type != null)
@@ -248,11 +199,6 @@ namespace ICP.ClientGenerator
 										string variableName = "r" + i;
 										string? optionalString = null;
 										string variableTypeName = parameter.Type.GetNamespacedName();
-										if (parameter.IsOpt)
-										{
-											optionalString = "Optional";
-											variableTypeName = $"EdjCase.ICP.Candid.Models.OptionalValue<{variableTypeName}>";
-										}
 										builder.AppendLine($"{variableTypeName} {variableName} = {argVariableName}.Values[{i}].To{optionalString}Object<{parameter.Type.GetNamespacedName()}>();");
 										returnParamVariables.Add(variableName);
 									}
@@ -266,32 +212,59 @@ namespace ICP.ClientGenerator
 						isStatic: false,
 						isAsync: true,
 						isConstructor: false,
-						returnTypes: returnTypes,
-						name: methodName,
+						returnTypes: funcDesc.IsFireAndForget ? new() : resolvedReturnTypes,
+						name: methodName.PascalCaseValue,
 						baseConstructorParams: null,
-						args.ToArray()
+						argsForMethod.ToArray()
 					);
 
 				}
 			});
 		}
 
-
-
-		private static void WriteRecord(IndentedStringBuilder builder, TypeName recordName, RecordSourceDescriptor record)
+		private static List<TypedValueName> ResolveTypes(IndentedStringBuilder builder, List<(ValueName Name, SourceCodeType Type)> argTypes)
 		{
-			WriteClass(builder, record.Name, () =>
+			List<TypedValueName> resolvedTypes = new();
+			int argIndex = 0;
+			foreach ((ValueName argName, SourceCodeType argType) in argTypes)
 			{
-				foreach ((ValueName fieldName, TypeName fieldType) in record.Fields)
+				string nameContext = "Arg" + argIndex;
+				(TypeName? type, _) = ResolveType(argType, nameContext, out Action<IndentedStringBuilder>? argTypeBuilder);
+				if (argTypeBuilder != null)
 				{
+					argTypeBuilder(builder);
+				}
+				// Skip null types, means they are null, empty or reserved
+				if (type != null)
+				{
+					resolvedTypes.Add(new TypedValueName(type, argName));
+				}
+			}
+			return resolvedTypes;
+		}
+
+		internal static void WriteRecord(IndentedStringBuilder builder, TypeName recordName, RecordSourceCodeType record)
+		{
+			WriteClass(builder, recordName, () =>
+			{
+				int i = 0;
+				foreach ((ValueName fieldName, SourceCodeType fieldType) in record.Fields)
+				{
+					(TypeName? fieldTypeName, _) = ResolveType(fieldType, "R" + i, out Action<IndentedStringBuilder>? typeBuilder);
+					i++;
+					if (typeBuilder != null)
+					{
+						typeBuilder(builder);
+					}
+
 					string propertyName = fieldName.PascalCaseValue;
-					if(propertyName == record.Name.GetName())
+					if (propertyName == recordName.GetName())
 					{
 						// Cant match the class name
 						propertyName = propertyName + "_"; // TODO best way to escape it. @ does not work
 					}
 					builder.AppendLine($"[{typeof(CandidNameAttribute).FullName}(\"{fieldName.CandidName}\")]");
-					builder.AppendLine($"public {fieldType.GetNamespacedName()} {propertyName} {{ get; set; }}");
+					builder.AppendLine($"public {fieldTypeName!.GetNamespacedName()} {propertyName} {{ get; set; }}");
 					builder.AppendLine("");
 				}
 			});
@@ -299,15 +272,15 @@ namespace ICP.ClientGenerator
 		}
 
 
-		private static void WriteVariant(IndentedStringBuilder builder, TypeName variantName, VariantSourceDescriptor variant)
+		internal static void WriteVariant(IndentedStringBuilder builder, TypeName variantName, VariantSourceCodeType variant)
 		{
-			TypeName enumName = new TypeName(variant.Name.GetName() + "Type", null);
-			WriteEnum(builder, enumName, variant.Options);
+			TypeName enumName = new(variantName.GetName() + "Type", null);
 			var implementationTypes = new List<TypeName>
 			{
 				new TypeName("CandidVariantValueBase", "EdjCase.ICP.Candid.Models", enumName)
 			};
-			WriteClass(builder, variant.Name, () =>
+			var enumOptions = new List<(ValueName Name, TypeName? Type)>();
+			WriteClass(builder, variantName, () =>
 			{
 				// Constrcutor
 				WriteMethod(
@@ -320,7 +293,7 @@ namespace ICP.ClientGenerator
 					isAsync: false,
 					isConstructor: true,
 					returnType: null,
-					name: variant.Name.GetName(),
+					name: variantName.GetName(),
 					baseConstructorParams: new List<string> { "type", "value" },
 					TypedParam.FromType(enumName, ValueName.Default("type")),
 					TypedParam.FromType(new TypeName("Object?", "System"), ValueName.Default("value"))
@@ -338,29 +311,43 @@ namespace ICP.ClientGenerator
 					isAsync: false,
 					isConstructor: true,
 					returnType: null,
-					name: variant.Name.GetName(),
+					name: variantName.GetName(),
 					baseConstructorParams: null
 				);
 				builder.AppendLine("");
 
 
-
-				foreach ((ValueName valueName, TypeName? typeName) in variant.Options)
+				int i = 0;
+				foreach ((ValueName optionName, SourceCodeType optionType) in variant.Options)
 				{
-					if (typeName == null)
+					string backupOptionName = "O" + i;
+					i++;
+					(TypeName? optionTypeName, bool customType) = ResolveType(optionType, backupOptionName, out Action<IndentedStringBuilder>? optionTypeBuilder);
+					
+					if (optionTypeBuilder != null)
+					{
+						optionTypeBuilder(builder);
+					}
+					if(optionTypeName != null && customType)
+					{
+						// Prefix with parent name if subtype
+						optionTypeName = optionTypeName.WithParentType(variantName);
+					}
+					enumOptions.Add((optionName, optionTypeName));
+					if (optionTypeName == null)
 					{
 						WriteMethod(
 							builder,
 							inner: () =>
 							{
-								builder.AppendLine($"return new {variant.Name.GetNamespacedName()}({enumName.GetNamespacedName()}.{valueName.PascalCaseValue}, null);");
+								builder.AppendLine($"return new {variantName.GetNamespacedName()}({enumName.GetNamespacedName()}.{optionName.PascalCaseValue}, null);");
 							},
 							access: "public",
 							isStatic: true,
 							isAsync: false,
 							isConstructor: false,
-							returnType: new TypedValueName(variant.Name, valueName),
-							name: valueName.PascalCaseValue
+							returnType: new TypedValueName(variantName, optionName),
+							name: optionName.PascalCaseValue
 						);
 					}
 					else
@@ -370,16 +357,16 @@ namespace ICP.ClientGenerator
 							builder,
 							inner: () =>
 							{
-								builder.AppendLine($"return new {variant.Name.GetNamespacedName()}({enumName.GetNamespacedName()}.{valueName.PascalCaseValue}, {paramName.CamelCaseValue});");
+								builder.AppendLine($"return new {variantName.GetNamespacedName()}({enumName.GetNamespacedName()}.{optionName.PascalCaseValue}, {paramName.CamelCaseValue});");
 							},
 							access: "public",
 							isStatic: true,
 							isAsync: false,
 							isConstructor: false,
-							returnType: new TypedValueName(variant.Name, ValueName.Default("type")),
-							name: valueName.PascalCaseValue,
+							returnType: new TypedValueName(variantName, ValueName.Default("type")),
+							name: optionName.PascalCaseValue,
 							baseConstructorParams: null,
-							TypedParam.FromType(typeName, paramName)
+							TypedParam.FromType(optionTypeName, paramName)
 						);
 						builder.AppendLine("");
 
@@ -387,15 +374,15 @@ namespace ICP.ClientGenerator
 							builder,
 							inner: () =>
 							{
-								builder.AppendLine($"this.ValidateType({enumName.GetNamespacedName()}.{valueName.PascalCaseValue});");
-								builder.AppendLine($"return ({typeName.GetNamespacedName()})this.value!;");
+								builder.AppendLine($"this.ValidateType({enumName.GetNamespacedName()}.{optionName.PascalCaseValue});");
+								builder.AppendLine($"return ({optionTypeName.GetNamespacedName()})this.value!;");
 							},
 							access: "public",
 							isStatic: false,
 							isAsync: false,
 							isConstructor: false,
-							returnType: new TypedValueName(typeName, valueName),
-							name: "As" + valueName.PascalCaseValue
+							returnType: new TypedValueName(optionTypeName, optionName),
+							name: "As" + optionName.PascalCaseValue
 						);
 					}
 					builder.AppendLine("");
@@ -403,8 +390,78 @@ namespace ICP.ClientGenerator
 				}
 
 			}, implementationTypes);
+
+
+
+			WriteEnum(builder, enumName, enumOptions);
 		}
 
+		internal static (TypeName? Type, bool CustomType) ResolveType(SourceCodeType type, string nameContext, out Action<IndentedStringBuilder>? typeBuilder)
+		{
+			switch (type)
+			{
+				case NullEmptyOrReservedSourceCodeType:
+					typeBuilder = null;
+					return (null, false);
+				case CsharpTypeSourceCodeType c:
+					List<(TypeName, Action<IndentedStringBuilder>?)> genericTypes = new();
+					if (!c.GenericTypes.Any())
+					{
+						typeBuilder = null;
+					}
+					else
+					{
+						int i = 0;
+						foreach (var t in c.GenericTypes)
+						{
+							(TypeName? n, bool inline) = ResolveType(t, nameContext + "V" + i, out Action<IndentedStringBuilder>? genericTypeBuilder);
+							i++;
+							if (n != null)
+							{
+								genericTypes.Add((n, genericTypeBuilder));
+							}
+						}
+						typeBuilder = (builder) =>
+						{
+							// Build each sub type
+							foreach ((TypeName t, Action<IndentedStringBuilder>? tBuilder) in genericTypes)
+							{
+								if (tBuilder != null)
+								{
+									tBuilder(builder);
+								}
+							}
+						};
+					}
+					string typeName = c.Type.Name;
+					if (c.Type.IsGenericTypeDefinition)
+					{
+						// Remove the `1 from the end
+						typeName = typeName.Substring(0, typeName.Length - 2);
+					}
+					var cType = new TypeName(typeName, c.Type.Namespace, genericTypes.Select(t => t.Item1).ToArray());
+					return (cType, false)
+;
+				case ReferenceSourceCodeType re:
+					string correctedRefId = StringUtil.ToPascalCase(re.Id.ToString()); // TODO casing?
+					typeBuilder = null;
+					return (new TypeName(correctedRefId, null), false);
+				case VariantSourceCodeType v:
+					TypeName variantName = new TypeName(nameContext, null);
+					typeBuilder = (builder) => WriteVariant(builder, variantName, v);
+					return (variantName, true);
+				case RecordSourceCodeType r:
+					TypeName recordName = new TypeName(nameContext, null);
+					typeBuilder = (builder) => WriteRecord(builder, recordName, r);
+					return (recordName, true);
+				case ServiceSourceCodeType s:
+					TypeName serviceName = new TypeName(nameContext, null);
+					typeBuilder = (builder) => WriteService(builder, serviceName, s);
+					return (serviceName, true);
+				default:
+					throw new NotImplementedException();
+			}
+		}
 
 		private class TypedParam
 		{

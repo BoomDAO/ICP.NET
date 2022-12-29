@@ -14,8 +14,17 @@ namespace Sample.Shared.Governance.Models
 		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("failure_reason")]
 		public EdjCase.ICP.Candid.Models.OptionalValue<GovernanceError> FailureReason { get; set; }
 		
+		public class R2V0
+		{
+			[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("0")]
+			public ulong F0 { get; set; }
+			
+			[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("1")]
+			public Ballot F1 { get; set; }
+			
+		}
 		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("ballots")]
-		public System.Collections.Generic.List<ProposalData> Ballots { get; set; }
+		public System.Collections.Generic.List<R2V0> Ballots { get; set; }
 		
 		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("proposal_timestamp_seconds")]
 		public ulong ProposalTimestampSeconds { get; set; }

@@ -6,42 +6,6 @@ using EdjCase.ICP.Candid;
 
 namespace Sample.Shared.Governance.Models
 {
-	public enum CommandType
-	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Spawn")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(Spawn))]
-		Spawn,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Split")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(Split))]
-		Split,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Follow")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(Follow))]
-		Follow,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("ClaimOrRefresh")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(ClaimOrRefresh))]
-		ClaimOrRefresh,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Configure")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(Configure))]
-		Configure,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("RegisterVote")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(RegisterVote))]
-		RegisterVote,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Merge")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(Merge))]
-		Merge,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("DisburseToNeuron")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(DisburseToNeuron))]
-		DisburseToNeuron,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("MakeProposal")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(Proposal))]
-		MakeProposal,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("MergeMaturity")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(MergeMaturity))]
-		MergeMaturity,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Disburse")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(Disburse))]
-		Disburse,
-	}
 	public class Command : EdjCase.ICP.Candid.Models.CandidVariantValueBase<CommandType>
 	{
 		public Command(CommandType type, System.Object? value)  : base(type, value)
@@ -173,6 +137,42 @@ namespace Sample.Shared.Governance.Models
 			return (Disburse)this.value!;
 		}
 		
+	}
+	public enum CommandType
+	{
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Spawn")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(Spawn))]
+		Spawn,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Split")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(Split))]
+		Split,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Follow")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(Follow))]
+		Follow,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("ClaimOrRefresh")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(ClaimOrRefresh))]
+		ClaimOrRefresh,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Configure")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(Configure))]
+		Configure,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("RegisterVote")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(RegisterVote))]
+		RegisterVote,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Merge")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(Merge))]
+		Merge,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("DisburseToNeuron")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(DisburseToNeuron))]
+		DisburseToNeuron,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("MakeProposal")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(Proposal))]
+		MakeProposal,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("MergeMaturity")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(MergeMaturity))]
+		MergeMaturity,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Disburse")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(Disburse))]
+		Disburse,
 	}
 }
 

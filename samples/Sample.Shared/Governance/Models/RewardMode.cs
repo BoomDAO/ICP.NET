@@ -6,15 +6,6 @@ using EdjCase.ICP.Candid;
 
 namespace Sample.Shared.Governance.Models
 {
-	public enum RewardModeType
-	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("RewardToNeuron")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(RewardToNeuron))]
-		RewardToNeuron,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("RewardToAccount")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(RewardToAccount))]
-		RewardToAccount,
-	}
 	public class RewardMode : EdjCase.ICP.Candid.Models.CandidVariantValueBase<RewardModeType>
 	{
 		public RewardMode(RewardModeType type, System.Object? value)  : base(type, value)
@@ -47,6 +38,15 @@ namespace Sample.Shared.Governance.Models
 			return (RewardToAccount)this.value!;
 		}
 		
+	}
+	public enum RewardModeType
+	{
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("RewardToNeuron")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(RewardToNeuron))]
+		RewardToNeuron,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("RewardToAccount")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(RewardToAccount))]
+		RewardToAccount,
 	}
 }
 

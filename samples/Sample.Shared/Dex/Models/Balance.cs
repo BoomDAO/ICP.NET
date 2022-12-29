@@ -1,10 +1,10 @@
-using Token = EdjCase.ICP.Candid.Models.Principal;
-using OrderId = System.UInt32;
 using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using EdjCase.ICP.Candid.Mapping;
 using EdjCase.ICP.Candid;
+using Token = EdjCase.ICP.Candid.Models.Principal;
+using OrderId = System.UInt32;
 
 namespace Sample.Shared.Dex.Models
 {

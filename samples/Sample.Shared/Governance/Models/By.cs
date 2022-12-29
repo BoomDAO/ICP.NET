@@ -6,18 +6,6 @@ using EdjCase.ICP.Candid;
 
 namespace Sample.Shared.Governance.Models
 {
-	public enum ByType
-	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("NeuronIdOrSubaccount")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(By))]
-		NeuronIdOrSubaccount,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("MemoAndController")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(ClaimOrRefreshNeuronFromAccount))]
-		MemoAndController,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Memo")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(ulong))]
-		Memo,
-	}
 	public class By : EdjCase.ICP.Candid.Models.CandidVariantValueBase<ByType>
 	{
 		public By(ByType type, System.Object? value)  : base(type, value)
@@ -28,15 +16,18 @@ namespace Sample.Shared.Governance.Models
 		{
 		}
 		
-		public static By NeuronIdOrSubaccount(By info)
+		public class O0
+		{
+		}
+		public static By NeuronIdOrSubaccount(By.O0 info)
 		{
 			return new By(ByType.NeuronIdOrSubaccount, info);
 		}
 		
-		public By AsNeuronIdOrSubaccount()
+		public By.O0 AsNeuronIdOrSubaccount()
 		{
 			this.ValidateType(ByType.NeuronIdOrSubaccount);
-			return (By)this.value!;
+			return (By.O0)this.value!;
 		}
 		
 		public static By MemoAndController(ClaimOrRefreshNeuronFromAccount info)
@@ -61,6 +52,18 @@ namespace Sample.Shared.Governance.Models
 			return (ulong)this.value!;
 		}
 		
+	}
+	public enum ByType
+	{
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("NeuronIdOrSubaccount")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(By.O0))]
+		NeuronIdOrSubaccount,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("MemoAndController")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(ClaimOrRefreshNeuronFromAccount))]
+		MemoAndController,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Memo")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(ulong))]
+		Memo,
 	}
 }
 

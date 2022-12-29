@@ -31,7 +31,7 @@ namespace EdjCase.ICP.Candid.Models.Values
 			{
 				t = (CandidVariantType)type;
 			}
-			int index = t.Fields.AsEnumerable()
+			int index = t.Options.AsEnumerable()
 				.OrderBy(f => f.Key)
 				.ToList()
 				.FindIndex(f => f.Key == this.Tag);
@@ -41,7 +41,7 @@ namespace EdjCase.ICP.Candid.Models.Values
 			}
 			// bytes = index (LEB128) + encoded value
 			return LEB128.EncodeUnsigned((uint)index)
-				.Concat(this.Value.EncodeValue(t.Fields[this.Tag], getReferencedType))
+				.Concat(this.Value.EncodeValue(t.Options[this.Tag], getReferencedType))
 				.ToArray();
 		}
 

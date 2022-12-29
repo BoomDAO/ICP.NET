@@ -6,15 +6,6 @@ using EdjCase.ICP.Candid;
 
 namespace Sample.Shared.Governance.Models
 {
-	public enum DissolveStateType
-	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("DissolveDelaySeconds")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(ulong))]
-		DissolveDelaySeconds,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("WhenDissolvedTimestampSeconds")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(ulong))]
-		WhenDissolvedTimestampSeconds,
-	}
 	public class DissolveState : EdjCase.ICP.Candid.Models.CandidVariantValueBase<DissolveStateType>
 	{
 		public DissolveState(DissolveStateType type, System.Object? value)  : base(type, value)
@@ -47,6 +38,15 @@ namespace Sample.Shared.Governance.Models
 			return (ulong)this.value!;
 		}
 		
+	}
+	public enum DissolveStateType
+	{
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("DissolveDelaySeconds")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(ulong))]
+		DissolveDelaySeconds,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("WhenDissolvedTimestampSeconds")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(ulong))]
+		WhenDissolvedTimestampSeconds,
 	}
 }
 

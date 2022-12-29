@@ -33,17 +33,18 @@ namespace EdjCase.ICP.Candid.Models.Types
 		public override abstract CandidTypeCode Type { get; }
 		protected abstract string TypeString { get; }
 
-		public Dictionary<CandidTag, CandidType> Fields { get; }
+		protected abstract Dictionary<CandidTag, CandidType> GetFieldsOrOptions();
 
-		protected CandidRecordOrVariantType(Dictionary<CandidTag, CandidType> fields, CandidId? recursiveId) : base(recursiveId)
+		protected CandidRecordOrVariantType(CandidId? recursiveId) : base(recursiveId)
 		{
-			this.Fields = fields;
+
 		}
 
 		internal override byte[] EncodeInnerTypes(CompoundTypeTable compoundTypeTable)
 		{
-			byte[] fieldCount = LEB128.EncodeSigned(this.Fields.Count);
-			IEnumerable<byte> fieldTypes = this.Fields
+			Dictionary<CandidTag, CandidType> fieldsOrOptions = this.GetFieldsOrOptions();
+			byte[] fieldCount = LEB128.EncodeSigned(fieldsOrOptions.Count);
+			IEnumerable<byte> fieldTypes = fieldsOrOptions
 				.OrderBy(f => f.Key)
 				.SelectMany(f =>
 				{
@@ -57,21 +58,22 @@ namespace EdjCase.ICP.Candid.Models.Types
 
 		internal override IEnumerable<CandidType> GetInnerTypes()
 		{
-			return this.Fields.Values;
+			return this.GetFieldsOrOptions().Values;
 		}
 
 		public override bool Equals(object? obj)
 		{
+			Dictionary<CandidTag, CandidType> fieldsOrOptions = this.GetFieldsOrOptions();
 			bool exactType = this.GetType() == obj?.GetType();
 			if (exactType && obj is CandidRecordOrVariantType def)
 			{
-				if (this.Fields.Count != def.Fields.Count)
+				if (fieldsOrOptions.Count != fieldsOrOptions.Count)
 				{
 					return false;
 				}
-				foreach ((CandidTag fLabel, CandidType fDef) in this.Fields)
+				foreach ((CandidTag fLabel, CandidType fDef) in fieldsOrOptions)
 				{
-					if (!def.Fields.TryGetValue(fLabel, out CandidType? otherFDef))
+					if (!fieldsOrOptions.TryGetValue(fLabel, out CandidType? otherFDef))
 					{
 						return false;
 					}
@@ -87,7 +89,8 @@ namespace EdjCase.ICP.Candid.Models.Types
 
 		public override int GetHashCode()
 		{
-			return HashCode.Combine(this.Type, this.Fields);
+			Dictionary<CandidTag, CandidType> fieldsOrOptions = this.GetFieldsOrOptions();
+			return HashCode.Combine(this.Type, fieldsOrOptions);
 		}
 	}
 }

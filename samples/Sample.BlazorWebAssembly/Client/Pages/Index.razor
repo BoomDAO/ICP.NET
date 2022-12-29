@@ -82,7 +82,7 @@ else if(this.MadeCall && this.ProposalId != null)
     {
         if (this.ProposalId != null)
         {
-            this.Info = await this.Client.get_proposal_info(this.ProposalId.Value, identityOverride: this.Identity);
+            this.Info = await this.Client.GetProposalInfo(this.ProposalId.Value, identityOverride: this.Identity);
             this.MadeCall = true;
         }
     }

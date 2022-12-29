@@ -32,12 +32,12 @@ namespace EdjCase.ICP.ClientGenerator
 			{
 				value = value.Trim('"');
 			}
+			string candidName = value;
 			if (char.IsNumber(value[0]))
 			{
 				// If Its a number, prefix it
 				value = "F" + value;
 			}
-			string candidName = value;
 			string propertyName = StringUtil.ToPascalCase(value);
 			string variableName = StringUtil.ToCamelCase(value);
 			if (IsKeyword(propertyName))

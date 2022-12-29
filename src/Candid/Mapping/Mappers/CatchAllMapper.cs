@@ -20,12 +20,12 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 			return BuildInternal(objType, options).Mapper;
 		}
 
-		private static (CatchAllMapper Mapper, CandidType Type) BuildInternal(Type objType, CandidConverterOptions options)
+		private static (CatchAllMapper Mapper, CandidType Type) BuildInternal(Type objType, CandidConverterOptions options, List<Type> parentTypes)
 		{
-			return _cache.GetOrAdd((objType, options), (a) => BuildInternalNoCache(a.Item1, a.Item2));
+			return _cache.GetOrAdd((objType, options), (a) => BuildInternalNoCache(a.Item1, a.Item2, parentTypes));
 		}
 
-		private static (CatchAllMapper Mapper, CandidType Type) BuildInternalNoCache(Type objType, CandidConverterOptions options)
+		private static (CatchAllMapper Mapper, CandidType Type) BuildInternalNoCache(Type objType, CandidConverterOptions options, List<Type> parentTypes)
 		{
 			if (objType == typeof(string))
 			{
@@ -213,7 +213,7 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 		private static (CatchAllMapper Mapper, CandidType Type) BuildOpt(Type objType, CandidConverterOptions options)
 		{
 			Type innerType = objType.GenericTypeArguments[0];
-			(CatchAllMapper innerCatchAllMapper, CandidType t) = BuildInternal(innerType, options);
+			(CatchAllMapper innerCatchAllMapper, CandidType t) = BuildInternal(innerType, options, parentTypes);
 			var type = new CandidOptionalType(t);
 			PropertyInfo hasValueProp = objType.GetProperty(nameof(OptionalValue<object>.HasValue));
 			MethodInfo valueGetFunc = objType.GetMethod(nameof(OptionalValue<object>.GetValueOrThrow));

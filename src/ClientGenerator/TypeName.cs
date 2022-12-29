@@ -15,11 +15,15 @@ namespace EdjCase.ICP.ClientGenerator
 		private string? nameCache { get; set; }
 		private string? namespacedNameCache { get; set; }
 
-		public TypeName(string name, string? @namespace, params TypeName[] genericTypes)
+		public TypeName(string name, string? @namespace, List<TypeName> genericTypes)
 		{
 			this.name = name;
 			this.@namespace = @namespace;
-			this.genericTypes = genericTypes?.ToList() ?? new List<TypeName>();
+			this.genericTypes = genericTypes ?? new List<TypeName>();
+		}
+		public TypeName(string name, string? @namespace, params TypeName[] genericTypes) : this(name, @namespace, genericTypes.ToList())
+		{
+
 		}
 
 		public string GetName()
@@ -100,6 +104,12 @@ namespace EdjCase.ICP.ClientGenerator
 					.ToList();
 			}
 			return new TypeName(type.Name, type.Namespace, genericTypes?.ToArray() ?? new TypeName[0]);
+		}
+
+		internal TypeName WithParentType(TypeName parent)
+		{
+			string name = parent.GetName() + "." + this.GetName();
+			return new TypeName(name, parent.@namespace, parent.genericTypes);
 		}
 	}
 

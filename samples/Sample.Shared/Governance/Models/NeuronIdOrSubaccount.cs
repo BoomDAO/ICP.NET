@@ -6,15 +6,6 @@ using EdjCase.ICP.Candid;
 
 namespace Sample.Shared.Governance.Models
 {
-	public enum NeuronIdOrSubaccountType
-	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Subaccount")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(System.Collections.Generic.List<byte>))]
-		Subaccount,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("NeuronId")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(NeuronId))]
-		NeuronId,
-	}
 	public class NeuronIdOrSubaccount : EdjCase.ICP.Candid.Models.CandidVariantValueBase<NeuronIdOrSubaccountType>
 	{
 		public NeuronIdOrSubaccount(NeuronIdOrSubaccountType type, System.Object? value)  : base(type, value)
@@ -47,6 +38,15 @@ namespace Sample.Shared.Governance.Models
 			return (NeuronId)this.value!;
 		}
 		
+	}
+	public enum NeuronIdOrSubaccountType
+	{
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Subaccount")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(System.Collections.Generic.List<byte>))]
+		Subaccount,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("NeuronId")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(NeuronId))]
+		NeuronId,
 	}
 }
 

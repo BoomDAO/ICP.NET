@@ -47,8 +47,17 @@ namespace Sample.Shared.Governance.Models
 		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("dissolve_state")]
 		public EdjCase.ICP.Candid.Models.OptionalValue<DissolveState> DissolveState { get; set; }
 		
+		public class R13V0
+		{
+			[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("0")]
+			public int F0 { get; set; }
+			
+			[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("1")]
+			public Followees F1 { get; set; }
+			
+		}
 		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("followees")]
-		public System.Collections.Generic.List<Neuron> Followees { get; set; }
+		public System.Collections.Generic.List<R13V0> Followees { get; set; }
 		
 		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("neuron_fees_e8s")]
 		public ulong NeuronFeesE8s { get; set; }
