@@ -1,24 +1,33 @@
 using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid;
 
 namespace Sample.Shared.Governance.Models
 {
 	public class NeuronStakeTransfer
 	{
-		public List<byte> to_subaccount { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("to_subaccount")]
+		public System.Collections.Generic.List<byte> ToSubaccount { get; set; }
 		
-		public ulong neuron_stake_e8s { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("neuron_stake_e8s")]
+		public ulong NeuronStakeE8s { get; set; }
 		
-		public EdjCase.ICP.Candid.Models.Principal? from { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("from")]
+		public EdjCase.ICP.Candid.Models.OptionalValue<EdjCase.ICP.Candid.Models.Principal> From { get; set; }
 		
-		public ulong memo { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("memo")]
+		public ulong Memo { get; set; }
 		
-		public List<byte> from_subaccount { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("from_subaccount")]
+		public System.Collections.Generic.List<byte> FromSubaccount { get; set; }
 		
-		public ulong transfer_timestamp { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("transfer_timestamp")]
+		public ulong TransferTimestamp { get; set; }
 		
-		public ulong block_height { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("block_height")]
+		public ulong BlockHeight { get; set; }
 		
 	}
 }

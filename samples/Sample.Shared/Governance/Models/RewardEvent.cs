@@ -1,18 +1,24 @@
 using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid;
 
 namespace Sample.Shared.Governance.Models
 {
 	public class RewardEvent
 	{
-		public ulong day_after_genesis { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("day_after_genesis")]
+		public ulong DayAfterGenesis { get; set; }
 		
-		public ulong actual_timestamp_seconds { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("actual_timestamp_seconds")]
+		public ulong ActualTimestampSeconds { get; set; }
 		
-		public ulong distributed_e8s_equivalent { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("distributed_e8s_equivalent")]
+		public ulong DistributedE8sEquivalent { get; set; }
 		
-		public List<NeuronId> settled_proposals { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("settled_proposals")]
+		public System.Collections.Generic.List<NeuronId> SettledProposals { get; set; }
 		
 	}
 }

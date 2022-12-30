@@ -117,7 +117,7 @@ namespace EdjCase.ICP.Candid
 
         private static CompoundTypeTextComponent GenerateVariant(CandidVariantType va)
         {
-            List<KeyValueTextComponent> fields = va.Fields
+            List<KeyValueTextComponent> fields = va.Options
                 .Select(f => new KeyValueTextComponent(GenerateTag(f.Key), GenerateInternal(f.Value)))
                 .ToList();
             var innerValue = new CurlyBraceTypeTextComponent<KeyValueTextComponent>(fields);

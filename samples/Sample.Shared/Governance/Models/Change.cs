@@ -1,17 +1,14 @@
 using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid;
 
 namespace Sample.Shared.Governance.Models
 {
-	public enum ChangeType
+	public class Change : EdjCase.ICP.Candid.Models.CandidVariantValueBase<ChangeType>
 	{
-		ToRemove,
-		ToAdd,
-	}
-	public class Change : EdjCase.ICP.Candid.CandidVariantValueBase<ChangeType>
-	{
-		public Change(ChangeType type, object? value)  : base(type, value)
+		public Change(ChangeType type, System.Object? value)  : base(type, value)
 		{
 		}
 		
@@ -41,6 +38,15 @@ namespace Sample.Shared.Governance.Models
 			return (NodeProvider)this.value!;
 		}
 		
+	}
+	public enum ChangeType
+	{
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("ToRemove")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(NodeProvider))]
+		ToRemove,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("ToAdd")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(NodeProvider))]
+		ToAdd,
 	}
 }
 

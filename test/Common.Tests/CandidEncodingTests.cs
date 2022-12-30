@@ -375,9 +375,9 @@ namespace EdjCase.ICP.Candid.Tests
                     })
                 }
             });
-            var expectedArg = CandidArg.FromCandid(new List<CandidValueWithType>
+            var expectedArg = CandidArg.FromCandid(new List<CandidTypedValue>
             {
-                CandidValueWithType.FromValueAndType(value1, type1)
+                CandidTypedValue.FromValueAndType(value1, type1)
             });
 
             byte[] actualBytes = ByteUtil.FromHexString(hex);
@@ -423,9 +423,9 @@ namespace EdjCase.ICP.Candid.Tests
                     new CandidOptionalType(new CandidReferenceType(referenceId))
                 }
             }, referenceId);
-            var expectedArg = CandidArg.FromCandid(new List<CandidValueWithType>
+            var expectedArg = CandidArg.FromCandid(new List<CandidTypedValue>
             {
-                CandidValueWithType.FromValueAndType(value1, type1)
+                CandidTypedValue.FromValueAndType(value1, type1)
             });
 
             byte[] actualBytes = Convert.FromHexString(actualHex);
@@ -541,11 +541,11 @@ namespace EdjCase.ICP.Candid.Tests
 				}
 			});
 			var arg = CandidArg.FromCandid(
-				CandidValueWithType.FromValueAndType(
+				CandidTypedValue.FromValueAndType(
 					CandidPrimitive.Text("https://www.theverge.com/rss/index.xml"),
 					new CandidPrimitiveType(PrimitiveType.Text)
 				),
-				CandidValueWithType.FromValueAndType(content, contentType)
+				CandidTypedValue.FromValueAndType(content, contentType)
 			);
 			
 			byte[] encodedBytes = arg.Encode();

@@ -50,6 +50,10 @@ namespace EdjCase.ICP.Candid.Parsers
 					return typeDef;
 				case CandidTextTokenType.OpenParenthesis:
 					return CandidTextParser.GetFunc(helper, null);
+				case CandidTextTokenType.OpenCurlyBrace:
+					return CandidTextParser.GetRecord(helper, null);
+				case CandidTextTokenType.OpenBracket:
+					return CandidTextParser.GetVec(helper, null);
 				default:
 					// TODO
 					throw new NotImplementedException();
@@ -130,7 +134,9 @@ namespace EdjCase.ICP.Candid.Parsers
 				{
 					// `label`: `type`
 					string rawLabel = helper.CurrentToken.GetTextValueOrThrow();
-					label = CandidTag.FromName(rawLabel);
+					label = uint.TryParse(rawLabel, out uint id)
+						? CandidTag.FromId(id)
+						: CandidTag.FromName(rawLabel);
 					helper.MoveNextOrThrow();
 					helper.CurrentToken.ValidateType(CandidTextTokenType.Colon);
 					helper.MoveNextOrThrow();

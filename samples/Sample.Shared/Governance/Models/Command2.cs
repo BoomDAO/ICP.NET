@@ -1,19 +1,14 @@
+using System;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid;
+
 namespace Sample.Shared.Governance.Models
 {
-	public enum Command2Type
+	public class Command2 : EdjCase.ICP.Candid.Models.CandidVariantValueBase<Command2Type>
 	{
-		Spawn,
-		Split,
-		Configure,
-		Merge,
-		DisburseToNeuron,
-		ClaimOrRefreshNeuron,
-		MergeMaturity,
-		Disburse,
-	}
-	public class Command2 : EdjCase.ICP.Candid.CandidVariantValueBase<Command2Type>
-	{
-		public Command2(Command2Type type, object? value)  : base(type, value)
+		public Command2(Command2Type type, System.Object? value)  : base(type, value)
 		{
 		}
 		
@@ -110,4 +105,32 @@ namespace Sample.Shared.Governance.Models
 		}
 		
 	}
+	public enum Command2Type
+	{
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Spawn")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(Spawn))]
+		Spawn,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Split")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(Split))]
+		Split,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Configure")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(Configure))]
+		Configure,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Merge")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(Merge))]
+		Merge,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("DisburseToNeuron")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(DisburseToNeuron))]
+		DisburseToNeuron,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("ClaimOrRefreshNeuron")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(ClaimOrRefresh))]
+		ClaimOrRefreshNeuron,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("MergeMaturity")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(MergeMaturity))]
+		MergeMaturity,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Disburse")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(Disburse))]
+		Disburse,
+	}
 }
+

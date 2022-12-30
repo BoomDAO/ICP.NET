@@ -1,16 +1,21 @@
 using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid;
 
 namespace Sample.Shared.Governance.Models
 {
 	public class ManageNeuron
 	{
-		public NeuronId? id { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("id")]
+		public EdjCase.ICP.Candid.Models.OptionalValue<NeuronId> Id { get; set; }
 		
-		public Command? command { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("command")]
+		public EdjCase.ICP.Candid.Models.OptionalValue<Command> Command { get; set; }
 		
-		public NeuronIdOrSubaccount? neuron_id_or_subaccount { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("neuron_id_or_subaccount")]
+		public EdjCase.ICP.Candid.Models.OptionalValue<NeuronIdOrSubaccount> NeuronIdOrSubaccount { get; set; }
 		
 	}
 }

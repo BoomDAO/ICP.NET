@@ -1,19 +1,16 @@
-using Token = EdjCase.ICP.Candid.Models.Principal;
-using OrderId = System.UInt32;
 using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid;
+using Token = EdjCase.ICP.Candid.Models.Principal;
+using OrderId = System.UInt32;
 
 namespace Sample.Shared.Dex.Models
 {
-	public enum WithdrawReceiptType
+	public class WithdrawReceipt : EdjCase.ICP.Candid.Models.CandidVariantValueBase<WithdrawReceiptType>
 	{
-		Err,
-		Ok,
-	}
-	public class WithdrawReceipt : EdjCase.ICP.Candid.CandidVariantValueBase<WithdrawReceiptType>
-	{
-		public WithdrawReceipt(WithdrawReceiptType type, object? value)  : base(type, value)
+		public WithdrawReceipt(WithdrawReceiptType type, System.Object? value)  : base(type, value)
 		{
 		}
 		
@@ -43,6 +40,15 @@ namespace Sample.Shared.Dex.Models
 			return (EdjCase.ICP.Candid.UnboundedUInt)this.value!;
 		}
 		
+	}
+	public enum WithdrawReceiptType
+	{
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Err")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(WithdrawErr))]
+		Err,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Ok")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(EdjCase.ICP.Candid.UnboundedUInt))]
+		Ok,
 	}
 }
 

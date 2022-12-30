@@ -133,10 +133,10 @@ namespace EdjCase.ICP.Candid.Models.Values
         /// If opaque, returns null, otherwise the principalid
         /// </summary>
         /// <returns></returns>
-        public new Principal? AsPrincipal()
+        public new Principal AsPrincipal()
         {
             this.ValidateType(PrimitiveType.Principal);
-            return (Principal?)this.value;
+            return (Principal)this.value!;
         }
 
 
@@ -287,11 +287,8 @@ namespace EdjCase.ICP.Candid.Models.Values
 
         private byte[] EncodePrincipal()
         {
-            Principal? principalId = this.AsPrincipal();
-            if(principalId == null)
-            {
-                return new byte[] { 0 };
-            }
+			// TODO how to do opaque?
+            Principal principalId = this.AsPrincipal();
             byte[] value = principalId.Raw;
             byte[] encodedValueLength = LEB128.EncodeSigned(value.Length);
             return new byte[] { 1 }
@@ -407,7 +404,7 @@ namespace EdjCase.ICP.Candid.Models.Values
         {
             return new CandidPrimitive(PrimitiveType.Bool, value);
         }
-        public static CandidPrimitive Principal(Principal? value)
+        public static CandidPrimitive Principal(Principal value)
         {
             return new CandidPrimitive(PrimitiveType.Principal, value);
         }

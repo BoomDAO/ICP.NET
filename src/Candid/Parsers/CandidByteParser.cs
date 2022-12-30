@@ -44,8 +44,8 @@ namespace EdjCase.ICP.Candid.Parsers
                 Dictionary<CandidId, CandidCompoundType> recursiveTypes = new();
 
                 // Get an arg value for each type
-                List<CandidValueWithType> args = types
-                    .Select(t => CandidValueWithType.FromValueAndType(helper.ReadValue(t, recursiveTypes), t))
+                List<CandidTypedValue> args = types
+                    .Select(t => CandidTypedValue.FromValueAndType(helper.ReadValue(t, recursiveTypes), t))
                     .ToList();
 
                 // TODO Remaining bytes are opaque reference bytes
@@ -523,7 +523,7 @@ namespace EdjCase.ICP.Candid.Parsers
                     CandidOptionalType o => this.ReadOptValue(o.Value, recursiveTypes),
                     CandidVectorType ve => this.ReadVectorValue(ve.InnerType, recursiveTypes),
                     CandidRecordType r => this.ReadRecordValue(r.Fields.ToDictionary(f => f.Key, f => f.Value), recursiveTypes),
-                    CandidVariantType va => this.ReadVariantValue(va.Fields.ToDictionary(f => f.Key, f => f.Value), recursiveTypes),
+                    CandidVariantType va => this.ReadVariantValue(va.Options.ToDictionary(f => f.Key, f => f.Value), recursiveTypes),
                     CandidServiceType s => this.ReadServiceValue(),
                     CandidFuncType f => this.ReadFuncValue(),
                     _ => throw new NotImplementedException(),

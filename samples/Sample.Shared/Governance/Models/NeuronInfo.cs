@@ -1,30 +1,42 @@
 using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid;
 
 namespace Sample.Shared.Governance.Models
 {
 	public class NeuronInfo
 	{
-		public ulong dissolve_delay_seconds { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("dissolve_delay_seconds")]
+		public ulong DissolveDelaySeconds { get; set; }
 		
-		public List<BallotInfo> recent_ballots { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("recent_ballots")]
+		public System.Collections.Generic.List<BallotInfo> RecentBallots { get; set; }
 		
-		public ulong created_timestamp_seconds { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("created_timestamp_seconds")]
+		public ulong CreatedTimestampSeconds { get; set; }
 		
-		public int state { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("state")]
+		public int State { get; set; }
 		
-		public ulong stake_e8s { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("stake_e8s")]
+		public ulong StakeE8s { get; set; }
 		
-		public ulong? joined_community_fund_timestamp_seconds { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("joined_community_fund_timestamp_seconds")]
+		public EdjCase.ICP.Candid.Models.OptionalValue<ulong> JoinedCommunityFundTimestampSeconds { get; set; }
 		
-		public ulong retrieved_at_timestamp_seconds { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("retrieved_at_timestamp_seconds")]
+		public ulong RetrievedAtTimestampSeconds { get; set; }
 		
-		public KnownNeuronData? known_neuron_data { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("known_neuron_data")]
+		public EdjCase.ICP.Candid.Models.OptionalValue<KnownNeuronData> KnownNeuronData { get; set; }
 		
-		public ulong voting_power { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("voting_power")]
+		public ulong VotingPower { get; set; }
 		
-		public ulong age_seconds { get; set; }
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("age_seconds")]
+		public ulong AgeSeconds { get; set; }
 		
 	}
 }

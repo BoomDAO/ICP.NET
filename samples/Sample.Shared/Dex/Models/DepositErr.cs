@@ -1,19 +1,16 @@
-using Token = EdjCase.ICP.Candid.Models.Principal;
-using OrderId = System.UInt32;
 using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid;
+using Token = EdjCase.ICP.Candid.Models.Principal;
+using OrderId = System.UInt32;
 
 namespace Sample.Shared.Dex.Models
 {
-	public enum DepositErrType
+	public class DepositErr : EdjCase.ICP.Candid.Models.CandidVariantValueBase<DepositErrType>
 	{
-		BalanceLow,
-		TransferFailure,
-	}
-	public class DepositErr : EdjCase.ICP.Candid.CandidVariantValueBase<DepositErrType>
-	{
-		public DepositErr(DepositErrType type, object? value)  : base(type, value)
+		public DepositErr(DepositErrType type, System.Object? value)  : base(type, value)
 		{
 		}
 		
@@ -31,6 +28,13 @@ namespace Sample.Shared.Dex.Models
 			return new DepositErr(DepositErrType.TransferFailure, null);
 		}
 		
+	}
+	public enum DepositErrType
+	{
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("BalanceLow")]
+		BalanceLow,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("TransferFailure")]
+		TransferFailure,
 	}
 }
 

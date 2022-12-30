@@ -1,13 +1,14 @@
+using System;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid;
+
 namespace Sample.Shared.Governance.Models
 {
-	public enum Result3Type
+	public class Result3 : EdjCase.ICP.Candid.Models.CandidVariantValueBase<Result3Type>
 	{
-		Ok,
-		Err,
-	}
-	public class Result3 : EdjCase.ICP.Candid.CandidVariantValueBase<Result3Type>
-	{
-		public Result3(Result3Type type, object? value)  : base(type, value)
+		public Result3(Result3Type type, System.Object? value)  : base(type, value)
 		{
 		}
 		
@@ -38,4 +39,14 @@ namespace Sample.Shared.Governance.Models
 		}
 		
 	}
+	public enum Result3Type
+	{
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Ok")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(RewardNodeProviders))]
+		Ok,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Err")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(GovernanceError))]
+		Err,
+	}
 }
+

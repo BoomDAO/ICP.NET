@@ -1,4 +1,4 @@
-﻿using EdjCase.ICP.Candid.Exceptions;
+using EdjCase.ICP.Candid.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -104,9 +104,11 @@ namespace EdjCase.ICP.Candid.Models
             {
                 '(' => CandidTextTokenType.OpenParenthesis,
                 ')' => CandidTextTokenType.CloseParenthesis,
-                '{' => CandidTextTokenType.OpenCurlyBrace,
-                '}' => CandidTextTokenType.CloseCurlyBrace,
-                ':' => CandidTextTokenType.Colon,
+				'{' => CandidTextTokenType.OpenCurlyBrace,
+				'}' => CandidTextTokenType.CloseCurlyBrace,
+				'[' => CandidTextTokenType.OpenBracket,
+				']' => CandidTextTokenType.CloseBracket,
+				':' => CandidTextTokenType.Colon,
                 ';' => CandidTextTokenType.SemiColon,
                 '.' => CandidTextTokenType.Period,
                 ',' => CandidTextTokenType.Comma,
@@ -144,9 +146,11 @@ namespace EdjCase.ICP.Candid.Models
     {
         OpenParenthesis,
         CloseParenthesis,
-        OpenCurlyBrace,
-        CloseCurlyBrace,
-        Colon,
+		OpenCurlyBrace,
+		CloseCurlyBrace,
+		OpenBracket,
+		CloseBracket,
+		Colon,
         SemiColon,
         Text,
         Period,

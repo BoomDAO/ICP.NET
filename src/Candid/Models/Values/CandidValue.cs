@@ -196,7 +196,7 @@ namespace EdjCase.ICP.Candid.Models.Values
         /// If opaque, returns null, otherwise the principalid
         /// </summary>
         /// <returns></returns>
-        public Principal? AsPrincipal()
+        public Principal AsPrincipal()
         {
             return this.AsPrimitive().AsPrincipal();
         }

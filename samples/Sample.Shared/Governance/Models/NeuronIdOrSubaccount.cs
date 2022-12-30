@@ -1,17 +1,14 @@
 using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid;
 
 namespace Sample.Shared.Governance.Models
 {
-	public enum NeuronIdOrSubaccountType
+	public class NeuronIdOrSubaccount : EdjCase.ICP.Candid.Models.CandidVariantValueBase<NeuronIdOrSubaccountType>
 	{
-		Subaccount,
-		NeuronId,
-	}
-	public class NeuronIdOrSubaccount : EdjCase.ICP.Candid.CandidVariantValueBase<NeuronIdOrSubaccountType>
-	{
-		public NeuronIdOrSubaccount(NeuronIdOrSubaccountType type, object? value)  : base(type, value)
+		public NeuronIdOrSubaccount(NeuronIdOrSubaccountType type, System.Object? value)  : base(type, value)
 		{
 		}
 		
@@ -19,15 +16,15 @@ namespace Sample.Shared.Governance.Models
 		{
 		}
 		
-		public static NeuronIdOrSubaccount Subaccount(List<byte> info)
+		public static NeuronIdOrSubaccount Subaccount(System.Collections.Generic.List<byte> info)
 		{
 			return new NeuronIdOrSubaccount(NeuronIdOrSubaccountType.Subaccount, info);
 		}
 		
-		public List<byte> AsSubaccount()
+		public System.Collections.Generic.List<byte> AsSubaccount()
 		{
 			this.ValidateType(NeuronIdOrSubaccountType.Subaccount);
-			return (List<byte>)this.value!;
+			return (System.Collections.Generic.List<byte>)this.value!;
 		}
 		
 		public static NeuronIdOrSubaccount NeuronId(NeuronId info)
@@ -41,6 +38,15 @@ namespace Sample.Shared.Governance.Models
 			return (NeuronId)this.value!;
 		}
 		
+	}
+	public enum NeuronIdOrSubaccountType
+	{
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Subaccount")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(System.Collections.Generic.List<byte>))]
+		Subaccount,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("NeuronId")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(NeuronId))]
+		NeuronId,
 	}
 }
 

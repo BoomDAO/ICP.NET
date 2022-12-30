@@ -1,13 +1,14 @@
+using System;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid;
+
 namespace Sample.Shared.Governance.Models
 {
-	public enum Result4Type
+	public class Result4 : EdjCase.ICP.Candid.Models.CandidVariantValueBase<Result4Type>
 	{
-		Ok,
-		Err,
-	}
-	public class Result4 : EdjCase.ICP.Candid.CandidVariantValueBase<Result4Type>
-	{
-		public Result4(Result4Type type, object? value)  : base(type, value)
+		public Result4(Result4Type type, System.Object? value)  : base(type, value)
 		{
 		}
 		
@@ -38,4 +39,14 @@ namespace Sample.Shared.Governance.Models
 		}
 		
 	}
+	public enum Result4Type
+	{
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Ok")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(NeuronInfo))]
+		Ok,
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Err")]
+		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(GovernanceError))]
+		Err,
+	}
 }
+

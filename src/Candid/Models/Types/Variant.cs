@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,12 +12,16 @@ namespace EdjCase.ICP.Candid.Models.Types
 
 		protected override string TypeString { get; } = "variant";
 
-		public CandidVariantType(Dictionary<CandidTag, CandidType> options, CandidId? recursiveId = null) : base(options, recursiveId)
+		public Dictionary<CandidTag, CandidType> Options { get; }
+
+		public CandidVariantType(Dictionary<CandidTag, CandidType> options, CandidId? recursiveId = null) : base(recursiveId)
 		{
-			if (options?.Any() != true)
-			{
-				throw new ArgumentException("At least one variant option must be specified", nameof(options));
-			}
+			this.Options = options;
+		}
+
+		protected override Dictionary<CandidTag, CandidType> GetFieldsOrOptions()
+		{
+			return this.Options;
 		}
 	}
 }

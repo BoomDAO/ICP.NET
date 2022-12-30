@@ -1,4 +1,4 @@
-﻿using EdjCase.ICP.Candid.Models;
+using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid.Models.Types;
 using EdjCase.ICP.Candid.Models.Values;
 using EdjCase.ICP.Candid.Parsers;
@@ -8,13 +8,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
-
 namespace EdjCase.ICP.Candid.Tests
 {
     public class CandidTextParsingTests
     {
         [Fact]
-        public void Parse_Func()
+        public void Parse_Func_1()
         {
             string text = @"(
     nat64

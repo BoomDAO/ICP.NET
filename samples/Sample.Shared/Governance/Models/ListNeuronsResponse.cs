@@ -1,22 +1,28 @@
 using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid;
 
 namespace Sample.Shared.Governance.Models
 {
 	public class ListNeuronsResponse
 	{
-		public List<neuron_infosInfo> neuron_infos { get; set; }
-		
-		public List<Neuron> full_neurons { get; set; }
-		
-		public class neuron_infosInfo
+		public class R0V0
 		{
+			[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("0")]
 			public ulong F0 { get; set; }
 			
+			[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("1")]
 			public NeuronInfo F1 { get; set; }
 			
 		}
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("neuron_infos")]
+		public System.Collections.Generic.List<R0V0> NeuronInfos { get; set; }
+		
+		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("full_neurons")]
+		public System.Collections.Generic.List<Neuron> FullNeurons { get; set; }
+		
 	}
 }
 
