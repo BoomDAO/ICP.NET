@@ -11,7 +11,8 @@ namespace EdjCase.ICP.Candid.Mapping
 {
 	public interface IObjectMapper
 	{
-		bool CanMap(Type type);
+		CandidType CandidType { get; }
+		Type Type { get; }
 		object Map(CandidValue value, CandidConverterOptions options);
 		CandidTypedValue Map(object obj, CandidConverterOptions options);
 	}

@@ -18,11 +18,5 @@ var client = new GovernanceApiClient(agent, canisterId);
 
 var info = await client.GetProposalInfo(94182, null);
 
-var paths = new List<Path>
-{
-	Path.FromSegments("time"),
-	Path.FromSegments("canister", "az5sd-cqaaa-aaaae-aaarq-cai", "module_hash"),
-};
-var a = await agent.ReadStateAsync(Principal.FromText("az5sd-cqaaa-aaaae-aaarq-cai"), paths);
-
+Console.WriteLine(info.GetValueOrDefault()?.Proposal.GetValueOrDefault()?.Title);
 

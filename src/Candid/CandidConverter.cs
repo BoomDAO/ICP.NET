@@ -20,7 +20,7 @@ namespace EdjCase.ICP.Candid
 
 		public CandidConverter(CandidConverterOptions? options = null)
 		{
-			this.Options = options ?? CandidConverterOptions.Default;
+			this.Options = options ?? new CandidConverterOptions();
 		}
 
 		public CandidTypedValue FromObject(object? obj)
@@ -55,7 +55,7 @@ namespace EdjCase.ICP.Candid
 		{
 			if (value.IsNull())
 			{
-				return OptionalValue<object>.Null(); // Handle null here for all mappers
+				return OptionalValue<object>.NoValue(); // Handle null here for all mappers
 			}
 			IObjectMapper mapper = this.Options.ResolveMapper(objType);
 			object v = mapper!.Map(value, this.Options);
@@ -66,24 +66,15 @@ namespace EdjCase.ICP.Candid
 
 	public class CandidConverterOptions
 	{
-		public IReadOnlyList<IObjectMapper> CustomMappers { get; }
-		public ICaseConverter? CaseConverter { get; }
+		public Func<Type, IObjectMapper?>? CustomMappingResolver { get; }
 
 		private readonly ConcurrentDictionary<Type, IObjectMapper> _typeToMapperCache;
 
-		public CandidConverterOptions(
-			IEnumerable<IObjectMapper> mappers,
-			ICaseConverter? caseConverter = null)
+		public CandidConverterOptions(Func<Type, IObjectMapper?>? customMappingResolver = null)
 		{
-			this.CaseConverter = caseConverter;
-			this.CustomMappers = mappers?.ToList() ?? throw new ArgumentNullException(nameof(mappers));
 			this._typeToMapperCache = new ConcurrentDictionary<Type, IObjectMapper>();
+			this.CustomMappingResolver = customMappingResolver;
 		}
-
-		public static CandidConverterOptions Default { get; } = new CandidConverterOptions(
-			mappers: Enumerable.Empty<IObjectMapper>(),
-			caseConverter: null
-		);
 
 		public IObjectMapper ResolveMapper(Type type)
 		{
@@ -97,11 +88,11 @@ namespace EdjCase.ICP.Candid
 			{
 				return mapperAttr.Mapper;
 			}
-			IObjectMapper? mapper = this.CustomMappers
-				.FirstOrDefault(m => m.CanMap(type));
+			IObjectMapper? mapper = this.CustomMappingResolver?.Invoke(type);
+
 			return mapper == null
 				// Create a dynamic mapper if no custom one
-				? CatchAllMapperFactory.Build(type, this)
+				? DefaultMapperFactory.Build(type)
 				: mapper;
 		}
 	}

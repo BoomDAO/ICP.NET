@@ -89,7 +89,7 @@ namespace EdjCase.ICP.Candid.Models
 			return this.HasValue ? this.GetValueOrThrow()!.ToString() : "";
 		}
 
-		public static OptionalValue<T> Null()
+		public static OptionalValue<T> NoValue()
 		{
 			return new OptionalValue<T>(false, default);
 		}
