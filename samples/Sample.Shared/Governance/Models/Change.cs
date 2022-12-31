@@ -6,10 +6,17 @@ using EdjCase.ICP.Candid;
 
 namespace Sample.Shared.Governance.Models
 {
-	public class Change : EdjCase.ICP.Candid.Models.CandidVariantValueBase<ChangeType>
+	[EdjCase.ICP.Candid.Mapping.VariantAttribute(typeof(ChangeTag))]
+	public class Change
 	{
-		public Change(ChangeType type, System.Object? value)  : base(type, value)
+		[EdjCase.ICP.Candid.Mapping.VariantTagPropertyAttribute]
+		public ChangeTag Tag { get; set; }
+		[EdjCase.ICP.Candid.Mapping.VariantValuePropertyAttribute]
+		public object? Value { get; set; }
+		private Change(ChangeTag tag, System.Object? value)
 		{
+			this.Tag = tag;
+			this.Value = value;
 		}
 		
 		protected Change()
@@ -18,34 +25,41 @@ namespace Sample.Shared.Governance.Models
 		
 		public static Change ToRemove(NodeProvider info)
 		{
-			return new Change(ChangeType.ToRemove, info);
+			return new Change(ChangeTag.ToRemove, info);
 		}
 		
 		public NodeProvider AsToRemove()
 		{
-			this.ValidateType(ChangeType.ToRemove);
-			return (NodeProvider)this.value!;
+			this.ValidateType(ChangeTag.ToRemove);
+			return (NodeProvider)this.Value!;
 		}
 		
 		public static Change ToAdd(NodeProvider info)
 		{
-			return new Change(ChangeType.ToAdd, info);
+			return new Change(ChangeTag.ToAdd, info);
 		}
 		
 		public NodeProvider AsToAdd()
 		{
-			this.ValidateType(ChangeType.ToAdd);
-			return (NodeProvider)this.value!;
+			this.ValidateType(ChangeTag.ToAdd);
+			return (NodeProvider)this.Value!;
 		}
 		
+		private void ValidateType(ChangeTag tag)
+		{
+			if (!this.Tag.Equals(tag))
+			{
+				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
+			}
+		}
 	}
-	public enum ChangeType
+	public enum ChangeTag
 	{
 		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("ToRemove")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(NodeProvider))]
+		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(NodeProvider))]
 		ToRemove,
 		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("ToAdd")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(NodeProvider))]
+		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(NodeProvider))]
 		ToAdd,
 	}
 }

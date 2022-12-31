@@ -8,10 +8,17 @@ using OrderId = System.UInt32;
 
 namespace Sample.Shared.Dex.Models
 {
-	public class DepositErr : EdjCase.ICP.Candid.Models.CandidVariantValueBase<DepositErrType>
+	[EdjCase.ICP.Candid.Mapping.VariantAttribute(typeof(DepositErrTag))]
+	public class DepositErr
 	{
-		public DepositErr(DepositErrType type, System.Object? value)  : base(type, value)
+		[EdjCase.ICP.Candid.Mapping.VariantTagPropertyAttribute]
+		public DepositErrTag Tag { get; set; }
+		[EdjCase.ICP.Candid.Mapping.VariantValuePropertyAttribute]
+		public object? Value { get; set; }
+		private DepositErr(DepositErrTag tag, System.Object? value)
 		{
+			this.Tag = tag;
+			this.Value = value;
 		}
 		
 		protected DepositErr()
@@ -20,16 +27,16 @@ namespace Sample.Shared.Dex.Models
 		
 		public static DepositErr BalanceLow()
 		{
-			return new DepositErr(DepositErrType.BalanceLow, null);
+			return new DepositErr(DepositErrTag.BalanceLow, null);
 		}
 		
 		public static DepositErr TransferFailure()
 		{
-			return new DepositErr(DepositErrType.TransferFailure, null);
+			return new DepositErr(DepositErrTag.TransferFailure, null);
 		}
 		
 	}
-	public enum DepositErrType
+	public enum DepositErrTag
 	{
 		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("BalanceLow")]
 		BalanceLow,

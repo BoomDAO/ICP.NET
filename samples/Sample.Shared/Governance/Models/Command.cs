@@ -6,10 +6,17 @@ using EdjCase.ICP.Candid;
 
 namespace Sample.Shared.Governance.Models
 {
-	public class Command : EdjCase.ICP.Candid.Models.CandidVariantValueBase<CommandType>
+	[EdjCase.ICP.Candid.Mapping.VariantAttribute(typeof(CommandTag))]
+	public class Command
 	{
-		public Command(CommandType type, System.Object? value)  : base(type, value)
+		[EdjCase.ICP.Candid.Mapping.VariantTagPropertyAttribute]
+		public CommandTag Tag { get; set; }
+		[EdjCase.ICP.Candid.Mapping.VariantValuePropertyAttribute]
+		public object? Value { get; set; }
+		private Command(CommandTag tag, System.Object? value)
 		{
+			this.Tag = tag;
+			this.Value = value;
 		}
 		
 		protected Command()
@@ -18,160 +25,167 @@ namespace Sample.Shared.Governance.Models
 		
 		public static Command Spawn(Spawn info)
 		{
-			return new Command(CommandType.Spawn, info);
+			return new Command(CommandTag.Spawn, info);
 		}
 		
 		public Spawn AsSpawn()
 		{
-			this.ValidateType(CommandType.Spawn);
-			return (Spawn)this.value!;
+			this.ValidateType(CommandTag.Spawn);
+			return (Spawn)this.Value!;
 		}
 		
 		public static Command Split(Split info)
 		{
-			return new Command(CommandType.Split, info);
+			return new Command(CommandTag.Split, info);
 		}
 		
 		public Split AsSplit()
 		{
-			this.ValidateType(CommandType.Split);
-			return (Split)this.value!;
+			this.ValidateType(CommandTag.Split);
+			return (Split)this.Value!;
 		}
 		
 		public static Command Follow(Follow info)
 		{
-			return new Command(CommandType.Follow, info);
+			return new Command(CommandTag.Follow, info);
 		}
 		
 		public Follow AsFollow()
 		{
-			this.ValidateType(CommandType.Follow);
-			return (Follow)this.value!;
+			this.ValidateType(CommandTag.Follow);
+			return (Follow)this.Value!;
 		}
 		
 		public static Command ClaimOrRefresh(ClaimOrRefresh info)
 		{
-			return new Command(CommandType.ClaimOrRefresh, info);
+			return new Command(CommandTag.ClaimOrRefresh, info);
 		}
 		
 		public ClaimOrRefresh AsClaimOrRefresh()
 		{
-			this.ValidateType(CommandType.ClaimOrRefresh);
-			return (ClaimOrRefresh)this.value!;
+			this.ValidateType(CommandTag.ClaimOrRefresh);
+			return (ClaimOrRefresh)this.Value!;
 		}
 		
 		public static Command Configure(Configure info)
 		{
-			return new Command(CommandType.Configure, info);
+			return new Command(CommandTag.Configure, info);
 		}
 		
 		public Configure AsConfigure()
 		{
-			this.ValidateType(CommandType.Configure);
-			return (Configure)this.value!;
+			this.ValidateType(CommandTag.Configure);
+			return (Configure)this.Value!;
 		}
 		
 		public static Command RegisterVote(RegisterVote info)
 		{
-			return new Command(CommandType.RegisterVote, info);
+			return new Command(CommandTag.RegisterVote, info);
 		}
 		
 		public RegisterVote AsRegisterVote()
 		{
-			this.ValidateType(CommandType.RegisterVote);
-			return (RegisterVote)this.value!;
+			this.ValidateType(CommandTag.RegisterVote);
+			return (RegisterVote)this.Value!;
 		}
 		
 		public static Command Merge(Merge info)
 		{
-			return new Command(CommandType.Merge, info);
+			return new Command(CommandTag.Merge, info);
 		}
 		
 		public Merge AsMerge()
 		{
-			this.ValidateType(CommandType.Merge);
-			return (Merge)this.value!;
+			this.ValidateType(CommandTag.Merge);
+			return (Merge)this.Value!;
 		}
 		
 		public static Command DisburseToNeuron(DisburseToNeuron info)
 		{
-			return new Command(CommandType.DisburseToNeuron, info);
+			return new Command(CommandTag.DisburseToNeuron, info);
 		}
 		
 		public DisburseToNeuron AsDisburseToNeuron()
 		{
-			this.ValidateType(CommandType.DisburseToNeuron);
-			return (DisburseToNeuron)this.value!;
+			this.ValidateType(CommandTag.DisburseToNeuron);
+			return (DisburseToNeuron)this.Value!;
 		}
 		
 		public static Command MakeProposal(Proposal info)
 		{
-			return new Command(CommandType.MakeProposal, info);
+			return new Command(CommandTag.MakeProposal, info);
 		}
 		
 		public Proposal AsMakeProposal()
 		{
-			this.ValidateType(CommandType.MakeProposal);
-			return (Proposal)this.value!;
+			this.ValidateType(CommandTag.MakeProposal);
+			return (Proposal)this.Value!;
 		}
 		
 		public static Command MergeMaturity(MergeMaturity info)
 		{
-			return new Command(CommandType.MergeMaturity, info);
+			return new Command(CommandTag.MergeMaturity, info);
 		}
 		
 		public MergeMaturity AsMergeMaturity()
 		{
-			this.ValidateType(CommandType.MergeMaturity);
-			return (MergeMaturity)this.value!;
+			this.ValidateType(CommandTag.MergeMaturity);
+			return (MergeMaturity)this.Value!;
 		}
 		
 		public static Command Disburse(Disburse info)
 		{
-			return new Command(CommandType.Disburse, info);
+			return new Command(CommandTag.Disburse, info);
 		}
 		
 		public Disburse AsDisburse()
 		{
-			this.ValidateType(CommandType.Disburse);
-			return (Disburse)this.value!;
+			this.ValidateType(CommandTag.Disburse);
+			return (Disburse)this.Value!;
 		}
 		
+		private void ValidateType(CommandTag tag)
+		{
+			if (!this.Tag.Equals(tag))
+			{
+				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
+			}
+		}
 	}
-	public enum CommandType
+	public enum CommandTag
 	{
 		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Spawn")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(Spawn))]
+		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Spawn))]
 		Spawn,
 		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Split")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(Split))]
+		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Split))]
 		Split,
 		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Follow")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(Follow))]
+		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Follow))]
 		Follow,
 		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("ClaimOrRefresh")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(ClaimOrRefresh))]
+		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(ClaimOrRefresh))]
 		ClaimOrRefresh,
 		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Configure")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(Configure))]
+		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Configure))]
 		Configure,
 		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("RegisterVote")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(RegisterVote))]
+		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(RegisterVote))]
 		RegisterVote,
 		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Merge")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(Merge))]
+		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Merge))]
 		Merge,
 		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("DisburseToNeuron")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(DisburseToNeuron))]
+		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(DisburseToNeuron))]
 		DisburseToNeuron,
 		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("MakeProposal")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(Proposal))]
+		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Proposal))]
 		MakeProposal,
 		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("MergeMaturity")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(MergeMaturity))]
+		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(MergeMaturity))]
 		MergeMaturity,
 		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Disburse")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(Disburse))]
+		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Disburse))]
 		Disburse,
 	}
 }

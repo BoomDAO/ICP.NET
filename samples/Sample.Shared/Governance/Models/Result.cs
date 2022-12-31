@@ -6,10 +6,17 @@ using EdjCase.ICP.Candid;
 
 namespace Sample.Shared.Governance.Models
 {
-	public class Result : EdjCase.ICP.Candid.Models.CandidVariantValueBase<ResultType>
+	[EdjCase.ICP.Candid.Mapping.VariantAttribute(typeof(ResultTag))]
+	public class Result
 	{
-		public Result(ResultType type, System.Object? value)  : base(type, value)
+		[EdjCase.ICP.Candid.Mapping.VariantTagPropertyAttribute]
+		public ResultTag Tag { get; set; }
+		[EdjCase.ICP.Candid.Mapping.VariantValuePropertyAttribute]
+		public object? Value { get; set; }
+		private Result(ResultTag tag, System.Object? value)
 		{
+			this.Tag = tag;
+			this.Value = value;
 		}
 		
 		protected Result()
@@ -18,27 +25,34 @@ namespace Sample.Shared.Governance.Models
 		
 		public static Result Ok()
 		{
-			return new Result(ResultType.Ok, null);
+			return new Result(ResultTag.Ok, null);
 		}
 		
 		public static Result Err(GovernanceError info)
 		{
-			return new Result(ResultType.Err, info);
+			return new Result(ResultTag.Err, info);
 		}
 		
 		public GovernanceError AsErr()
 		{
-			this.ValidateType(ResultType.Err);
-			return (GovernanceError)this.value!;
+			this.ValidateType(ResultTag.Err);
+			return (GovernanceError)this.Value!;
 		}
 		
+		private void ValidateType(ResultTag tag)
+		{
+			if (!this.Tag.Equals(tag))
+			{
+				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
+			}
+		}
 	}
-	public enum ResultType
+	public enum ResultTag
 	{
 		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Ok")]
 		Ok,
 		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Err")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(GovernanceError))]
+		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(GovernanceError))]
 		Err,
 	}
 }
