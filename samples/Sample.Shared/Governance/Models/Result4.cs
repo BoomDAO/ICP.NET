@@ -6,10 +6,17 @@ using EdjCase.ICP.Candid;
 
 namespace Sample.Shared.Governance.Models
 {
-	public class Result4 : EdjCase.ICP.Candid.Models.CandidVariantValueBase<Result4Type>
+	[EdjCase.ICP.Candid.Mapping.VariantAttribute(typeof(Result4Tag))]
+	public class Result4
 	{
-		public Result4(Result4Type type, System.Object? value)  : base(type, value)
+		[EdjCase.ICP.Candid.Mapping.VariantTagPropertyAttribute]
+		public Result4Tag Tag { get; set; }
+		[EdjCase.ICP.Candid.Mapping.VariantValuePropertyAttribute]
+		public object? Value { get; set; }
+		private Result4(Result4Tag tag, System.Object? value)
 		{
+			this.Tag = tag;
+			this.Value = value;
 		}
 		
 		protected Result4()
@@ -18,34 +25,41 @@ namespace Sample.Shared.Governance.Models
 		
 		public static Result4 Ok(NeuronInfo info)
 		{
-			return new Result4(Result4Type.Ok, info);
+			return new Result4(Result4Tag.Ok, info);
 		}
 		
 		public NeuronInfo AsOk()
 		{
-			this.ValidateType(Result4Type.Ok);
-			return (NeuronInfo)this.value!;
+			this.ValidateType(Result4Tag.Ok);
+			return (NeuronInfo)this.Value!;
 		}
 		
 		public static Result4 Err(GovernanceError info)
 		{
-			return new Result4(Result4Type.Err, info);
+			return new Result4(Result4Tag.Err, info);
 		}
 		
 		public GovernanceError AsErr()
 		{
-			this.ValidateType(Result4Type.Err);
-			return (GovernanceError)this.value!;
+			this.ValidateType(Result4Tag.Err);
+			return (GovernanceError)this.Value!;
 		}
 		
+		private void ValidateType(Result4Tag tag)
+		{
+			if (!this.Tag.Equals(tag))
+			{
+				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
+			}
+		}
 	}
-	public enum Result4Type
+	public enum Result4Tag
 	{
 		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Ok")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(NeuronInfo))]
+		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(NeuronInfo))]
 		Ok,
 		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Err")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(GovernanceError))]
+		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(GovernanceError))]
 		Err,
 	}
 }

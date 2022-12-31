@@ -8,10 +8,17 @@ using OrderId = System.UInt32;
 
 namespace Sample.Shared.Dex.Models
 {
-	public class WithdrawErr : EdjCase.ICP.Candid.Models.CandidVariantValueBase<WithdrawErrType>
+	[EdjCase.ICP.Candid.Mapping.VariantAttribute(typeof(WithdrawErrTag))]
+	public class WithdrawErr
 	{
-		public WithdrawErr(WithdrawErrType type, System.Object? value)  : base(type, value)
+		[EdjCase.ICP.Candid.Mapping.VariantTagPropertyAttribute]
+		public WithdrawErrTag Tag { get; set; }
+		[EdjCase.ICP.Candid.Mapping.VariantValuePropertyAttribute]
+		public object? Value { get; set; }
+		private WithdrawErr(WithdrawErrTag tag, System.Object? value)
 		{
+			this.Tag = tag;
+			this.Value = value;
 		}
 		
 		protected WithdrawErr()
@@ -20,16 +27,16 @@ namespace Sample.Shared.Dex.Models
 		
 		public static WithdrawErr BalanceLow()
 		{
-			return new WithdrawErr(WithdrawErrType.BalanceLow, null);
+			return new WithdrawErr(WithdrawErrTag.BalanceLow, null);
 		}
 		
 		public static WithdrawErr TransferFailure()
 		{
-			return new WithdrawErr(WithdrawErrType.TransferFailure, null);
+			return new WithdrawErr(WithdrawErrTag.TransferFailure, null);
 		}
 		
 	}
-	public enum WithdrawErrType
+	public enum WithdrawErrTag
 	{
 		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("BalanceLow")]
 		BalanceLow,

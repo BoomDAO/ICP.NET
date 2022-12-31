@@ -8,10 +8,17 @@ using OrderId = System.UInt32;
 
 namespace Sample.Shared.Dex.Models
 {
-	public class OrderPlacementReceipt : EdjCase.ICP.Candid.Models.CandidVariantValueBase<OrderPlacementReceiptType>
+	[EdjCase.ICP.Candid.Mapping.VariantAttribute(typeof(OrderPlacementReceiptTag))]
+	public class OrderPlacementReceipt
 	{
-		public OrderPlacementReceipt(OrderPlacementReceiptType type, System.Object? value)  : base(type, value)
+		[EdjCase.ICP.Candid.Mapping.VariantTagPropertyAttribute]
+		public OrderPlacementReceiptTag Tag { get; set; }
+		[EdjCase.ICP.Candid.Mapping.VariantValuePropertyAttribute]
+		public object? Value { get; set; }
+		private OrderPlacementReceipt(OrderPlacementReceiptTag tag, System.Object? value)
 		{
+			this.Tag = tag;
+			this.Value = value;
 		}
 		
 		protected OrderPlacementReceipt()
@@ -20,34 +27,41 @@ namespace Sample.Shared.Dex.Models
 		
 		public static OrderPlacementReceipt Err(OrderPlacementErr info)
 		{
-			return new OrderPlacementReceipt(OrderPlacementReceiptType.Err, info);
+			return new OrderPlacementReceipt(OrderPlacementReceiptTag.Err, info);
 		}
 		
 		public OrderPlacementErr AsErr()
 		{
-			this.ValidateType(OrderPlacementReceiptType.Err);
-			return (OrderPlacementErr)this.value!;
+			this.ValidateType(OrderPlacementReceiptTag.Err);
+			return (OrderPlacementErr)this.Value!;
 		}
 		
 		public static OrderPlacementReceipt Ok(EdjCase.ICP.Candid.Models.OptionalValue<Order> info)
 		{
-			return new OrderPlacementReceipt(OrderPlacementReceiptType.Ok, info);
+			return new OrderPlacementReceipt(OrderPlacementReceiptTag.Ok, info);
 		}
 		
 		public EdjCase.ICP.Candid.Models.OptionalValue<Order> AsOk()
 		{
-			this.ValidateType(OrderPlacementReceiptType.Ok);
-			return (EdjCase.ICP.Candid.Models.OptionalValue<Order>)this.value!;
+			this.ValidateType(OrderPlacementReceiptTag.Ok);
+			return (EdjCase.ICP.Candid.Models.OptionalValue<Order>)this.Value!;
 		}
 		
+		private void ValidateType(OrderPlacementReceiptTag tag)
+		{
+			if (!this.Tag.Equals(tag))
+			{
+				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
+			}
+		}
 	}
-	public enum OrderPlacementReceiptType
+	public enum OrderPlacementReceiptTag
 	{
 		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Err")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(OrderPlacementErr))]
+		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(OrderPlacementErr))]
 		Err,
 		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Ok")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(EdjCase.ICP.Candid.Models.OptionalValue<Order>))]
+		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(EdjCase.ICP.Candid.Models.OptionalValue<Order>))]
 		Ok,
 	}
 }

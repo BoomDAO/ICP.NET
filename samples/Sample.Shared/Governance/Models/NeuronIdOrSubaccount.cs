@@ -6,10 +6,17 @@ using EdjCase.ICP.Candid;
 
 namespace Sample.Shared.Governance.Models
 {
-	public class NeuronIdOrSubaccount : EdjCase.ICP.Candid.Models.CandidVariantValueBase<NeuronIdOrSubaccountType>
+	[EdjCase.ICP.Candid.Mapping.VariantAttribute(typeof(NeuronIdOrSubaccountTag))]
+	public class NeuronIdOrSubaccount
 	{
-		public NeuronIdOrSubaccount(NeuronIdOrSubaccountType type, System.Object? value)  : base(type, value)
+		[EdjCase.ICP.Candid.Mapping.VariantTagPropertyAttribute]
+		public NeuronIdOrSubaccountTag Tag { get; set; }
+		[EdjCase.ICP.Candid.Mapping.VariantValuePropertyAttribute]
+		public object? Value { get; set; }
+		private NeuronIdOrSubaccount(NeuronIdOrSubaccountTag tag, System.Object? value)
 		{
+			this.Tag = tag;
+			this.Value = value;
 		}
 		
 		protected NeuronIdOrSubaccount()
@@ -18,34 +25,41 @@ namespace Sample.Shared.Governance.Models
 		
 		public static NeuronIdOrSubaccount Subaccount(System.Collections.Generic.List<byte> info)
 		{
-			return new NeuronIdOrSubaccount(NeuronIdOrSubaccountType.Subaccount, info);
+			return new NeuronIdOrSubaccount(NeuronIdOrSubaccountTag.Subaccount, info);
 		}
 		
 		public System.Collections.Generic.List<byte> AsSubaccount()
 		{
-			this.ValidateType(NeuronIdOrSubaccountType.Subaccount);
-			return (System.Collections.Generic.List<byte>)this.value!;
+			this.ValidateType(NeuronIdOrSubaccountTag.Subaccount);
+			return (System.Collections.Generic.List<byte>)this.Value!;
 		}
 		
 		public static NeuronIdOrSubaccount NeuronId(NeuronId info)
 		{
-			return new NeuronIdOrSubaccount(NeuronIdOrSubaccountType.NeuronId, info);
+			return new NeuronIdOrSubaccount(NeuronIdOrSubaccountTag.NeuronId, info);
 		}
 		
 		public NeuronId AsNeuronId()
 		{
-			this.ValidateType(NeuronIdOrSubaccountType.NeuronId);
-			return (NeuronId)this.value!;
+			this.ValidateType(NeuronIdOrSubaccountTag.NeuronId);
+			return (NeuronId)this.Value!;
 		}
 		
+		private void ValidateType(NeuronIdOrSubaccountTag tag)
+		{
+			if (!this.Tag.Equals(tag))
+			{
+				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
+			}
+		}
 	}
-	public enum NeuronIdOrSubaccountType
+	public enum NeuronIdOrSubaccountTag
 	{
 		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Subaccount")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(System.Collections.Generic.List<byte>))]
+		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(System.Collections.Generic.List<byte>))]
 		Subaccount,
 		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("NeuronId")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(NeuronId))]
+		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(NeuronId))]
 		NeuronId,
 	}
 }

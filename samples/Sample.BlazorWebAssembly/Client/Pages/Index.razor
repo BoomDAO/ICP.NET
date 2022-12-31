@@ -53,9 +53,9 @@ else
         if (proposal.Action.HasValue)
         {
             var action = proposal.Action.GetValueOrThrow();
-            switch (action.Type)
+            switch (action.Tag)
             {
-                case ActionType.Motion:
+                case ActionTag.Motion:
                     <h2>Motion: @action.AsMotion().MotionText</h2>
                     break;
             }

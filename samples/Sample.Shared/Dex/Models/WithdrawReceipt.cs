@@ -8,10 +8,17 @@ using OrderId = System.UInt32;
 
 namespace Sample.Shared.Dex.Models
 {
-	public class WithdrawReceipt : EdjCase.ICP.Candid.Models.CandidVariantValueBase<WithdrawReceiptType>
+	[EdjCase.ICP.Candid.Mapping.VariantAttribute(typeof(WithdrawReceiptTag))]
+	public class WithdrawReceipt
 	{
-		public WithdrawReceipt(WithdrawReceiptType type, System.Object? value)  : base(type, value)
+		[EdjCase.ICP.Candid.Mapping.VariantTagPropertyAttribute]
+		public WithdrawReceiptTag Tag { get; set; }
+		[EdjCase.ICP.Candid.Mapping.VariantValuePropertyAttribute]
+		public object? Value { get; set; }
+		private WithdrawReceipt(WithdrawReceiptTag tag, System.Object? value)
 		{
+			this.Tag = tag;
+			this.Value = value;
 		}
 		
 		protected WithdrawReceipt()
@@ -20,34 +27,41 @@ namespace Sample.Shared.Dex.Models
 		
 		public static WithdrawReceipt Err(WithdrawErr info)
 		{
-			return new WithdrawReceipt(WithdrawReceiptType.Err, info);
+			return new WithdrawReceipt(WithdrawReceiptTag.Err, info);
 		}
 		
 		public WithdrawErr AsErr()
 		{
-			this.ValidateType(WithdrawReceiptType.Err);
-			return (WithdrawErr)this.value!;
+			this.ValidateType(WithdrawReceiptTag.Err);
+			return (WithdrawErr)this.Value!;
 		}
 		
 		public static WithdrawReceipt Ok(EdjCase.ICP.Candid.UnboundedUInt info)
 		{
-			return new WithdrawReceipt(WithdrawReceiptType.Ok, info);
+			return new WithdrawReceipt(WithdrawReceiptTag.Ok, info);
 		}
 		
 		public EdjCase.ICP.Candid.UnboundedUInt AsOk()
 		{
-			this.ValidateType(WithdrawReceiptType.Ok);
-			return (EdjCase.ICP.Candid.UnboundedUInt)this.value!;
+			this.ValidateType(WithdrawReceiptTag.Ok);
+			return (EdjCase.ICP.Candid.UnboundedUInt)this.Value!;
 		}
 		
+		private void ValidateType(WithdrawReceiptTag tag)
+		{
+			if (!this.Tag.Equals(tag))
+			{
+				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
+			}
+		}
 	}
-	public enum WithdrawReceiptType
+	public enum WithdrawReceiptTag
 	{
 		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Err")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(WithdrawErr))]
+		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(WithdrawErr))]
 		Err,
 		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Ok")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(EdjCase.ICP.Candid.UnboundedUInt))]
+		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(EdjCase.ICP.Candid.UnboundedUInt))]
 		Ok,
 	}
 }

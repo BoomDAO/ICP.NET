@@ -30,6 +30,5 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\Candid\EdjCase.ICP.Candid.csproj" />
-	  <ProjectReference Include="..\EdjCase.ICP.VariantSourceGenerator\EdjCase.ICP.VariantSourceGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false"/>
 	</ItemGroup>
 </Project>

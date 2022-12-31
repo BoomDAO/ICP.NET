@@ -274,28 +274,37 @@ namespace ICP.ClientGenerator
 
 		internal static void WriteVariant(IndentedStringBuilder builder, TypeName variantName, VariantSourceCodeType variant)
 		{
-			TypeName enumName = new(variantName.GetName() + "Type", null);
-			var implementationTypes = new List<TypeName>
-			{
-				new TypeName("CandidVariantValueBase", "EdjCase.ICP.Candid.Models", enumName)
-			};
+			TypeName enumName = new(variantName.GetName() + "Tag", null);
+			var implementationTypes = new List<TypeName>();
 			var enumOptions = new List<(ValueName Name, TypeName? Type)>();
+
+			builder.AppendLine($"[{typeof(VariantAttribute).FullName}(typeof({enumName.GetNamespacedName()}))]");
 			WriteClass(builder, variantName, () =>
 			{
+				// Type Property
+				builder.AppendLine($"[{typeof(VariantTagPropertyAttribute).FullName}]");
+				builder.AppendLine($"public {enumName.GetNamespacedName()} Tag {{ get; set; }}");
+
+				// Value Property
+				builder.AppendLine($"[{typeof(VariantValuePropertyAttribute).FullName}]");
+				builder.AppendLine($"public object? Value {{ get; set; }}");
+
 				// Constrcutor
 				WriteMethod(
 					builder,
 					inner: () =>
 					{
+						builder.AppendLine("this.Tag = tag;");
+						builder.AppendLine("this.Value = value;");
 					},
-					access: "public",
+					access: "private",
 					isStatic: false,
 					isAsync: false,
 					isConstructor: true,
 					returnType: null,
 					name: variantName.GetName(),
-					baseConstructorParams: new List<string> { "type", "value" },
-					TypedParam.FromType(enumName, ValueName.Default("type")),
+					baseConstructorParams: null,
+					TypedParam.FromType(enumName, ValueName.Default("tag")),
 					TypedParam.FromType(new TypeName("Object?", "System"), ValueName.Default("value"))
 				);
 				builder.AppendLine("");
@@ -317,6 +326,7 @@ namespace ICP.ClientGenerator
 				builder.AppendLine("");
 
 
+				bool anyOptionsWithType = false;
 				int i = 0;
 				foreach ((ValueName optionName, SourceCodeType optionType) in variant.Options)
 				{
@@ -352,6 +362,7 @@ namespace ICP.ClientGenerator
 					}
 					else
 					{
+						anyOptionsWithType = true;
 						ValueName paramName = ValueName.Default("info");
 						WriteMethod(
 							builder,
@@ -374,8 +385,8 @@ namespace ICP.ClientGenerator
 							builder,
 							inner: () =>
 							{
-								builder.AppendLine($"this.ValidateType({enumName.GetNamespacedName()}.{optionName.PascalCaseValue});");
-								builder.AppendLine($"return ({optionTypeName.GetNamespacedName()})this.value!;");
+								builder.AppendLine($"this.ValidateTag({enumName.GetNamespacedName()}.{optionName.PascalCaseValue});");
+								builder.AppendLine($"return ({optionTypeName.GetNamespacedName()})this.Value!;");
 							},
 							access: "public",
 							isStatic: false,
@@ -387,6 +398,28 @@ namespace ICP.ClientGenerator
 					}
 					builder.AppendLine("");
 
+				}
+
+				if (anyOptionsWithType)
+				{
+					WriteMethod(
+						builder,
+						inner: () =>
+						{
+							builder.AppendLine($"if (!this.Tag.Equals(tag))");
+							builder.AppendLine("{");
+							builder.AppendLine("	throw new InvalidOperationException($\"Cannot cast '{this.Tag}' to type '{tag}'\");");
+							builder.AppendLine("}");
+						},
+						access: "private",
+						isStatic: false,
+						isAsync: false,
+						isConstructor: false,
+						returnType: null,
+						name: "ValidateTag",
+						baseConstructorParams: null,
+						new TypedParam(enumName.GetNamespacedName(), "tag")
+					);
 				}
 
 			}, implementationTypes);

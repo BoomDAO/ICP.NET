@@ -1,4 +1,5 @@
 using EdjCase.ICP.Candid;
+using EdjCase.ICP.Candid.Mapping;
 using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid.Models.Types;
 using EdjCase.ICP.Candid.Models.Values;
@@ -65,7 +66,7 @@ namespace ICP.Candid.Tests
 
 			public override bool Equals(object? obj)
 			{
-				if(obj is not RecordClass r)
+				if (obj is not RecordClass r)
 				{
 					return false;
 				}
@@ -111,29 +112,29 @@ namespace ICP.Candid.Tests
 
 
 
-		public class VariantValueClass : ICandidVariantValue
+		[Variant(typeof(VariantValueClassType))]
+		public class VariantValueClass
 		{
-			public (CandidTag tag, object? value) Value { get; set; }
-			public Dictionary<CandidTag, Type?> GetOptions()
-			{
-				return new Dictionary<CandidTag, Type?>
-				{
-					{ CandidTag.FromName("v1"), null },
-					{ CandidTag.FromName("v2"), typeof(string) },
-					{ CandidTag.FromName("v3"), typeof(int) },
-					{ CandidTag.FromName("v4"), typeof(OptionalValue<string>) },
-				};
-			}
+			[VariantTagProperty]
+			public VariantValueClassType Type { get; set; }
+			[VariantValueProperty]
+			public object? Value { get; set; }
 
-			public (CandidTag Tag, object? Value) GetValue()
-			{
-				return this.Value;
-			}
+		}
 
-			public void SetValue(CandidTag tag, object? value)
-			{
-				this.Value = (tag, value);
-			}
+		public enum VariantValueClassType
+		{
+			[CandidName("v1")]
+			V1,
+			[CandidName("v2")]
+			[VariantOptionType(typeof(string))]
+			V2,
+			[CandidName("v3")]
+			[VariantOptionType(typeof(int))]
+			V3,
+			[CandidName("v4")]
+			[VariantOptionType(typeof(OptionalValue<string>))]
+			V4
 		}
 
 		[Fact]
@@ -141,7 +142,8 @@ namespace ICP.Candid.Tests
 		{
 			var variant = new VariantValueClass
 			{
-				Value = (CandidTag.FromName("v4"), OptionalValue<string>.WithValue("text"))
+				Type = VariantValueClassType.V4,
+				Value = OptionalValue<string>.WithValue("text")
 			};
 			CandidValue expectedValue = new CandidVariant("v4", new CandidOptional(CandidPrimitive.Text("text")));
 
@@ -160,11 +162,11 @@ namespace ICP.Candid.Tests
 				expected,
 				(x, y) =>
 				{
-					if (!object.ReferenceEquals(x.Value.value, null))
+					if (!object.ReferenceEquals(x.Value, null))
 					{
-						if(!object.ReferenceEquals(y.Value.value, null))
+						if (!object.ReferenceEquals(y.Value, null))
 						{
-							return x.Value.tag == y.Value.tag && x.Value.value!.Equals(y.Value.value);
+							return x.Type == y.Type && x.Value!.Equals(y.Value);
 						}
 					}
 					return false;

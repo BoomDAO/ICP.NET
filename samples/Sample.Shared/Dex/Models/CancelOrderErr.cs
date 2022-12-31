@@ -8,10 +8,17 @@ using OrderId = System.UInt32;
 
 namespace Sample.Shared.Dex.Models
 {
-	public class CancelOrderErr : EdjCase.ICP.Candid.Models.CandidVariantValueBase<CancelOrderErrType>
+	[EdjCase.ICP.Candid.Mapping.VariantAttribute(typeof(CancelOrderErrTag))]
+	public class CancelOrderErr
 	{
-		public CancelOrderErr(CancelOrderErrType type, System.Object? value)  : base(type, value)
+		[EdjCase.ICP.Candid.Mapping.VariantTagPropertyAttribute]
+		public CancelOrderErrTag Tag { get; set; }
+		[EdjCase.ICP.Candid.Mapping.VariantValuePropertyAttribute]
+		public object? Value { get; set; }
+		private CancelOrderErr(CancelOrderErrTag tag, System.Object? value)
 		{
+			this.Tag = tag;
+			this.Value = value;
 		}
 		
 		protected CancelOrderErr()
@@ -20,16 +27,16 @@ namespace Sample.Shared.Dex.Models
 		
 		public static CancelOrderErr NotAllowed()
 		{
-			return new CancelOrderErr(CancelOrderErrType.NotAllowed, null);
+			return new CancelOrderErr(CancelOrderErrTag.NotAllowed, null);
 		}
 		
 		public static CancelOrderErr NotExistingOrder()
 		{
-			return new CancelOrderErr(CancelOrderErrType.NotExistingOrder, null);
+			return new CancelOrderErr(CancelOrderErrTag.NotExistingOrder, null);
 		}
 		
 	}
-	public enum CancelOrderErrType
+	public enum CancelOrderErrTag
 	{
 		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("NotAllowed")]
 		NotAllowed,

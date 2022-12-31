@@ -8,10 +8,17 @@ using OrderId = System.UInt32;
 
 namespace Sample.Shared.Dex.Models
 {
-	public class OrderPlacementErr : EdjCase.ICP.Candid.Models.CandidVariantValueBase<OrderPlacementErrType>
+	[EdjCase.ICP.Candid.Mapping.VariantAttribute(typeof(OrderPlacementErrTag))]
+	public class OrderPlacementErr
 	{
-		public OrderPlacementErr(OrderPlacementErrType type, System.Object? value)  : base(type, value)
+		[EdjCase.ICP.Candid.Mapping.VariantTagPropertyAttribute]
+		public OrderPlacementErrTag Tag { get; set; }
+		[EdjCase.ICP.Candid.Mapping.VariantValuePropertyAttribute]
+		public object? Value { get; set; }
+		private OrderPlacementErr(OrderPlacementErrTag tag, System.Object? value)
 		{
+			this.Tag = tag;
+			this.Value = value;
 		}
 		
 		protected OrderPlacementErr()
@@ -20,16 +27,16 @@ namespace Sample.Shared.Dex.Models
 		
 		public static OrderPlacementErr InvalidOrder()
 		{
-			return new OrderPlacementErr(OrderPlacementErrType.InvalidOrder, null);
+			return new OrderPlacementErr(OrderPlacementErrTag.InvalidOrder, null);
 		}
 		
 		public static OrderPlacementErr OrderBookFull()
 		{
-			return new OrderPlacementErr(OrderPlacementErrType.OrderBookFull, null);
+			return new OrderPlacementErr(OrderPlacementErrTag.OrderBookFull, null);
 		}
 		
 	}
-	public enum OrderPlacementErrType
+	public enum OrderPlacementErrTag
 	{
 		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("InvalidOrder")]
 		InvalidOrder,

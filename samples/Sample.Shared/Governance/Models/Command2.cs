@@ -6,10 +6,17 @@ using EdjCase.ICP.Candid;
 
 namespace Sample.Shared.Governance.Models
 {
-	public class Command2 : EdjCase.ICP.Candid.Models.CandidVariantValueBase<Command2Type>
+	[EdjCase.ICP.Candid.Mapping.VariantAttribute(typeof(Command2Tag))]
+	public class Command2
 	{
-		public Command2(Command2Type type, System.Object? value)  : base(type, value)
+		[EdjCase.ICP.Candid.Mapping.VariantTagPropertyAttribute]
+		public Command2Tag Tag { get; set; }
+		[EdjCase.ICP.Candid.Mapping.VariantValuePropertyAttribute]
+		public object? Value { get; set; }
+		private Command2(Command2Tag tag, System.Object? value)
 		{
+			this.Tag = tag;
+			this.Value = value;
 		}
 		
 		protected Command2()
@@ -18,118 +25,125 @@ namespace Sample.Shared.Governance.Models
 		
 		public static Command2 Spawn(Spawn info)
 		{
-			return new Command2(Command2Type.Spawn, info);
+			return new Command2(Command2Tag.Spawn, info);
 		}
 		
 		public Spawn AsSpawn()
 		{
-			this.ValidateType(Command2Type.Spawn);
-			return (Spawn)this.value!;
+			this.ValidateType(Command2Tag.Spawn);
+			return (Spawn)this.Value!;
 		}
 		
 		public static Command2 Split(Split info)
 		{
-			return new Command2(Command2Type.Split, info);
+			return new Command2(Command2Tag.Split, info);
 		}
 		
 		public Split AsSplit()
 		{
-			this.ValidateType(Command2Type.Split);
-			return (Split)this.value!;
+			this.ValidateType(Command2Tag.Split);
+			return (Split)this.Value!;
 		}
 		
 		public static Command2 Configure(Configure info)
 		{
-			return new Command2(Command2Type.Configure, info);
+			return new Command2(Command2Tag.Configure, info);
 		}
 		
 		public Configure AsConfigure()
 		{
-			this.ValidateType(Command2Type.Configure);
-			return (Configure)this.value!;
+			this.ValidateType(Command2Tag.Configure);
+			return (Configure)this.Value!;
 		}
 		
 		public static Command2 Merge(Merge info)
 		{
-			return new Command2(Command2Type.Merge, info);
+			return new Command2(Command2Tag.Merge, info);
 		}
 		
 		public Merge AsMerge()
 		{
-			this.ValidateType(Command2Type.Merge);
-			return (Merge)this.value!;
+			this.ValidateType(Command2Tag.Merge);
+			return (Merge)this.Value!;
 		}
 		
 		public static Command2 DisburseToNeuron(DisburseToNeuron info)
 		{
-			return new Command2(Command2Type.DisburseToNeuron, info);
+			return new Command2(Command2Tag.DisburseToNeuron, info);
 		}
 		
 		public DisburseToNeuron AsDisburseToNeuron()
 		{
-			this.ValidateType(Command2Type.DisburseToNeuron);
-			return (DisburseToNeuron)this.value!;
+			this.ValidateType(Command2Tag.DisburseToNeuron);
+			return (DisburseToNeuron)this.Value!;
 		}
 		
 		public static Command2 ClaimOrRefreshNeuron(ClaimOrRefresh info)
 		{
-			return new Command2(Command2Type.ClaimOrRefreshNeuron, info);
+			return new Command2(Command2Tag.ClaimOrRefreshNeuron, info);
 		}
 		
 		public ClaimOrRefresh AsClaimOrRefreshNeuron()
 		{
-			this.ValidateType(Command2Type.ClaimOrRefreshNeuron);
-			return (ClaimOrRefresh)this.value!;
+			this.ValidateType(Command2Tag.ClaimOrRefreshNeuron);
+			return (ClaimOrRefresh)this.Value!;
 		}
 		
 		public static Command2 MergeMaturity(MergeMaturity info)
 		{
-			return new Command2(Command2Type.MergeMaturity, info);
+			return new Command2(Command2Tag.MergeMaturity, info);
 		}
 		
 		public MergeMaturity AsMergeMaturity()
 		{
-			this.ValidateType(Command2Type.MergeMaturity);
-			return (MergeMaturity)this.value!;
+			this.ValidateType(Command2Tag.MergeMaturity);
+			return (MergeMaturity)this.Value!;
 		}
 		
 		public static Command2 Disburse(Disburse info)
 		{
-			return new Command2(Command2Type.Disburse, info);
+			return new Command2(Command2Tag.Disburse, info);
 		}
 		
 		public Disburse AsDisburse()
 		{
-			this.ValidateType(Command2Type.Disburse);
-			return (Disburse)this.value!;
+			this.ValidateType(Command2Tag.Disburse);
+			return (Disburse)this.Value!;
 		}
 		
+		private void ValidateType(Command2Tag tag)
+		{
+			if (!this.Tag.Equals(tag))
+			{
+				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
+			}
+		}
 	}
-	public enum Command2Type
+	public enum Command2Tag
 	{
 		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Spawn")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(Spawn))]
+		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Spawn))]
 		Spawn,
 		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Split")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(Split))]
+		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Split))]
 		Split,
 		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Configure")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(Configure))]
+		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Configure))]
 		Configure,
 		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Merge")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(Merge))]
+		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Merge))]
 		Merge,
 		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("DisburseToNeuron")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(DisburseToNeuron))]
+		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(DisburseToNeuron))]
 		DisburseToNeuron,
 		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("ClaimOrRefreshNeuron")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(ClaimOrRefresh))]
+		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(ClaimOrRefresh))]
 		ClaimOrRefreshNeuron,
 		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("MergeMaturity")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(MergeMaturity))]
+		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(MergeMaturity))]
 		MergeMaturity,
 		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Disburse")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(Disburse))]
+		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Disburse))]
 		Disburse,
 	}
 }

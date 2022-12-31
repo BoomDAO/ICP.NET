@@ -1,16 +1,20 @@
 # ICP.NET
+
 Collection of Internet Computer Protocol (ICP) libraries for .NET/Blazor
 
 - Agent
+
   - Library to communicate to and from the Internet Computer
   - Nuget: [`EdjCase.ICP.Agent`](https://www.nuget.org/packages/EdjCase.ICP.Agent)
 
 - Candid
+
   - Library of Candid Encoding, Models and Helpers
   - Nuget: [`EdjCase.ICP.Candid`](https://www.nuget.org/packages/EdjCase.ICP.Candid)
 
 - Client Generator
-  - Library of generating C# client code from *.did files
+
+  - Library of generating C# client code from \*.did files
   - Nuget: [`EdjCase.ICP.ClientGenerator`](https://www.nuget.org/packages/EdjCase.ICP.ClientGenerator)
 
 - Samples
@@ -20,7 +24,12 @@ Collection of Internet Computer Protocol (ICP) libraries for .NET/Blazor
     - CLI
 
 # Agent
+
 ## Usage (Manual)
+
+- Dont define any types and use CandidValue and CandidType
+- Call functions using Candid objects
+
 ```cs
 // Create identity
 var identity = new AnonymousIdentity();
@@ -31,7 +40,10 @@ IAgent agent = new HttpAgent(identity);
 // Create Candid arg to send in request
 ulong proposalId = 1234;
 CandidArg arg = CandidArg.FromCandid(
-    CandidTypedValue.FromObject(proposalId)
+	new CandidTypedValue( // Candid type with no conversion
+		value: CandidPrimitive.Nat64(proposalId),
+		type: new CandidPrimitiveType(PrimitiveType.Nat64)
+	)
 );
 
 // Make request to IC
@@ -41,11 +53,42 @@ QueryResponse response = await agent.QueryAsync(governanceCanisterId, method, ar
 
 QueryReply reply = response.ThrowOrGetReply();
 // Convert to custom class
-ProposalInfo? info = reply.Arg.Values[0].ToOptionalObject<ProposalInfo>()
+OptionalValue<ProposalInfo> info = reply.Arg.Values[0].ToOptionalObject<ProposalInfo>()
+```
+
+## Usage (Self Defined Types)
+
+- Declare types of api models
+- Call functions and use custom object converters
+
+```cs
+// Create identity
+var identity = new AnonymousIdentity();
+
+// Create http agent
+IAgent agent = new HttpAgent(identity);
+
+// Create Candid arg to send in request
+ulong proposalId = 1234;
+CandidArg arg = CandidArg.FromCandid(
+    CandidTypedValue.FromObject(proposalId) // Conversion can be C# or custom types
+);
+
+// Make request to IC
+string method = "get_proposal_info";
+Principal governanceCanisterId = Principal.FromText("rrkah-fqaaa-aaaaa-aaaaq-cai");
+QueryResponse response = await agent.QueryAsync(governanceCanisterId, method, arg);
+
+QueryReply reply = response.ThrowOrGetReply();
+// Convert to custom class
+OptionalValue<ProposalInfo> info = reply.Arg.Values[0].ToOptionalObject<ProposalInfo>() // Conversion to custom or C# types
 ```
 
 ## Usage (w/ Client Generator)
+
 - Run Client Generator on `*.did` file (see Client Generator below)
+- Use generated client and models to call function
+
 ```cs
 // Create identity
 var identity = new AnonymousIdentity();
@@ -57,37 +100,33 @@ IAgent agent = new HttpAgent(identity);
 var client = new GovernanceApiClient(agent, Principal.FromText("rrkah-fqaaa-aaaaa-aaaaq-cai"));
 
 // Make request
-ProposalInfo? info = await client.GetProposalInfoAsync(62143);
+OptionalValue<ProposalInfo> info = await client.GetProposalInfoAsync(62143);
 ```
 
 # Candid
+
 ## Parse from bytes
+
 ```cs
 CandidArg arg = CandidArg.FromBytes(rawCandidBytes);
 ```
 
 ## Reading candid values directly
+
 ```cs
 CandidArg arg = CandidArg.FromBytes(rawCandidBytes);
 CandidValue firstArg = arg.Values[0];
 string title = firstArg.AsRecord()["title"];
 ```
 
-## Converting candid to custom classes
-```cs
-// Custom class
-public class MyObj
-{
-    public string Title { get; set; }
-    public bool IsGoodTitle { get; set; }
-}
-```
+## Converting candid to and from custom classes
 
 ```cs
 // Deserialize
 CandidArg arg = CandidArg.FromBytes(rawCandidBytes);
 MyObj obj = arg.Values[0].ToObject<MyObj>();
 ```
+
 ```cs
 // Serialze
 MyObj obj = new MyObj
@@ -97,13 +136,74 @@ MyObj obj = new MyObj
 };
 CandidTypedValue value = CandidTypedValue.FromObject(obj);
 ```
+
+### Variant
+
+```cs
+[Variant(typeof(MyVariantTag))] // Required to flag as variant and define options with enum
+public class MyVariant
+{
+    [VariantTagProperty] // Flag for tag/enum property, not required if name is `Tag`
+    public MyVariantTag Tag { get; set; }
+    [VariantValueProperty] // Flag for value property, not required if name is `Value`
+    public object? Value { get; set; }
+}
+
+public enum MyVariantTag
+{
+    [CandidName("o1")] // Used to override name for candid
+    Option1,
+    [CandidName("o2")]
+    [VariantType(typeof(string))] // Used to specify if the option has a value associated
+    Option2
+}
+```
+
+### Record
+
+```cs
+public class MyRecord
+{
+    [CandidName("title")] // Used to override name for candid
+    public string Title { get; set; }
+    [CandidName("is_good_title")]
+    public bool IsGoodTitle { get; set; }
+}
+```
+
+### Other
+
+```cs
+C# -> Candid
+UnboundedUInt -> Nat
+byte -> Nat8
+ushort -> Nat16
+uint -> Nat32
+ulong -> Nat64
+UnboundedInt -> Int
+sbyte -> Int8
+short -> Int16
+int -> Int32
+long -> Int64
+string -> Text
+float -> Float32
+double -> Float64
+bool -> Bool
+Principal -> Principal
+OptionalValue<T> -> Opt T
+List<T> -> Vec T
+CandidFunc -> Func
+```
+
 ## Parse from Text
+
 ```cs
 string text = "record { field_1:nat64; field_2: vec nat8 }";
 CandidRecordType type = CandidTextParser.Parse<CandidRecordType>(text);
 ```
 
 ## Generate Text representation
+
 ```cs
 var type = new CandidRecordType(new Dictionary<CandidTag, CandidType>
 {
@@ -120,7 +220,9 @@ string text = CandidTextGenerator.Generator(type, IndentType.Tab);
 ```
 
 # Client Generator
+
 ## Usage (Code)
+
 ```cs
     // Location of the `*.did` file to parse from
     string candidFilePath = "location/to/service.did";
@@ -137,16 +239,21 @@ string text = CandidTextGenerator.Generator(type, IndentType.Tab);
 ```
 
 ## Usage (dotnet tool)
+
 ### Install with dotnet tools
+
 ```
 dotnet tool install -g EdjCase.ICP.ClientGenerator
 ```
+
 ### Run tool
+
 ```
 candid-client-generator -f "location/to/service.did" -o "location/to/output" -n "My.Namespace.IC" -c "MyClient"
 ```
 
 # Links
+
 - [IC Http Interface Spec](https://smartcontracts.org/docs/current/references/ic-interface-spec)
 - [Candid Spec](https://github.com/dfinity/candid/blob/master/spec/Candid.md)
 - [Candid Decoder](https://fxa77-fiaaa-aaaae-aaana-cai.raw.ic0.app/explain)

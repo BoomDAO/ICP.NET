@@ -10,6 +10,7 @@ using System.Data;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace EdjCase.ICP.Candid.Mapping.Mappers
@@ -243,10 +244,6 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 					}
 				);
 			}
-			if (typeof(ICandidVariantValue).IsAssignableFrom(objType))
-			{
-				return BuildVariant(objType);
-			}
 			// Generics
 			if (objType.IsGenericType)
 			{
@@ -273,6 +270,12 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 						}
 					);
 				}
+			}
+			// Variants are objects with a [Variant] on the class
+			VariantAttribute? variantAttribute = objType.GetCustomAttribute<VariantAttribute>();
+			if (variantAttribute != null)
+			{
+				return BuildVariant(objType, variantAttribute);
 			}
 			// Assume anything else is a record
 			return BuildRecord(objType);
@@ -331,19 +334,56 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 			});
 		}
 
-		private static IResolvableTypeInfo BuildVariant(Type objType)
+		private static IResolvableTypeInfo BuildVariant(Type objType, VariantAttribute attribute)
 		{
-			ICandidVariantValue variant = (ICandidVariantValue)Activator.CreateInstance(objType, nonPublic: true);
-			Dictionary<CandidTag, Type?> optionTypes = variant.GetOptions();
+			object? variant = Activator.CreateInstance(objType, nonPublic: true);
 
-			List<Type> dependencies = optionTypes.Values
-				.Where(v => v != null)
-				.Select(v => v!)
+			Dictionary<CandidTag, VariantMapper.Option> options = attribute.TagType.GetEnumValues()
+				.Select(tagObject =>
+				{
+					Enum tagEnum = (Enum)tagObject;
+					string tagName = Enum.GetName(attribute.TagType, tagEnum);
+					MemberInfo field = attribute.TagType.GetMember(tagName).First();
+					var typeAttribute = field.GetCustomAttribute<VariantOptionTypeAttribute>();
+					Type? optionType = typeAttribute?.OptionType;
+					var nameAttribute = field.GetCustomAttribute<CandidNameAttribute>();
+					string name = nameAttribute?.Name ?? tagName;
+					VariantMapper.ValueInfo? valueInfo = null;
+					if (optionType != null)
+					{
+						IObjectMapper? overrideMapper = null;// TODO overrides?
+						valueInfo = new VariantMapper.ValueInfo(optionType, overrideMapper);
+					}
+					return (CandidTag.FromName(name), new VariantMapper.Option(tagEnum, valueInfo));
+				})
+				.ToDictionary(k => k.Item1, k => k.Item2);
+
+			List<Type> dependencies = options.Values
+				.Where(v => v.ValueInfo != null)
+				.Select(v => v.ValueInfo!.Type)
+				.Distinct()
 				.ToList();
-			Dictionary<CandidTag, (Type Type, IObjectMapper? OverrideMapper)?> options = optionTypes
-				.ToDictionary(
-					t => t.Key,
-					t => t.Value == null ? (ValueTuple<Type, IObjectMapper?>?)null : (t.Value, null)); // TODO overrides?
+
+			List<PropertyInfo> properties = objType
+				.GetProperties(BindingFlags.Instance | BindingFlags.Public)
+				.ToList();
+
+			const string defaultTypePropertyName = "Tag";
+			PropertyInfo? typeProperty = properties
+				.FirstOrDefault(p => p.GetCustomAttribute<VariantTagPropertyAttribute>() != null)
+				?? properties.FirstOrDefault(p => p.Name == defaultTypePropertyName);
+			if (typeProperty == null)
+			{
+				throw new InvalidOperationException($"Variant type '{objType.FullName}' must include a property named '{defaultTypePropertyName}' or have the '{typeof(VariantTagPropertyAttribute).FullName}' attribute on a property");
+			}
+			const string defaultValuePropertyName = "Value";
+			PropertyInfo? valueProperty = properties
+				.FirstOrDefault(p => p.GetCustomAttribute<VariantValuePropertyAttribute>() != null)
+				?? properties.FirstOrDefault(p => p.Name == defaultValuePropertyName);
+			if (valueProperty == null)
+			{
+				throw new InvalidOperationException($"Variant type '{objType.FullName}' must include a property named '{defaultValuePropertyName}' or have the '{typeof(VariantValuePropertyAttribute).FullName}' attribute on a property");
+			}
 			return new ComplexTypeInfo(objType, dependencies, (resolvedDependencies) =>
 			{
 				Dictionary<CandidTag, CandidType> optionCandidTypes = options
@@ -351,16 +391,16 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 						o => o.Key,
 						o =>
 						{
-							if (o.Value == null)
+							if (o.Value.ValueInfo == null)
 							{
 								return new CandidPrimitiveType(PrimitiveType.Null);
 							}
-							return o.Value.Value.OverrideMapper?.CandidType ?? resolvedDependencies[o.Value.Value.Type];
+							return o.Value.ValueInfo.OverrideMapper?.CandidType ?? resolvedDependencies[o.Value.ValueInfo.Type];
 						}
 					);
 				var type = new CandidVariantType(optionCandidTypes);
 
-				return new VariantMapper(type, objType, options);
+				return new VariantMapper(type, objType, typeProperty, valueProperty, options);
 			});
 		}
 

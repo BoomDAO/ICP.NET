@@ -8,10 +8,17 @@ using OrderId = System.UInt32;
 
 namespace Sample.Shared.Dex.Models
 {
-	public class CancelOrderReceipt : EdjCase.ICP.Candid.Models.CandidVariantValueBase<CancelOrderReceiptType>
+	[EdjCase.ICP.Candid.Mapping.VariantAttribute(typeof(CancelOrderReceiptTag))]
+	public class CancelOrderReceipt
 	{
-		public CancelOrderReceipt(CancelOrderReceiptType type, System.Object? value)  : base(type, value)
+		[EdjCase.ICP.Candid.Mapping.VariantTagPropertyAttribute]
+		public CancelOrderReceiptTag Tag { get; set; }
+		[EdjCase.ICP.Candid.Mapping.VariantValuePropertyAttribute]
+		public object? Value { get; set; }
+		private CancelOrderReceipt(CancelOrderReceiptTag tag, System.Object? value)
 		{
+			this.Tag = tag;
+			this.Value = value;
 		}
 		
 		protected CancelOrderReceipt()
@@ -20,34 +27,41 @@ namespace Sample.Shared.Dex.Models
 		
 		public static CancelOrderReceipt Err(CancelOrderErr info)
 		{
-			return new CancelOrderReceipt(CancelOrderReceiptType.Err, info);
+			return new CancelOrderReceipt(CancelOrderReceiptTag.Err, info);
 		}
 		
 		public CancelOrderErr AsErr()
 		{
-			this.ValidateType(CancelOrderReceiptType.Err);
-			return (CancelOrderErr)this.value!;
+			this.ValidateType(CancelOrderReceiptTag.Err);
+			return (CancelOrderErr)this.Value!;
 		}
 		
 		public static CancelOrderReceipt Ok(OrderId info)
 		{
-			return new CancelOrderReceipt(CancelOrderReceiptType.Ok, info);
+			return new CancelOrderReceipt(CancelOrderReceiptTag.Ok, info);
 		}
 		
 		public OrderId AsOk()
 		{
-			this.ValidateType(CancelOrderReceiptType.Ok);
-			return (OrderId)this.value!;
+			this.ValidateType(CancelOrderReceiptTag.Ok);
+			return (OrderId)this.Value!;
 		}
 		
+		private void ValidateType(CancelOrderReceiptTag tag)
+		{
+			if (!this.Tag.Equals(tag))
+			{
+				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
+			}
+		}
 	}
-	public enum CancelOrderReceiptType
+	public enum CancelOrderReceiptTag
 	{
 		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Err")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(CancelOrderErr))]
+		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(CancelOrderErr))]
 		Err,
 		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Ok")]
-		[EdjCase.ICP.Candid.Models.VariantOptionTypeAttribute(typeof(OrderId))]
+		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(OrderId))]
 		Ok,
 	}
 }
