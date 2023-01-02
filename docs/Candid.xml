@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>EdjCase.ICP.Candid</name>
+    </assembly>
+    <members>
+        <member name="M:EdjCase.ICP.Candid.BinarySequence.#ctor(System.Boolean[])">
+            <param name="bits">Least signifcant to most ordered bits</param>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.CandidArgBuilder.compoundTypeTable">
+            <summary>
+            Helper to capture compound types
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.CandidArgBuilder.EncodedTypes">
+            <summary>
+            Ordered list of encoded types (encoded with SLEB128).
+            If SLEB value is positive, it is an index for `EncodedCompoundTypes` for a compound type
+            If SLEB value is negative, it is type code for a primitive value
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.CandidArgBuilder.EncodedValues">
+            <summary>
+            Ordered list of encoded values
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidTag.HashName(System.String)">
+            <summary>
+            Hashes the name to get the proper id 
+            hash(name) = ( Sum_(i=0..k) utf8(name)[i] * 223^(k-i) ) mod 2^32 where k = |utf8(name)|-1
+            </summary>
+            <param name="name">Name to hash</param>
+            <returns>Unsigned 32 byte integer hash</returns>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.Models.CompoundTypeTable.CompoundTypeIndexMap">
+            <summary>
+            A mapping of compound type definition to `EncodedCompoundTypes` index to be used as reference
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidPrimitive.AsPrincipal">
+            <summary>
+            If opaque, returns null, otherwise the principalid
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidValue.AsPrincipal">
+            <summary>
+            If opaque, returns null, otherwise the principalid
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:System.Runtime.CompilerServices.IsExternalInit">
+            <summary>
+            Reserved to be used by the compiler for tracking metadata.
+            This class should not be used by developers in source code.
+            </summary>
+        </member>
+    </members>
+</doc>

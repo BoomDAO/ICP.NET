@@ -14,6 +14,8 @@
 	  <Company>Edjcase</Company>
 	  <Authors>Gekctek</Authors>
 	  <PackageId>EdjCase.ICP.Candid</PackageId>
+	  <GenerateDocumentationFile>True</GenerateDocumentationFile>
+	  <DocumentationFile>..\..\docs\Candid.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
