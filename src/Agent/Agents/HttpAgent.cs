@@ -21,6 +21,9 @@ using Path = EdjCase.ICP.Candid.Models.Path;
 
 namespace EdjCase.ICP.Agent.Agents
 {
+	/// <summary>
+	/// An `IAgent` implementation using HTTP to make requests to the IC
+	/// </summary>
 	public class HttpAgent : IAgent
 	{
 		private const string CBOR_CONTENT_TYPE = "application/cbor";
@@ -34,40 +37,106 @@ namespace EdjCase.ICP.Agent.Agents
 			return options;
 		}, isThreadSafe: true);
 
+		/// <summary>
+		/// The identity that will be used on each request unless overriden
+		/// This identity can be anonymous
+		/// </summary>
 		public IIdentity Identity { get; }
 
 		private readonly HttpClient httpClient;
 
-		public HttpAgent(IIdentity identity, Uri? boundryCanisterUrl = null)
+		/// <param name="identity">Identity to use for each request. Can be anonymous</param>
+		/// <param name="httpBoundryNodeUrl">Url to the boundry node to connect to. Defaults to `https://ic0.app/`</param>
+		public HttpAgent(IIdentity identity, Uri? httpBoundryNodeUrl = null)
 		{
 			this.Identity = identity;
 			this.httpClient = new HttpClient
 			{
-				BaseAddress = boundryCanisterUrl ?? new Uri("https://ic0.app/")
+				BaseAddress = httpBoundryNodeUrl ?? new Uri("https://ic0.app/")
 			};
 			this.httpClient.DefaultRequestHeaders
 				.Accept
 				.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(CBOR_CONTENT_TYPE));
 		}
 
-		public async Task<RequestId> CallAsync(Principal canisterId, string method, CandidArg encodedArgument, Principal? targetCanisterOverride = null, IIdentity? identityOverride = null)
+		/// <summary>
+		/// Sends a `call` request to a canister. There is no 
+		/// </summary>
+		/// <param name="canisterId">The id of the canister to send the request to</param>
+		/// <param name="method">The name of the method to call on the specified canister</param>
+		/// <param name="arg">The argument to supply to the canister method</param>
+		/// <param name="effectiveCanisterId">The effective desitnation for requests.
+		/// Used when calling the management cansiter `aaaaa-aa` where the effective canister id is the 
+		/// canister that needs to be effected</param>
+		/// <param name="identityOverride">Optional. Used to override the `HttpAgent`'s `IIdentity` specified in the constructor</param>
+		/// <returns>The request id of the request made</returns>
+		public async Task<RequestId> CallAsync(
+			Principal canisterId,
+			string method,
+			CandidArg arg,
+			Principal? effectiveCanisterId = null,
+			IIdentity? identityOverride = null)
 		{
-			if (targetCanisterOverride == null)
+			if (effectiveCanisterId == null)
 			{
-				targetCanisterOverride = canisterId;
+				effectiveCanisterId = canisterId;
 			}
-			return await this.SendWithNoResponseAsync($"/api/v2/canister/{targetCanisterOverride.ToText()}/call", BuildRequest, identityOverride);
+			return await this.SendWithNoResponseAsync($"/api/v2/canister/{effectiveCanisterId.ToText()}/call", BuildRequest, identityOverride);
 
 			CallRequest BuildRequest(Principal sender, ICTimestamp now)
 			{
-				return new CallRequest(canisterId, method, encodedArgument, sender, now);
+				return new CallRequest(canisterId, method, arg, sender, now);
 			}
 		}
 
+		/// <summary>
+		/// Sends a `query` request to a canister.
+		/// A query only gets data with no modification
+		/// This call will faster than an update
+		/// </summary>
+		/// <param name="canisterId">The id of the canister to send the request to</param>
+		/// <param name="method">The name of the method to call on the specified canister</param>
+		/// <param name="arg">The argument to supply to the canister method</param>
+		/// <param name="effectiveCanisterId">The effective desitnation for requests.
+		/// Used when calling the management cansiter `aaaaa-aa` where the effective canister id is the 
+		/// canister that needs to be effected</param>
+		/// <param name="identityOverride">Optional. Used to override the `HttpAgent`'s `IIdentity` specified in the constructor</param>
+		/// <returns>The request id of the request made</returns>
+		public async Task<QueryResponse> QueryAsync(
+			Principal canisterId,
+			string method,
+			CandidArg arg,
+			IIdentity? identityOverride = null)
+		{
+			return await this.SendAsync<QueryRequest, QueryResponse>($"/api/v2/canister/{canisterId.ToText()}/query", BuildRequest, identityOverride);
+
+			QueryRequest BuildRequest(Principal sender, ICTimestamp now)
+			{
+				return new QueryRequest(canisterId, method, arg, sender, now);
+			}
+		}
+
+		public async Task<ReadStateResponse> ReadStateAsync(Principal canisterId, List<Path> paths, IIdentity? identityOverride = null)
+		{
+			return await this.SendAsync<ReadStateRequest, ReadStateResponse>($"/api/v2/canister/{canisterId.ToText()}/read_state", BuildRequest, identityOverride);
+
+			ReadStateRequest BuildRequest(Principal sender, ICTimestamp now)
+			{
+				return new ReadStateRequest(paths, sender, now);
+			}
+		}
+
+		/// <summary>
+		/// Gets the request status of the specified request to a canister
+		/// </summary>
+		/// <param name="canisterId">The canister the request was sent to</param>
+		/// <param name="id">The id of the request</param>
+		/// <returns>A request status if there is a status found. Otherwise null</returns>
 		public async Task<RequestStatus?> GetRequestStatusAsync(Principal canisterId, RequestId id)
 		{
 			var pathRequestStatus = Path.FromSegments("request_status", id.RawValue);
-			var paths = new List<Path> { pathRequestStatus }; ReadStateResponse response = await this.ReadStateAsync(canisterId, paths);
+			var paths = new List<Path> { pathRequestStatus };
+			ReadStateResponse response = await this.ReadStateAsync(canisterId, paths);
 			HashTree? requestStatus = response.Certificate.Tree.GetValue(pathRequestStatus);
 			string? status = requestStatus?.GetValue("status")?.AsLeaf().AsUtf8();
 			//received, processing, replied, rejected or done
@@ -94,11 +163,7 @@ namespace EdjCase.ICP.Agent.Agents
 			}
 		}
 
-		public Principal GetPrincipal()
-		{
-			return this.Identity.GetPrincipal();
-		}
-
+		//TODO
 		public async Task<Key> GetRootKeyAsync()
 		{
 			// TODO cache
@@ -106,30 +171,13 @@ namespace EdjCase.ICP.Agent.Agents
 			return jsonObject.DevelopmentRootKey ?? throw new NotImplementedException("Get root key from trusted source");
 		}
 
+		//TODO
 		public async Task<StatusResponse> GetStatusAsync()
 		{
 			return await this.SendAsync<StatusResponse>("/api/v2/status");
 		}
 
-		public async Task<QueryResponse> QueryAsync(Principal canisterId, string method, CandidArg arg, IIdentity? identityOverride = null)
-		{
-			return await this.SendAsync<QueryRequest, QueryResponse>($"/api/v2/canister/{canisterId.ToText()}/query", BuildRequest, identityOverride);
 
-			QueryRequest BuildRequest(Principal sender, ICTimestamp now)
-			{
-				return new QueryRequest(canisterId, method, arg, sender, now);
-			}
-		}
-
-		public async Task<ReadStateResponse> ReadStateAsync(Principal canisterId, List<Path> paths, IIdentity? identityOverride = null)
-		{
-			return await this.SendAsync<ReadStateRequest, ReadStateResponse>($"/api/v2/canister/{canisterId.ToText()}/read_state", BuildRequest, identityOverride);
-
-			ReadStateRequest BuildRequest(Principal sender, ICTimestamp now)
-			{
-				return new ReadStateRequest(paths, sender, now);
-			}
-		}
 
 
 		private async Task<RequestId> SendWithNoResponseAsync<TRequest>(string url, Func<Principal, ICTimestamp, TRequest> getRequest, IIdentity? identityOverride)
