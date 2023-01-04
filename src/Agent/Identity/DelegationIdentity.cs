@@ -2,6 +2,7 @@ using EdjCase.ICP.Agent;
 using EdjCase.ICP.Agent.Auth;
 using EdjCase.ICP.Candid.Crypto;
 using EdjCase.ICP.Candid.Models;
+using EdjCase.ICP.Candid.Models.Keys;
 using System;
 using System.Collections.Generic;
 using System.Linq;

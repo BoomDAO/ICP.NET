@@ -13,14 +13,6 @@ namespace EdjCase.ICP.Agent.Agents
 {
 	public interface IAgent
 	{
-		/// <summary>
-		/// Returns the principal ID associated with this agent (by default). It only shows
-		/// the principal of the default identity in the agent, which is the principal used
-		/// when calls don't specify it.
-		/// </summary>
-		/// <returns>Principal for agent</returns>
-		Principal GetPrincipal();
-
 		/**
 		* Send a read state query to the replica. This includes a list of paths to return,
 		* and will return a Certificate. This will only reject on communication errors,
@@ -66,7 +58,7 @@ namespace EdjCase.ICP.Agent.Agents
 		* otherwise you are prone to man-in-the-middle attacks! Do not call this
 		* function by default.
 		*/
-		Task<Key> GetRootKeyAsync();
+		Task<byte[]> GetRootKeyAsync();
 
 
 	}

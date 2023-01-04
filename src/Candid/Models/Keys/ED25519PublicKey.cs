@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 using EdjCase.ICP.Candid.Crypto;
 using EdjCase.ICP.Candid.Utilities;
 
-namespace EdjCase.ICP.Candid.Models
+namespace EdjCase.ICP.Candid.Models.Keys
 {
 	public class ED25519PublicKey : IHashable, IPublicKey
 	{
-		private static byte[] ED25519_OID = new byte[]
+		private static byte[] OID = new byte[]
 		{
 			0x30, 0x05, // SEQUENCE of 5 bytes
 			0x06, 0x03, // OID with 3 bytes
@@ -33,12 +33,12 @@ namespace EdjCase.ICP.Candid.Models
 
 		public byte[] GetDerEncodedBytes()
 		{
-			return DerEncodingUtil.EncodePublicKey(this.Value, ED25519_OID);
+			return DerEncodingUtil.EncodePublicKey(this.Value, OID);
 		}
 
 		public static ED25519PublicKey FromDer(byte[] derEncodedPublicKey)
 		{
-			byte[] value = DerEncodingUtil.DecodePublicKey(derEncodedPublicKey, ED25519_OID);
+			byte[] value = DerEncodingUtil.DecodePublicKey(derEncodedPublicKey, OID);
 			return new ED25519PublicKey(value);
 		}
 
@@ -49,7 +49,7 @@ namespace EdjCase.ICP.Candid.Models
 
 		public byte[] GetOid()
 		{
-			return ED25519_OID;
+			return OID;
 		}
 	}
 }

@@ -18,5 +18,11 @@ var client = new GovernanceApiClient(agent, canisterId);
 
 var info = await client.GetProposalInfo(94182, null);
 
+var paths = new List<Path>
+{
+	Path.FromSegments("time")
+};
+EdjCase.ICP.Agent.Responses.ReadStateResponse readStateResponse = await agent.ReadStateAsync(canisterId, paths);
+
 Console.WriteLine(info.GetValueOrDefault()?.Proposal.GetValueOrDefault()?.Title);
 

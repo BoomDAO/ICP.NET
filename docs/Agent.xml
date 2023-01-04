@@ -4,13 +4,42 @@
         <name>EdjCase.ICP.Agent</name>
     </assembly>
     <members>
-        <member name="M:EdjCase.ICP.Agent.Agents.IAgent.GetPrincipal">
+        <member name="T:EdjCase.ICP.Agent.Agents.HttpAgent">
             <summary>
-            Returns the principal ID associated with this agent (by default). It only shows
-            the principal of the default identity in the agent, which is the principal used
-            when calls don't specify it.
+            An `IAgent` implementation using HTTP to make requests to the IC
             </summary>
-            <returns>Principal for agent</returns>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Agents.HttpAgent.Identity">
+            <summary>
+            The identity that will be used on each request unless overriden
+            This identity can be anonymous
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Agents.HttpAgent.#ctor(EdjCase.ICP.Agent.Auth.IIdentity,System.Uri)">
+            <param name="identity">Identity to use for each request. Can be anonymous</param>
+            <param name="httpBoundryNodeUrl">Url to the boundry node to connect to. Defaults to `https://ic0.app/`</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Agents.HttpAgent.CallAsync(EdjCase.ICP.Candid.Models.Principal,System.String,EdjCase.ICP.Candid.Models.CandidArg,EdjCase.ICP.Candid.Models.Principal,EdjCase.ICP.Agent.Auth.IIdentity)">
+            <summary>
+            Sends a `call` request to a canister. There is no 
+            </summary>
+            <param name="canisterId">The id of the canister to send the request to</param>
+            <param name="method">The name of the method to call on the specified canister</param>
+            <param name="arg">The argument to supply to the canister method</param>
+            <param name="effectiveCanisterId">The effective desitnation for requests.
+            Used when calling the management cansiter `aaaaa-aa` where the effective canister id is the 
+            canister that needs to be effected</param>
+            <param name="identityOverride">Optional. Used to override the `HttpAgent`'s `IIdentity` specified in the constructor</param>
+            <returns>The request id of the request made</returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:EdjCase.ICP.Agent.Agents.HttpAgent.QueryAsync(EdjCase.ICP.Candid.Models.Principal,System.String,EdjCase.ICP.Candid.Models.CandidArg,EdjCase.ICP.Agent.Auth.IIdentity)" -->
+        <member name="M:EdjCase.ICP.Agent.Agents.HttpAgent.GetRequestStatusAsync(EdjCase.ICP.Candid.Models.Principal,EdjCase.ICP.Candid.Models.RequestId)">
+            <summary>
+            Gets the request status of the specified request to a canister
+            </summary>
+            <param name="canisterId">The canister the request was sent to</param>
+            <param name="id">The id of the request</param>
+            <returns>A request status if there is a status found. Otherwise null</returns>
         </member>
         <member name="M:EdjCase.ICP.Agent.Agents.IAgent.ReadStateAsync(EdjCase.ICP.Candid.Models.Principal,System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Path},EdjCase.ICP.Agent.Auth.IIdentity)">
             Send a read state query to the replica. This includes a list of paths to return,
@@ -113,6 +142,65 @@
             Default value: 2592000 (approximately 30 days).
             </summary>
         </member>
+        <member name="T:EdjCase.ICP.Agent.Certificate">
+            <summary>
+            A model that contains a state tree along with a validation signature. If required
+            the model can have a delegation to allow for subnet data/keys
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Certificate.Tree">
+            <summary>
+            A partial state tree of the requested state data
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Certificate.Signature">
+            <summary>
+            A signature on the tree root hash. Used to validate the tree
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Certificate.Delegation">
+            <summary>
+            Optional. A signed delegation that links a public key to the root public key
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Certificate.#ctor(EdjCase.ICP.Candid.Models.HashTree,System.Byte[],EdjCase.ICP.Agent.CertificateDelegation)">
+            <inheritdoc cref="P:EdjCase.ICP.Agent.CertificateDelegation.SubnetId"/>
+            <inheritdoc cref="P:EdjCase.ICP.Agent.CertificateDelegation.Certificate"/>
+            <exception cref="T:System.ArgumentNullException">Throws if either `tree` or `signature` are null</exception>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.CertificateDelegation">
+            <summary>
+            A model that contains a certificate proving the delegation of a subnet for the subnet certificate
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.CertificateDelegation.SubnetId">
+            <summary>
+            The principal of the subnet being delegated to
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.CertificateDelegation.Certificate">
+            <summary>
+            The signed certificate that is signed by the delegator
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.CertificateDelegation.#ctor(EdjCase.ICP.Candid.Models.Principal,EdjCase.ICP.Agent.Certificate)">
+            <inheritdoc cref="P:EdjCase.ICP.Agent.CertificateDelegation.SubnetId"/>
+            <inheritdoc cref="P:EdjCase.ICP.Agent.CertificateDelegation.Certificate"/>
+            <exception cref="T:System.ArgumentNullException">Throws if either `subnetId` or `certificate` are null</exception>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.CertificateDelegation.GetPublicKey">
+            <summary>
+            Gets the public key value from the hash tree in the certificate
+            </summary>
+            <returns>The delegation public key for the subnet</returns>
+            <exception cref="T:System.InvalidOperationException">Throws if certificate is missing `subnet/{subnet_id}/public_key`</exception>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.CertificateDelegation.IsValid(System.Byte[]@)">
+            <summary>
+            Checks if the Certificate signature is valid
+            </summary>
+            <returns>True if the certificate signature is valid, otherwise false</returns>
+        </member>
         <member name="P:EdjCase.ICP.Agent.Requests.CallRequest.CanisterId">
             <summary>
             The principal of the canister to call
@@ -123,7 +211,7 @@
             Name of the canister method to call
             </summary>
         </member>
-        <member name="P:EdjCase.ICP.Agent.Requests.CallRequest.EncodedArgument">
+        <member name="P:EdjCase.ICP.Agent.Requests.CallRequest.Arg">
             <summary>
             Argument to pass to the canister method
             </summary>

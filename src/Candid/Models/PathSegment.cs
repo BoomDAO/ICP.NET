@@ -31,7 +31,7 @@ namespace EdjCase.ICP.Candid.Models
 
     public class PathSegment : IHashable
     {
-		public Blob Value { get; }
+		public byte[] Value { get; }
 
         public PathSegment(byte[] value)
         {

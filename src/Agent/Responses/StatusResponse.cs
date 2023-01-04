@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using Dahomey.Cbor.ObjectModel;
@@ -22,7 +22,7 @@ namespace EdjCase.ICP.Agent.Responses
         public string? ImplementationRevision { get; }
 
         // Only for development networks
-        public Key? DevelopmentRootKey { get; }
+        public byte[]? DevelopmentRootKey { get; }
 
 
         public StatusResponse(
@@ -30,7 +30,7 @@ namespace EdjCase.ICP.Agent.Responses
             string? implementationSource,
             string? implementationVersion,
             string? implementationRevision,
-            Key? developmentRootKey)
+			byte[]? developmentRootKey)
         {
             this.ICApiVersion = icApiVersion;
             this.ImplementationSource = implementationSource;
@@ -46,16 +46,13 @@ namespace EdjCase.ICP.Agent.Responses
             string? implementationVersion = cbor["impl_version"].Value<string?>();
             string? implementationRevision = cbor["impl_revision"].Value<string?>();
             byte[]? rawDevelopmentRootKey = cbor["root_key"].Value<byte[]?>();
-            Key? developmentRootKey = rawDevelopmentRootKey == null
-                ? null
-                : new Key(ByteUtil.ToHexString(rawDevelopmentRootKey));
             return new StatusResponse(
                 icApiVersion,
                 implementationSource,
                 implementationVersion,
                 implementationRevision,
-                developmentRootKey
-            );
+				rawDevelopmentRootKey
+			);
         }
     }
 }

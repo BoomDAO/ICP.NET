@@ -3,6 +3,7 @@ using EdjCase.ICP.Agent.Auth;
 using EdjCase.ICP.Agent.Identity;
 using EdjCase.ICP.Agent.Requests;
 using EdjCase.ICP.Candid.Models;
+using EdjCase.ICP.Candid.Models.Keys;
 using EdjCase.ICP.Candid.Models.Types;
 using EdjCase.ICP.Candid.Models.Values;
 using EdjCase.ICP.Candid.Utilities;

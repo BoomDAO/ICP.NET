@@ -37,6 +37,12 @@
             A mapping of compound type definition to `EncodedCompoundTypes` index to be used as reference
             </summary>
         </member>
+        <member name="M:EdjCase.ICP.Candid.Models.HashTree.BuildRootHash">
+            <summary>
+            Computes the root SHA256 hash of the tree based on the IC certificate spec
+            </summary>
+            <returns>A blob of the hash digest</returns>
+        </member>
         <member name="M:EdjCase.ICP.Candid.Models.Values.CandidPrimitive.AsPrincipal">
             <summary>
             If opaque, returns null, otherwise the principalid

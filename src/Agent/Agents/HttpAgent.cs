@@ -27,6 +27,8 @@ namespace EdjCase.ICP.Agent.Agents
 	public class HttpAgent : IAgent
 	{
 		private const string CBOR_CONTENT_TYPE = "application/cbor";
+		private static byte[] mainnetRootKey = ByteUtil.FromHexString("308182301d060d2b0601040182dc7c0503010201060c2b0601040182dc7c05030201036100814c0e6ec71fab583b08bd81373c255c3c371b2e84863c98a4f1e08b74235d14fb5d9c0cd546d9685f913a0c0b2cc5341583bf4b4392e467db96d65b9bb4cb717112f8472e0d5a4d14505ffd7484b01291091c5f87b98883463f98091a0baaae");
+		private byte[]? rootKeyCache = null;
 
 		private static readonly Lazy<CborOptions> cborOptionsLazy = new Lazy<CborOptions>(() =>
 		{
@@ -97,7 +99,6 @@ namespace EdjCase.ICP.Agent.Agents
 		/// <param name="canisterId">The id of the canister to send the request to</param>
 		/// <param name="method">The name of the method to call on the specified canister</param>
 		/// <param name="arg">The argument to supply to the canister method</param>
-		/// <param name="effectiveCanisterId">The effective desitnation for requests.
 		/// Used when calling the management cansiter `aaaaa-aa` where the effective canister id is the 
 		/// canister that needs to be effected</param>
 		/// <param name="identityOverride">Optional. Used to override the `HttpAgent`'s `IIdentity` specified in the constructor</param>
@@ -116,9 +117,21 @@ namespace EdjCase.ICP.Agent.Agents
 			}
 		}
 
-		public async Task<ReadStateResponse> ReadStateAsync(Principal canisterId, List<Path> paths, IIdentity? identityOverride = null)
+		public async Task<ReadStateResponse> ReadStateAsync(
+			Principal canisterId,
+			List<Path> paths,
+			IIdentity? identityOverride = null)
 		{
-			return await this.SendAsync<ReadStateRequest, ReadStateResponse>($"/api/v2/canister/{canisterId.ToText()}/read_state", BuildRequest, identityOverride);
+			string url = $"/api/v2/canister/{canisterId.ToText()}/read_state";
+			ReadStateResponse response = await this.SendAsync<ReadStateRequest, ReadStateResponse>(url, BuildRequest, identityOverride);
+
+			byte[] rootPublicKey = await this.GetRootKeyAsync();
+			if (!response.Certificate.IsValid(rootPublicKey))
+			{
+				throw new InvalidCertificateException("Certificate signature does not match the IC public key");
+			}
+
+			return response;
 
 			ReadStateRequest BuildRequest(Principal sender, ICTimestamp now)
 			{
@@ -149,8 +162,8 @@ namespace EdjCase.ICP.Agent.Agents
 				case "processing":
 					return RequestStatus.Processing();
 				case "replied":
-					Blob r = requestStatus!.GetValue("reply")!.AsLeaf();
-					return RequestStatus.Replied(CandidArg.FromBytes(r.Value));
+					HashTree.EncodedValue r = requestStatus!.GetValue("reply")!.AsLeaf();
+					return RequestStatus.Replied(CandidArg.FromBytes(r));
 				case "rejected":
 					UnboundedUInt code = requestStatus!.GetValue("reject_code")!.AsLeaf().AsNat();
 					string message = requestStatus.GetValue("reject_message")!.AsLeaf().AsUtf8();
@@ -163,15 +176,18 @@ namespace EdjCase.ICP.Agent.Agents
 			}
 		}
 
-		//TODO
-		public async Task<Key> GetRootKeyAsync()
+
+		public async Task<byte[]> GetRootKeyAsync()
 		{
-			// TODO cache
-			StatusResponse jsonObject = await this.GetStatusAsync();
-			return jsonObject.DevelopmentRootKey ?? throw new NotImplementedException("Get root key from trusted source");
+			if (this.rootKeyCache == null)
+			{
+				StatusResponse jsonObject = await this.GetStatusAsync();
+				this.rootKeyCache = jsonObject.DevelopmentRootKey ?? HttpAgent.mainnetRootKey;
+			}
+			return this.rootKeyCache;
 		}
 
-		//TODO
+
 		public async Task<StatusResponse> GetStatusAsync()
 		{
 			return await this.SendAsync<StatusResponse>("/api/v2/status");
