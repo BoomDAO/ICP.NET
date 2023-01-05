@@ -157,7 +157,7 @@ namespace EdjCase.ICP.Candid.Models
 
 				domain_sep(s) = byte(|s|) · s
 			 */
-			SHA256HashFunction hashFunction = new (SHA256.Create());
+			SHA256HashFunction hashFunction = new(SHA256.Create());
 			EncodedValue rootHash = this.BuildHashInternal(hashFunction);
 			return EncodedValue.WithDomainSeperator("ic-state-root", rootHash);
 		}
@@ -282,7 +282,7 @@ namespace EdjCase.ICP.Candid.Models
 				int index = 1;
 				textBytes.CopyTo(bytes, index);
 				index++;
-				foreach(EncodedValue encodedValue in encodedValues)
+				foreach (EncodedValue encodedValue in encodedValues)
 				{
 					encodedValue.Value.CopyTo(bytes, index);
 					index += encodedValue.Value.Length;
