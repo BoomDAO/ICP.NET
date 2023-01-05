@@ -30,7 +30,7 @@ namespace Sample.Shared.Governance.Models
 		
 		public RewardNodeProviders AsOk()
 		{
-			this.ValidateType(Result3Tag.Ok);
+			this.ValidateTag(Result3Tag.Ok);
 			return (RewardNodeProviders)this.Value!;
 		}
 		
@@ -41,11 +41,11 @@ namespace Sample.Shared.Governance.Models
 		
 		public GovernanceError AsErr()
 		{
-			this.ValidateType(Result3Tag.Err);
+			this.ValidateTag(Result3Tag.Err);
 			return (GovernanceError)this.Value!;
 		}
 		
-		private void ValidateType(Result3Tag tag)
+		private void ValidateTag(Result3Tag tag)
 		{
 			if (!this.Tag.Equals(tag))
 			{

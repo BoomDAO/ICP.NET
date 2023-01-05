@@ -1,6 +1,6 @@
 using Chaos.NaCl;
 using EdjCase.ICP.Agent.Auth;
-using EdjCase.ICP.Candid.Models.Keys;
+using EdjCase.ICP.Agent.Keys;
 using EdjCase.ICP.Candid.Utilities;
 using System;
 using System.Collections.Generic;

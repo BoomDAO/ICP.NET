@@ -7,9 +7,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Asn1DecoderNet5.Interfaces;
 using EdjCase.ICP.Candid.Crypto;
+using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid.Utilities;
 
-namespace EdjCase.ICP.Candid.Models.Keys
+namespace EdjCase.ICP.Agent.Keys
 {
 	public class BlsPublicKey : IHashable, IPublicKey
 	{

@@ -30,7 +30,7 @@ namespace Sample.Shared.Governance.Models
 		
 		public RewardToNeuron AsRewardToNeuron()
 		{
-			this.ValidateType(RewardModeTag.RewardToNeuron);
+			this.ValidateTag(RewardModeTag.RewardToNeuron);
 			return (RewardToNeuron)this.Value!;
 		}
 		
@@ -41,11 +41,11 @@ namespace Sample.Shared.Governance.Models
 		
 		public RewardToAccount AsRewardToAccount()
 		{
-			this.ValidateType(RewardModeTag.RewardToAccount);
+			this.ValidateTag(RewardModeTag.RewardToAccount);
 			return (RewardToAccount)this.Value!;
 		}
 		
-		private void ValidateType(RewardModeTag tag)
+		private void ValidateTag(RewardModeTag tag)
 		{
 			if (!this.Tag.Equals(tag))
 			{

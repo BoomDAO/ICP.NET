@@ -35,11 +35,11 @@ namespace Sample.Shared.Governance.Models
 		
 		public GovernanceError AsErr()
 		{
-			this.ValidateType(ResultTag.Err);
+			this.ValidateTag(ResultTag.Err);
 			return (GovernanceError)this.Value!;
 		}
 		
-		private void ValidateType(ResultTag tag)
+		private void ValidateTag(ResultTag tag)
 		{
 			if (!this.Tag.Equals(tag))
 			{

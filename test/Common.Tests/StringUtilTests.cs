@@ -1,4 +1,4 @@
-﻿using EdjCase.ICP.Candid.Models.Values;
+using EdjCase.ICP.Candid.Models.Values;
 using System;
 using System.Collections.Generic;
 using System.Linq;

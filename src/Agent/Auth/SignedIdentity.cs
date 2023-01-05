@@ -1,7 +1,7 @@
 using EdjCase.ICP.Agent.Identity;
 using EdjCase.ICP.Candid.Crypto;
 using EdjCase.ICP.Candid.Models;
-using EdjCase.ICP.Candid.Models.Keys;
+using EdjCase.ICP.Agent.Keys;
 using EdjCase.ICP.Candid.Utilities;
 using System;
 using System.Collections.Generic;
@@ -24,7 +24,7 @@ namespace EdjCase.ICP.Agent.Auth
 		public Principal GetPrincipal()
 		{
 			IPublicKey publicKey = this.GetPublicKey();
-			return Principal.SelfAuthenticating(publicKey);
+			return Principal.SelfAuthenticating(publicKey.GetRawBytes());
 		}
 
 		public SignedContent CreateSignedContent(Dictionary<string, IHashable> content)

@@ -33,7 +33,7 @@ namespace Sample.Shared.Governance.Models
 		
 		public By.O0 AsNeuronIdOrSubaccount()
 		{
-			this.ValidateType(ByTag.NeuronIdOrSubaccount);
+			this.ValidateTag(ByTag.NeuronIdOrSubaccount);
 			return (By.O0)this.Value!;
 		}
 		
@@ -44,7 +44,7 @@ namespace Sample.Shared.Governance.Models
 		
 		public ClaimOrRefreshNeuronFromAccount AsMemoAndController()
 		{
-			this.ValidateType(ByTag.MemoAndController);
+			this.ValidateTag(ByTag.MemoAndController);
 			return (ClaimOrRefreshNeuronFromAccount)this.Value!;
 		}
 		
@@ -55,11 +55,11 @@ namespace Sample.Shared.Governance.Models
 		
 		public ulong AsMemo()
 		{
-			this.ValidateType(ByTag.Memo);
+			this.ValidateTag(ByTag.Memo);
 			return (ulong)this.Value!;
 		}
 		
-		private void ValidateType(ByTag tag)
+		private void ValidateTag(ByTag tag)
 		{
 			if (!this.Tag.Equals(tag))
 			{

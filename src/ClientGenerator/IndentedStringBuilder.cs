@@ -17,7 +17,8 @@ namespace EdjCase.ICP.ClientGenerator
 			{
 				this.stringBuilder.Append("\t");
 			}
-			this.stringBuilder.AppendLine(value);
+			this.stringBuilder.Append(value);
+			this.stringBuilder.Append('\n');
 		}
 
 		public IDisposable Indent()

@@ -30,7 +30,7 @@ namespace Sample.Shared.Governance.Models
 		
 		public KnownNeuron AsRegisterKnownNeuron()
 		{
-			this.ValidateType(ActionTag.RegisterKnownNeuron);
+			this.ValidateTag(ActionTag.RegisterKnownNeuron);
 			return (KnownNeuron)this.Value!;
 		}
 		
@@ -41,7 +41,7 @@ namespace Sample.Shared.Governance.Models
 		
 		public ManageNeuron AsManageNeuron()
 		{
-			this.ValidateType(ActionTag.ManageNeuron);
+			this.ValidateTag(ActionTag.ManageNeuron);
 			return (ManageNeuron)this.Value!;
 		}
 		
@@ -52,7 +52,7 @@ namespace Sample.Shared.Governance.Models
 		
 		public ExecuteNnsFunction AsExecuteNnsFunction()
 		{
-			this.ValidateType(ActionTag.ExecuteNnsFunction);
+			this.ValidateTag(ActionTag.ExecuteNnsFunction);
 			return (ExecuteNnsFunction)this.Value!;
 		}
 		
@@ -63,7 +63,7 @@ namespace Sample.Shared.Governance.Models
 		
 		public RewardNodeProvider AsRewardNodeProvider()
 		{
-			this.ValidateType(ActionTag.RewardNodeProvider);
+			this.ValidateTag(ActionTag.RewardNodeProvider);
 			return (RewardNodeProvider)this.Value!;
 		}
 		
@@ -74,7 +74,7 @@ namespace Sample.Shared.Governance.Models
 		
 		public SetDefaultFollowees AsSetDefaultFollowees()
 		{
-			this.ValidateType(ActionTag.SetDefaultFollowees);
+			this.ValidateTag(ActionTag.SetDefaultFollowees);
 			return (SetDefaultFollowees)this.Value!;
 		}
 		
@@ -85,7 +85,7 @@ namespace Sample.Shared.Governance.Models
 		
 		public RewardNodeProviders AsRewardNodeProviders()
 		{
-			this.ValidateType(ActionTag.RewardNodeProviders);
+			this.ValidateTag(ActionTag.RewardNodeProviders);
 			return (RewardNodeProviders)this.Value!;
 		}
 		
@@ -96,7 +96,7 @@ namespace Sample.Shared.Governance.Models
 		
 		public NetworkEconomics AsManageNetworkEconomics()
 		{
-			this.ValidateType(ActionTag.ManageNetworkEconomics);
+			this.ValidateTag(ActionTag.ManageNetworkEconomics);
 			return (NetworkEconomics)this.Value!;
 		}
 		
@@ -107,7 +107,7 @@ namespace Sample.Shared.Governance.Models
 		
 		public ApproveGenesisKyc AsApproveGenesisKyc()
 		{
-			this.ValidateType(ActionTag.ApproveGenesisKyc);
+			this.ValidateTag(ActionTag.ApproveGenesisKyc);
 			return (ApproveGenesisKyc)this.Value!;
 		}
 		
@@ -118,7 +118,7 @@ namespace Sample.Shared.Governance.Models
 		
 		public AddOrRemoveNodeProvider AsAddOrRemoveNodeProvider()
 		{
-			this.ValidateType(ActionTag.AddOrRemoveNodeProvider);
+			this.ValidateTag(ActionTag.AddOrRemoveNodeProvider);
 			return (AddOrRemoveNodeProvider)this.Value!;
 		}
 		
@@ -129,11 +129,11 @@ namespace Sample.Shared.Governance.Models
 		
 		public Motion AsMotion()
 		{
-			this.ValidateType(ActionTag.Motion);
+			this.ValidateTag(ActionTag.Motion);
 			return (Motion)this.Value!;
 		}
 		
-		private void ValidateType(ActionTag tag)
+		private void ValidateTag(ActionTag tag)
 		{
 			if (!this.Tag.Equals(tag))
 			{

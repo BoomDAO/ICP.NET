@@ -1,5 +1,5 @@
 using EdjCase.ICP.Agent.Identity;
-using EdjCase.ICP.Candid.Models.Keys;
+using EdjCase.ICP.Agent.Keys;
 using EdjCase.ICP.Candid.Utilities;
 using Snapshooter.Xunit;
 using System;

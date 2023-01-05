@@ -32,7 +32,7 @@ namespace Sample.Shared.Dex.Models
 		
 		public OrderPlacementErr AsErr()
 		{
-			this.ValidateType(OrderPlacementReceiptTag.Err);
+			this.ValidateTag(OrderPlacementReceiptTag.Err);
 			return (OrderPlacementErr)this.Value!;
 		}
 		
@@ -43,11 +43,11 @@ namespace Sample.Shared.Dex.Models
 		
 		public EdjCase.ICP.Candid.Models.OptionalValue<Order> AsOk()
 		{
-			this.ValidateType(OrderPlacementReceiptTag.Ok);
+			this.ValidateTag(OrderPlacementReceiptTag.Ok);
 			return (EdjCase.ICP.Candid.Models.OptionalValue<Order>)this.Value!;
 		}
 		
-		private void ValidateType(OrderPlacementReceiptTag tag)
+		private void ValidateTag(OrderPlacementReceiptTag tag)
 		{
 			if (!this.Tag.Equals(tag))
 			{

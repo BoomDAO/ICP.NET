@@ -1,7 +1,7 @@
 using EdjCase.ICP.Agent.Identity;
 using EdjCase.ICP.Candid.Crypto;
 using EdjCase.ICP.Candid.Models;
-using EdjCase.ICP.Candid.Models.Keys;
+using EdjCase.ICP.Agent.Keys;
 using System;
 using System.Collections.Generic;
 using System.Text;

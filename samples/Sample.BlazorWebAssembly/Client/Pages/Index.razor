@@ -4,7 +4,7 @@
 @using EdjCase.ICP.Agent.Identity
 @using EdjCase.ICP.Candid.Models
 @using System.Text.Json.Serialization
-@using EdjCase.ICP.Candid.Models.Keys;
+@using EdjCase.ICP.Agent.Keys;
 @using EdjCase.ICP.Candid.Utilities
 
 @inject IJSRuntime JSRuntime
@@ -64,10 +64,10 @@ else
     }
     <pre>
         @JsonSerializer.Serialize(info, new JsonSerializerOptions{WriteIndented=true});
-    </pre>
+        </pre>
 
 }
-else if(this.MadeCall && this.ProposalId != null)
+else if (this.MadeCall && this.ProposalId != null)
 {
     <h2>Id: @this.ProposalId</h2>
     <h2>Proposal Not Found</h2>

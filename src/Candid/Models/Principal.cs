@@ -1,5 +1,4 @@
 using EdjCase.ICP.Candid.Crypto;
-using EdjCase.ICP.Candid.Models.Keys;
 using EdjCase.ICP.Candid.Utilities;
 using System;
 using System.Linq;
@@ -74,9 +73,9 @@ namespace EdjCase.ICP.Candid.Models
 			return new Principal(new byte[] { anonymousSuffix });
 		}
 
-		public static Principal SelfAuthenticating(IPublicKey publicKey)
+		public static Principal SelfAuthenticating(byte[] publicKey)
 		{
-			byte[] digest = new SHA224().GenerateDigest(publicKey.GetRawBytes());
+			byte[] digest = new SHA224().GenerateDigest(publicKey);
 
 			// bytes = digest + selfAuthenticatingSuffix
 			byte[] bytes = new byte[digest.Length + 1];

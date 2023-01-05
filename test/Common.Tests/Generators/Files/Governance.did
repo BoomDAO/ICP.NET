@@ -1,4 +1,4 @@
-﻿type AccountIdentifier = record { hash : vec nat8 };
+type AccountIdentifier = record { hash : vec nat8 };
 type Action = variant {
   RegisterKnownNeuron : KnownNeuron;
   ManageNeuron : ManageNeuron;

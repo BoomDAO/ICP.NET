@@ -32,7 +32,7 @@ namespace Sample.Shared.Dex.Models
 		
 		public DepositErr AsErr()
 		{
-			this.ValidateType(DepositReceiptTag.Err);
+			this.ValidateTag(DepositReceiptTag.Err);
 			return (DepositErr)this.Value!;
 		}
 		
@@ -43,11 +43,11 @@ namespace Sample.Shared.Dex.Models
 		
 		public EdjCase.ICP.Candid.UnboundedUInt AsOk()
 		{
-			this.ValidateType(DepositReceiptTag.Ok);
+			this.ValidateTag(DepositReceiptTag.Ok);
 			return (EdjCase.ICP.Candid.UnboundedUInt)this.Value!;
 		}
 		
-		private void ValidateType(DepositReceiptTag tag)
+		private void ValidateTag(DepositReceiptTag tag)
 		{
 			if (!this.Tag.Equals(tag))
 			{

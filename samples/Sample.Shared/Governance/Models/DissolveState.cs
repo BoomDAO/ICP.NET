@@ -30,7 +30,7 @@ namespace Sample.Shared.Governance.Models
 		
 		public ulong AsDissolveDelaySeconds()
 		{
-			this.ValidateType(DissolveStateTag.DissolveDelaySeconds);
+			this.ValidateTag(DissolveStateTag.DissolveDelaySeconds);
 			return (ulong)this.Value!;
 		}
 		
@@ -41,11 +41,11 @@ namespace Sample.Shared.Governance.Models
 		
 		public ulong AsWhenDissolvedTimestampSeconds()
 		{
-			this.ValidateType(DissolveStateTag.WhenDissolvedTimestampSeconds);
+			this.ValidateTag(DissolveStateTag.WhenDissolvedTimestampSeconds);
 			return (ulong)this.Value!;
 		}
 		
-		private void ValidateType(DissolveStateTag tag)
+		private void ValidateTag(DissolveStateTag tag)
 		{
 			if (!this.Tag.Equals(tag))
 			{

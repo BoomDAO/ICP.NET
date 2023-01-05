@@ -20,7 +20,7 @@ namespace ICP.Candid.Tests
 {
 	public class RequestIdTests
 	{
-		private IHashFunction  sha256 = SHA256HashFunction.Create();
+		private IHashFunction sha256 = SHA256HashFunction.Create();
 
 		[Fact]
 		public void RequestId_Dict()
