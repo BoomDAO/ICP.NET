@@ -29,23 +29,23 @@ namespace EdjCase.ICP.Candid.Models
 		}
 	}
 
-    public class PathSegment : IHashable
-    {
+	public class PathSegment : IHashable
+	{
 		public byte[] Value { get; }
 
-        public PathSegment(byte[] value)
-        {
-            if(value == null || value.Length < 1)
-            {
-                throw new ArgumentException("Path segment bytes cannot be empty", nameof(value));
-            }
-            this.Value = value ?? throw new ArgumentNullException(nameof(value));
-        }
+		public PathSegment(byte[] value)
+		{
+			if (value == null || value.Length < 1)
+			{
+				throw new ArgumentException("Path segment bytes cannot be empty", nameof(value));
+			}
+			this.Value = value ?? throw new ArgumentNullException(nameof(value));
+		}
 
-        public byte[] ComputeHash(IHashFunction hashFunction)
-        {
-            return hashFunction.ComputeHash(this.Value);
-        }
+		public byte[] ComputeHash(IHashFunction hashFunction)
+		{
+			return hashFunction.ComputeHash(this.Value);
+		}
 
 		public static PathSegment FromString(string segment)
 		{

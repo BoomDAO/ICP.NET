@@ -1,4 +1,4 @@
-﻿using EdjCase.ICP.Candid.Utilities;
+using EdjCase.ICP.Candid.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,22 +37,22 @@ namespace EdjCase.ICP.Candid
 			return false;
 		}
 
-        public static UnboundedUInt FromBigInteger(BigInteger value)
-        {
+		public static UnboundedUInt FromBigInteger(BigInteger value)
+		{
 			return new UnboundedUInt(value);
-        }
+		}
 
-        public BigInteger ToBigInteger()
-        {
+		public BigInteger ToBigInteger()
+		{
 			return this.value;
-        }
+		}
 
-        public override string ToString()
-        {
+		public override string ToString()
+		{
 			return this.value.ToString();
-        }
+		}
 
-        public bool Equals(UnboundedUInt? uuint)
+		public bool Equals(UnboundedUInt? uuint)
 		{
 			return this.CompareTo(uuint) == 0;
 		}
@@ -65,10 +65,10 @@ namespace EdjCase.ICP.Candid
 
 		public int CompareTo(UnboundedUInt? other)
 		{
-			if(object.ReferenceEquals(other, null))
-            {
+			if (object.ReferenceEquals(other, null))
+			{
 				return 1;
-            }
+			}
 			return this.value.CompareTo(other.value);
 		}
 
@@ -85,10 +85,10 @@ namespace EdjCase.ICP.Candid
 
 		public static bool operator ==(UnboundedUInt? v1, UnboundedUInt? v2)
 		{
-			if(object.ReferenceEquals(v1, null))
-            {
+			if (object.ReferenceEquals(v1, null))
+			{
 				return object.ReferenceEquals(v2, null);
-            }
+			}
 			return v1.Equals(v2);
 		}
 
@@ -154,10 +154,10 @@ namespace EdjCase.ICP.Candid
 
 		public static implicit operator UnboundedUInt(UnboundedInt value)
 		{
-			if(value < 0)
-            {
+			if (value < 0)
+			{
 				throw new InvalidCastException("Value must be 0 or greater");
-            }
+			}
 			return UnboundedUInt.FromBigInteger(value.ToBigInteger());
 		}
 
@@ -211,7 +211,7 @@ namespace EdjCase.ICP.Candid
 			return (ulong)value.value;
 		}
 
-        public static explicit operator uint(UnboundedUInt value)
+		public static explicit operator uint(UnboundedUInt value)
 		{
 			ValidateMinMax(value, uint.MinValue, uint.MaxValue);
 			return (uint)value.value;

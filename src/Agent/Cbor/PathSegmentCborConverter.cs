@@ -32,7 +32,7 @@ namespace EdjCase.ICP.Agent.Cbor
 				return;
 			}
 			writer.WriteBeginArray(value.Segments.Count);
-			foreach(PathSegment segment in value.Segments)
+			foreach (PathSegment segment in value.Segments)
 			{
 				writer.WriteByteString(segment.Value);
 			}

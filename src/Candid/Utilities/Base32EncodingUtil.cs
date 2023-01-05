@@ -1,28 +1,28 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace EdjCase.ICP.Candid.Utilities
 {
-    public static class Base32EncodingUtil
-    {
-        public static byte[] ToBytes(string input)
-        {
-            if (string.IsNullOrEmpty(input))
-            {
-                throw new ArgumentNullException("input");
-            }
+	public static class Base32EncodingUtil
+	{
+		public static byte[] ToBytes(string input)
+		{
+			if (string.IsNullOrEmpty(input))
+			{
+				throw new ArgumentNullException("input");
+			}
 
-            input = input.TrimEnd('='); //remove padding characters
-            int byteCount = input.Length * 5 / 8; //this must be TRUNCATED
-            byte[] returnArray = new byte[byteCount];
+			input = input.TrimEnd('='); //remove padding characters
+			int byteCount = input.Length * 5 / 8; //this must be TRUNCATED
+			byte[] returnArray = new byte[byteCount];
 
-            byte curByte = 0, bitsRemaining = 8;
+			byte curByte = 0, bitsRemaining = 8;
 			int arrayIndex = 0;
 
 			foreach (char c in input)
-            {
-                int cValue = CharToValue(c);
+			{
+				int cValue = CharToValue(c);
 				int mask;
 				if (bitsRemaining > 5)
 				{
@@ -40,91 +40,91 @@ namespace EdjCase.ICP.Candid.Utilities
 				}
 			}
 
-            //if we didn't end with a full byte
-            if (arrayIndex != byteCount)
-            {
-                returnArray[arrayIndex] = curByte;
-            }
+			//if we didn't end with a full byte
+			if (arrayIndex != byteCount)
+			{
+				returnArray[arrayIndex] = curByte;
+			}
 
-            return returnArray;
-        }
+			return returnArray;
+		}
 
-        public static string ToString(byte[] input)
-        {
-            if (input == null || input.Length == 0)
-            {
-                throw new ArgumentNullException("input");
-            }
+		public static string ToString(byte[] input)
+		{
+			if (input == null || input.Length == 0)
+			{
+				throw new ArgumentNullException("input");
+			}
 
-            int charCount = (int)Math.Ceiling(input.Length / 5d) * 8;
-            char[] returnArray = new char[charCount];
+			int charCount = (int)Math.Ceiling(input.Length / 5d) * 8;
+			char[] returnArray = new char[charCount];
 
-            byte nextChar = 0, bitsRemaining = 5;
-            int arrayIndex = 0;
+			byte nextChar = 0, bitsRemaining = 5;
+			int arrayIndex = 0;
 
-            foreach (byte b in input)
-            {
-                nextChar = (byte)(nextChar | (b >> (8 - bitsRemaining)));
-                returnArray[arrayIndex++] = ValueToChar(nextChar);
+			foreach (byte b in input)
+			{
+				nextChar = (byte)(nextChar | (b >> (8 - bitsRemaining)));
+				returnArray[arrayIndex++] = ValueToChar(nextChar);
 
-                if (bitsRemaining < 4)
-                {
-                    nextChar = (byte)((b >> (3 - bitsRemaining)) & 31);
-                    returnArray[arrayIndex++] = ValueToChar(nextChar);
-                    bitsRemaining += 5;
-                }
+				if (bitsRemaining < 4)
+				{
+					nextChar = (byte)((b >> (3 - bitsRemaining)) & 31);
+					returnArray[arrayIndex++] = ValueToChar(nextChar);
+					bitsRemaining += 5;
+				}
 
-                bitsRemaining -= 3;
-                nextChar = (byte)((b << bitsRemaining) & 31);
-            }
+				bitsRemaining -= 3;
+				nextChar = (byte)((b << bitsRemaining) & 31);
+			}
 
-            //if we didn't end with a full char
-            if (arrayIndex != charCount)
-            {
-                returnArray[arrayIndex++] = ValueToChar(nextChar);
-                while (arrayIndex != charCount) returnArray[arrayIndex++] = '='; //padding
-            }
+			//if we didn't end with a full char
+			if (arrayIndex != charCount)
+			{
+				returnArray[arrayIndex++] = ValueToChar(nextChar);
+				while (arrayIndex != charCount) returnArray[arrayIndex++] = '='; //padding
+			}
 
-            return new string(returnArray);
-        }
+			return new string(returnArray);
+		}
 
-        private static int CharToValue(char c)
-        {
-            int value = (int)c;
+		private static int CharToValue(char c)
+		{
+			int value = (int)c;
 
-            //65-90 == uppercase letters
-            if (value < 91 && value > 64)
-            {
-                return value - 65;
-            }
-            //50-55 == numbers 2-7
-            if (value < 56 && value > 49)
-            {
-                return value - 24;
-            }
-            //97-122 == lowercase letters
-            if (value < 123 && value > 96)
-            {
-                return value - 97;
-            }
+			//65-90 == uppercase letters
+			if (value < 91 && value > 64)
+			{
+				return value - 65;
+			}
+			//50-55 == numbers 2-7
+			if (value < 56 && value > 49)
+			{
+				return value - 24;
+			}
+			//97-122 == lowercase letters
+			if (value < 123 && value > 96)
+			{
+				return value - 97;
+			}
 
-            throw new ArgumentException("Character is not a Base32 character.", "c");
-        }
+			throw new ArgumentException("Character is not a Base32 character.", "c");
+		}
 
-        private static char ValueToChar(byte b)
-        {
-            if (b < 26)
-            {
-                return (char)(b + 97);
-            }
+		private static char ValueToChar(byte b)
+		{
+			if (b < 26)
+			{
+				return (char)(b + 97);
+			}
 
-            if (b < 32)
-            {
-                return (char)(b + 24);
-            }
+			if (b < 32)
+			{
+				return (char)(b + 24);
+			}
 
-            throw new ArgumentException("Byte is not a value Base32 value.", "b");
-        }
+			throw new ArgumentException("Byte is not a value Base32 value.", "b");
+		}
 
-    }
+	}
 }

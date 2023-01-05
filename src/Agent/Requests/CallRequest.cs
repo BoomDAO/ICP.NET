@@ -87,7 +87,7 @@ namespace EdjCase.ICP.Agent.Requests
 
 	public class CallRejectedException : Exception
 	{
-		public UnboundedUInt RejectCode { get; } 
+		public UnboundedUInt RejectCode { get; }
 		public string RejectMessage { get; }
 		public string? ErrorCode { get; }
 		public CallRejectedException(UnboundedUInt rejectCode, string rejectMessage, string? errorCode)

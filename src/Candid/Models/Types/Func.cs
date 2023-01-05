@@ -100,5 +100,5 @@ namespace EdjCase.ICP.Candid.Models.Types
 		{
 			return HashCode.Combine(this.Type, this.Modes, this.ArgTypes, this.ReturnTypes);
 		}
-    }
+	}
 }

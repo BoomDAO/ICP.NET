@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace EdjCase.ICP.Agent.Requests
 {

@@ -59,10 +59,10 @@ namespace EdjCase.ICP.Candid.Models.Values
 			return false;
 		}
 
-        public override string ToString()
-        {
+		public override string ToString()
+		{
 			return $"{{{this.Tag}:{this.Value}}}";
-        }
-    }
+		}
+	}
 
 }

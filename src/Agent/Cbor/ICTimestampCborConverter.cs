@@ -1,4 +1,4 @@
-﻿using Dahomey.Cbor.Serialization;
+using Dahomey.Cbor.Serialization;
 using Dahomey.Cbor.Serialization.Converters;
 using EdjCase.ICP.Candid;
 using EdjCase.ICP.Candid.Models;

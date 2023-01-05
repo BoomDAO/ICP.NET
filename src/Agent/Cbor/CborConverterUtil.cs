@@ -1,4 +1,4 @@
-﻿using Dahomey.Cbor;
+using Dahomey.Cbor;
 using Dahomey.Cbor.Serialization;
 using EdjCase.ICP.Candid.Encodings;
 using System;

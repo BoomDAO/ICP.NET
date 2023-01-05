@@ -1,4 +1,4 @@
-﻿using EdjCase.ICP.Candid.Crypto;
+using EdjCase.ICP.Candid.Crypto;
 using EdjCase.ICP.Candid.Models;
 using System;
 

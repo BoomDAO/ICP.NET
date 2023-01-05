@@ -53,7 +53,7 @@ namespace EdjCase.ICP.Candid.Models.Values
 		public bool TryGetField(CandidTag label,
 #if !NETSTANDARD2_0
 		[NotNullWhen(true)]
-# endif
+#endif
 			out CandidValue? value)
 		{
 			return this.Fields.TryGetValue(label, out value);
@@ -107,18 +107,18 @@ namespace EdjCase.ICP.Candid.Models.Values
 			return false;
 		}
 
-        private IEnumerable<(uint, CandidValue)> GetOrderedFields(CandidRecord candidRecord)
-        {
+		private IEnumerable<(uint, CandidValue)> GetOrderedFields(CandidRecord candidRecord)
+		{
 			return candidRecord.Fields
 					   .Select(f => (f.Key.Id, f.Value))
 					   .OrderBy(f => f.Id);
-        }
+		}
 
-        public override string ToString()
-        {
+		public override string ToString()
+		{
 			IEnumerable<string> fields = this.Fields.Select(f => $"{f.Key}:{f.Value}");
 			return $"{{{string.Join("; ", fields)}}}";
-        }
-    }
+		}
+	}
 
 }

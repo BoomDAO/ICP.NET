@@ -72,7 +72,7 @@ namespace EdjCase.ICP.Candid.Models
 
 		public static bool operator ==(OptionalValue<T> x, OptionalValue<T> y)
 		{
-			if(object.ReferenceEquals(x, null))
+			if (object.ReferenceEquals(x, null))
 			{
 				return object.ReferenceEquals(y, null);
 			}

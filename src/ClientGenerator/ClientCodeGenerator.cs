@@ -50,7 +50,7 @@ namespace EdjCase.ICP.ClientGenerator
 					continue;
 				}
 
-				if(customType)
+				if (customType)
 				{
 					if (typeBuilder == null)
 					{
@@ -64,7 +64,7 @@ namespace EdjCase.ICP.ClientGenerator
 				else
 				{
 					aliases.Add(id, name);
-					if(typeBuilder != null)
+					if (typeBuilder != null)
 					{
 						typeFileGenerators.Add((importedNamespaces) =>
 						{
