@@ -27,12 +27,17 @@ x86/
 [Aa][Rr][Mm]64/
 bld/
 [Bb]in/
+bin
+Bin
 [Oo]bj/
+obj
+Obj
 [Ll]og/
 [Ll]ogs/
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/
+.vs
 # Uncomment if you have tasks that create the project's static files in wwwroot
 #wwwroot/
 
@@ -216,6 +221,7 @@ _pkginfo.txt
 # Visual Studio cache files
 # files ending in .cache can be ignored
 *.[Cc]ache
+^.*\.cache$
 # but keep track of directories ending in .cache
 !?*.[Cc]ache/
 
