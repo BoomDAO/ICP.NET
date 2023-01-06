@@ -2,7 +2,7 @@
 
   <PropertyGroup>
 	  <OutputType>Exe</OutputType>
-	  <TargetFramework>net6.0</TargetFramework>
+	  <TargetFramework>netstandard2.0</TargetFramework>
 	  <Nullable>enable</Nullable>
 	  <LangVersion>latest</LangVersion>
 	  <RootNamespace>EdjCase.ICP.ClientGenerator</RootNamespace>
@@ -18,6 +18,8 @@
 	  <PackAsTool>true</PackAsTool>
 	  <ToolCommandName>candid-client-generator</ToolCommandName>
 	  <PackageOutputPath>./nupkg</PackageOutputPath>
+	  <ApplicationIcon />
+	  <StartupObject />
   </PropertyGroup>
 
 	<ItemGroup>
