@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 namespace EdjCase.Cryptography.BLS
@@ -14,10 +15,9 @@ namespace EdjCase.Cryptography.BLS
 		public const int MCLBN_COMPILED_TIME_VAR = MCLBN_FR_UNIT_SIZE * 10 + MCLBN_FP_UNIT_SIZE;
 
 		// This will search and load bls384_256.dll on Windows, and libbls384_256.dll on Linux
-		private const string DllName = "bls384_256";
+		private const string DllName = "lib/bls384_256";
 
 		//#define MCLBN_FP_UNIT_SIZE 6
-		//#define MCLBN_FR_UNIT_SIZE 6
 		private const int MCLBN_FP_UNIT_SIZE = 6;
 
 		private const int MCLBN_FR_UNIT_SIZE = 4;
@@ -46,7 +46,7 @@ namespace EdjCase.Cryptography.BLS
 
 		//BLS_DLL_API mclSize blsPublicKeyDeserialize(blsPublicKey* pub, const void* buf, mclSize bufSize);
 		[DllImport(DllName, EntryPoint = "blsPublicKeyDeserialize")]
-		public static extern unsafe int PublicKeyDeserialize([In, Out] ref BlsPublicKey pub, byte* buf, int bufSize);
+		public static extern unsafe int PublicKeyDeserialize(ref BlsPublicKey pub, [In] byte[] buf, ulong bufSize);
 
 		//BLS_DLL_API mclSize blsSignatureDeserialize(blsSignature* sig, const void* buf, mclSize bufSize);
 		[DllImport(DllName, EntryPoint = "blsSignatureDeserialize")]
@@ -104,25 +104,10 @@ namespace EdjCase.Cryptography.BLS
 				return $"FP(ulong[{this.d_0:x},{this.d_1:x},{this.d_2:x},{this.d_3:x},{this.d_4:x},{this.d_5:x}])";
 			}
 		}
-		public struct BlsPublicKey
+		[StructLayout(LayoutKind.Sequential)]
+		public unsafe struct BlsPublicKey
 		{
-			public MclBnG1 v;
-
-			public override string ToString()
-			{
-				return this.v.ToString();
-			}
-		}
-		public struct MclBnG1
-		{
-			public MclBnFp x;
-			public MclBnFp y;
-			public MclBnFp z;
-
-			public override string ToString()
-			{
-				return $"G1(x={this.x},y={this.y},z={this.z})";
-			}
+			private fixed ulong v[MCLBN_FP_UNIT_SIZE * 6];
 		}
 	}
 

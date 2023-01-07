@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 
 namespace EdjCase.Cryptography.BLS
 {
@@ -11,12 +12,24 @@ namespace EdjCase.Cryptography.BLS
 		private const int PublicKeyLength = 96;
 		private const int SignatureLength = 48;
 
+		private static object intializeLock = new object();
+		private static bool isInitialized = false;
 
-		public static Lazy<bool> isDllInitialized = new Lazy<bool>(
-			() => Interop.Init(Interop.MCL_BLS12_381, Interop.MCLBN_COMPILED_TIME_VAR) == 1,
-			true
-		);
-
+		private static void EnsureInitialized()
+		{
+			lock (BlsUtil.intializeLock)
+			{
+				if (!BlsUtil.isInitialized)
+				{
+					int result = Interop.Init(Interop.MCL_BLS12_381, Interop.MCLBN_COMPILED_TIME_VAR);
+					if (result != 0)
+					{
+						throw new InvalidOperationException("Dll failed to initialize. Error Code: " + result);
+					}
+					BlsUtil.isInitialized = true;
+				}
+			}
+		}
 
 		public static bool VerifyHash(
 			byte[] publicKey,
@@ -28,20 +41,10 @@ namespace EdjCase.Cryptography.BLS
 			{
 				throw new ArgumentOutOfRangeException(nameof(signature), signature.Length, $"Signature must be {SignatureLength} bytes long.");
 			}
-			if (!isDllInitialized.Value)
-			{
-				throw new InvalidOperationException("Dll is not initialized");
-			}
+			EnsureInitialized();
 
 			var blsPublicKey = default(Interop.BlsPublicKey);
-			int publicKeyBytesRead;
-			unsafe
-			{
-				fixed (byte* publicKeyPtr = publicKey)
-				{
-					publicKeyBytesRead = Interop.PublicKeyDeserialize(ref blsPublicKey, publicKeyPtr, publicKey!.Length);
-				}
-			}
+			int publicKeyBytesRead = Interop.PublicKeyDeserialize(ref blsPublicKey, publicKey, (ulong)publicKey!.Length);
 			if (publicKeyBytesRead != publicKey.Length)
 			{
 				throw new Exception($"Error deserializing BLS public key, length: {publicKeyBytesRead}");
