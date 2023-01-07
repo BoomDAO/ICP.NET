@@ -38,7 +38,7 @@ namespace EdjCase.ICP.Candid
 
 			using (var stringWriter = new StringWriter())
 			{
-				using (var writer = new IndentedTextWriter(stringWriter, tabString))
+				using (var writer = new IndentedTextWriter(stringWriter, tabString) { NewLine = "\n" })
 				{
 					textComponent.WriteText(writer, indentType != IndentType.None);
 				}

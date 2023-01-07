@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace EdjCase.ICP.Candid.Utilities
 {
-	public static class Base32EncodingUtil
+	internal static class Base32EncodingUtil
 	{
 		public static byte[] ToBytes(string input)
 		{
@@ -12,8 +13,17 @@ namespace EdjCase.ICP.Candid.Utilities
 			{
 				throw new ArgumentNullException("input");
 			}
+			bool grouped = input.Contains("-");
+			if(grouped)
+			{
+				//Remove checksum and dashes
+				input = new string(input.Skip(8).Where(i => i != '-').ToArray());
+			}
+			else
+			{
+				input = input.TrimEnd('='); //remove padding characters
+			}
 
-			input = input.TrimEnd('='); //remove padding characters
 			int byteCount = input.Length * 5 / 8; //this must be TRUNCATED
 			byte[] returnArray = new byte[byteCount];
 
@@ -49,7 +59,7 @@ namespace EdjCase.ICP.Candid.Utilities
 			return returnArray;
 		}
 
-		public static string ToString(byte[] input)
+		public static string FromBytes(byte[] input, bool groupedWithChecksum = true)
 		{
 			if (input == null || input.Length == 0)
 			{
@@ -57,7 +67,7 @@ namespace EdjCase.ICP.Candid.Utilities
 			}
 
 			int charCount = (int)Math.Ceiling(input.Length / 5d) * 8;
-			char[] returnArray = new char[charCount];
+			char[] characterArray = new char[charCount];
 
 			byte nextChar = 0, bitsRemaining = 5;
 			int arrayIndex = 0;
@@ -65,12 +75,12 @@ namespace EdjCase.ICP.Candid.Utilities
 			foreach (byte b in input)
 			{
 				nextChar = (byte)(nextChar | (b >> (8 - bitsRemaining)));
-				returnArray[arrayIndex++] = ValueToChar(nextChar);
+				characterArray[arrayIndex++] = ValueToChar(nextChar);
 
 				if (bitsRemaining < 4)
 				{
 					nextChar = (byte)((b >> (3 - bitsRemaining)) & 31);
-					returnArray[arrayIndex++] = ValueToChar(nextChar);
+					characterArray[arrayIndex++] = ValueToChar(nextChar);
 					bitsRemaining += 5;
 				}
 
@@ -81,11 +91,35 @@ namespace EdjCase.ICP.Candid.Utilities
 			//if we didn't end with a full char
 			if (arrayIndex != charCount)
 			{
-				returnArray[arrayIndex++] = ValueToChar(nextChar);
-				while (arrayIndex != charCount) returnArray[arrayIndex++] = '='; //padding
+				characterArray[arrayIndex++] = ValueToChar(nextChar);
+
+				// dont pad if grouping 
+				if (!groupedWithChecksum)
+				{
+					while (arrayIndex != charCount) characterArray[arrayIndex++] = '='; //padding
+				}
 			}
 
-			return new string(returnArray);
+			if (groupedWithChecksum)
+			{
+				// Add a dash every 5 characters
+				int charLength = arrayIndex;
+				int dashCount = charLength / 5;
+				char[] chars = new char[charLength + dashCount];
+				int offset = 0;
+				for (int i = 0; i < charLength; i++)
+				{
+					if (i % 5 == 0 && i != 0)
+					{
+						chars[i + offset] = '-';
+						offset += 1;
+					}
+					chars[i + offset] = characterArray[i];
+				}
+				characterArray = chars;
+			}
+
+			return new string(characterArray);
 		}
 
 		private static int CharToValue(char c)

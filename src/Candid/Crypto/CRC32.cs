@@ -2,47 +2,74 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace EdjCase.ICP.Candid.Crypto
 {
-	public class CRC32
+	/// <summary>
+	/// Helper class for computing CRC32 hashes/checksums on byte data
+	/// Useful for calculating checksums on data
+	/// </summary>
+	public static class CRC32
 	{
-		private readonly uint[] ChecksumTable;
 		private const uint Polynomial = 0xEDB88320;
 
-		public CRC32()
+		private static readonly Lazy<uint[]> ChecksumTable = new Lazy<uint[]>(() =>
 		{
-			this.ChecksumTable = new uint[0x100];
+			// Intialize table values
+			return Enumerable.Range(0, 0x100)
+				.Select(i =>
+				{
+					return Enumerable.Range(0, 8)
+						.Aggregate((uint)i, (acc, _) =>
+						{
+							bool isBitSet = (acc & 1) != 0;
+							if (isBitSet)
+							{
+								return Polynomial ^ (acc >> 1);
+							}
+							return acc >> 1;
+						});
+				})
+				.ToArray();
+		}, true);
 
-			for (uint index = 0; index < 0x100; ++index)
+		/// <summary>
+		/// Computes the 32-bit hash on the stream of data provided
+		/// </summary>
+		/// <param name="stream">Byte data. Will use the whole stream</param>
+		/// <returns>Hash of the byte data as a byte array of length of 4</returns>
+		public static byte[] ComputeHash(Stream stream)
+		{
+			uint hash32Value = 0xFFFFFFFF;
+
+			int currentByte;
+			while ((currentByte = stream.ReadByte()) != -1)
 			{
-				uint item = index;
-				for (int bit = 0; bit < 8; ++bit)
-					item = ((item & 1) != 0) ? (CRC32.Polynomial ^ (item >> 1)) : (item >> 1);
-				this.ChecksumTable[index] = item;
+				// Use rightmost byte and xor it to the current byte to get the table index
+				uint checksumIndex = (hash32Value & 0xFF) ^ (byte)currentByte;
+				// Use all other bytes besides that byte and xor it with the checksum table value
+				uint otherBytes = hash32Value >> 8;
+				hash32Value = CRC32.ChecksumTable.Value[checksumIndex] ^ otherBytes;
 			}
-		}
-
-		public byte[] ComputeHash(Stream stream)
-		{
-			uint result = 0xFFFFFFFF;
-
-			int current;
-			while ((current = stream.ReadByte()) != -1)
-				result = this.ChecksumTable[(result & 0xFF) ^ (byte)current] ^ (result >> 8);
-
-			byte[] hash = BitConverter.GetBytes(~result);
+			// Invert and convert the 32-bit value into a byte array
+			byte[] hash = BitConverter.GetBytes(~hash32Value);
 			Array.Reverse(hash);
 			return hash;
 		}
 
-		public byte[] ComputeHash(byte[] data)
+		/// <summary>
+		/// Computes the 32-bit hash on the data bytes provided
+		/// </summary>
+		/// <param name="data">Byte data</param>
+		/// <returns>Hash of the byte data as a byte array of length of 4</returns>
+		public static byte[] ComputeHash(byte[] data)
 		{
 			using (MemoryStream stream = new MemoryStream(data))
 			{
-				return this.ComputeHash(stream);
+				return CRC32.ComputeHash(stream);
 			}
 		}
 	}

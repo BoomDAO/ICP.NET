@@ -18,27 +18,12 @@ namespace EdjCase.ICP.Candid.Models
 
 		public string ToText()
 		{
-			// Add checksum to beginning of byte array;
-			var crc32 = new CRC32();
-			byte[] checksum = crc32.ComputeHash(this.Raw);
-			byte[] bytesWithChecksum = checksum.Concat(this.Raw).ToArray();
-			string base32String = Base32EncodingUtil.ToString(bytesWithChecksum);
-			base32String = base32String.Trim('=');
-
-			// Add a dash every 5 characters
-			int dashCount = base32String.Length / 5;
-			char[] chars = new char[base32String.Length + dashCount];
-			int offset = 0;
-			for (int i = 0; i < base32String.Length; i++)
-			{
-				if (i % 5 == 0 && i != 0)
-				{
-					chars[i + offset] = '-';
-					offset += 1;
-				}
-				chars[i + offset] = base32String[i];
-			}
-			return new string(chars);
+			// Add checksum to beginning of byte array
+			byte[] checksum = CRC32.ComputeHash(this.Raw);
+			byte[] bytesWithChecksum = checksum
+				.Concat(this.Raw)
+				.ToArray();
+			return Base32EncodingUtil.FromBytes(bytesWithChecksum, groupedWithChecksum: true);
 		}
 
 		public override string ToString()

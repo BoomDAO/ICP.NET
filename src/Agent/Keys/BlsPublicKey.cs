@@ -7,8 +7,6 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using Asn1DecoderNet5.Interfaces;
-using Asn1DecoderNet5.Tags;
 using EdjCase.Cryptography.BLS;
 using EdjCase.ICP.Candid.Crypto;
 using EdjCase.ICP.Candid.Models;
@@ -49,39 +47,7 @@ namespace EdjCase.ICP.Agent.Keys
 
 		public byte[] GetDerEncodedBytes()
 		{
-			ITag tag = new Tag
-			{
-				Childs = new List<ITag>
-				{
-					new Tag
-					{
-						TagNumber = sequenceTagNumber,
-						Childs = new List<ITag>
-						{
-							new Tag
-							{
-								TagNumber = oidTagNumber,
-								Content = algorithmOid
-							},
-							new Tag
-							{
-								TagNumber = oidTagNumber,
-								Content = curveOid
-							}
-						}
-					},
-					new Tag
-					{
-						TagNumber = bitStringTagNumber,
-						Content = new byte[] { 0x00 }
-							.Concat(this.Value)
-							.ToArray()
-					}
-				}
-			};
-			tag.ConvertContentToReadableContent();
-			string oid = tag.ReadableContent;
-			return Asn1DecoderNet5.Encoding.OidEncoding.GetBytes(oid);
+			return new byte[0];
 		}
 
 		public static BlsPublicKey FromDer(byte[] derEncodedPublicKey)
@@ -92,34 +58,8 @@ namespace EdjCase.ICP.Agent.Keys
 			//     OBJECT IDENTIFIER 1.3.6.1.4.1.44668.5.3.1.2.1
 			//     OBJECT IDENTIFIER 1.3.6.1.4.1.44668.5.3.2.1
 			//   BIT STRING(768 bit) …
-			ITag derTag = Asn1DecoderNet5.Decoder.Decode(derEncodedPublicKey);
-			if (derTag.TagNumber != sequenceTagNumber || derTag.Childs.Count != 2)
-			{
-				throw new InvalidBlsPublicKey();
-			}
-			ITag oids = derTag.Childs.First();
-			if (oids.Childs.Count != 2)
-			{
-				throw new InvalidBlsPublicKey();
-			}
-			ITag oid1 = oids.Childs[0];
-			ITag oid2 = oids.Childs[1];
-			if (oid1.TagNumber != oidTagNumber
-				|| oid2.TagNumber != oidTagNumber)
-			{
-				throw new InvalidBlsPublicKey();
-			}
 
-			if (!oid1.Content.SequenceEqual(algorithmOid)
-				|| !oid2.Content.SequenceEqual(curveOid))
-			{
-				throw new InvalidBlsPublicKey();
-			}
-
-			byte[] publicKey = derTag.Childs[1].Content
-				.Skip(1) // Skip 0 byte
-				.ToArray();
-			return new BlsPublicKey(publicKey);
+			return new BlsPublicKey(new byte[0]);
 		}
 
 		public byte[] GetRawBytes()

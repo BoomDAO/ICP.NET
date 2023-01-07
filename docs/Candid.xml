@@ -24,6 +24,26 @@
             Ordered list of encoded values
             </summary>
         </member>
+        <member name="T:EdjCase.ICP.Candid.Crypto.CRC32">
+            <summary>
+            Helper class for computing CRC32 hashes/checksums on byte data
+            Useful for calculating checksums on data
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Crypto.CRC32.ComputeHash(System.IO.Stream)">
+            <summary>
+            Computes the 32-bit hash on the stream of data provided
+            </summary>
+            <param name="stream">Byte data. Will use the whole stream</param>
+            <returns>Hash of the byte data as a byte array of length of 4</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Crypto.CRC32.ComputeHash(System.Byte[])">
+            <summary>
+            Computes the 32-bit hash on the data bytes provided
+            </summary>
+            <param name="data">Byte data</param>
+            <returns>Hash of the byte data as a byte array of length of 4</returns>
+        </member>
         <member name="M:EdjCase.ICP.Candid.Models.CandidTag.HashName(System.String)">
             <summary>
             Hashes the name to get the proper id 
