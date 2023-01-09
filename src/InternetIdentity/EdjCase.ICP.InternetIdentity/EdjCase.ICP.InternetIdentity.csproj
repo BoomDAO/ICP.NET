@@ -8,7 +8,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Agent\EdjCase.ICP.Agent.csproj" />
     <ProjectReference Include="..\..\Candid\EdjCase.ICP.Candid.csproj" />
-    <ProjectReference Include="..\..\ClientGenerator\EdjCase.ICP.ClientGenerator.csproj" />
   </ItemGroup>
 
 </Project>
