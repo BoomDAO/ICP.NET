@@ -28,7 +28,7 @@
 
 
   <ItemGroup>
-    <None Update="SessionIdentity.json">
+    <None Update="test_SessionIdentity.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
