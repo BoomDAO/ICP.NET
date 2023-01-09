@@ -26,4 +26,11 @@
     </Compile>
   </ItemGroup>
 
+
+  <ItemGroup>
+    <None Update="SessionIdentity.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

@@ -354,3 +354,7 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+
+
+# Secret test files
+test_SessionIdentity.json

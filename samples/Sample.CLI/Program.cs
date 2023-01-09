@@ -91,7 +91,7 @@ public class App
 
 	public static IIdentity GetIdentity()
 	{
-		string identityStr = "";
+		string identityStr = System.IO.File.ReadAllText("test_SessionIdentity.json");
 		var identity = JsonConvert.DeserializeObject<Jsonnable.DelegationIdentity>(identityStr);
 		return FromJSON(identity);
 	}
