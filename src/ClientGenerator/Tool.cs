@@ -39,47 +39,49 @@ namespace EdjCase.ICP.ClientGenerator
 		public static async Task Main(string[] args)
 		{
 #if DEBUG
-			Console.WriteLine("CanisterId (leave blank if using file): ");
-			string? canisterId = Console.ReadLine()?.Trim();
-			string fileName;
-			string? filePath = null;
-			string? baseUrl = null;
-			bool useFile = string.IsNullOrWhiteSpace(canisterId);
-			if (useFile)
+			if (args.Length <= 1)
 			{
-				Console.WriteLine("File Path: ");
-				filePath = Console.ReadLine()!;
-				fileName = System.IO.Path.GetFileName(filePath);
-				if (fileName.EndsWith(".did"))
+				Console.WriteLine("CanisterId (leave blank if using file): ");
+				string? canisterId = Console.ReadLine()?.Trim();
+				string fileName;
+				string? filePath = null;
+				string? baseUrl = null;
+				bool useFile = string.IsNullOrWhiteSpace(canisterId);
+				if (useFile)
 				{
-					fileName = fileName.Substring(0, fileName.Length - 4);
+					Console.WriteLine("File Path: ");
+					filePath = Console.ReadLine()!;
+					fileName = System.IO.Path.GetFileName(filePath);
+					if (fileName.EndsWith(".did"))
+					{
+						fileName = fileName.Substring(0, fileName.Length - 4);
+					}
 				}
-			}
-			else
-			{
-				Console.WriteLine("Base Url (leave blank from mainnet): ");
-				baseUrl = Console.ReadLine()!;
-				Console.WriteLine("Service Name: ");
-				fileName = Console.ReadLine()!;
-			}
-			Console.WriteLine("Output Directory: ");
-			string outputDirectory = Console.ReadLine()!;
-			if (useFile)
-			{
-				args = new string[]
+				else
 				{
+					Console.WriteLine("Base Url (leave blank from mainnet): ");
+					baseUrl = Console.ReadLine()!;
+					Console.WriteLine("Service Name: ");
+					fileName = Console.ReadLine()!;
+				}
+				Console.WriteLine("Output Directory: ");
+				string outputDirectory = Console.ReadLine()!;
+				if (useFile)
+				{
+					args = new string[]
+					{
 					"-o",
 					System.IO.Path.Combine(outputDirectory, fileName),
 					"-f",
 					filePath!,
 					"-n",
 					$"Sample.Shared.{fileName}"
-				};
-			}
-			else
-			{
-				args = new string[]
+					};
+				}
+				else
 				{
+					args = new string[]
+					{
 					"-o",
 					System.IO.Path.Combine(outputDirectory, fileName),
 					"-i",
@@ -88,7 +90,8 @@ namespace EdjCase.ICP.ClientGenerator
 					$"Sample.Shared.{fileName}",
 					"-u",
 					baseUrl ?? "https://ic0.app"
-				};
+					};
+				}
 			}
 #endif
 			await Parser.Default.ParseArguments<Options>(args)
