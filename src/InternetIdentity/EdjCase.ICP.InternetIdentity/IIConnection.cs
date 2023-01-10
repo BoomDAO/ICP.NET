@@ -20,24 +20,6 @@ namespace EdjCase.ICP.InternetIdentity
 		}
 	}
 
-	public class MultiWebAuthnIdentity : SigningIdentityBase
-	{
-		public static MultiWebAuthnIdentity FromDevices(IEnumerable<IIClient.DeviceData> devices)
-		{
-			throw new System.NotImplementedException();
-		}
-
-		public override IPublicKey GetPublicKey()
-		{
-			throw new System.NotImplementedException();
-		}
-
-		public override Signature Sign(byte[] sign)
-		{
-			throw new System.NotImplementedException();
-		}
-	}
-
 	public class IIConnection
 	{
 		public static readonly Principal InternetIdentityBackendCanister = Principal.FromText("rdmx6-jaaaa-aaaaa-aaadq-cai");

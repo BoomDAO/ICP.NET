@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Fido2Net\Fido2Net\Fido2Net.csproj" />
     <ProjectReference Include="..\..\Agent\EdjCase.ICP.Agent.csproj" />
     <ProjectReference Include="..\..\Candid\EdjCase.ICP.Candid.csproj" />
   </ItemGroup>
