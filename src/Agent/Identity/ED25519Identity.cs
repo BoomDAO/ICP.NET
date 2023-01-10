@@ -5,6 +5,7 @@ using EdjCase.ICP.Candid.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Security.Cryptography;
 
 namespace EdjCase.ICP.Agent.Identity
 {
@@ -31,6 +32,15 @@ namespace EdjCase.ICP.Agent.Identity
 		{
 			byte[] signatureBytes = Ed25519.Sign(message, this.PrivateKey);
 			return new Signature(signatureBytes);
+		}
+
+		public static ED25519Identity Generate()
+		{
+			byte[] seed = new byte[Ed25519.PrivateKeySeedSizeInBytes];
+			using var cryptoRng = new RNGCryptoServiceProvider();
+			cryptoRng.GetBytes(seed);
+			Ed25519.KeyPairFromSeed(publicKey: out var pub, expandedPrivateKey: out var priv, seed);
+			return new ED25519Identity(new ED25519PublicKey(pub), priv);
 		}
 	}
 }
