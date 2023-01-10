@@ -448,7 +448,7 @@ namespace ICP.ClientGenerator
 			}
 			else
 			{
-				var res = this.ResolveType_Impl(type, typeNameStr, out typeBuilder);
+				var res = this.ResolveType_Impl(type, typeNameStr, isDeclaration: true, out typeBuilder);
 				this._resolvedTypes[typeNameStr] = (res.Item1, res.Item2, typeBuilder);
 				return res;
 			}
@@ -456,10 +456,10 @@ namespace ICP.ClientGenerator
 
 		internal (TypeName? Type, bool CustomType) ResolveType(SourceCodeType type, string nameContext, out Action<IndentedStringBuilder>? typeBuilder)
 		{
-			return this.ResolveType_Impl(type, nameContext, out typeBuilder);
+			return this.ResolveType_Impl(type, nameContext, isDeclaration: false, out typeBuilder);
 		}
 
-		internal (TypeName? Type, bool CustomType) ResolveType_Impl(SourceCodeType type, string nameContext, out Action<IndentedStringBuilder>? typeBuilder)
+		internal (TypeName? Type, bool CustomType) ResolveType_Impl(SourceCodeType type, string nameContext, bool isDeclaration, out Action<IndentedStringBuilder>? typeBuilder)
 		{
 			switch (type)
 			{
@@ -508,14 +508,23 @@ namespace ICP.ClientGenerator
 				case ReferenceSourceCodeType re:
 					{
 						string correctedRefId = StringUtil.ToPascalCase(re.Id.ToString()); // TODO casing?
-						if (this._resolvedTypes.TryGetValue(correctedRefId, out var existing))
+						typeBuilder = null;
+
+						if (isDeclaration)
 						{
-							typeBuilder = null;
-							return (existing.Type, false);
+							if (this._resolvedTypes.TryGetValue(correctedRefId, out var existing))
+							{
+								typeBuilder = null;
+								return (existing.Type, false);
+							}
+							else
+							{
+								throw new System.InvalidOperationException("Candid type reference to another user-defined type; but that type is not yet defined");
+							}
 						}
 						else
 						{
-							throw new System.InvalidOperationException("Candid type reference to another user-defined type; but that type is not yet defined");
+							return (new TypeName(correctedRefId, null), false);
 						}
 					}
 
