@@ -29,6 +29,7 @@ namespace EdjCase.ICP.ClientGenerator
 	{
 		public static ClientCodeResult FromService(string serviceName, string baseNamespace, CandidServiceDescription service)
 		{
+			var typeSourceGenerator = new TypeSourceGenerator();
 
 			// Mapping of A => Type
 			// where candid is: type A = Type;
@@ -36,14 +37,11 @@ namespace EdjCase.ICP.ClientGenerator
 				.Where(t => !(t.Value is CandidServiceType)) // avoid duplication service of type
 				.ToDictionary(t => ValueName.Default(t.Key.ToString()), t => ResolveSourceCodeType(t.Value));
 
-
-
-
 			Dictionary<ValueName, TypeName> aliases = new();
 			var typeFileGenerators = new List<Func<List<string>, (string Name, string SourceCode)>>();
 			foreach ((ValueName id, SourceCodeType typeInfo) in declaredTypes)
 			{
-				(TypeName? name, bool customType) = TypeSourceGenerator.ResolveType(typeInfo, id.PascalCaseValue, out Action<IndentedStringBuilder>? typeBuilder);
+				(TypeName? name, bool customType) = typeSourceGenerator.ResolveType(typeInfo, id.PascalCaseValue, out Action<IndentedStringBuilder>? typeBuilder);
 				if (name == null)
 				{
 					// Skip null, empty and reserved types
@@ -94,7 +92,7 @@ namespace EdjCase.ICP.ClientGenerator
 				.ToList();
 			TypeName clientName = new TypeName(StringUtil.ToPascalCase(serviceName) + "ApiClient", baseNamespace);
 			ServiceSourceCodeType serviceSourceType = ResolveService(service.Service);
-			string clientSource = TypeSourceGenerator.GenerateClientSourceCode(clientName, baseNamespace, serviceSourceType, importedNamespaces);
+			string clientSource = typeSourceGenerator.GenerateClientSourceCode(clientName, baseNamespace, serviceSourceType, importedNamespaces);
 
 			string? aliasFile = null; // TODO? global using only supported in C# 10+
 			return new ClientCodeResult(clientName, clientSource, typeFiles, aliasFile);
