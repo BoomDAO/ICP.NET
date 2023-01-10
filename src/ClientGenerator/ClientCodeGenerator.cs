@@ -41,7 +41,7 @@ namespace EdjCase.ICP.ClientGenerator
 			var typeFileGenerators = new List<Func<List<string>, (string Name, string SourceCode)>>();
 			foreach ((ValueName id, SourceCodeType typeInfo) in declaredTypes)
 			{
-				(TypeName? name, bool customType) = typeSourceGenerator.ResolveType(typeInfo, id.PascalCaseValue, out Action<IndentedStringBuilder>? typeBuilder);
+				(TypeName? name, bool customType) = typeSourceGenerator.ResolveTypeDeclaration(id, typeInfo, out Action<IndentedStringBuilder>? typeBuilder);
 				if (name == null)
 				{
 					// Skip null, empty and reserved types

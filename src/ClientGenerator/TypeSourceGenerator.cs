@@ -333,12 +333,12 @@ namespace ICP.ClientGenerator
 					string backupOptionName = "O" + i;
 					i++;
 					(TypeName? optionTypeName, bool customType) = this.ResolveType(optionType, backupOptionName, out Action<IndentedStringBuilder>? optionTypeBuilder);
-					
+
 					if (optionTypeBuilder != null)
 					{
 						optionTypeBuilder(builder);
 					}
-					if(optionTypeName != null && customType)
+					if (optionTypeName != null && customType)
 					{
 						// Prefix with parent name if subtype
 						optionTypeName = optionTypeName.WithParentType(variantName);
@@ -429,7 +429,37 @@ namespace ICP.ClientGenerator
 			WriteEnum(builder, enumName, enumOptions);
 		}
 
+		private readonly Dictionary<string, (TypeName? Type, bool CustomType, Action<IndentedStringBuilder>? TypeBuilder)> _resolvedTypes = new();
+
+		internal (TypeName? Type, bool CustomType) ResolveTypeDeclaration(ValueName typeName, SourceCodeType type, out Action<IndentedStringBuilder>? typeBuilder)
+		{
+			// note that this only works for only one level of type nesting, so type aliases to generics whose argument is a user-defined type
+			// will fail, for example:
+			//    type A<T> = record { left : A, right : B };
+			//    type X = blob;
+			//    type F = A<X>;
+
+			var typeNameStr = typeName.PascalCaseValue;
+
+			if (this._resolvedTypes.TryGetValue(typeNameStr, out var existing))
+			{
+				typeBuilder = null;
+				return (existing.Type, existing.CustomType);
+			}
+			else
+			{
+				var res = this.ResolveType_Impl(type, typeNameStr, out typeBuilder);
+				this._resolvedTypes[typeNameStr] = (res.Item1, res.Item2, typeBuilder);
+				return res;
+			}
+		}
+
 		internal (TypeName? Type, bool CustomType) ResolveType(SourceCodeType type, string nameContext, out Action<IndentedStringBuilder>? typeBuilder)
+		{
+			return this.ResolveType_Impl(type, nameContext, out typeBuilder);
+		}
+
+		internal (TypeName? Type, bool CustomType) ResolveType_Impl(SourceCodeType type, string nameContext, out Action<IndentedStringBuilder>? typeBuilder)
 		{
 			switch (type)
 			{
@@ -476,9 +506,19 @@ namespace ICP.ClientGenerator
 					return (cType, false)
 ;
 				case ReferenceSourceCodeType re:
-					string correctedRefId = StringUtil.ToPascalCase(re.Id.ToString()); // TODO casing?
-					typeBuilder = null;
-					return (new TypeName(correctedRefId, null), false);
+					{
+						string correctedRefId = StringUtil.ToPascalCase(re.Id.ToString()); // TODO casing?
+						if (this._resolvedTypes.TryGetValue(correctedRefId, out var existing))
+						{
+							typeBuilder = null;
+							return (existing.Type, false);
+						}
+						else
+						{
+							throw new System.InvalidOperationException("Candid type reference to another user-defined type; but that type is not yet defined");
+						}
+					}
+
 				case VariantSourceCodeType v:
 					TypeName variantName = new TypeName(nameContext, null);
 					typeBuilder = (builder) => this.WriteVariant(builder, variantName, v);
