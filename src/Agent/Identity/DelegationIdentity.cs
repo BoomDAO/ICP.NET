@@ -26,7 +26,7 @@ namespace EdjCase.ICP.Agent.Identity
 			return this.Chain.PublicKey;
 		}
 
-		public override Signature Sign(byte[] blob)
+		public override Task<Signature> Sign(byte[] blob)
 		{
 			return this.Identity.Sign(blob);
 		}
@@ -47,14 +47,14 @@ namespace EdjCase.ICP.Agent.Identity
 			this.Delegations = delegations;
 		}
 
-		public static DelegationChain Create(
+		public static async Task<DelegationChain> Create(
 			SigningIdentityBase identity, // from
 			IPublicKey publicKey,         // to
 			ICTimestamp expiration,
 			DelegationChain? previousChain = null,
 			List<Principal>? principalIds = null)
 		{
-			SignedDelegation signedDelegation = SignedDelegation.Create(identity, publicKey, expiration, principalIds);
+			SignedDelegation signedDelegation = await SignedDelegation.Create(identity, publicKey, expiration, principalIds);
 			List<SignedDelegation> delegations = previousChain?.Delegations ?? new List<SignedDelegation>();
 			delegations.Add(signedDelegation);
 			return new DelegationChain(identity.GetPublicKey(), delegations);
@@ -74,7 +74,7 @@ namespace EdjCase.ICP.Agent.Identity
 			this.Signature = signature ?? throw new ArgumentNullException(nameof(signature));
 		}
 
-		public static SignedDelegation Create(
+		public static async Task<SignedDelegation> Create(
 			SigningIdentityBase fromIdentity,
 			IPublicKey publicKey,
 			ICTimestamp expiration,
@@ -91,7 +91,7 @@ namespace EdjCase.ICP.Agent.Identity
 				.Concat(delegationHashDigest)
 				.ToArray();
 
-			Signature signature = fromIdentity.Sign(challenge); // Sign the domain sep + delegation hash digest
+			Signature signature = await fromIdentity.Sign(challenge); // Sign the domain sep + delegation hash digest
 			return new SignedDelegation(delegation, signature);
 		}
 

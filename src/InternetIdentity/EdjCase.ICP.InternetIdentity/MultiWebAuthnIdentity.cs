@@ -6,6 +6,7 @@ using IIClient = EdjCase.ICP.InternetIdentity.Models;
 using Fido2Net;
 using Dahomey.Cbor.Serialization;
 using Dahomey.Cbor.Util;
+using System.Threading.Tasks;
 
 namespace EdjCase.ICP.InternetIdentity
 {
@@ -64,7 +65,7 @@ namespace EdjCase.ICP.InternetIdentity
 			}
 		}
 
-		public static byte[] Fido2Assert(byte[] challenge, FidoAssertion assert, WebAuthnIdentitySignerOptions options, IEnumerable<IIClient.DeviceData> devices)
+		public static async Task<byte[]> Fido2Assert(byte[] challenge, FidoAssertion assert, WebAuthnIdentitySignerOptions options, IEnumerable<IIClient.DeviceData> devices)
 		{
 			using var device = new FidoDevice();
 			device.Open(GetFidoDeviceNameForSign());
@@ -125,10 +126,10 @@ namespace EdjCase.ICP.InternetIdentity
 			yield return this.device;
 		}
 
-		public override Signature Sign(byte[] sign)
+		public override async Task<Signature> Sign(byte[] sign)
 		{
 			using var assert = new FidoAssertion();
-			return new Signature(WebAuthnIdentitySigner.Fido2Assert(sign, assert, this.signerOptions, this.GetDevices()));
+			return new Signature(await WebAuthnIdentitySigner.Fido2Assert(sign, assert, this.signerOptions, this.GetDevices()));
 		}
 	}
 
@@ -172,15 +173,20 @@ namespace EdjCase.ICP.InternetIdentity
 			return true;
 		}
 
-		public override Signature Sign(byte[] sign)
+		public override async Task<Signature> Sign(byte[] sign)
 		{
 			if (this._selectedIdentity != null)
 			{
-				return this._selectedIdentity.Sign(sign);
+				return await this._selectedIdentity.Sign(sign);
 			}
 
 			using var assert = new FidoAssertion();
-			var signature = WebAuthnIdentitySigner.Fido2Assert(sign, assert, this.signerOptions, this.devices);
+			var signature = await WebAuthnIdentitySigner.Fido2Assert(sign, assert, this.signerOptions, this.devices);
+			return this.ConvSignature(assert, signature);
+		}
+
+		private Signature ConvSignature(FidoAssertion assert, byte[] signature)
+		{
 			var id = assert[0].Id;
 
 			// find the device which the user actually signed with, and use that device exclusively in the future.

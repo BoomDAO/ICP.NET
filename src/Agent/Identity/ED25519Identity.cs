@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 
 namespace EdjCase.ICP.Agent.Identity
 {
@@ -28,10 +29,10 @@ namespace EdjCase.ICP.Agent.Identity
 		}
 
 
-		public override Signature Sign(byte[] message)
+		public override Task<Signature> Sign(byte[] message)
 		{
 			byte[] signatureBytes = Ed25519.Sign(message, this.PrivateKey);
-			return new Signature(signatureBytes);
+			return Task.FromResult(new Signature(signatureBytes));
 		}
 
 		public static ED25519Identity Generate()

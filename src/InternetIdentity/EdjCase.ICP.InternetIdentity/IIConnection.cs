@@ -108,7 +108,7 @@ namespace EdjCase.ICP.InternetIdentity
 		{
 			var sessionKey = ED25519Identity.Generate();
 			var tenMinutesInNanoSeconds = 600 * 1_000_000_000ul;
-			var delegationChain = DelegationChain.Create(
+			var delegationChain = await DelegationChain.Create(
 				userSignIdentity, sessionKey.PublicKey,
 				ICTimestamp.FromNanoSecondsInFuture(tenMinutesInNanoSeconds),
 				principalIds: new List<Principal> { targetCanisterId }
