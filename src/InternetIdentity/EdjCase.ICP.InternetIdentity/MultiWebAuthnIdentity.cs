@@ -7,6 +7,7 @@ using Fido2Net;
 using Dahomey.Cbor.Serialization;
 using Dahomey.Cbor.Util;
 using System.Threading.Tasks;
+using System.Runtime.CompilerServices;
 
 namespace EdjCase.ICP.InternetIdentity
 {
@@ -65,7 +66,7 @@ namespace EdjCase.ICP.InternetIdentity
 			}
 		}
 
-		public static async Task<byte[]> Fido2Assert(byte[] challenge, FidoAssertion assert, WebAuthnIdentitySignerOptions options, IEnumerable<IIClient.DeviceData> devices)
+		public static byte[] Fido2AssertSync(byte[] challenge, FidoAssertion assert, WebAuthnIdentitySignerOptions options, IEnumerable<IIClient.DeviceData> devices)
 		{
 			using var device = new FidoDevice();
 			device.Open(GetFidoDeviceNameForSign());
@@ -104,6 +105,12 @@ namespace EdjCase.ICP.InternetIdentity
 			return SerializeAssertion(assert[0], clientData);
 		}
 
+		public static Task<byte[]> Fido2Assert(byte[] challenge, FidoAssertion assert, WebAuthnIdentitySignerOptions options, IEnumerable<IIClient.DeviceData> devices)
+		{
+			return Task.Factory.StartNew(
+				() => Fido2AssertSync(challenge, assert, options, devices),
+				TaskCreationOptions.DenyChildAttach | TaskCreationOptions.LongRunning);
+		}
 	}
 
 	public class WebAuthnIdentity : SigningIdentityBase
