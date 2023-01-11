@@ -18,7 +18,7 @@ namespace EdjCase.ICP.InternetIdentity
 
 	public static class WebAuthnIdentitySigner
 	{
-		private static string ClientDataTemplate = "{\"type\": \"webauthn.get\", \"challenge\": \"{0}\", \"origin\": \"https://identity.ic0.app\", \"crossOrigin\": false}";
+		private static string ClientDataTemplate = "{{\"type\": \"webauthn.get\", \"challenge\": \"{0}\", \"origin\": \"https://identity.ic0.app\", \"crossOrigin\": false}}";
 		private static string RpId = "identity.ic0.app";
 		private static byte[] authenticator_data = System.Text.Encoding.ASCII.GetBytes("authenticator_data");
 		private static byte[] client_data_json = System.Text.Encoding.ASCII.GetBytes("client_data_json");
@@ -38,7 +38,8 @@ namespace EdjCase.ICP.InternetIdentity
 			return (str, bytes);
 		}
 
-		private static byte[] SerializeAssertion(FidoAssertionStatement assertion, byte[] clientDataJson)
+
+		private static byte[] SerializeAssertion(FidoAssertionStatement assertion, string clientDataStr)
 		{
 			using (ByteBufferWriter bufferWriter = new ByteBufferWriter())
 			{
@@ -46,21 +47,19 @@ namespace EdjCase.ICP.InternetIdentity
 				writer.WriteSemanticTag(55799);
 
 				writer.WriteBeginMap(3);
-				writer.WriteByteString(authenticator_data);
 
 				// TODO: figure out why the authenticator data has garbage at the start!?
 				// this is super fragile...
-				var authData = assertion.AuthData.Slice(2);
-				writer.WriteByteString(authData);
+				writer.WriteString(authenticator_data);
+				writer.WriteByteString(assertion.AuthData.Slice(2));
 
-				writer.WriteByteString(client_data_json);
-				writer.WriteString(clientDataJson);
+				writer.WriteString(client_data_json);
+				writer.WriteString(clientDataStr);
 
-				writer.WriteByteString(signature);
-				writer.WriteString(assertion.Signature);
+				writer.WriteString(signature);
+				writer.WriteByteString(assertion.Signature);
 
 				writer.WriteEndMap(3);
-
 				return bufferWriter.WrittenSpan.ToArray();
 			}
 		}
@@ -84,22 +83,24 @@ namespace EdjCase.ICP.InternetIdentity
 				}
 			}
 
+			assert.SetExtensions(FidoExtensions.None);
+
 			// these aren't required by the II spec, but may be useful? not clear if it really matters
-			assert.SetUserPresenceRequired(false);
-			assert.SetUserVerificationRequired(false);
+			//assert.SetUserPresenceRequired(false);
+			//assert.SetUserVerificationRequired(false);
 
 			// confiugre the device
-			if (options.timeout.TotalSeconds > 0.0f)
-			{
-				device.SetTimeout(options.timeout);
-			}
+			//if (options.timeout.TotalSeconds > 0.0f)
+			//{
+			//	device.SetTimeout(options.timeout);
+			//}
 
 			// get the assertion, and close the device
 			device.GetAssert(assert, null); // note: blocks for a long time!
 			device.Close();
 
 			// convert the assertion response into the form required by II (cbor)
-			return SerializeAssertion(assert[0], clientDataBytes);
+			return SerializeAssertion(assert[0], clientData);
 		}
 
 	}
@@ -114,7 +115,15 @@ namespace EdjCase.ICP.InternetIdentity
 		{
 			this.device = device ?? throw new System.InvalidOperationException("Devices must be non-null");
 			this.signerOptions = signerOptions ?? WebAuthnIdentitySignerOptions.Default;
-			this.publicKey = DerCosePublicKey.FromDer(device.Pubkey.ToArray());
+
+			// TODO: This Pubkey is WRONG! We are passing the DER encoded pubkey to the constructor
+			// which assumes it gets the 'raw' bytes (i.e. the pubkey-type specific encoding).
+			// however, somewhere downstream functionality relies on this and incorrectly interprets
+			// the 'raw' bytes as the DER encoded bytes, so we have to do this for now.
+			//
+			// we should be doing:
+			// this.publicKey = DerCosePublicKey.FromDer(device.Pubkey.ToArray());
+			this.publicKey = new DerCosePublicKey(device.Pubkey.ToArray());
 		}
 
 		public override IPublicKey GetPublicKey() => this.publicKey;
