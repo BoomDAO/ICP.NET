@@ -11,6 +11,30 @@ using System.Runtime.CompilerServices;
 
 namespace EdjCase.ICP.InternetIdentity
 {
+	internal class DisposeAction : System.IDisposable
+	{
+		public DisposeAction(System.Action act)
+		{
+			this._act = act;
+		}
+
+		public void Dispose()
+		{
+			this._act?.Invoke();
+		}
+
+		private System.Action _act;
+	}
+
+	internal static class Fido2Ext
+	{
+		public static DisposeAction OpenAuto(this FidoDevice device, string deviceName)
+		{
+			device.Open(deviceName);
+			return new DisposeAction(() => device.Close());
+		}
+	}
+
 	public class WebAuthnIdentitySignerOptions
 	{
 		public readonly System.TimeSpan timeout = System.TimeSpan.FromSeconds(60.0);
@@ -69,7 +93,7 @@ namespace EdjCase.ICP.InternetIdentity
 		public static byte[] Fido2AssertSync(byte[] challenge, FidoAssertion assert, WebAuthnIdentitySignerOptions options, IEnumerable<IIClient.DeviceData> devices)
 		{
 			using var device = new FidoDevice();
-			device.Open(GetFidoDeviceNameForSign());
+			using var _opened = device.OpenAuto(GetFidoDeviceNameForSign());
 
 			var (clientData, clientDataBytes) = GetClientData(challenge);
 
@@ -97,9 +121,8 @@ namespace EdjCase.ICP.InternetIdentity
 			//	device.SetTimeout(options.timeout);
 			//}
 
-			// get the assertion, and close the device
+			// get the assertion
 			device.GetAssert(assert, null); // note: blocks for a long time!
-			device.Close();
 
 			// convert the assertion response into the form required by II (cbor)
 			return SerializeAssertion(assert[0], clientData);
