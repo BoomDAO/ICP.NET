@@ -48,8 +48,8 @@ namespace EdjCase.ICP.Agent.Identity
 		}
 
 		public static DelegationChain Create(
-			SigningIdentityBase identity,
-			IPublicKey publicKey,
+			SigningIdentityBase identity, // from
+			IPublicKey publicKey,         // to
 			ICTimestamp expiration,
 			DelegationChain? previousChain = null,
 			List<Principal>? principalIds = null)
@@ -57,7 +57,7 @@ namespace EdjCase.ICP.Agent.Identity
 			SignedDelegation signedDelegation = SignedDelegation.Create(identity, publicKey, expiration, principalIds);
 			List<SignedDelegation> delegations = previousChain?.Delegations ?? new List<SignedDelegation>();
 			delegations.Add(signedDelegation);
-			return new DelegationChain(publicKey, delegations);
+			return new DelegationChain(identity.GetPublicKey(), delegations);
 		}
 	}
 
@@ -80,7 +80,7 @@ namespace EdjCase.ICP.Agent.Identity
 			ICTimestamp expiration,
 			List<Principal>? targets = null)
 		{
-			var delegation = new Delegation(publicKey.GetRawBytes(), expiration, targets);
+			var delegation = new Delegation(publicKey.GetDerEncodedBytes(), expiration, targets);
 			Dictionary<string, IHashable> hashable = delegation.BuildHashableItem();
 			// The signature is calculated by signing the concatenation of the domain separator
 			// and the message.
