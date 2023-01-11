@@ -10,6 +10,7 @@ using System.Linq;
 using Newtonsoft.Json;
 
 using EdjCase.ICP.InternetIdentity;
+using System.Threading;
 
 namespace Jsonnable
 {
@@ -92,6 +93,23 @@ public class App
 
 	public static async Task Main(string[] args)
 	{
+		var run = Run();
+		await Polling(run);
+	}
+
+	public static async Task Polling(Task t)
+	{
+		var sw = System.Diagnostics.Stopwatch.StartNew();
+
+		while (!t.IsCompleted)
+		{
+			Console.WriteLine($"Waiting for {sw.Elapsed}...");
+			await Task.Delay(1000);
+		}
+	}
+
+	public static async Task Run()
+	{
 		var identitySaved = GetIdentity();
 
 		var userNumber = 1980705ul;
@@ -120,7 +138,12 @@ public class App
 			canisterId,
 			"get_account_data",
 			CandidArg.Empty());
-
 		Console.WriteLine(response.ToString());
+
+		var response2 = await agent.CallAndWaitAsync(
+			canisterId,
+			"get_owned_objects",
+			CandidArg.Empty());
+		Console.WriteLine(response2.ToString());
 	}
 }

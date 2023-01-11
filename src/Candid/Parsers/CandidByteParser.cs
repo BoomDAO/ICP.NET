@@ -114,7 +114,6 @@ namespace EdjCase.ICP.Candid.Parsers
         {
             private List<TypeInfo> Types { get; }
             public CandidDebugTracer Tracer { get; }
-            private int referenceCount = 0;
 
 
             public DefinitionResolver(List<Func<DefinitionResolver, CandidCompoundType>> types)
@@ -131,7 +130,8 @@ namespace EdjCase.ICP.Candid.Parsers
                     switch (defOrRef.Type)
                     {
                         case DefintionOrReferenceType.Reference:
-                            TypeInfo typeInfo = this.Types[(int)defOrRef.ReferenceIndex!];
+							var referenceIndex = (int)defOrRef.ReferenceIndex!;
+							TypeInfo typeInfo = this.Types[(int)defOrRef.ReferenceIndex!];
 
                             // If not resolved, try to resolve
                             if (!typeInfo.ResolvingOrResolved)
@@ -154,7 +154,7 @@ namespace EdjCase.ICP.Candid.Parsers
                                 return typeInfo.ResolvedType;
                             }
                             // If neither, then it is 'resolving', meaning it is a recursive type
-                            typeInfo.RecursiveId = CandidId.Parse($"rec_{++this.referenceCount}"); // Create a new reference to mark parent object
+                            typeInfo.RecursiveId = CandidId.Parse($"rec_{referenceIndex}");
                             this.Tracer.RecursiveReference(typeInfo.RecursiveId);
                             // Give func to resolve the type which WILL be resolved, but not yet
                             return new CandidReferenceType(typeInfo.RecursiveId);
