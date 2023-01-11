@@ -13,38 +13,45 @@ namespace EdjCase.ICP.Candid.Models
 			0x2b, 0x06, 0x01, 0x04, 0x01, 0x83, 0xb8, 0x43, 0x01, 0x01, // DER encoded COSE
 		};
 
-		public byte[] Value { get; }
-
-		public DerCosePublicKey(byte[] value)
+		protected DerCosePublicKey(byte[]? rawBytes, byte[]? derEncodedBytes)
 		{
-			this.Value = value ?? throw new ArgumentNullException(nameof(value));
-		}
-
-		public byte[] ComputeHash(IHashFunction hashFunction)
-		{
-			return hashFunction.ComputeHash(this.Value);
-		}
-
-		public byte[] GetDerEncodedBytes()
-		{
-			return DerEncodingUtil.EncodePublicKey(this.Value, DER_COSE_OID);
+			this._rawBytes = rawBytes;
+			this._derEncodedBytes = derEncodedBytes;
 		}
 
 		public static DerCosePublicKey FromDer(byte[] derEncodedPublicKey)
 		{
-			byte[] value = DerEncodingUtil.DecodePublicKey(derEncodedPublicKey, DER_COSE_OID);
-			return new DerCosePublicKey(value);
+			return new DerCosePublicKey(null, derEncodedPublicKey);
+		}
+
+		public static DerCosePublicKey FromRaw(byte[] rawBytes)
+		{
+			return new DerCosePublicKey(rawBytes, null);
+		}
+
+		public byte[] ComputeHash(IHashFunction hashFunction)
+		{
+			throw new System.NotImplementedException("TODO: unclear how this is used");
+			//return hashFunction.ComputeHash(this.Value);
+		}
+
+		public byte[] GetDerEncodedBytes()
+		{
+			return this._derEncodedBytes = this._derEncodedBytes ?? DerEncodingUtil.EncodePublicKey(this._rawBytes!, DER_COSE_OID);
 		}
 
 		public byte[] GetRawBytes()
 		{
-			return this.Value;
+			return this._rawBytes = this._rawBytes ?? DerEncodingUtil.DecodePublicKey(this._derEncodedBytes!, DER_COSE_OID);
 		}
 
 		public byte[] GetOid()
 		{
 			return DER_COSE_OID;
 		}
+
+		private byte[]? _rawBytes;
+		private byte[]? _derEncodedBytes;
 	}
 }
 

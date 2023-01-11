@@ -115,15 +115,7 @@ namespace EdjCase.ICP.InternetIdentity
 		{
 			this.device = device ?? throw new System.InvalidOperationException("Devices must be non-null");
 			this.signerOptions = signerOptions ?? WebAuthnIdentitySignerOptions.Default;
-
-			// TODO: This Pubkey is WRONG! We are passing the DER encoded pubkey to the constructor
-			// which assumes it gets the 'raw' bytes (i.e. the pubkey-type specific encoding).
-			// however, somewhere downstream functionality relies on this and incorrectly interprets
-			// the 'raw' bytes as the DER encoded bytes, so we have to do this for now.
-			//
-			// we should be doing:
-			// this.publicKey = DerCosePublicKey.FromDer(device.Pubkey.ToArray());
-			this.publicKey = new DerCosePublicKey(device.Pubkey.ToArray());
+			this.publicKey = DerCosePublicKey.FromDer(device.Pubkey.ToArray());
 		}
 
 		public override IPublicKey GetPublicKey() => this.publicKey;

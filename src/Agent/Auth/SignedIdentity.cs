@@ -34,7 +34,7 @@ namespace EdjCase.ICP.Agent.Auth
 			byte[] domainSeparator = Encoding.UTF8.GetBytes("\x0Aic-request");
 			Signature senderSignature = this.Sign(domainSeparator.Concat(contentHash).ToArray());
 			List<SignedDelegation>? senderDelegations = this.GetSenderDelegations();
-			return new SignedContent(content, senderPublicKey.GetRawBytes(), senderDelegations, senderSignature);
+			return new SignedContent(content, senderPublicKey.GetDerEncodedBytes(), senderDelegations, senderSignature);
 		}
 	}
 }
