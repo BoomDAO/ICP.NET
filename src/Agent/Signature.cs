@@ -1,6 +1,7 @@
-﻿using EdjCase.ICP.Candid.Crypto;
+using EdjCase.ICP.Candid.Crypto;
 using EdjCase.ICP.Candid.Models;
 using System;
+using System.Linq;
 
 namespace EdjCase.ICP.Agent
 {
@@ -11,6 +12,10 @@ namespace EdjCase.ICP.Agent
 		public Signature(byte[] value)
 		{
 			this.Value = value ?? throw new ArgumentNullException(nameof(value));
+		}
+		public Signature(System.Collections.Generic.IReadOnlyList<byte> value)
+		{
+			this.Value = value.ToArray() ?? throw new ArgumentNullException(nameof(value));
 		}
 
 		public byte[] ComputeHash(IHashFunction hashFunction)

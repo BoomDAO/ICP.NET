@@ -20,6 +20,27 @@ namespace EdjCase.ICP.InternetIdentity
 		}
 	}
 
+	public static class IIModelConvertExt
+	{
+		public static Delegation Convert(this IIClient.Delegation deletation)
+		{
+			return new Delegation(
+				deletation.Pubkey.ToArray(),
+				ICTimestamp.FromNanoSeconds(deletation.Expiration),
+				deletation.Targets.GetValueOrDefault()
+			);
+		}
+
+		public static SignedDelegation Convert(this IIClient.SignedDelegation signedDeletation)
+		{
+			return new SignedDelegation(
+				signedDeletation.Delegation.Convert(),
+				new Signature(signedDeletation.Signature)
+			);
+		}
+	}
+
+
 	public class IIConnection
 	{
 		public static readonly Principal InternetIdentityBackendCanister = Principal.FromText("rdmx6-jaaaa-aaaaa-aaadq-cai");
@@ -67,6 +88,12 @@ namespace EdjCase.ICP.InternetIdentity
 			return await this.RequestNewDelegation(userIdentity, InternetIdentityBackendCanister);
 		}
 
+
+		public async Task<AuthenticatedIIConnection> LoginToConn(ulong userNumber)
+		{
+			return new AuthenticatedIIConnection(userNumber, await this.Login(userNumber));
+		}
+
 		public async Task<IEnumerable<IIClient.DeviceData>> LookupAuthenticators(ulong userNumber)
 		{
 			var devices = await this.client.Lookup(userNumber);
@@ -74,8 +101,7 @@ namespace EdjCase.ICP.InternetIdentity
 		}
 
 		// this is responsible for converting a "direct" user identity, which identifies the user,
-		// and can be used to sign for all canisters, into a delegation identity, which is anonymized and
-		// can only be used to sign for a specific target canister.
+		// into a delegation identity, which is anonymized, has an expiry, etc.
 		//
 		// corresponds to `requestFEDelegation' from @dfinity/internet-identity
 		public async Task<DelegationIdentity> RequestNewDelegation(SigningIdentityBase userSignIdentity, Principal targetCanisterId)
@@ -90,8 +116,49 @@ namespace EdjCase.ICP.InternetIdentity
 			return new DelegationIdentity(sessionKey, delegationChain);
 		}
 
+
+
 		private IAgent? _agent;
 		private InternetIdentityApiClient? _client;
 		public IIdentity? _identity;
+	}
+
+
+	public class AuthenticatedIIConnection : IIConnection
+	{
+		public readonly ulong UserNumber;
+
+
+		public AuthenticatedIIConnection(ulong UserNumber, IIdentity identity)
+		{
+			this.UserNumber = UserNumber;
+			this.identity = identity;
+		}
+
+
+		public async Task<DelegationIdentity> PrepareAndGetDelegation(string hostname, SigningIdentityBase sessionKey, ulong? maxTimeToLive = null)
+		{
+			var sessionPubkey = sessionKey.GetPublicKey().GetDerEncodedBytes().ToList();
+
+			var (userkey, timestamp) = await this.client.PrepareDelegation(
+				this.UserNumber,
+				hostname,
+				sessionPubkey,
+				new EdjCase.ICP.Candid.Models.OptionalValue<ulong>(maxTimeToLive.HasValue, maxTimeToLive ?? 0)
+			);
+			var signedDelegation = (await this.client.GetDelegation(
+				this.UserNumber,
+				hostname,
+				sessionPubkey,
+				timestamp
+			)).AsSignedDelegation().Convert();
+
+			return new DelegationIdentity(
+					sessionKey,
+					new DelegationChain(
+						DerPublicKey.FromDer(userkey.ToArray()), // TODO: no copy
+						new List<SignedDelegation> { signedDelegation }));
+		}
+
 	}
 }
