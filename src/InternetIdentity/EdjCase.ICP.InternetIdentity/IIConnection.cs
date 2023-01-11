@@ -45,7 +45,7 @@ namespace EdjCase.ICP.InternetIdentity
 	{
 		public static readonly Principal InternetIdentityBackendCanister = Principal.FromText("rdmx6-jaaaa-aaaaa-aaadq-cai");
 
-		public IIdentity identity
+		public IIdentity Identity
 		{
 			get => this._identity ?? new AnonymousIdentity();
 			set
@@ -56,19 +56,19 @@ namespace EdjCase.ICP.InternetIdentity
 			}
 		}
 
-		public IAgent agent
+		public IAgent Agent
 		{
 			get
 			{
-				return this._agent ?? (this._agent = new HttpAgent(this.identity));
+				return this._agent ?? (this._agent = new HttpAgent(this.Identity));
 			}
 		}
 		
-		public InternetIdentityApiClient client
+		public InternetIdentityApiClient Client
 		{
 			get
 			{
-				return this._client ?? (this._client = new InternetIdentityApiClient(this.agent, InternetIdentityBackendCanister));
+				return this._client ?? (this._client = new InternetIdentityApiClient(this.Agent, InternetIdentityBackendCanister));
 			}
 		}
 
@@ -96,7 +96,7 @@ namespace EdjCase.ICP.InternetIdentity
 
 		public async Task<IEnumerable<IIClient.DeviceData>> LookupAuthenticators(ulong userNumber)
 		{
-			var devices = await this.client.Lookup(userNumber);
+			var devices = await this.Client.Lookup(userNumber);
 			return devices.Where(d => d.Purpose.Tag == IIClient.PurposeTag.Authentication);
 		}
 
@@ -132,7 +132,7 @@ namespace EdjCase.ICP.InternetIdentity
 		public AuthenticatedIIConnection(ulong UserNumber, IIdentity identity)
 		{
 			this.UserNumber = UserNumber;
-			this.identity = identity;
+			this.Identity = identity;
 		}
 
 
@@ -140,13 +140,13 @@ namespace EdjCase.ICP.InternetIdentity
 		{
 			var sessionPubkey = sessionKey.GetPublicKey().GetDerEncodedBytes().ToList();
 
-			var (userkey, timestamp) = await this.client.PrepareDelegation(
+			var (userkey, timestamp) = await this.Client.PrepareDelegation(
 				this.UserNumber,
 				hostname,
 				sessionPubkey,
-				new EdjCase.ICP.Candid.Models.OptionalValue<ulong>(maxTimeToLive.HasValue, maxTimeToLive ?? 0)
+				new OptionalValue<ulong>(maxTimeToLive.HasValue, maxTimeToLive ?? 0)
 			);
-			var signedDelegation = (await this.client.GetDelegation(
+			var signedDelegation = (await this.Client.GetDelegation(
 				this.UserNumber,
 				hostname,
 				sessionPubkey,
