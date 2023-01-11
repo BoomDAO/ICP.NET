@@ -24,11 +24,22 @@ namespace EdjCase.ICP.InternetIdentity
 	{
 		public static readonly Principal InternetIdentityBackendCanister = Principal.FromText("rdmx6-jaaaa-aaaaa-aaadq-cai");
 
+		public IIdentity identity
+		{
+			get => this._identity ?? new AnonymousIdentity();
+			set
+			{
+				this._identity = value;
+				this._agent = null;
+				this._client = null;
+			}
+		}
+
 		public IAgent agent
 		{
 			get
 			{
-				return this._agent ?? (this._agent = new HttpAgent(new AnonymousIdentity()));
+				return this._agent ?? (this._agent = new HttpAgent(this.identity));
 			}
 		}
 		
@@ -44,7 +55,7 @@ namespace EdjCase.ICP.InternetIdentity
 		{
 		}
 
-		public async Task<DelegationIdentity> Login(ulong userNumber, Principal targetCanisterId)
+		public async Task<DelegationIdentity> Login(ulong userNumber)
 		{
 			var authenticatorDevices = await this.LookupAuthenticators(userNumber);
 			if (authenticatorDevices.FirstOrDefault() == null)
@@ -53,7 +64,7 @@ namespace EdjCase.ICP.InternetIdentity
 			}
 
 			var userIdentity = MultiWebAuthnIdentity.FromDevices(authenticatorDevices);
-			return await this.RequestNewDelegation(userIdentity, targetCanisterId);
+			return await this.RequestNewDelegation(userIdentity, InternetIdentityBackendCanister);
 		}
 
 		public async Task<IEnumerable<IIClient.DeviceData>> LookupAuthenticators(ulong userNumber)
@@ -81,5 +92,6 @@ namespace EdjCase.ICP.InternetIdentity
 
 		private IAgent? _agent;
 		private InternetIdentityApiClient? _client;
+		public IIdentity? _identity;
 	}
 }
