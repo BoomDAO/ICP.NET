@@ -1,22 +1,15 @@
 using EdjCase.ICP.Agent.Agents;
-using EdjCase.ICP.Agent.Auth;
 using EdjCase.ICP.Agent.Identity;
-using EdjCase.ICP.Agent.Responses;
 using EdjCase.ICP.Candid.Models;
-using Sample.Shared.Governance;
-using Sample.Shared.Governance.Models;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using Path = EdjCase.ICP.Candid.Models.Path;
-using Newtonsoft.Json.Linq;
-using System.Diagnostics.Contracts;
 using EdjCase.ICP.Candid.Utilities;
 using System.Numerics;
 using Candid = EdjCase.ICP.Candid;
 using System.Linq;
-using EdjCase.ICP.Agent;
 using Newtonsoft.Json;
+
+using EdjCase.ICP.InternetIdentity;
 
 namespace Jsonnable
 {
@@ -63,6 +56,7 @@ public class App
 			targets: x.targets?.Select(Principal.FromHex).ToList()
 		);
 	}
+
 	public static SignedDelegation FromJSON(Jsonnable.SignedDelegation x)
 	{
 		return new SignedDelegation(FromJSON(x.delegation), new(ByteUtil.FromHexString(x.signature)));
@@ -70,7 +64,7 @@ public class App
 	public static DelegationChain FromJSON(Jsonnable.DelegationChain x)
 	{
 		return new DelegationChain(
-			new ED25519PublicKey(ByteUtil.FromHexString(x.publicKey)), // Note: assumes that the public key has the correct encoding
+			new DerEncodedPublicKey(ByteUtil.FromHexString(x.publicKey)),
 			x.delegations.Select(FromJSON).ToList());
 	}
 
@@ -89,7 +83,7 @@ public class App
 			FromJSON(x.identity));
 	}
 
-	public static IIdentity GetIdentity()
+	public static DelegationIdentity GetIdentity()
 	{
 		string identityStr = System.IO.File.ReadAllText("test_SessionIdentity.json");
 		var identity = JsonConvert.DeserializeObject<Jsonnable.DelegationIdentity>(identityStr);
@@ -98,12 +92,29 @@ public class App
 
 	public static async Task Main(string[] args)
 	{
+		var identitySaved = GetIdentity();
+
+		var userNumber = 1980705ul;
+
+		// this is the frontend canister to which we want to authenticate.
+		// we can pretend to to be this host for now (to get the same anonymized identity as in the browser)...
+		// in practice we should use derivation origins.
+		var hostname = "https://6nx2y-qiaaa-aaaal-qa6wq-cai.ic0.app";
+
+		// this is the backend canister with which we want to communicate.
+		var canisterId = Principal.FromText("6eure-gaaaa-aaaal-qa6xa-cai");
+
+		// authenticate to II
+		var anonConn = new IIConnection();
+		var authenticatedConn = await anonConn.LoginToConn(userNumber);
+		
+		// get delegation identity for sessions
+		ED25519Identity sessionKey = ED25519Identity.Generate();
+		var sessionDelegationIdentity = await authenticatedConn.PrepareAndGetDelegation(hostname, sessionKey);
+
+		// make a call to the canister
 		Uri url = new Uri($"https://ic0.app");
-
-		var identity = GetIdentity();
-		IAgent agent = new HttpAgent(identity, url);
-
-		Principal canisterId = Principal.FromText("6eure-gaaaa-aaaal-qa6xa-cai");
+		IAgent agent = new HttpAgent(sessionDelegationIdentity, url);
 
 		var response = await agent.CallAndWaitAsync(
 			canisterId,
