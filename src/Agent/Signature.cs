@@ -13,9 +13,10 @@ namespace EdjCase.ICP.Agent
 		{
 			this.Value = value ?? throw new ArgumentNullException(nameof(value));
 		}
-		public Signature(System.Collections.Generic.IReadOnlyList<byte> value)
+
+		public static Signature Copy(System.Collections.Generic.IReadOnlyList<byte> value)
 		{
-			this.Value = value.ToArray() ?? throw new ArgumentNullException(nameof(value));
+			return new Signature(value.ToArray());
 		}
 
 		public byte[] ComputeHash(IHashFunction hashFunction)

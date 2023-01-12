@@ -35,7 +35,7 @@ namespace EdjCase.ICP.InternetIdentity
 		{
 			return new SignedDelegation(
 				signedDeletation.Delegation.Convert(),
-				new Signature(signedDeletation.Signature)
+				Signature.Copy(signedDeletation.Signature)
 			);
 		}
 	}
