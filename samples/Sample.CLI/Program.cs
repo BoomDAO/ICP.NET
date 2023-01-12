@@ -68,7 +68,7 @@ public class App
 	public async Task<DelegationIdentity> GetOrCreateDelegationIdentity(ulong userNumber, string hostname)
 	{
 		var identity = GetDelegationIdentityFromFile();
-		if (identity != null) return identity;
+		if (identity != null && identity.Chain.IsExpirationValid(ICTimestamp.Now())) return identity;
 
 		identity = await CreateDelegationIdentity(userNumber, hostname);
 

@@ -59,6 +59,12 @@ namespace EdjCase.ICP.Agent.Identity
 			delegations.Add(signedDelegation);
 			return new DelegationChain(identity.GetPublicKey(), delegations);
 		}
+
+
+		public bool IsExpirationValid(ICTimestamp ForTime)
+		{
+			return this.Delegations.All(d => d.Delegation.IsExpirationValid(ForTime));
+		}
 	}
 
 	public class SignedDelegation : IHashable
@@ -157,6 +163,11 @@ namespace EdjCase.ICP.Agent.Identity
 			return this.BuildHashableItem()
 				.ToHashable()
 				.ComputeHash(hashFunction);
+		}
+
+		public bool IsExpirationValid(ICTimestamp ForTime)
+		{
+			return this.Expiration >= ForTime;
 		}
 
 		public class Properties
