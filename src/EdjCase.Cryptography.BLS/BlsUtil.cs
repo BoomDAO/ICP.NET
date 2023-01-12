@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography.X509Certificates;
 
 namespace EdjCase.Cryptography.BLS
 {
@@ -44,10 +45,18 @@ namespace EdjCase.Cryptography.BLS
 			EnsureInitialized();
 
 			var blsPublicKey = default(Interop.BlsPublicKey);
-			int publicKeyBytesRead = Interop.PublicKeyDeserialize(ref blsPublicKey, publicKey, (ulong)publicKey!.Length);
+			int publicKeyBytesRead;
+			unsafe
+			{
+				fixed (byte* publicKeyPtr = publicKey)
+				{
+					publicKeyBytesRead = Interop.PublicKeyDeserialize(ref blsPublicKey, publicKeyPtr, publicKey!.Length);
+				}
+			}
+			//int publicKeyBytesRead = Interop.PublicKeyDeserialize(ref blsPublicKey, publicKey, (ulong)publicKey!.Length);
 			if (publicKeyBytesRead != publicKey.Length)
 			{
-				throw new Exception($"Error deserializing BLS public key, length: {publicKeyBytesRead}");
+				throw new Exception($"Error deserializing BLS public key");
 			}
 
 			var blsSignature = default(Interop.BlsSignature);

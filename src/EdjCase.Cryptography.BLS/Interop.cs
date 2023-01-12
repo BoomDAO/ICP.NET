@@ -46,7 +46,7 @@ namespace EdjCase.Cryptography.BLS
 
 		//BLS_DLL_API mclSize blsPublicKeyDeserialize(blsPublicKey* pub, const void* buf, mclSize bufSize);
 		[DllImport(DllName, EntryPoint = "blsPublicKeyDeserialize")]
-		public static extern unsafe int PublicKeyDeserialize(ref BlsPublicKey pub, [In] byte[] buf, ulong bufSize);
+		public static extern unsafe int PublicKeyDeserialize([In, Out] ref BlsPublicKey pub, byte* buf, int bufSize);
 
 		//BLS_DLL_API mclSize blsSignatureDeserialize(blsSignature* sig, const void* buf, mclSize bufSize);
 		[DllImport(DllName, EntryPoint = "blsSignatureDeserialize")]
@@ -62,7 +62,7 @@ namespace EdjCase.Cryptography.BLS
 
 		public struct BlsSignature
 		{
-			public MclBnG2 v;
+			public MclBnG1 v;
 
 			public override string ToString()
 			{
@@ -104,10 +104,48 @@ namespace EdjCase.Cryptography.BLS
 				return $"FP(ulong[{this.d_0:x},{this.d_1:x},{this.d_2:x},{this.d_3:x},{this.d_4:x},{this.d_5:x}])";
 			}
 		}
-		[StructLayout(LayoutKind.Sequential)]
-		public unsafe struct BlsPublicKey
+		public struct BlsPublicKey
 		{
-			private fixed ulong v[MCLBN_FP_UNIT_SIZE * 6];
+			public MclBnG2 v;
+
+			public override string ToString()
+			{
+				return this.v.ToString();
+			}
+		}
+
+		public struct BlsSecretKey
+		{
+			public MclBnFr v;
+
+			public override string ToString()
+			{
+				return this.v.ToString();
+			}
+		}
+		public struct MclBnFr
+		{
+			public ulong d_0;
+			public ulong d_1;
+			public ulong d_2;
+			public ulong d_3;
+
+			public override string ToString()
+			{
+				return $"FR(ulong[{this.d_0:x},{this.d_1:x},{this.d_2:x},{this.d_3:x}])";
+			}
+		}
+
+		public struct MclBnG1
+		{
+			public MclBnFp x;
+			public MclBnFp y;
+			public MclBnFp z;
+
+			public override string ToString()
+			{
+				return $"G1(x={this.x},y={this.y},z={this.z})";
+			}
 		}
 	}
 

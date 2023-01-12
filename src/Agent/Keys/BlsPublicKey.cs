@@ -29,11 +29,6 @@ namespace EdjCase.ICP.Agent.Keys
 			return hashFunction.ComputeHash(this.Value);
 		}
 
-
-		const int sequenceTagNumber = 48;
-		const int oidTagNumber = 6;
-		const int bitStringTagNumber = 3;
-
 		//1.3.6.1.4.1.44668.5.3.1.2.1
 		static byte[] algorithmOid = new byte[]
 		{
@@ -58,8 +53,9 @@ namespace EdjCase.ICP.Agent.Keys
 			//     OBJECT IDENTIFIER 1.3.6.1.4.1.44668.5.3.1.2.1
 			//     OBJECT IDENTIFIER 1.3.6.1.4.1.44668.5.3.2.1
 			//   BIT STRING(768 bit) …
-
-			return new BlsPublicKey(new byte[0]);
+			string a = "308182301d060d2b0601040182dc7c0503010201060c2b0601040182dc7c05030201036100";
+			byte[] prefix = ByteUtil.FromHexString(a);
+			return new BlsPublicKey(derEncodedPublicKey.Skip(prefix.Length).ToArray());
 		}
 
 		public byte[] GetRawBytes()
