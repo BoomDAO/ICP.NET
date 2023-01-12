@@ -3,20 +3,22 @@ using EdjCase.ICP.Agent.Identity;
 using EdjCase.ICP.Candid.Models;
 using System;
 using System.Threading.Tasks;
-using EdjCase.ICP.Candid.Utilities;
 using EdjCase.ICP.InternetIdentity;
-using Dahomey.Cbor;
-using Dahomey.Cbor.Util;
 using McMaster.Extensions.CommandLineUtils;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Bson;
+using EdjCase.ICP.Serialization;
 
 
 [HelpOption("-h|--help")]
 public class App
 {
+
 	[Option("-u|--user-number", Description = "Authenticate as this user")]
 	public ulong UserNumber { get; set; }
+
+
+	[Option("--write-format", Description = "Write session data in this format")]
+	public SerializedFormat WriteFormat { get; set; }
+
 
 	public static void Main(string[] args) => CommandLineApplication.Execute<App>(args);
 
@@ -42,13 +44,8 @@ public class App
 	{
 		try
 		{
-			var raw = Convert.FromBase64String(System.IO.File.ReadAllText("test_SessionIdentity.json"));
-			var ms = new System.IO.MemoryStream(raw);
-			using (var reader = new BsonDataReader(ms))
-			{
-				JsonSerializer serializer = new JsonSerializer();
-				return serializer.Deserialize<DelegationIdentity>(reader);
-			}
+			var raw = System.IO.File.ReadAllBytes("test_SessionIdentity.json");
+			return SerializationUtil.Deserialize<DelegationIdentity>(SerializationUtil.DefaultSerializer, raw);
 		}
 		catch
 		{
@@ -68,20 +65,16 @@ public class App
 		return sessionDelegationIdentity;
 	}
 
-	public static async Task<DelegationIdentity> GetOrCreateDelegationIdentity(ulong userNumber, string hostname)
+	public async Task<DelegationIdentity> GetOrCreateDelegationIdentity(ulong userNumber, string hostname)
 	{
 		var identity = GetDelegationIdentityFromFile();
 		if (identity != null) return identity;
 
 		identity = await CreateDelegationIdentity(userNumber, hostname);
 
-		var ms = new System.IO.MemoryStream();
-		using (var writer = new BsonDataWriter(ms))
-		{
-			JsonSerializer serializer = new JsonSerializer();
-			serializer.Serialize(writer, identity);
-		}
-		System.IO.File.WriteAllText("test_SessionIdentity.json", Convert.ToBase64String(ms.ToArray()));
+		System.IO.File.WriteAllBytes(
+			"test_SessionIdentity.json",
+			SerializationUtil.Serialize(SerializationUtil.DefaultSerializer, identity, this.WriteFormat));
 
 		return identity;
 	}
@@ -93,7 +86,7 @@ public class App
 		// in practice we should use derivation origins.
 		var hostname = "https://6nx2y-qiaaa-aaaal-qa6wq-cai.ic0.app";
 
-		var sessionDelegationIdentity = await GetOrCreateDelegationIdentity(this.UserNumber, hostname);
+		var sessionDelegationIdentity = await this.GetOrCreateDelegationIdentity(this.UserNumber, hostname);
 
 		// this is the backend canister with which we want to communicate.
 		var canisterId = Principal.FromText("6eure-gaaaa-aaaal-qa6xa-cai");
