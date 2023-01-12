@@ -46,7 +46,7 @@ namespace EdjCase.ICP.Serialization
 		public static JsonSerializer MakeJsonSerializer(JsonSerializer? serializer = null)
 		{
 			serializer = serializer ?? new JsonSerializer();
-			serializer.TypeNameHandling = TypeNameHandling.All;
+			serializer.TypeNameHandling = TypeNameHandling.Auto;
 			serializer.Converters.Add(new UnboundedUIntJsonConverter());
 			return serializer;
 		}
