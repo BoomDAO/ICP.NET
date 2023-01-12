@@ -44,7 +44,7 @@ namespace EdjCase.ICP.InternetIdentity
 
 	public static class WebAuthnIdentitySigner
 	{
-		private static string ClientDataTemplate = "{{\"type\": \"webauthn.get\", \"challenge\": \"{0}\", \"origin\": \"https://identity.ic0.app\", \"crossOrigin\": false}}";
+		private static string ClientDataTemplate = "{{\"type\":\"webauthn.get\",\"challenge\":\"{0}\",\"origin\":\"https://identity.ic0.app\",\"crossOrigin\":false}}";
 		private static string RpId = "identity.ic0.app";
 		private static byte[] authenticator_data = System.Text.Encoding.ASCII.GetBytes("authenticator_data");
 		private static byte[] client_data_json = System.Text.Encoding.ASCII.GetBytes("client_data_json");
