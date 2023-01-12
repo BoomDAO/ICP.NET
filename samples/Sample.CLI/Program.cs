@@ -4,96 +4,25 @@ using EdjCase.ICP.Candid.Models;
 using System;
 using System.Threading.Tasks;
 using EdjCase.ICP.Candid.Utilities;
-using System.Numerics;
-using Candid = EdjCase.ICP.Candid;
-using System.Linq;
-using Newtonsoft.Json;
-
 using EdjCase.ICP.InternetIdentity;
-using System.Threading;
-
-namespace Jsonnable
-{
-	public class Delegation
-	{
-		public string pubkey = "";
-		public string expiration = "";
-		public string[]? targets;
-	}
-
-	public class SignedDelegation
-	{
-		public string signature = "";
-		public Delegation delegation = new();
-	}
-
-	public class DelegationChain
-	{
-		public string publicKey = "";
-		public SignedDelegation[] delegations = System.Array.Empty<SignedDelegation>();
-	}
-
-	public class ED25519Identity
-	{
-		public string privateKey = "";
-		public string publicKey = "";
-	}
-
-	public class DelegationIdentity
-	{
-		public ED25519Identity sessionKey = new();
-		public DelegationChain identity = new();
-	}
-}
+using Dahomey.Cbor;
+using Dahomey.Cbor.Util;
+using McMaster.Extensions.CommandLineUtils;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Bson;
 
 
+[HelpOption("-h|--help")]
 public class App
 {
-	public static Delegation FromJSON(Jsonnable.Delegation x)
-	{
-		return new Delegation(
-			publicKey: ByteUtil.FromHexString(x.pubkey),
-			expiration: new (new Candid.UnboundedUInt(BigInteger.Parse(x.expiration, System.Globalization.NumberStyles.AllowHexSpecifier))),
-			targets: x.targets?.Select(Principal.FromHex).ToList()
-		);
-	}
+	[Option("-u|--user-number", Description = "Authenticate as this user")]
+	public ulong UserNumber { get; set; }
 
-	public static SignedDelegation FromJSON(Jsonnable.SignedDelegation x)
-	{
-		return new SignedDelegation(FromJSON(x.delegation), new(ByteUtil.FromHexString(x.signature)));
-	}
-	public static DelegationChain FromJSON(Jsonnable.DelegationChain x)
-	{
-		return new DelegationChain(
-			new DerEncodedPublicKey(ByteUtil.FromHexString(x.publicKey)),
-			x.delegations.Select(FromJSON).ToList());
-	}
+	public static void Main(string[] args) => CommandLineApplication.Execute<App>(args);
 
-	public static ED25519Identity FromJSON(Jsonnable.ED25519Identity x)
+	public async Task OnExecute()
 	{
-		return new ED25519Identity(
-			ED25519PublicKey.FromDer(ByteUtil.FromHexString(x.publicKey)),
-			ByteUtil.FromHexString(x.privateKey)
-		);
-	}
-
-	public static DelegationIdentity FromJSON(Jsonnable.DelegationIdentity x)
-	{
-		return new DelegationIdentity(
-			FromJSON(x.sessionKey),
-			FromJSON(x.identity));
-	}
-
-	public static DelegationIdentity GetIdentity()
-	{
-		string identityStr = System.IO.File.ReadAllText("test_SessionIdentity.json");
-		var identity = JsonConvert.DeserializeObject<Jsonnable.DelegationIdentity>(identityStr);
-		return FromJSON(identity);
-	}
-
-	public static async Task Main(string[] args)
-	{
-		var run = Run();
+		var run = this.Run();
 		await Polling(run);
 	}
 
@@ -108,27 +37,66 @@ public class App
 		}
 	}
 
-	public static async Task Run()
+
+	public static DelegationIdentity? GetDelegationIdentityFromFile()
 	{
-		var identitySaved = GetIdentity();
+		try
+		{
+			var raw = Convert.FromBase64String(System.IO.File.ReadAllText("test_SessionIdentity.json"));
+			var ms = new System.IO.MemoryStream(raw);
+			using (var reader = new BsonDataReader(ms))
+			{
+				JsonSerializer serializer = new JsonSerializer();
+				return serializer.Deserialize<DelegationIdentity>(reader);
+			}
+		}
+		catch
+		{
+			return null;
+		}
+	}
 
-		var userNumber = 1980705ul;
+	public static async Task<DelegationIdentity> CreateDelegationIdentity(ulong userNumber, string hostname)
+	{
+		// authenticate to II
+		var anonConn = new IIConnection();
+		var authenticatedConn = await anonConn.LoginToConn(userNumber);
 
+		// get delegation identity for sessions
+		ED25519Identity sessionKey = ED25519Identity.Generate();
+		var sessionDelegationIdentity = await authenticatedConn.PrepareAndGetDelegation(hostname, sessionKey);
+		return sessionDelegationIdentity;
+	}
+
+	public static async Task<DelegationIdentity> GetOrCreateDelegationIdentity(ulong userNumber, string hostname)
+	{
+		var identity = GetDelegationIdentityFromFile();
+		if (identity != null) return identity;
+
+		identity = await CreateDelegationIdentity(userNumber, hostname);
+
+		var ms = new System.IO.MemoryStream();
+		using (var writer = new BsonDataWriter(ms))
+		{
+			JsonSerializer serializer = new JsonSerializer();
+			serializer.Serialize(writer, identity);
+		}
+		System.IO.File.WriteAllText("test_SessionIdentity.json", Convert.ToBase64String(ms.ToArray()));
+
+		return identity;
+	}
+
+	public async Task Run()
+	{
 		// this is the frontend canister to which we want to authenticate.
 		// we can pretend to to be this host for now (to get the same anonymized identity as in the browser)...
 		// in practice we should use derivation origins.
 		var hostname = "https://6nx2y-qiaaa-aaaal-qa6wq-cai.ic0.app";
 
+		var sessionDelegationIdentity = await GetOrCreateDelegationIdentity(this.UserNumber, hostname);
+
 		// this is the backend canister with which we want to communicate.
 		var canisterId = Principal.FromText("6eure-gaaaa-aaaal-qa6xa-cai");
-
-		// authenticate to II
-		var anonConn = new IIConnection();
-		var authenticatedConn = await anonConn.LoginToConn(userNumber);
-		
-		// get delegation identity for sessions
-		ED25519Identity sessionKey = ED25519Identity.Generate();
-		var sessionDelegationIdentity = await authenticatedConn.PrepareAndGetDelegation(hostname, sessionKey);
 
 		// make a call to the canister
 		Uri url = new Uri($"https://ic0.app");
