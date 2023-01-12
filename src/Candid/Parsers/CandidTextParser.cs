@@ -99,7 +99,8 @@ namespace EdjCase.ICP.Candid.Parsers
 			var modes = new List<FuncMode>();
 			while (helper.MoveNext())
 			{
-				if (helper.CurrentToken.Type == CandidTextTokenType.SemiColon)
+				if (helper.CurrentToken.Type == CandidTextTokenType.SemiColon
+					|| helper.CurrentToken.Type == CandidTextTokenType.CloseCurlyBrace)
 				{
 					break;
 				}
@@ -170,16 +171,21 @@ namespace EdjCase.ICP.Candid.Parsers
 				string label = helper.CurrentToken.GetTextValueOrThrow();
 				helper.MoveNextOrThrow();
 				CandidType fieldType;
-				if (helper.CurrentToken.Type == CandidTextTokenType.SemiColon)
+				switch (helper.CurrentToken.Type)
 				{
-					fieldType = new CandidPrimitiveType(PrimitiveType.Null);
-					helper.MoveNextOrThrow();
-				}
-				else
-				{
-					helper.CurrentToken.ValidateType(CandidTextTokenType.Colon);
-					helper.MoveNextOrThrow();
-					fieldType = ParseType(helper);
+					case CandidTextTokenType.SemiColon:
+						fieldType = new CandidPrimitiveType(PrimitiveType.Null);
+						helper.MoveNextOrThrow();
+						break;
+					case CandidTextTokenType.Colon:
+						helper.MoveNextOrThrow();
+						fieldType = ParseType(helper);
+						break;
+					case CandidTextTokenType.CloseCurlyBrace:
+						fieldType = new CandidPrimitiveType(PrimitiveType.Null);
+						break;
+					default:
+						throw new CandidTextParseException($"Unexpected token '{helper.CurrentToken.Type}' after variant label");
 				}
 				options.Add(CandidTag.FromName(label), fieldType);
 			}
