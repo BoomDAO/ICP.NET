@@ -42,7 +42,7 @@ namespace EdjCase.ICP.Agent.Keys
 
 		public byte[] GetDerEncodedBytes()
 		{
-			return new byte[0];
+			throw new NotImplementedException(); // TODO
 		}
 
 		public static BlsPublicKey FromDer(byte[] derEncodedPublicKey)
@@ -54,7 +54,7 @@ namespace EdjCase.ICP.Agent.Keys
 			//     OBJECT IDENTIFIER 1.3.6.1.4.1.44668.5.3.2.1
 			//   BIT STRING(768 bit) …
 			string a = "308182301d060d2b0601040182dc7c0503010201060c2b0601040182dc7c05030201036100";
-			byte[] prefix = ByteUtil.FromHexString(a);
+			byte[] prefix = ByteUtil.FromHexString(a); // TODO
 			return new BlsPublicKey(derEncodedPublicKey.Skip(prefix.Length).ToArray());
 		}
 
