@@ -9,13 +9,13 @@ namespace EdjCase.ICP.Agent.Requests
 		[Dahomey.Cbor.Attributes.CborProperty(Properties.REQUEST_TYPE)]
 		public string REQUEST_TYPE { get; } = "query";
 		[Dahomey.Cbor.Attributes.CborProperty(Properties.PATHS)]
-		public List<Path> Paths { get; }
+		public List<StatePath> Paths { get; }
 		[Dahomey.Cbor.Attributes.CborProperty(Properties.SENDER)]
 		public Principal Sender { get; }
 		[Dahomey.Cbor.Attributes.CborProperty(Properties.INGRESS_EXPIRY)]
 		public ICTimestamp IngressExpiry { get; }
 
-		public ReadStateRequest(List<Path> paths, Principal sender, ICTimestamp ingressExpiry)
+		public ReadStateRequest(List<StatePath> paths, Principal sender, ICTimestamp ingressExpiry)
 		{
 			this.Paths = paths ?? throw new ArgumentNullException(nameof(paths));
 			this.IngressExpiry = ingressExpiry ?? throw new ArgumentNullException(nameof(ingressExpiry));

@@ -7,24 +7,24 @@ using System.Text;
 
 namespace EdjCase.ICP.Agent.Cbor
 {
-	internal class PathCborConverter : CborConverterBase<Path?>
+	internal class PathCborConverter : CborConverterBase<StatePath?>
 	{
-		public override Path? Read(ref CborReader reader)
+		public override StatePath? Read(ref CborReader reader)
 		{
 			if (reader.GetCurrentDataItemType() == CborDataItemType.Null)
 			{
 				return null;
 			}
-			List<PathSegment> value = CborReaderUtil.ReadArray(ref reader, this.GetArrayValue);
-			return new Path(value);
+			List<StatePathSegment> value = CborReaderUtil.ReadArray(ref reader, this.GetArrayValue);
+			return new StatePath(value);
 		}
 
-		private PathSegment GetArrayValue(ref CborReader reader)
+		private StatePathSegment GetArrayValue(ref CborReader reader)
 		{
-			return new PathSegment(reader.ReadByteString().ToArray());
+			return new StatePathSegment(reader.ReadByteString().ToArray());
 		}
 
-		public override void Write(ref CborWriter writer, Path? value)
+		public override void Write(ref CborWriter writer, StatePath? value)
 		{
 			if (value == null)
 			{
@@ -32,25 +32,25 @@ namespace EdjCase.ICP.Agent.Cbor
 				return;
 			}
 			writer.WriteBeginArray(value.Segments.Count);
-			foreach (PathSegment segment in value.Segments)
+			foreach (StatePathSegment segment in value.Segments)
 			{
 				writer.WriteByteString(segment.Value);
 			}
 		}
 	}
-	internal class PathSegmentCborConverter : CborConverterBase<PathSegment?>
+	internal class PathSegmentCborConverter : CborConverterBase<StatePathSegment?>
 	{
-		public override PathSegment? Read(ref CborReader reader)
+		public override StatePathSegment? Read(ref CborReader reader)
 		{
 			if (reader.GetCurrentDataItemType() == CborDataItemType.Null)
 			{
 				return null;
 			}
 			ReadOnlySpan<byte> value = reader.ReadByteString();
-			return new PathSegment(value.ToArray());
+			return new StatePathSegment(value.ToArray());
 		}
 
-		public override void Write(ref CborWriter writer, PathSegment? value)
+		public override void Write(ref CborWriter writer, StatePathSegment? value)
 		{
 			if (value == null)
 			{

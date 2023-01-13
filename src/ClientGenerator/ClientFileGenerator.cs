@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using Path = EdjCase.ICP.Candid.Models.Path;
+using StatePath = EdjCase.ICP.Candid.Models.StatePath;
 
 namespace EdjCase.ICP.ClientGenerator
 {
@@ -18,8 +18,8 @@ namespace EdjCase.ICP.ClientGenerator
 		{
 
 			var agent = new HttpAgent(new AnonymousIdentity(), baseUrl);
-			var candidServicePath = Path.FromSegments("canister", canisterId.Raw, "metadata", "candid:service");
-			var paths = new List<Path>
+			var candidServicePath = StatePath.FromSegments("canister", canisterId.Raw, "metadata", "candid:service");
+			var paths = new List<StatePath>
 			{
 				candidServicePath
 			};

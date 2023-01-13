@@ -80,12 +80,12 @@ namespace EdjCase.ICP.Candid.Models
 			return new HashTree(NodeType.Pruned, blob);
 		}
 
-		public HashTree? GetValue(PathSegment path)
+		public HashTree? GetValue(StatePathSegment path)
 		{
-			return this.GetValue(new Path(new List<PathSegment> { path }));
+			return this.GetValue(new StatePath(new List<StatePathSegment> { path }));
 		}
 
-		public HashTree? GetValue(Path path)
+		public HashTree? GetValue(StatePath path)
 		{
 			if (!path.Segments.Any())
 			{
@@ -94,7 +94,7 @@ namespace EdjCase.ICP.Candid.Models
 			HashTree currentTree = this;
 			for (int i = 0; i < path.Segments.Count; i++)
 			{
-				PathSegment segment = path.Segments[i];
+				StatePathSegment segment = path.Segments[i];
 				HashTree newTree;
 				switch (currentTree.Type)
 				{
@@ -115,7 +115,7 @@ namespace EdjCase.ICP.Candid.Models
 						return null;
 					case NodeType.Fork:
 						(HashTree left, HashTree right) = currentTree.AsFork();
-						var remainingPath = new Path(path.Segments.Skip(i));
+						var remainingPath = new StatePath(path.Segments.Skip(i));
 						HashTree? l = left.GetValue(remainingPath);
 						if (l != null)
 						{

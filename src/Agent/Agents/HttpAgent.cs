@@ -17,7 +17,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Path = EdjCase.ICP.Candid.Models.Path;
+using StatePath = EdjCase.ICP.Candid.Models.StatePath;
 
 namespace EdjCase.ICP.Agent.Agents
 {
@@ -119,7 +119,7 @@ namespace EdjCase.ICP.Agent.Agents
 
 		public async Task<ReadStateResponse> ReadStateAsync(
 			Principal canisterId,
-			List<Path> paths,
+			List<StatePath> paths,
 			IIdentity? identityOverride = null)
 		{
 			string url = $"/api/v2/canister/{canisterId.ToText()}/read_state";
@@ -147,8 +147,8 @@ namespace EdjCase.ICP.Agent.Agents
 		/// <returns>A request status if there is a status found. Otherwise null</returns>
 		public async Task<RequestStatus?> GetRequestStatusAsync(Principal canisterId, RequestId id)
 		{
-			var pathRequestStatus = Path.FromSegments("request_status", id.RawValue);
-			var paths = new List<Path> { pathRequestStatus };
+			var pathRequestStatus = StatePath.FromSegments("request_status", id.RawValue);
+			var paths = new List<StatePath> { pathRequestStatus };
 			ReadStateResponse response = await this.ReadStateAsync(canisterId, paths);
 			HashTree? requestStatus = response.Certificate.Tree.GetValue(pathRequestStatus);
 			string? status = requestStatus?.GetValue("status")?.AsLeaf().AsUtf8();
@@ -181,14 +181,14 @@ namespace EdjCase.ICP.Agent.Agents
 		{
 			if (this.rootKeyCache == null)
 			{
-				StatusResponse jsonObject = await this.GetStatusAsync();
+				StatusResponse jsonObject = await this.GetReplicaStatusAsync();
 				this.rootKeyCache = jsonObject.DevelopmentRootKey ?? HttpAgent.mainnetRootKey;
 			}
 			return this.rootKeyCache;
 		}
 
 
-		public async Task<StatusResponse> GetStatusAsync()
+		public async Task<StatusResponse> GetReplicaStatusAsync()
 		{
 			return await this.SendAsync<StatusResponse>("/api/v2/status");
 		}

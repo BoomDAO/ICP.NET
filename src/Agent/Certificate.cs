@@ -87,7 +87,7 @@ namespace EdjCase.ICP.Agent
 		/// <exception cref="InvalidOperationException">Throws if certificate is missing `subnet/{subnet_id}/public_key`</exception>
 		public byte[] GetPublicKey()
 		{
-			Path path = Path.FromSegments(
+			StatePath path = StatePath.FromSegments(
 				"subnet",
 				this.SubnetId.Raw,
 				"public_key"

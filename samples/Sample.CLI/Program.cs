@@ -4,7 +4,7 @@ using EdjCase.ICP.Candid.Models;
 using Sample.Shared.Governance;
 using System;
 using System.Collections.Generic;
-using Path = EdjCase.ICP.Candid.Models.Path;
+using StatePath = EdjCase.ICP.Candid.Models.StatePath;
 
 Uri url = new Uri($"https://ic0.app");
 
@@ -18,9 +18,9 @@ var client = new GovernanceApiClient(agent, canisterId);
 
 var info = await client.GetProposalInfo(94182, null);
 
-var paths = new List<Path>
+var paths = new List<StatePath>
 {
-	Path.FromSegments("time")
+	StatePath.FromSegments("time")
 };
 EdjCase.ICP.Agent.Responses.ReadStateResponse readStateResponse = await agent.ReadStateAsync(canisterId, paths);
 

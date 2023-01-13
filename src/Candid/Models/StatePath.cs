@@ -7,18 +7,18 @@ using System.Text;
 
 namespace EdjCase.ICP.Candid.Models
 {
-	public class Path : IHashable
+	public class StatePath : IHashable
 	{
-		public IReadOnlyList<PathSegment> Segments { get; }
-		public Path(IEnumerable<PathSegment> segments)
+		public IReadOnlyList<StatePathSegment> Segments { get; }
+		public StatePath(IEnumerable<StatePathSegment> segments)
 		{
 			this.Segments = segments.ToList();
 		}
 
 
-		public static Path FromSegments(params PathSegment[] segments)
+		public static StatePath FromSegments(params StatePathSegment[] segments)
 		{
-			return new Path(segments);
+			return new StatePath(segments);
 		}
 
 		public byte[] ComputeHash(IHashFunction hashFunction)
@@ -29,11 +29,11 @@ namespace EdjCase.ICP.Candid.Models
 		}
 	}
 
-	public class PathSegment : IHashable
+	public class StatePathSegment : IHashable
 	{
 		public byte[] Value { get; }
 
-		public PathSegment(byte[] value)
+		public StatePathSegment(byte[] value)
 		{
 			if (value == null || value.Length < 1)
 			{
@@ -47,28 +47,28 @@ namespace EdjCase.ICP.Candid.Models
 			return hashFunction.ComputeHash(this.Value);
 		}
 
-		public static PathSegment FromString(string segment)
+		public static StatePathSegment FromString(string segment)
 		{
 			if (string.IsNullOrEmpty(segment))
 			{
 				throw new ArgumentException("Segment string value must have a value", nameof(segment));
 			}
-			return new PathSegment(Encoding.UTF8.GetBytes(segment));
+			return new StatePathSegment(Encoding.UTF8.GetBytes(segment));
 		}
 
-		public static implicit operator byte[](PathSegment value)
+		public static implicit operator byte[](StatePathSegment value)
 		{
 			return value.Value;
 		}
 
-		public static implicit operator PathSegment(byte[] value)
+		public static implicit operator StatePathSegment(byte[] value)
 		{
-			return new PathSegment(value);
+			return new StatePathSegment(value);
 		}
 
-		public static implicit operator PathSegment(string value)
+		public static implicit operator StatePathSegment(string value)
 		{
-			return PathSegment.FromString(value);
+			return StatePathSegment.FromString(value);
 		}
 	}
 }
