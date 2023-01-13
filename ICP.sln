@@ -31,7 +31,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.RestAPI", "samples\S
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdjCase.ICP.ClientGenerator", "src\ClientGenerator\EdjCase.ICP.ClientGenerator.csproj", "{1C184ECB-7653-4DC1-B453-E529656897CB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdjCase.ICP.InternetIdentity", "src\InternetIdentity\EdjCase.ICP.InternetIdentity\EdjCase.ICP.InternetIdentity.csproj", "{6030010B-7BA2-4305-B999-F92995478E02}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdjCase.ICP.InternetIdentity", "src\InternetIdentity\EdjCase.ICP.InternetIdentity.csproj", "{6030010B-7BA2-4305-B999-F92995478E02}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fido2Net", "Fido2Net\Fido2Net\Fido2Net.csproj", "{9539D54D-1FBA-43D2-A813-E9EDB7976765}"
 EndProject
