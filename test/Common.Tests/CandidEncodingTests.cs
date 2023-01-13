@@ -1,17 +1,10 @@
-using EdjCase.ICP.Agent.Responses;
-using EdjCase.ICP.Candid;
 using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid.Models.Types;
 using EdjCase.ICP.Candid.Models.Values;
 using EdjCase.ICP.Candid.Utilities;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Channels;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace EdjCase.ICP.Candid.Tests

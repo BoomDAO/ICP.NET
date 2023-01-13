@@ -2,10 +2,10 @@ using Agent.Cbor;
 using Dahomey.Cbor;
 using Dahomey.Cbor.Serialization;
 using Dahomey.Cbor.Util;
-using EdjCase.ICP.Agent.Auth;
+using EdjCase.ICP.Agent.Models;
+using EdjCase.ICP.Agent.Identities;
 using EdjCase.ICP.Agent.Requests;
 using EdjCase.ICP.Agent.Responses;
-using EdjCase.ICP.Candid;
 using EdjCase.ICP.Candid.Crypto;
 using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid.Utilities;
@@ -15,7 +15,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using StatePath = EdjCase.ICP.Candid.Models.StatePath;
 
@@ -61,17 +60,8 @@ namespace EdjCase.ICP.Agent.Agents
 				.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(CBOR_CONTENT_TYPE));
 		}
 
-		/// <summary>
-		/// Sends a `call` request to a canister. There is no 
-		/// </summary>
-		/// <param name="canisterId">The id of the canister to send the request to</param>
-		/// <param name="method">The name of the method to call on the specified canister</param>
-		/// <param name="arg">The argument to supply to the canister method</param>
-		/// <param name="effectiveCanisterId">The effective desitnation for requests.
-		/// Used when calling the management cansiter `aaaaa-aa` where the effective canister id is the 
-		/// canister that needs to be effected</param>
-		/// <param name="identityOverride">Optional. Used to override the `HttpAgent`'s `IIdentity` specified in the constructor</param>
-		/// <returns>The request id of the request made</returns>
+
+		/// <inheritdoc cref="IAgent.CallAsync(Principal, string, CandidArg, Principal?, IIdentity?)"/>
 		public async Task<RequestId> CallAsync(
 			Principal canisterId,
 			string method,
@@ -91,18 +81,7 @@ namespace EdjCase.ICP.Agent.Agents
 			}
 		}
 
-		/// <summary>
-		/// Sends a `query` request to a canister.
-		/// A query only gets data with no modification
-		/// This call will faster than an update
-		/// </summary>
-		/// <param name="canisterId">The id of the canister to send the request to</param>
-		/// <param name="method">The name of the method to call on the specified canister</param>
-		/// <param name="arg">The argument to supply to the canister method</param>
-		/// Used when calling the management cansiter `aaaaa-aa` where the effective canister id is the 
-		/// canister that needs to be effected</param>
-		/// <param name="identityOverride">Optional. Used to override the `HttpAgent`'s `IIdentity` specified in the constructor</param>
-		/// <returns>The request id of the request made</returns>
+		/// <inheritdoc cref="IAgent.QueryAsync(Principal, string, CandidArg, IIdentity?)"/>
 		public async Task<QueryResponse> QueryAsync(
 			Principal canisterId,
 			string method,
@@ -117,6 +96,7 @@ namespace EdjCase.ICP.Agent.Agents
 			}
 		}
 
+		/// <inheritdoc cref="IAgent.ReadStateAsync(Principal, List{StatePath}, IIdentity?)"/>
 		public async Task<ReadStateResponse> ReadStateAsync(
 			Principal canisterId,
 			List<StatePath> paths,
@@ -139,12 +119,7 @@ namespace EdjCase.ICP.Agent.Agents
 			}
 		}
 
-		/// <summary>
-		/// Gets the request status of the specified request to a canister
-		/// </summary>
-		/// <param name="canisterId">The canister the request was sent to</param>
-		/// <param name="id">The id of the request</param>
-		/// <returns>A request status if there is a status found. Otherwise null</returns>
+		/// <inheritdoc cref="IAgent.GetRequestStatusAsync(Principal, RequestId)"/>
 		public async Task<RequestStatus?> GetRequestStatusAsync(Principal canisterId, RequestId id)
 		{
 			var pathRequestStatus = StatePath.FromSegments("request_status", id.RawValue);
@@ -177,6 +152,7 @@ namespace EdjCase.ICP.Agent.Agents
 		}
 
 
+		/// <inheritdoc cref="IAgent.GetRootKeyAsync"/>
 		public async Task<byte[]> GetRootKeyAsync()
 		{
 			if (this.rootKeyCache == null)
@@ -188,6 +164,7 @@ namespace EdjCase.ICP.Agent.Agents
 		}
 
 
+		/// <inheritdoc cref="IAgent.GetReplicaStatusAsync"/>
 		public async Task<StatusResponse> GetReplicaStatusAsync()
 		{
 			return await this.SendAsync<StatusResponse>("/api/v2/status");
@@ -238,7 +215,7 @@ namespace EdjCase.ICP.Agent.Agents
 			}
 			TRequest request = getRequest(identityOverride.GetPrincipal(), ICTimestamp.Now());
 			Dictionary<string, IHashable> content = request.BuildHashableItem();
-			SignedContent signedContent = identityOverride.CreateSignedContent(content);
+			SignedContent signedContent = identityOverride.SignContent(content);
 
 
 			byte[] cborBody = this.SerializeSignedContent(signedContent);

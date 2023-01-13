@@ -1,9 +1,7 @@
-using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid.Models.Types;
 using EdjCase.ICP.Candid.Parsers;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace EdjCase.ICP.Candid.Models
 {

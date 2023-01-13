@@ -6,7 +6,7 @@ using System.Text;
 
 namespace EdjCase.ICP.Candid
 {
-	public class BinarySequence
+	internal class BinarySequence
 	{
 		// Least signifcant bit (index 0) => Most signifcant bit (index n - 1)
 		private readonly bool[] bits;

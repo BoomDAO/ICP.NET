@@ -1,12 +1,9 @@
 using EdjCase.ICP.Agent.Agents;
-using EdjCase.ICP.Agent.Auth;
+using EdjCase.ICP.Agent.Identities;
 using EdjCase.ICP.Candid.Models;
-using EdjCase.ICP.ClientGenerator;
-using Microsoft.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 using StatePath = EdjCase.ICP.Candid.Models.StatePath;
 

@@ -1,10 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EdjCase.ICP.Candid.Crypto
 {
@@ -12,7 +8,7 @@ namespace EdjCase.ICP.Candid.Crypto
 	/// Helper class for computing CRC32 hashes/checksums on byte data
 	/// Useful for calculating checksums on data
 	/// </summary>
-	public static class CRC32
+	internal static class CRC32
 	{
 		private const uint Polynomial = 0xEDB88320;
 

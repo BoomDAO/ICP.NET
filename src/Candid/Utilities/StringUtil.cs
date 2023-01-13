@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace EdjCase.ICP.Candid.Models.Values
 {
-	public static class StringUtil
+	internal static class StringUtil
 	{
 		public static string ToSnakeCase(string value)
 		{

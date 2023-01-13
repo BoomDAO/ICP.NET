@@ -1,8 +1,6 @@
-using System;
-
 namespace EdjCase.ICP.Candid.Crypto
 {
-	public class SHA224
+	internal class SHA224
 	{
 		public int HashSize { get; }
 		public int BlockSize { get; }

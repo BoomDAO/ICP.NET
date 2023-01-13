@@ -1,13 +1,8 @@
 using EdjCase.ICP.Candid.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using EdjCase.ICP.Candid.Models.Values;
 using EdjCase.ICP.Candid.Models.Types;
-using EdjCase.ICP.Candid;
 
 namespace EdjCase.ICP.Candid.Tests
 {

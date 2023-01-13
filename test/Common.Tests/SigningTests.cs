@@ -1,6 +1,4 @@
-using EdjCase.ICP.Agent;
-using EdjCase.ICP.Agent.Auth;
-using EdjCase.ICP.Agent.Identity;
+using EdjCase.ICP.Agent.Identities;
 using EdjCase.ICP.Agent.Requests;
 using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Agent.Keys;
@@ -8,12 +6,9 @@ using EdjCase.ICP.Candid.Models.Types;
 using EdjCase.ICP.Candid.Models.Values;
 using EdjCase.ICP.Candid.Utilities;
 using Snapshooter.Xunit;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
+using EdjCase.ICP.Agent.Models;
 
 namespace ICP.Candid.Tests
 {
@@ -31,9 +26,9 @@ namespace ICP.Candid.Tests
 				)
 			);
 			string publicKeyHex = "302a300506032b6570032100029402057ca0c30e54a2cdd13de7c4ebb0b5636797cc6424159e294aeb060804";
-			var publicKey = new ED25519PublicKey(ByteUtil.FromHexString(publicKeyHex));
+			var publicKey = new Ed25519PublicKey(ByteUtil.FromHexString(publicKeyHex));
 			string privateKeyHex = "1180beb163ce5f4b477d3f217c889866cd549bfbac2e8f3ed53b8739084acc15029402057ca0c30e54a2cdd13de7c4ebb0b5636797cc6424159e294aeb060804";
-			var innerIdentity = new ED25519Identity(publicKey, ByteUtil.FromHexString(privateKeyHex));
+			var innerIdentity = new Ed25519Identity(publicKey, ByteUtil.FromHexString(privateKeyHex));
 
 			var delegationExpr = ICTimestamp.FromNanoSeconds(1654641739465407291);
 			var delegation = new Delegation(publicKey.GetRawBytes(), delegationExpr);
@@ -43,7 +38,7 @@ namespace ICP.Candid.Tests
 			{
 				new SignedDelegation(delegation, signature)
 			};
-			var chainPublicKey = new ED25519PublicKey(ByteUtil.FromHexString("303c300c060a2b0601040183b8430102032c000a00000000000000070101a451d1829b843e2aabdd49ea590668978a73612067bdde0b8502f844452a7558"));
+			var chainPublicKey = new Ed25519PublicKey(ByteUtil.FromHexString("303c300c060a2b0601040183b8430102032c000a00000000000000070101a451d1829b843e2aabdd49ea590668978a73612067bdde0b8502f844452a7558"));
 			var chain = new DelegationChain(chainPublicKey, delegations);
 			var identity = new DelegationIdentity(innerIdentity, chain);
 			var sender = identity.GetPrincipal();
@@ -51,7 +46,7 @@ namespace ICP.Candid.Tests
 			var request = new QueryRequest(canisterId, method, arg, sender, ingressExpiry);
 			Dictionary<string, IHashable> content = request.BuildHashableItem();
 
-			SignedContent signedContent = identity.CreateSignedContent(content);
+			SignedContent signedContent = identity.SignContent(content);
 
 			Snapshot.Match(ByteUtil.ToHexString(signedContent.SenderSignature!));
 		}

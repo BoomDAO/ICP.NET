@@ -1,38 +1,52 @@
 using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Formats.Asn1;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 using EdjCase.ICP.Candid.Crypto;
 using EdjCase.ICP.Candid.Models;
-using EdjCase.ICP.Candid.Utilities;
 
 namespace EdjCase.ICP.Agent.Keys
 {
-	public class ED25519PublicKey : IHashable, IPublicKey
+	/// <summary>
+	/// A public key using the Ed25519 algorithm
+	/// </summary>
+	public class Ed25519PublicKey : IHashable, IPublicKey
 	{
-		public const string OID = "1.3.101.112";
+		private const string OID = "1.3.101.112";
 
+		/// <summary>
+		/// The raw key bytes
+		/// </summary>
 		public byte[] Value { get; }
 
-		public ED25519PublicKey(byte[] value)
+		/// <param name="value">The raw key bytes</param>
+		/// <exception cref="ArgumentNullException">Throws if the value is null</exception>
+		public Ed25519PublicKey(byte[] value)
 		{
 			this.Value = value ?? throw new ArgumentNullException(nameof(value));
 		}
 
+		/// <summary>
+		/// Computes the hash of the key with the specified hash function
+		/// </summary>
+		/// <param name="hashFunction">A hash function to hash the key with</param>
+		/// <returns>The hash of the key bytes</returns>
 		public byte[] ComputeHash(IHashFunction hashFunction)
 		{
 			return hashFunction.ComputeHash(this.Value);
 		}
 
+		/// <summary>
+		/// The raw bytes of the key
+		/// </summary>
+		/// <returns></returns>
 		public byte[] GetRawBytes()
 		{
 			return this.Value;
 		}
 
+		/// <summary>
+		/// The bytes of the key with DER encoding
+		/// </summary>
+		/// <returns>DER encoded key bytes</returns>
 		public byte[] GetDerEncodedBytes()
 		{
 			AsnWriter writer = new(AsnEncodingRules.DER);
@@ -52,7 +66,13 @@ namespace EdjCase.ICP.Agent.Keys
 			return writer.Encode();
 		}
 
-		public static ED25519PublicKey FromDer(byte[] derEncodedPublicKey)
+		/// <summary>
+		/// Builds a key from the DER encoded bytes
+		/// </summary>
+		/// <param name="derEncodedPublicKey">The DER encoded bytes of the key</param>
+		/// <returns>A decoded key</returns>
+		/// <exception cref="InvalidPublicKey">Throws if the key bytes is invalid</exception>
+		public static Ed25519PublicKey FromDer(byte[] derEncodedPublicKey)
 		{
 			// DER encoding
 			// SEQUENCE (2 elem)
@@ -73,21 +93,13 @@ namespace EdjCase.ICP.Agent.Keys
 			}
 			catch
 			{
-				throw new InvalidEd25519PublicKey();
+				throw new InvalidPublicKey();
 			}
 			if (oid != "1.3.101.112" || publicKey.Length != 32)
 			{
-				throw new InvalidEd25519PublicKey();
+				throw new InvalidPublicKey();
 			}
-			return new ED25519PublicKey(publicKey);
-		}
-	}
-
-
-	public class InvalidEd25519PublicKey : Exception
-	{
-		public InvalidEd25519PublicKey()
-		{
+			return new Ed25519PublicKey(publicKey);
 		}
 	}
 }

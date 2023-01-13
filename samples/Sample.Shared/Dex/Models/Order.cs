@@ -1,10 +1,6 @@
-using System;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using EdjCase.ICP.Candid.Mapping;
-using EdjCase.ICP.Candid;
 using Token = EdjCase.ICP.Candid.Models.Principal;
 using OrderId = System.UInt32;
+using EdjCase.ICP.Candid.Models;
 
 namespace Sample.Shared.Dex.Models
 {
@@ -14,7 +10,7 @@ namespace Sample.Shared.Dex.Models
 		public Token From { get; set; }
 		
 		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("fromAmount")]
-		public EdjCase.ICP.Candid.UnboundedUInt FromAmount { get; set; }
+		public UnboundedUInt FromAmount { get; set; }
 		
 		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("id")]
 		public OrderId Id { get; set; }
@@ -26,7 +22,7 @@ namespace Sample.Shared.Dex.Models
 		public Token To { get; set; }
 		
 		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("toAmount")]
-		public EdjCase.ICP.Candid.UnboundedUInt ToAmount { get; set; }
+		public UnboundedUInt ToAmount { get; set; }
 		
 	}
 }

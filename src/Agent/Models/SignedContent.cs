@@ -1,9 +1,8 @@
-using EdjCase.ICP.Agent.Identity;
 using EdjCase.ICP.Candid.Models;
 using System;
 using System.Collections.Generic;
 
-namespace EdjCase.ICP.Agent.Auth
+namespace EdjCase.ICP.Agent.Models
 {
 	public class SignedContent : IRepresentationIndependentHashItem
 	{

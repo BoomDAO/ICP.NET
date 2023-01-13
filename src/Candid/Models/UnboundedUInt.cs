@@ -1,12 +1,8 @@
 using EdjCase.ICP.Candid.Utilities;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace EdjCase.ICP.Candid
+namespace EdjCase.ICP.Candid.Models
 {
 	public class UnboundedUInt : IComparable<UnboundedUInt>, IEquatable<UnboundedUInt>
 	{
@@ -23,7 +19,7 @@ namespace EdjCase.ICP.Candid
 
 		public byte[] GetRawBytes(bool isBigEndian)
 		{
-			return NumericUtil.ToByteArray(this.value, unsignedBits: true, bigEndian: isBigEndian);
+			return this.value.ToByteArray(unsignedBits: true, bigEndian: isBigEndian);
 		}
 
 		public bool TryToUInt64(out ulong value)
@@ -65,7 +61,7 @@ namespace EdjCase.ICP.Candid
 
 		public int CompareTo(UnboundedUInt? other)
 		{
-			if (object.ReferenceEquals(other, null))
+			if (ReferenceEquals(other, null))
 			{
 				return 1;
 			}
@@ -85,18 +81,18 @@ namespace EdjCase.ICP.Candid
 
 		public static bool operator ==(UnboundedUInt? v1, UnboundedUInt? v2)
 		{
-			if (object.ReferenceEquals(v1, null))
+			if (ReferenceEquals(v1, null))
 			{
-				return object.ReferenceEquals(v2, null);
+				return ReferenceEquals(v2, null);
 			}
 			return v1.Equals(v2);
 		}
 
 		public static bool operator !=(UnboundedUInt? v1, UnboundedUInt? v2)
 		{
-			if (object.ReferenceEquals(v1, null))
+			if (ReferenceEquals(v1, null))
 			{
-				return object.ReferenceEquals(v2, null);
+				return ReferenceEquals(v2, null);
 			}
 			return !v1.Equals(v2);
 		}
@@ -158,49 +154,49 @@ namespace EdjCase.ICP.Candid
 			{
 				throw new InvalidCastException("Value must be 0 or greater");
 			}
-			return UnboundedUInt.FromBigInteger(value.ToBigInteger());
+			return FromBigInteger(value.ToBigInteger());
 		}
 
 
 
 		public static implicit operator UnboundedUInt(ulong value)
 		{
-			return UnboundedUInt.FromUInt64(value);
+			return FromUInt64(value);
 		}
 
 		public static implicit operator UnboundedUInt(uint value)
 		{
-			return UnboundedUInt.FromUInt64(value);
+			return FromUInt64(value);
 		}
 
 		public static implicit operator UnboundedUInt(ushort value)
 		{
-			return UnboundedUInt.FromUInt64(value);
+			return FromUInt64(value);
 		}
 
 		public static implicit operator UnboundedUInt(byte value)
 		{
-			return UnboundedUInt.FromUInt64(value);
+			return FromUInt64(value);
 		}
 
 		public static explicit operator UnboundedUInt(long value)
 		{
-			return UnboundedUInt.FromUInt64((ulong)value);
+			return FromUInt64((ulong)value);
 		}
 
 		public static explicit operator UnboundedUInt(int value)
 		{
-			return UnboundedUInt.FromUInt64((uint)value);
+			return FromUInt64((uint)value);
 		}
 
 		public static explicit operator UnboundedUInt(short value)
 		{
-			return UnboundedUInt.FromUInt64((ushort)value);
+			return FromUInt64((ushort)value);
 		}
 
 		public static explicit operator UnboundedUInt(sbyte value)
 		{
-			return UnboundedUInt.FromUInt64((byte)value);
+			return FromUInt64((byte)value);
 		}
 
 

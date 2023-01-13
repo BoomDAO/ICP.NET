@@ -1,14 +1,9 @@
 using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid.Models.Values;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EdjCase.ICP.ClientGenerator
 {
-	public class ValueName
+	internal class ValueName
 	{
 		public string PascalCaseValue { get; }
 		public string CamelCaseValue { get; }

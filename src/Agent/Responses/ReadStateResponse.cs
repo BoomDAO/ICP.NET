@@ -1,4 +1,5 @@
 using System;
+using EdjCase.ICP.Agent.Models;
 
 namespace EdjCase.ICP.Agent.Responses
 {

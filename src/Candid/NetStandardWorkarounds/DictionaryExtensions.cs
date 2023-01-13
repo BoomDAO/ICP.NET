@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 #if NETSTANDARD2_0
-public static class DictionaryExtensions
+internal static class DictionaryExtensions
 {
 	public static TValue? GetValueOrDefault<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key, TValue? defaultValue = default)
 	{

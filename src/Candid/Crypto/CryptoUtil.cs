@@ -1,10 +1,8 @@
-using EdjCase.ICP.Candid.Models;
-using System;
 using System.Diagnostics;
 
 namespace EdjCase.ICP.Candid.Crypto
 {
-	public static class CryptoUtil
+	internal static class CryptoUtil
 	{
 		public static void ConvertULongToBytesSwapOrder(ulong a_in, byte[] a_out, int a_index)
 		{

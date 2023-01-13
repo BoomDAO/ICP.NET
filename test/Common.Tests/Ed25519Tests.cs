@@ -1,11 +1,5 @@
-using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Agent.Keys;
 using EdjCase.ICP.Candid.Utilities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace ICP.Candid.Tests
@@ -19,11 +13,11 @@ namespace ICP.Candid.Tests
 		public void PubliKey_Der_Encoding(string publicKeyHex, string derEncodedPublicKeyHex)
 		{
 			byte[] publicKeyBytes = ByteUtil.FromHexString(publicKeyHex);
-			var publicKey = new ED25519PublicKey(publicKeyBytes);
+			var publicKey = new Ed25519PublicKey(publicKeyBytes);
 
 			byte[] expectedDer = ByteUtil.FromHexString(derEncodedPublicKeyHex);
 
-			ED25519PublicKey key = ED25519PublicKey.FromDer(expectedDer);
+			Ed25519PublicKey key = Ed25519PublicKey.FromDer(expectedDer);
 
 			Assert.Equal(publicKeyBytes, key.GetRawBytes());
 

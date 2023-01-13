@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Xunit;
 using EdjCase.ICP.ClientGenerator;
 using EdjCase.ICP.Candid.Models;

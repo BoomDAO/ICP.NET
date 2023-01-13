@@ -1,12 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
 
 namespace EdjCase.ICP.Candid.Utilities
 {
-	public static class NumericUtil
+	internal static class NumericUtil
 	{
 		public static BinarySequence ToBits(this BigInteger value, bool unsignedBits = false)
 		{

@@ -1,11 +1,10 @@
 using System;
-using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 
 namespace EdjCase.ICP.Candid.Utilities
 {
-	public static class ByteUtil
+	internal static class ByteUtil
 	{
 		public static string ToHexString(byte[] bytes)
 		{

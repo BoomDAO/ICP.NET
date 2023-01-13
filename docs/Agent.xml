@@ -15,31 +15,27 @@
             This identity can be anonymous
             </summary>
         </member>
-        <member name="M:EdjCase.ICP.Agent.Agents.HttpAgent.#ctor(EdjCase.ICP.Agent.Auth.IIdentity,System.Uri)">
+        <member name="M:EdjCase.ICP.Agent.Agents.HttpAgent.#ctor(EdjCase.ICP.Agent.Identities.IIdentity,System.Uri)">
             <param name="identity">Identity to use for each request. Can be anonymous</param>
             <param name="httpBoundryNodeUrl">Url to the boundry node to connect to. Defaults to `https://ic0.app/`</param>
         </member>
-        <member name="M:EdjCase.ICP.Agent.Agents.HttpAgent.CallAsync(EdjCase.ICP.Candid.Models.Principal,System.String,EdjCase.ICP.Candid.Models.CandidArg,EdjCase.ICP.Candid.Models.Principal,EdjCase.ICP.Agent.Auth.IIdentity)">
-            <summary>
-            Sends a `call` request to a canister. There is no 
-            </summary>
-            <param name="canisterId">The id of the canister to send the request to</param>
-            <param name="method">The name of the method to call on the specified canister</param>
-            <param name="arg">The argument to supply to the canister method</param>
-            <param name="effectiveCanisterId">The effective desitnation for requests.
-            Used when calling the management cansiter `aaaaa-aa` where the effective canister id is the 
-            canister that needs to be effected</param>
-            <param name="identityOverride">Optional. Used to override the `HttpAgent`'s `IIdentity` specified in the constructor</param>
-            <returns>The request id of the request made</returns>
+        <member name="M:EdjCase.ICP.Agent.Agents.HttpAgent.CallAsync(EdjCase.ICP.Candid.Models.Principal,System.String,EdjCase.ICP.Candid.Models.CandidArg,EdjCase.ICP.Candid.Models.Principal,EdjCase.ICP.Agent.Identities.IIdentity)">
+            <inheritdoc cref="M:EdjCase.ICP.Agent.Agents.IAgent.CallAsync(EdjCase.ICP.Candid.Models.Principal,System.String,EdjCase.ICP.Candid.Models.CandidArg,EdjCase.ICP.Candid.Models.Principal,EdjCase.ICP.Agent.Identities.IIdentity)"/>
         </member>
-        <!-- Badly formed XML comment ignored for member "M:EdjCase.ICP.Agent.Agents.HttpAgent.QueryAsync(EdjCase.ICP.Candid.Models.Principal,System.String,EdjCase.ICP.Candid.Models.CandidArg,EdjCase.ICP.Agent.Auth.IIdentity)" -->
+        <member name="M:EdjCase.ICP.Agent.Agents.HttpAgent.QueryAsync(EdjCase.ICP.Candid.Models.Principal,System.String,EdjCase.ICP.Candid.Models.CandidArg,EdjCase.ICP.Agent.Identities.IIdentity)">
+            <inheritdoc cref="M:EdjCase.ICP.Agent.Agents.IAgent.QueryAsync(EdjCase.ICP.Candid.Models.Principal,System.String,EdjCase.ICP.Candid.Models.CandidArg,EdjCase.ICP.Agent.Identities.IIdentity)"/>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Agents.HttpAgent.ReadStateAsync(EdjCase.ICP.Candid.Models.Principal,System.Collections.Generic.List{EdjCase.ICP.Candid.Models.StatePath},EdjCase.ICP.Agent.Identities.IIdentity)">
+            <inheritdoc cref="M:EdjCase.ICP.Agent.Agents.IAgent.ReadStateAsync(EdjCase.ICP.Candid.Models.Principal,System.Collections.Generic.List{EdjCase.ICP.Candid.Models.StatePath},EdjCase.ICP.Agent.Identities.IIdentity)"/>
+        </member>
         <member name="M:EdjCase.ICP.Agent.Agents.HttpAgent.GetRequestStatusAsync(EdjCase.ICP.Candid.Models.Principal,EdjCase.ICP.Candid.Models.RequestId)">
-            <summary>
-            Gets the request status of the specified request to a canister
-            </summary>
-            <param name="canisterId">The canister the request was sent to</param>
-            <param name="id">The id of the request</param>
-            <returns>A request status if there is a status found. Otherwise null</returns>
+            <inheritdoc cref="M:EdjCase.ICP.Agent.Agents.IAgent.GetRequestStatusAsync(EdjCase.ICP.Candid.Models.Principal,EdjCase.ICP.Candid.Models.RequestId)"/>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Agents.HttpAgent.GetRootKeyAsync">
+            <inheritdoc cref="M:EdjCase.ICP.Agent.Agents.IAgent.GetRootKeyAsync"/>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Agents.HttpAgent.GetReplicaStatusAsync">
+            <inheritdoc cref="M:EdjCase.ICP.Agent.Agents.IAgent.GetReplicaStatusAsync"/>
         </member>
         <member name="T:EdjCase.ICP.Agent.Agents.IAgent">
             <summary>
@@ -47,7 +43,7 @@
             are specific to an `IAgent` implementation
             </summary>
         </member>
-        <member name="M:EdjCase.ICP.Agent.Agents.IAgent.ReadStateAsync(EdjCase.ICP.Candid.Models.Principal,System.Collections.Generic.List{EdjCase.ICP.Candid.Models.StatePath},EdjCase.ICP.Agent.Auth.IIdentity)">
+        <member name="M:EdjCase.ICP.Agent.Agents.IAgent.ReadStateAsync(EdjCase.ICP.Candid.Models.Principal,System.Collections.Generic.List{EdjCase.ICP.Candid.Models.StatePath},EdjCase.ICP.Agent.Identities.IIdentity)">
             <summary>
             Gets the state of a specified canister with the subset of state information
             specified by the paths parameter
@@ -65,7 +61,7 @@
             <param name="id">Id of the request to get a status for</param>
             <returns>A status variant of the request. If request is not found, will return null</returns>
         </member>
-        <member name="M:EdjCase.ICP.Agent.Agents.IAgent.CallAsync(EdjCase.ICP.Candid.Models.Principal,System.String,EdjCase.ICP.Candid.Models.CandidArg,EdjCase.ICP.Candid.Models.Principal,EdjCase.ICP.Agent.Auth.IIdentity)">
+        <member name="M:EdjCase.ICP.Agent.Agents.IAgent.CallAsync(EdjCase.ICP.Candid.Models.Principal,System.String,EdjCase.ICP.Candid.Models.CandidArg,EdjCase.ICP.Candid.Models.Principal,EdjCase.ICP.Agent.Identities.IIdentity)">
             <summary>
             Sends a call request to a specified canister method and gets back an id of the 
             request that is being processed. This call does NOT wait for the request to be complete.
@@ -85,7 +81,7 @@
             </summary>
             <returns>A response containing all replica status information</returns>
         </member>
-        <member name="M:EdjCase.ICP.Agent.Agents.IAgent.QueryAsync(EdjCase.ICP.Candid.Models.Principal,System.String,EdjCase.ICP.Candid.Models.CandidArg,EdjCase.ICP.Agent.Auth.IIdentity)">
+        <member name="M:EdjCase.ICP.Agent.Agents.IAgent.QueryAsync(EdjCase.ICP.Candid.Models.Principal,System.String,EdjCase.ICP.Candid.Models.CandidArg,EdjCase.ICP.Agent.Identities.IIdentity)">
             <summary>
             Sends a query request to a specified canister method
             </summary>
@@ -106,7 +102,7 @@
             Extension methods for the `IAgent` interface
             </summary>
         </member>
-        <member name="M:EdjCase.ICP.Agent.Agents.IAgentExtensions.CallAndWaitAsync(EdjCase.ICP.Agent.Agents.IAgent,EdjCase.ICP.Candid.Models.Principal,System.String,EdjCase.ICP.Candid.Models.CandidArg,EdjCase.ICP.Candid.Models.Principal,EdjCase.ICP.Agent.Auth.IIdentity,System.Nullable{System.Threading.CancellationToken})">
+        <member name="M:EdjCase.ICP.Agent.Agents.IAgentExtensions.CallAndWaitAsync(EdjCase.ICP.Agent.Agents.IAgent,EdjCase.ICP.Candid.Models.Principal,System.String,EdjCase.ICP.Candid.Models.CandidArg,EdjCase.ICP.Candid.Models.Principal,EdjCase.ICP.Agent.Identities.IIdentity,System.Nullable{System.Threading.CancellationToken})">
             <summary>
             Sends a call request to a specified canister method, waits for the request to be processed,
             the returns the candid response to the call. This is helper method built on top of `CallAsync`
@@ -121,63 +117,297 @@
             <param name="cancellationToken">Optional. If specified, will be used to prematurely end the waiting</param>
             <returns>The id of the request that can be used to look up its status with `GetRequestStatusAsync`</returns>
         </member>
-        <member name="T:EdjCase.ICP.Agent.Certificate">
+        <member name="T:EdjCase.ICP.Agent.RequestCleanedUpException">
+            <summary>
+            Exception to indicate that a request has been cleaned up.
+            This is usually due to the request being too old
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.RequestCleanedUpException.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.InvalidPublicKey">
+            <summary>
+            Exception to indicate that the specified BLS public key is invalid
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.InvalidPublicKey.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.InvalidCertificateException">
+            <summary>
+            Exception to indicate that the certificate is invalid
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.InvalidCertificateException.#ctor(System.String)">
+            <param name="message">Specific error message</param>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Identities.AnonymousIdentity">
+            <summary>
+            An identity that is anonymous.
+            Should be used if there is no user context or the user hasn't logged in
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Identities.AnonymousIdentity.SignContent(System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.Candid.Models.IHashable})">
+            <inheritdoc/>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Identities.AnonymousIdentity.GetPrincipal">
+            <inheritdoc/>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Identities.DelegationIdentity.GetPublicKey">
+            <inheritdoc/>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Identities.DelegationIdentity.Sign(System.Byte[])">
+            <inheritdoc/>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Identities.DelegationIdentity.GetSenderDelegations">
+            <inheritdoc/>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Identities.Ed25519Identity">
+            <summary>
+            An identity using a Ed25519 key
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Identities.Ed25519Identity.PublicKey">
+            <summary>
+            The public key of the identity
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Identities.Ed25519Identity.PrivateKey">
+            <summary>
+            The private key of the identity
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Identities.Ed25519Identity.#ctor(EdjCase.ICP.Agent.Keys.Ed25519PublicKey,System.Byte[])">
+            <param name="publicKey">The public key of the identity</param>
+            <param name="privateKey">The private key of the identity</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Identities.Ed25519Identity.GetPublicKey">
+            <inheritdoc/>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Identities.Ed25519Identity.Sign(System.Byte[])">
+            <inheritdoc/>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Identities.IIdentity">
+            <summary>
+            Identity to use for requests to Internet Computer canisters
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Identities.IIdentity.GetPrincipal">
+            <summary>
+            Gets the principal for this identity
+            </summary>
+            <returns>The identity principal</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Identities.IIdentity.SignContent(System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.Candid.Models.IHashable})">
+            <summary>
+            Signs the hashable content
+            </summary>
+            <param name="content">The data that needs to be signed</param>
+            <returns>The content with signature(s) from the identity</returns>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Identities.SigningIdentityBase">
+            <summary>
+            An identity type that has signing capabilities
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Identities.SigningIdentityBase.GetPublicKey">
+            <summary>
+            Returns the public key of the identity
+            </summary>
+            <returns>Public key of the identity</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Identities.SigningIdentityBase.GetSenderDelegations">
+            <summary>
+            Gets the signed delegations for the identity.
+            Delegations will exist if the identity is a delegated identity
+            instead of having the raw keys. This is used in Internet Identity
+            </summary>
+            <returns>The signed delegations, otherwise an empty list</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Identities.SigningIdentityBase.Sign(System.Byte[])">
+            <summary>
+            Signs the specified bytes with the identity key
+            </summary>
+            <param name="data">The byte data to sign</param>
+            <returns>The signature bytes of the specified data bytes</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Identities.SigningIdentityBase.GetPrincipal">
+            <inheritdoc/>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Identities.SigningIdentityBase.SignContent(System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.Candid.Models.IHashable})">
+            <inheritdoc/>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Keys.BlsPublicKey">
+            <summary>
+            A public key using the BLS algorithm
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Keys.BlsPublicKey.Value">
+            <summary>
+            The raw bytes value
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Keys.BlsPublicKey.#ctor(System.Byte[])">
+            <param name="value">The raw bytes value</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Keys.BlsPublicKey.ComputeHash(EdjCase.ICP.Candid.Crypto.IHashFunction)">
+            <inheritdoc/>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Keys.BlsPublicKey.GetDerEncodedBytes">
+            <inheritdoc/>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Keys.BlsPublicKey.FromDer(System.Byte[])">
+            <summary>
+            Converts a DER encoded public key into a public key object
+            </summary>
+            <param name="derEncodedPublicKey">Public key with a DER encoding</param>
+            <returns>Key object from the specified public key</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Keys.BlsPublicKey.GetRawBytes">
+            <summary>
+            Gets the raw bytes of the public key
+            </summary>
+            <returns>Public key bytes</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Keys.BlsPublicKey.ValidateSignature(System.Byte[],System.Byte[])">
+            <summary>
+            Validates the specified signature against the specified hash value
+            </summary>
+            <param name="hash">The hash digest of some data</param>
+            <param name="signature">The signature for the hashed data</param>
+            <returns>True if the signature is valid, otherwise false</returns>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Keys.Ed25519PublicKey">
+            <summary>
+            A public key using the Ed25519 algorithm
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Keys.Ed25519PublicKey.Value">
+            <summary>
+            The raw key bytes
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Keys.Ed25519PublicKey.#ctor(System.Byte[])">
+            <param name="value">The raw key bytes</param>
+            <exception cref="T:System.ArgumentNullException">Throws if the value is null</exception>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Keys.Ed25519PublicKey.ComputeHash(EdjCase.ICP.Candid.Crypto.IHashFunction)">
+            <summary>
+            Computes the hash of the key with the specified hash function
+            </summary>
+            <param name="hashFunction">A hash function to hash the key with</param>
+            <returns>The hash of the key bytes</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Keys.Ed25519PublicKey.GetRawBytes">
+            <summary>
+            The raw bytes of the key
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Keys.Ed25519PublicKey.GetDerEncodedBytes">
+            <summary>
+            The bytes of the key with DER encoding
+            </summary>
+            <returns>DER encoded key bytes</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Keys.Ed25519PublicKey.FromDer(System.Byte[])">
+            <summary>
+            Builds a key from the DER encoded bytes
+            </summary>
+            <param name="derEncodedPublicKey">The DER encoded bytes of the key</param>
+            <returns>A decoded key</returns>
+            <exception cref="T:EdjCase.ICP.Agent.InvalidPublicKey">Throws if the key bytes is invalid</exception>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Keys.IPublicKey">
+            <summary>
+            A cryptographic public key that can be DER encoded
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Keys.IPublicKey.GetDerEncodedBytes">
+            <summary>
+            Gets the DER encoded bytes of the key
+            </summary>
+            <returns>DER encoded key bytes</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Keys.IPublicKey.GetRawBytes">
+            <summary>
+            Gets the raw bytes of the key
+            </summary>
+            <returns>Key bytes</returns>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Models.Certificate">
             <summary>
             A model that contains a state tree along with a validation signature. If required
             the model can have a delegation to allow for subnet data/keys
             </summary>
         </member>
-        <member name="P:EdjCase.ICP.Agent.Certificate.Tree">
+        <member name="P:EdjCase.ICP.Agent.Models.Certificate.Tree">
             <summary>
             A partial state tree of the requested state data
             </summary>
         </member>
-        <member name="P:EdjCase.ICP.Agent.Certificate.Signature">
+        <member name="P:EdjCase.ICP.Agent.Models.Certificate.Signature">
             <summary>
             A signature on the tree root hash. Used to validate the tree
             </summary>
         </member>
-        <member name="P:EdjCase.ICP.Agent.Certificate.Delegation">
+        <member name="P:EdjCase.ICP.Agent.Models.Certificate.Delegation">
             <summary>
             Optional. A signed delegation that links a public key to the root public key
             </summary>
         </member>
-        <member name="M:EdjCase.ICP.Agent.Certificate.#ctor(EdjCase.ICP.Candid.Models.HashTree,System.Byte[],EdjCase.ICP.Agent.CertificateDelegation)">
-            <inheritdoc cref="P:EdjCase.ICP.Agent.CertificateDelegation.SubnetId"/>
-            <inheritdoc cref="P:EdjCase.ICP.Agent.CertificateDelegation.Certificate"/>
+        <member name="M:EdjCase.ICP.Agent.Models.Certificate.#ctor(EdjCase.ICP.Candid.Models.HashTree,System.Byte[],EdjCase.ICP.Agent.Models.CertificateDelegation)">
+            <param name="tree">A partial state tree of the requested state data</param>
+            <param name="signature">A signature on the tree root hash. Used to validate the tree</param>
+            <param name="delegation">Optional. A signed delegation that links a public key to the root public key</param>
             <exception cref="T:System.ArgumentNullException">Throws if either `tree` or `signature` are null</exception>
         </member>
-        <member name="T:EdjCase.ICP.Agent.CertificateDelegation">
+        <member name="M:EdjCase.ICP.Agent.Models.Certificate.IsValid(System.Byte[])">
+            <summary>
+            Checks the validity of the certificate based off the 
+            specified root public key
+            </summary>
+            <param name="rootPublicKey">The root public key of the internet computer network</param>
+            <returns>True if the certificate is valid, otherwise false</returns>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Models.CertificateDelegation">
             <summary>
             A model that contains a certificate proving the delegation of a subnet for the subnet certificate
             </summary>
         </member>
-        <member name="P:EdjCase.ICP.Agent.CertificateDelegation.SubnetId">
+        <member name="P:EdjCase.ICP.Agent.Models.CertificateDelegation.SubnetId">
             <summary>
             The principal of the subnet being delegated to
             </summary>
         </member>
-        <member name="P:EdjCase.ICP.Agent.CertificateDelegation.Certificate">
+        <member name="P:EdjCase.ICP.Agent.Models.CertificateDelegation.Certificate">
             <summary>
             The signed certificate that is signed by the delegator
             </summary>
         </member>
-        <member name="M:EdjCase.ICP.Agent.CertificateDelegation.#ctor(EdjCase.ICP.Candid.Models.Principal,EdjCase.ICP.Agent.Certificate)">
-            <inheritdoc cref="P:EdjCase.ICP.Agent.CertificateDelegation.SubnetId"/>
-            <inheritdoc cref="P:EdjCase.ICP.Agent.CertificateDelegation.Certificate"/>
+        <member name="M:EdjCase.ICP.Agent.Models.CertificateDelegation.#ctor(EdjCase.ICP.Candid.Models.Principal,EdjCase.ICP.Agent.Models.Certificate)">
+            <param name="subnetId">The principal of the subnet being delegated to</param>
+            <param name="certificate">The signed certificate that is signed by the delegator</param>
             <exception cref="T:System.ArgumentNullException">Throws if either `subnetId` or `certificate` are null</exception>
         </member>
-        <member name="M:EdjCase.ICP.Agent.CertificateDelegation.GetPublicKey">
+        <member name="M:EdjCase.ICP.Agent.Models.CertificateDelegation.GetPublicKey">
             <summary>
             Gets the public key value from the hash tree in the certificate
             </summary>
             <returns>The delegation public key for the subnet</returns>
             <exception cref="T:System.InvalidOperationException">Throws if certificate is missing `subnet/{subnet_id}/public_key`</exception>
         </member>
-        <member name="M:EdjCase.ICP.Agent.CertificateDelegation.IsValid(System.Byte[]@)">
+        <member name="M:EdjCase.ICP.Agent.Models.CertificateDelegation.IsValid(System.Byte[]@)">
             <summary>
-            Checks if the Certificate signature is valid
+            Checks if the Certificate signature is valid and
+            outputs the public key of the delegation
             </summary>
+            <param name="publicKey">The public key of the delegation</param>
             <returns>True if the certificate signature is valid, otherwise false</returns>
         </member>
         <member name="P:EdjCase.ICP.Agent.Requests.CallRequest.CanisterId">

@@ -1,12 +1,8 @@
 using EdjCase.ICP.Candid.Utilities;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace EdjCase.ICP.Candid
+namespace EdjCase.ICP.Candid.Models
 {
 	public class UnboundedInt : IComparable<UnboundedInt>, IEquatable<UnboundedInt>
 	{
@@ -19,7 +15,7 @@ namespace EdjCase.ICP.Candid
 
 		public byte[] GetRawBytes(bool isBigEndian)
 		{
-			return NumericUtil.ToByteArray(this.value, unsignedBits: false, bigEndian: isBigEndian);
+			return this.value.ToByteArray(unsignedBits: false, bigEndian: isBigEndian);
 		}
 
 		public bool TryToInt64(out long value)
@@ -63,7 +59,7 @@ namespace EdjCase.ICP.Candid
 
 		public int CompareTo(UnboundedInt? other)
 		{
-			if (object.ReferenceEquals(other, null))
+			if (ReferenceEquals(other, null))
 			{
 				return 1;
 			}
@@ -77,18 +73,18 @@ namespace EdjCase.ICP.Candid
 
 		public static bool operator ==(UnboundedInt? v1, UnboundedInt? v2)
 		{
-			if (object.ReferenceEquals(v1, null))
+			if (ReferenceEquals(v1, null))
 			{
-				return object.ReferenceEquals(v2, null);
+				return ReferenceEquals(v2, null);
 			}
 			return v1.Equals(v2);
 		}
 
 		public static bool operator !=(UnboundedInt? v1, UnboundedInt? v2)
 		{
-			if (object.ReferenceEquals(v1, null))
+			if (ReferenceEquals(v1, null))
 			{
-				return object.ReferenceEquals(v2, null);
+				return ReferenceEquals(v2, null);
 			}
 			return !v1.Equals(v2);
 		}
@@ -147,47 +143,47 @@ namespace EdjCase.ICP.Candid
 
 		public static implicit operator UnboundedInt(UnboundedUInt value)
 		{
-			return UnboundedInt.FromBigInteger(value.ToBigInteger());
+			return FromBigInteger(value.ToBigInteger());
 		}
 
 
 		public static implicit operator UnboundedInt(long value)
 		{
-			return UnboundedInt.FromInt64(value);
+			return FromInt64(value);
 		}
 
 		public static implicit operator UnboundedInt(int value)
 		{
-			return UnboundedInt.FromInt64(value);
+			return FromInt64(value);
 		}
 
 		public static implicit operator UnboundedInt(short value)
 		{
-			return UnboundedInt.FromInt64(value);
+			return FromInt64(value);
 		}
 
 		public static implicit operator UnboundedInt(sbyte value)
 		{
-			return UnboundedInt.FromInt64(value);
+			return FromInt64(value);
 		}
 		public static implicit operator UnboundedInt(ulong value)
 		{
-			return UnboundedInt.FromInt64((long)value);
+			return FromInt64((long)value);
 		}
 
 		public static implicit operator UnboundedInt(uint value)
 		{
-			return UnboundedInt.FromInt64((int)value);
+			return FromInt64((int)value);
 		}
 
 		public static implicit operator UnboundedInt(ushort value)
 		{
-			return UnboundedInt.FromInt64((short)value);
+			return FromInt64((short)value);
 		}
 
 		public static implicit operator UnboundedInt(byte value)
 		{
-			return UnboundedInt.FromInt64((sbyte)value);
+			return FromInt64((sbyte)value);
 		}
 
 

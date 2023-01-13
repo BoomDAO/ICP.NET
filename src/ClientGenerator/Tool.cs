@@ -1,11 +1,6 @@
 using CommandLine;
 using EdjCase.ICP.Candid.Models;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace EdjCase.ICP.ClientGenerator

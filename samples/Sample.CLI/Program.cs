@@ -1,5 +1,5 @@
 using EdjCase.ICP.Agent.Agents;
-using EdjCase.ICP.Agent.Auth;
+using EdjCase.ICP.Agent.Identities;
 using EdjCase.ICP.Candid.Models;
 using Sample.Shared.Governance;
 using System;

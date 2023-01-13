@@ -1,4 +1,3 @@
-using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid.Models.Types;
 using System;
 using System.Collections.Generic;

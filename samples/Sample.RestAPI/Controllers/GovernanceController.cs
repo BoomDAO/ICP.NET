@@ -1,6 +1,5 @@
 using EdjCase.ICP.Candid.Models;
 using Microsoft.AspNetCore.Mvc;
-using Sample.Shared;
 using Sample.Shared.Governance;
 using Sample.Shared.Governance.Models;
 

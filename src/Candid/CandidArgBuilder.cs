@@ -1,17 +1,12 @@
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Numerics;
 using System.Text;
 using EdjCase.ICP.Candid.Encodings;
 using EdjCase.ICP.Candid.Models;
-using EdjCase.ICP.Candid.Models.Types;
-using EdjCase.ICP.Candid.Models.Values;
 
 namespace EdjCase.ICP.Candid
 {
-	public class CandidArgBuilder
+	internal class CandidArgBuilder
 	{
 		/// <summary>
 		/// Helper to capture compound types
