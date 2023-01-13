@@ -35,7 +35,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdjCase.ICP.InternetIdentit
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fido2Net", "Fido2Net\Fido2Net\Fido2Net.csproj", "{9539D54D-1FBA-43D2-A813-E9EDB7976765}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdjCase.ICP.Serialization", "src\Serialization\EdjCase.ICP.Serialization.csproj", "{1FA3C4A2-B808-4828-896C-B839E5694101}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdjCase.ICP.Serialization", "src\Serialization\EdjCase.ICP.Serialization.csproj", "{1FA3C4A2-B808-4828-896C-B839E5694101}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
