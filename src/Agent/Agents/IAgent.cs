@@ -69,12 +69,12 @@ namespace EdjCase.ICP.Agent.Agents
 			this IAgent agent,
 			Principal canisterId,
 			string method,
-			CandidArg encodedArgument,
+			CandidArg arg,
 			Principal? effectiveCanisterId = null,
 			IIdentity? identityOverride = null,
 			CancellationToken? cancellationToken = null)
 		{
-			RequestId id = await agent.CallAsync(canisterId, method, encodedArgument, effectiveCanisterId, identityOverride);
+			RequestId id = await agent.CallAsync(canisterId, method, arg, effectiveCanisterId, identityOverride);
 
 			while (true)
 			{

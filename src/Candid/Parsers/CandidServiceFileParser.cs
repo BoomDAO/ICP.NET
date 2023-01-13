@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace EdjCase.ICP.Candid.Parsers
@@ -13,6 +14,7 @@ namespace EdjCase.ICP.Candid.Parsers
 	{
 		public static CandidServiceDescription Parse(string text)
 		{
+			text = Regex.Replace(text, "//.*\r?\n", ""); // Remove comments
 			using (var textReader = new StringReader(text))
 			{
 				var declaredTypes = new Dictionary<CandidId, CandidType>();
@@ -116,6 +118,11 @@ namespace EdjCase.ICP.Candid.Parsers
 			char? wordChar = reader.PeekOrDefault();
 			while (wordChar != null && !char.IsWhiteSpace(wordChar.Value))
 			{
+				if(stringBuilder.Length > 0 && wordChar == ':')
+				{
+					// stop word if there is no space between ':' and the text
+					break;
+				}
 				stringBuilder.Append(wordChar);
 				reader.Read();
 				wordChar = reader.PeekOrDefault();
