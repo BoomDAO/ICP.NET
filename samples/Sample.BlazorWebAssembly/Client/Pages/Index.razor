@@ -166,7 +166,7 @@ else if (this.MadeCall && this.ProposalId != null)
         public SignedDelegation ToCommon()
         {
             Delegation delegation = this.Delegation.ToCommon();
-            Signature signature = new Signature(Convert.FromHexString(this.Signature));
+            byte[] signature = Convert.FromHexString(this.Signature);
             return new SignedDelegation(delegation, signature);
         }
     }

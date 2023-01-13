@@ -12,7 +12,7 @@ using EdjCase.ICP.Candid.Utilities;
 
 namespace Agent.Cbor
 {
-	public static class CborConverterUtil
+	internal static class CborConverterUtil
 	{
 		public static void Write(ref CborWriter writer, UnboundedUInt value)
 		{

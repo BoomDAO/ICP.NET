@@ -27,10 +27,9 @@ namespace EdjCase.ICP.Agent.Identity
 		}
 
 
-		public override Signature Sign(byte[] message)
+		public override byte[] Sign(byte[] message)
 		{
-			byte[] signatureBytes = Ed25519.Sign(message, this.PrivateKey);
-			return new Signature(signatureBytes);
+			return Ed25519.Sign(message, this.PrivateKey);
 		}
 	}
 }

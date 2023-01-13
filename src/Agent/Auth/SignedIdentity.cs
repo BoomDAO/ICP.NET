@@ -19,7 +19,7 @@ namespace EdjCase.ICP.Agent.Auth
 			return null;
 		}
 
-		public abstract Signature Sign(byte[] sign);
+		public abstract byte[] Sign(byte[] sign);
 
 		public Principal GetPrincipal()
 		{
@@ -33,7 +33,7 @@ namespace EdjCase.ICP.Agent.Auth
 			var sha256 = SHA256HashFunction.Create();
 			byte[] contentHash = content.ToHashable().ComputeHash(sha256);
 			byte[] domainSeparator = Encoding.UTF8.GetBytes("\x0Aic-request");
-			Signature senderSignature = this.Sign(domainSeparator.Concat(contentHash).ToArray());
+			byte[] senderSignature = this.Sign(domainSeparator.Concat(contentHash).ToArray());
 			List<SignedDelegation>? senderDelegations = this.GetSenderDelegations();
 			return new SignedContent(content, senderPublicKey.GetRawBytes(), senderDelegations, senderSignature);
 		}

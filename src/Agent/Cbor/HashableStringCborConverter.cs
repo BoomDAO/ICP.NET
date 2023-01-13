@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace EdjCase.ICP.Agent.Cbor
 {
-	public class HashableStringCborConverter : CborConverterBase<HashableString?>
+	internal class HashableStringCborConverter : CborConverterBase<HashableString?>
 	{
 
 		public override HashableString? Read(ref CborReader reader)

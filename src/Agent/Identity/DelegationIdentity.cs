@@ -27,7 +27,7 @@ namespace EdjCase.ICP.Agent.Identity
 			return this.Chain.PublicKey;
 		}
 
-		public override Signature Sign(byte[] blob)
+		public override byte[] Sign(byte[] blob)
 		{
 			return this.Identity.Sign(blob);
 		}
@@ -67,9 +67,9 @@ namespace EdjCase.ICP.Agent.Identity
 		[Dahomey.Cbor.Attributes.CborProperty("delegation")]
 		public Delegation Delegation { get; }
 		[Dahomey.Cbor.Attributes.CborProperty("signature")]
-		public Signature Signature { get; }
+		public byte[] Signature { get; }
 
-		public SignedDelegation(Delegation delegation, Signature signature)
+		public SignedDelegation(Delegation delegation, byte[] signature)
 		{
 			this.Delegation = delegation ?? throw new ArgumentNullException(nameof(delegation));
 			this.Signature = signature ?? throw new ArgumentNullException(nameof(signature));
@@ -92,7 +92,7 @@ namespace EdjCase.ICP.Agent.Identity
 				.Concat(delegationHashDigest)
 				.ToArray();
 
-			Signature signature = fromIdentity.Sign(challenge); // Sign the domain sep + delegation hash digest
+			byte[] signature = fromIdentity.Sign(challenge); // Sign the domain sep + delegation hash digest
 			return new SignedDelegation(delegation, signature);
 		}
 
@@ -101,7 +101,7 @@ namespace EdjCase.ICP.Agent.Identity
 			return new Dictionary<string, IHashable>
 			{
 				{ "delegation", this.Delegation },
-				{ "signature", this.Signature }
+				{ "signature", this.Signature.ToHashable() }
 			}
 				.ToHashable()
 				.ComputeHash(hashFunction);

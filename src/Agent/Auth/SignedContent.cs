@@ -20,9 +20,9 @@ namespace EdjCase.ICP.Agent.Auth
 
 		[Dahomey.Cbor.Attributes.CborIgnoreIfDefault]
 		[Dahomey.Cbor.Attributes.CborProperty("sender_sig")]
-		public Signature? SenderSignature { get; }
+		public byte[]? SenderSignature { get; }
 
-		public SignedContent(Dictionary<string, IHashable> content, byte[]? senderPublicKey, List<SignedDelegation>? delegations, Signature? senderSignature)
+		public SignedContent(Dictionary<string, IHashable> content, byte[]? senderPublicKey, List<SignedDelegation>? delegations, byte[]? senderSignature)
 		{
 			this.Content = content ?? throw new ArgumentNullException(nameof(content));
 			this.SenderPublicKey = senderPublicKey;
@@ -42,7 +42,7 @@ namespace EdjCase.ICP.Agent.Auth
 			}
 			if (this.SenderSignature != null)
 			{
-				properties.Add("sender_sig", this.SenderSignature);
+				properties.Add("sender_sig", this.SenderSignature.ToHashable());
 			}
 			if (this.SenderDelegations != null)
 			{

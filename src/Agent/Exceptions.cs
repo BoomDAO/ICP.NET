@@ -4,9 +4,9 @@ using System.Text;
 
 namespace EdjCase.ICP.Agent
 {
-	public class RequestCleanedUpExcpetion : Exception
+	public class RequestCleanedUpException : Exception
 	{
-		public RequestCleanedUpExcpetion() : base("Request reply/rejected data has timed out and been cleaned up")
+		public RequestCleanedUpException() : base("Request reply/rejected data has timed out and has been cleaned up")
 		{
 
 		}

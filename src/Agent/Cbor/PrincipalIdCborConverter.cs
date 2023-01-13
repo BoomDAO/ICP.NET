@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace EdjCase.ICP.Agent.Cbor
 {
-	public class PrincipalIdCborConverter : CborConverterBase<Principal?>
+	internal class PrincipalIdCborConverter : CborConverterBase<Principal?>
 	{
 		public override Principal? Read(ref CborReader reader)
 		{

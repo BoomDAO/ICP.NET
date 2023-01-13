@@ -7,7 +7,7 @@ using System.Text;
 
 namespace EdjCase.ICP.Agent.Cbor
 {
-	public class PathCborConverter : CborConverterBase<Path?>
+	internal class PathCborConverter : CborConverterBase<Path?>
 	{
 		public override Path? Read(ref CborReader reader)
 		{
@@ -38,7 +38,7 @@ namespace EdjCase.ICP.Agent.Cbor
 			}
 		}
 	}
-	public class PathSegmentCborConverter : CborConverterBase<PathSegment?>
+	internal class PathSegmentCborConverter : CborConverterBase<PathSegment?>
 	{
 		public override PathSegment? Read(ref CborReader reader)
 		{

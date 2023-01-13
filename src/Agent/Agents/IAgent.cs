@@ -98,7 +98,7 @@ namespace EdjCase.ICP.Agent.Agents
 						(UnboundedUInt code, string message, string? errorCode) = requestStatus.AsRejected();
 						throw new CallRejectedException(code, message, errorCode);
 					case RequestStatus.StatusType.Done:
-						throw new RequestCleanedUpExcpetion();
+						throw new RequestCleanedUpException();
 				}
 			}
 		}
