@@ -15,7 +15,7 @@ namespace Sample.RestAPI.Controllers
 			this.Client = client;
 		}
 
-		[Route("GetProposalInfo/{id}")]
+		[Route("proposals/{id}")]
 		[HttpGet]
 		public async Task<IActionResult> GetProposalInfo(ulong id)
 		{
