@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using StatePath = EdjCase.ICP.Candid.Models.StatePath;
 
 namespace EdjCase.ICP.ClientGenerator
 {

@@ -16,7 +16,6 @@ using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using StatePath = EdjCase.ICP.Candid.Models.StatePath;
 
 namespace EdjCase.ICP.Agent.Agents
 {

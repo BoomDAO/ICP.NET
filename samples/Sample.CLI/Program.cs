@@ -4,7 +4,6 @@ using EdjCase.ICP.Candid.Models;
 using Sample.Shared.Governance;
 using System;
 using System.Collections.Generic;
-using StatePath = EdjCase.ICP.Candid.Models.StatePath;
 
 Uri url = new Uri($"https://ic0.app");
 
