@@ -18,7 +18,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\InternetIdentity\EdjCase.ICP.InternetIdentity.csproj" />
-    <ProjectReference Include="..\..\src\InternetIdentity\EdjCase.ICP.InternetIdentity\EdjCase.ICP.InternetIdentity.csproj" />
     <ProjectReference Include="..\..\src\Serialization\EdjCase.ICP.Serialization.csproj" />
     <ProjectReference Include="..\Sample.Shared\Sample.Shared.csproj" />
 	  <ProjectReference Include="..\..\src\ClientGenerator\EdjCase.ICP.ClientGenerator.csproj" />

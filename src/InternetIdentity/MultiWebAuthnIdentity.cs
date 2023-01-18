@@ -8,23 +8,10 @@ using Dahomey.Cbor.Serialization;
 using Dahomey.Cbor.Util;
 using System.Threading.Tasks;
 using System.Runtime.CompilerServices;
+using System;
 
 namespace EdjCase.ICP.InternetIdentity
 {
-	internal class DisposeAction : System.IDisposable
-	{
-		public DisposeAction(System.Action act)
-		{
-			this._act = act;
-		}
-
-		public void Dispose()
-		{
-			this._act?.Invoke();
-		}
-
-		private System.Action _act;
-	}
 
 	internal static class Fido2Ext
 	{
@@ -33,13 +20,21 @@ namespace EdjCase.ICP.InternetIdentity
 			device.Open(deviceName);
 			return new DisposeAction(() => device.Close());
 		}
-	}
 
-	public class WebAuthnIdentitySignerOptions
-	{
-		public readonly System.TimeSpan timeout = System.TimeSpan.FromSeconds(60.0);
+		public class DisposeAction : IDisposable
+		{
+			public DisposeAction(System.Action act)
+			{
+				this._act = act;
+			}
 
-		public static readonly WebAuthnIdentitySignerOptions Default = new WebAuthnIdentitySignerOptions();
+			public void Dispose()
+			{
+				this._act?.Invoke();
+			}
+
+			private System.Action _act;
+		}
 	}
 
 	public static class WebAuthnIdentitySigner
@@ -90,7 +85,11 @@ namespace EdjCase.ICP.InternetIdentity
 			}
 		}
 
-		public static byte[] Fido2AssertSync(byte[] challenge, FidoAssertion assert, WebAuthnIdentitySignerOptions options, IEnumerable<IIClient.DeviceData> devices)
+		public static byte[] Fido2AssertSync(
+			byte[] challenge,
+			FidoAssertion assert,
+			IEnumerable<byte[]> deviceCredentials
+		)
 		{
 			using var device = new FidoDevice();
 			using var _opened = device.OpenAuto(GetFidoDeviceNameForSign());
@@ -100,13 +99,10 @@ namespace EdjCase.ICP.InternetIdentity
 			// configure the assertion request
 			assert.SetClientData(clientDataBytes);
 			assert.Rp = RpId;
-			foreach (var d in devices)
+			foreach (byte[] credentials in deviceCredentials)
 			{
-				if (d.CredentialId.TryGetValue(out var cred))
-				{
-					// TODO: avoid copying here! CredentialId doesn't need to be a List
-					assert.AllowCredential(cred.ToArray());
-				}
+				// TODO: avoid copying here! CredentialId doesn't need to be a List
+				assert.AllowCredential(cred.ToArray());
 			}
 
 			assert.SetExtensions(FidoExtensions.None);
@@ -128,10 +124,10 @@ namespace EdjCase.ICP.InternetIdentity
 			return SerializeAssertion(assert[0], clientData);
 		}
 
-		public static Task<byte[]> Fido2Assert(byte[] challenge, FidoAssertion assert, WebAuthnIdentitySignerOptions options, IEnumerable<IIClient.DeviceData> devices)
+		public static Task<byte[]> Fido2Assert(byte[] challenge, FidoAssertion assert, IEnumerable<IIClient.DeviceData> devices)
 		{
 			return Task.Factory.StartNew(
-				() => Fido2AssertSync(challenge, assert, options, devices),
+				() => Fido2AssertSync(challenge, assert, devices),
 				TaskCreationOptions.DenyChildAttach | TaskCreationOptions.LongRunning);
 		}
 	}

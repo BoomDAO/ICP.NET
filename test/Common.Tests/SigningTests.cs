@@ -19,7 +19,7 @@ namespace ICP.Candid.Tests
 	public class SigningTests
 	{
 		[Fact]
-		public void Sign_QueryRequest()
+		public async Task Sign_QueryRequest()
 		{
 			Principal canisterId = Principal.FromText("rrkah-fqaaa-aaaaa-aaaaq-cai");
 			string method = "get_proposal_info";
