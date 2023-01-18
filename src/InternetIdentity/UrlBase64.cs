@@ -9,13 +9,13 @@ using System.Collections.Generic;
 
 namespace EdjCase.ICP.InternetIdentity
 {
-	public enum PaddingPolicy
+	internal enum PaddingPolicy
 	{
 		Discard,
 		Preserve,
 	}
 
-	public static class UrlBase64
+	internal static class UrlBase64
 	{
 		private static readonly char[] TwoPads = { '=', '=' };
 

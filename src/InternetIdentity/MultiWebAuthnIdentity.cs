@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using IIClient = EdjCase.ICP.InternetIdentity.Models;
 using Fido2Net;
 using Dahomey.Cbor.Serialization;
 using Dahomey.Cbor.Util;
@@ -7,6 +6,7 @@ using System.Threading.Tasks;
 using System;
 using EdjCase.ICP.Agent.Identities;
 using EdjCase.ICP.Agent.Keys;
+using System.Linq;
 
 namespace EdjCase.ICP.InternetIdentity
 {
@@ -33,6 +33,13 @@ namespace EdjCase.ICP.InternetIdentity
 
 			private System.Action _act;
 		}
+	}
+
+	public class WebAuthnIdentitySignerOptions
+	{
+		public TimeSpan Timeout { get; } = TimeSpan.FromSeconds(60.0);
+
+		public static readonly WebAuthnIdentitySignerOptions Default = new WebAuthnIdentitySignerOptions();
 	}
 
 	public static class WebAuthnIdentitySigner
@@ -86,6 +93,7 @@ namespace EdjCase.ICP.InternetIdentity
 		public static byte[] Fido2AssertSync(
 			byte[] challenge,
 			FidoAssertion assert,
+			WebAuthnIdentitySignerOptions signerOptions,
 			IEnumerable<byte[]> deviceCredentials
 		)
 		{
@@ -121,54 +129,52 @@ namespace EdjCase.ICP.InternetIdentity
 			return SerializeAssertion(assert[0], clientData);
 		}
 
-		public static Task<byte[]> Fido2Assert(byte[] challenge, FidoAssertion assert, IEnumerable<byte[]> deviceCredentials)
+		public static Task<byte[]> Fido2Assert(byte[] challenge, FidoAssertion assert, WebAuthnIdentitySignerOptions signerOptions, IEnumerable<byte[]> deviceCredentials)
 		{
 			return Task.Factory.StartNew(
-				() => Fido2AssertSync(challenge, assert, deviceCredentials),
-				TaskCreationOptions.DenyChildAttach | TaskCreationOptions.LongRunning);
+				function: () => Fido2AssertSync(challenge, assert, signerOptions, deviceCredentials),
+				creationOptions: TaskCreationOptions.DenyChildAttach | TaskCreationOptions.LongRunning
+			);
 		}
 	}
 
 	public class WebAuthnIdentity : SigningIdentityBase
 	{
-		public readonly IIClient.DeviceData device;
-		public readonly WebAuthnIdentitySignerOptions signerOptions;
-		public IPublicKey publicKey { get; }
+		public byte[] DeviceCredential { get; }
+		public WebAuthnIdentitySignerOptions SignerOptions { get; }
+		public IPublicKey PublicKey { get; }
 
-		public WebAuthnIdentity(IIClient.DeviceData device, WebAuthnIdentitySignerOptions? signerOptions = null)
+		public WebAuthnIdentity(byte[] deviceCredential, byte[] devicePublicKey, WebAuthnIdentitySignerOptions? signerOptions = null)
 		{
-			this.device = device ?? throw new System.InvalidOperationException("Devices must be non-null");
-			this.signerOptions = signerOptions ?? WebAuthnIdentitySignerOptions.Default;
-			this.publicKey = DerCosePublicKey.FromDer(device.Pubkey.ToArray());
+			this.DeviceCredential = deviceCredential ?? throw new ArgumentNullException(nameof(deviceCredential));
+			this.SignerOptions = signerOptions ?? WebAuthnIdentitySignerOptions.Default;
+			this.PublicKey = DerCosePublicKey.FromDer(devicePublicKey);
 		}
 
-		public override IPublicKey GetPublicKey() => this.publicKey;
+		public override IPublicKey GetPublicKey() => this.PublicKey;
 
-		private IEnumerable<IIClient.DeviceData> GetDevices()
-		{
-			yield return this.device;
-		}
 
 		public override async Task<byte[]> SignAsync(byte[] sign)
 		{
 			using var assert = new FidoAssertion();
-			return await WebAuthnIdentitySigner.Fido2Assert(sign, assert, this.signerOptions, this.GetDevices());
+			IEnumerable<byte[]> deviceCredentials = Enumerable.Repeat(this.DeviceCredential, 1);
+			return await WebAuthnIdentitySigner.Fido2Assert(sign, assert, this.SignerOptions, deviceCredentials);
 		}
 	}
 
 	public class MultiWebAuthnIdentity : SigningIdentityBase
 	{
-		public readonly IEnumerable<IIClient.DeviceData> devices;
-		public readonly WebAuthnIdentitySignerOptions signerOptions;
+		public IEnumerable<byte[]> DeviceCredentials { get; }
+		public WebAuthnIdentitySignerOptions SignerOptions { get; }
 		public SigningIdentityBase? selectedIdentity { get => this._selectedIdentity; }
 
-		public MultiWebAuthnIdentity(IEnumerable<IIClient.DeviceData> devices, WebAuthnIdentitySignerOptions? signerOptions = null)
+		public MultiWebAuthnIdentity(IEnumerable<byte[]> deviceCredentials, WebAuthnIdentitySignerOptions? signerOptions = null)
 		{
-			this.devices = devices ?? throw new System.InvalidOperationException("Devices must be non-null");
-			this.signerOptions = signerOptions ?? WebAuthnIdentitySignerOptions.Default;
+			this.DeviceCredentials = deviceCredentials ?? throw new ArgumentNullException(nameof(deviceCredentials));
+			this.SignerOptions = signerOptions ?? WebAuthnIdentitySignerOptions.Default;
 		}
 
-		public static MultiWebAuthnIdentity FromDevices(IEnumerable<IIClient.DeviceData> devices)
+		public static MultiWebAuthnIdentity FromDevices(IEnumerable<byte[]> devices)
 		{
 			return new MultiWebAuthnIdentity(devices);
 		}
@@ -181,11 +187,11 @@ namespace EdjCase.ICP.InternetIdentity
 			}
 			else
 			{
-				throw new System.InvalidOperationException("Cannot use MultiWebAuthnIdentity.GetPublicKey before the first call to Sign");
+				throw new InvalidOperationException("Cannot use MultiWebAuthnIdentity.GetPublicKey before the first call to Sign");
 			}
 		}
 
-		private static bool SpanEquals(System.ReadOnlySpan<byte> a, IReadOnlyList<byte> b)
+		private static bool SpanEquals(ReadOnlySpan<byte> a, IReadOnlyList<byte> b)
 		{
 			if (a.Length != b.Count) return false;
 
@@ -204,7 +210,7 @@ namespace EdjCase.ICP.InternetIdentity
 			}
 
 			using var assert = new FidoAssertion();
-			var signature = await WebAuthnIdentitySigner.Fido2Assert(sign, assert, this.signerOptions, this.devices);
+			var signature = await WebAuthnIdentitySigner.Fido2Assert(sign, assert, this.SignerOptions, this.DeviceCredentials);
 			return this.ConvSignature(assert, signature);
 		}
 
@@ -214,11 +220,11 @@ namespace EdjCase.ICP.InternetIdentity
 
 			// find the device which the user actually signed with, and use that device exclusively in the future.
 			// its unclear why this really matters (we never sign with this identity but once), but II does this, so replicate it here.
-			foreach (var d in this.devices)
+			foreach (byte[] credential in this.DeviceCredentials)
 			{
-				if (d.CredentialId.TryGetValue(out var cred) && SpanEquals(id, cred))
+				if (SpanEquals(id, credential))
 				{
-					this._selectedIdentity = new WebAuthnIdentity(d, this.signerOptions);
+					this._selectedIdentity = new WebAuthnIdentity(credential, devicePublicKey, this.SignerOptions);
 					break;
 				}
 			}

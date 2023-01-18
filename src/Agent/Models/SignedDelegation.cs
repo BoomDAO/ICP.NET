@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace EdjCase.ICP.Agent.Models
 {
@@ -23,13 +24,13 @@ namespace EdjCase.ICP.Agent.Models
 			this.Signature = signature ?? throw new ArgumentNullException(nameof(signature));
 		}
 
-		public static SignedDelegation Create(
+		public static async Task<SignedDelegation> CreateAsync(
 			SigningIdentityBase fromIdentity,
 			IPublicKey publicKey,
 			ICTimestamp expiration,
 			List<Principal>? targets = null)
 		{
-			var delegation = new Delegation(publicKey.GetRawBytes(), expiration, targets);
+			var delegation = new Delegation(publicKey.GetDerEncodedBytes(), expiration, targets);
 			Dictionary<string, IHashable> hashable = delegation.BuildHashableItem();
 			// The signature is calculated by signing the concatenation of the domain separator
 			// and the message.
@@ -40,7 +41,7 @@ namespace EdjCase.ICP.Agent.Models
 				.Concat(delegationHashDigest)
 				.ToArray();
 
-			byte[] signature = fromIdentity.Sign(challenge); // Sign the domain sep + delegation hash digest
+			byte[] signature = await fromIdentity.SignAsync(challenge); // Sign the domain sep + delegation hash digest
 			return new SignedDelegation(delegation, signature);
 		}
 
