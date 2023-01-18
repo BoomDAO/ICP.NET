@@ -1,8 +1,9 @@
 using System;
 using EdjCase.ICP.Candid.Crypto;
+using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid.Utilities;
 
-namespace EdjCase.ICP.Candid.Models
+namespace EdjCase.ICP.Agent.Keys
 {
 	public class DerCosePublicKey : IHashable, IPublicKey
 	{

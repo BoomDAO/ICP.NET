@@ -1,7 +1,8 @@
 using EdjCase.ICP.Agent;
 using EdjCase.ICP.Agent.Agents;
-using EdjCase.ICP.Agent.Auth;
-using EdjCase.ICP.Agent.Identity;
+using EdjCase.ICP.Agent.Identities;
+using EdjCase.ICP.Agent.Keys;
+using EdjCase.ICP.Agent.Models;
 using EdjCase.ICP.Candid.Models;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,7 +36,7 @@ namespace EdjCase.ICP.InternetIdentity
 		{
 			return new SignedDelegation(
 				signedDeletation.Delegation.Convert(),
-				Signature.Copy(signedDeletation.Signature)
+				signedDeletation.Signature.ToArray()
 			);
 		}
 	}
@@ -106,7 +107,7 @@ namespace EdjCase.ICP.InternetIdentity
 		// corresponds to `requestFEDelegation' from @dfinity/internet-identity
 		public async Task<DelegationIdentity> RequestNewDelegation(SigningIdentityBase userSignIdentity, Principal targetCanisterId)
 		{
-			var sessionKey = ED25519Identity.Generate();
+			var sessionKey = Ed25519Identity.Generate();
 			var tenMinutesInNanoSeconds = 600 * 1_000_000_000ul;
 			var delegationChain = await DelegationChain.Create(
 				userSignIdentity, sessionKey.PublicKey,

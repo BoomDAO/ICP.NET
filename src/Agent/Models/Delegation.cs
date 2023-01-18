@@ -58,6 +58,16 @@ namespace EdjCase.ICP.Agent.Models
 				.ComputeHash(hashFunction);
 		}
 
+		/// <summary>
+		/// Checks to see if the expiration is on or after the specified time
+		/// </summary>
+		/// <param name="timestamp">The timestamp to compare the expiration against</param>
+		/// <returns>True if the delegation is NOT expired, otherwise false</returns>
+		public bool IsExpirationValid(ICTimestamp timestamp)
+		{
+			return this.Expiration >= timestamp;
+		}
+
 		public class Properties
 		{
 			public const string PUBLIC_KEY = "pubkey";

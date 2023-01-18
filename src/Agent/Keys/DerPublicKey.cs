@@ -1,4 +1,7 @@
-namespace EdjCase.ICP.Candid.Models
+
+using System;
+
+namespace EdjCase.ICP.Agent.Keys
 {
 	/// <summary>
 	/// Public key type which makes no promises about the format.
@@ -6,11 +9,11 @@ namespace EdjCase.ICP.Candid.Models
 	/// </summary>
 	public class DerPublicKey : IPublicKey
 	{
-		public byte[] DerEncodedPublicKey;
+		public byte[] DerEncodedPublicKey { get; }
 
 		public DerPublicKey(byte[] derEncodedPublicKey)
 		{
-			this.DerEncodedPublicKey = derEncodedPublicKey ?? throw new System.ArgumentNullException(nameof(derEncodedPublicKey));
+			this.DerEncodedPublicKey = derEncodedPublicKey ?? throw new ArgumentNullException(nameof(derEncodedPublicKey));
 		}
 
 		public static DerPublicKey FromDer(byte[] derEncodedPublicKey)

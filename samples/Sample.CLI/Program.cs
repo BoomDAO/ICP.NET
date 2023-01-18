@@ -1,12 +1,11 @@
 using EdjCase.ICP.Agent.Agents;
-using EdjCase.ICP.Agent.Identity;
 using EdjCase.ICP.Candid.Models;
 using System;
 using System.Threading.Tasks;
 using EdjCase.ICP.InternetIdentity;
 using McMaster.Extensions.CommandLineUtils;
 using EdjCase.ICP.Serialization;
-
+using EdjCase.ICP.Agent.Identities;
 
 [HelpOption("-h|--help")]
 public class App
@@ -60,7 +59,7 @@ public class App
 		var authenticatedConn = await anonConn.LoginToConn(userNumber);
 
 		// get delegation identity for sessions
-		ED25519Identity sessionKey = ED25519Identity.Generate();
+		Ed25519Identity sessionKey = Ed25519Identity.Generate();
 		var sessionDelegationIdentity = await authenticatedConn.PrepareAndGetDelegation(hostname, sessionKey);
 		return sessionDelegationIdentity;
 	}

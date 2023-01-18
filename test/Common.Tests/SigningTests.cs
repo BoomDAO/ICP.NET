@@ -9,6 +9,7 @@ using Snapshooter.Xunit;
 using System.Collections.Generic;
 using Xunit;
 using EdjCase.ICP.Agent.Models;
+using System.Threading.Tasks;
 
 namespace ICP.Candid.Tests
 {
@@ -46,7 +47,7 @@ namespace ICP.Candid.Tests
 			var request = new QueryRequest(canisterId, method, arg, sender, ingressExpiry);
 			Dictionary<string, IHashable> content = request.BuildHashableItem();
 
-			SignedContent signedContent = await identity.CreateSignedContent(content);
+			SignedContent signedContent = await identity.SignContentAsync(content);
 
 			Snapshot.Match(ByteUtil.ToHexString(signedContent.SenderSignature!));
 		}

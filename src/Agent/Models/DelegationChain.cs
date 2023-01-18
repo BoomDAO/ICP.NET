@@ -2,6 +2,7 @@ using EdjCase.ICP.Agent.Identities;
 using EdjCase.ICP.Agent.Keys;
 using EdjCase.ICP.Candid.Models;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace EdjCase.ICP.Agent.Models
 {
@@ -27,6 +28,11 @@ namespace EdjCase.ICP.Agent.Models
 			List<SignedDelegation> delegations = previousChain?.Delegations ?? new List<SignedDelegation>();
 			delegations.Add(signedDelegation);
 			return new DelegationChain(publicKey, delegations);
+		}
+
+		public bool IsExpirationValid(ICTimestamp timestamp)
+		{
+			return this.Delegations.All(d => d.Delegation.IsExpirationValid(timestamp));
 		}
 	}
 }

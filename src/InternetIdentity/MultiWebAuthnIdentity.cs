@@ -1,14 +1,12 @@
-using EdjCase.ICP.Agent;
-using EdjCase.ICP.Agent.Auth;
-using EdjCase.ICP.Candid.Models;
 using System.Collections.Generic;
 using IIClient = EdjCase.ICP.InternetIdentity.Models;
 using Fido2Net;
 using Dahomey.Cbor.Serialization;
 using Dahomey.Cbor.Util;
 using System.Threading.Tasks;
-using System.Runtime.CompilerServices;
 using System;
+using EdjCase.ICP.Agent.Identities;
+using EdjCase.ICP.Agent.Keys;
 
 namespace EdjCase.ICP.InternetIdentity
 {
@@ -99,10 +97,9 @@ namespace EdjCase.ICP.InternetIdentity
 			// configure the assertion request
 			assert.SetClientData(clientDataBytes);
 			assert.Rp = RpId;
-			foreach (byte[] credentials in deviceCredentials)
+			foreach (byte[] credential in deviceCredentials)
 			{
-				// TODO: avoid copying here! CredentialId doesn't need to be a List
-				assert.AllowCredential(cred.ToArray());
+				assert.AllowCredential(credential);
 			}
 
 			assert.SetExtensions(FidoExtensions.None);
@@ -124,10 +121,10 @@ namespace EdjCase.ICP.InternetIdentity
 			return SerializeAssertion(assert[0], clientData);
 		}
 
-		public static Task<byte[]> Fido2Assert(byte[] challenge, FidoAssertion assert, IEnumerable<IIClient.DeviceData> devices)
+		public static Task<byte[]> Fido2Assert(byte[] challenge, FidoAssertion assert, IEnumerable<byte[]> deviceCredentials)
 		{
 			return Task.Factory.StartNew(
-				() => Fido2AssertSync(challenge, assert, devices),
+				() => Fido2AssertSync(challenge, assert, deviceCredentials),
 				TaskCreationOptions.DenyChildAttach | TaskCreationOptions.LongRunning);
 		}
 	}
@@ -152,10 +149,10 @@ namespace EdjCase.ICP.InternetIdentity
 			yield return this.device;
 		}
 
-		public override async Task<Signature> Sign(byte[] sign)
+		public override async Task<byte[]> SignAsync(byte[] sign)
 		{
 			using var assert = new FidoAssertion();
-			return new Signature(await WebAuthnIdentitySigner.Fido2Assert(sign, assert, this.signerOptions, this.GetDevices()));
+			return await WebAuthnIdentitySigner.Fido2Assert(sign, assert, this.signerOptions, this.GetDevices());
 		}
 	}
 
@@ -199,11 +196,11 @@ namespace EdjCase.ICP.InternetIdentity
 			return true;
 		}
 
-		public override async Task<Signature> Sign(byte[] sign)
+		public override async Task<byte[]> SignAsync(byte[] sign)
 		{
 			if (this._selectedIdentity != null)
 			{
-				return await this._selectedIdentity.Sign(sign);
+				return await this._selectedIdentity.SignAsync(sign);
 			}
 
 			using var assert = new FidoAssertion();
@@ -211,7 +208,7 @@ namespace EdjCase.ICP.InternetIdentity
 			return this.ConvSignature(assert, signature);
 		}
 
-		private Signature ConvSignature(FidoAssertion assert, byte[] signature)
+		private byte[] ConvSignature(FidoAssertion assert, byte[] signature)
 		{
 			var id = assert[0].Id;
 
@@ -226,7 +223,7 @@ namespace EdjCase.ICP.InternetIdentity
 				}
 			}
 
-			return new Signature(signature);
+			return signature;
 		}
 
 		private SigningIdentityBase? _selectedIdentity;

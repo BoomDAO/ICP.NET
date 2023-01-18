@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using EdjCase.ICP.Agent.Models;
+using System.Threading.Tasks;
 
 namespace EdjCase.ICP.Agent.Identities
 {
@@ -35,23 +36,23 @@ namespace EdjCase.ICP.Agent.Identities
 		/// </summary>
 		/// <param name="data">The byte data to sign</param>
 		/// <returns>The signature bytes of the specified data bytes</returns>
-		public abstract byte[] Sign(byte[] data);
+		public abstract Task<byte[]> SignAsync(byte[] data);
 
 		/// <inheritdoc/>
 		public Principal GetPrincipal()
 		{
 			IPublicKey publicKey = this.GetPublicKey();
-			return Principal.SelfAuthenticating(publicKey.GetRawBytes());
+			return Principal.SelfAuthenticating(publicKey);
 		}
 
 		/// <inheritdoc/>
-		public SignedContent SignContent(Dictionary<string, IHashable> content)
+		public async Task<SignedContent> SignContentAsync(Dictionary<string, IHashable> content)
 		{
 			IPublicKey senderPublicKey = this.GetPublicKey();
 			var sha256 = SHA256HashFunction.Create();
 			byte[] contentHash = content.ToHashable().ComputeHash(sha256);
 			byte[] domainSeparator = Encoding.UTF8.GetBytes("\x0Aic-request");
-			byte[] senderSignature = this.Sign(domainSeparator.Concat(contentHash).ToArray());
+			byte[] senderSignature = await this.SignAsync(domainSeparator.Concat(contentHash).ToArray());
 			List<SignedDelegation>? senderDelegations = this.GetSenderDelegations();
 			return new SignedContent(content, senderPublicKey.GetRawBytes(), senderDelegations, senderSignature);
 		}
