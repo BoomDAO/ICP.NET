@@ -6,11 +6,11 @@
 	  <Nullable>enable</Nullable>
 	  <LangVersion>latest</LangVersion>
 	  <RootNamespace>EdjCase.ICP.ClientGenerator</RootNamespace>
-	  <RepositoryUrl>https://github.com/Gekctek/ICP.NET</RepositoryUrl>
+	  <RepositoryUrl>https://github.com/EdjCase/ICP.NET</RepositoryUrl>
 	  <RepositoryType>git</RepositoryType>
 	  <PackageTags>.net;blazor;ICP;IC</PackageTags>
 	  <PackageReadmeFile>README.md</PackageReadmeFile>
-	  <PackageProjectUrl>https://github.com/Gekctek/ICP.NET</PackageProjectUrl>
+	  <PackageProjectUrl>https://github.com/EdjCase/ICP.NET</PackageProjectUrl>
 	  <Product>EdjCase.ICP.ClientGenerator</Product>
 	  <Company>Edjcase</Company>
 	  <Authors>Gekctek</Authors>
@@ -18,8 +18,8 @@
 	  <PackAsTool>true</PackAsTool>
 	  <ToolCommandName>candid-client-generator</ToolCommandName>
 	  <PackageOutputPath>./nupkg</PackageOutputPath>
-	  <ApplicationIcon />
-	  <StartupObject />
+	  <GenerateDocumentationFile>True</GenerateDocumentationFile>
+	  <DocumentationFile>..\..\docs\ClientGenerator.xml</DocumentationFile>
   </PropertyGroup>
 
 	<ItemGroup>

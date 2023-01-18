@@ -1,11 +1,10 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 
 namespace EdjCase.ICP.Candid.Utilities
 {
-	public static class EnumerableUtil
+	internal static class EnumerableUtil
 	{
 
 		public static IEnumerable<T[]> Chunk<T>(this IEnumerable<T> source, int size)

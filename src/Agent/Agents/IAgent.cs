@@ -1,88 +1,104 @@
-using EdjCase.ICP.Agent.Auth;
+using EdjCase.ICP.Agent.Identities;
 using EdjCase.ICP.Agent.Requests;
 using EdjCase.ICP.Agent.Responses;
-using EdjCase.ICP.Candid;
 using EdjCase.ICP.Candid.Models;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace EdjCase.ICP.Agent.Agents
 {
+	/// <summary>
+	/// An agent is used to communicate with the Internet Computer with certain protocols that 
+	/// are specific to an `IAgent` implementation
+	/// </summary>
 	public interface IAgent
 	{
 		/// <summary>
-		/// Returns the principal ID associated with this agent (by default). It only shows
-		/// the principal of the default identity in the agent, which is the principal used
-		/// when calls don't specify it.
+		/// Gets the state of a specified canister with the subset of state information
+		/// specified by the paths parameter
 		/// </summary>
-		/// <returns>Principal for agent</returns>
-		Principal GetPrincipal();
+		/// <param name="canisterId">Canister to read state for</param>
+		/// <param name="paths">The state paths to get information for. Other state data will be pruned if not specified</param>
+		/// <param name="identityOverride">Optional. If specified, will override the agent identity</param>
+		/// <returns>A response that contains the certificate of the current cansiter state</returns>
+		Task<ReadStateResponse> ReadStateAsync(Principal canisterId, List<StatePath> paths, IIdentity? identityOverride = null);
 
-		/**
-		* Send a read state query to the replica. This includes a list of paths to return,
-		* and will return a Certificate. This will only reject on communication errors,
-		* but the certificate might contain less information than requested.
-		* @param effectiveCanisterId A Canister ID related to this call.
-		* @param options The options for this call.
-		*/
-		Task<ReadStateResponse> ReadStateAsync(Principal canisterId, List<Path> paths, IIdentity? identityOverride = null);
-
+		/// <summary>
+		/// Gets the status of a request that is being processed by the specified canister
+		/// </summary>
+		/// <param name="canisterId">Canister where the request was sent to</param>
+		/// <param name="id">Id of the request to get a status for</param>
+		/// <returns>A status variant of the request. If request is not found, will return null</returns>
 		Task<RequestStatus?> GetRequestStatusAsync(Principal canisterId, RequestId id);
 
-		Task<RequestId> CallAsync(Principal canisterId, string method, CandidArg encodedArgument, Principal? effectiveCanisterId = null, IIdentity? identityOverride = null);
+		/// <summary>
+		/// Sends a call request to a specified canister method and gets back an id of the 
+		/// request that is being processed. This call does NOT wait for the request to be complete.
+		/// Either check the status with `GetRequestStatusAsync` or use the `CallAndWaitAsync` method
+		/// </summary>
+		/// <param name="canisterId">Canister to read state for</param>
+		/// <param name="method">The name of the method to call on the cansiter</param>
+		/// <param name="arg">The candid arg to send with the request</param>
+		/// <param name="effectiveCanisterId">Optional. Specifies the relevant canister id if calling the root canister</param>
+		/// <param name="identityOverride">Optional. If specified, will override the agent identity</param>
+		/// <returns>The id of the request that can be used to look up its status with `GetRequestStatusAsync`</returns>
+		Task<RequestId> CallAsync(Principal canisterId, string method, CandidArg arg, Principal? effectiveCanisterId = null, IIdentity? identityOverride = null);
 
-		/**
-		* Query the status endpoint of the replica. This normally has a few fields that
-		* corresponds to the version of the replica, its root public key, and any other
-		* information made public.
-		* @returns A JsonObject that is essentially a record of fields from the status
-		*     endpoint.
-		*/
-		Task<StatusResponse> GetStatusAsync();
+		/// <summary>
+		/// Gets the status of the IC replica. This includes versioning information
+		/// about the replica
+		/// </summary>
+		/// <returns>A response containing all replica status information</returns>
+		Task<StatusResponse> GetReplicaStatusAsync();
 
-		/**
-		* Send a query call to a canister. See
-		* {@link https://sdk.ICP.org/docs/interface-spec/#http-query | the interface spec}.
-		* @param canisterId The Principal of the Canister to send the query to. Sending a query to
-		*     the management canister is not supported (as it has no meaning from an agent).
-		* @param options Options to use to create and send the query.
-		* @returns The response from the replica. The Promise will only reject when the communication
-		*     failed. If the query itself failed but no protocol errors happened, the response will
-		*     be of type QueryResponseRejected.
-		*/
+		/// <summary>
+		/// Sends a query request to a specified canister method
+		/// </summary>
+		/// <param name="canisterId">Canister to read state for</param>
+		/// <param name="method">The name of the method to call on the cansiter</param>
+		/// <param name="arg">The candid arg to send with the request</param>
+		/// <param name="identityOverride">Optional. If specified, will override the agent identity</param>
+		/// <returns>The response data of the query call</returns>
 		Task<QueryResponse> QueryAsync(Principal canisterId, string method, CandidArg arg, IIdentity? identityOverride = null);
-		/**
-		* By default, the agent is configured to talk to the main Internet Computer,
-		* and verifies responses using a hard-coded public key.
-		*
-		* This function will instruct the agent to ask the endpoint for its public
-		* key, and use that instead. This is required when talking to a local test
-		* instance, for example.
-		*
-		* Only use this when you are  _not_ talking to the main Internet Computer,
-		* otherwise you are prone to man-in-the-middle attacks! Do not call this
-		* function by default.
-		*/
-		Task<Key> GetRootKeyAsync();
+
+		/// <summary>
+		/// Gets the root public key of the current Internet Computer network
+		/// </summary>
+		/// <returns>The root public key bytes </returns>
+		Task<byte[]> GetRootKeyAsync();
 
 
 	}
 
+	/// <summary>
+	/// Extension methods for the `IAgent` interface
+	/// </summary>
 	public static class IAgentExtensions
 	{
+		/// <summary>
+		/// Sends a call request to a specified canister method, waits for the request to be processed,
+		/// the returns the candid response to the call. This is helper method built on top of `CallAsync`
+		/// to wait for the response so it doesn't need to be implemented manually
+		/// </summary>
+		/// <param name="agent">The agent to use for the call</param>
+		/// <param name="canisterId">Canister to read state for</param>
+		/// <param name="method">The name of the method to call on the cansiter</param>
+		/// <param name="arg">The candid arg to send with the request</param>
+		/// <param name="effectiveCanisterId">Optional. Specifies the relevant canister id if calling the root canister</param>
+		/// <param name="identityOverride">Optional. If specified, will override the agent identity</param>
+		/// <param name="cancellationToken">Optional. If specified, will be used to prematurely end the waiting</param>
+		/// <returns>The id of the request that can be used to look up its status with `GetRequestStatusAsync`</returns>
 		public static async Task<CandidArg> CallAndWaitAsync(
 			this IAgent agent,
 			Principal canisterId,
 			string method,
-			CandidArg encodedArgument,
+			CandidArg arg,
 			Principal? effectiveCanisterId = null,
 			IIdentity? identityOverride = null,
 			CancellationToken? cancellationToken = null)
 		{
-			RequestId id = await agent.CallAsync(canisterId, method, encodedArgument, effectiveCanisterId, identityOverride);
+			RequestId id = await agent.CallAsync(canisterId, method, arg, effectiveCanisterId, identityOverride);
 
 			while (true)
 			{
@@ -106,7 +122,7 @@ namespace EdjCase.ICP.Agent.Agents
 						(UnboundedUInt code, string message, string? errorCode) = requestStatus.AsRejected();
 						throw new CallRejectedException(code, message, errorCode);
 					case RequestStatus.StatusType.Done:
-						throw new RequestCleanedUpExcpetion();
+						throw new RequestCleanedUpException();
 				}
 			}
 		}

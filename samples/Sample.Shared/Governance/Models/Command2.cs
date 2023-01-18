@@ -1,8 +1,4 @@
 using System;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using EdjCase.ICP.Candid.Mapping;
-using EdjCase.ICP.Candid;
 
 namespace Sample.Shared.Governance.Models
 {
@@ -30,7 +26,7 @@ namespace Sample.Shared.Governance.Models
 		
 		public Spawn AsSpawn()
 		{
-			this.ValidateType(Command2Tag.Spawn);
+			this.ValidateTag(Command2Tag.Spawn);
 			return (Spawn)this.Value!;
 		}
 		
@@ -41,7 +37,7 @@ namespace Sample.Shared.Governance.Models
 		
 		public Split AsSplit()
 		{
-			this.ValidateType(Command2Tag.Split);
+			this.ValidateTag(Command2Tag.Split);
 			return (Split)this.Value!;
 		}
 		
@@ -52,7 +48,7 @@ namespace Sample.Shared.Governance.Models
 		
 		public Configure AsConfigure()
 		{
-			this.ValidateType(Command2Tag.Configure);
+			this.ValidateTag(Command2Tag.Configure);
 			return (Configure)this.Value!;
 		}
 		
@@ -63,7 +59,7 @@ namespace Sample.Shared.Governance.Models
 		
 		public Merge AsMerge()
 		{
-			this.ValidateType(Command2Tag.Merge);
+			this.ValidateTag(Command2Tag.Merge);
 			return (Merge)this.Value!;
 		}
 		
@@ -74,7 +70,7 @@ namespace Sample.Shared.Governance.Models
 		
 		public DisburseToNeuron AsDisburseToNeuron()
 		{
-			this.ValidateType(Command2Tag.DisburseToNeuron);
+			this.ValidateTag(Command2Tag.DisburseToNeuron);
 			return (DisburseToNeuron)this.Value!;
 		}
 		
@@ -85,7 +81,7 @@ namespace Sample.Shared.Governance.Models
 		
 		public ClaimOrRefresh AsClaimOrRefreshNeuron()
 		{
-			this.ValidateType(Command2Tag.ClaimOrRefreshNeuron);
+			this.ValidateTag(Command2Tag.ClaimOrRefreshNeuron);
 			return (ClaimOrRefresh)this.Value!;
 		}
 		
@@ -96,7 +92,7 @@ namespace Sample.Shared.Governance.Models
 		
 		public MergeMaturity AsMergeMaturity()
 		{
-			this.ValidateType(Command2Tag.MergeMaturity);
+			this.ValidateTag(Command2Tag.MergeMaturity);
 			return (MergeMaturity)this.Value!;
 		}
 		
@@ -107,11 +103,11 @@ namespace Sample.Shared.Governance.Models
 		
 		public Disburse AsDisburse()
 		{
-			this.ValidateType(Command2Tag.Disburse);
+			this.ValidateTag(Command2Tag.Disburse);
 			return (Disburse)this.Value!;
 		}
 		
-		private void ValidateType(Command2Tag tag)
+		private void ValidateTag(Command2Tag tag)
 		{
 			if (!this.Tag.Equals(tag))
 			{

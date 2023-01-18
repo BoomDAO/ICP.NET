@@ -1,11 +1,6 @@
 using CommandLine;
 using EdjCase.ICP.Candid.Models;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace EdjCase.ICP.ClientGenerator
@@ -39,75 +34,39 @@ namespace EdjCase.ICP.ClientGenerator
 		public static async Task Main(string[] args)
 		{
 #if DEBUG
-			if (args.Length <= 1)
+			while (true)
 			{
-				Console.WriteLine("CanisterId (leave blank if using file): ");
-				string? canisterId = Console.ReadLine()?.Trim();
-				string fileName;
-				string? filePath = null;
-				string? baseUrl = null;
-				bool useFile = string.IsNullOrWhiteSpace(canisterId);
-				if (useFile)
-				{
-					Console.WriteLine("File Path: ");
-					filePath = Console.ReadLine()!;
-					fileName = System.IO.Path.GetFileName(filePath);
-					if (fileName.EndsWith(".did"))
+#endif
+				ParserResult<Options> result = await Parser.Default.ParseArguments<Options>(args)
+					.WithParsedAsync<Options>(async o =>
 					{
-						fileName = fileName.Substring(0, fileName.Length - 4);
-					}
+						if (string.IsNullOrWhiteSpace(o.CanisterId))
+						{
+							ClientFileGenerator.GenerateClientFromFile(o.CandidFilePath!, o.OutputDirectory, o.Namespace, o.ClientName);
+						}
+						else
+						{
+							Principal canisterId = Principal.FromText(o.CanisterId);
+							Uri? baseUrl = string.IsNullOrWhiteSpace(o.BaseUrl) ? null : new Uri(o.BaseUrl);
+							await ClientFileGenerator.GenerateClientFromCanisterAsync(canisterId, o.OutputDirectory, o.Namespace, o.ClientName, baseUrl);
+						}
+					});
+
+#if DEBUG
+				if (result.Tag == ParserResultType.NotParsed)
+				{
+					string? argString = Console.ReadLine();
+					args = argString?.Split(' ', StringSplitOptions.RemoveEmptyEntries) ?? new string[0];
 				}
 				else
 				{
-					Console.WriteLine("Base Url (leave blank from mainnet): ");
-					baseUrl = Console.ReadLine()!;
-					Console.WriteLine("Service Name: ");
-					fileName = Console.ReadLine()!;
-				}
-				Console.WriteLine("Output Directory: ");
-				string outputDirectory = Console.ReadLine()!;
-				if (useFile)
-				{
-					args = new string[]
-					{
-					"-o",
-					System.IO.Path.Combine(outputDirectory, fileName),
-					"-f",
-					filePath!,
-					"-n",
-					$"Sample.Shared.{fileName}"
-					};
-				}
-				else
-				{
-					args = new string[]
-					{
-					"-o",
-					System.IO.Path.Combine(outputDirectory, fileName),
-					"-i",
-					canisterId!,
-					"-n",
-					$"Sample.Shared.{fileName}",
-					"-u",
-					baseUrl ?? "https://ic0.app"
-					};
+					// Reset on success
+					Console.WriteLine("Generation Complete. Press Enter to run again");
+					Console.ReadLine();
+					args = new string[0];
 				}
 			}
 #endif
-			await Parser.Default.ParseArguments<Options>(args)
-				.WithParsedAsync<Options>(async o =>
-				{
-					if (string.IsNullOrWhiteSpace(o.CanisterId))
-					{
-						ClientFileGenerator.GenerateClientFromFile(o.CandidFilePath!, o.OutputDirectory, o.Namespace, o.ClientName);
-					}
-					else
-					{
-						Principal canisterId = Principal.FromText(o.CanisterId);
-						Uri? baseUrl = string.IsNullOrWhiteSpace(o.BaseUrl) ? null : new Uri(o.BaseUrl);
-						await ClientFileGenerator.GenerateClientFromCanisterAsync(canisterId, o.OutputDirectory, o.Namespace, o.ClientName, baseUrl);
-					}
-				});
 		}
 	}
 }

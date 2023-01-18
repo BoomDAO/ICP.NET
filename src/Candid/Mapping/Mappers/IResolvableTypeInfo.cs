@@ -4,14 +4,9 @@ using EdjCase.ICP.Candid.Models.Values;
 using EdjCase.ICP.Candid.Utilities;
 using System;
 using System.Collections;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using System.Text;
 
 namespace EdjCase.ICP.Candid.Mapping.Mappers
 {

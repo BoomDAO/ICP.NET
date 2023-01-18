@@ -1,10 +1,5 @@
 using System;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using EdjCase.ICP.Candid.Mapping;
-using EdjCase.ICP.Candid;
-using Token = EdjCase.ICP.Candid.Models.Principal;
-using OrderId = System.UInt32;
+using EdjCase.ICP.Candid.Models;
 
 namespace Sample.Shared.Dex.Models
 {
@@ -32,22 +27,22 @@ namespace Sample.Shared.Dex.Models
 		
 		public DepositErr AsErr()
 		{
-			this.ValidateType(DepositReceiptTag.Err);
+			this.ValidateTag(DepositReceiptTag.Err);
 			return (DepositErr)this.Value!;
 		}
 		
-		public static DepositReceipt Ok(EdjCase.ICP.Candid.UnboundedUInt info)
+		public static DepositReceipt Ok(UnboundedUInt info)
 		{
 			return new DepositReceipt(DepositReceiptTag.Ok, info);
 		}
 		
-		public EdjCase.ICP.Candid.UnboundedUInt AsOk()
+		public UnboundedUInt AsOk()
 		{
-			this.ValidateType(DepositReceiptTag.Ok);
-			return (EdjCase.ICP.Candid.UnboundedUInt)this.Value!;
+			this.ValidateTag(DepositReceiptTag.Ok);
+			return (UnboundedUInt)this.Value!;
 		}
 		
-		private void ValidateType(DepositReceiptTag tag)
+		private void ValidateTag(DepositReceiptTag tag)
 		{
 			if (!this.Tag.Equals(tag))
 			{
@@ -61,7 +56,7 @@ namespace Sample.Shared.Dex.Models
 		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(DepositErr))]
 		Err,
 		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Ok")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(EdjCase.ICP.Candid.UnboundedUInt))]
+		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(UnboundedUInt))]
 		Ok,
 	}
 }

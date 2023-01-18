@@ -1,7 +1,7 @@
-﻿using EdjCase.ICP.Candid.Utilities;
+using EdjCase.ICP.Candid.Models;
+using EdjCase.ICP.Candid.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Numerics;
@@ -22,7 +22,7 @@ namespace EdjCase.ICP.Candid.Encodings
 			return new UnboundedUInt(v);
 		}
 		public static UnboundedUInt DecodeUnsigned(Stream stream)
-        {
+		{
 			BigInteger v = LEB128.Decode(stream, isUnsigned: true);
 			return new UnboundedUInt(v);
 		}
@@ -35,12 +35,12 @@ namespace EdjCase.ICP.Candid.Encodings
 
 		private static BigInteger Decode(Stream stream, bool isUnsigned)
 		{
-            byte[] bytes = LEB128.GetValueBits(stream, isUnsigned)
+			byte[] bytes = LEB128.GetValueBits(stream, isUnsigned)
 				.Chunk(8)
 				.Select(bits =>
 				{
 					byte b = 0;
-                    for (int i = bits.Length - 1; i >= 0; i--)
+					for (int i = bits.Length - 1; i >= 0; i--)
 					{
 						bool bit = bits[i];
 						b |= bit ? (byte)1 : (byte)0;
@@ -48,7 +48,7 @@ namespace EdjCase.ICP.Candid.Encodings
 						{
 							b <<= 1;
 						}
-                    }
+					}
 					return b;
 				})
 				.ToArray();
@@ -81,13 +81,13 @@ namespace EdjCase.ICP.Candid.Encodings
 				{
 					bool paddingValue;
 					if (isUnsigned)
-                    {
+					{
 						paddingValue = false;
-                    }
-                    else
-                    {
+					}
+					else
+					{
 						paddingValue = lastBitSet; // 1 if signed and last bit is 1, otherwise 0
-                    }
+					}
 					while (i % 8 != 0)
 					{
 						// Round out the 
@@ -104,7 +104,7 @@ namespace EdjCase.ICP.Candid.Encodings
 			}
 		}
 
-        public static byte[] EncodeUnsigned(UnboundedUInt value)
+		public static byte[] EncodeUnsigned(UnboundedUInt value)
 		{
 			return LEB128.EncodeUnsigned(value.ToBigInteger());
 		}
@@ -116,10 +116,10 @@ namespace EdjCase.ICP.Candid.Encodings
 
 		private static byte[] EncodeUnsigned(BigInteger value)
 		{
-			if(value < 0)
-            {
+			if (value < 0)
+			{
 				throw new ArgumentOutOfRangeException(nameof(value), "Value must be 0 or greater");
-            }
+			}
 			if (value == 0)
 			{
 				return new byte[] { 0b0 };
@@ -173,7 +173,7 @@ namespace EdjCase.ICP.Candid.Encodings
 				bool mostSignficantBitIsSet = (byteValue & 0b0100_0000) != 0;
 				if (value == 0) // no more bits => end
 				{
-                    if (mostSignficantBitIsSet)
+					if (mostSignficantBitIsSet)
 					{
 						// If last bit is a 1, add another 0 value byte
 						AddByteWithMoreFlag(byteValue);
@@ -185,20 +185,20 @@ namespace EdjCase.ICP.Candid.Encodings
 				}
 				if (value == -1) // -1 == only bit remaining is a sign bit (with backfilled 1's from a right shift) => end
 				{
-                    // -1 is equivalent to all 1's in the binary sequence/255 if unsigned
-                    // AND since if the number is negative, 1 is used to fill vacated bit positions
-                    // meaning the remaining value is just the sign bit
+					// -1 is equivalent to all 1's in the binary sequence/255 if unsigned
+					// AND since if the number is negative, 1 is used to fill vacated bit positions
+					// meaning the remaining value is just the sign bit
 
-                    // IF the most signficant bit is not set, set the final byte to 0b0111_1111
-                    // otherwise end
+					// IF the most signficant bit is not set, set the final byte to 0b0111_1111
+					// otherwise end
 
-                    if (!mostSignficantBitIsSet)
+					if (!mostSignficantBitIsSet)
 					{
 						// If last bit is a 1, add another 111_1111 value byte
 						AddByteWithMoreFlag(byteValue);
-                        bytes.Add(0b0111_1111);
+						bytes.Add(0b0111_1111);
 						break;
-                    }
+					}
 					bytes.Add(byteValue);
 					break;
 				}

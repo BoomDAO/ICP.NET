@@ -1,9 +1,5 @@
 using EdjCase.ICP.Candid.Encodings;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EdjCase.ICP.Candid.Models.Types
 {

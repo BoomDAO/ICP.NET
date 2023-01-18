@@ -1,9 +1,4 @@
 using System;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using EdjCase.ICP.Candid.Mapping;
-using EdjCase.ICP.Candid;
-using Token = EdjCase.ICP.Candid.Models.Principal;
 using OrderId = System.UInt32;
 
 namespace Sample.Shared.Dex.Models
@@ -32,7 +27,7 @@ namespace Sample.Shared.Dex.Models
 		
 		public CancelOrderErr AsErr()
 		{
-			this.ValidateType(CancelOrderReceiptTag.Err);
+			this.ValidateTag(CancelOrderReceiptTag.Err);
 			return (CancelOrderErr)this.Value!;
 		}
 		
@@ -43,11 +38,11 @@ namespace Sample.Shared.Dex.Models
 		
 		public OrderId AsOk()
 		{
-			this.ValidateType(CancelOrderReceiptTag.Ok);
+			this.ValidateTag(CancelOrderReceiptTag.Ok);
 			return (OrderId)this.Value!;
 		}
 		
-		private void ValidateType(CancelOrderReceiptTag tag)
+		private void ValidateTag(CancelOrderReceiptTag tag)
 		{
 			if (!this.Tag.Equals(tag))
 			{

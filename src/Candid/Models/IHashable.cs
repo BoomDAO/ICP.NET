@@ -56,9 +56,9 @@ namespace EdjCase.ICP.Candid.Models
 			{
 				return x.Length - y.Length;
 			}
-			for(int i = 0; i < x.Length; i++)
+			for (int i = 0; i < x.Length; i++)
 			{
-				if(x[i] != y[i])
+				if (x[i] != y[i])
 				{
 					return x[i] - y[i];
 				}

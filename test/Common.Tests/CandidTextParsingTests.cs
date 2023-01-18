@@ -2,20 +2,16 @@ using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid.Models.Types;
 using EdjCase.ICP.Candid.Models.Values;
 using EdjCase.ICP.Candid.Parsers;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 namespace EdjCase.ICP.Candid.Tests
 {
-    public class CandidTextParsingTests
-    {
-        [Fact]
-        public void Parse_Func_1()
-        {
-            string text = @"(
+	public class CandidTextParsingTests
+	{
+		[Fact]
+		public void Parse_Func_1()
+		{
+			string text = @"(
     nat64
 ) -> (
     opt record {
@@ -247,641 +243,641 @@ namespace EdjCase.ICP.Candid.Tests
         executed_timestamp_seconds:nat64
     }
 ) query";
-            CandidId proposalReferenceId = CandidId.Parse("rec_1");
-            List<FuncMode> expectedModes = new List<FuncMode> { FuncMode.Query };
-            List<CandidType> expectedArgTypes = new()
-            {
-                new CandidPrimitiveType(PrimitiveType.Nat64)
-            };
-            List<CandidType> expectedReturnTypes = new()
-            {
-                new CandidOptionalType(
-                    new CandidRecordType(
-                        new Dictionary<CandidTag, CandidType>
-                        {
-                            {
-                                CandidTag.FromName("id"),
-                                new CandidOptionalType(
-                                    new CandidRecordType(
-                                        new Dictionary<CandidTag, CandidType>
-                                        {
-                                            {CandidTag.FromName("id"), new CandidPrimitiveType(PrimitiveType.Nat64) }
-                                        }
-                                    )
-                                )
-                            },
-                            {
-                                CandidTag.FromName("status"),
-                                new CandidPrimitiveType(PrimitiveType.Int32)
-                            },
-                            {
-                                CandidTag.FromName("topic"),
-                                new CandidPrimitiveType(PrimitiveType.Int32)
-                            },
-                            {
-                                CandidTag.FromName("failure_reason"),
-                                new CandidOptionalType(
-                                    new CandidRecordType(
-                                        new Dictionary<CandidTag, CandidType>
-                                        {
-                                            { CandidTag.FromName("error_message"), new CandidPrimitiveType(PrimitiveType.Text) },
-                                            { CandidTag.FromName("error_type"), new CandidPrimitiveType(PrimitiveType.Int32) }
-                                        }
-                                    )
-                                )
-                            },
-                            {
-                                CandidTag.FromName("ballots"),
-                                new CandidVectorType(
-                                    new CandidRecordType(
-                                        new Dictionary<CandidTag, CandidType>
-                                        {
-                                            {
-                                                CandidTag.FromId(0),
-                                                new CandidPrimitiveType(PrimitiveType.Nat64) },
-                                            {
-                                                CandidTag.FromId(1),
-                                                new CandidRecordType(
-                                                    new Dictionary<CandidTag, CandidType>
-                                                    {
-                                                        { CandidTag.FromName("vote"), new CandidPrimitiveType(PrimitiveType.Int32) },
-                                                        { CandidTag.FromName("voting_power"), new CandidPrimitiveType(PrimitiveType.Nat64) }
-                                                    }
-                                                )
-                                            }
-                                        }
-                                    )
-                                )
-                            },
-                            {
-                                CandidTag.FromName("proposal_timestamp_seconds"),
-                                new CandidPrimitiveType(PrimitiveType.Nat64)
-                            },
-                            {
-                                CandidTag.FromName("reward_event_round"),
-                                new CandidPrimitiveType(PrimitiveType.Nat64)
-                            },
-                            {
-                                CandidTag.FromName("deadline_timestamp_seconds"),
-                                new CandidOptionalType(new CandidPrimitiveType(PrimitiveType.Nat64))
-                            },
-                            {
-                                CandidTag.FromName("failed_timestamp_seconds"),
-                                new CandidPrimitiveType(PrimitiveType.Nat64)
-                            },
-                            {
-                                CandidTag.FromName("reject_cost_e8s"),
-                                new CandidPrimitiveType(PrimitiveType.Nat64)
-                            },
-                            {
-                                CandidTag.FromName("latest_tally"),
-                                new CandidOptionalType(
-                                    new CandidRecordType(new Dictionary<CandidTag, CandidType>
-                                    {
-                                        { CandidTag.FromName("no"), new CandidPrimitiveType(PrimitiveType.Nat64) },
-                                        { CandidTag.FromName("yes"), new CandidPrimitiveType(PrimitiveType.Nat64) },
-                                        { CandidTag.FromName("total"), new CandidPrimitiveType(PrimitiveType.Nat64) },
-                                        { CandidTag.FromName("timestamp_seconds"), new CandidPrimitiveType(PrimitiveType.Nat64) },
-                                    })
-                                )
-                            },
-                            {
-                                CandidTag.FromName("reward_status"),
-                                new CandidPrimitiveType(PrimitiveType.Int32)
-                            },
-                            {
-                                CandidTag.FromName("decided_timestamp_seconds"),
-                                new CandidPrimitiveType(PrimitiveType.Nat64)
-                            },
-                            {
-                                CandidTag.FromName("proposal"),
-                                new CandidOptionalType(
-                                    new CandidRecordType(new Dictionary<CandidTag, CandidType>
-                                    {
-                                        {
-                                            CandidTag.FromName("url"),
-                                            new CandidPrimitiveType(PrimitiveType.Text)
-                                        },
-                                        {
-                                            CandidTag.FromName("title"),
-                                            new CandidOptionalType(new CandidPrimitiveType(PrimitiveType.Text))
-                                        },
-                                        {
-                                            CandidTag.FromName("action"),
-                                            new CandidOptionalType(
-                                                new CandidVariantType(new Dictionary<CandidTag, CandidType>
-                                                {
-                                                    {
-                                                        CandidTag.FromName("RegisterKnownNeuron"),
-                                                        new CandidRecordType(new Dictionary<CandidTag, CandidType>
-                                                        {
-                                                            {
-                                                                CandidTag.FromName("id"),
-                                                                new CandidOptionalType(
-                                                                    new CandidRecordType(new Dictionary<CandidTag, CandidType>
-                                                                    {
-                                                                        { CandidTag.FromName("id"), new CandidPrimitiveType(PrimitiveType.Nat64) }
-                                                                    })
-                                                                )
-                                                            },
-                                                            {
-                                                                CandidTag.FromName("known_neuron_data"),
-                                                                new CandidOptionalType(
-                                                                    new CandidRecordType(new Dictionary<CandidTag, CandidType>
-                                                                    {
-                                                                        { CandidTag.FromName("name"), new CandidPrimitiveType(PrimitiveType.Text) },
-                                                                        { CandidTag.FromName("description"), new CandidOptionalType(new CandidPrimitiveType(PrimitiveType.Text)) }
-                                                                    })
-                                                                )
-                                                            }
-                                                        })
-                                                    },
-                                                    {
-                                                        CandidTag.FromName("ManageNeuron"),
-                                                        new CandidRecordType(new Dictionary<CandidTag, CandidType>
-                                                        {
-                                                            {
-                                                                CandidTag.FromName("id"),
-                                                                new CandidOptionalType(
-                                                                    new CandidRecordType(new Dictionary<CandidTag, CandidType>
-                                                                    {
-                                                                        { CandidTag.FromName("id"), new CandidPrimitiveType(PrimitiveType.Nat64) }
-                                                                    })
-                                                                )
-                                                            },
-                                                            {
-                                                                CandidTag.FromName("command"),
-                                                                new CandidOptionalType(
-                                                                    new CandidVariantType(new Dictionary<CandidTag, CandidType>
-                                                                    {
-                                                                        {
-                                                                            CandidTag.FromName("Spawn"),
-                                                                            new CandidRecordType(new Dictionary<CandidTag, CandidType>
-                                                                            {
-                                                                                { CandidTag.FromName("percentage_to_spawn"), new CandidOptionalType(new CandidPrimitiveType(PrimitiveType.Nat32)) },
-                                                                                { CandidTag.FromName("new_controller"), new CandidOptionalType(new CandidPrimitiveType(PrimitiveType.Principal)) },
-                                                                                { CandidTag.FromName("nonce"), new CandidOptionalType(new CandidPrimitiveType(PrimitiveType.Nat64)) },
-                                                                            })
-                                                                        },
-                                                                        {
-                                                                            CandidTag.FromName("Split"),
-                                                                            new CandidRecordType(new Dictionary<CandidTag, CandidType>
-                                                                            {
-                                                                                { CandidTag.FromName("amount_e8s"), new CandidPrimitiveType(PrimitiveType.Nat64) }
-                                                                            })
-                                                                        },
-                                                                        {
-                                                                            CandidTag.FromName("Follow"),
-                                                                            new CandidRecordType(new Dictionary<CandidTag, CandidType>
-                                                                            {
-                                                                                { CandidTag.FromName("topic"), new CandidPrimitiveType(PrimitiveType.Int32) },
-                                                                                {
-                                                                                    CandidTag.FromName("followees"),
-                                                                                    new CandidVectorType(new CandidRecordType(new Dictionary<CandidTag, CandidType>
-                                                                                    {
-                                                                                        { CandidTag.FromName("id"), new CandidPrimitiveType(PrimitiveType.Nat64) }
-                                                                                    }))
-                                                                                },
-                                                                            })
-                                                                        },
-                                                                        {
-                                                                            CandidTag.FromName("ClaimOrRefresh"),
-                                                                            new CandidRecordType(new Dictionary<CandidTag, CandidType>
-                                                                            {
-                                                                                {
-                                                                                    CandidTag.FromName("by"),
-                                                                                    new CandidOptionalType(new CandidVariantType(new Dictionary<CandidTag, CandidType>
-                                                                                    {
-                                                                                        { CandidTag.FromName("NeuronIdOrSubaccount"), new CandidRecordType(new Dictionary<CandidTag, CandidType>()) },
-                                                                                        {
-                                                                                            CandidTag.FromName("MemoAndController"),
-                                                                                            new CandidRecordType(new Dictionary<CandidTag, CandidType>
-                                                                                            {
-                                                                                                { CandidTag.FromName("controller"), new CandidOptionalType(new CandidPrimitiveType(PrimitiveType.Principal)) },
-                                                                                                { CandidTag.FromName("memo"), new CandidPrimitiveType(PrimitiveType.Nat64) }
-                                                                                            })
-                                                                                        },
-                                                                                        { CandidTag.FromName("Memo"), new CandidPrimitiveType(PrimitiveType.Nat64) }
-                                                                                    }))
-                                                                                },
-                                                                            })
-                                                                        },
-                                                                        {
-                                                                            CandidTag.FromName("Configure"),
-                                                                            new CandidRecordType(new Dictionary<CandidTag, CandidType>
-                                                                            {
-                                                                                {
-                                                                                    CandidTag.FromName("operation"),
-                                                                                    new CandidOptionalType(new CandidVariantType(new Dictionary<CandidTag, CandidType>
-                                                                                    {
-                                                                                        {
-                                                                                            CandidTag.FromName("RemoveHotKey"),
-                                                                                            new CandidRecordType(new Dictionary<CandidTag, CandidType>
-                                                                                            {
-                                                                                                { CandidTag.FromName("hot_key_to_remove"), new CandidOptionalType(new CandidPrimitiveType(PrimitiveType.Principal)) }
-                                                                                            })
-                                                                                        },
-                                                                                        {
-                                                                                            CandidTag.FromName("AddHotKey"),
-                                                                                            new CandidRecordType(new Dictionary<CandidTag, CandidType>
-                                                                                            {
-                                                                                                { CandidTag.FromName("new_hot_key"), new CandidOptionalType(new CandidPrimitiveType(PrimitiveType.Principal)) }
-                                                                                            })
-                                                                                        },
-                                                                                        {
-                                                                                            CandidTag.FromName("StopDissolving"),
-                                                                                            new CandidRecordType(new Dictionary<CandidTag, CandidType>())
-                                                                                        },
-                                                                                        {
-                                                                                            CandidTag.FromName("StartDissolving"),
-                                                                                            new CandidRecordType(new Dictionary<CandidTag, CandidType>())
-                                                                                        },
-                                                                                        {
-                                                                                            CandidTag.FromName("IncreaseDissolveDelay"),
-                                                                                            new CandidRecordType(new Dictionary<CandidTag, CandidType>
-                                                                                            {
-                                                                                                { CandidTag.FromName("additional_dissolve_delay_seconds"), new CandidPrimitiveType(PrimitiveType.Nat32) }
-                                                                                            })
-                                                                                        },
-                                                                                        {
-                                                                                            CandidTag.FromName("JoinCommunityFund"),
-                                                                                            new CandidRecordType(new Dictionary<CandidTag, CandidType>())
-                                                                                        },
-                                                                                        {
-                                                                                            CandidTag.FromName("SetDissolveTimestamp"),
-                                                                                            new CandidRecordType(new Dictionary<CandidTag, CandidType>
-                                                                                            {
-                                                                                                { CandidTag.FromName("dissolve_timestamp_seconds"), new CandidPrimitiveType(PrimitiveType.Nat64) }
-                                                                                            })
-                                                                                        },
-                                                                                    }))
-                                                                                },
-                                                                            })
-                                                                        },
-                                                                        {
-                                                                            CandidTag.FromName("RegisterVote"),
-                                                                            new CandidRecordType(new Dictionary<CandidTag, CandidType>
-                                                                            {
-                                                                                { CandidTag.FromName("vote"), new CandidPrimitiveType(PrimitiveType.Int32) },
-                                                                                {
-                                                                                    CandidTag.FromName("proposal"),
-                                                                                    new CandidOptionalType(
-                                                                                        new CandidRecordType(new Dictionary<CandidTag, CandidType>
-                                                                                        {
-                                                                                            { CandidTag.FromName("id"), new CandidPrimitiveType(PrimitiveType.Nat64) }
-                                                                                        })
-                                                                                    )
-                                                                                },
-                                                                            })
-                                                                        },
-                                                                        {
-                                                                            CandidTag.FromName("Merge"),
-                                                                            new CandidRecordType(new Dictionary<CandidTag, CandidType>
-                                                                            {
-                                                                                {
-                                                                                    CandidTag.FromName("source_neuron_id"),
-                                                                                    new CandidOptionalType(
-                                                                                        new CandidRecordType(new Dictionary<CandidTag, CandidType>
-                                                                                        {
-                                                                                            { CandidTag.FromName("id"), new CandidPrimitiveType(PrimitiveType.Nat64) }
-                                                                                        })
-                                                                                    )
-                                                                                },
-                                                                            })
-                                                                        },
-                                                                        {
-                                                                            CandidTag.FromName("DisburseToNeuron"),
-                                                                            new CandidRecordType(new Dictionary<CandidTag, CandidType>
-                                                                            {
-                                                                                { CandidTag.FromName("dissolve_delay_seconds"), new CandidPrimitiveType(PrimitiveType.Nat64) },
-                                                                                { CandidTag.FromName("kyc_verified"), new CandidPrimitiveType(PrimitiveType.Bool) },
-                                                                                { CandidTag.FromName("amount_e8s"), new CandidPrimitiveType(PrimitiveType.Nat64) },
-                                                                                { CandidTag.FromName("new_controller"), new CandidOptionalType(new CandidPrimitiveType(PrimitiveType.Principal)) },
-                                                                                { CandidTag.FromName("nonce"), new CandidPrimitiveType(PrimitiveType.Nat64) },
-                                                                            })
-                                                                        },
-                                                                        {
-                                                                            CandidTag.FromName("MakeProposal"),
-                                                                            new CandidReferenceType(proposalReferenceId)
-                                                                        },
-                                                                        {
-                                                                            CandidTag.FromName("MergeMaturity"),
-                                                                            new CandidRecordType(new Dictionary<CandidTag, CandidType>
-                                                                            {
-                                                                                { CandidTag.FromName("percentage_to_merge"), new CandidPrimitiveType(PrimitiveType.Nat32) },
-                                                                            })
-                                                                        },
-                                                                        {
-                                                                            CandidTag.FromName("Disburse"),
-                                                                            new CandidRecordType(new Dictionary<CandidTag, CandidType>
-                                                                            {
-                                                                                {
-                                                                                    CandidTag.FromName("to_account"),
-                                                                                    new CandidOptionalType(
-                                                                                        new CandidRecordType(new Dictionary<CandidTag, CandidType>
-                                                                                        {
-                                                                                            { CandidTag.FromName("hash"), new CandidVectorType(new CandidPrimitiveType(PrimitiveType.Nat8)) }
-                                                                                        })
-                                                                                    )
-                                                                                },
-                                                                                {
-                                                                                    CandidTag.FromName("amount"),
-                                                                                    new CandidOptionalType(
-                                                                                        new CandidRecordType(new Dictionary<CandidTag, CandidType>
-                                                                                        {
-                                                                                            { CandidTag.FromName("e8s"), new CandidPrimitiveType(PrimitiveType.Nat64) }
-                                                                                        })
-                                                                                    )
-                                                                                },
-                                                                            })
-                                                                        },
-                                                                    })
-                                                                )
-                                                            },
-                                                            {
-                                                                CandidTag.FromName("neuron_id_or_subaccount"),
-                                                                new CandidOptionalType(
-                                                                    new CandidVariantType(new Dictionary<CandidTag, CandidType>
-                                                                    {
-                                                                        { CandidTag.FromName("Subaccount"), new CandidVectorType(new CandidPrimitiveType(PrimitiveType.Nat8)) },
-                                                                        {
-                                                                            CandidTag.FromName("NeuronId"),
-                                                                            new CandidRecordType(new Dictionary<CandidTag, CandidType>
-                                                                            {
-                                                                                { CandidTag.FromName("id"), new CandidPrimitiveType(PrimitiveType.Nat64) }
-                                                                            })
-                                                                        },
-                                                                    })
-                                                                )
-                                                            },
-                                                        })
-                                                    },
-                                                    {
-                                                        CandidTag.FromName("ExecuteNnsFunction"),
-                                                        new CandidRecordType(new Dictionary<CandidTag, CandidType>
-                                                        {
-                                                            {
-                                                                CandidTag.FromName("nns_function"),
-                                                                new CandidPrimitiveType(PrimitiveType.Int32)
-                                                            },
-                                                            {
-                                                                CandidTag.FromName("payload"),
-                                                                new CandidVectorType(new CandidPrimitiveType(PrimitiveType.Nat8))
-                                                            }
-                                                        })
-                                                    },
-                                                    {
-                                                        CandidTag.FromName("RewardNodeProvider"),
-                                                        new CandidRecordType(new Dictionary<CandidTag, CandidType>
-                                                        {
-                                                            {
-                                                                CandidTag.FromName("node_provider"),
-                                                                new CandidOptionalType(
-                                                                    new CandidRecordType(new Dictionary<CandidTag, CandidType>
-                                                                    {
-                                                                        { CandidTag.FromName("id"), new CandidOptionalType(new CandidPrimitiveType(PrimitiveType.Principal)) },
-                                                                        {
-                                                                            CandidTag.FromName("reward_account"),
-                                                                            new CandidOptionalType(new CandidRecordType(new Dictionary<CandidTag, CandidType>
-                                                                            {
-                                                                                { CandidTag.FromName("hash"), new CandidVectorType(new CandidPrimitiveType(PrimitiveType.Nat8)) }
-                                                                            }))
-                                                                        },
-                                                                    })
-                                                                )
-                                                            },
-                                                            {
-                                                                CandidTag.FromName("reward_mode"),
-                                                                new CandidOptionalType(
-                                                                    new CandidVariantType(new Dictionary<CandidTag, CandidType>
-                                                                    {
-                                                                        {
-                                                                            CandidTag.FromName("RewardToNeuron"),
-                                                                            new CandidRecordType(new Dictionary<CandidTag, CandidType>
-                                                                            {
-                                                                                { CandidTag.FromName("dissolve_delay_seconds"), new CandidPrimitiveType(PrimitiveType.Nat64) }
-                                                                            })
-                                                                        },
-                                                                        {
-                                                                            CandidTag.FromName("RewardToAccount"),
-                                                                            new CandidRecordType(new Dictionary<CandidTag, CandidType>
-                                                                            {
-                                                                                {
-                                                                                    CandidTag.FromName("to_account"),
-                                                                                    new CandidOptionalType(new CandidRecordType(new Dictionary<CandidTag, CandidType>
-                                                                                    {
-                                                                                        { CandidTag.FromName("hash"), new CandidVectorType(new CandidPrimitiveType(PrimitiveType.Nat8)) }
-                                                                                    }))
-                                                                                }
-                                                                            })
-                                                                        },
-                                                                    })
-                                                                )
-                                                            },
-                                                            {
-                                                                CandidTag.FromName("amount_e8s"),
-                                                                new CandidPrimitiveType(PrimitiveType.Nat64)
-                                                            }
-                                                        })
-                                                    },
-                                                    {
-                                                        CandidTag.FromName("SetDefaultFollowees"),
-                                                        new CandidRecordType(new Dictionary<CandidTag, CandidType>
-                                                        {
-                                                            {
-                                                                CandidTag.FromName("default_followees"),
-                                                                new CandidVectorType(
-                                                                    new CandidRecordType(new Dictionary<CandidTag, CandidType>
-                                                                    {
-                                                                        { CandidTag.FromName("_0_"), new CandidPrimitiveType(PrimitiveType.Int32) },
-                                                                        {
-                                                                            CandidTag.FromName("_1_"),
-                                                                            new CandidRecordType(new Dictionary<CandidTag, CandidType>
-                                                                            {
-                                                                                {
-                                                                                    CandidTag.FromName("followees"),
-                                                                                    new CandidVectorType(
-                                                                                        new CandidRecordType(new Dictionary<CandidTag, CandidType>
-                                                                                        {
-                                                                                            { CandidTag.FromName("id"), new CandidPrimitiveType(PrimitiveType.Nat64) }
-                                                                                        })
-                                                                                    )
-                                                                                }
-                                                                            })
-                                                                        }
+			CandidId proposalReferenceId = CandidId.Parse("rec_1");
+			List<FuncMode> expectedModes = new List<FuncMode> { FuncMode.Query };
+			List<CandidType> expectedArgTypes = new()
+			{
+				new CandidPrimitiveType(PrimitiveType.Nat64)
+			};
+			List<CandidType> expectedReturnTypes = new()
+			{
+				new CandidOptionalType(
+					new CandidRecordType(
+						new Dictionary<CandidTag, CandidType>
+						{
+							{
+								CandidTag.FromName("id"),
+								new CandidOptionalType(
+									new CandidRecordType(
+										new Dictionary<CandidTag, CandidType>
+										{
+											{CandidTag.FromName("id"), new CandidPrimitiveType(PrimitiveType.Nat64) }
+										}
+									)
+								)
+							},
+							{
+								CandidTag.FromName("status"),
+								new CandidPrimitiveType(PrimitiveType.Int32)
+							},
+							{
+								CandidTag.FromName("topic"),
+								new CandidPrimitiveType(PrimitiveType.Int32)
+							},
+							{
+								CandidTag.FromName("failure_reason"),
+								new CandidOptionalType(
+									new CandidRecordType(
+										new Dictionary<CandidTag, CandidType>
+										{
+											{ CandidTag.FromName("error_message"), new CandidPrimitiveType(PrimitiveType.Text) },
+											{ CandidTag.FromName("error_type"), new CandidPrimitiveType(PrimitiveType.Int32) }
+										}
+									)
+								)
+							},
+							{
+								CandidTag.FromName("ballots"),
+								new CandidVectorType(
+									new CandidRecordType(
+										new Dictionary<CandidTag, CandidType>
+										{
+											{
+												CandidTag.FromId(0),
+												new CandidPrimitiveType(PrimitiveType.Nat64) },
+											{
+												CandidTag.FromId(1),
+												new CandidRecordType(
+													new Dictionary<CandidTag, CandidType>
+													{
+														{ CandidTag.FromName("vote"), new CandidPrimitiveType(PrimitiveType.Int32) },
+														{ CandidTag.FromName("voting_power"), new CandidPrimitiveType(PrimitiveType.Nat64) }
+													}
+												)
+											}
+										}
+									)
+								)
+							},
+							{
+								CandidTag.FromName("proposal_timestamp_seconds"),
+								new CandidPrimitiveType(PrimitiveType.Nat64)
+							},
+							{
+								CandidTag.FromName("reward_event_round"),
+								new CandidPrimitiveType(PrimitiveType.Nat64)
+							},
+							{
+								CandidTag.FromName("deadline_timestamp_seconds"),
+								new CandidOptionalType(new CandidPrimitiveType(PrimitiveType.Nat64))
+							},
+							{
+								CandidTag.FromName("failed_timestamp_seconds"),
+								new CandidPrimitiveType(PrimitiveType.Nat64)
+							},
+							{
+								CandidTag.FromName("reject_cost_e8s"),
+								new CandidPrimitiveType(PrimitiveType.Nat64)
+							},
+							{
+								CandidTag.FromName("latest_tally"),
+								new CandidOptionalType(
+									new CandidRecordType(new Dictionary<CandidTag, CandidType>
+									{
+										{ CandidTag.FromName("no"), new CandidPrimitiveType(PrimitiveType.Nat64) },
+										{ CandidTag.FromName("yes"), new CandidPrimitiveType(PrimitiveType.Nat64) },
+										{ CandidTag.FromName("total"), new CandidPrimitiveType(PrimitiveType.Nat64) },
+										{ CandidTag.FromName("timestamp_seconds"), new CandidPrimitiveType(PrimitiveType.Nat64) },
+									})
+								)
+							},
+							{
+								CandidTag.FromName("reward_status"),
+								new CandidPrimitiveType(PrimitiveType.Int32)
+							},
+							{
+								CandidTag.FromName("decided_timestamp_seconds"),
+								new CandidPrimitiveType(PrimitiveType.Nat64)
+							},
+							{
+								CandidTag.FromName("proposal"),
+								new CandidOptionalType(
+									new CandidRecordType(new Dictionary<CandidTag, CandidType>
+									{
+										{
+											CandidTag.FromName("url"),
+											new CandidPrimitiveType(PrimitiveType.Text)
+										},
+										{
+											CandidTag.FromName("title"),
+											new CandidOptionalType(new CandidPrimitiveType(PrimitiveType.Text))
+										},
+										{
+											CandidTag.FromName("action"),
+											new CandidOptionalType(
+												new CandidVariantType(new Dictionary<CandidTag, CandidType>
+												{
+													{
+														CandidTag.FromName("RegisterKnownNeuron"),
+														new CandidRecordType(new Dictionary<CandidTag, CandidType>
+														{
+															{
+																CandidTag.FromName("id"),
+																new CandidOptionalType(
+																	new CandidRecordType(new Dictionary<CandidTag, CandidType>
+																	{
+																		{ CandidTag.FromName("id"), new CandidPrimitiveType(PrimitiveType.Nat64) }
+																	})
+																)
+															},
+															{
+																CandidTag.FromName("known_neuron_data"),
+																new CandidOptionalType(
+																	new CandidRecordType(new Dictionary<CandidTag, CandidType>
+																	{
+																		{ CandidTag.FromName("name"), new CandidPrimitiveType(PrimitiveType.Text) },
+																		{ CandidTag.FromName("description"), new CandidOptionalType(new CandidPrimitiveType(PrimitiveType.Text)) }
+																	})
+																)
+															}
+														})
+													},
+													{
+														CandidTag.FromName("ManageNeuron"),
+														new CandidRecordType(new Dictionary<CandidTag, CandidType>
+														{
+															{
+																CandidTag.FromName("id"),
+																new CandidOptionalType(
+																	new CandidRecordType(new Dictionary<CandidTag, CandidType>
+																	{
+																		{ CandidTag.FromName("id"), new CandidPrimitiveType(PrimitiveType.Nat64) }
+																	})
+																)
+															},
+															{
+																CandidTag.FromName("command"),
+																new CandidOptionalType(
+																	new CandidVariantType(new Dictionary<CandidTag, CandidType>
+																	{
+																		{
+																			CandidTag.FromName("Spawn"),
+																			new CandidRecordType(new Dictionary<CandidTag, CandidType>
+																			{
+																				{ CandidTag.FromName("percentage_to_spawn"), new CandidOptionalType(new CandidPrimitiveType(PrimitiveType.Nat32)) },
+																				{ CandidTag.FromName("new_controller"), new CandidOptionalType(new CandidPrimitiveType(PrimitiveType.Principal)) },
+																				{ CandidTag.FromName("nonce"), new CandidOptionalType(new CandidPrimitiveType(PrimitiveType.Nat64)) },
+																			})
+																		},
+																		{
+																			CandidTag.FromName("Split"),
+																			new CandidRecordType(new Dictionary<CandidTag, CandidType>
+																			{
+																				{ CandidTag.FromName("amount_e8s"), new CandidPrimitiveType(PrimitiveType.Nat64) }
+																			})
+																		},
+																		{
+																			CandidTag.FromName("Follow"),
+																			new CandidRecordType(new Dictionary<CandidTag, CandidType>
+																			{
+																				{ CandidTag.FromName("topic"), new CandidPrimitiveType(PrimitiveType.Int32) },
+																				{
+																					CandidTag.FromName("followees"),
+																					new CandidVectorType(new CandidRecordType(new Dictionary<CandidTag, CandidType>
+																					{
+																						{ CandidTag.FromName("id"), new CandidPrimitiveType(PrimitiveType.Nat64) }
+																					}))
+																				},
+																			})
+																		},
+																		{
+																			CandidTag.FromName("ClaimOrRefresh"),
+																			new CandidRecordType(new Dictionary<CandidTag, CandidType>
+																			{
+																				{
+																					CandidTag.FromName("by"),
+																					new CandidOptionalType(new CandidVariantType(new Dictionary<CandidTag, CandidType>
+																					{
+																						{ CandidTag.FromName("NeuronIdOrSubaccount"), new CandidRecordType(new Dictionary<CandidTag, CandidType>()) },
+																						{
+																							CandidTag.FromName("MemoAndController"),
+																							new CandidRecordType(new Dictionary<CandidTag, CandidType>
+																							{
+																								{ CandidTag.FromName("controller"), new CandidOptionalType(new CandidPrimitiveType(PrimitiveType.Principal)) },
+																								{ CandidTag.FromName("memo"), new CandidPrimitiveType(PrimitiveType.Nat64) }
+																							})
+																						},
+																						{ CandidTag.FromName("Memo"), new CandidPrimitiveType(PrimitiveType.Nat64) }
+																					}))
+																				},
+																			})
+																		},
+																		{
+																			CandidTag.FromName("Configure"),
+																			new CandidRecordType(new Dictionary<CandidTag, CandidType>
+																			{
+																				{
+																					CandidTag.FromName("operation"),
+																					new CandidOptionalType(new CandidVariantType(new Dictionary<CandidTag, CandidType>
+																					{
+																						{
+																							CandidTag.FromName("RemoveHotKey"),
+																							new CandidRecordType(new Dictionary<CandidTag, CandidType>
+																							{
+																								{ CandidTag.FromName("hot_key_to_remove"), new CandidOptionalType(new CandidPrimitiveType(PrimitiveType.Principal)) }
+																							})
+																						},
+																						{
+																							CandidTag.FromName("AddHotKey"),
+																							new CandidRecordType(new Dictionary<CandidTag, CandidType>
+																							{
+																								{ CandidTag.FromName("new_hot_key"), new CandidOptionalType(new CandidPrimitiveType(PrimitiveType.Principal)) }
+																							})
+																						},
+																						{
+																							CandidTag.FromName("StopDissolving"),
+																							new CandidRecordType(new Dictionary<CandidTag, CandidType>())
+																						},
+																						{
+																							CandidTag.FromName("StartDissolving"),
+																							new CandidRecordType(new Dictionary<CandidTag, CandidType>())
+																						},
+																						{
+																							CandidTag.FromName("IncreaseDissolveDelay"),
+																							new CandidRecordType(new Dictionary<CandidTag, CandidType>
+																							{
+																								{ CandidTag.FromName("additional_dissolve_delay_seconds"), new CandidPrimitiveType(PrimitiveType.Nat32) }
+																							})
+																						},
+																						{
+																							CandidTag.FromName("JoinCommunityFund"),
+																							new CandidRecordType(new Dictionary<CandidTag, CandidType>())
+																						},
+																						{
+																							CandidTag.FromName("SetDissolveTimestamp"),
+																							new CandidRecordType(new Dictionary<CandidTag, CandidType>
+																							{
+																								{ CandidTag.FromName("dissolve_timestamp_seconds"), new CandidPrimitiveType(PrimitiveType.Nat64) }
+																							})
+																						},
+																					}))
+																				},
+																			})
+																		},
+																		{
+																			CandidTag.FromName("RegisterVote"),
+																			new CandidRecordType(new Dictionary<CandidTag, CandidType>
+																			{
+																				{ CandidTag.FromName("vote"), new CandidPrimitiveType(PrimitiveType.Int32) },
+																				{
+																					CandidTag.FromName("proposal"),
+																					new CandidOptionalType(
+																						new CandidRecordType(new Dictionary<CandidTag, CandidType>
+																						{
+																							{ CandidTag.FromName("id"), new CandidPrimitiveType(PrimitiveType.Nat64) }
+																						})
+																					)
+																				},
+																			})
+																		},
+																		{
+																			CandidTag.FromName("Merge"),
+																			new CandidRecordType(new Dictionary<CandidTag, CandidType>
+																			{
+																				{
+																					CandidTag.FromName("source_neuron_id"),
+																					new CandidOptionalType(
+																						new CandidRecordType(new Dictionary<CandidTag, CandidType>
+																						{
+																							{ CandidTag.FromName("id"), new CandidPrimitiveType(PrimitiveType.Nat64) }
+																						})
+																					)
+																				},
+																			})
+																		},
+																		{
+																			CandidTag.FromName("DisburseToNeuron"),
+																			new CandidRecordType(new Dictionary<CandidTag, CandidType>
+																			{
+																				{ CandidTag.FromName("dissolve_delay_seconds"), new CandidPrimitiveType(PrimitiveType.Nat64) },
+																				{ CandidTag.FromName("kyc_verified"), new CandidPrimitiveType(PrimitiveType.Bool) },
+																				{ CandidTag.FromName("amount_e8s"), new CandidPrimitiveType(PrimitiveType.Nat64) },
+																				{ CandidTag.FromName("new_controller"), new CandidOptionalType(new CandidPrimitiveType(PrimitiveType.Principal)) },
+																				{ CandidTag.FromName("nonce"), new CandidPrimitiveType(PrimitiveType.Nat64) },
+																			})
+																		},
+																		{
+																			CandidTag.FromName("MakeProposal"),
+																			new CandidReferenceType(proposalReferenceId)
+																		},
+																		{
+																			CandidTag.FromName("MergeMaturity"),
+																			new CandidRecordType(new Dictionary<CandidTag, CandidType>
+																			{
+																				{ CandidTag.FromName("percentage_to_merge"), new CandidPrimitiveType(PrimitiveType.Nat32) },
+																			})
+																		},
+																		{
+																			CandidTag.FromName("Disburse"),
+																			new CandidRecordType(new Dictionary<CandidTag, CandidType>
+																			{
+																				{
+																					CandidTag.FromName("to_account"),
+																					new CandidOptionalType(
+																						new CandidRecordType(new Dictionary<CandidTag, CandidType>
+																						{
+																							{ CandidTag.FromName("hash"), new CandidVectorType(new CandidPrimitiveType(PrimitiveType.Nat8)) }
+																						})
+																					)
+																				},
+																				{
+																					CandidTag.FromName("amount"),
+																					new CandidOptionalType(
+																						new CandidRecordType(new Dictionary<CandidTag, CandidType>
+																						{
+																							{ CandidTag.FromName("e8s"), new CandidPrimitiveType(PrimitiveType.Nat64) }
+																						})
+																					)
+																				},
+																			})
+																		},
+																	})
+																)
+															},
+															{
+																CandidTag.FromName("neuron_id_or_subaccount"),
+																new CandidOptionalType(
+																	new CandidVariantType(new Dictionary<CandidTag, CandidType>
+																	{
+																		{ CandidTag.FromName("Subaccount"), new CandidVectorType(new CandidPrimitiveType(PrimitiveType.Nat8)) },
+																		{
+																			CandidTag.FromName("NeuronId"),
+																			new CandidRecordType(new Dictionary<CandidTag, CandidType>
+																			{
+																				{ CandidTag.FromName("id"), new CandidPrimitiveType(PrimitiveType.Nat64) }
+																			})
+																		},
+																	})
+																)
+															},
+														})
+													},
+													{
+														CandidTag.FromName("ExecuteNnsFunction"),
+														new CandidRecordType(new Dictionary<CandidTag, CandidType>
+														{
+															{
+																CandidTag.FromName("nns_function"),
+																new CandidPrimitiveType(PrimitiveType.Int32)
+															},
+															{
+																CandidTag.FromName("payload"),
+																new CandidVectorType(new CandidPrimitiveType(PrimitiveType.Nat8))
+															}
+														})
+													},
+													{
+														CandidTag.FromName("RewardNodeProvider"),
+														new CandidRecordType(new Dictionary<CandidTag, CandidType>
+														{
+															{
+																CandidTag.FromName("node_provider"),
+																new CandidOptionalType(
+																	new CandidRecordType(new Dictionary<CandidTag, CandidType>
+																	{
+																		{ CandidTag.FromName("id"), new CandidOptionalType(new CandidPrimitiveType(PrimitiveType.Principal)) },
+																		{
+																			CandidTag.FromName("reward_account"),
+																			new CandidOptionalType(new CandidRecordType(new Dictionary<CandidTag, CandidType>
+																			{
+																				{ CandidTag.FromName("hash"), new CandidVectorType(new CandidPrimitiveType(PrimitiveType.Nat8)) }
+																			}))
+																		},
+																	})
+																)
+															},
+															{
+																CandidTag.FromName("reward_mode"),
+																new CandidOptionalType(
+																	new CandidVariantType(new Dictionary<CandidTag, CandidType>
+																	{
+																		{
+																			CandidTag.FromName("RewardToNeuron"),
+																			new CandidRecordType(new Dictionary<CandidTag, CandidType>
+																			{
+																				{ CandidTag.FromName("dissolve_delay_seconds"), new CandidPrimitiveType(PrimitiveType.Nat64) }
+																			})
+																		},
+																		{
+																			CandidTag.FromName("RewardToAccount"),
+																			new CandidRecordType(new Dictionary<CandidTag, CandidType>
+																			{
+																				{
+																					CandidTag.FromName("to_account"),
+																					new CandidOptionalType(new CandidRecordType(new Dictionary<CandidTag, CandidType>
+																					{
+																						{ CandidTag.FromName("hash"), new CandidVectorType(new CandidPrimitiveType(PrimitiveType.Nat8)) }
+																					}))
+																				}
+																			})
+																		},
+																	})
+																)
+															},
+															{
+																CandidTag.FromName("amount_e8s"),
+																new CandidPrimitiveType(PrimitiveType.Nat64)
+															}
+														})
+													},
+													{
+														CandidTag.FromName("SetDefaultFollowees"),
+														new CandidRecordType(new Dictionary<CandidTag, CandidType>
+														{
+															{
+																CandidTag.FromName("default_followees"),
+																new CandidVectorType(
+																	new CandidRecordType(new Dictionary<CandidTag, CandidType>
+																	{
+																		{ CandidTag.FromName("_0_"), new CandidPrimitiveType(PrimitiveType.Int32) },
+																		{
+																			CandidTag.FromName("_1_"),
+																			new CandidRecordType(new Dictionary<CandidTag, CandidType>
+																			{
+																				{
+																					CandidTag.FromName("followees"),
+																					new CandidVectorType(
+																						new CandidRecordType(new Dictionary<CandidTag, CandidType>
+																						{
+																							{ CandidTag.FromName("id"), new CandidPrimitiveType(PrimitiveType.Nat64) }
+																						})
+																					)
+																				}
+																			})
+																		}
 
-                                                                    })
-                                                                )
-                                                            }
-                                                        })
-                                                    },
-                                                    {
-                                                        CandidTag.FromName("RewardNodeProviders"),
-                                                        new CandidRecordType(new Dictionary<CandidTag, CandidType>
-                                                        {
-                                                            { CandidTag.FromName("use_registry_derived_rewards"), new CandidOptionalType(new CandidPrimitiveType(PrimitiveType.Bool)) },
-                                                            {
-                                                                CandidTag.FromName("rewards"),
-                                                                new CandidVectorType(
-                                                                    new CandidRecordType(new Dictionary<CandidTag, CandidType>
-                                                                    {
-                                                                        {
-                                                                            CandidTag.FromName("node_provider"),
-                                                                            new CandidOptionalType(
-                                                                                new CandidRecordType(new Dictionary<CandidTag, CandidType>
-                                                                                {
-                                                                                    { CandidTag.FromName("id"), new CandidOptionalType(new CandidPrimitiveType(PrimitiveType.Principal)) },
-                                                                                    {
-                                                                                        CandidTag.FromName("reward_account"),
-                                                                                        new CandidOptionalType(new CandidRecordType(new Dictionary<CandidTag, CandidType>
-                                                                                        {
-                                                                                            { CandidTag.FromName("hash"), new CandidVectorType(new CandidPrimitiveType(PrimitiveType.Nat8)) }
-                                                                                        }))
-                                                                                    },
-                                                                                })
-                                                                            )
-                                                                        },
-                                                                        {
-                                                                            CandidTag.FromName("reward_mode"),
-                                                                            new CandidOptionalType(
-                                                                                new CandidVariantType(new Dictionary<CandidTag, CandidType>
-                                                                                {
-                                                                                    {
-                                                                                        CandidTag.FromName("RewardToNeuron"),
-                                                                                        new CandidRecordType(new Dictionary<CandidTag, CandidType>
-                                                                                        {
-                                                                                            { CandidTag.FromName("dissolve_delay_seconds"), new CandidPrimitiveType(PrimitiveType.Nat64) }
-                                                                                        })
-                                                                                    },
-                                                                                    {
-                                                                                        CandidTag.FromName("RewardToAccount"),
-                                                                                        new CandidRecordType(new Dictionary<CandidTag, CandidType>
-                                                                                        {
-                                                                                            {
-                                                                                                CandidTag.FromName("to_account"),
-                                                                                                new CandidOptionalType(new CandidRecordType(new Dictionary<CandidTag, CandidType>
-                                                                                                {
-                                                                                                    { CandidTag.FromName("hash"), new CandidVectorType(new CandidPrimitiveType(PrimitiveType.Nat8)) }
-                                                                                                }))
-                                                                                            }
-                                                                                        })
-                                                                                    },
-                                                                                })
-                                                                            )
-                                                                        },
-                                                                        { CandidTag.FromName("amount_e8s"), new CandidPrimitiveType(PrimitiveType.Nat64) }
-                                                                    })
-                                                                )
-                                                            }
-                                                        })
-                                                    },
-                                                    {
-                                                        CandidTag.FromName("ManageNetworkEconomics"),
-                                                        new CandidRecordType(new Dictionary<CandidTag, CandidType>
-                                                        {
-                                                            { CandidTag.FromName("neuron_minimum_stake_e8s"), new CandidPrimitiveType(PrimitiveType.Nat64) },
-                                                            { CandidTag.FromName("max_proposals_to_keep_per_topic"), new CandidPrimitiveType(PrimitiveType.Nat32) },
-                                                            { CandidTag.FromName("neuron_management_fee_per_proposal_e8s"), new CandidPrimitiveType(PrimitiveType.Nat64) },
-                                                            { CandidTag.FromName("reject_cost_e8s"), new CandidPrimitiveType(PrimitiveType.Nat64) },
-                                                            { CandidTag.FromName("transaction_fee_e8s"), new CandidPrimitiveType(PrimitiveType.Nat64) },
-                                                            { CandidTag.FromName("neuron_spawn_dissolve_delay_seconds"), new CandidPrimitiveType(PrimitiveType.Nat64) },
-                                                            { CandidTag.FromName("minimum_icp_xdr_rate"), new CandidPrimitiveType(PrimitiveType.Nat64) },
-                                                            { CandidTag.FromName("maximum_node_provider_rewards_e8s"), new CandidPrimitiveType(PrimitiveType.Nat64) }
-                                                        })
-                                                    },
-                                                    {
-                                                        CandidTag.FromName("ApproveGenesisKyc"),
-                                                        new CandidRecordType(new Dictionary<CandidTag, CandidType>
-                                                        {
-                                                            { CandidTag.FromName("principals"), new CandidVectorType(new CandidPrimitiveType(PrimitiveType.Principal)) },
-                                                        })
-                                                    },
-                                                    {
-                                                        CandidTag.FromName("AddOrRemoveNodeProvider"),
-                                                        new CandidRecordType(new Dictionary<CandidTag, CandidType>
-                                                        {
-                                                            {
-                                                                CandidTag.FromName("change"),
-                                                                new CandidOptionalType(
-                                                                    new CandidVariantType(new Dictionary<CandidTag, CandidType>
-                                                                    {
-                                                                        {
-                                                                            CandidTag.FromName("ToRemove"),
-                                                                            new CandidRecordType(new Dictionary<CandidTag, CandidType>
-                                                                            {
-                                                                                { CandidTag.FromName("id"), new CandidOptionalType(new CandidPrimitiveType(PrimitiveType.Principal)) },
-                                                                                {
-                                                                                    CandidTag.FromName("reward_account"),
-                                                                                    new CandidOptionalType(
-                                                                                        new CandidRecordType(new Dictionary<CandidTag, CandidType>
-                                                                                        {
-                                                                                            { CandidTag.FromName("hash"), new CandidVectorType(new CandidPrimitiveType(PrimitiveType.Nat8)) }
-                                                                                        })
-                                                                                    )
-                                                                                },
-                                                                            })
-                                                                        },
-                                                                        {
-                                                                            CandidTag.FromName("ToAdd"),
-                                                                            new CandidRecordType(new Dictionary<CandidTag, CandidType>
-                                                                            {
-                                                                                { CandidTag.FromName("id"), new CandidOptionalType(new CandidPrimitiveType(PrimitiveType.Principal)) },
-                                                                                {
-                                                                                    CandidTag.FromName("reward_account"),
-                                                                                    new CandidOptionalType(
-                                                                                        new CandidRecordType(new Dictionary<CandidTag, CandidType>
-                                                                                        {
-                                                                                            { CandidTag.FromName("hash"), new CandidVectorType(new CandidPrimitiveType(PrimitiveType.Nat8)) }
-                                                                                        })
-                                                                                    )
-                                                                                },
-                                                                            })
-                                                                        }
-                                                                    }) 
-                                                                )
-                                                            }
-                                                        })
-                                                    },
-                                                    {
-                                                        CandidTag.FromName("Motion"),
-                                                        new CandidRecordType(new Dictionary<CandidTag, CandidType>
-                                                        {
-                                                            { CandidTag.FromName("motion_text"), new CandidPrimitiveType(PrimitiveType.Text) },
-                                                        })
-                                                    },
-                                                })
-                                            )
-                                        },
-                                        {
-                                            CandidTag.FromName("summary"),
-                                            new CandidPrimitiveType(PrimitiveType.Text)
-                                        },
-                                    }, proposalReferenceId)
-                                )
-                            },
-                            {
-                                CandidTag.FromName("proposer"),
-                                new CandidOptionalType(
-                                    new CandidRecordType(new Dictionary<CandidTag, CandidType>
-                                    {
-                                        { CandidTag.FromName("id"), new CandidPrimitiveType(PrimitiveType.Nat64) }
-                                    })
-                                )
-                            },
-                            {
-                                CandidTag.FromName("executed_timestamp_seconds"),
-                                new CandidPrimitiveType(PrimitiveType.Nat64)
-                            },
-                        }
-                    )
-                )
-            };
-            CandidFuncType expectedFunc = new CandidFuncType(expectedModes, expectedArgTypes, expectedReturnTypes);
-            CandidFuncType func = CandidTextParser.Parse<CandidFuncType>(text);
+																	})
+																)
+															}
+														})
+													},
+													{
+														CandidTag.FromName("RewardNodeProviders"),
+														new CandidRecordType(new Dictionary<CandidTag, CandidType>
+														{
+															{ CandidTag.FromName("use_registry_derived_rewards"), new CandidOptionalType(new CandidPrimitiveType(PrimitiveType.Bool)) },
+															{
+																CandidTag.FromName("rewards"),
+																new CandidVectorType(
+																	new CandidRecordType(new Dictionary<CandidTag, CandidType>
+																	{
+																		{
+																			CandidTag.FromName("node_provider"),
+																			new CandidOptionalType(
+																				new CandidRecordType(new Dictionary<CandidTag, CandidType>
+																				{
+																					{ CandidTag.FromName("id"), new CandidOptionalType(new CandidPrimitiveType(PrimitiveType.Principal)) },
+																					{
+																						CandidTag.FromName("reward_account"),
+																						new CandidOptionalType(new CandidRecordType(new Dictionary<CandidTag, CandidType>
+																						{
+																							{ CandidTag.FromName("hash"), new CandidVectorType(new CandidPrimitiveType(PrimitiveType.Nat8)) }
+																						}))
+																					},
+																				})
+																			)
+																		},
+																		{
+																			CandidTag.FromName("reward_mode"),
+																			new CandidOptionalType(
+																				new CandidVariantType(new Dictionary<CandidTag, CandidType>
+																				{
+																					{
+																						CandidTag.FromName("RewardToNeuron"),
+																						new CandidRecordType(new Dictionary<CandidTag, CandidType>
+																						{
+																							{ CandidTag.FromName("dissolve_delay_seconds"), new CandidPrimitiveType(PrimitiveType.Nat64) }
+																						})
+																					},
+																					{
+																						CandidTag.FromName("RewardToAccount"),
+																						new CandidRecordType(new Dictionary<CandidTag, CandidType>
+																						{
+																							{
+																								CandidTag.FromName("to_account"),
+																								new CandidOptionalType(new CandidRecordType(new Dictionary<CandidTag, CandidType>
+																								{
+																									{ CandidTag.FromName("hash"), new CandidVectorType(new CandidPrimitiveType(PrimitiveType.Nat8)) }
+																								}))
+																							}
+																						})
+																					},
+																				})
+																			)
+																		},
+																		{ CandidTag.FromName("amount_e8s"), new CandidPrimitiveType(PrimitiveType.Nat64) }
+																	})
+																)
+															}
+														})
+													},
+													{
+														CandidTag.FromName("ManageNetworkEconomics"),
+														new CandidRecordType(new Dictionary<CandidTag, CandidType>
+														{
+															{ CandidTag.FromName("neuron_minimum_stake_e8s"), new CandidPrimitiveType(PrimitiveType.Nat64) },
+															{ CandidTag.FromName("max_proposals_to_keep_per_topic"), new CandidPrimitiveType(PrimitiveType.Nat32) },
+															{ CandidTag.FromName("neuron_management_fee_per_proposal_e8s"), new CandidPrimitiveType(PrimitiveType.Nat64) },
+															{ CandidTag.FromName("reject_cost_e8s"), new CandidPrimitiveType(PrimitiveType.Nat64) },
+															{ CandidTag.FromName("transaction_fee_e8s"), new CandidPrimitiveType(PrimitiveType.Nat64) },
+															{ CandidTag.FromName("neuron_spawn_dissolve_delay_seconds"), new CandidPrimitiveType(PrimitiveType.Nat64) },
+															{ CandidTag.FromName("minimum_icp_xdr_rate"), new CandidPrimitiveType(PrimitiveType.Nat64) },
+															{ CandidTag.FromName("maximum_node_provider_rewards_e8s"), new CandidPrimitiveType(PrimitiveType.Nat64) }
+														})
+													},
+													{
+														CandidTag.FromName("ApproveGenesisKyc"),
+														new CandidRecordType(new Dictionary<CandidTag, CandidType>
+														{
+															{ CandidTag.FromName("principals"), new CandidVectorType(new CandidPrimitiveType(PrimitiveType.Principal)) },
+														})
+													},
+													{
+														CandidTag.FromName("AddOrRemoveNodeProvider"),
+														new CandidRecordType(new Dictionary<CandidTag, CandidType>
+														{
+															{
+																CandidTag.FromName("change"),
+																new CandidOptionalType(
+																	new CandidVariantType(new Dictionary<CandidTag, CandidType>
+																	{
+																		{
+																			CandidTag.FromName("ToRemove"),
+																			new CandidRecordType(new Dictionary<CandidTag, CandidType>
+																			{
+																				{ CandidTag.FromName("id"), new CandidOptionalType(new CandidPrimitiveType(PrimitiveType.Principal)) },
+																				{
+																					CandidTag.FromName("reward_account"),
+																					new CandidOptionalType(
+																						new CandidRecordType(new Dictionary<CandidTag, CandidType>
+																						{
+																							{ CandidTag.FromName("hash"), new CandidVectorType(new CandidPrimitiveType(PrimitiveType.Nat8)) }
+																						})
+																					)
+																				},
+																			})
+																		},
+																		{
+																			CandidTag.FromName("ToAdd"),
+																			new CandidRecordType(new Dictionary<CandidTag, CandidType>
+																			{
+																				{ CandidTag.FromName("id"), new CandidOptionalType(new CandidPrimitiveType(PrimitiveType.Principal)) },
+																				{
+																					CandidTag.FromName("reward_account"),
+																					new CandidOptionalType(
+																						new CandidRecordType(new Dictionary<CandidTag, CandidType>
+																						{
+																							{ CandidTag.FromName("hash"), new CandidVectorType(new CandidPrimitiveType(PrimitiveType.Nat8)) }
+																						})
+																					)
+																				},
+																			})
+																		}
+																	})
+																)
+															}
+														})
+													},
+													{
+														CandidTag.FromName("Motion"),
+														new CandidRecordType(new Dictionary<CandidTag, CandidType>
+														{
+															{ CandidTag.FromName("motion_text"), new CandidPrimitiveType(PrimitiveType.Text) },
+														})
+													},
+												})
+											)
+										},
+										{
+											CandidTag.FromName("summary"),
+											new CandidPrimitiveType(PrimitiveType.Text)
+										},
+									}, proposalReferenceId)
+								)
+							},
+							{
+								CandidTag.FromName("proposer"),
+								new CandidOptionalType(
+									new CandidRecordType(new Dictionary<CandidTag, CandidType>
+									{
+										{ CandidTag.FromName("id"), new CandidPrimitiveType(PrimitiveType.Nat64) }
+									})
+								)
+							},
+							{
+								CandidTag.FromName("executed_timestamp_seconds"),
+								new CandidPrimitiveType(PrimitiveType.Nat64)
+							},
+						}
+					)
+				)
+			};
+			CandidFuncType expectedFunc = new CandidFuncType(expectedModes, expectedArgTypes, expectedReturnTypes);
+			CandidFuncType func = CandidTextParser.Parse<CandidFuncType>(text);
 
-            Assert.Equal(expectedFunc, func);
-            string generatedText = CandidTextGenerator.Generate(func, CandidTextGenerator.IndentType.Spaces_2);
-            Assert.Equal(text, generatedText);
-        }
-    }
+			Assert.Equal(expectedFunc, func);
+			string generatedText = CandidTextGenerator.Generate(func, CandidTextGenerator.IndentType.Spaces_2);
+			Assert.Equal(text, generatedText);
+		}
+	}
 }

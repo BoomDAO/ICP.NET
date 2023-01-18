@@ -1,18 +1,13 @@
-﻿using Dahomey.Cbor;
+using Dahomey.Cbor;
 using Dahomey.Cbor.Serialization;
-using EdjCase.ICP.Candid.Encodings;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
-using EdjCase.ICP.Candid;
 using EdjCase.ICP.Candid.Utilities;
+using EdjCase.ICP.Candid.Models;
 
 namespace Agent.Cbor
 {
-	public static class CborConverterUtil
+	internal static class CborConverterUtil
 	{
 		public static void Write(ref CborWriter writer, UnboundedUInt value)
 		{

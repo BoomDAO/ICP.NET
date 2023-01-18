@@ -1,0 +1,140 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>EdjCase.ICP.Candid</name>
+    </assembly>
+    <members>
+        <member name="M:EdjCase.ICP.Candid.BinarySequence.#ctor(System.Boolean[])">
+            <param name="bits">Least signifcant to most ordered bits</param>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.CandidArgBuilder.compoundTypeTable">
+            <summary>
+            Helper to capture compound types
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.CandidArgBuilder.EncodedTypes">
+            <summary>
+            Ordered list of encoded types (encoded with SLEB128).
+            If SLEB value is positive, it is an index for `EncodedCompoundTypes` for a compound type
+            If SLEB value is negative, it is type code for a primitive value
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.CandidArgBuilder.EncodedValues">
+            <summary>
+            Ordered list of encoded values
+            </summary>
+        </member>
+        <member name="T:EdjCase.ICP.Candid.Crypto.CRC32">
+            <summary>
+            Helper class for computing CRC32 hashes/checksums on byte data
+            Useful for calculating checksums on data
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Crypto.CRC32.ComputeHash(System.IO.Stream)">
+            <summary>
+            Computes the 32-bit hash on the stream of data provided
+            </summary>
+            <param name="stream">Byte data. Will use the whole stream</param>
+            <returns>Hash of the byte data as a byte array of length of 4</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Crypto.CRC32.ComputeHash(System.Byte[])">
+            <summary>
+            Computes the 32-bit hash on the data bytes provided
+            </summary>
+            <param name="data">Byte data</param>
+            <returns>Hash of the byte data as a byte array of length of 4</returns>
+        </member>
+        <member name="T:EdjCase.ICP.Candid.Exceptions.CandidDecodingException">
+            <summary>
+            An error that occurs during the decoding of bytes to a candid structure
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Exceptions.CandidDecodingException.ByteEndIndex">
+            <summary>
+            The index where the byte reader last read. Helps identitfy the source of the 
+            decoding issue
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Exceptions.CandidDecodingException.ErrorMessage">
+            <summary>
+            Message about the error that occurred
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Exceptions.CandidDecodingException.#ctor(System.Int32,System.String)">
+            <param name="byteEndIndex">The index where the byte reader last read</param>
+            <param name="message">Message about the error that occurred</param>
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Exceptions.CandidDecodingException.Message">
+            <inheritdoc/>
+        </member>
+        <member name="T:EdjCase.ICP.Candid.Exceptions.CandidTextParseException">
+            <summary>
+            An error that occurs when the conversion of text to a candid model fails
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Exceptions.CandidTextParseException.Message">
+            <inheritdoc/>
+        </member>
+        <member name="T:EdjCase.ICP.Candid.Exceptions.InvalidCandidException">
+            <summary>
+            An error that occurs if the candid models do not follow the 
+            specification
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Exceptions.InvalidCandidException.Message">
+            <inheritdoc/>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidTag.HashName(System.String)">
+            <summary>
+            Hashes the name to get the proper id 
+            hash(name) = ( Sum_(i=0..k) utf8(name)[i] * 223^(k-i) ) mod 2^32 where k = |utf8(name)|-1
+            </summary>
+            <param name="name">Name to hash</param>
+            <returns>Unsigned 32 byte integer hash</returns>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.Models.CompoundTypeTable.CompoundTypeIndexMap">
+            <summary>
+            A mapping of compound type definition to `EncodedCompoundTypes` index to be used as reference
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.HashTree.BuildRootHash">
+            <summary>
+            Computes the root SHA256 hash of the tree based on the IC certificate spec
+            </summary>
+            <returns>A blob of the hash digest</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidPrimitive.AsPrincipal">
+            <summary>
+            If opaque, returns null, otherwise the principalid
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidValue.AsPrincipal">
+            <summary>
+            If opaque, returns null, otherwise the principalid
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:EdjCase.ICP.Candid.Parsers.CandidByteParser">
+            <summary>
+            Functions to help parse candid arguments from the raw bytes
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Parsers.CandidByteParser.Parse(System.Byte[])">
+            <summary>
+            Converts a byte representation of candid arguments to a usable model
+            </summary>
+            <param name="value">The byte representation of Candid arguments</param>
+            <returns>Candid arg value from the specified bytes</returns>
+            <exception cref="T:EdjCase.ICP.Candid.Exceptions.CandidDecodingException">Throws if the bytes are not valid Candid</exception>
+            <exception cref="T:EdjCase.ICP.Candid.Exceptions.InvalidCandidException">Throws if the the candid does not follow the specification</exception>
+            $"Candid failed with while resolving a type reference
+        </member>
+        <member name="T:System.Runtime.CompilerServices.IsExternalInit">
+            <summary>
+            Reserved to be used by the compiler for tracking metadata.
+            This class should not be used by developers in source code.
+            </summary>
+        </member>
+    </members>
+</doc>

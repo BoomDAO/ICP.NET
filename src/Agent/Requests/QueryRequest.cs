@@ -1,5 +1,3 @@
-using EdjCase.ICP.Candid;
-using EdjCase.ICP.Candid.Crypto;
 using EdjCase.ICP.Candid.Models;
 using System;
 using System.Collections.Generic;

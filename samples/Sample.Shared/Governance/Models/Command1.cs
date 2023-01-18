@@ -1,8 +1,4 @@
 using System;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using EdjCase.ICP.Candid.Mapping;
-using EdjCase.ICP.Candid;
 
 namespace Sample.Shared.Governance.Models
 {
@@ -30,7 +26,7 @@ namespace Sample.Shared.Governance.Models
 		
 		public GovernanceError AsError()
 		{
-			this.ValidateType(Command1Tag.Error);
+			this.ValidateTag(Command1Tag.Error);
 			return (GovernanceError)this.Value!;
 		}
 		
@@ -41,7 +37,7 @@ namespace Sample.Shared.Governance.Models
 		
 		public SpawnResponse AsSpawn()
 		{
-			this.ValidateType(Command1Tag.Spawn);
+			this.ValidateTag(Command1Tag.Spawn);
 			return (SpawnResponse)this.Value!;
 		}
 		
@@ -52,7 +48,7 @@ namespace Sample.Shared.Governance.Models
 		
 		public SpawnResponse AsSplit()
 		{
-			this.ValidateType(Command1Tag.Split);
+			this.ValidateTag(Command1Tag.Split);
 			return (SpawnResponse)this.Value!;
 		}
 		
@@ -66,7 +62,7 @@ namespace Sample.Shared.Governance.Models
 		
 		public Command1.O3 AsFollow()
 		{
-			this.ValidateType(Command1Tag.Follow);
+			this.ValidateTag(Command1Tag.Follow);
 			return (Command1.O3)this.Value!;
 		}
 		
@@ -77,7 +73,7 @@ namespace Sample.Shared.Governance.Models
 		
 		public ClaimOrRefreshResponse AsClaimOrRefresh()
 		{
-			this.ValidateType(Command1Tag.ClaimOrRefresh);
+			this.ValidateTag(Command1Tag.ClaimOrRefresh);
 			return (ClaimOrRefreshResponse)this.Value!;
 		}
 		
@@ -91,7 +87,7 @@ namespace Sample.Shared.Governance.Models
 		
 		public Command1.O5 AsConfigure()
 		{
-			this.ValidateType(Command1Tag.Configure);
+			this.ValidateTag(Command1Tag.Configure);
 			return (Command1.O5)this.Value!;
 		}
 		
@@ -105,7 +101,7 @@ namespace Sample.Shared.Governance.Models
 		
 		public Command1.O6 AsRegisterVote()
 		{
-			this.ValidateType(Command1Tag.RegisterVote);
+			this.ValidateTag(Command1Tag.RegisterVote);
 			return (Command1.O6)this.Value!;
 		}
 		
@@ -119,7 +115,7 @@ namespace Sample.Shared.Governance.Models
 		
 		public Command1.O7 AsMerge()
 		{
-			this.ValidateType(Command1Tag.Merge);
+			this.ValidateTag(Command1Tag.Merge);
 			return (Command1.O7)this.Value!;
 		}
 		
@@ -130,7 +126,7 @@ namespace Sample.Shared.Governance.Models
 		
 		public SpawnResponse AsDisburseToNeuron()
 		{
-			this.ValidateType(Command1Tag.DisburseToNeuron);
+			this.ValidateTag(Command1Tag.DisburseToNeuron);
 			return (SpawnResponse)this.Value!;
 		}
 		
@@ -141,7 +137,7 @@ namespace Sample.Shared.Governance.Models
 		
 		public MakeProposalResponse AsMakeProposal()
 		{
-			this.ValidateType(Command1Tag.MakeProposal);
+			this.ValidateTag(Command1Tag.MakeProposal);
 			return (MakeProposalResponse)this.Value!;
 		}
 		
@@ -152,7 +148,7 @@ namespace Sample.Shared.Governance.Models
 		
 		public MergeMaturityResponse AsMergeMaturity()
 		{
-			this.ValidateType(Command1Tag.MergeMaturity);
+			this.ValidateTag(Command1Tag.MergeMaturity);
 			return (MergeMaturityResponse)this.Value!;
 		}
 		
@@ -163,11 +159,11 @@ namespace Sample.Shared.Governance.Models
 		
 		public DisburseResponse AsDisburse()
 		{
-			this.ValidateType(Command1Tag.Disburse);
+			this.ValidateTag(Command1Tag.Disburse);
 			return (DisburseResponse)this.Value!;
 		}
 		
-		private void ValidateType(Command1Tag tag)
+		private void ValidateTag(Command1Tag tag)
 		{
 			if (!this.Tag.Equals(tag))
 			{

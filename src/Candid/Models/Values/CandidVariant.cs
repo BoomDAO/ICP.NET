@@ -1,4 +1,3 @@
-using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid.Encodings;
 using System;
 using System.Linq;
@@ -37,7 +36,7 @@ namespace EdjCase.ICP.Candid.Models.Values
 				.FindIndex(f => f.Key == this.Tag);
 			if (index < 0)
 			{
-				throw new CandidSerializationEncodingException($"Variant option '{this.Tag}' was not found in the type");
+				throw new InvalidCandidException($"Variant option '{this.Tag}' was not found in the type", null);
 			}
 			// bytes = index (LEB128) + encoded value
 			return LEB128.EncodeUnsigned((uint)index)
@@ -59,10 +58,10 @@ namespace EdjCase.ICP.Candid.Models.Values
 			return false;
 		}
 
-        public override string ToString()
-        {
+		public override string ToString()
+		{
 			return $"{{{this.Tag}:{this.Value}}}";
-        }
-    }
+		}
+	}
 
 }

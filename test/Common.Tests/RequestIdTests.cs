@@ -1,26 +1,13 @@
-using EdjCase.ICP.Agent;
-using EdjCase.ICP.Agent.Auth;
-using EdjCase.ICP.Agent.Identity;
-using EdjCase.ICP.Agent.Requests;
 using EdjCase.ICP.Candid.Crypto;
 using EdjCase.ICP.Candid.Models;
-using EdjCase.ICP.Candid.Models.Types;
-using EdjCase.ICP.Candid.Models.Values;
-using EdjCase.ICP.Candid.Utilities;
-using Snapshooter.Xunit;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Channels;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace ICP.Candid.Tests
 {
 	public class RequestIdTests
 	{
-		private IHashFunction  sha256 = SHA256HashFunction.Create();
+		private IHashFunction sha256 = SHA256HashFunction.Create();
 
 		[Fact]
 		public void RequestId_Dict()

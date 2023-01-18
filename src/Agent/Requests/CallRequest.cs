@@ -1,4 +1,3 @@
-using EdjCase.ICP.Candid;
 using EdjCase.ICP.Candid.Models;
 using System;
 using System.Collections.Generic;
@@ -21,7 +20,7 @@ namespace EdjCase.ICP.Agent.Requests
 		/// Argument to pass to the canister method
 		/// </summary>
 		[Dahomey.Cbor.Attributes.CborProperty(Properties.ARG)]
-		public CandidArg EncodedArgument { get; }
+		public CandidArg Arg { get; }
 		/// <summary>
 		/// The user who issued the request
 		/// </summary>
@@ -38,11 +37,18 @@ namespace EdjCase.ICP.Agent.Requests
 		[Dahomey.Cbor.Attributes.CborProperty(Properties.NONCE)]
 		public byte[]? Nonce { get; }
 
-		public CallRequest(Principal canisterId, string method, CandidArg encodedArgument, Principal sender, ICTimestamp ingressExpiry, byte[]? nonce = null)
+		public CallRequest(
+			Principal canisterId,
+			string method,
+			CandidArg encodedArgument,
+			Principal sender,
+			ICTimestamp ingressExpiry,
+			byte[]? nonce = null
+		)
 		{
 			this.CanisterId = canisterId ?? throw new ArgumentNullException(nameof(canisterId));
 			this.Method = method ?? throw new ArgumentNullException(nameof(method));
-			this.EncodedArgument = encodedArgument ?? throw new ArgumentNullException(nameof(encodedArgument));
+			this.Arg = encodedArgument ?? throw new ArgumentNullException(nameof(encodedArgument));
 			this.Sender = sender ?? throw new ArgumentNullException(nameof(sender));
 			this.IngressExpiry = ingressExpiry ?? throw new ArgumentNullException(nameof(ingressExpiry));
 			this.Nonce = nonce;
@@ -55,7 +61,7 @@ namespace EdjCase.ICP.Agent.Requests
 				{Properties.REQUEST_TYPE, "call".ToHashable()},
 				{Properties.CANISTER_ID, this.CanisterId},
 				{Properties.METHOD_NAME, this.Method.ToHashable()},
-				{Properties.ARG, this.EncodedArgument},
+				{Properties.ARG, this.Arg},
 				{Properties.SENDER, this.Sender},
 				{Properties.INGRESS_EXPIRY, this.IngressExpiry},
 			};
@@ -80,7 +86,7 @@ namespace EdjCase.ICP.Agent.Requests
 
 	public class CallRejectedException : Exception
 	{
-		public UnboundedUInt RejectCode { get; } 
+		public UnboundedUInt RejectCode { get; }
 		public string RejectMessage { get; }
 		public string? ErrorCode { get; }
 		public CallRejectedException(UnboundedUInt rejectCode, string rejectMessage, string? errorCode)
