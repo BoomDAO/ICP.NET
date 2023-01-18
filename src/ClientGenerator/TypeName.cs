@@ -1,13 +1,11 @@
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace EdjCase.ICP.ClientGenerator
 {
-	public class TypeName
+	internal class TypeName
 	{
 		private string? @namespace { get; }
 		private string name { get; }

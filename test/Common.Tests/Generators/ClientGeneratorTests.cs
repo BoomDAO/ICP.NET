@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Xunit;
 using EdjCase.ICP.ClientGenerator;
 using EdjCase.ICP.Candid.Models;
@@ -9,8 +8,8 @@ using Snapshooter.Xunit;
 namespace EdjCase.ICP.Candid.Tests.Generators
 {
 	public class ClientGeneratorTests
-    {
-        [Theory]
+	{
+		[Theory]
 		[InlineData("Governance")]
 		[InlineData("Dex")]
 		public void GenerateClients(string serviceName)
@@ -29,7 +28,7 @@ namespace EdjCase.ICP.Candid.Tests.Generators
 
 			using (Stream? stream = assembly.GetManifestResourceStream(resourceName))
 			{
-				if(stream == null)
+				if (stream == null)
 				{
 					throw new FileNotFoundException(resourceName);
 				}

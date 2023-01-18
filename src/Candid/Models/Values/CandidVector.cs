@@ -59,11 +59,11 @@ namespace EdjCase.ICP.Candid.Models.Values
 			return false;
 		}
 
-        public override string ToString()
-        {
+		public override string ToString()
+		{
 			IEnumerable<string> values = this.Values.Select(v => v.ToString());
 			return $"[{string.Join(", ", values)}]";
-        }
+		}
 	}
 
 }

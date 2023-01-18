@@ -1,9 +1,8 @@
-﻿using EdjCase.ICP.Candid.Encodings;
+using EdjCase.ICP.Candid.Encodings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace EdjCase.ICP.Candid.Models.Types
 {
@@ -15,7 +14,7 @@ namespace EdjCase.ICP.Candid.Models.Types
 		public Dictionary<CandidId, CandidFuncType> Methods { get; }
 
 
-        public CandidServiceType(Dictionary<CandidId, CandidFuncType> methods, CandidId? id, CandidId? recursiveId = null) : base(recursiveId)
+		public CandidServiceType(Dictionary<CandidId, CandidFuncType> methods, CandidId? id, CandidId? recursiveId = null) : base(recursiveId)
 		{
 			this.Methods = methods;
 			this.Id = id;
@@ -59,5 +58,5 @@ namespace EdjCase.ICP.Candid.Models.Types
 		{
 			return HashCode.Combine(this.Type, this.Methods);
 		}
-    }
+	}
 }

@@ -1,8 +1,4 @@
 using System;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using EdjCase.ICP.Candid.Mapping;
-using EdjCase.ICP.Candid;
 
 namespace Sample.Shared.Governance.Models
 {
@@ -30,7 +26,7 @@ namespace Sample.Shared.Governance.Models
 		
 		public RemoveHotKey AsRemoveHotKey()
 		{
-			this.ValidateType(OperationTag.RemoveHotKey);
+			this.ValidateTag(OperationTag.RemoveHotKey);
 			return (RemoveHotKey)this.Value!;
 		}
 		
@@ -41,7 +37,7 @@ namespace Sample.Shared.Governance.Models
 		
 		public AddHotKey AsAddHotKey()
 		{
-			this.ValidateType(OperationTag.AddHotKey);
+			this.ValidateTag(OperationTag.AddHotKey);
 			return (AddHotKey)this.Value!;
 		}
 		
@@ -55,7 +51,7 @@ namespace Sample.Shared.Governance.Models
 		
 		public Operation.O2 AsStopDissolving()
 		{
-			this.ValidateType(OperationTag.StopDissolving);
+			this.ValidateTag(OperationTag.StopDissolving);
 			return (Operation.O2)this.Value!;
 		}
 		
@@ -69,7 +65,7 @@ namespace Sample.Shared.Governance.Models
 		
 		public Operation.O3 AsStartDissolving()
 		{
-			this.ValidateType(OperationTag.StartDissolving);
+			this.ValidateTag(OperationTag.StartDissolving);
 			return (Operation.O3)this.Value!;
 		}
 		
@@ -80,7 +76,7 @@ namespace Sample.Shared.Governance.Models
 		
 		public IncreaseDissolveDelay AsIncreaseDissolveDelay()
 		{
-			this.ValidateType(OperationTag.IncreaseDissolveDelay);
+			this.ValidateTag(OperationTag.IncreaseDissolveDelay);
 			return (IncreaseDissolveDelay)this.Value!;
 		}
 		
@@ -94,7 +90,7 @@ namespace Sample.Shared.Governance.Models
 		
 		public Operation.O5 AsJoinCommunityFund()
 		{
-			this.ValidateType(OperationTag.JoinCommunityFund);
+			this.ValidateTag(OperationTag.JoinCommunityFund);
 			return (Operation.O5)this.Value!;
 		}
 		
@@ -105,11 +101,11 @@ namespace Sample.Shared.Governance.Models
 		
 		public SetDissolveTimestamp AsSetDissolveTimestamp()
 		{
-			this.ValidateType(OperationTag.SetDissolveTimestamp);
+			this.ValidateTag(OperationTag.SetDissolveTimestamp);
 			return (SetDissolveTimestamp)this.Value!;
 		}
 		
-		private void ValidateType(OperationTag tag)
+		private void ValidateTag(OperationTag tag)
 		{
 			if (!this.Tag.Equals(tag))
 			{

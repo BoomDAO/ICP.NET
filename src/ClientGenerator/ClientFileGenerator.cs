@@ -1,14 +1,10 @@
 using EdjCase.ICP.Agent.Agents;
-using EdjCase.ICP.Agent.Auth;
+using EdjCase.ICP.Agent.Identities;
 using EdjCase.ICP.Candid.Models;
-using EdjCase.ICP.ClientGenerator;
-using Microsoft.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
-using Path = EdjCase.ICP.Candid.Models.Path;
 
 namespace EdjCase.ICP.ClientGenerator
 {
@@ -18,8 +14,8 @@ namespace EdjCase.ICP.ClientGenerator
 		{
 
 			var agent = new HttpAgent(new AnonymousIdentity(), baseUrl);
-			var candidServicePath = Path.FromSegments("canister", canisterId.Raw, "metadata", "candid:service");
-			var paths = new List<Path>
+			var candidServicePath = StatePath.FromSegments("canister", canisterId.Raw, "metadata", "candid:service");
+			var paths = new List<StatePath>
 			{
 				candidServicePath
 			};

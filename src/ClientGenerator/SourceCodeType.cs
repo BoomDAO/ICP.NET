@@ -1,25 +1,21 @@
 using EdjCase.ICP.Candid.Models;
-using EdjCase.ICP.Candid.Models.Types;
-using EdjCase.ICP.Candid.Models.Values;
 using EdjCase.ICP.ClientGenerator;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace ICP.ClientGenerator
 {
-	public abstract class SourceCodeType
+	internal abstract class SourceCodeType
 	{
 	}
 
-	public class NullEmptyOrReservedSourceCodeType : SourceCodeType
+	internal class NullEmptyOrReservedSourceCodeType : SourceCodeType
 	{
 
 	}
 
 
-	public class CsharpTypeSourceCodeType : SourceCodeType
+	internal class CsharpTypeSourceCodeType : SourceCodeType
 	{
 		public Type Type { get; }
 		public List<SourceCodeType> GenericTypes { get; }
@@ -36,7 +32,7 @@ namespace ICP.ClientGenerator
 		}
 	}
 
-	public class ReferenceSourceCodeType : SourceCodeType
+	internal class ReferenceSourceCodeType : SourceCodeType
 	{
 		public CandidId Id { get; }
 		public ReferenceSourceCodeType(CandidId id)
@@ -46,7 +42,7 @@ namespace ICP.ClientGenerator
 	}
 
 
-	public class RecordSourceCodeType : SourceCodeType
+	internal class RecordSourceCodeType : SourceCodeType
 	{
 		public List<(ValueName Tag, SourceCodeType Type)> Fields { get; }
 
@@ -57,7 +53,7 @@ namespace ICP.ClientGenerator
 		}
 	}
 
-	public class VariantSourceCodeType : SourceCodeType
+	internal class VariantSourceCodeType : SourceCodeType
 	{
 		public List<(ValueName Tag, SourceCodeType Type)> Options { get; }
 
@@ -67,7 +63,7 @@ namespace ICP.ClientGenerator
 		}
 	}
 
-	public class ServiceSourceCodeType : SourceCodeType
+	internal class ServiceSourceCodeType : SourceCodeType
 	{
 		public List<(ValueName Name, Func FuncInfo)> Methods { get; set; }
 		public ServiceSourceCodeType(List<(ValueName Name, Func FuncInfo)> methods)

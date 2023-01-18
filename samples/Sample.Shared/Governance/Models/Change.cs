@@ -1,8 +1,4 @@
 using System;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using EdjCase.ICP.Candid.Mapping;
-using EdjCase.ICP.Candid;
 
 namespace Sample.Shared.Governance.Models
 {
@@ -30,7 +26,7 @@ namespace Sample.Shared.Governance.Models
 		
 		public NodeProvider AsToRemove()
 		{
-			this.ValidateType(ChangeTag.ToRemove);
+			this.ValidateTag(ChangeTag.ToRemove);
 			return (NodeProvider)this.Value!;
 		}
 		
@@ -41,11 +37,11 @@ namespace Sample.Shared.Governance.Models
 		
 		public NodeProvider AsToAdd()
 		{
-			this.ValidateType(ChangeTag.ToAdd);
+			this.ValidateTag(ChangeTag.ToAdd);
 			return (NodeProvider)this.Value!;
 		}
 		
-		private void ValidateType(ChangeTag tag)
+		private void ValidateTag(ChangeTag tag)
 		{
 			if (!this.Tag.Equals(tag))
 			{

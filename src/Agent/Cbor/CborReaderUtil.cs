@@ -1,12 +1,5 @@
-using Agent.Cbor;
 using Dahomey.Cbor.Serialization;
-using EdjCase.ICP.Candid.Encodings;
-using EdjCase.ICP.Candid.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using static EdjCase.ICP.Agent.Cbor.CborReaderUtil;
 
 namespace EdjCase.ICP.Agent.Cbor
 {

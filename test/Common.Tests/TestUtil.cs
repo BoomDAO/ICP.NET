@@ -1,17 +1,12 @@
 using EdjCase.ICP.Candid.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using EdjCase.ICP.Candid.Models.Values;
 using EdjCase.ICP.Candid.Models.Types;
-using EdjCase.ICP.Candid;
 
 namespace EdjCase.ICP.Candid.Tests
 {
-    public static class TestUtil
+	public static class TestUtil
 	{
 		public static void AssertEncodedCandid(string expectedHex, string expectedPrefix, CandidValue value, CandidType typeDef)
 		{
@@ -28,7 +23,7 @@ namespace EdjCase.ICP.Candid.Tests
 			Assert.Equal(expectedHex, actualHex);
 
 			// Decode test
-            CandidArg args = CandidArg.FromBytes(actualBytes);
+			CandidArg args = CandidArg.FromBytes(actualBytes);
 			CandidTypedValue actual = Assert.Single(args.Values);
 
 			Assert.Equal(value, actual.Value);

@@ -1,18 +1,11 @@
-using Dahomey.Cbor.ObjectModel;
 using Dahomey.Cbor.Serialization;
 using Dahomey.Cbor.Serialization.Converters;
-using EdjCase.ICP.Agent;
 using EdjCase.ICP.Agent.Cbor;
 using EdjCase.ICP.Agent.Responses;
-using EdjCase.ICP.Candid;
 using EdjCase.ICP.Candid.Encodings;
 using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid.Utilities;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Agent.Cbor
 {
@@ -20,23 +13,23 @@ namespace Agent.Cbor
 	{
 		public override QueryResponse Read(ref CborReader reader)
 		{
-            var context = new QueryReponseContext();
+			var context = new QueryReponseContext();
 			CborReaderUtil.ReadMap(ref reader, ref context, this.SetQueryResponseField);
-            switch (context.Status)
-            {
+			switch (context.Status)
+			{
 				case "replied":
 #if DEBUG
-                    string argHex = ByteUtil.ToHexString(context.ReplyArg!);
+					string argHex = ByteUtil.ToHexString(context.ReplyArg!);
 #endif
-                    var arg = CandidArg.FromBytes(context.ReplyArg!);
-                    var reply = new QueryReply(arg);
+					var arg = CandidArg.FromBytes(context.ReplyArg!);
+					var reply = new QueryReply(arg);
 					return QueryResponse.Replied(reply);
 				case "rejected":
-                    ReplicaRejectCode code = (ReplicaRejectCode)(ulong)context.RejectCode!;
+					ReplicaRejectCode code = (ReplicaRejectCode)(ulong)context.RejectCode!;
 					return QueryResponse.Rejected(code, context.RejectMessage);
 				default:
 					throw new NotImplementedException($"Cannot deserialize query response with status '{context.Status}'");
-            }
+			}
 		}
 
 		private void SetQueryResponseField(string name, ref CborReader reader, ref QueryReponseContext context)
@@ -89,16 +82,16 @@ namespace Agent.Cbor
 
 		public override void Write(ref CborWriter writer, QueryResponse value)
 		{
-            // Never write
+			// Never write
 			throw new NotImplementedException();
 		}
 	}
-    
-    internal class QueryReponseContext
-    {
-        public string? Status { get; set; }
-        public byte[]? ReplyArg { get; set; }
-        public UnboundedUInt? RejectCode { get; set; }
-        public string? RejectMessage { get; set; }
-    }
+
+	internal class QueryReponseContext
+	{
+		public string? Status { get; set; }
+		public byte[]? ReplyArg { get; set; }
+		public UnboundedUInt? RejectCode { get; set; }
+		public string? RejectMessage { get; set; }
+	}
 }

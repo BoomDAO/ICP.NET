@@ -1,15 +1,10 @@
-using EdjCase.ICP.Agent.Auth;
-using EdjCase.ICP.Candid;
+using EdjCase.ICP.Agent.Identities;
 using EdjCase.ICP.Candid.Mapping;
-using EdjCase.ICP.Candid.Models;
-using EdjCase.ICP.Candid.Models.Types;
 using EdjCase.ICP.Candid.Models.Values;
 using EdjCase.ICP.ClientGenerator;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace ICP.ClientGenerator
 {
@@ -333,12 +328,12 @@ namespace ICP.ClientGenerator
 					string backupOptionName = "O" + i;
 					i++;
 					(TypeName? optionTypeName, bool customType) = ResolveType(optionType, backupOptionName, out Action<IndentedStringBuilder>? optionTypeBuilder);
-					
+
 					if (optionTypeBuilder != null)
 					{
 						optionTypeBuilder(builder);
 					}
-					if(optionTypeName != null && customType)
+					if (optionTypeName != null && customType)
 					{
 						// Prefix with parent name if subtype
 						optionTypeName = optionTypeName.WithParentType(variantName);

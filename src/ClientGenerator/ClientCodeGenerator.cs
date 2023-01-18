@@ -1,4 +1,3 @@
-using EdjCase.ICP.Candid;
 using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid.Models.Types;
 using EdjCase.ICP.Candid.Models.Values;
@@ -10,7 +9,7 @@ using System.Linq;
 
 namespace EdjCase.ICP.ClientGenerator
 {
-	public class ClientCodeResult
+	internal class ClientCodeResult
 	{
 		public TypeName Name { get; }
 		public string ClientFile { get; }
@@ -25,7 +24,7 @@ namespace EdjCase.ICP.ClientGenerator
 			this.AliasFile = aliasFile;
 		}
 	}
-	public static class ClientCodeGenerator
+	internal static class ClientCodeGenerator
 	{
 		public static ClientCodeResult FromService(string serviceName, string baseNamespace, CandidServiceDescription service)
 		{
@@ -50,7 +49,7 @@ namespace EdjCase.ICP.ClientGenerator
 					continue;
 				}
 
-				if(customType)
+				if (customType)
 				{
 					if (typeBuilder == null)
 					{
@@ -64,7 +63,7 @@ namespace EdjCase.ICP.ClientGenerator
 				else
 				{
 					aliases.Add(id, name);
-					if(typeBuilder != null)
+					if (typeBuilder != null)
 					{
 						typeFileGenerators.Add((importedNamespaces) =>
 						{

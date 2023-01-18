@@ -1,8 +1,4 @@
 using System;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using EdjCase.ICP.Candid.Mapping;
-using EdjCase.ICP.Candid;
 
 namespace Sample.Shared.Governance.Models
 {
@@ -30,7 +26,7 @@ namespace Sample.Shared.Governance.Models
 		
 		public Neuron AsOk()
 		{
-			this.ValidateType(Result2Tag.Ok);
+			this.ValidateTag(Result2Tag.Ok);
 			return (Neuron)this.Value!;
 		}
 		
@@ -41,11 +37,11 @@ namespace Sample.Shared.Governance.Models
 		
 		public GovernanceError AsErr()
 		{
-			this.ValidateType(Result2Tag.Err);
+			this.ValidateTag(Result2Tag.Err);
 			return (GovernanceError)this.Value!;
 		}
 		
-		private void ValidateType(Result2Tag tag)
+		private void ValidateTag(Result2Tag tag)
 		{
 			if (!this.Tag.Equals(tag))
 			{

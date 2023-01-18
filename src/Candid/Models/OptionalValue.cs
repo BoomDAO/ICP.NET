@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace EdjCase.ICP.Candid.Models
 {
@@ -72,7 +70,7 @@ namespace EdjCase.ICP.Candid.Models
 
 		public static bool operator ==(OptionalValue<T> x, OptionalValue<T> y)
 		{
-			if(object.ReferenceEquals(x, null))
+			if (object.ReferenceEquals(x, null))
 			{
 				return object.ReferenceEquals(y, null);
 			}

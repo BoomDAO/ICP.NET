@@ -1,8 +1,4 @@
 using System;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using EdjCase.ICP.Candid.Mapping;
-using EdjCase.ICP.Candid;
 
 namespace Sample.Shared.Governance.Models
 {
@@ -30,7 +26,7 @@ namespace Sample.Shared.Governance.Models
 		
 		public System.Collections.Generic.List<byte> AsSubaccount()
 		{
-			this.ValidateType(NeuronIdOrSubaccountTag.Subaccount);
+			this.ValidateTag(NeuronIdOrSubaccountTag.Subaccount);
 			return (System.Collections.Generic.List<byte>)this.Value!;
 		}
 		
@@ -41,11 +37,11 @@ namespace Sample.Shared.Governance.Models
 		
 		public NeuronId AsNeuronId()
 		{
-			this.ValidateType(NeuronIdOrSubaccountTag.NeuronId);
+			this.ValidateTag(NeuronIdOrSubaccountTag.NeuronId);
 			return (NeuronId)this.Value!;
 		}
 		
-		private void ValidateType(NeuronIdOrSubaccountTag tag)
+		private void ValidateTag(NeuronIdOrSubaccountTag tag)
 		{
 			if (!this.Tag.Equals(tag))
 			{

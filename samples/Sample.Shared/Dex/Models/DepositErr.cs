@@ -1,11 +1,3 @@
-using System;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using EdjCase.ICP.Candid.Mapping;
-using EdjCase.ICP.Candid;
-using Token = EdjCase.ICP.Candid.Models.Principal;
-using OrderId = System.UInt32;
-
 namespace Sample.Shared.Dex.Models
 {
 	[EdjCase.ICP.Candid.Mapping.VariantAttribute(typeof(DepositErrTag))]

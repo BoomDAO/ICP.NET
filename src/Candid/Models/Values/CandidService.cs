@@ -1,4 +1,3 @@
-using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid.Models.Types;
 using System;
 using System.Linq;
@@ -45,9 +44,9 @@ namespace EdjCase.ICP.Candid.Models.Values
 				t = (CandidServiceType)type;
 			}
 			if (this.IsOpqaueReference)
-            {
+			{
 				return new byte[] { 0 };
-            }
+			}
 			return new byte[] { 1 }
 				.Concat(this.principalId!.Raw)
 				.ToArray();
@@ -61,22 +60,22 @@ namespace EdjCase.ICP.Candid.Models.Values
 		{
 			if (other is CandidService s)
 			{
-				if(this.IsOpqaueReference != s.IsOpqaueReference)
-                {
+				if (this.IsOpqaueReference != s.IsOpqaueReference)
+				{
 					return false;
-                }
-                if (this.IsOpqaueReference)
-                {
+				}
+				if (this.IsOpqaueReference)
+				{
 					// TODO can we ever tell if they are the same? do we care?
 					return false;
-                }
+				}
 				return this.principalId == s.principalId;
 			}
 			return false;
 		}
 
-        public override string ToString()
-        {
+		public override string ToString()
+		{
 			return this.IsOpqaueReference
 				? "(Opaque Reference)"
 				: this.principalId!.ToString();

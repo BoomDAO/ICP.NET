@@ -4,7 +4,6 @@ using EdjCase.ICP.Candid.Models;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 
 namespace EdjCase.ICP.Candid.Mapping.Mappers
 {
