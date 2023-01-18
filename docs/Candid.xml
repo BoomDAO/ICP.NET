@@ -44,6 +44,46 @@
             <param name="data">Byte data</param>
             <returns>Hash of the byte data as a byte array of length of 4</returns>
         </member>
+        <member name="T:EdjCase.ICP.Candid.Exceptions.CandidDecodingException">
+            <summary>
+            An error that occurs during the decoding of bytes to a candid structure
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Exceptions.CandidDecodingException.ByteEndIndex">
+            <summary>
+            The index where the byte reader last read. Helps identitfy the source of the 
+            decoding issue
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Exceptions.CandidDecodingException.ErrorMessage">
+            <summary>
+            Message about the error that occurred
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Exceptions.CandidDecodingException.#ctor(System.Int32,System.String)">
+            <param name="byteEndIndex">The index where the byte reader last read</param>
+            <param name="message">Message about the error that occurred</param>
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Exceptions.CandidDecodingException.Message">
+            <inheritdoc/>
+        </member>
+        <member name="T:EdjCase.ICP.Candid.Exceptions.CandidTextParseException">
+            <summary>
+            An error that occurs when the conversion of text to a candid model fails
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Exceptions.CandidTextParseException.Message">
+            <inheritdoc/>
+        </member>
+        <member name="T:EdjCase.ICP.Candid.Exceptions.InvalidCandidException">
+            <summary>
+            An error that occurs if the candid models do not follow the 
+            specification
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Exceptions.InvalidCandidException.Message">
+            <inheritdoc/>
+        </member>
         <member name="M:EdjCase.ICP.Candid.Models.CandidTag.HashName(System.String)">
             <summary>
             Hashes the name to get the proper id 
@@ -86,7 +126,7 @@
             </summary>
             <param name="value">The byte representation of Candid arguments</param>
             <returns>Candid arg value from the specified bytes</returns>
-            <exception cref="T:EdjCase.ICP.Candid.Exceptions.CandidEncodingException">Throws if the bytes are not valid Candid</exception>
+            <exception cref="T:EdjCase.ICP.Candid.Exceptions.CandidDecodingException">Throws if the bytes are not valid Candid</exception>
             <exception cref="T:EdjCase.ICP.Candid.Exceptions.InvalidCandidException">Throws if the the candid does not follow the specification</exception>
             $"Candid failed with while resolving a type reference
         </member>
