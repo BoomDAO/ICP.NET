@@ -50,7 +50,7 @@ namespace ICP.Candid.Tests
 			var request = new QueryRequest(canisterId, method, arg, sender, ingressExpiry);
 			Dictionary<string, IHashable> content = request.BuildHashableItem();
 
-			SignedContent signedContent = identity.CreateSignedContent(content);
+			SignedContent signedContent = await identity.CreateSignedContent(content);
 
 			Snapshot.Match(ByteUtil.ToHexString(signedContent.SenderSignature!.Value));
 		}

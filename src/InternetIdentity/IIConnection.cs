@@ -12,11 +12,11 @@ namespace EdjCase.ICP.InternetIdentity
 {
 	public class UnknownUserException : System.Exception
 	{
-		public readonly ulong userNumber;
+		public ulong UserNumber { get; }
 
 		public UnknownUserException(ulong userNumber)
 		{
-			this.userNumber = userNumber;
+			this.UserNumber = userNumber;
 		}
 	}
 
