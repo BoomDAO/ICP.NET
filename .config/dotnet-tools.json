@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "isRoot": true,
+  "tools": {
+    "edjcase.icp.clientgenerator": {
+      "version": "9.44.22-pre",
+      "commands": [
+        "candid-client-generator"
+      ]
+    }
+  }
+}

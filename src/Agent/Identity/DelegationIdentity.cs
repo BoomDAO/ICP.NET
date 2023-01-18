@@ -26,7 +26,7 @@ namespace EdjCase.ICP.Agent.Identity
 			return this.Chain.PublicKey;
 		}
 
-		public override Signature Sign(byte[] blob)
+		public override Task<Signature> Sign(byte[] blob)
 		{
 			return this.Identity.Sign(blob);
 		}
@@ -47,17 +47,23 @@ namespace EdjCase.ICP.Agent.Identity
 			this.Delegations = delegations;
 		}
 
-		public static DelegationChain Create(
-			SigningIdentityBase identity,
-			IPublicKey publicKey,
+		public static async Task<DelegationChain> Create(
+			SigningIdentityBase identity, // from
+			IPublicKey publicKey,         // to
 			ICTimestamp expiration,
 			DelegationChain? previousChain = null,
 			List<Principal>? principalIds = null)
 		{
-			SignedDelegation signedDelegation = SignedDelegation.Create(identity, publicKey, expiration, principalIds);
+			SignedDelegation signedDelegation = await SignedDelegation.Create(identity, publicKey, expiration, principalIds);
 			List<SignedDelegation> delegations = previousChain?.Delegations ?? new List<SignedDelegation>();
 			delegations.Add(signedDelegation);
-			return new DelegationChain(publicKey, delegations);
+			return new DelegationChain(identity.GetPublicKey(), delegations);
+		}
+
+
+		public bool IsExpirationValid(ICTimestamp ForTime)
+		{
+			return this.Delegations.All(d => d.Delegation.IsExpirationValid(ForTime));
 		}
 	}
 
@@ -74,13 +80,13 @@ namespace EdjCase.ICP.Agent.Identity
 			this.Signature = signature ?? throw new ArgumentNullException(nameof(signature));
 		}
 
-		public static SignedDelegation Create(
+		public static async Task<SignedDelegation> Create(
 			SigningIdentityBase fromIdentity,
 			IPublicKey publicKey,
 			ICTimestamp expiration,
 			List<Principal>? targets = null)
 		{
-			var delegation = new Delegation(publicKey.GetRawBytes(), expiration, targets);
+			var delegation = new Delegation(publicKey.GetDerEncodedBytes(), expiration, targets);
 			Dictionary<string, IHashable> hashable = delegation.BuildHashableItem();
 			// The signature is calculated by signing the concatenation of the domain separator
 			// and the message.
@@ -91,7 +97,7 @@ namespace EdjCase.ICP.Agent.Identity
 				.Concat(delegationHashDigest)
 				.ToArray();
 
-			Signature signature = fromIdentity.Sign(challenge); // Sign the domain sep + delegation hash digest
+			Signature signature = await fromIdentity.Sign(challenge); // Sign the domain sep + delegation hash digest
 			return new SignedDelegation(delegation, signature);
 		}
 
@@ -157,6 +163,11 @@ namespace EdjCase.ICP.Agent.Identity
 			return this.BuildHashableItem()
 				.ToHashable()
 				.ComputeHash(hashFunction);
+		}
+
+		public bool IsExpirationValid(ICTimestamp ForTime)
+		{
+			return this.Expiration >= ForTime;
 		}
 
 		public class Properties

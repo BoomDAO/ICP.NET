@@ -75,7 +75,7 @@ namespace EdjCase.ICP.Candid.Models
 
         public static Principal SelfAuthenticating(IPublicKey publicKey)
         {
-            byte[] digest = new SHA224().GenerateDigest(publicKey.GetRawBytes());
+            byte[] digest = new SHA224().GenerateDigest(publicKey.GetDerEncodedBytes());
 
             // bytes = digest + selfAuthenticatingSuffix
             byte[] bytes = new byte[digest.Length + 1];

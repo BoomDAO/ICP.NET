@@ -1,5 +1,6 @@
-﻿using EdjCase.ICP.Candid.Models;
+using EdjCase.ICP.Candid.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace EdjCase.ICP.Agent.Auth
 {
@@ -7,6 +8,6 @@ namespace EdjCase.ICP.Agent.Auth
 	{
 		Principal GetPrincipal();
 
-		SignedContent CreateSignedContent(Dictionary<string, IHashable> content);
+		Task<SignedContent> CreateSignedContent(Dictionary<string, IHashable> content);
 	}
 }

@@ -18,6 +18,8 @@
 	  <PackAsTool>true</PackAsTool>
 	  <ToolCommandName>candid-client-generator</ToolCommandName>
 	  <PackageOutputPath>./nupkg</PackageOutputPath>
+	  <ApplicationIcon />
+	  <StartupObject />
   </PropertyGroup>
 
 	<ItemGroup>

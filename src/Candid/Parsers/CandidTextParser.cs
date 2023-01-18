@@ -56,7 +56,7 @@ namespace EdjCase.ICP.Candid.Parsers
 					return CandidTextParser.GetVec(helper, null);
 				default:
 					// TODO
-					throw new NotImplementedException();
+					throw new NotImplementedException($"Parsing encountered unimplemented candid type, next token is {helper.CurrentToken.Type}");
 			}
 		}
 		private static CandidFuncType GetFunc(CandidTextTokenHelper helper, CandidId? recursiveId)
@@ -182,6 +182,12 @@ namespace EdjCase.ICP.Candid.Parsers
 						fieldType = ParseType(helper);
 						break;
 					case CandidTextTokenType.CloseCurlyBrace:
+						/* Edge case: handles missing semicolon on the final option of a variant, when that option has a "null" field type:
+						 *	type MyVariant = variant {
+						 *		foo: A;
+						 *		bar
+						 *	}<<< Cursor is here
+						 */
 						fieldType = new CandidPrimitiveType(PrimitiveType.Null);
 						break;
 					default:

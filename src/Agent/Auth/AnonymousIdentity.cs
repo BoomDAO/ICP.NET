@@ -11,9 +11,9 @@ namespace EdjCase.ICP.Agent.Auth
 	public class AnonymousIdentity : IIdentity
 	{
 
-		public SignedContent CreateSignedContent(Dictionary<string, IHashable> request)
+		public Task<SignedContent> CreateSignedContent(Dictionary<string, IHashable> request)
 		{
-			return new SignedContent(request, null, null, null);
+			return Task.FromResult(new SignedContent(request, null, null, null));
 		}
 
 		public Principal GetPrincipal() => Principal.Anonymous();

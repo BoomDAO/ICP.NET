@@ -13,7 +13,7 @@ using System.Text;
 
 namespace ICP.ClientGenerator
 {
-	internal static class TypeSourceGenerator
+	internal class TypeSourceGenerator
 	{
 		private static Dictionary<Type, string> systemTypeShorthands = new Dictionary<Type, string>
 		{
@@ -31,13 +31,13 @@ namespace ICP.ClientGenerator
 			{ typeof(bool), "bool" }
 		};
 
-		public static string GenerateClientSourceCode(TypeName clientName, string baseNamespace, ServiceSourceCodeType desc, List<string>? importedNamespaces = null)
+		public string GenerateClientSourceCode(TypeName clientName, string baseNamespace, ServiceSourceCodeType desc, List<string>? importedNamespaces = null)
 		{
 			IndentedStringBuilder builder = new();
 
 			WriteNamespace(builder, baseNamespace, () =>
 			{
-				WriteService(builder, clientName, desc);
+				this.WriteService(builder, clientName, desc);
 			});
 			string source = BuildSourceWithShorthands(builder);
 
@@ -102,7 +102,7 @@ namespace ICP.ClientGenerator
 			return source;
 		}
 
-		private static void WriteService(IndentedStringBuilder builder, TypeName serviceName, ServiceSourceCodeType service)
+		private void WriteService(IndentedStringBuilder builder, TypeName serviceName, ServiceSourceCodeType service)
 		{
 			WriteClass(builder, serviceName, () =>
 			{
@@ -128,11 +128,11 @@ namespace ICP.ClientGenerator
 				);
 				foreach ((ValueName methodName, ServiceSourceCodeType.Func funcDesc) in service.Methods)
 				{
-					List<TypedValueName> resolvedArgTypes = ResolveTypes(builder, funcDesc.ArgTypes);
+					List<TypedValueName> resolvedArgTypes = this.ResolveTypes(builder, funcDesc.ArgTypes);
 
 					List<TypedValueName> resolvedReturnTypes = funcDesc.IsFireAndForget
 						? new() // TODO confirm no return types, or even not async?
-						: ResolveTypes(builder, funcDesc.ReturnTypes);
+						: this.ResolveTypes(builder, funcDesc.ReturnTypes);
 
 					List<TypedParam> argsForMethod = resolvedArgTypes
 						.Select((a, i) => TypedParam.FromType(a.Type, a.Value))
@@ -222,14 +222,14 @@ namespace ICP.ClientGenerator
 			});
 		}
 
-		private static List<TypedValueName> ResolveTypes(IndentedStringBuilder builder, List<(ValueName Name, SourceCodeType Type)> argTypes)
+		private List<TypedValueName> ResolveTypes(IndentedStringBuilder builder, List<(ValueName Name, SourceCodeType Type)> argTypes)
 		{
 			List<TypedValueName> resolvedTypes = new();
 			int argIndex = 0;
 			foreach ((ValueName argName, SourceCodeType argType) in argTypes)
 			{
 				string nameContext = "Arg" + argIndex;
-				(TypeName? type, _) = ResolveType(argType, nameContext, out Action<IndentedStringBuilder>? argTypeBuilder);
+				(TypeName? type, _) = this.ResolveType(argType, nameContext, out Action<IndentedStringBuilder>? argTypeBuilder);
 				if (argTypeBuilder != null)
 				{
 					argTypeBuilder(builder);
@@ -243,14 +243,14 @@ namespace ICP.ClientGenerator
 			return resolvedTypes;
 		}
 
-		internal static void WriteRecord(IndentedStringBuilder builder, TypeName recordName, RecordSourceCodeType record)
+		internal void WriteRecord(IndentedStringBuilder builder, TypeName recordName, RecordSourceCodeType record)
 		{
 			WriteClass(builder, recordName, () =>
 			{
 				int i = 0;
 				foreach ((ValueName fieldName, SourceCodeType fieldType) in record.Fields)
 				{
-					(TypeName? fieldTypeName, _) = ResolveType(fieldType, "R" + i, out Action<IndentedStringBuilder>? typeBuilder);
+					(TypeName? fieldTypeName, _) = this.ResolveType(fieldType, "R" + i, out Action<IndentedStringBuilder>? typeBuilder);
 					i++;
 					if (typeBuilder != null)
 					{
@@ -272,7 +272,7 @@ namespace ICP.ClientGenerator
 		}
 
 
-		internal static void WriteVariant(IndentedStringBuilder builder, TypeName variantName, VariantSourceCodeType variant)
+		internal void WriteVariant(IndentedStringBuilder builder, TypeName variantName, VariantSourceCodeType variant)
 		{
 			TypeName enumName = new(variantName.GetName() + "Tag", null);
 			var implementationTypes = new List<TypeName>();
@@ -332,13 +332,13 @@ namespace ICP.ClientGenerator
 				{
 					string backupOptionName = "O" + i;
 					i++;
-					(TypeName? optionTypeName, bool customType) = ResolveType(optionType, backupOptionName, out Action<IndentedStringBuilder>? optionTypeBuilder);
-					
+					(TypeName? optionTypeName, bool customType) = this.ResolveType(optionType, backupOptionName, out Action<IndentedStringBuilder>? optionTypeBuilder);
+
 					if (optionTypeBuilder != null)
 					{
 						optionTypeBuilder(builder);
 					}
-					if(optionTypeName != null && customType)
+					if (optionTypeName != null && customType)
 					{
 						// Prefix with parent name if subtype
 						optionTypeName = optionTypeName.WithParentType(variantName);
@@ -429,7 +429,37 @@ namespace ICP.ClientGenerator
 			WriteEnum(builder, enumName, enumOptions);
 		}
 
-		internal static (TypeName? Type, bool CustomType) ResolveType(SourceCodeType type, string nameContext, out Action<IndentedStringBuilder>? typeBuilder)
+		private readonly Dictionary<string, (TypeName? Type, bool CustomType, Action<IndentedStringBuilder>? TypeBuilder)> _resolvedTypes = new();
+
+		internal (TypeName? Type, bool CustomType) ResolveTypeDeclaration(ValueName typeName, SourceCodeType type, out Action<IndentedStringBuilder>? typeBuilder)
+		{
+			// note that this only works for only one level of type nesting, so type aliases to generics whose argument is a user-defined type
+			// will fail, for example:
+			//    type A<T> = record { left : A, right : B };
+			//    type X = blob;
+			//    type F = A<X>;
+
+			var typeNameStr = typeName.PascalCaseValue;
+
+			if (this._resolvedTypes.TryGetValue(typeNameStr, out var existing))
+			{
+				typeBuilder = null;
+				return (existing.Type, existing.CustomType);
+			}
+			else
+			{
+				var res = this.ResolveType_Impl(type, typeNameStr, isDeclaration: true, out typeBuilder);
+				this._resolvedTypes[typeNameStr] = (res.Item1, res.Item2, typeBuilder);
+				return res;
+			}
+		}
+
+		internal (TypeName? Type, bool CustomType) ResolveType(SourceCodeType type, string nameContext, out Action<IndentedStringBuilder>? typeBuilder)
+		{
+			return this.ResolveType_Impl(type, nameContext, isDeclaration: false, out typeBuilder);
+		}
+
+		internal (TypeName? Type, bool CustomType) ResolveType_Impl(SourceCodeType type, string nameContext, bool isDeclaration, out Action<IndentedStringBuilder>? typeBuilder)
 		{
 			switch (type)
 			{
@@ -447,7 +477,7 @@ namespace ICP.ClientGenerator
 						int i = 0;
 						foreach (var t in c.GenericTypes)
 						{
-							(TypeName? n, bool inline) = ResolveType(t, nameContext + "V" + i, out Action<IndentedStringBuilder>? genericTypeBuilder);
+							(TypeName? n, bool inline) = this.ResolveType(t, nameContext + "V" + i, out Action<IndentedStringBuilder>? genericTypeBuilder);
 							i++;
 							if (n != null)
 							{
@@ -476,20 +506,39 @@ namespace ICP.ClientGenerator
 					return (cType, false)
 ;
 				case ReferenceSourceCodeType re:
-					string correctedRefId = StringUtil.ToPascalCase(re.Id.ToString()); // TODO casing?
-					typeBuilder = null;
-					return (new TypeName(correctedRefId, null), false);
+					{
+						string correctedRefId = StringUtil.ToPascalCase(re.Id.ToString()); // TODO casing?
+						typeBuilder = null;
+
+						if (isDeclaration)
+						{
+							if (this._resolvedTypes.TryGetValue(correctedRefId, out var existing))
+							{
+								typeBuilder = null;
+								return (existing.Type, false);
+							}
+							else
+							{
+								throw new System.InvalidOperationException("Candid type reference to another user-defined type; but that type is not yet defined");
+							}
+						}
+						else
+						{
+							return (new TypeName(correctedRefId, null), false);
+						}
+					}
+
 				case VariantSourceCodeType v:
 					TypeName variantName = new TypeName(nameContext, null);
-					typeBuilder = (builder) => WriteVariant(builder, variantName, v);
+					typeBuilder = (builder) => this.WriteVariant(builder, variantName, v);
 					return (variantName, true);
 				case RecordSourceCodeType r:
 					TypeName recordName = new TypeName(nameContext, null);
-					typeBuilder = (builder) => WriteRecord(builder, recordName, r);
+					typeBuilder = (builder) => this.WriteRecord(builder, recordName, r);
 					return (recordName, true);
 				case ServiceSourceCodeType s:
 					TypeName serviceName = new TypeName(nameContext, null);
-					typeBuilder = (builder) => WriteService(builder, serviceName, s);
+					typeBuilder = (builder) => this.WriteService(builder, serviceName, s);
 					return (serviceName, true);
 				default:
 					throw new NotImplementedException();

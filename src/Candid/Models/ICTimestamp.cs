@@ -54,5 +54,15 @@ namespace EdjCase.ICP.Candid.Models
 				.Add(offset)
 				.ToString("s");
 		}
+
+		public static bool operator >= (ICTimestamp a, ICTimestamp b)
+		{
+			return a.NanoSeconds >= b.NanoSeconds;
+		}
+
+		public static bool operator <=(ICTimestamp a, ICTimestamp b)
+		{
+			return a.NanoSeconds <= b.NanoSeconds;
+		}
 	}
 }
