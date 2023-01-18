@@ -36,7 +36,7 @@ namespace EdjCase.ICP.Candid.Models.Values
 				.FindIndex(f => f.Key == this.Tag);
 			if (index < 0)
 			{
-				throw new CandidSerializationEncodingException($"Variant option '{this.Tag}' was not found in the type");
+				throw new InvalidCandidException($"Variant option '{this.Tag}' was not found in the type", null);
 			}
 			// bytes = index (LEB128) + encoded value
 			return LEB128.EncodeUnsigned((uint)index)

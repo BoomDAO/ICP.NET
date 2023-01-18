@@ -11,8 +11,19 @@ using EdjCase.ICP.Candid.Models.Values;
 
 namespace EdjCase.ICP.Candid.Parsers
 {
+	/// <summary>
+	/// Functions to help parse candid arguments from the raw bytes
+	/// </summary>
 	public static class CandidByteParser
 	{
+		/// <summary>
+		/// Converts a byte representation of candid arguments to a usable model
+		/// </summary>
+		/// <param name="value">The byte representation of Candid arguments</param>
+		/// <returns>Candid arg value from the specified bytes</returns>
+		/// <exception cref="CandidDecodingException">Throws if the bytes are not valid Candid</exception>
+		/// <exception cref="InvalidCandidException">Throws if the the candid does not follow the specification</exception>
+		/// $"Candid failed with while resolving a type reference
 		public static CandidArg Parse(byte[] value)
 		{
 			var helper = new ByteHelper(value);
@@ -24,7 +35,7 @@ namespace EdjCase.ICP.Candid.Parsers
 				DefintionOrReference t = helper.ReadType();
 				if (t.Type != DefintionOrReferenceType.Compound)
 				{
-					throw CandidSerializationParseException.FromReader(helper.Reader, $"Expected compound type, got '{t.Type}'");
+					throw CandidDecodingException.FromReader(helper.Reader, $"Expected compound type, got '{t.Type}'");
 				}
 				return t.DefinitionFunc!;
 			});
@@ -48,9 +59,9 @@ namespace EdjCase.ICP.Candid.Parsers
 				// TODO Remaining bytes are opaque reference bytes
 				return CandidArg.FromCandid(args);
 			}
-			catch (Exception ex) when (ex is not CandidSerializationException)
+			catch (Exception ex)
 			{
-				throw new Exception($"Failed to parse the candid arg. Here is the trace that it parsed so far:\n{resolver.Tracer}", ex);
+				throw new InvalidCandidException(ex, resolver.Tracer.ToString());
 			}
 		}
 
@@ -273,7 +284,7 @@ namespace EdjCase.ICP.Candid.Parsers
 				byte[] magicNumber = this.Reader.ReadBytes(4);
 				if (!magicNumber.SequenceEqual(new byte[] { 68, 73, 68, 76 }))
 				{
-					throw CandidSerializationParseException.FromReader(this.Reader, "Bytes must start with 'DIDL' (0x68, 0x73, 0x68, 0x76)");
+					throw CandidDecodingException.FromReader(this.Reader, "Bytes must start with 'DIDL' (0x68, 0x73, 0x68, 0x76)");
 				}
 			}
 
@@ -427,7 +438,7 @@ namespace EdjCase.ICP.Candid.Parsers
 									{
 										return f;
 									}
-									throw new CandidTypeResolutionException($"Service method values can only be Func types. Actual type '{type}'");
+									throw new InvalidCandidException($"Service method values can only be Func types. Actual type '{type}'", resolver.Tracer.ToString());
 								});
 							resolver.Tracer.EndCompound("Service");
 							return new CandidServiceType(m, id: null);
@@ -532,7 +543,7 @@ namespace EdjCase.ICP.Candid.Parsers
 				CandidCompoundType? typeDef = recursiveTypes.GetValueOrDefault(recursiveId);
 				if (typeDef == null)
 				{
-					throw CandidSerializationParseException.FromReader(this.Reader, $"Cannot find recursive type with id '{recursiveId}'");
+					throw CandidDecodingException.FromReader(this.Reader, $"Cannot find recursive type with id '{recursiveId}'");
 				}
 				return this.ReadValue(typeDef, recursiveTypes);
 			}
@@ -609,7 +620,7 @@ namespace EdjCase.ICP.Candid.Parsers
 				{
 					return true;
 				}
-				throw CandidSerializationParseException.FromReader(this.Reader, $"Expected byte with value 0 or 1, got: {b}");
+				throw CandidDecodingException.FromReader(this.Reader, $"Expected byte with value 0 or 1, got: {b}");
 			}
 
 			public CandidValue ReadFuncValue()
@@ -646,7 +657,7 @@ namespace EdjCase.ICP.Candid.Parsers
 				UnboundedUInt index = this.ReadNat();
 				if (!index.TryToUInt64(out ulong i) || i > int.MaxValue)
 				{
-					throw CandidSerializationParseException.FromReader(this.Reader, $"Cannot handle variants with more than '{int.MaxValue}' options");
+					throw CandidDecodingException.FromReader(this.Reader, $"Cannot handle variants with more than '{int.MaxValue}' options");
 				}
 				(CandidTag tag, CandidType typeDef) = options
 					.OrderBy(f => f.Key)

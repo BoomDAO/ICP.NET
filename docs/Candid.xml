@@ -75,6 +75,21 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="T:EdjCase.ICP.Candid.Parsers.CandidByteParser">
+            <summary>
+            Functions to help parse candid arguments from the raw bytes
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Parsers.CandidByteParser.Parse(System.Byte[])">
+            <summary>
+            Converts a byte representation of candid arguments to a usable model
+            </summary>
+            <param name="value">The byte representation of Candid arguments</param>
+            <returns>Candid arg value from the specified bytes</returns>
+            <exception cref="T:EdjCase.ICP.Candid.Exceptions.CandidEncodingException">Throws if the bytes are not valid Candid</exception>
+            <exception cref="T:EdjCase.ICP.Candid.Exceptions.InvalidCandidException">Throws if the the candid does not follow the specification</exception>
+            $"Candid failed with while resolving a type reference
+        </member>
         <member name="T:System.Runtime.CompilerServices.IsExternalInit">
             <summary>
             Reserved to be used by the compiler for tracking metadata.

@@ -2,14 +2,18 @@ using System;
 
 namespace EdjCase.ICP.Candid.Exceptions
 {
+	/// <summary>
+	/// An error that occurs when the conversion of text to a candid model fails
+	/// </summary>
 	public class CandidTextParseException : Exception
 	{
-		public string ParseError { get; }
-		public CandidTextParseException(string message)
+		internal string ParseError { get; }
+		internal CandidTextParseException(string message)
 		{
 			this.ParseError = message;
 		}
 
+		/// <inheritdoc/>
 		public override string Message
 		{
 
