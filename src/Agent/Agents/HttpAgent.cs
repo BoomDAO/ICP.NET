@@ -61,7 +61,7 @@ namespace EdjCase.ICP.Agent.Agents
 		}
 
 
-		/// <inheritdoc cref="IAgent.CallAsync(Principal, string, CandidArg, Principal?, IIdentity?)"/>
+		/// <inheritdoc/>
 		public async Task<RequestId> CallAsync(
 			Principal canisterId,
 			string method,
@@ -81,7 +81,7 @@ namespace EdjCase.ICP.Agent.Agents
 			}
 		}
 
-		/// <inheritdoc cref="IAgent.QueryAsync(Principal, string, CandidArg, IIdentity?)"/>
+		/// <inheritdoc/>
 		public async Task<QueryResponse> QueryAsync(
 			Principal canisterId,
 			string method,
@@ -96,7 +96,7 @@ namespace EdjCase.ICP.Agent.Agents
 			}
 		}
 
-		/// <inheritdoc cref="IAgent.ReadStateAsync(Principal, List{StatePath}, IIdentity?)"/>
+		/// <inheritdoc/>
 		public async Task<ReadStateResponse> ReadStateAsync(
 			Principal canisterId,
 			List<StatePath> paths,
@@ -119,7 +119,7 @@ namespace EdjCase.ICP.Agent.Agents
 			}
 		}
 
-		/// <inheritdoc cref="IAgent.GetRequestStatusAsync(Principal, RequestId)"/>
+		/// <inheritdoc/>
 		public async Task<RequestStatus?> GetRequestStatusAsync(Principal canisterId, RequestId id)
 		{
 			var pathRequestStatus = StatePath.FromSegments("request_status", id.RawValue);
@@ -152,7 +152,7 @@ namespace EdjCase.ICP.Agent.Agents
 		}
 
 
-		/// <inheritdoc cref="IAgent.GetRootKeyAsync"/>
+		/// <inheritdoc/>
 		public async Task<byte[]> GetRootKeyAsync()
 		{
 			if (this.rootKeyCache == null)
@@ -164,7 +164,7 @@ namespace EdjCase.ICP.Agent.Agents
 		}
 
 
-		/// <inheritdoc cref="IAgent.GetReplicaStatusAsync"/>
+		/// <inheritdoc/>
 		public async Task<StatusResponse> GetReplicaStatusAsync()
 		{
 			return await this.SendAsync<StatusResponse>("/api/v2/status");
