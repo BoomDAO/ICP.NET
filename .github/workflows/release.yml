@@ -10,6 +10,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Checkout submodule
+        uses: Mushus/checkout-submodule@v1.0.1
+        with:
+          submodulePath: Fido2Net
+
       - name: Setup Dotnet
         uses: actions/setup-dotnet@v1
         with:
