@@ -1,7 +1,6 @@
 using EdjCase.ICP.Agent;
 using EdjCase.ICP.Agent.Agents;
 using EdjCase.ICP.Agent.Identities;
-using EdjCase.ICP.Agent.Keys;
 using EdjCase.ICP.Agent.Models;
 using EdjCase.ICP.Candid.Models;
 using System.Collections.Generic;
@@ -140,7 +139,7 @@ namespace EdjCase.ICP.InternetIdentity
 
 		public async Task<DelegationIdentity> PrepareAndGetDelegation(string hostname, SigningIdentityBase sessionKey, ulong? maxTimeToLive = null)
 		{
-			var sessionPubkey = sessionKey.GetPublicKey().GetDerEncodedBytes().ToList();
+			var sessionPubkey = sessionKey.GetPublicKey().Value.ToList();
 
 			var (userkey, timestamp) = await this.Client.PrepareDelegation(
 				this.UserNumber,
@@ -158,7 +157,7 @@ namespace EdjCase.ICP.InternetIdentity
 			return new DelegationIdentity(
 					sessionKey,
 					new DelegationChain(
-						DerPublicKey.FromDer(userkey.ToArray()), // TODO: no copy
+						new DerEncodedPublicKey(userkey.ToArray()), // TODO: no copy
 						new List<SignedDelegation> { signedDelegation }));
 		}
 

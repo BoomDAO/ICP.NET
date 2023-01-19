@@ -1,5 +1,4 @@
 using EdjCase.ICP.Agent.Identities;
-using EdjCase.ICP.Agent.Keys;
 using EdjCase.ICP.Candid.Models;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,9 +9,9 @@ namespace EdjCase.ICP.Agent.Models
 
 	public class DelegationChain
 	{
-		public IPublicKey PublicKey { get; }
+		public DerEncodedPublicKey PublicKey { get; }
 		public List<SignedDelegation> Delegations { get; }
-		public DelegationChain(IPublicKey publicKey, List<SignedDelegation> delegations)
+		public DelegationChain(DerEncodedPublicKey publicKey, List<SignedDelegation> delegations)
 		{
 			this.PublicKey = publicKey;
 			this.Delegations = delegations;
@@ -20,7 +19,7 @@ namespace EdjCase.ICP.Agent.Models
 
 		public static async Task<DelegationChain> CreateAsync(
 			SigningIdentityBase identity,
-			IPublicKey publicKey,
+			DerEncodedPublicKey publicKey,
 			ICTimestamp expiration,
 			DelegationChain? previousChain = null,
 			List<Principal>? principalIds = null)

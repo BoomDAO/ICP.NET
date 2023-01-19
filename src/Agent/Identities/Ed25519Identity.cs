@@ -1,5 +1,4 @@
 using Chaos.NaCl;
-using EdjCase.ICP.Agent.Keys;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 
@@ -13,7 +12,7 @@ namespace EdjCase.ICP.Agent.Identities
 		/// <summary>
 		/// The public key of the identity
 		/// </summary>
-		public Ed25519PublicKey PublicKey { get; }
+		public DerEncodedPublicKey PublicKey { get; }
 
 		/// <summary>
 		/// The private key of the identity
@@ -22,7 +21,7 @@ namespace EdjCase.ICP.Agent.Identities
 
 		/// <param name="publicKey">The public key of the identity</param>
 		/// <param name="privateKey">The private key of the identity</param>
-		public Ed25519Identity(Ed25519PublicKey publicKey, byte[] privateKey)
+		public Ed25519Identity(DerEncodedPublicKey publicKey, byte[] privateKey)
 		{
 			// TODO validate that pub+priv match
 			this.PublicKey = publicKey;
@@ -30,7 +29,7 @@ namespace EdjCase.ICP.Agent.Identities
 		}
 
 		/// <inheritdoc/>
-		public override IPublicKey GetPublicKey()
+		public override DerEncodedPublicKey GetPublicKey()
 		{
 			return this.PublicKey;
 		}
@@ -54,7 +53,8 @@ namespace EdjCase.ICP.Agent.Identities
 			{
 				cryptoRng.GetBytes(seed);
 				Ed25519.KeyPairFromSeed(publicKey: out var pub, expandedPrivateKey: out var priv, seed);
-				return new Ed25519Identity(new Ed25519PublicKey(pub), priv);
+				var publicKey = DerEncodedPublicKey.FromEd25519(pub);
+				return new Ed25519Identity(publicKey, priv);
 			}
 		}
 	}

@@ -1,4 +1,3 @@
-using EdjCase.ICP.Agent.Keys;
 using System.Collections.Generic;
 using EdjCase.ICP.Agent.Models;
 using System.Threading.Tasks;
@@ -19,7 +18,7 @@ namespace EdjCase.ICP.Agent.Identities
 		}
 
 		/// <inheritdoc/>
-		public override IPublicKey GetPublicKey()
+		public override DerEncodedPublicKey GetPublicKey()
 		{
 			return this.Chain.PublicKey;
 		}

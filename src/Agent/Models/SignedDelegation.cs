@@ -1,5 +1,4 @@
 using EdjCase.ICP.Agent.Identities;
-using EdjCase.ICP.Agent.Keys;
 using EdjCase.ICP.Candid.Crypto;
 using EdjCase.ICP.Candid.Models;
 using System;
@@ -26,11 +25,11 @@ namespace EdjCase.ICP.Agent.Models
 
 		public static async Task<SignedDelegation> CreateAsync(
 			SigningIdentityBase fromIdentity,
-			IPublicKey publicKey,
+			DerEncodedPublicKey publicKey,
 			ICTimestamp expiration,
 			List<Principal>? targets = null)
 		{
-			var delegation = new Delegation(publicKey.GetDerEncodedBytes(), expiration, targets);
+			var delegation = new Delegation(publicKey.Value, expiration, targets);
 			Dictionary<string, IHashable> hashable = delegation.BuildHashableItem();
 			// The signature is calculated by signing the concatenation of the domain separator
 			// and the message.

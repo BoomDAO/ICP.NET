@@ -4,7 +4,6 @@
 @using EdjCase.ICP.Agent.Identities
 @using EdjCase.ICP.Candid.Models
 @using System.Text.Json.Serialization
-@using EdjCase.ICP.Agent.Keys;
 @using EdjCase.ICP.Candid.Utilities
 
 @inject IJSRuntime JSRuntime
@@ -119,7 +118,7 @@ else if (this.MadeCall && this.ProposalId != null)
         if (identityValues != null && chainModel != null)
         {
             byte[] publicKeyBytes = FromHexString(identityValues[0]);
-            var publicKey = new Ed25519PublicKey(publicKeyBytes);
+            var publicKey = DerEncodedPublicKey.FromEd25519(publicKeyBytes);
             byte[] privateKey = FromHexString(identityValues[1]);
             var identity = new Ed25519Identity(publicKey, privateKey);
             DelegationChain chain = chainModel.ToCommon();
@@ -161,7 +160,7 @@ else if (this.MadeCall && this.ProposalId != null)
             List<SignedDelegation> delegations = this.Delegations
                 .Select(d => d.ToCommon())
                 .ToList();
-            Ed25519PublicKey publicKey = new(Convert.FromHexString(this.PublicKey));
+            var publicKey = DerEncodedPublicKey.FromEd25519(Convert.FromHexString(this.PublicKey));
             return new DelegationChain(publicKey, delegations);
         }
     }
@@ -190,10 +189,10 @@ else if (this.MadeCall && this.ProposalId != null)
 
         public Delegation ToCommon()
         {
-            var publicKey = new Ed25519PublicKey(Convert.FromHexString(this.PubKey));
+            var publicKey = DerEncodedPublicKey.FromEd25519(Convert.FromHexString(this.PubKey));
             ulong nanosecondsFromNow = (ulong)ToBigInteger(FromHexString(this.Expiration), isUnsigned: true, isBigEndian: true);
             ICTimestamp expiration = ICTimestamp.FromNanoSeconds(nanosecondsFromNow);
-            return new Delegation(publicKey.GetRawBytes(), expiration, targets: null);
+            return new Delegation(publicKey.AsEd25519(), expiration, targets: null);
         }
 
         public static System.Numerics.BigInteger ToBigInteger(byte[] bytes, bool isUnsigned, bool isBigEndian)

@@ -1,5 +1,5 @@
+using EdjCase.Cryptography.BLS;
 using EdjCase.ICP.Candid.Models;
-using EdjCase.ICP.Agent.Keys;
 using System;
 
 namespace EdjCase.ICP.Agent.Models
@@ -54,8 +54,8 @@ namespace EdjCase.ICP.Agent.Models
 					return false;
 				}
 			}
-			var blsKey = BlsPublicKey.FromDer(rootPublicKey);
-			return blsKey.ValidateSignature(rootHash.Value, this.Signature);
+			var blsKey = new DerEncodedPublicKey(rootPublicKey).AsBls();
+			return BlsUtil.VerifySignature(blsKey, rootHash.Value, this.Signature);
 		}
 	}
 

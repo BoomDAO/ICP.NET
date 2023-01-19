@@ -1,5 +1,5 @@
+using EdjCase.ICP.Agent;
 using EdjCase.ICP.Agent.Identities;
-using EdjCase.ICP.Agent.Keys;
 using EdjCase.ICP.Candid.Utilities;
 using Snapshooter.Xunit;
 using Xunit;
@@ -13,8 +13,8 @@ namespace ICP.Candid.Tests
 		public void ED25519PublicKey_GetDerEncodedBytes(string publicKeyHex)
 		{
 			byte[] publicKeyBytes = ByteUtil.FromHexString(publicKeyHex);
-			var key = new Ed25519PublicKey(publicKeyBytes);
-			byte[] derEncoded = key.GetDerEncodedBytes();
+			var key = DerEncodedPublicKey.FromEd25519(publicKeyBytes);
+			byte[] derEncoded = key.Value;
 			Snapshot.Match(derEncoded);
 		}
 		[Theory]
@@ -22,11 +22,10 @@ namespace ICP.Candid.Tests
 		public void ED25519Identity_GetDerEncodedBytes(string publicKeyHex, string privateKeyHex)
 		{
 			byte[] publicKeyBytes = ByteUtil.FromHexString(publicKeyHex);
-			var publicKey = new Ed25519PublicKey(publicKeyBytes);
+			var publicKey = DerEncodedPublicKey.FromEd25519(publicKeyBytes);
 			byte[] privateKeyBytes = ByteUtil.FromHexString(privateKeyHex);
 			var identity = new Ed25519Identity(publicKey, privateKeyBytes);
-			var edPublicKey = Assert.IsType<Ed25519PublicKey>(publicKey);
-			Snapshot.Match(edPublicKey.Value);
+			Snapshot.Match(publicKey.Value);
 		}
 	}
 }
