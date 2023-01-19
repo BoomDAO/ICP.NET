@@ -1,5 +1,5 @@
+using EdjCase.ICP.Agent;
 using EdjCase.ICP.Candid.Models;
-using EdjCase.ICP.Agent.Keys;
 using EdjCase.ICP.Candid.Utilities;
 using Xunit;
 
@@ -34,10 +34,17 @@ namespace ICP.Candid.Tests
 		public void Principal_Match_PublicKey(string principalText, string publicKeyHex)
 		{
 			var principal = Principal.FromText(principalText);
+
+			Assert.Equal(principalText, principal.ToText());
+
 			byte[] publicKeyBytes = ByteUtil.FromHexString(publicKeyHex);
-			Ed25519PublicKey publicKey = new Ed25519PublicKey(publicKeyBytes);
+
+			var publicKey = DerEncodedPublicKey.FromDer(publicKeyBytes);
 			var publicKeyPrincipal = Principal.SelfAuthenticating(publicKey.Value);
 			Assert.Equal(principal, publicKeyPrincipal);
+
+
+			Assert.Equal(publicKeyPrincipal.ToHex(), principal.ToHex());
 		}
 	}
 }

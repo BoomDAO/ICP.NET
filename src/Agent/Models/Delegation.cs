@@ -6,6 +6,7 @@ using System.Linq;
 
 namespace EdjCase.ICP.Agent.Models
 {
+	// TODO move attributes to a converter
 	public class Delegation : IRepresentationIndependentHashItem, IHashable
 	{
 		[Dahomey.Cbor.Attributes.CborProperty(Properties.PUBLIC_KEY)]
@@ -56,6 +57,16 @@ namespace EdjCase.ICP.Agent.Models
 			return this.BuildHashableItem()
 				.ToHashable()
 				.ComputeHash(hashFunction);
+		}
+
+		/// <summary>
+		/// Checks to see if the expiration is on or after the specified time
+		/// </summary>
+		/// <param name="timestamp">The timestamp to compare the expiration against</param>
+		/// <returns>True if the delegation is NOT expired, otherwise false</returns>
+		public bool IsExpirationValid(ICTimestamp timestamp)
+		{
+			return this.Expiration >= timestamp;
 		}
 
 		public class Properties

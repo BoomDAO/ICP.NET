@@ -1,10 +1,10 @@
 using EdjCase.ICP.Candid.Crypto;
 using EdjCase.ICP.Candid.Models;
-using EdjCase.ICP.Agent.Keys;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using EdjCase.ICP.Agent.Models;
+using System.Threading.Tasks;
 
 namespace EdjCase.ICP.Agent.Identities
 {
@@ -17,7 +17,7 @@ namespace EdjCase.ICP.Agent.Identities
 		/// Returns the public key of the identity
 		/// </summary>
 		/// <returns>Public key of the identity</returns>
-		public abstract IPublicKey GetPublicKey();
+		public abstract DerEncodedPublicKey GetPublicKey();
 
 		/// <summary>
 		/// Gets the signed delegations for the identity.
@@ -35,25 +35,25 @@ namespace EdjCase.ICP.Agent.Identities
 		/// </summary>
 		/// <param name="data">The byte data to sign</param>
 		/// <returns>The signature bytes of the specified data bytes</returns>
-		public abstract byte[] Sign(byte[] data);
+		public abstract Task<byte[]> SignAsync(byte[] data);
 
 		/// <inheritdoc/>
 		public Principal GetPrincipal()
 		{
-			IPublicKey publicKey = this.GetPublicKey();
-			return Principal.SelfAuthenticating(publicKey.GetRawBytes());
+			DerEncodedPublicKey publicKey = this.GetPublicKey();
+			return Principal.SelfAuthenticating(publicKey.Value);
 		}
 
 		/// <inheritdoc/>
-		public SignedContent SignContent(Dictionary<string, IHashable> content)
+		public async Task<SignedContent> SignContentAsync(Dictionary<string, IHashable> content)
 		{
-			IPublicKey senderPublicKey = this.GetPublicKey();
+			DerEncodedPublicKey senderPublicKey = this.GetPublicKey();
 			var sha256 = SHA256HashFunction.Create();
 			byte[] contentHash = content.ToHashable().ComputeHash(sha256);
 			byte[] domainSeparator = Encoding.UTF8.GetBytes("\x0Aic-request");
-			byte[] senderSignature = this.Sign(domainSeparator.Concat(contentHash).ToArray());
+			byte[] senderSignature = await this.SignAsync(domainSeparator.Concat(contentHash).ToArray());
 			List<SignedDelegation>? senderDelegations = this.GetSenderDelegations();
-			return new SignedContent(content, senderPublicKey.GetRawBytes(), senderDelegations, senderSignature);
+			return new SignedContent(content, senderPublicKey.Value, senderDelegations, senderSignature);
 		}
 	}
 }

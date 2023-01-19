@@ -214,7 +214,7 @@ namespace EdjCase.ICP.Agent.Agents
 			}
 			TRequest request = getRequest(identityOverride.GetPrincipal(), ICTimestamp.Now());
 			Dictionary<string, IHashable> content = request.BuildHashableItem();
-			SignedContent signedContent = identityOverride.SignContent(content);
+			SignedContent signedContent = await identityOverride.SignContentAsync(content);
 
 
 			byte[] cborBody = this.SerializeSignedContent(signedContent);

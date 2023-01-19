@@ -5,6 +5,9 @@ using System.Linq;
 
 namespace EdjCase.ICP.Candid.Models
 {
+	// TODO change principal to be a variant of the different types or at least be able to tell what type they are
+	// types can be derived from the ending
+	// https://internetcomputer.org/docs/current/references/ic-interface-spec#principal
 	public class Principal : IHashable, IEquatable<Principal>
 	{
 		private const byte anonymousSuffix = 4;
@@ -58,9 +61,9 @@ namespace EdjCase.ICP.Candid.Models
 			return new Principal(new byte[] { anonymousSuffix });
 		}
 
-		public static Principal SelfAuthenticating(byte[] publicKey)
+		public static Principal SelfAuthenticating(byte[] derEncodedPublicKey)
 		{
-			byte[] digest = new SHA224().GenerateDigest(publicKey);
+			byte[] digest = new SHA224().GenerateDigest(derEncodedPublicKey);
 
 			// bytes = digest + selfAuthenticatingSuffix
 			byte[] bytes = new byte[digest.Length + 1];

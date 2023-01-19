@@ -4,6 +4,8 @@ using EdjCase.ICP.Candid.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace EdjCase.ICP.ClientGenerator
@@ -43,6 +45,11 @@ namespace EdjCase.ICP.ClientGenerator
 
 		private static void WriteClientFiles(string fileText, string outputDirectory, string baseNamespace, string clientName)
 		{
+			fileText = string.Join("\n",
+				fileText.Split(new[] { '\r', '\n' })
+						.Where(l => !l.TrimStart().StartsWith("//"))
+			);
+
 			Console.WriteLine($"Parsing file contents...");
 			CandidServiceDescription serviceFile = CandidServiceDescription.Parse(fileText);
 

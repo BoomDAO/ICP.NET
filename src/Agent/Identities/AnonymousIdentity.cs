@@ -1,6 +1,7 @@
 using EdjCase.ICP.Agent.Models;
 using EdjCase.ICP.Candid.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace EdjCase.ICP.Agent.Identities
 {
@@ -11,9 +12,9 @@ namespace EdjCase.ICP.Agent.Identities
 	public class AnonymousIdentity : IIdentity
 	{
 		/// <inheritdoc/>
-		public SignedContent SignContent(Dictionary<string, IHashable> request)
+		public Task<SignedContent> SignContentAsync(Dictionary<string, IHashable> request)
 		{
-			return new SignedContent(request, null, null, null);
+			return Task.FromResult(new SignedContent(request, null, null, null));
 		}
 
 		/// <inheritdoc/>

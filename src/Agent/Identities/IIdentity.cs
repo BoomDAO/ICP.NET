@@ -1,6 +1,7 @@
 using EdjCase.ICP.Agent.Models;
 using EdjCase.ICP.Candid.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace EdjCase.ICP.Agent.Identities
 {
@@ -20,6 +21,6 @@ namespace EdjCase.ICP.Agent.Identities
 		/// </summary>
 		/// <param name="content">The data that needs to be signed</param>
 		/// <returns>The content with signature(s) from the identity</returns>
-		SignedContent SignContent(Dictionary<string, IHashable> content);
+		Task<SignedContent> SignContentAsync(Dictionary<string, IHashable> content);
 	}
 }

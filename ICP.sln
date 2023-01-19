@@ -31,7 +31,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.RestAPI", "samples\S
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdjCase.ICP.ClientGenerator", "src\ClientGenerator\EdjCase.ICP.ClientGenerator.csproj", "{1C184ECB-7653-4DC1-B453-E529656897CB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdjCase.Cryptography.BLS", "src\EdjCase.Cryptography.BLS\EdjCase.Cryptography.BLS.csproj", "{DE71EFA5-C09A-4A04-9C27-DE2D360A3D10}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdjCase.ICP.InternetIdentity", "src\InternetIdentity\EdjCase.ICP.InternetIdentity.csproj", "{6030010B-7BA2-4305-B999-F92995478E02}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fido2Net", "Fido2Net\Fido2Net\Fido2Net.csproj", "{9539D54D-1FBA-43D2-A813-E9EDB7976765}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdjCase.Cryptography.BLS", "src\EdjCase.Cryptography.BLS\EdjCase.Cryptography.BLS.csproj", "{DE71EFA5-C09A-4A04-9C27-DE2D360A3D10}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -75,6 +79,14 @@ Global
 		{1C184ECB-7653-4DC1-B453-E529656897CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1C184ECB-7653-4DC1-B453-E529656897CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1C184ECB-7653-4DC1-B453-E529656897CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6030010B-7BA2-4305-B999-F92995478E02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6030010B-7BA2-4305-B999-F92995478E02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6030010B-7BA2-4305-B999-F92995478E02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6030010B-7BA2-4305-B999-F92995478E02}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9539D54D-1FBA-43D2-A813-E9EDB7976765}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9539D54D-1FBA-43D2-A813-E9EDB7976765}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9539D54D-1FBA-43D2-A813-E9EDB7976765}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9539D54D-1FBA-43D2-A813-E9EDB7976765}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DE71EFA5-C09A-4A04-9C27-DE2D360A3D10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DE71EFA5-C09A-4A04-9C27-DE2D360A3D10}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DE71EFA5-C09A-4A04-9C27-DE2D360A3D10}.Release|Any CPU.ActiveCfg = Release|Any CPU

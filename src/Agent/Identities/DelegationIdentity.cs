@@ -1,6 +1,6 @@
-using EdjCase.ICP.Agent.Keys;
 using System.Collections.Generic;
 using EdjCase.ICP.Agent.Models;
+using System.Threading.Tasks;
 
 namespace EdjCase.ICP.Agent.Identities
 {
@@ -18,15 +18,15 @@ namespace EdjCase.ICP.Agent.Identities
 		}
 
 		/// <inheritdoc/>
-		public override IPublicKey GetPublicKey()
+		public override DerEncodedPublicKey GetPublicKey()
 		{
 			return this.Chain.PublicKey;
 		}
 
 		/// <inheritdoc/>
-		public override byte[] Sign(byte[] blob)
+		public override async Task<byte[]> SignAsync(byte[] blob)
 		{
-			return this.Identity.Sign(blob);
+			return await this.Identity.SignAsync(blob);
 		}
 
 		/// <inheritdoc/>

@@ -32,6 +32,20 @@ namespace EdjCase.ICP.Candid.Models
 			return this.value!;
 		}
 
+		public bool TryGetValue(out T x)
+		{
+			if (this.HasValue)
+			{
+				x = this.value!;
+				return true;
+			}
+			else
+			{
+				x = default;
+				return false;
+			}
+		}
+
 		public OptionalValue<T2> Cast<T2>()
 		{
 			return new OptionalValue<T2>(this.HasValue, (T2?)(object?)this.value);

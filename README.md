@@ -252,6 +252,17 @@ dotnet tool install -g EdjCase.ICP.ClientGenerator
 candid-client-generator -f "location/to/service.did" -o "location/to/output" -n "My.Namespace.IC" -c "MyClient"
 ```
 
+### Installing local tool for development
+
+Build with the version of `src/ClientGenerator/EdjCase.ICP.ClientGenerator.csproj` set to some pre-release version (anything not available in NuGet repositories).
+
+e.g.:
+
+```
+(cd src/ClientGenerator/ ; dotnet pack --configuration Debug -property:Version=99.99.99-pre)
+dotnet tool install EdjCase.ICP.ClientGenerator --local --add-source ./src/ClientGenerator/nupkg --version 99.99.99-pre --ignore-failed-sources
+```
+
 # Links
 
 - [IC Http Interface Spec](https://smartcontracts.org/docs/current/references/ic-interface-spec)

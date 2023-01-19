@@ -33,7 +33,7 @@ namespace EdjCase.ICP.Candid.Parsers
 				if (nextWord != "service")
 				{
 					// TODO
-					throw new Exception();
+					throw new Exception($"nextWord is {nextWord}");
 				}
 				string? seperator = textReader.ReadNextWord();
 				if (seperator != ":")

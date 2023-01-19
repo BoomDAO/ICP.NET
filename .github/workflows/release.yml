@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      
+
       - name: Setup Dotnet
         uses: actions/setup-dotnet@v1
         with:
@@ -20,12 +20,18 @@ jobs:
 
       - name: Push Candid
         run: dotnet nuget push EdjCase.ICP.Candid.${{ github.event.release.tag_name }}.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
-          
+
       - name: Pack Agent
         run: dotnet pack src/Agent/EdjCase.ICP.Agent.csproj --configuration Release /p:Version=${{ github.event.release.tag_name }} --output . --include-symbols --include-source
 
       - name: Push Agent
         run: dotnet nuget push EdjCase.ICP.Agent.${{ github.event.release.tag_name }}.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+
+      - name: Pack Internet Identity
+        run: dotnet pack src/InternetIdentity/EdjCase.ICP.InternetIdentity.csproj --configuration Release /p:Version=${{ github.event.release.tag_name }} --output . --include-symbols --include-source
+
+      - name: Push Internet Identity
+        run: dotnet nuget push EdjCase.ICP.InternetIdentity.${{ github.event.release.tag_name }}.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
 
       - name: Pack Client Generator
         run: dotnet pack src/ClientGenerator/EdjCase.ICP.ClientGenerator.csproj --configuration Release /p:Version=${{ github.event.release.tag_name }} --output . --include-symbols --include-source

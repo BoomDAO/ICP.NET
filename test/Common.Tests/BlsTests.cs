@@ -21,7 +21,7 @@ namespace ICP.Candid.Tests
 			byte[] publicKey = ByteUtil.FromHexString(publicKeyHex);
 			byte[] hash = ByteUtil.FromHexString(hashHex);
 			byte[] signature = ByteUtil.FromHexString(signatureHex);
-			bool isValid = EdjCase.Cryptography.BLS.BlsUtil.VerifyHash(publicKey, hash, signature);
+			bool isValid = EdjCase.Cryptography.BLS.BlsUtil.VerifySignature(publicKey, hash, signature);
 			Assert.True(isValid);
 		}
 	}
