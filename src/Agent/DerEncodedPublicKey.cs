@@ -106,7 +106,6 @@ namespace EdjCase.ICP.Agent
 						throw new ArgumentException("At least one OID is required", nameof(oids));
 					}
 				}
-				// BIT STRING(256 bit)
 				writer.WriteBitString(value);
 			}
 
