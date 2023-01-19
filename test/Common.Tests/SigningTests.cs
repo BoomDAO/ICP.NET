@@ -49,7 +49,8 @@ namespace ICP.Candid.Tests
 
 			SignedContent signedContent = await identity.SignContentAsync(content);
 
-			Snapshot.Match(ByteUtil.ToHexString(signedContent.SenderSignature!));
+			string signatureHex = ByteUtil.ToHexString(signedContent.SenderSignature!);
+			Snapshot.Match(signatureHex);
 		}
 	}
 }

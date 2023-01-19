@@ -6,6 +6,7 @@ using System.Linq;
 
 namespace EdjCase.ICP.Agent.Models
 {
+	// TODO move attributes to a converter
 	public class Delegation : IRepresentationIndependentHashItem, IHashable
 	{
 		[Dahomey.Cbor.Attributes.CborProperty(Properties.PUBLIC_KEY)]

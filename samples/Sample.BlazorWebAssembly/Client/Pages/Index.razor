@@ -192,7 +192,7 @@ else if (this.MadeCall && this.ProposalId != null)
             var publicKey = DerEncodedPublicKey.FromEd25519(Convert.FromHexString(this.PubKey));
             ulong nanosecondsFromNow = (ulong)ToBigInteger(FromHexString(this.Expiration), isUnsigned: true, isBigEndian: true);
             ICTimestamp expiration = ICTimestamp.FromNanoSeconds(nanosecondsFromNow);
-            return new Delegation(publicKey.AsEd25519(), expiration, targets: null);
+            return new Delegation(publicKey.Value, expiration, targets: null);
         }
 
         public static System.Numerics.BigInteger ToBigInteger(byte[] bytes, bool isUnsigned, bool isBigEndian)

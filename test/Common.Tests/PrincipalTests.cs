@@ -34,10 +34,17 @@ namespace ICP.Candid.Tests
 		public void Principal_Match_PublicKey(string principalText, string publicKeyHex)
 		{
 			var principal = Principal.FromText(principalText);
+
+			Assert.Equal(principalText, principal.ToText());
+
 			byte[] publicKeyBytes = ByteUtil.FromHexString(publicKeyHex);
-			var publicKey = DerEncodedPublicKey.FromEd25519(publicKeyBytes);
+
+			var publicKey = DerEncodedPublicKey.FromDer(publicKeyBytes);
 			var publicKeyPrincipal = Principal.SelfAuthenticating(publicKey.Value);
 			Assert.Equal(principal, publicKeyPrincipal);
+
+
+			Assert.Equal(publicKeyPrincipal.ToHex(), principal.ToHex());
 		}
 	}
 }

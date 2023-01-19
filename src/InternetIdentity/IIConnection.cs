@@ -22,12 +22,12 @@ namespace EdjCase.ICP.InternetIdentity
 
 	public static class IIModelConvertExt
 	{
-		public static Delegation Convert(this IIClient.Delegation deletation)
+		public static Delegation Convert(this IIClient.Delegation delegation)
 		{
 			return new Delegation(
-				deletation.Pubkey.ToArray(),
-				ICTimestamp.FromNanoSeconds(deletation.Expiration),
-				deletation.Targets.GetValueOrDefault()
+				delegation.Pubkey.ToArray(),
+				ICTimestamp.FromNanoSeconds(delegation.Expiration),
+				delegation.Targets.GetValueOrDefault()
 			);
 		}
 
