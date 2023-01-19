@@ -41,6 +41,15 @@ jobs:
           name: binaries-agent
           path: publish-agent
 
+      - name: Publish Internet Identity Dlls
+        run: dotnet publish ./src/InternetIdentity --no-restore -c Release -o ./publish-internet-identity
+
+      - name: Upload Internet Identity Binaries Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: binaries-internet-identity
+          path: publish-internet-identity
+
       - name: Publish ClientGenerator Dlls
         run: dotnet publish ./src/ClientGenerator --no-restore -c Release -o ./publish-clientgenerator
 
