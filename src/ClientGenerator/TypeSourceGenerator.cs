@@ -47,7 +47,6 @@ namespace ICP.ClientGenerator
 			}
 			builder.AppendLine("using EdjCase.ICP.Agent.Agents;");
 			builder.AppendLine("using EdjCase.ICP.Agent.Responses;");
-			builder.AppendLine("using EdjCase.ICP.Agent.Auth;");
 			builder.AppendLine("using EdjCase.ICP.Candid.Models;");
 			builder.AppendLine($"using {baseNamespace}.Models;");
 			builder.AppendLine("");

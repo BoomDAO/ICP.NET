@@ -102,6 +102,15 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 					(v, options) => v.AsText()
 				);
 			}
+			if (objType == typeof(bool))
+			{
+				return BuildPrimitive(
+					objType,
+					new CandidPrimitiveType(PrimitiveType.Bool),
+					(o, options) => CandidPrimitive.Bool((bool)o),
+					(v, options) => v.AsBool()
+				);
+			}
 			if (objType == typeof(byte))
 			{
 				return BuildPrimitive(
@@ -190,6 +199,15 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 					new CandidPrimitiveType(PrimitiveType.Int),
 					(o, options) => CandidPrimitive.Int((UnboundedInt)o),
 					(v, options) => v.AsInt()
+				);
+			}
+			if (objType == typeof(float))
+			{
+				return BuildPrimitive(
+					objType,
+					new CandidPrimitiveType(PrimitiveType.Float32),
+					(o, options) => CandidPrimitive.Float32((float)o),
+					(v, options) => v.AsFloat32()
 				);
 			}
 			if (objType == typeof(double))
