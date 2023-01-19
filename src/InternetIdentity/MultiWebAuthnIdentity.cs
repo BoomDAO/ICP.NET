@@ -157,7 +157,7 @@ namespace EdjCase.ICP.InternetIdentity
 		{
 			this.Device = device ?? throw new ArgumentNullException(nameof(device));
 			this.SignerOptions = signerOptions ?? WebAuthnIdentitySignerOptions.Default;
-			this.PublicKey = DerEncodedPublicKey.FromCose(device.Pubkey.ToArray());
+			this.PublicKey = DerEncodedPublicKey.FromDer(device.Pubkey.ToArray());
 		}
 
 		public override DerEncodedPublicKey GetPublicKey() => this.PublicKey;
