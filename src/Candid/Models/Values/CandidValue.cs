@@ -57,12 +57,21 @@ namespace EdjCase.ICP.Candid.Models.Values
 			this.ValidateType(CandidValueType.Vector);
 			return (CandidVector)this;
 		}
-		public List<T> AsVector<T>(Func<CandidValue, T> converter)
+
+		public List<T> AsVectorAsList<T>(Func<CandidValue, T> converter)
 		{
 			CandidVector vector = this.AsVector();
 			return vector.Values
 				.Select(v => converter(v))
 				.ToList();
+		}
+
+		public T[] AsVectorAsArray<T>(Func<CandidValue, T> converter)
+		{
+			CandidVector vector = this.AsVector();
+			return vector.Values
+				.Select(v => converter(v))
+				.ToArray();
 		}
 
 		public bool IsNull()
@@ -111,14 +120,15 @@ namespace EdjCase.ICP.Candid.Models.Values
 			return (CandidOptional)this;
 		}
 
-		public T? AsOptional<T>(Func<CandidValue, T> valueConverter)
+		public OptionalValue<T> AsOptional<T>(Func<CandidValue, T> valueConverter)
 		{
 			CandidOptional? optional = this.AsOptional();
 			if (optional.Value is CandidPrimitive p && p.ValueType == PrimitiveType.Null)
 			{
-				return default;
+				return OptionalValue<T>.NoValue();
 			}
-			return valueConverter(optional.Value);
+			T value = valueConverter(optional.Value);
+			return OptionalValue<T>.WithValue(value);
 		}
 
 		public string AsText()
