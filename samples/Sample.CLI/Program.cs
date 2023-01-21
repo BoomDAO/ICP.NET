@@ -7,6 +7,7 @@ using EdjCase.ICP.Agent.Identities;
 using System.IO;
 using CommandLine;
 using Sample.Shared.Governance;
+using System.Security.Principal;
 
 public class Program
 {
@@ -26,7 +27,7 @@ public class Program
 	public static async Task Main(string[] args)
 	{
 #if DEBUG
-		if(args.Length == 0)
+		if (args.Length == 0)
 		{
 			args = Console.ReadLine()!.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 		}
@@ -47,12 +48,21 @@ public class Program
 	public static async Task Run(ulong anchor, string hostname)
 	{
 		Authenticator connection = Authenticator.WithHttpAgent();
-		DelegationIdentity identity = await connection.LoginAsync(anchor, hostname);
+		LoginResult result = await connection.LoginAsync(anchor, hostname);
 
+		if (!result.IsSuccessful)
+		{
+			Console.WriteLine("Failed. Error: " + result.AsFailure());
+			return;
+		}
+		Console.WriteLine("Login success!");
+		DelegationIdentity identity = result.AsSuccessful();
 		var agent = new HttpAgent(identity);
 		Principal canisterId = Principal.FromText("rrkah-fqaaa-aaaaa-aaaaq-cai");
 		var client = new GovernanceApiClient(agent, canisterId);
 		var a = await client.GetProposalInfo(1999);
+
+
 	}
 }
 

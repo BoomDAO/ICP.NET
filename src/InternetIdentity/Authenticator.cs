@@ -7,6 +7,7 @@ using Fido2Net;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using IdentityClient = EdjCase.ICP.InternetIdentity.Models;
 
@@ -14,6 +15,7 @@ namespace EdjCase.ICP.InternetIdentity
 {
 	public class Authenticator
 	{
+
 		private InternetIdentityApiClient client { get; }
 		private Principal identityCanisterId { get; }
 
@@ -23,7 +25,7 @@ namespace EdjCase.ICP.InternetIdentity
 			this.client = new InternetIdentityApiClient(agent, this.identityCanisterId);
 		}
 
-		public async Task<DelegationIdentity> LoginAsync(
+		public async Task<LoginResult> LoginAsync(
 			ulong anchor,
 			string clientHostname,
 			IIdentity? sessionIdentity = null,
@@ -32,17 +34,26 @@ namespace EdjCase.ICP.InternetIdentity
 			List<DeviceInfo> devices = await this.GetDevicesAsync(anchor);
 			if (!devices.Any())
 			{
-				throw new UnknownAnchorException(anchor);
+				return LoginResult.FromError(ErrorType.InvalidAnchorOrNoDevices);
 			}
 
 			sessionIdentity = sessionIdentity ?? Ed25519Identity.Generate();
 
-			DelegationIdentity deviceIdentity = await this.BuildDeviceIdentityAsync(devices, sessionIdentity);
+			try
+			{
+				DelegationIdentity deviceIdentity = await this.BuildDeviceIdentityAsync(devices, sessionIdentity);
 
-			// Authenticate requests as device
-			this.client.Agent.Identity = deviceIdentity;
+				// Authenticate requests as device
+				this.client.Agent.Identity = deviceIdentity;
 
-			return await this.PrepareAndGetDelegationAsync(anchor, clientHostname, sessionIdentity, maxTimeToLive);
+				DelegationIdentity identity = await this.PrepareAndGetDelegationAsync(anchor, clientHostname, sessionIdentity, maxTimeToLive);
+				return LoginResult.FromSuccess(identity);
+			}
+			catch (FidoException)
+			{
+				return LoginResult.FromError(ErrorType.CouldNotAuthenticate);
+			}
+
 		}
 
 		public static Authenticator WithHttpAgent(Principal? identityCanisterOverride = null)
@@ -90,7 +101,7 @@ namespace EdjCase.ICP.InternetIdentity
 					signedDelegation = new SignedDelegation(delegation, signedDelegationResponse.Signature);
 					break;
 				case IdentityClient.GetDelegationResponseTag.NoSuchDelegation:
-					throw new Exception(); // TODO
+					throw new Exception("Failed to find delegation. Delegation preparation must have failed.");
 				default:
 					throw new NotImplementedException();
 			}
@@ -109,7 +120,7 @@ namespace EdjCase.ICP.InternetIdentity
 		/// 
 		/// Corresponds to `requestFEDelegation' from @dfinity/internet-identity
 		/// </summary>
-		private async Task<DelegationIdentity> BuildDeviceIdentityAsync(List<DeviceInfo> devices, IIdentity sessionIdentity)
+		private async Task<DelegationIdentity> BuildDeviceIdentityAsync(IList<DeviceInfo> devices, IIdentity sessionIdentity)
 		{
 			// Only allow the anonymizing delegation to last for 10 minutes
 			ICTimestamp expiration = ICTimestamp.Future(TimeSpan.FromMinutes(10));
@@ -118,22 +129,29 @@ namespace EdjCase.ICP.InternetIdentity
 
 			DerEncodedPublicKey sessionPublicKey = sessionIdentity.GetPublicKey();
 
-			SignedDelegation anonymizingDelegation = await SignedDelegation.CreateAsync(sessionPublicKey, SignAsync, expiration, targets);
+			// Create delegation represented by the session key, then sign it with the device
+			var sessionDelegation = new Delegation(sessionPublicKey.Value, expiration, targets);
+			byte[] challenge = sessionDelegation.BuildSigningChallenge();
 
-			DelegationChain chain = new DelegationChain(sessionPublicKey, new List<SignedDelegation> { anonymizingDelegation });
+			DelegationChain chain;
+			using (var assert = new FidoAssertion())
+			{
+				// TODO can detect the device before signing?
+				(DerEncodedPublicKey devicePublicKey, byte[] deviceSignature) = await Fido2.SignAsync(challenge, assert, devices);
+
+				SignedDelegation signedDelegation = new SignedDelegation(sessionDelegation, deviceSignature);
+
+				// Have a delegation chain that represents the device but is delegated to 
+				// the session key
+				chain = new DelegationChain(
+					devicePublicKey,
+					new List<SignedDelegation> { signedDelegation }
+				);
+			}
+
 
 			return new DelegationIdentity(sessionIdentity, chain);
-
-			async Task<byte[]> SignAsync(byte[] challenge)
-			{
-				using (var assert = new FidoAssertion())
-				{
-					IEnumerable<byte[]> allowedCredentialIds = devices
-						.Where(d => d.CredentialId != null)
-						.Select(d => d.CredentialId!);
-					return await Fido2.SignAsync(challenge, assert, allowedCredentialIds);
-				}
-			}
 		}
 	}
+
 }

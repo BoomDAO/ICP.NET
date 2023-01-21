@@ -1,8 +1,10 @@
 using Dahomey.Cbor.Serialization;
 using Dahomey.Cbor.Util;
+using EdjCase.ICP.Agent;
 using Fido2Net;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,21 +20,21 @@ namespace EdjCase.ICP.InternetIdentity
 		private static byte[] signature = Encoding.ASCII.GetBytes("signature");
 
 
-		public static Task<byte[]> SignAsync(
+		public static Task<(DerEncodedPublicKey PublicKey, byte[] Signature)> SignAsync(
 			byte[] challenge,
 			FidoAssertion assert,
-			IEnumerable<byte[]> allowedCredentialIds)
+			IList<DeviceInfo> devices)
 		{
 			return Task.Factory.StartNew(
-				function: () => Sign(challenge, assert, allowedCredentialIds),
+				function: () => Sign(challenge, assert, devices),
 				creationOptions: TaskCreationOptions.DenyChildAttach | TaskCreationOptions.LongRunning
 			);
 		}
 
-		public static byte[] Sign(
+		public static (DerEncodedPublicKey PublicKey, byte[] Signature) Sign(
 			byte[] challenge,
 			FidoAssertion assert,
-			IEnumerable<byte[]> allowedCredentialIds
+			IList<DeviceInfo> devices
 		)
 		{
 			using (var device = new FidoDevice())
@@ -48,9 +50,12 @@ namespace EdjCase.ICP.InternetIdentity
 					// configure the assertion request
 					assert.SetClientData(clientDataBytes);
 					assert.Rp = RpId;
-					foreach (byte[] credentialId in allowedCredentialIds)
+					foreach (DeviceInfo d in devices)
 					{
-						assert.AllowCredential(credentialId);
+						if (d.CredentialId != null)
+						{
+							assert.AllowCredential(d.CredentialId);
+						}
 					}
 
 					assert.SetExtensions(FidoExtensions.None);
@@ -60,7 +65,11 @@ namespace EdjCase.ICP.InternetIdentity
 
 					// convert the assertion response into the form required by II (cbor)
 					byte[] assertionBytes = SerializeAssertion(assert[0], clientDataJson);
-					return assertionBytes;
+					ReadOnlySpan<byte> a = assert[0].Id;
+					DeviceInfo chosenDevice = devices
+						.First(d => assert[0].Id.SequenceEqual(d.CredentialId));
+
+					return (chosenDevice.PublicKey, assertionBytes);
 				}
 				finally
 				{

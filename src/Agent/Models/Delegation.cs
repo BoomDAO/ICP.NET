@@ -70,7 +70,7 @@ namespace EdjCase.ICP.Agent.Models
 			return this.Expiration >= timestamp;
 		}
 
-		internal byte[] BuildSigningChallenge()
+		public byte[] BuildSigningChallenge()
 		{
 			Dictionary<string, IHashable> hashable = this.BuildHashableItem();
 			// The signature is calculated by signing the concatenation of the domain separator
