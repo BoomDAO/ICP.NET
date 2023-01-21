@@ -4,7 +4,7 @@ using PublicKey = System.Collections.Generic.List<System.Byte>;
 
 namespace EdjCase.ICP.InternetIdentity.Models
 {
-	public class HttpResponse
+	internal class HttpResponse
 	{
 		[CandidName("status_code")]
 		public ushort StatusCode { get; set; }

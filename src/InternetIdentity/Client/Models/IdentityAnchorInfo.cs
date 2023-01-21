@@ -3,7 +3,7 @@ using EdjCase.ICP.Candid.Mapping;
 
 namespace EdjCase.ICP.InternetIdentity.Models
 {
-	public class IdentityAnchorInfo
+	internal class IdentityAnchorInfo
 	{
 		[CandidName("devices")]
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.

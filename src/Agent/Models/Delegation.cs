@@ -3,6 +3,7 @@ using EdjCase.ICP.Candid.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace EdjCase.ICP.Agent.Models
 {
@@ -67,6 +68,20 @@ namespace EdjCase.ICP.Agent.Models
 		public bool IsExpirationValid(ICTimestamp timestamp)
 		{
 			return this.Expiration >= timestamp;
+		}
+
+		internal byte[] BuildSigningChallenge()
+		{
+			Dictionary<string, IHashable> hashable = this.BuildHashableItem();
+			// The signature is calculated by signing the concatenation of the domain separator
+			// and the message.
+			var hashFunction = SHA256HashFunction.Create();
+
+			byte[] delegationHashDigest = new HashableObject(hashable)
+				.ComputeHash(hashFunction);
+			return Encoding.UTF8.GetBytes("\x1Aic-request-auth-delegation") // Prefix with domain seperator
+				.Concat(delegationHashDigest)
+				.ToArray();
 		}
 
 		public class Properties

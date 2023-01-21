@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace EdjCase.ICP.InternetIdentity
 {
 
-	internal static class WebAuthnIdentitySigner
+	internal static class Fido2
 	{
 		private const string clientDataTemplate = "{{\"type\":\"webauthn.get\",\"challenge\":\"{0}\",\"origin\":\"https://identity.ic0.app\",\"crossOrigin\":false}}";
 		private const string RpId = "identity.ic0.app";
@@ -18,23 +18,21 @@ namespace EdjCase.ICP.InternetIdentity
 		private static byte[] signature = Encoding.ASCII.GetBytes("signature");
 
 
-		public static Task<byte[]> Fido2Assert(
+		public static Task<byte[]> SignAsync(
 			byte[] challenge,
 			FidoAssertion assert,
-			WebAuthnOptions signerOptions,
-			IEnumerable<DeviceInfo> devices)
+			IEnumerable<byte[]> allowedCredentialIds)
 		{
 			return Task.Factory.StartNew(
-				function: () => Fido2AssertSync(challenge, assert, signerOptions, devices),
+				function: () => Sign(challenge, assert, allowedCredentialIds),
 				creationOptions: TaskCreationOptions.DenyChildAttach | TaskCreationOptions.LongRunning
 			);
 		}
 
-		private static byte[] Fido2AssertSync(
+		public static byte[] Sign(
 			byte[] challenge,
 			FidoAssertion assert,
-			WebAuthnOptions signerOptions,
-			IEnumerable<DeviceInfo> devices
+			IEnumerable<byte[]> allowedCredentialIds
 		)
 		{
 			using (var device = new FidoDevice())
@@ -50,25 +48,12 @@ namespace EdjCase.ICP.InternetIdentity
 					// configure the assertion request
 					assert.SetClientData(clientDataBytes);
 					assert.Rp = RpId;
-					foreach (DeviceInfo deviceInfo in devices)
+					foreach (byte[] credentialId in allowedCredentialIds)
 					{
-						if (deviceInfo.CredentialId != null)
-						{
-							assert.AllowCredential(deviceInfo.CredentialId);
-						}
+						assert.AllowCredential(credentialId);
 					}
 
 					assert.SetExtensions(FidoExtensions.None);
-
-					// these aren't required by the II spec, but may be useful? not clear if it really matters
-					//assert.SetUserPresenceRequired(false);
-					//assert.SetUserVerificationRequired(false);
-
-					// confiugre the device
-					//if (options.timeout.TotalSeconds > 0.0f)
-					//{
-					//	device.SetTimeout(options.timeout);
-					//}
 
 					// get the assertion
 					device.GetAssert(assert, null); // note: blocks for a long time!

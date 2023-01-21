@@ -2,7 +2,7 @@ using EdjCase.ICP.Candid.Mapping;
 
 namespace EdjCase.ICP.InternetIdentity.Models
 {
-	public class InternetIdentityStats
+	internal class InternetIdentityStats
 	{
 		[CandidName("users_registered")]
 		public ulong UsersRegistered { get; set; }

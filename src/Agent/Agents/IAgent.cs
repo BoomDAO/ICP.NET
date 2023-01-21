@@ -2,6 +2,7 @@ using EdjCase.ICP.Agent.Identities;
 using EdjCase.ICP.Agent.Requests;
 using EdjCase.ICP.Agent.Responses;
 using EdjCase.ICP.Candid.Models;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,14 +16,17 @@ namespace EdjCase.ICP.Agent.Agents
 	public interface IAgent
 	{
 		/// <summary>
+		/// The identity to use for requests. If null, then it will use the anonymous identity
+		/// </summary>
+		public IIdentity? Identity { get; set; }
+		/// <summary>
 		/// Gets the state of a specified canister with the subset of state information
 		/// specified by the paths parameter
 		/// </summary>
 		/// <param name="canisterId">Canister to read state for</param>
 		/// <param name="paths">The state paths to get information for. Other state data will be pruned if not specified</param>
-		/// <param name="identityOverride">Optional. If specified, will override the agent identity</param>
 		/// <returns>A response that contains the certificate of the current cansiter state</returns>
-		Task<ReadStateResponse> ReadStateAsync(Principal canisterId, List<StatePath> paths, IIdentity? identityOverride = null);
+		Task<ReadStateResponse> ReadStateAsync(Principal canisterId, List<StatePath> paths);
 
 		/// <summary>
 		/// Gets the status of a request that is being processed by the specified canister
@@ -41,9 +45,8 @@ namespace EdjCase.ICP.Agent.Agents
 		/// <param name="method">The name of the method to call on the cansiter</param>
 		/// <param name="arg">The candid arg to send with the request</param>
 		/// <param name="effectiveCanisterId">Optional. Specifies the relevant canister id if calling the root canister</param>
-		/// <param name="identityOverride">Optional. If specified, will override the agent identity</param>
 		/// <returns>The id of the request that can be used to look up its status with `GetRequestStatusAsync`</returns>
-		Task<RequestId> CallAsync(Principal canisterId, string method, CandidArg arg, Principal? effectiveCanisterId = null, IIdentity? identityOverride = null);
+		Task<RequestId> CallAsync(Principal canisterId, string method, CandidArg arg, Principal? effectiveCanisterId = null);
 
 		/// <summary>
 		/// Gets the status of the IC replica. This includes versioning information
@@ -58,17 +61,14 @@ namespace EdjCase.ICP.Agent.Agents
 		/// <param name="canisterId">Canister to read state for</param>
 		/// <param name="method">The name of the method to call on the cansiter</param>
 		/// <param name="arg">The candid arg to send with the request</param>
-		/// <param name="identityOverride">Optional. If specified, will override the agent identity</param>
 		/// <returns>The response data of the query call</returns>
-		Task<QueryResponse> QueryAsync(Principal canisterId, string method, CandidArg arg, IIdentity? identityOverride = null);
+		Task<QueryResponse> QueryAsync(Principal canisterId, string method, CandidArg arg);
 
 		/// <summary>
 		/// Gets the root public key of the current Internet Computer network
 		/// </summary>
 		/// <returns>The root public key bytes </returns>
 		Task<byte[]> GetRootKeyAsync();
-
-
 	}
 
 	/// <summary>
@@ -86,7 +86,6 @@ namespace EdjCase.ICP.Agent.Agents
 		/// <param name="method">The name of the method to call on the cansiter</param>
 		/// <param name="arg">The candid arg to send with the request</param>
 		/// <param name="effectiveCanisterId">Optional. Specifies the relevant canister id if calling the root canister</param>
-		/// <param name="identityOverride">Optional. If specified, will override the agent identity</param>
 		/// <param name="cancellationToken">Optional. If specified, will be used to prematurely end the waiting</param>
 		/// <returns>The id of the request that can be used to look up its status with `GetRequestStatusAsync`</returns>
 		public static async Task<CandidArg> CallAndWaitAsync(
@@ -95,10 +94,9 @@ namespace EdjCase.ICP.Agent.Agents
 			string method,
 			CandidArg arg,
 			Principal? effectiveCanisterId = null,
-			IIdentity? identityOverride = null,
 			CancellationToken? cancellationToken = null)
 		{
-			RequestId id = await agent.CallAsync(canisterId, method, arg, effectiveCanisterId, identityOverride);
+			RequestId id = await agent.CallAsync(canisterId, method, arg, effectiveCanisterId);
 
 			while (true)
 			{

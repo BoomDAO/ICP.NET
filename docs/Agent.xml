@@ -16,16 +16,16 @@
             </summary>
         </member>
         <member name="M:EdjCase.ICP.Agent.Agents.HttpAgent.#ctor(EdjCase.ICP.Agent.Identities.IIdentity,System.Uri)">
-            <param name="identity">Identity to use for each request. Can be anonymous</param>
+            <param name="identity">Optional. Identity to use for each request. If unspecified, will use anonymous identity</param>
             <param name="httpBoundryNodeUrl">Url to the boundry node to connect to. Defaults to `https://ic0.app/`</param>
         </member>
-        <member name="M:EdjCase.ICP.Agent.Agents.HttpAgent.CallAsync(EdjCase.ICP.Candid.Models.Principal,System.String,EdjCase.ICP.Candid.Models.CandidArg,EdjCase.ICP.Candid.Models.Principal,EdjCase.ICP.Agent.Identities.IIdentity)">
+        <member name="M:EdjCase.ICP.Agent.Agents.HttpAgent.CallAsync(EdjCase.ICP.Candid.Models.Principal,System.String,EdjCase.ICP.Candid.Models.CandidArg,EdjCase.ICP.Candid.Models.Principal)">
             <inheritdoc/>
         </member>
-        <member name="M:EdjCase.ICP.Agent.Agents.HttpAgent.QueryAsync(EdjCase.ICP.Candid.Models.Principal,System.String,EdjCase.ICP.Candid.Models.CandidArg,EdjCase.ICP.Agent.Identities.IIdentity)">
+        <member name="M:EdjCase.ICP.Agent.Agents.HttpAgent.QueryAsync(EdjCase.ICP.Candid.Models.Principal,System.String,EdjCase.ICP.Candid.Models.CandidArg)">
             <inheritdoc/>
         </member>
-        <member name="M:EdjCase.ICP.Agent.Agents.HttpAgent.ReadStateAsync(EdjCase.ICP.Candid.Models.Principal,System.Collections.Generic.List{EdjCase.ICP.Candid.Models.StatePath},EdjCase.ICP.Agent.Identities.IIdentity)">
+        <member name="M:EdjCase.ICP.Agent.Agents.HttpAgent.ReadStateAsync(EdjCase.ICP.Candid.Models.Principal,System.Collections.Generic.List{EdjCase.ICP.Candid.Models.StatePath})">
             <inheritdoc/>
         </member>
         <member name="M:EdjCase.ICP.Agent.Agents.HttpAgent.GetRequestStatusAsync(EdjCase.ICP.Candid.Models.Principal,EdjCase.ICP.Candid.Models.RequestId)">
@@ -43,14 +43,18 @@
             are specific to an `IAgent` implementation
             </summary>
         </member>
-        <member name="M:EdjCase.ICP.Agent.Agents.IAgent.ReadStateAsync(EdjCase.ICP.Candid.Models.Principal,System.Collections.Generic.List{EdjCase.ICP.Candid.Models.StatePath},EdjCase.ICP.Agent.Identities.IIdentity)">
+        <member name="P:EdjCase.ICP.Agent.Agents.IAgent.Identity">
+            <summary>
+            The identity to use for requests. If null, then it will use the anonymous identity
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Agents.IAgent.ReadStateAsync(EdjCase.ICP.Candid.Models.Principal,System.Collections.Generic.List{EdjCase.ICP.Candid.Models.StatePath})">
             <summary>
             Gets the state of a specified canister with the subset of state information
             specified by the paths parameter
             </summary>
             <param name="canisterId">Canister to read state for</param>
             <param name="paths">The state paths to get information for. Other state data will be pruned if not specified</param>
-            <param name="identityOverride">Optional. If specified, will override the agent identity</param>
             <returns>A response that contains the certificate of the current cansiter state</returns>
         </member>
         <member name="M:EdjCase.ICP.Agent.Agents.IAgent.GetRequestStatusAsync(EdjCase.ICP.Candid.Models.Principal,EdjCase.ICP.Candid.Models.RequestId)">
@@ -61,7 +65,7 @@
             <param name="id">Id of the request to get a status for</param>
             <returns>A status variant of the request. If request is not found, will return null</returns>
         </member>
-        <member name="M:EdjCase.ICP.Agent.Agents.IAgent.CallAsync(EdjCase.ICP.Candid.Models.Principal,System.String,EdjCase.ICP.Candid.Models.CandidArg,EdjCase.ICP.Candid.Models.Principal,EdjCase.ICP.Agent.Identities.IIdentity)">
+        <member name="M:EdjCase.ICP.Agent.Agents.IAgent.CallAsync(EdjCase.ICP.Candid.Models.Principal,System.String,EdjCase.ICP.Candid.Models.CandidArg,EdjCase.ICP.Candid.Models.Principal)">
             <summary>
             Sends a call request to a specified canister method and gets back an id of the 
             request that is being processed. This call does NOT wait for the request to be complete.
@@ -71,7 +75,6 @@
             <param name="method">The name of the method to call on the cansiter</param>
             <param name="arg">The candid arg to send with the request</param>
             <param name="effectiveCanisterId">Optional. Specifies the relevant canister id if calling the root canister</param>
-            <param name="identityOverride">Optional. If specified, will override the agent identity</param>
             <returns>The id of the request that can be used to look up its status with `GetRequestStatusAsync`</returns>
         </member>
         <member name="M:EdjCase.ICP.Agent.Agents.IAgent.GetReplicaStatusAsync">
@@ -81,14 +84,13 @@
             </summary>
             <returns>A response containing all replica status information</returns>
         </member>
-        <member name="M:EdjCase.ICP.Agent.Agents.IAgent.QueryAsync(EdjCase.ICP.Candid.Models.Principal,System.String,EdjCase.ICP.Candid.Models.CandidArg,EdjCase.ICP.Agent.Identities.IIdentity)">
+        <member name="M:EdjCase.ICP.Agent.Agents.IAgent.QueryAsync(EdjCase.ICP.Candid.Models.Principal,System.String,EdjCase.ICP.Candid.Models.CandidArg)">
             <summary>
             Sends a query request to a specified canister method
             </summary>
             <param name="canisterId">Canister to read state for</param>
             <param name="method">The name of the method to call on the cansiter</param>
             <param name="arg">The candid arg to send with the request</param>
-            <param name="identityOverride">Optional. If specified, will override the agent identity</param>
             <returns>The response data of the query call</returns>
         </member>
         <member name="M:EdjCase.ICP.Agent.Agents.IAgent.GetRootKeyAsync">
@@ -102,7 +104,7 @@
             Extension methods for the `IAgent` interface
             </summary>
         </member>
-        <member name="M:EdjCase.ICP.Agent.Agents.IAgentExtensions.CallAndWaitAsync(EdjCase.ICP.Agent.Agents.IAgent,EdjCase.ICP.Candid.Models.Principal,System.String,EdjCase.ICP.Candid.Models.CandidArg,EdjCase.ICP.Candid.Models.Principal,EdjCase.ICP.Agent.Identities.IIdentity,System.Nullable{System.Threading.CancellationToken})">
+        <member name="M:EdjCase.ICP.Agent.Agents.IAgentExtensions.CallAndWaitAsync(EdjCase.ICP.Agent.Agents.IAgent,EdjCase.ICP.Candid.Models.Principal,System.String,EdjCase.ICP.Candid.Models.CandidArg,EdjCase.ICP.Candid.Models.Principal,System.Nullable{System.Threading.CancellationToken})">
             <summary>
             Sends a call request to a specified canister method, waits for the request to be processed,
             the returns the candid response to the call. This is helper method built on top of `CallAsync`
@@ -113,7 +115,6 @@
             <param name="method">The name of the method to call on the cansiter</param>
             <param name="arg">The candid arg to send with the request</param>
             <param name="effectiveCanisterId">Optional. Specifies the relevant canister id if calling the root canister</param>
-            <param name="identityOverride">Optional. If specified, will override the agent identity</param>
             <param name="cancellationToken">Optional. If specified, will be used to prematurely end the waiting</param>
             <returns>The id of the request that can be used to look up its status with `GetRequestStatusAsync`</returns>
         </member>
@@ -145,18 +146,6 @@
         </member>
         <member name="M:EdjCase.ICP.Agent.InvalidCertificateException.#ctor(System.String)">
             <param name="message">Specific error message</param>
-        </member>
-        <member name="T:EdjCase.ICP.Agent.Identities.AnonymousIdentity">
-            <summary>
-            An identity that is anonymous.
-            Should be used if there is no user context or the user hasn't logged in
-            </summary>
-        </member>
-        <member name="M:EdjCase.ICP.Agent.Identities.AnonymousIdentity.SignContentAsync(System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.Candid.Models.IHashable})">
-            <inheritdoc/>
-        </member>
-        <member name="M:EdjCase.ICP.Agent.Identities.AnonymousIdentity.GetPrincipal">
-            <inheritdoc/>
         </member>
         <member name="M:EdjCase.ICP.Agent.Identities.DelegationIdentity.GetPublicKey">
             <inheritdoc/>
@@ -192,6 +181,9 @@
         <member name="M:EdjCase.ICP.Agent.Identities.Ed25519Identity.SignAsync(System.Byte[])">
             <inheritdoc/>
         </member>
+        <member name="M:EdjCase.ICP.Agent.Identities.Ed25519Identity.GetSenderDelegations">
+            <inheritdoc/>
+        </member>
         <member name="M:EdjCase.ICP.Agent.Identities.Ed25519Identity.Generate">
             <summary>
             Generates an identity with a new Ed25519 key pair
@@ -203,31 +195,13 @@
             Identity to use for requests to Internet Computer canisters
             </summary>
         </member>
-        <member name="M:EdjCase.ICP.Agent.Identities.IIdentity.GetPrincipal">
-            <summary>
-            Gets the principal for this identity
-            </summary>
-            <returns>The identity principal</returns>
-        </member>
-        <member name="M:EdjCase.ICP.Agent.Identities.IIdentity.SignContentAsync(System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.Candid.Models.IHashable})">
-            <summary>
-            Signs the hashable content
-            </summary>
-            <param name="content">The data that needs to be signed</param>
-            <returns>The content with signature(s) from the identity</returns>
-        </member>
-        <member name="T:EdjCase.ICP.Agent.Identities.SigningIdentityBase">
-            <summary>
-            An identity type that has signing capabilities
-            </summary>
-        </member>
-        <member name="M:EdjCase.ICP.Agent.Identities.SigningIdentityBase.GetPublicKey">
+        <member name="M:EdjCase.ICP.Agent.Identities.IIdentity.GetPublicKey">
             <summary>
             Returns the public key of the identity
             </summary>
             <returns>Public key of the identity</returns>
         </member>
-        <member name="M:EdjCase.ICP.Agent.Identities.SigningIdentityBase.GetSenderDelegations">
+        <member name="M:EdjCase.ICP.Agent.Identities.IIdentity.GetSenderDelegations">
             <summary>
             Gets the signed delegations for the identity.
             Delegations will exist if the identity is a delegated identity
@@ -235,18 +209,19 @@
             </summary>
             <returns>The signed delegations, otherwise an empty list</returns>
         </member>
-        <member name="M:EdjCase.ICP.Agent.Identities.SigningIdentityBase.SignAsync(System.Byte[])">
+        <member name="M:EdjCase.ICP.Agent.Identities.IIdentity.SignAsync(System.Byte[])">
             <summary>
             Signs the specified bytes with the identity key
             </summary>
             <param name="data">The byte data to sign</param>
             <returns>The signature bytes of the specified data bytes</returns>
         </member>
-        <member name="M:EdjCase.ICP.Agent.Identities.SigningIdentityBase.GetPrincipal">
-            <inheritdoc/>
-        </member>
-        <member name="M:EdjCase.ICP.Agent.Identities.SigningIdentityBase.SignContentAsync(System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.Candid.Models.IHashable})">
-            <inheritdoc/>
+        <member name="M:EdjCase.ICP.Agent.Identities.IIdentityExtensions.SignContentAsync(EdjCase.ICP.Agent.Identities.IIdentity,System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.Candid.Models.IHashable})">
+            <summary>
+            Signs the hashable content
+            </summary>
+            <param name="content">The data that needs to be signed</param>
+            <returns>The content with signature(s) from the identity</returns>
         </member>
         <member name="T:EdjCase.ICP.Agent.Models.Certificate">
             <summary>

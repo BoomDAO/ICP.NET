@@ -3,107 +3,57 @@ using EdjCase.ICP.Candid.Models;
 using System;
 using System.Threading.Tasks;
 using EdjCase.ICP.InternetIdentity;
-using McMaster.Extensions.CommandLineUtils;
-using EdjCase.ICP.Serialization;
 using EdjCase.ICP.Agent.Identities;
+using System.IO;
+using CommandLine;
+using Sample.Shared.Governance;
 
-[HelpOption("-h|--help")]
-public class App
+public class Program
 {
-
-	[Option("-u|--user-number", Description = "Authenticate as this user")]
-	public ulong UserNumber { get; set; }
-
-
-	[Option("--write-format", Description = "Write session data in this format")]
-	public SerializedFormat WriteFormat { get; set; }
-
-
-	public static void Main(string[] args) => CommandLineApplication.Execute<App>(args);
-
-	public async Task OnExecute()
+	public class Options
 	{
-		var run = this.Run();
-		await Polling(run);
+
+		[Option('a', "anchor", Required = true, HelpText = "Anchor identifier to authenticate with")]
+		public ulong Anchor { get; set; }
+
+		[Option('n', "hostname", Required = true, HelpText = "Client hostname to give access to")]
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+		public string Hostname { get; set; }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+
 	}
 
-	public static async Task Polling(Task t)
+	public static async Task Main(string[] args)
 	{
-		var sw = System.Diagnostics.Stopwatch.StartNew();
-
-		while (!t.IsCompleted)
+#if DEBUG
+		if(args.Length == 0)
 		{
-			Console.WriteLine($"Waiting for {sw.Elapsed}...");
-			await Task.Delay(1000);
+			args = Console.ReadLine()!.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 		}
+#endif
+		await ParseAndRunAsync(args);
 	}
 
-
-	public static DelegationIdentity? GetDelegationIdentityFromFile()
+	private static async Task<bool> ParseAndRunAsync(string[] args)
 	{
-		try
-		{
-			var raw = System.IO.File.ReadAllBytes("test_SessionIdentity.json");
-			return SerializationUtil.Deserialize<DelegationIdentity>(SerializationUtil.DefaultSerializer, raw);
-		}
-		catch
-		{
-			return null;
-		}
+		ParserResult<Options> result = await Parser.Default.ParseArguments<Options>(args)
+			.WithParsedAsync<Options>(async o =>
+			{
+				await Run(o.Anchor, o.Hostname);
+			});
+		return result.Tag == ParserResultType.Parsed;
 	}
 
-	public static async Task<DelegationIdentity> CreateDelegationIdentity(ulong userNumber, string hostname)
+	public static async Task Run(ulong anchor, string hostname)
 	{
-		// authenticate to II
-		var anonConn = new IIConnection();
-		var authenticatedConn = await anonConn.LoginToConn(userNumber);
+		Authenticator connection = Authenticator.WithHttpAgent();
+		DelegationIdentity identity = await connection.LoginAsync(anchor, hostname);
 
-		// get delegation identity for sessions
-		Ed25519Identity sessionKey = Ed25519Identity.Generate();
-		var sessionDelegationIdentity = await authenticatedConn.PrepareAndGetDelegation(hostname, sessionKey);
-		return sessionDelegationIdentity;
-	}
-
-	public async Task<DelegationIdentity> GetOrCreateDelegationIdentity(ulong userNumber, string hostname)
-	{
-		var identity = GetDelegationIdentityFromFile();
-		if (identity != null && identity.Chain.IsExpirationValid(ICTimestamp.Now())) return identity;
-
-		identity = await CreateDelegationIdentity(userNumber, hostname);
-
-		System.IO.File.WriteAllBytes(
-			"test_SessionIdentity.json",
-			SerializationUtil.Serialize(SerializationUtil.DefaultSerializer, identity, this.WriteFormat));
-
-		return identity;
-	}
-
-	public async Task Run()
-	{
-		// this is the frontend canister to which we want to authenticate.
-		// we can pretend to to be this host for now (to get the same anonymized identity as in the browser)...
-		// in practice we should use derivation origins.
-		var hostname = "https://6nx2y-qiaaa-aaaal-qa6wq-cai.ic0.app";
-
-		var sessionDelegationIdentity = await this.GetOrCreateDelegationIdentity(this.UserNumber, hostname);
-
-		// this is the backend canister with which we want to communicate.
-		var canisterId = Principal.FromText("6eure-gaaaa-aaaal-qa6xa-cai");
-
-		// make a call to the canister
-		Uri url = new Uri($"https://ic0.app");
-		IAgent agent = new HttpAgent(sessionDelegationIdentity, url);
-
-		var response = await agent.CallAndWaitAsync(
-			canisterId,
-			"get_account_data",
-			CandidArg.Empty());
-		Console.WriteLine(response.ToString());
-
-		var response2 = await agent.CallAndWaitAsync(
-			canisterId,
-			"get_owned_objects",
-			CandidArg.Empty());
-		Console.WriteLine(response2.ToString());
+		var agent = new HttpAgent(identity);
+		Principal canisterId = Principal.FromText("rrkah-fqaaa-aaaaa-aaaaq-cai");
+		var client = new GovernanceApiClient(agent, canisterId);
+		var a = await client.GetProposalInfo(1999);
 	}
 }
+
+

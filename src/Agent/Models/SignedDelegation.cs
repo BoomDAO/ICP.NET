@@ -4,6 +4,7 @@ using EdjCase.ICP.Candid.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -24,23 +25,24 @@ namespace EdjCase.ICP.Agent.Models
 		}
 
 		public static async Task<SignedDelegation> CreateAsync(
-			SigningIdentityBase fromIdentity,
 			DerEncodedPublicKey publicKey,
+			IIdentity signingIdentity,
 			ICTimestamp expiration,
 			List<Principal>? targets = null)
 		{
+			return await CreateAsync(publicKey, signingIdentity.SignAsync, expiration, targets);
+		}
+
+		public static async Task<SignedDelegation> CreateAsync(
+			DerEncodedPublicKey publicKey,
+			Func<byte[], Task<byte[]>> signingFunc,
+			ICTimestamp expiration,
+			List<Principal>? targets = null)
+		{
+
 			var delegation = new Delegation(publicKey.Value, expiration, targets);
-			Dictionary<string, IHashable> hashable = delegation.BuildHashableItem();
-			// The signature is calculated by signing the concatenation of the domain separator
-			// and the message.
-			var hashFunction = SHA256HashFunction.Create();
-
-			byte[] delegationHashDigest = new HashableObject(hashable).ComputeHash(hashFunction);
-			byte[] challenge = Encoding.UTF8.GetBytes("\x1Aic-request-auth-delegation") // Prefix with domain seperator
-				.Concat(delegationHashDigest)
-				.ToArray();
-
-			byte[] signature = await fromIdentity.SignAsync(challenge); // Sign the domain sep + delegation hash digest
+			byte[] challenge = delegation.BuildSigningChallenge();
+			byte[] signature = await signingFunc(challenge);
 			return new SignedDelegation(delegation, signature);
 		}
 

@@ -19,7 +19,7 @@ namespace Sample.Shared.Dex
 			this.Agent = agent ?? throw new ArgumentNullException(nameof(agent));
 			this.CanisterId = canisterId ?? throw new ArgumentNullException(nameof(canisterId));
 		}
-		public async Task<CancelOrderReceipt> CancelOrder(OrderId arg0, EdjCase.ICP.Agent.Identities.IIdentity? identityOverride = null)
+		public async Task<CancelOrderReceipt> CancelOrder(OrderId arg0)
 		{
 			string method = "cancelOrder";
 			CandidTypedValue p0 = CandidTypedValue.FromObject(arg0);
@@ -32,7 +32,7 @@ namespace Sample.Shared.Dex
 			CancelOrderReceipt r0 = responseArg.Values[0].ToObject<CancelOrderReceipt>();
 			return (r0);
 		}
-		public async Task Clear(EdjCase.ICP.Agent.Identities.IIdentity? identityOverride = null)
+		public async Task Clear()
 		{
 			string method = "clear";
 			var candidArgs = new List<CandidTypedValue>
@@ -41,7 +41,7 @@ namespace Sample.Shared.Dex
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
 			CandidArg responseArg = await this.Agent.CallAndWaitAsync(this.CanisterId, method, arg, null, null);
 		}
-		public async Task Credit(EdjCase.ICP.Candid.Models.Principal arg0, Token arg1, UnboundedUInt arg2, EdjCase.ICP.Agent.Identities.IIdentity? identityOverride = null)
+		public async Task Credit(EdjCase.ICP.Candid.Models.Principal arg0, Token arg1, UnboundedUInt arg2)
 		{
 			string method = "credit";
 			CandidTypedValue p0 = CandidTypedValue.FromObject(arg0);
@@ -56,7 +56,7 @@ namespace Sample.Shared.Dex
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
 			CandidArg responseArg = await this.Agent.CallAndWaitAsync(this.CanisterId, method, arg, null, null);
 		}
-		public async Task<DepositReceipt> Deposit(Token arg0, EdjCase.ICP.Agent.Identities.IIdentity? identityOverride = null)
+		public async Task<DepositReceipt> Deposit(Token arg0)
 		{
 			string method = "deposit";
 			CandidTypedValue p0 = CandidTypedValue.FromObject(arg0);
@@ -65,23 +65,23 @@ namespace Sample.Shared.Dex
 				p0,
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			CandidArg responseArg = await this.Agent.CallAndWaitAsync(this.CanisterId, method, arg, null, null);
+			CandidArg responseArg = await this.Agent.CallAndWaitAsync(this.CanisterId, method, arg);
 			DepositReceipt r0 = responseArg.Values[0].ToObject<DepositReceipt>();
 			return (r0);
 		}
-		public async Task<System.Collections.Generic.List<Balance>> GetAllBalances(EdjCase.ICP.Agent.Identities.IIdentity? identityOverride = null)
+		public async Task<System.Collections.Generic.List<Balance>> GetAllBalances()
 		{
 			string method = "getAllBalances";
 			var candidArgs = new List<CandidTypedValue>
 			{
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, null);
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg);
 			QueryReply reply = response.ThrowOrGetReply();
 			System.Collections.Generic.List<Balance> r0 = reply.Arg.Values[0].ToObject<System.Collections.Generic.List<Balance>>();
 			return (r0);
 		}
-		public async Task<UnboundedUInt> GetBalance(Token arg0, EdjCase.ICP.Agent.Identities.IIdentity? identityOverride = null)
+		public async Task<UnboundedUInt> GetBalance(Token arg0)
 		{
 			string method = "getBalance";
 			CandidTypedValue p0 = CandidTypedValue.FromObject(arg0);
@@ -90,24 +90,24 @@ namespace Sample.Shared.Dex
 				p0,
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, null);
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg);
 			QueryReply reply = response.ThrowOrGetReply();
 			UnboundedUInt r0 = reply.Arg.Values[0].ToObject<UnboundedUInt>();
 			return (r0);
 		}
-		public async Task<System.Collections.Generic.List<Balance>> GetBalances(EdjCase.ICP.Agent.Identities.IIdentity? identityOverride = null)
+		public async Task<System.Collections.Generic.List<Balance>> GetBalances()
 		{
 			string method = "getBalances";
 			var candidArgs = new List<CandidTypedValue>
 			{
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, null);
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg);
 			QueryReply reply = response.ThrowOrGetReply();
 			System.Collections.Generic.List<Balance> r0 = reply.Arg.Values[0].ToObject<System.Collections.Generic.List<Balance>>();
 			return (r0);
 		}
-		public async Task<System.Collections.Generic.List<byte>> GetDepositAddress(EdjCase.ICP.Agent.Identities.IIdentity? identityOverride = null)
+		public async Task<System.Collections.Generic.List<byte>> GetDepositAddress()
 		{
 			string method = "getDepositAddress";
 			var candidArgs = new List<CandidTypedValue>
@@ -118,7 +118,7 @@ namespace Sample.Shared.Dex
 			System.Collections.Generic.List<byte> r0 = responseArg.Values[0].ToObject<System.Collections.Generic.List<byte>>();
 			return (r0);
 		}
-		public async Task<EdjCase.ICP.Candid.Models.OptionalValue<Order>> GetOrder(OrderId arg0, EdjCase.ICP.Agent.Identities.IIdentity? identityOverride = null)
+		public async Task<EdjCase.ICP.Candid.Models.OptionalValue<Order>> GetOrder(OrderId arg0)
 		{
 			string method = "getOrder";
 			CandidTypedValue p0 = CandidTypedValue.FromObject(arg0);
@@ -131,7 +131,7 @@ namespace Sample.Shared.Dex
 			EdjCase.ICP.Candid.Models.OptionalValue<Order> r0 = responseArg.Values[0].ToObject<EdjCase.ICP.Candid.Models.OptionalValue<Order>>();
 			return (r0);
 		}
-		public async Task<System.Collections.Generic.List<Order>> GetOrders(EdjCase.ICP.Agent.Identities.IIdentity? identityOverride = null)
+		public async Task<System.Collections.Generic.List<Order>> GetOrders()
 		{
 			string method = "getOrders";
 			var candidArgs = new List<CandidTypedValue>
@@ -142,7 +142,7 @@ namespace Sample.Shared.Dex
 			System.Collections.Generic.List<Order> r0 = responseArg.Values[0].ToObject<System.Collections.Generic.List<Order>>();
 			return (r0);
 		}
-		public async Task<string> GetSymbol(Token arg0, EdjCase.ICP.Agent.Identities.IIdentity? identityOverride = null)
+		public async Task<string> GetSymbol(Token arg0)
 		{
 			string method = "getSymbol";
 			CandidTypedValue p0 = CandidTypedValue.FromObject(arg0);
@@ -155,7 +155,7 @@ namespace Sample.Shared.Dex
 			string r0 = responseArg.Values[0].ToObject<string>();
 			return (r0);
 		}
-		public async Task<OrderPlacementReceipt> PlaceOrder(Token arg0, UnboundedUInt arg1, Token arg2, UnboundedUInt arg3, EdjCase.ICP.Agent.Identities.IIdentity? identityOverride = null)
+		public async Task<OrderPlacementReceipt> PlaceOrder(Token arg0, UnboundedUInt arg1, Token arg2, UnboundedUInt arg3)
 		{
 			string method = "placeOrder";
 			CandidTypedValue p0 = CandidTypedValue.FromObject(arg0);
@@ -174,19 +174,19 @@ namespace Sample.Shared.Dex
 			OrderPlacementReceipt r0 = responseArg.Values[0].ToObject<OrderPlacementReceipt>();
 			return (r0);
 		}
-		public async Task<EdjCase.ICP.Candid.Models.Principal> Whoami(EdjCase.ICP.Agent.Identities.IIdentity? identityOverride = null)
+		public async Task<EdjCase.ICP.Candid.Models.Principal> Whoami()
 		{
 			string method = "whoami";
 			var candidArgs = new List<CandidTypedValue>
 			{
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, null);
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg);
 			QueryReply reply = response.ThrowOrGetReply();
 			EdjCase.ICP.Candid.Models.Principal r0 = reply.Arg.Values[0].ToObject<EdjCase.ICP.Candid.Models.Principal>();
 			return (r0);
 		}
-		public async Task<WithdrawReceipt> Withdraw(Token arg0, UnboundedUInt arg1, EdjCase.ICP.Candid.Models.Principal arg2, EdjCase.ICP.Agent.Identities.IIdentity? identityOverride = null)
+		public async Task<WithdrawReceipt> Withdraw(Token arg0, UnboundedUInt arg1, EdjCase.ICP.Candid.Models.Principal arg2)
 		{
 			string method = "withdraw";
 			CandidTypedValue p0 = CandidTypedValue.FromObject(arg0);

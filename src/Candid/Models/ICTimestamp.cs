@@ -16,25 +16,26 @@ namespace EdjCase.ICP.Candid.Models
 			this.NanoSeconds = nanoSeconds ?? throw new ArgumentNullException(nameof(nanoSeconds));
 		}
 
-		public static ICTimestamp FromNanoSeconds(ulong nanosecondsSinceEpoch)
+		public static ICTimestamp FromNanoSeconds(UnboundedUInt nanosecondsSinceEpoch)
 		{
-			return new ICTimestamp(nanosecondsSinceEpoch.ToUnbounded());
-		}
-
-		public static ICTimestamp FromNanoSecondsInFuture(ulong nanosecondsFromNow)
-		{
-			ulong futureDate = EpochNowInNanoseconds() + nanosecondsFromNow;
-			return new ICTimestamp(futureDate.ToUnbounded());
-		}
-
-		private static ulong EpochNowInNanoseconds()
-		{
-			return (ulong)(((DateTime.UtcNow - epoch).TotalMilliseconds + REPLICA_PERMITTED_DRIFT_MILLISECONDS) * 1_000_000);
+			return new ICTimestamp(nanosecondsSinceEpoch);
 		}
 
 		public static ICTimestamp Now()
 		{
-			return FromNanoSecondsInFuture(0);
+			return FutureInNanoseconds(0);
+		}
+
+
+		public static ICTimestamp FutureInNanoseconds(UnboundedUInt nanosecondsFromNow)
+		{
+			UnboundedUInt futureDate = EpochNowInNanoseconds() + nanosecondsFromNow;
+			return new ICTimestamp(futureDate);
+		}
+
+		public static ICTimestamp Future(TimeSpan timespanFromNow)
+		{
+			return FutureInNanoseconds((ulong)(timespanFromNow.Ticks / 100L));
 		}
 
 		public byte[] ComputeHash(IHashFunction hashFunction)
@@ -63,6 +64,12 @@ namespace EdjCase.ICP.Candid.Models
 		public static bool operator <=(ICTimestamp a, ICTimestamp b)
 		{
 			return a.NanoSeconds <= b.NanoSeconds;
+		}
+
+		private static UnboundedUInt EpochNowInNanoseconds()
+		{
+			ulong nanoseconds = (ulong)(((DateTime.UtcNow - epoch).TotalMilliseconds + REPLICA_PERMITTED_DRIFT_MILLISECONDS) * 1_000_000);
+			return UnboundedUInt.FromUInt64(nanoseconds);
 		}
 	}
 }

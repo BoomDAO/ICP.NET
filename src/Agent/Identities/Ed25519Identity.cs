@@ -1,4 +1,6 @@
 using Chaos.NaCl;
+using EdjCase.ICP.Agent.Models;
+using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 
@@ -7,7 +9,7 @@ namespace EdjCase.ICP.Agent.Identities
 	/// <summary>
 	/// An identity using a Ed25519 key
 	/// </summary>
-	public class Ed25519Identity : SigningIdentityBase
+	public class Ed25519Identity : IIdentity
 	{
 		/// <summary>
 		/// The public key of the identity
@@ -29,17 +31,23 @@ namespace EdjCase.ICP.Agent.Identities
 		}
 
 		/// <inheritdoc/>
-		public override DerEncodedPublicKey GetPublicKey()
+		public DerEncodedPublicKey GetPublicKey()
 		{
 			return this.PublicKey;
 		}
 
 
 		/// <inheritdoc/>
-		public override Task<byte[]> SignAsync(byte[] message)
+		public Task<byte[]> SignAsync(byte[] message)
 		{
 			byte[] signature = Ed25519.Sign(message, this.PrivateKey);
 			return Task.FromResult(signature);
+		}
+
+		/// <inheritdoc/>
+		public List<SignedDelegation>? GetSenderDelegations()
+		{
+			return null;
 		}
 
 		/// <summary>

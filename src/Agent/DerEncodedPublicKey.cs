@@ -1,3 +1,4 @@
+using EdjCase.ICP.Candid.Models;
 using System;
 using System.Collections.Generic;
 using System.Formats.Asn1;
@@ -19,6 +20,11 @@ namespace EdjCase.ICP.Agent
 		public DerEncodedPublicKey(byte[] value)
 		{
 			this.Value = value;
+		}
+
+		public Principal ToPrincipal()
+		{
+			return Principal.SelfAuthenticating(this.Value);
 		}
 
 		public byte[] AsEd25519()

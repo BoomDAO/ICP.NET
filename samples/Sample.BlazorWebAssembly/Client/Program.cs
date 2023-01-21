@@ -12,10 +12,7 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7288") });
 
-Uri url = new Uri($"https://ic0.app");
-
-var identity = new AnonymousIdentity();
-builder.Services.AddSingleton<IAgent>(sp => new HttpAgent(identity, url));
+builder.Services.AddSingleton<IAgent>(sp => new HttpAgent());
 builder.Services.AddSingleton(sp => ActivatorUtilities.CreateInstance<GovernanceApiClient>(sp, Principal.FromText("rrkah-fqaaa-aaaaa-aaaaq-cai")));
 
 await builder.Build().RunAsync();

@@ -6,7 +6,7 @@ using System.Text;
 
 namespace EdjCase.ICP.InternetIdentity
 {
-	public class DeviceInfo
+	internal class DeviceInfo
 	{
 		/// <summary>
 		/// DER encoded public key for the device

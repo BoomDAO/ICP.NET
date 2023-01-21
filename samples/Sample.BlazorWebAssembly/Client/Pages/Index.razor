@@ -19,7 +19,7 @@
 
 <button @onclick="ReloadProposalInfo">Fetch</button>
 
-@if (this.Identity == null)
+@if (this.Client.Agent.Identity == null)
 {
     <button @onclick="Login">Login</button>
 }
@@ -76,13 +76,12 @@ else if (this.MadeCall && this.ProposalId != null)
     public ulong? ProposalId { get; set; }
     public bool MadeCall { get; set; }
     public OptionalValue<ProposalInfo>? Info { get; set; }
-    public IIdentity? Identity { get; set; }
 
     public async Task ReloadProposalInfo()
     {
         if (this.ProposalId != null)
         {
-            this.Info = await this.Client.GetProposalInfo(this.ProposalId.Value, identityOverride: this.Identity);
+            this.Info = await this.Client.GetProposalInfo(this.ProposalId.Value);
             this.MadeCall = true;
         }
     }
@@ -122,7 +121,7 @@ else if (this.MadeCall && this.ProposalId != null)
             byte[] privateKey = FromHexString(identityValues[1]);
             var identity = new Ed25519Identity(publicKey, privateKey);
             DelegationChain chain = chainModel.ToCommon();
-            this.Identity = new DelegationIdentity(identity, chain);
+            this.Client.Agent.Identity = new DelegationIdentity(identity, chain);
         }
         this.StateHasChanged();
     }

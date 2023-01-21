@@ -131,7 +131,6 @@ namespace ICP.ClientGenerator
 					List<TypedParam> argsForMethod = resolvedArgTypes
 						.Select((a, i) => TypedParam.FromType(a.Type, a.Value))
 						.ToList();
-					argsForMethod.Add(new TypedParam($"{typeof(IIdentity).FullName!}?", "identityOverride", "null"));
 
 					WriteMethod(
 						builder,
@@ -171,13 +170,13 @@ namespace ICP.ClientGenerator
 							string argVariableName;
 							if (funcDesc.IsQuery)
 							{
-								builder.AppendLine("QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg, null);");
+								builder.AppendLine("QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg);");
 								builder.AppendLine("QueryReply reply = response.ThrowOrGetReply();");
 								argVariableName = "reply.Arg";
 							}
 							else
 							{
-								builder.AppendLine("CandidArg responseArg = await this.Agent.CallAndWaitAsync(this.CanisterId, method, arg, null, null);");
+								builder.AppendLine("CandidArg responseArg = await this.Agent.CallAndWaitAsync(this.CanisterId, method, arg);");
 								argVariableName = "responseArg";
 							}
 

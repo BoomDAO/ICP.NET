@@ -42,7 +42,7 @@ namespace ICP.Candid.Tests
 			var chainPublicKey = DerEncodedPublicKey.FromEd25519(ByteUtil.FromHexString("303c300c060a2b0601040183b8430102032c000a00000000000000070101a451d1829b843e2aabdd49ea590668978a73612067bdde0b8502f844452a7558"));
 			var chain = new DelegationChain(chainPublicKey, delegations);
 			var identity = new DelegationIdentity(innerIdentity, chain);
-			var sender = identity.GetPrincipal();
+			var sender = identity.GetPublicKey().ToPrincipal();
 			var ingressExpiry = ICTimestamp.FromNanoSeconds(1654598046354206365);
 			var request = new QueryRequest(canisterId, method, arg, sender, ingressExpiry);
 			Dictionary<string, IHashable> content = request.BuildHashableItem();
