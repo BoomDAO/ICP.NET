@@ -11,8 +11,4 @@
     <ProjectReference Include="..\Candid\EdjCase.ICP.Candid.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
-
 </Project>

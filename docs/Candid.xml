@@ -92,6 +92,12 @@
             <param name="name">Name to hash</param>
             <returns>Unsigned 32 byte integer hash</returns>
         </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidTypedValue.AsPrincipal">
+            <summary>
+            If opaque, returns null, otherwise the principalid
+            </summary>
+            <returns></returns>
+        </member>
         <member name="F:EdjCase.ICP.Candid.Models.CompoundTypeTable.CompoundTypeIndexMap">
             <summary>
             A mapping of compound type definition to `EncodedCompoundTypes` index to be used as reference

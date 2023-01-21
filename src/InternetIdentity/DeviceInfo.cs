@@ -1,5 +1,4 @@
 using EdjCase.ICP.Agent;
-using EdjCase.ICP.InternetIdentity.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -27,13 +26,6 @@ namespace EdjCase.ICP.InternetIdentity
 		{
 			this.PublicKey = publicKey ?? throw new ArgumentNullException(nameof(publicKey));
 			this.CredentialId = credentialId;
-		}
-
-		internal static DeviceInfo FromModel(DeviceData data)
-		{
-			byte[] publicKey = data.Pubkey;
-			byte[]? credentialId = data.CredentialId.GetValueOrDefault();
-			return new DeviceInfo(publicKey, credentialId);
 		}
 	}
 }

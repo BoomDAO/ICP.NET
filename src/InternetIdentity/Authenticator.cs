@@ -7,31 +7,26 @@ using Fido2Net;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
-using IdentityClient = EdjCase.ICP.InternetIdentity.Models;
 
 namespace EdjCase.ICP.InternetIdentity
 {
 	public class Authenticator
 	{
+		private IInternetIdentityClient client { get; }
 
-		private InternetIdentityApiClient client { get; }
-		private Principal identityCanisterId { get; }
-
-		public Authenticator(IAgent agent, Principal? identityCanisterOverride = null)
+		internal Authenticator(IInternetIdentityClient client)
 		{
-			this.identityCanisterId = identityCanisterOverride ?? Principal.FromText("rdmx6-jaaaa-aaaaa-aaadq-cai");
-			this.client = new InternetIdentityApiClient(agent, this.identityCanisterId);
+			this.client = client;
 		}
 
 		public async Task<LoginResult> LoginAsync(
 			ulong anchor,
 			string clientHostname,
 			IIdentity? sessionIdentity = null,
-			ulong? maxTimeToLive = null)
+			TimeSpan? maxTimeToLive = null)
 		{
-			List<DeviceInfo> devices = await this.GetDevicesAsync(anchor);
+			List<DeviceInfo> devices = await this.client.LookupAsync(anchor);
 			if (!devices.Any())
 			{
 				return LoginResult.FromError(ErrorType.InvalidAnchorOrNoDevices);
@@ -43,10 +38,20 @@ namespace EdjCase.ICP.InternetIdentity
 			{
 				DelegationIdentity deviceIdentity = await this.BuildDeviceIdentityAsync(devices, sessionIdentity);
 
-				// Authenticate requests as device
-				this.client.Agent.Identity = deviceIdentity;
 
-				DelegationIdentity identity = await this.PrepareAndGetDelegationAsync(anchor, clientHostname, sessionIdentity, maxTimeToLive);
+				// Sign the session identity using a delegation
+				// the device key signs a delegation saying the 
+				// session key is authorized for the next X amount
+				// of time for the specified host
+				DelegationIdentity identity = await this.client.PrepareAndGetDelegationAsync(
+					anchor,
+					clientHostname,
+					// Authenticate canister requests as device to get the delegated session identity
+					deviceIdentity,
+					// Identity to sign in a delegation
+					sessionIdentity,
+					maxTimeToLive
+				);
 				return LoginResult.FromSuccess(identity);
 			}
 			catch (FidoException)
@@ -58,60 +63,11 @@ namespace EdjCase.ICP.InternetIdentity
 
 		public static Authenticator WithHttpAgent(Principal? identityCanisterOverride = null)
 		{
-			IAgent agent = new HttpAgent();
-			return new Authenticator(agent, identityCanisterOverride);
+			var agent = new HttpAgent();
+			IInternetIdentityClient client = new AgentInternetIdentityClient(agent, identityCanisterOverride);
+			return new Authenticator(client);
 		}
 
-
-		private async Task<List<DeviceInfo>> GetDevicesAsync(ulong anchor)
-		{
-			List<IdentityClient.DeviceData> devices = await this.client.Lookup(anchor);
-			return devices
-				.Where(d => d.Purpose.Tag == IdentityClient.PurposeTag.Authentication)
-				.Select(DeviceInfo.FromModel)
-				.ToList();
-		}
-
-		private async Task<DelegationIdentity> PrepareAndGetDelegationAsync(ulong anchor, string hostname, IIdentity sessionIdentity, ulong? maxTimeToLive = null)
-		{
-			DerEncodedPublicKey publicKey = sessionIdentity.GetPublicKey();
-			(byte[] userkey, ulong expiration) = await this.client.PrepareDelegation(
-				anchor,
-				hostname,
-				publicKey.Value,
-				new OptionalValue<ulong>(maxTimeToLive.HasValue, maxTimeToLive ?? 0)
-			);
-			IdentityClient.GetDelegationResponse response = await this.client.GetDelegation(
-				anchor,
-				hostname,
-				publicKey.Value,
-				expiration
-			);
-			SignedDelegation signedDelegation;
-			switch (response.Tag)
-			{
-				case IdentityClient.GetDelegationResponseTag.SignedDelegation:
-					IdentityClient.SignedDelegation signedDelegationResponse = response.AsSignedDelegation();
-					IdentityClient.Delegation delegationResponse = signedDelegationResponse.Delegation;
-					Delegation delegation = new Delegation(
-						delegationResponse.Pubkey,
-						ICTimestamp.FromNanoSeconds(delegationResponse.Expiration),
-						delegationResponse.Targets.GetValueOrDefault()
-					);
-					signedDelegation = new SignedDelegation(delegation, signedDelegationResponse.Signature);
-					break;
-				case IdentityClient.GetDelegationResponseTag.NoSuchDelegation:
-					throw new Exception("Failed to find delegation. Delegation preparation must have failed.");
-				default:
-					throw new NotImplementedException();
-			}
-
-			var chain = new DelegationChain(
-				new DerEncodedPublicKey(userkey),
-				new List<SignedDelegation> { signedDelegation }
-			);
-			return new DelegationIdentity(sessionIdentity, chain);
-		}
 
 
 		/// <summary>
@@ -125,7 +81,8 @@ namespace EdjCase.ICP.InternetIdentity
 			// Only allow the anonymizing delegation to last for 10 minutes
 			ICTimestamp expiration = ICTimestamp.Future(TimeSpan.FromMinutes(10));
 
-			var targets = new List<Principal> { this.identityCanisterId };
+			Principal identityCanisterId = this.client.GetCanisterId();
+			var targets = new List<Principal> { identityCanisterId };
 
 			DerEncodedPublicKey sessionPublicKey = sessionIdentity.GetPublicKey();
 
