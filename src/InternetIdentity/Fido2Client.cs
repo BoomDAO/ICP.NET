@@ -13,7 +13,7 @@ namespace EdjCase.ICP.InternetIdentity
 
 	internal interface IFido2Client
 	{
-		Task<(DerEncodedPublicKey PublicKey, byte[] Signature)> SignAsync(byte[] challenge, IList<DeviceInfo> devices);
+		Task<(DerEncodedPublicKey PublicKey, byte[] Signature)?> SignAsync(byte[] challenge, IList<DeviceInfo> devices);
 	}
 
 	internal class Fido2Client : IFido2Client
@@ -25,7 +25,7 @@ namespace EdjCase.ICP.InternetIdentity
 		private static byte[] signature = Encoding.ASCII.GetBytes("signature");
 
 
-		public Task<(DerEncodedPublicKey PublicKey, byte[] Signature)> SignAsync(byte[] challenge, IList<DeviceInfo> devices)
+		public Task<(DerEncodedPublicKey PublicKey, byte[] Signature)?> SignAsync(byte[] challenge, IList<DeviceInfo> devices)
 		{
 			return Task.Factory.StartNew(
 				function: () => Sign(challenge, devices),
@@ -33,7 +33,7 @@ namespace EdjCase.ICP.InternetIdentity
 			);
 		}
 
-		public static (DerEncodedPublicKey PublicKey, byte[] Signature) Sign(byte[] challenge, IList<DeviceInfo> devices)
+		public static (DerEncodedPublicKey PublicKey, byte[] Signature)? Sign(byte[] challenge, IList<DeviceInfo> devices)
 		{
 			using (var assert = new FidoAssertion())
 			{
@@ -63,8 +63,12 @@ namespace EdjCase.ICP.InternetIdentity
 						// get the assertion
 						device.GetAssert(assert, null); // note: blocks for a long time!
 
-						DeviceInfo chosenDevice = devices
-							.First(d => assert[0].Id.SequenceEqual(d.CredentialId));
+						DeviceInfo? chosenDevice = devices
+							.FirstOrDefault(d => assert[0].Id.SequenceEqual(d.CredentialId));
+						if(chosenDevice == null)
+						{
+							return null;
+						}
 
 						byte[] signature = CreateSignatureFromAssertion(assert[0], clientDataJson);
 

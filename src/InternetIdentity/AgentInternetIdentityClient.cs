@@ -81,7 +81,7 @@ namespace EdjCase.ICP.InternetIdentity
 			);
 			// Authenticate as the device identity
 			this.agent.Identity = deviceIdentity;
-			
+
 
 			// Prepare the delegation to be gotten
 			CandidArg responseArg = await this.agent.CallAndWaitAsync(this.identityCanisterId, "prepare_delegation", prepareArg);
