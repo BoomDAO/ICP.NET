@@ -41,13 +41,13 @@ namespace EdjCase.ICP.Agent.Agents
 		/// The identity that will be used on each request unless overriden
 		/// This identity can be anonymous
 		/// </summary>
-		public IIdentity Identity { get; }
+		public IIdentity? Identity { get; set; }
 
 		private readonly HttpClient httpClient;
 
-		/// <param name="identity">Identity to use for each request. Can be anonymous</param>
+		/// <param name="identity">Optional. Identity to use for each request. If unspecified, will use anonymous identity</param>
 		/// <param name="httpBoundryNodeUrl">Url to the boundry node to connect to. Defaults to `https://ic0.app/`</param>
-		public HttpAgent(IIdentity identity, Uri? httpBoundryNodeUrl = null)
+		public HttpAgent(IIdentity? identity = null, Uri? httpBoundryNodeUrl = null)
 		{
 			this.Identity = identity;
 			this.httpClient = new HttpClient
@@ -65,14 +65,13 @@ namespace EdjCase.ICP.Agent.Agents
 			Principal canisterId,
 			string method,
 			CandidArg arg,
-			Principal? effectiveCanisterId = null,
-			IIdentity? identityOverride = null)
+			Principal? effectiveCanisterId = null)
 		{
 			if (effectiveCanisterId == null)
 			{
 				effectiveCanisterId = canisterId;
 			}
-			return await this.SendWithNoResponseAsync($"/api/v2/canister/{effectiveCanisterId.ToText()}/call", BuildRequest, identityOverride);
+			return await this.SendWithNoResponseAsync($"/api/v2/canister/{effectiveCanisterId.ToText()}/call", BuildRequest);
 
 			CallRequest BuildRequest(Principal sender, ICTimestamp now)
 			{
@@ -84,10 +83,9 @@ namespace EdjCase.ICP.Agent.Agents
 		public async Task<QueryResponse> QueryAsync(
 			Principal canisterId,
 			string method,
-			CandidArg arg,
-			IIdentity? identityOverride = null)
+			CandidArg arg)
 		{
-			return await this.SendAsync<QueryRequest, QueryResponse>($"/api/v2/canister/{canisterId.ToText()}/query", BuildRequest, identityOverride);
+			return await this.SendAsync<QueryRequest, QueryResponse>($"/api/v2/canister/{canisterId.ToText()}/query", BuildRequest);
 
 			QueryRequest BuildRequest(Principal sender, ICTimestamp now)
 			{
@@ -96,13 +94,10 @@ namespace EdjCase.ICP.Agent.Agents
 		}
 
 		/// <inheritdoc/>
-		public async Task<ReadStateResponse> ReadStateAsync(
-			Principal canisterId,
-			List<StatePath> paths,
-			IIdentity? identityOverride = null)
+		public async Task<ReadStateResponse> ReadStateAsync(Principal canisterId, List<StatePath> paths)
 		{
 			string url = $"/api/v2/canister/{canisterId.ToText()}/read_state";
-			ReadStateResponse response = await this.SendAsync<ReadStateRequest, ReadStateResponse>(url, BuildRequest, identityOverride);
+			ReadStateResponse response = await this.SendAsync<ReadStateRequest, ReadStateResponse>(url, BuildRequest);
 
 			byte[] rootPublicKey = await this.GetRootKeyAsync();
 			if (!response.Certificate.IsValid(rootPublicKey))
@@ -172,10 +167,10 @@ namespace EdjCase.ICP.Agent.Agents
 
 
 
-		private async Task<RequestId> SendWithNoResponseAsync<TRequest>(string url, Func<Principal, ICTimestamp, TRequest> getRequest, IIdentity? identityOverride)
+		private async Task<RequestId> SendWithNoResponseAsync<TRequest>(string url, Func<Principal, ICTimestamp, TRequest> getRequest)
 			where TRequest : IRepresentationIndependentHashItem
 		{
-			(Func<Task<Stream>> streamFunc, RequestId requestId) = await this.SendInternalAsync(url, getRequest, identityOverride);
+			(Func<Task<Stream>> streamFunc, RequestId requestId) = await this.SendInternalAsync(url, getRequest);
 
 			return requestId;
 		}
@@ -187,10 +182,10 @@ namespace EdjCase.ICP.Agent.Agents
 			return await Dahomey.Cbor.Cbor.DeserializeAsync<TResponse>(stream, HttpAgent.cborOptionsLazy.Value);
 		}
 
-		private async Task<TResponse> SendAsync<TRequest, TResponse>(string url, Func<Principal, ICTimestamp, TRequest> getRequest, IIdentity? identityOverride)
+		private async Task<TResponse> SendAsync<TRequest, TResponse>(string url, Func<Principal, ICTimestamp, TRequest> getRequest)
 			where TRequest : IRepresentationIndependentHashItem
 		{
-			(Func<Task<Stream>> streamFunc, RequestId requestId) = await this.SendInternalAsync(url, getRequest, identityOverride);
+			(Func<Task<Stream>> streamFunc, RequestId requestId) = await this.SendInternalAsync(url, getRequest);
 			Stream stream = await streamFunc();
 #if DEBUG
 			string cborHex;
@@ -205,16 +200,31 @@ namespace EdjCase.ICP.Agent.Agents
 			return await Dahomey.Cbor.Cbor.DeserializeAsync<TResponse>(stream, HttpAgent.cborOptionsLazy.Value);
 		}
 
-		private async Task<(Func<Task<Stream>> ResponseFunc, RequestId RequestId)> SendInternalAsync<TRequest>(string url, Func<Principal, ICTimestamp, TRequest> getRequest, IIdentity? identityOverride)
+		private async Task<(Func<Task<Stream>> ResponseFunc, RequestId RequestId)> SendInternalAsync<TRequest>(string url, Func<Principal, ICTimestamp, TRequest> getRequest)
 			where TRequest : IRepresentationIndependentHashItem
 		{
-			if (identityOverride == null)
+			Principal principal;
+			if (this.Identity == null)
 			{
-				identityOverride = this.Identity;
+				principal = Principal.Anonymous();
 			}
-			TRequest request = getRequest(identityOverride.GetPrincipal(), ICTimestamp.Now());
+			else
+			{
+				DerEncodedPublicKey publicKey = this.Identity.GetPublicKey();
+				principal = Principal.SelfAuthenticating(publicKey.Value);
+			}
+			TRequest request = getRequest(principal, ICTimestamp.Now());
 			Dictionary<string, IHashable> content = request.BuildHashableItem();
-			SignedContent signedContent = await identityOverride.SignContentAsync(content);
+
+			SignedContent signedContent;
+			if (this.Identity == null)
+			{
+				signedContent = new SignedContent(content, null, null, null);
+			}
+			else
+			{
+				signedContent = await this.Identity.SignContentAsync(content);
+			}
 
 
 			byte[] cborBody = this.SerializeSignedContent(signedContent);

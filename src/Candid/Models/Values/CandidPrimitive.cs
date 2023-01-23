@@ -329,9 +329,6 @@ namespace EdjCase.ICP.Candid.Models.Values
 
 
 
-
-
-
 		public static CandidPrimitive Text(string value)
 		{
 			return new CandidPrimitive(PrimitiveType.Text, value);
@@ -420,6 +417,9 @@ namespace EdjCase.ICP.Candid.Models.Values
 		{
 			return new CandidPrimitive(PrimitiveType.Empty, null);
 		}
+
+
+
 
 
 

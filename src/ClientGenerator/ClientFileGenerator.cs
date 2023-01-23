@@ -15,7 +15,7 @@ namespace EdjCase.ICP.ClientGenerator
 		public static async Task GenerateClientFromCanisterAsync(Principal canisterId, string outputDirectory, string baseNamespace, string? clientName = null, Uri? baseUrl = null)
 		{
 
-			var agent = new HttpAgent(new AnonymousIdentity(), baseUrl);
+			var agent = new HttpAgent(identity: null, httpBoundryNodeUrl: baseUrl);
 			var candidServicePath = StatePath.FromSegments("canister", canisterId.Raw, "metadata", "candid:service");
 			var paths = new List<StatePath>
 			{

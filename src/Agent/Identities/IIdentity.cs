@@ -1,6 +1,10 @@
 using EdjCase.ICP.Agent.Models;
+using EdjCase.ICP.Candid.Crypto;
 using EdjCase.ICP.Candid.Models;
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace EdjCase.ICP.Agent.Identities
@@ -11,16 +15,43 @@ namespace EdjCase.ICP.Agent.Identities
 	public interface IIdentity
 	{
 		/// <summary>
-		/// Gets the principal for this identity
+		/// Returns the public key of the identity
 		/// </summary>
-		/// <returns>The identity principal</returns>
-		Principal GetPrincipal();
+		/// <returns>Public key of the identity</returns>
+		public DerEncodedPublicKey GetPublicKey();
 
+		/// <summary>
+		/// Gets the signed delegations for the identity.
+		/// Delegations will exist if the identity is a delegated identity
+		/// instead of having the raw keys. This is used in Internet Identity
+		/// </summary>
+		/// <returns>The signed delegations, otherwise an empty list</returns>
+		public List<SignedDelegation>? GetSenderDelegations();
+
+		/// <summary>
+		/// Signs the specified bytes with the identity key
+		/// </summary>
+		/// <param name="data">The byte data to sign</param>
+		/// <returns>The signature bytes of the specified data bytes</returns>
+		public Task<byte[]> SignAsync(byte[] data);
+	}
+
+	public static class IIdentityExtensions
+	{
 		/// <summary>
 		/// Signs the hashable content
 		/// </summary>
 		/// <param name="content">The data that needs to be signed</param>
 		/// <returns>The content with signature(s) from the identity</returns>
-		Task<SignedContent> SignContentAsync(Dictionary<string, IHashable> content);
+		public static async Task<SignedContent> SignContentAsync(this IIdentity identity, Dictionary<string, IHashable> content)
+		{
+			DerEncodedPublicKey senderPublicKey = identity.GetPublicKey();
+			var sha256 = SHA256HashFunction.Create();
+			byte[] contentHash = content.ToHashable().ComputeHash(sha256);
+			byte[] domainSeparator = Encoding.UTF8.GetBytes("\x0Aic-request");
+			byte[] senderSignature = await identity.SignAsync(domainSeparator.Concat(contentHash).ToArray());
+			List<SignedDelegation>? senderDelegations = identity.GetSenderDelegations();
+			return new SignedContent(content, senderPublicKey.Value, senderDelegations, senderSignature);
+		}
 	}
 }

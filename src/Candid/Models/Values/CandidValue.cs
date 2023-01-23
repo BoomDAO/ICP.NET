@@ -57,12 +57,21 @@ namespace EdjCase.ICP.Candid.Models.Values
 			this.ValidateType(CandidValueType.Vector);
 			return (CandidVector)this;
 		}
-		public List<T> AsVector<T>(Func<CandidValue, T> converter)
+
+		public List<T> AsVectorAsList<T>(Func<CandidValue, T> converter)
 		{
 			CandidVector vector = this.AsVector();
 			return vector.Values
 				.Select(v => converter(v))
 				.ToList();
+		}
+
+		public T[] AsVectorAsArray<T>(Func<CandidValue, T> converter)
+		{
+			CandidVector vector = this.AsVector();
+			return vector.Values
+				.Select(v => converter(v))
+				.ToArray();
 		}
 
 		public bool IsNull()
@@ -111,14 +120,15 @@ namespace EdjCase.ICP.Candid.Models.Values
 			return (CandidOptional)this;
 		}
 
-		public T? AsOptional<T>(Func<CandidValue, T> valueConverter)
+		public OptionalValue<T> AsOptional<T>(Func<CandidValue, T> valueConverter)
 		{
 			CandidOptional? optional = this.AsOptional();
 			if (optional.Value is CandidPrimitive p && p.ValueType == PrimitiveType.Null)
 			{
-				return default;
+				return OptionalValue<T>.NoValue();
 			}
-			return valueConverter(optional.Value);
+			T value = valueConverter(optional.Value);
+			return OptionalValue<T>.WithValue(value);
 		}
 
 		public string AsText()
@@ -198,6 +208,96 @@ namespace EdjCase.ICP.Candid.Models.Values
 		public Principal AsPrincipal()
 		{
 			return this.AsPrimitive().AsPrincipal();
+		}
+
+
+		public static CandidPrimitive Text(string value)
+		{
+			return CandidPrimitive.Text(value);
+		}
+
+		public static CandidPrimitive Nat(UnboundedUInt value)
+		{
+			return CandidPrimitive.Nat(value);
+		}
+
+		public static CandidPrimitive Nat8(byte value)
+		{
+			return CandidPrimitive.Nat8(value);
+		}
+
+		public static CandidPrimitive Nat16(ushort value)
+		{
+			return CandidPrimitive.Nat16(value);
+		}
+
+		public static CandidPrimitive Nat32(uint value)
+		{
+			return CandidPrimitive.Nat32(value);
+		}
+
+		public static CandidPrimitive Nat64(ulong value)
+		{
+			return CandidPrimitive.Nat64(value);
+		}
+
+		public static CandidPrimitive Int(UnboundedInt value)
+		{
+			return CandidPrimitive.Int(value);
+		}
+
+		public static CandidPrimitive Int8(sbyte value)
+		{
+			return CandidPrimitive.Int8(value);
+		}
+
+		public static CandidPrimitive Int16(short value)
+		{
+			return CandidPrimitive.Int16(value);
+		}
+
+		public static CandidPrimitive Int32(int value)
+		{
+			return CandidPrimitive.Int32(value);
+		}
+
+		public static CandidPrimitive Int64(long value)
+		{
+			return CandidPrimitive.Int64(value);
+		}
+
+		public static CandidPrimitive Float32(float value)
+		{
+			return CandidPrimitive.Float32(value);
+		}
+
+		public static CandidPrimitive Float64(double value)
+		{
+			return CandidPrimitive.Float64(value);
+		}
+
+		public static CandidPrimitive Bool(bool value)
+		{
+			return CandidPrimitive.Bool(value);
+		}
+		public static CandidPrimitive Principal(Principal value)
+		{
+			return CandidPrimitive.Principal(value);
+		}
+
+		public static CandidPrimitive Null()
+		{
+			return CandidPrimitive.Null();
+		}
+
+		public static CandidPrimitive Reserved()
+		{
+			return CandidPrimitive.Reserved();
+		}
+
+		public static CandidPrimitive Empty()
+		{
+			return CandidPrimitive.Empty();
 		}
 
 		protected void ValidateType(CandidValueType type)

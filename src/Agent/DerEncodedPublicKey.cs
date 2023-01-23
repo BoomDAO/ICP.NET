@@ -1,3 +1,4 @@
+using EdjCase.ICP.Candid.Models;
 using System;
 using System.Collections.Generic;
 using System.Formats.Asn1;
@@ -12,6 +13,7 @@ namespace EdjCase.ICP.Agent
 		{
 			public static readonly string[] Ed25519 = new string[] { "1.3.101.112" };
 			public static readonly string[] Bls = new string[] { "1.3.6.1.4.1.44668.5.3.1.2.1", "1.3.6.1.4.1.44668.5.3.2.1" };
+			public static readonly string[] Cose = new string[] { "1.3.6.1.4.1.56387.1.1" };
 		}
 
 
@@ -19,6 +21,11 @@ namespace EdjCase.ICP.Agent
 		public DerEncodedPublicKey(byte[] value)
 		{
 			this.Value = value;
+		}
+
+		public Principal ToPrincipal()
+		{
+			return Principal.SelfAuthenticating(this.Value);
 		}
 
 		public byte[] AsEd25519()
@@ -29,6 +36,11 @@ namespace EdjCase.ICP.Agent
 		public byte[] AsBls()
 		{
 			return this.As(OidConstants.Bls);
+		}
+
+		public byte[] AsCose()
+		{
+			return this.As(OidConstants.Cose);
 		}
 
 
@@ -76,6 +88,11 @@ namespace EdjCase.ICP.Agent
 		public static DerEncodedPublicKey FromBls(byte[] value)
 		{
 			return From(value, OidConstants.Bls);
+		}
+
+		public static DerEncodedPublicKey FromCose(byte[] value)
+		{
+			return From(value, OidConstants.Cose);
 		}
 
 		public static DerEncodedPublicKey From(byte[] value, string oid)
