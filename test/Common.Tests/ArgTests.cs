@@ -13,7 +13,7 @@ namespace ICP.Candid.Tests
 		[Fact]
 		public void RequestId_Dict()
 		{
-			var arg = CandidArg.FromTypedValues(
+			var arg = CandidArg.FromCandid(
 				CandidTypedValue.FromValueAndType(
 					CandidPrimitive.Text("https://www.theverge.com/rss/index.xml"),
 					new CandidPrimitiveType(PrimitiveType.Text)

@@ -20,7 +20,7 @@ namespace ICP.Candid.Tests
 		{
 			Principal canisterId = Principal.FromText("rrkah-fqaaa-aaaaa-aaaaq-cai");
 			string method = "get_proposal_info";
-			CandidArg arg = CandidArg.FromTypedValues(
+			CandidArg arg = CandidArg.FromCandid(
 				CandidTypedValue.FromValueAndType(
 					value: CandidPrimitive.Nat64(1),
 					type: new CandidPrimitiveType(PrimitiveType.Nat64)

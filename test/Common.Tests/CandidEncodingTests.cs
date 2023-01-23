@@ -533,7 +533,7 @@ namespace EdjCase.ICP.Candid.Tests
 					}))
 				}
 			});
-			var arg = CandidArg.FromTypedValues(
+			var arg = CandidArg.FromCandid(
 				CandidTypedValue.FromValueAndType(
 					CandidPrimitive.Text("https://www.theverge.com/rss/index.xml"),
 					new CandidPrimitiveType(PrimitiveType.Text)

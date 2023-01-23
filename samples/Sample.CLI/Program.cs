@@ -29,6 +29,7 @@ public class Program
 #if DEBUG
 		if (args.Length == 0)
 		{
+			await ParseAndRunAsync(new string[] { "--help" }); // Prints the help if there are no args
 			args = Console.ReadLine()!.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 		}
 #endif
@@ -47,8 +48,9 @@ public class Program
 
 	public static async Task Run(ulong anchor, string hostname)
 	{
-		Authenticator connection = Authenticator.WithHttpAgent();
-		LoginResult result = await connection.LoginAsync(anchor, hostname);
+		LoginResult result = await Authenticator
+			.WithHttpAgent()
+			.LoginAsync(anchor, hostname);
 
 		if (!result.IsSuccessful)
 		{

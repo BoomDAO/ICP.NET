@@ -1,3 +1,5 @@
+using Dahomey.Cbor.Serialization;
+using Dahomey.Cbor.Util;
 using EdjCase.ICP.Agent;
 using EdjCase.ICP.Agent.Agents;
 using EdjCase.ICP.Agent.Identities;
@@ -13,11 +15,13 @@ namespace EdjCase.ICP.InternetIdentity
 {
 	public class Authenticator
 	{
-		private IInternetIdentityClient client { get; }
+		private IInternetIdentityClient identityClient { get; }
+		private IFido2Client fidoClient { get; }
 
-		internal Authenticator(IInternetIdentityClient client)
+		internal Authenticator(IInternetIdentityClient client, IFido2Client fidoClient)
 		{
-			this.client = client;
+			this.identityClient = client;
+			this.fidoClient = fidoClient;
 		}
 
 		public async Task<LoginResult> LoginAsync(
@@ -26,7 +30,7 @@ namespace EdjCase.ICP.InternetIdentity
 			IIdentity? sessionIdentity = null,
 			TimeSpan? maxTimeToLive = null)
 		{
-			List<DeviceInfo> devices = await this.client.LookupAsync(anchor);
+			List<DeviceInfo> devices = await this.identityClient.LookupAsync(anchor);
 			if (!devices.Any())
 			{
 				return LoginResult.FromError(ErrorType.InvalidAnchorOrNoDevices);
@@ -43,7 +47,7 @@ namespace EdjCase.ICP.InternetIdentity
 				// the device key signs a delegation saying the 
 				// session key is authorized for the next X amount
 				// of time for the specified host
-				DelegationIdentity identity = await this.client.PrepareAndGetDelegationAsync(
+				DelegationIdentity identity = await this.identityClient.PrepareAndGetDelegationAsync(
 					anchor,
 					clientHostname,
 					// Authenticate canister requests as device to get the delegated session identity
@@ -65,7 +69,8 @@ namespace EdjCase.ICP.InternetIdentity
 		{
 			var agent = new HttpAgent();
 			IInternetIdentityClient client = new AgentInternetIdentityClient(agent, identityCanisterOverride);
-			return new Authenticator(client);
+			IFido2Client fido2Signer = new Fido2Client();
+			return new Authenticator(client, fido2Signer);
 		}
 
 
@@ -81,7 +86,7 @@ namespace EdjCase.ICP.InternetIdentity
 			// Only allow the anonymizing delegation to last for 10 minutes
 			ICTimestamp expiration = ICTimestamp.Future(TimeSpan.FromMinutes(10));
 
-			Principal identityCanisterId = this.client.GetCanisterId();
+			Principal identityCanisterId = this.identityClient.GetCanisterId();
 			var targets = new List<Principal> { identityCanisterId };
 
 			DerEncodedPublicKey sessionPublicKey = sessionIdentity.GetPublicKey();
@@ -90,25 +95,25 @@ namespace EdjCase.ICP.InternetIdentity
 			var sessionDelegation = new Delegation(sessionPublicKey.Value, expiration, targets);
 			byte[] challenge = sessionDelegation.BuildSigningChallenge();
 
-			DelegationChain chain;
-			using (var assert = new FidoAssertion())
-			{
-				// TODO can detect the device before signing?
-				(DerEncodedPublicKey devicePublicKey, byte[] deviceSignature) = await Fido2.SignAsync(challenge, assert, devices);
+			// TODO can detect the device before signing?
+			(DerEncodedPublicKey publicKey, byte[] signature) = await this.fidoClient.SignAsync(challenge, devices);
 
-				SignedDelegation signedDelegation = new SignedDelegation(sessionDelegation, deviceSignature);
+			// convert the assertion response into the form required by II (cbor)
+			//byte[] assertion = SerializeAssertion();
 
-				// Have a delegation chain that represents the device but is delegated to 
-				// the session key
-				chain = new DelegationChain(
-					devicePublicKey,
-					new List<SignedDelegation> { signedDelegation }
-				);
-			}
+			SignedDelegation signedDelegation = new SignedDelegation(sessionDelegation, signature);
+
+			// Have a delegation chain that represents the device but is delegated to 
+			// the session key
+			DelegationChain chain = new DelegationChain(
+				publicKey,
+				new List<SignedDelegation> { signedDelegation }
+			);
 
 
 			return new DelegationIdentity(sessionIdentity, chain);
 		}
+
 	}
 
 }

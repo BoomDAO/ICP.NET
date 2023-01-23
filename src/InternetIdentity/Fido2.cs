@@ -11,7 +11,12 @@ using System.Threading.Tasks;
 namespace EdjCase.ICP.InternetIdentity
 {
 
-	internal static class Fido2
+	internal interface IFido2Client
+	{
+		Task<(DerEncodedPublicKey PublicKey, byte[] Signature)> SignAsync(byte[] challenge, IList<DeviceInfo> devices);
+	}
+
+	internal class Fido2Client : IFido2Client
 	{
 		private const string clientDataTemplate = "{{\"type\":\"webauthn.get\",\"challenge\":\"{0}\",\"origin\":\"https://identity.ic0.app\",\"crossOrigin\":false}}";
 		private const string RpId = "identity.ic0.app";
@@ -20,60 +25,55 @@ namespace EdjCase.ICP.InternetIdentity
 		private static byte[] signature = Encoding.ASCII.GetBytes("signature");
 
 
-		public static Task<(DerEncodedPublicKey PublicKey, byte[] Signature)> SignAsync(
-			byte[] challenge,
-			FidoAssertion assert,
-			IList<DeviceInfo> devices)
+		public Task<(DerEncodedPublicKey PublicKey, byte[] Signature)> SignAsync(byte[] challenge, IList<DeviceInfo> devices)
 		{
 			return Task.Factory.StartNew(
-				function: () => Sign(challenge, assert, devices),
+				function: () => Sign(challenge, devices),
 				creationOptions: TaskCreationOptions.DenyChildAttach | TaskCreationOptions.LongRunning
 			);
 		}
 
-		public static (DerEncodedPublicKey PublicKey, byte[] Signature) Sign(
-			byte[] challenge,
-			FidoAssertion assert,
-			IList<DeviceInfo> devices
-		)
+		public static (DerEncodedPublicKey PublicKey, byte[] Signature) Sign(byte[] challenge, IList<DeviceInfo> devices)
 		{
-			using (var device = new FidoDevice())
+			using (var assert = new FidoAssertion())
 			{
-				try
+				using (var device = new FidoDevice())
 				{
-					string deviceName = GetFidoDeviceNameForSign();
-					device.Open(deviceName);
-
-					string clientDataJson = string.Format(clientDataTemplate, UrlBase64.Encode(challenge));
-					byte[] clientDataBytes = Encoding.ASCII.GetBytes(clientDataJson);
-
-					// configure the assertion request
-					assert.SetClientData(clientDataBytes);
-					assert.Rp = RpId;
-					foreach (DeviceInfo d in devices)
+					try
 					{
-						if (d.CredentialId != null)
+						string deviceName = GetFidoDeviceNameForSign();
+						device.Open(deviceName);
+
+						string clientDataJson = string.Format(clientDataTemplate, UrlBase64.Encode(challenge));
+						byte[] clientDataBytes = Encoding.ASCII.GetBytes(clientDataJson);
+
+						// configure the assertion request
+						assert.SetClientData(clientDataBytes);
+						assert.Rp = RpId;
+						foreach (DeviceInfo d in devices)
 						{
-							assert.AllowCredential(d.CredentialId);
+							if (d.CredentialId != null)
+							{
+								assert.AllowCredential(d.CredentialId);
+							}
 						}
+
+						assert.SetExtensions(FidoExtensions.None);
+
+						// get the assertion
+						device.GetAssert(assert, null); // note: blocks for a long time!
+
+						DeviceInfo chosenDevice = devices
+							.First(d => assert[0].Id.SequenceEqual(d.CredentialId));
+
+						byte[] signature = CreateSignatureFromAssertion(assert[0], clientDataJson);
+
+						return (chosenDevice.PublicKey, signature);
 					}
-
-					assert.SetExtensions(FidoExtensions.None);
-
-					// get the assertion
-					device.GetAssert(assert, null); // note: blocks for a long time!
-
-					// convert the assertion response into the form required by II (cbor)
-					byte[] assertionBytes = SerializeAssertion(assert[0], clientDataJson);
-					ReadOnlySpan<byte> a = assert[0].Id;
-					DeviceInfo chosenDevice = devices
-						.First(d => assert[0].Id.SequenceEqual(d.CredentialId));
-
-					return (chosenDevice.PublicKey, assertionBytes);
-				}
-				finally
-				{
-					device.Close();
+					finally
+					{
+						device.Close();
+					}
 				}
 			}
 		}
@@ -87,8 +87,12 @@ namespace EdjCase.ICP.InternetIdentity
 		}
 
 
-
-		private static byte[] SerializeAssertion(FidoAssertionStatement assertion, string clientDataJson)
+		/// <summary>
+		/// The signature is a CBOR value consisting of a data item with major type 6 ("Semantic tag")
+		/// and tag value 55799, followed by a map with three mandatory fields:
+		/// authenticator_data, client_data_json and signature
+		/// </summary>
+		private static byte[] CreateSignatureFromAssertion(FidoAssertionStatement assertion, string clientDataJson)
 		{
 			using (ByteBufferWriter bufferWriter = new ByteBufferWriter())
 			{
@@ -112,5 +116,6 @@ namespace EdjCase.ICP.InternetIdentity
 				return bufferWriter.WrittenSpan.ToArray();
 			}
 		}
+
 	}
 }
