@@ -47,6 +47,14 @@ namespace EdjCase.ICP.InternetIdentity
 		{
 			return new LoginResult(null, identity);
 		}
+
+		public void ThrowIfFailed()
+		{
+			if (!this.IsSuccessful)
+			{
+				throw new InternetIdentityLoginException(this.AsFailure());
+			}
+		}
 	}
 
 	public enum ErrorType

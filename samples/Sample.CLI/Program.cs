@@ -8,6 +8,10 @@ using System.IO;
 using CommandLine;
 using Sample.Shared.Governance;
 using System.Security.Principal;
+using EdjCase.ICP.Agent.Responses;
+using EdjCase.ICP.Candid.Models.Types;
+using EdjCase.ICP.Candid.Models.Values;
+using Sample.Shared.Governance.Models;
 
 public class Program
 {
@@ -51,19 +55,13 @@ public class Program
 		LoginResult result = await Authenticator
 			.WithHttpAgent()
 			.LoginAsync(anchor, hostname);
-
-		if (!result.IsSuccessful)
-		{
-			Console.WriteLine("Failed. Error: " + result.AsFailure());
-			return;
-		}
+		result.ThrowIfFailed();
 		Console.WriteLine("Login success!");
 		DelegationIdentity identity = result.AsSuccessful();
 		var agent = new HttpAgent(identity);
 		Principal canisterId = Principal.FromText("rrkah-fqaaa-aaaaa-aaaaq-cai");
 		var client = new GovernanceApiClient(agent, canisterId);
 		var a = await client.GetProposalInfo(1999);
-
 
 	}
 }
