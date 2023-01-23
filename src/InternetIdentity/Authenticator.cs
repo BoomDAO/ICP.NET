@@ -40,8 +40,12 @@ namespace EdjCase.ICP.InternetIdentity
 
 			try
 			{
-				DelegationIdentity deviceIdentity = await this.BuildDeviceIdentityAsync(devices, sessionIdentity);
+				DelegationIdentity? deviceIdentity = await this.BuildDeviceIdentityAsync(devices, sessionIdentity);
 
+				if (deviceIdentity == null)
+				{
+					return LoginResult.FromError(ErrorType.NoMatchingDevice);
+				}
 
 				// Sign the session identity using a delegation
 				// the device key signs a delegation saying the 
@@ -81,7 +85,7 @@ namespace EdjCase.ICP.InternetIdentity
 		/// 
 		/// Corresponds to `requestFEDelegation' from @dfinity/internet-identity
 		/// </summary>
-		private async Task<DelegationIdentity> BuildDeviceIdentityAsync(IList<DeviceInfo> devices, IIdentity sessionIdentity)
+		private async Task<DelegationIdentity?> BuildDeviceIdentityAsync(IList<DeviceInfo> devices, IIdentity sessionIdentity)
 		{
 			// Only allow the anonymizing delegation to last for 10 minutes
 			ICTimestamp expiration = ICTimestamp.Future(TimeSpan.FromMinutes(10));
@@ -96,17 +100,22 @@ namespace EdjCase.ICP.InternetIdentity
 			byte[] challenge = sessionDelegation.BuildSigningChallenge();
 
 			// TODO can detect the device before signing?
-			(DerEncodedPublicKey publicKey, byte[] signature) = await this.fidoClient.SignAsync(challenge, devices);
+			(DerEncodedPublicKey PublicKey, byte[] Signature)? signInfo = await this.fidoClient.SignAsync(challenge, devices);
+
+			if (signInfo == null)
+			{
+				return null;
+			}
 
 			// convert the assertion response into the form required by II (cbor)
 			//byte[] assertion = SerializeAssertion();
 
-			SignedDelegation signedDelegation = new SignedDelegation(sessionDelegation, signature);
+			SignedDelegation signedDelegation = new SignedDelegation(sessionDelegation, signInfo.Value.Signature);
 
 			// Have a delegation chain that represents the device but is delegated to 
 			// the session key
 			DelegationChain chain = new DelegationChain(
-				publicKey,
+				signInfo.Value.PublicKey,
 				new List<SignedDelegation> { signedDelegation }
 			);
 

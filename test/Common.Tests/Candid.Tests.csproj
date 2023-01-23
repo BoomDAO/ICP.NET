@@ -21,6 +21,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
+		<PackageReference Include="Moq" Version="4.18.4" />
 		<PackageReference Include="Snapshooter.Xunit" Version="0.7.1" />
 		<PackageReference Include="xunit" Version="2.4.1" />
 		<PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
@@ -43,6 +44,7 @@
 		<ProjectReference Include="..\..\src\Candid\EdjCase.ICP.Candid.csproj" />
 		<ProjectReference Include="..\..\src\Agent\EdjCase.ICP.Agent.csproj" />
 		<ProjectReference Include="..\..\src\ClientGenerator\EdjCase.ICP.ClientGenerator.csproj" />
+		<ProjectReference Include="..\..\src\InternetIdentity\EdjCase.ICP.InternetIdentity.csproj" />
 	</ItemGroup>
 
 </Project>
