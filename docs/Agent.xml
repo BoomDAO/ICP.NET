@@ -340,7 +340,7 @@
             Name of the canister method to call
             </summary>
         </member>
-        <member name="P:EdjCase.ICP.Agent.Requests.QueryRequest.EncodedArgument">
+        <member name="P:EdjCase.ICP.Agent.Requests.QueryRequest.Arg">
             <summary>
             Argument to pass to the canister method
             </summary>

@@ -1,3 +1,4 @@
+using Dahomey.Cbor.Attributes;
 using EdjCase.ICP.Agent.Identities;
 using EdjCase.ICP.Candid.Crypto;
 using EdjCase.ICP.Candid.Models;
@@ -13,9 +14,10 @@ namespace EdjCase.ICP.Agent.Models
 
 	public class SignedDelegation : IHashable
 	{
-		[Dahomey.Cbor.Attributes.CborProperty("delegation")]
+		[CborProperty(Properties.DELEGATION)]
 		public Delegation Delegation { get; }
-		[Dahomey.Cbor.Attributes.CborProperty("signature")]
+
+		[CborProperty(Properties.SIGNATURE)]
 		public byte[] Signature { get; }
 
 		public SignedDelegation(Delegation delegation, byte[] signature)
@@ -50,11 +52,17 @@ namespace EdjCase.ICP.Agent.Models
 		{
 			return new Dictionary<string, IHashable>
 			{
-				{ "delegation", this.Delegation },
-				{ "signature", this.Signature.ToHashable() }
+				{ Properties.DELEGATION, this.Delegation },
+				{ Properties.SIGNATURE, this.Signature.ToHashable() }
 			}
 				.ToHashable()
 				.ComputeHash(hashFunction);
+		}
+
+		private class Properties
+		{
+			public const string DELEGATION = "delegation";
+			public const string SIGNATURE = "signature";
 		}
 	}
 

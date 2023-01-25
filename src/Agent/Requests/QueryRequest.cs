@@ -1,3 +1,4 @@
+using Dahomey.Cbor.Attributes;
 using EdjCase.ICP.Candid.Models;
 using System;
 using System.Collections.Generic;
@@ -7,31 +8,31 @@ namespace EdjCase.ICP.Agent.Requests
 
 	public class QueryRequest : IRepresentationIndependentHashItem
 	{
-		[Dahomey.Cbor.Attributes.CborProperty(Properties.REQUEST_TYPE)]
+		[CborProperty(Properties.REQUEST_TYPE)]
 		public string RequestType { get; } = "query";
 
 		/// <summary>
 		/// The principal of the canister to call.
 		/// </summary>
-		[Dahomey.Cbor.Attributes.CborProperty(Properties.CANISTER_ID)]
+		[CborProperty(Properties.CANISTER_ID)]
 		public Principal CanisterId { get; }
 
 		/// <summary>
 		/// Name of the canister method to call
 		/// </summary>
-		[Dahomey.Cbor.Attributes.CborProperty(Properties.METHOD_NAME)]
+		[CborProperty(Properties.METHOD_NAME)]
 		public string Method { get; }
 
 		/// <summary>
 		/// Argument to pass to the canister method
 		/// </summary>
-		[Dahomey.Cbor.Attributes.CborProperty(Properties.ARG)]
-		public CandidArg EncodedArgument { get; }
+		[CborProperty(Properties.ARG)]
+		public CandidArg Arg { get; }
 
 		/// <summary>
 		/// Required. The user who issued the request.
 		/// </summary>
-		[Dahomey.Cbor.Attributes.CborProperty(Properties.SENDER)]
+		[CborProperty(Properties.SENDER)]
 		public Principal Sender { get; }
 
 		/// <summary>
@@ -41,21 +42,22 @@ namespace EdjCase.ICP.Agent.Requests
 		/// the past. The IC may refuse to accept requests with an ingress expiry date too far in the future. 
 		/// This applies to synchronous and asynchronous requests alike (and could have been called request_expiry).
 		/// </summary>
-		[Dahomey.Cbor.Attributes.CborProperty(Properties.INGRESS_EXPIRY)]
+		[CborProperty(Properties.INGRESS_EXPIRY)]
 		public ICTimestamp IngressExpiry { get; }
 
 		/// <summary>
 		/// Optional. Arbitrary user-provided data, typically randomly generated. 
 		/// This can be used to create distinct requests with otherwise identical fields.
 		/// </summary>
-		[Dahomey.Cbor.Attributes.CborProperty(Properties.NONCE)]
+		[CborIgnoreIfDefault]
+		[CborProperty(Properties.NONCE)]
 		public byte[]? Nonce { get; }
 
 		public QueryRequest(Principal canisterId, string method, CandidArg encodedArgument, Principal sender, ICTimestamp ingressExpiry)
 		{
 			this.CanisterId = canisterId ?? throw new ArgumentNullException(nameof(canisterId));
 			this.Method = method ?? throw new ArgumentNullException(nameof(method));
-			this.EncodedArgument = encodedArgument ?? throw new ArgumentNullException(nameof(encodedArgument));
+			this.Arg = encodedArgument ?? throw new ArgumentNullException(nameof(encodedArgument));
 			this.Sender = sender ?? throw new ArgumentNullException(nameof(sender));
 			this.IngressExpiry = ingressExpiry ?? throw new ArgumentNullException(nameof(ingressExpiry));
 		}
@@ -67,7 +69,7 @@ namespace EdjCase.ICP.Agent.Requests
 				{Properties.REQUEST_TYPE, this.RequestType.ToHashable()},
 				{Properties.CANISTER_ID, this.CanisterId},
 				{Properties.METHOD_NAME, this.Method.ToHashable()},
-				{Properties.ARG, this.EncodedArgument},
+				{Properties.ARG, this.Arg},
 				{Properties.SENDER, this.Sender},
 				{Properties.INGRESS_EXPIRY, this.IngressExpiry}
 			};

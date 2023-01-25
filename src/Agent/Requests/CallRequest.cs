@@ -1,3 +1,4 @@
+using Dahomey.Cbor.Attributes;
 using EdjCase.ICP.Candid.Models;
 using System;
 using System.Collections.Generic;
@@ -9,32 +10,33 @@ namespace EdjCase.ICP.Agent.Requests
 		/// <summary>
 		/// The principal of the canister to call
 		/// </summary>
-		[Dahomey.Cbor.Attributes.CborProperty(Properties.CANISTER_ID)]
+		[CborProperty(Properties.CANISTER_ID)]
 		public Principal CanisterId { get; }
 		/// <summary>
 		/// Name of the canister method to call
 		/// </summary>
-		[Dahomey.Cbor.Attributes.CborProperty(Properties.METHOD_NAME)]
+		[CborProperty(Properties.METHOD_NAME)]
 		public string Method { get; }
 		/// <summary>
 		/// Argument to pass to the canister method
 		/// </summary>
-		[Dahomey.Cbor.Attributes.CborProperty(Properties.ARG)]
+		[CborProperty(Properties.ARG)]
 		public CandidArg Arg { get; }
 		/// <summary>
 		/// The user who issued the request
 		/// </summary>
-		[Dahomey.Cbor.Attributes.CborProperty(Properties.SENDER)]
+		[CborProperty(Properties.SENDER)]
 		public Principal Sender { get; }
 		/// <summary>
 		/// An upper limit on the validity of the request, expressed in nanoseconds since 1970-01-01
 		/// </summary>
-		[Dahomey.Cbor.Attributes.CborProperty(Properties.INGRESS_EXPIRY)]
+		[CborProperty(Properties.INGRESS_EXPIRY)]
 		public ICTimestamp IngressExpiry { get; }
 		/// <summary>
 		/// Optional. Arbitrary user-provided data, typically randomly generated. This can be used to create distinct requests with otherwise identical fields.
 		/// </summary>
-		[Dahomey.Cbor.Attributes.CborProperty(Properties.NONCE)]
+		[CborIgnoreIfDefault]
+		[CborProperty(Properties.NONCE)]
 		public byte[]? Nonce { get; }
 
 		public CallRequest(
@@ -81,19 +83,6 @@ namespace EdjCase.ICP.Agent.Requests
 			public const string SENDER = "sender";
 			public const string INGRESS_EXPIRY = "ingress_expiry";
 			public const string NONCE = "nonce";
-		}
-	}
-
-	public class CallRejectedException : Exception
-	{
-		public UnboundedUInt RejectCode { get; }
-		public string RejectMessage { get; }
-		public string? ErrorCode { get; }
-		public CallRejectedException(UnboundedUInt rejectCode, string rejectMessage, string? errorCode)
-		{
-			this.RejectCode = rejectCode;
-			this.RejectMessage = rejectMessage;
-			this.ErrorCode = errorCode;
 		}
 	}
 }

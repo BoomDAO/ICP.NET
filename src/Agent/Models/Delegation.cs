@@ -1,3 +1,4 @@
+using Dahomey.Cbor.Attributes;
 using EdjCase.ICP.Candid.Crypto;
 using EdjCase.ICP.Candid.Models;
 using System;
@@ -7,21 +8,20 @@ using System.Text;
 
 namespace EdjCase.ICP.Agent.Models
 {
-	// TODO move attributes to a converter
 	public class Delegation : IRepresentationIndependentHashItem, IHashable
 	{
-		[Dahomey.Cbor.Attributes.CborProperty(Properties.PUBLIC_KEY)]
+		[CborProperty(Properties.PUBLIC_KEY)]
 		public byte[] PublicKey { get; }
 
-		[Dahomey.Cbor.Attributes.CborProperty(Properties.EXPIRATION)]
+		[CborProperty(Properties.EXPIRATION)]
 		public ICTimestamp Expiration { get; }
 
-		[Dahomey.Cbor.Attributes.CborIgnoreIfDefault]
-		[Dahomey.Cbor.Attributes.CborProperty(Properties.TARGETS)]
+		[CborIgnoreIfDefault]
+		[CborProperty(Properties.TARGETS)]
 		public List<Principal>? Targets { get; }
 
-		[Dahomey.Cbor.Attributes.CborIgnoreIfDefault]
-		[Dahomey.Cbor.Attributes.CborProperty(Properties.SENDERS)]
+		[CborIgnoreIfDefault]
+		[CborProperty(Properties.SENDERS)]
 		public List<Principal>? Senders { get; }
 
 		public Delegation(byte[] publicKey, ICTimestamp expiration, List<Principal>? targets = null, List<Principal>? senders = null)

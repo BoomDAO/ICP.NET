@@ -1,3 +1,4 @@
+using EdjCase.ICP.Candid.Models;
 using System;
 
 namespace EdjCase.ICP.Agent
@@ -39,6 +40,21 @@ namespace EdjCase.ICP.Agent
 		public InvalidCertificateException(string message) : base(message)
 		{
 
+		}
+	}
+
+
+
+	public class CallRejectedException : Exception
+	{
+		public UnboundedUInt RejectCode { get; }
+		public string RejectMessage { get; }
+		public string? ErrorCode { get; }
+		public CallRejectedException(UnboundedUInt rejectCode, string rejectMessage, string? errorCode)
+		{
+			this.RejectCode = rejectCode;
+			this.RejectMessage = rejectMessage;
+			this.ErrorCode = errorCode;
 		}
 	}
 }

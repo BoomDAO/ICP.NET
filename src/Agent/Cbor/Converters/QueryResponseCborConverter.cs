@@ -7,14 +7,14 @@ using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid.Utilities;
 using System;
 
-namespace Agent.Cbor
+namespace EdjCase.ICP.Agent.Cbor.Converters
 {
 	internal class QueryResponseCborConverter : CborConverterBase<QueryResponse>
 	{
 		public override QueryResponse Read(ref CborReader reader)
 		{
 			var context = new QueryReponseContext();
-			CborReaderUtil.ReadMap(ref reader, ref context, this.SetQueryResponseField);
+			CborUtil.ReadMap(ref reader, ref context, this.SetQueryResponseField);
 			switch (context.Status)
 			{
 				case "replied":
@@ -42,7 +42,7 @@ namespace Agent.Cbor
 					break;
 				case "reply":
 					byte[]? replyContext = null;
-					CborReaderUtil.ReadMap(ref reader, ref replyContext, this.SetQueryResponseReply);
+					CborUtil.ReadMap(ref reader, ref replyContext, this.SetQueryResponseReply);
 					context.ReplyArg = replyContext;
 					break;
 				case "reject_code":

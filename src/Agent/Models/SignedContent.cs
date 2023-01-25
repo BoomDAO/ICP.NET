@@ -1,3 +1,4 @@
+using Dahomey.Cbor.Attributes;
 using EdjCase.ICP.Candid.Models;
 using System;
 using System.Collections.Generic;
@@ -6,22 +7,27 @@ namespace EdjCase.ICP.Agent.Models
 {
 	public class SignedContent : IRepresentationIndependentHashItem
 	{
-		[Dahomey.Cbor.Attributes.CborProperty("content")]
+		[CborProperty(Properties.CONTENT)]
 		public Dictionary<string, IHashable> Content { get; }
 
-		[Dahomey.Cbor.Attributes.CborIgnoreIfDefault]
-		[Dahomey.Cbor.Attributes.CborProperty("sender_pubkey")]
+		[CborIgnoreIfDefault]
+		[CborProperty(Properties.SENDER_PUBLIC_KEY)]
 		public byte[]? SenderPublicKey { get; }
 
-		[Dahomey.Cbor.Attributes.CborIgnoreIfDefault]
-		[Dahomey.Cbor.Attributes.CborProperty("sender_delegation")]
+		[CborIgnoreIfDefault]
+		[CborProperty(Properties.SENDER_DELEGATION)]
 		public List<SignedDelegation>? SenderDelegations { get; }
 
-		[Dahomey.Cbor.Attributes.CborIgnoreIfDefault]
-		[Dahomey.Cbor.Attributes.CborProperty("sender_sig")]
+		[CborIgnoreIfDefault]
+		[CborProperty(Properties.SENDER_SIGNATURE)]
 		public byte[]? SenderSignature { get; }
 
-		public SignedContent(Dictionary<string, IHashable> content, byte[]? senderPublicKey, List<SignedDelegation>? delegations, byte[]? senderSignature)
+		public SignedContent(
+			Dictionary<string, IHashable> content,
+			byte[]? senderPublicKey,
+			List<SignedDelegation>? delegations,
+			byte[]? senderSignature
+		)
 		{
 			this.Content = content ?? throw new ArgumentNullException(nameof(content));
 			this.SenderPublicKey = senderPublicKey;
@@ -33,21 +39,29 @@ namespace EdjCase.ICP.Agent.Models
 		{
 			var properties = new Dictionary<string, IHashable>
 			{
-				{"content", this.Content.ToHashable()}
+				{Properties.CONTENT, this.Content.ToHashable()}
 			};
 			if (this.SenderPublicKey != null)
 			{
-				properties.Add("sender_pubkey", this.SenderPublicKey.ToHashable());
+				properties.Add(Properties.SENDER_PUBLIC_KEY, this.SenderPublicKey.ToHashable());
 			}
 			if (this.SenderSignature != null)
 			{
-				properties.Add("sender_sig", this.SenderSignature.ToHashable());
+				properties.Add(Properties.SENDER_SIGNATURE, this.SenderSignature.ToHashable());
 			}
 			if (this.SenderDelegations != null)
 			{
-				properties.Add("sender_delegation", this.SenderDelegations.ToHashable());
+				properties.Add(Properties.SENDER_DELEGATION, this.SenderDelegations.ToHashable());
 			}
 			return properties;
+		}
+
+		internal class Properties
+		{
+			public const string CONTENT = "content";
+			public const string SENDER_PUBLIC_KEY = "sender_pubkey";
+			public const string SENDER_SIGNATURE = "sender_sig";
+			public const string SENDER_DELEGATION = "sender_delegation";
 		}
 	}
 }

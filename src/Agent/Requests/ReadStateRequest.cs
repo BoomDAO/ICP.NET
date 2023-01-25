@@ -1,3 +1,4 @@
+using Dahomey.Cbor.Attributes;
 using EdjCase.ICP.Candid.Models;
 using System;
 using System.Collections.Generic;
@@ -6,13 +7,16 @@ namespace EdjCase.ICP.Agent.Requests
 {
 	public class ReadStateRequest : IRepresentationIndependentHashItem
 	{
-		[Dahomey.Cbor.Attributes.CborProperty(Properties.REQUEST_TYPE)]
+		[CborProperty(Properties.REQUEST_TYPE)]
 		public string REQUEST_TYPE { get; } = "query";
-		[Dahomey.Cbor.Attributes.CborProperty(Properties.PATHS)]
+
+		[CborProperty(Properties.PATHS)]
 		public List<StatePath> Paths { get; }
-		[Dahomey.Cbor.Attributes.CborProperty(Properties.SENDER)]
+
+		[CborProperty(Properties.SENDER)]
 		public Principal Sender { get; }
-		[Dahomey.Cbor.Attributes.CborProperty(Properties.INGRESS_EXPIRY)]
+
+		[CborProperty(Properties.INGRESS_EXPIRY)]
 		public ICTimestamp IngressExpiry { get; }
 
 		public ReadStateRequest(List<StatePath> paths, Principal sender, ICTimestamp ingressExpiry)

@@ -16,6 +16,7 @@ using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using EdjCase.ICP.Agent.Cbor.Converters;
 
 namespace EdjCase.ICP.Agent.Agents
 {
@@ -33,7 +34,7 @@ namespace EdjCase.ICP.Agent.Agents
 			var options = new CborOptions();
 			var provider = new CborConverterProvider();
 			options.Registry.ConverterRegistry.RegisterConverterProvider(provider);
-			options.Registry.ConverterRegistry.RegisterConverter(typeof(IHashable), new HashableCborConverter(options.Registry.ConverterRegistry));
+			options.Registry.ConverterRegistry.RegisterConverter(typeof(IHashable), new HashableCborConverter(options));
 			return options;
 		}, isThreadSafe: true);
 
@@ -179,6 +180,7 @@ namespace EdjCase.ICP.Agent.Agents
 		{
 			Func<Task<Stream>> streamFunc = await this.SendRawAsync(url, null);
 			Stream stream = await streamFunc();
+
 			return await Dahomey.Cbor.Cbor.DeserializeAsync<TResponse>(stream, HttpAgent.cborOptionsLazy.Value);
 		}
 

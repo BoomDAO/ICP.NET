@@ -1,22 +1,27 @@
+using Dahomey.Cbor.Attributes;
 using Dahomey.Cbor.ObjectModel;
 
 namespace EdjCase.ICP.Agent.Responses
 {
 	public class StatusResponse
 	{
-		// ic_api_version
+		[CborProperty(Properties.IC_API_VERSION)]
 		public string ICApiVersion { get; }
 
-		// impl_source
+		[CborProperty(Properties.IMPLEMENTATION_SOURCE)]
 		public string? ImplementationSource { get; }
 
-		// impl_version
+		[CborIgnoreIfDefault]
+		[CborProperty(Properties.IMPLEMENTATION_VERSION)]
 		public string? ImplementationVersion { get; }
 
-		// impl_revision
+		[CborIgnoreIfDefault]
+		[CborProperty(Properties.IMPLEMENTATION_REVISION)]
 		public string? ImplementationRevision { get; }
 
 		// Only for development networks
+		[CborIgnoreIfDefault]
+		[CborProperty(Properties.ROOT_KEY)]
 		public byte[]? DevelopmentRootKey { get; }
 
 
@@ -34,20 +39,13 @@ namespace EdjCase.ICP.Agent.Responses
 			this.DevelopmentRootKey = developmentRootKey;
 		}
 
-		public static StatusResponse FromCbor(CborObject cbor)
+		private class Properties
 		{
-			string icApiVersion = cbor["ic_api_version"].Value<string>();
-			string? implementationSource = cbor["impl_source"].Value<string?>();
-			string? implementationVersion = cbor["impl_version"].Value<string?>();
-			string? implementationRevision = cbor["impl_revision"].Value<string?>();
-			byte[]? rawDevelopmentRootKey = cbor["root_key"].Value<byte[]?>();
-			return new StatusResponse(
-				icApiVersion,
-				implementationSource,
-				implementationVersion,
-				implementationRevision,
-				rawDevelopmentRootKey
-			);
+			public const string IC_API_VERSION = "ic_api_version";
+			public const string IMPLEMENTATION_SOURCE = "impl_source";
+			public const string IMPLEMENTATION_VERSION = "impl_version";
+			public const string IMPLEMENTATION_REVISION = "impl_revision";
+			public const string ROOT_KEY = "root_key";
 		}
 	}
 }
