@@ -8,23 +8,48 @@ using System.Text;
 
 namespace EdjCase.ICP.Agent.Models
 {
+	/// <summary>
+	/// A model that contains data on delegating authority from an identity
+	/// </summary>
 	public class Delegation : IRepresentationIndependentHashItem, IHashable
 	{
+		/// <summary>
+		/// The public key from the authorizing identity
+		/// </summary>
 		[CborProperty(Properties.PUBLIC_KEY)]
 		public byte[] PublicKey { get; }
 
+		/// <summary>
+		/// The expiration when the delegation will no longer be valid
+		/// </summary>
 		[CborProperty(Properties.EXPIRATION)]
 		public ICTimestamp Expiration { get; }
 
+		/// <summary>
+		/// Optional. A list of canister ids where the delegation can be sent to and be authorized
+		/// </summary>
 		[CborIgnoreIfDefault]
 		[CborProperty(Properties.TARGETS)]
 		public List<Principal>? Targets { get; }
 
+		/// <summary>
+		/// Optional. A list of sender ids that can send this delegation and be authorized
+		/// </summary>
 		[CborIgnoreIfDefault]
 		[CborProperty(Properties.SENDERS)]
 		public List<Principal>? Senders { get; }
 
-		public Delegation(byte[] publicKey, ICTimestamp expiration, List<Principal>? targets = null, List<Principal>? senders = null)
+		/// <param name="publicKey">The public key from the authorizing identity</param>
+		/// <param name="expiration">The expiration when the delegation will no longer be valid</param>
+		/// <param name="targets">Optional. A list of canister ids where the delegation can be sent to and be authorized</param>
+		/// <param name="senders">Optional. A list of sender ids that can send this delegation and be authorized</param>
+		/// <exception cref="ArgumentNullException"></exception>
+		public Delegation(
+			byte[] publicKey,
+			ICTimestamp expiration,
+			List<Principal>? targets = null,
+			List<Principal>? senders = null
+		)
 		{
 			this.PublicKey = publicKey ?? throw new ArgumentNullException(nameof(publicKey));
 			this.Expiration = expiration;
@@ -32,6 +57,7 @@ namespace EdjCase.ICP.Agent.Models
 			this.Senders = senders;
 		}
 
+		/// <inheritdoc/>
 		public Dictionary<string, IHashable> BuildHashableItem()
 		{
 			var obj = new Dictionary<string, IHashable>
@@ -53,6 +79,7 @@ namespace EdjCase.ICP.Agent.Models
 			return obj;
 		}
 
+		/// <inheritdoc/>
 		public byte[] ComputeHash(IHashFunction hashFunction)
 		{
 			return this.BuildHashableItem()
@@ -61,15 +88,9 @@ namespace EdjCase.ICP.Agent.Models
 		}
 
 		/// <summary>
-		/// Checks to see if the expiration is on or after the specified time
+		/// Creates a byte array of the data that can be signed by an algorithm for authorization/signature purposes
 		/// </summary>
-		/// <param name="timestamp">The timestamp to compare the expiration against</param>
-		/// <returns>True if the delegation is NOT expired, otherwise false</returns>
-		public bool IsExpirationValid(ICTimestamp timestamp)
-		{
-			return this.Expiration >= timestamp;
-		}
-
+		/// <returns>Byte array representation of the data</returns>
 		public byte[] BuildSigningChallenge()
 		{
 			Dictionary<string, IHashable> hashable = this.BuildHashableItem();
@@ -84,7 +105,7 @@ namespace EdjCase.ICP.Agent.Models
 				.ToArray();
 		}
 
-		public class Properties
+		internal class Properties
 		{
 			public const string PUBLIC_KEY = "pubkey";
 			public const string EXPIRATION = "expiration";

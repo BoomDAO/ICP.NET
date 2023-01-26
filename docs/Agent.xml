@@ -147,6 +147,30 @@
         <member name="M:EdjCase.ICP.Agent.InvalidCertificateException.#ctor(System.String)">
             <param name="message">Specific error message</param>
         </member>
+        <member name="T:EdjCase.ICP.Agent.Identities.DelegationIdentity">
+            <summary>
+            An identity that has a signed delegation chain that authorizes
+            the identity to act as another identity
+            
+            This is commonly used for things like Internet Identity where
+            a login session always generates a new key but that key has been 
+            signed by an authorized device through internet identity
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Identities.DelegationIdentity.Identity">
+            <summary>
+            The identity that authorization has been delegated to
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Identities.DelegationIdentity.Chain">
+            <summary>
+            The chain of singed delegations that prove authorization of the identity
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Identities.DelegationIdentity.#ctor(EdjCase.ICP.Agent.Identities.IIdentity,EdjCase.ICP.Agent.Models.DelegationChain)">
+            <param name="identity">The identity that authorization has been delegated to</param>
+            <param name="chain">The chain of singed delegations that prove authorization of the identity</param>
+        </member>
         <member name="M:EdjCase.ICP.Agent.Identities.DelegationIdentity.GetPublicKey">
             <inheritdoc/>
         </member>
@@ -216,10 +240,16 @@
             <param name="data">The byte data to sign</param>
             <returns>The signature bytes of the specified data bytes</returns>
         </member>
+        <member name="T:EdjCase.ICP.Agent.Identities.IIdentityExtensions">
+            <summary>
+            Extension methods for the IIdentity interface
+            </summary>
+        </member>
         <member name="M:EdjCase.ICP.Agent.Identities.IIdentityExtensions.SignContentAsync(EdjCase.ICP.Agent.Identities.IIdentity,System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.Candid.Models.IHashable})">
             <summary>
             Signs the hashable content
             </summary>
+            <param name="identity">The identity to sign the content with</param>
             <param name="content">The data that needs to be signed</param>
             <returns>The content with signature(s) from the identity</returns>
         </member>
@@ -293,12 +323,163 @@
             <param name="publicKey">The public key of the delegation</param>
             <returns>True if the certificate signature is valid, otherwise false</returns>
         </member>
-        <member name="M:EdjCase.ICP.Agent.Models.Delegation.IsExpirationValid(EdjCase.ICP.Candid.Models.ICTimestamp)">
+        <member name="T:EdjCase.ICP.Agent.Models.Delegation">
             <summary>
-            Checks to see if the expiration is on or after the specified time
+            A model that contains data on delegating authority from an identity
             </summary>
-            <param name="timestamp">The timestamp to compare the expiration against</param>
-            <returns>True if the delegation is NOT expired, otherwise false</returns>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Models.Delegation.PublicKey">
+            <summary>
+            The public key from the authorizing identity
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Models.Delegation.Expiration">
+            <summary>
+            The expiration when the delegation will no longer be valid
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Models.Delegation.Targets">
+            <summary>
+            Optional. A list of canister ids where the delegation can be sent to and be authorized
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Models.Delegation.Senders">
+            <summary>
+            Optional. A list of sender ids that can send this delegation and be authorized
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Models.Delegation.#ctor(System.Byte[],EdjCase.ICP.Candid.Models.ICTimestamp,System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal},System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal})">
+            <param name="publicKey">The public key from the authorizing identity</param>
+            <param name="expiration">The expiration when the delegation will no longer be valid</param>
+            <param name="targets">Optional. A list of canister ids where the delegation can be sent to and be authorized</param>
+            <param name="senders">Optional. A list of sender ids that can send this delegation and be authorized</param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Models.Delegation.BuildHashableItem">
+            <inheritdoc/>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Models.Delegation.ComputeHash(EdjCase.ICP.Candid.Crypto.IHashFunction)">
+            <inheritdoc/>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Models.Delegation.BuildSigningChallenge">
+            <summary>
+            Creates a byte array of the data that can be signed by an algorithm for authorization/signature purposes
+            </summary>
+            <returns>Byte array representation of the data</returns>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Models.DelegationChain">
+            <summary>
+            A model containing a list of signed delegations to authorize an identity 
+            to act on behalf of the chain's public key
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Models.DelegationChain.PublicKey">
+            <summary>
+            The public key of the identity that has delegated authority
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Models.DelegationChain.Delegations">
+            <summary>
+            <para>The chain of delegations to authorize a key<br/>
+            Each delegation is signed by its parent key<br/>
+            The first delegation's parent is the root key (`PublicKey` in `DelegationChain`)<br/>
+            The last delegation is for the key to be authorized</para>
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Models.DelegationChain.#ctor(EdjCase.ICP.Agent.DerEncodedPublicKey,System.Collections.Generic.List{EdjCase.ICP.Agent.Models.SignedDelegation})">
+            <param name="publicKey">The public key of the identity that has delegated authority</param>
+            <param name="delegations">The chain of delegations to authorize a key</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Models.DelegationChain.CreateAsync(EdjCase.ICP.Agent.DerEncodedPublicKey,EdjCase.ICP.Agent.Identities.IIdentity,EdjCase.ICP.Candid.Models.ICTimestamp,System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal},System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal})">
+            <summary>
+            Creates a delegation chain from the specified keys
+            </summary>
+            <param name="keyToDelegateTo">The key to delegate authority to</param>
+            <param name="delegatingIdentity">The identity that is signing the delegation</param>
+            <param name="expiration">How long to delegate for</param>
+            <param name="targets">Optional. List of canister ids to limit delegation to</param>
+            <param name="senders">Optional. List of pricipals where requests can originate from</param>
+            <returns>A delegation chain signed by the delegating identity</returns>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Models.SignedContent">
+            <summary>
+            A model containing content and the signature information of it
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Models.SignedContent.Content">
+            <summary>
+            The content that is signed in the form of key value pairs
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Models.SignedContent.SenderPublicKey">
+            <summary>
+            Public key used to authenticate this request, unless anonymous, then null
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Models.SignedContent.SenderDelegations">
+            <summary>
+            Optional. A chain of delegations, starting with the one signed by sender_pubkey
+            and ending with the one delegating to the key relating to sender_sig.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Models.SignedContent.SenderSignature">
+            <summary>
+            Signature to authenticate this request, unless anonymous, then null
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Models.SignedContent.#ctor(System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.Candid.Models.IHashable},System.Byte[],System.Collections.Generic.List{EdjCase.ICP.Agent.Models.SignedDelegation},System.Byte[])">
+            <param name="content">The content that is signed in the form of key value pairs</param>
+            <param name="senderPublicKey">Public key used to authenticate this request, unless anonymous, then null</param>
+            <param name="delegations">Optional. A chain of delegations, starting with the one signed by sender_pubkey 
+            and ending with the one delegating to the key relating to sender_sig.</param>
+            <param name="senderSignature">Signature to authenticate this request, unless anonymous, then null</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Models.SignedContent.BuildHashableItem">
+            <inheritdoc />
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Models.SignedDelegation">
+            <summary>
+            A delegation that has been signed by an identity
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Models.SignedDelegation.Delegation">
+            <summary>
+            The delegation that is signed
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Models.SignedDelegation.Signature">
+            <summary>
+            The signature for the delegation
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Models.SignedDelegation.#ctor(EdjCase.ICP.Agent.Models.Delegation,System.Byte[])">
+            <param name="delegation">The delegation that is signed</param>
+            <param name="signature">The signature for the delegation</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Models.SignedDelegation.CreateAsync(EdjCase.ICP.Agent.DerEncodedPublicKey,EdjCase.ICP.Agent.Identities.IIdentity,EdjCase.ICP.Candid.Models.ICTimestamp,System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal},System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal})">
+            <summary>
+            Creates a delegation signed by the delegating identity, authorizing the public key
+            </summary>
+            <param name="keyToDelegateTo">The key to delegate authority to</param>
+            <param name="delegatingIdentity">The identity that is signing the delegation</param>
+            <param name="expiration">How long to delegate for</param>
+            <param name="targets">Optional. List of canister ids to limit delegation to</param>
+            <param name="senders">Optional. List of pricipals where requests can originate from</param>
+            <returns>A delegation signed by the delegating identity</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Models.SignedDelegation.CreateAsync(EdjCase.ICP.Agent.DerEncodedPublicKey,System.Func{System.Byte[],System.Threading.Tasks.Task{System.Byte[]}},EdjCase.ICP.Candid.Models.ICTimestamp,System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal},System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal})">
+            <summary>
+            Creates a delegation signed by the delegating identity, authorizing the public key
+            </summary>
+            <param name="keyToDelegateTo">The key to delegate authority to</param>
+            <param name="signingFunc">Function to sign the delegation bytes</param>
+            <param name="expiration">How long to delegate for</param>
+            <param name="targets">Optional. List of canister ids to limit delegation to</param>
+            <param name="senders">Optional. List of pricipals where requests can originate from</param>
+            <returns>A delegation signed by the delegating identity</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Models.SignedDelegation.ComputeHash(EdjCase.ICP.Candid.Crypto.IHashFunction)">
+            <inheritdoc />
         </member>
         <member name="P:EdjCase.ICP.Agent.Requests.CallRequest.CanisterId">
             <summary>
