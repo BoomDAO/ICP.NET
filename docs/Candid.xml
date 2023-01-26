@@ -44,6 +44,72 @@
             <param name="data">Byte data</param>
             <returns>Hash of the byte data as a byte array of length of 4</returns>
         </member>
+        <member name="T:EdjCase.ICP.Candid.Crypto.IHashFunction">
+            <summary>
+            Interface to implement different hash function algorithms against
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Crypto.IHashFunction.ComputeHash(System.Byte[])">
+            <summary>
+            Computes the hash of the byte array based on the algorithm implemented
+            </summary>
+            <param name="value">Byte array to get the hash of</param>
+            <returns>Hash in the form of a byte array</returns>
+        </member>
+        <member name="T:EdjCase.ICP.Candid.Crypto.SHA256HashFunction">
+            <summary>
+            A SHA256 implementation of the `IHashFunction`
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Crypto.SHA256HashFunction.ComputeHash(System.Byte[])">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Crypto.SHA256HashFunction.Create">
+            <summary>
+            Helper method to create the hash function object
+            </summary>
+            <returns>Hash function object</returns>
+        </member>
+        <member name="T:EdjCase.ICP.Candid.Encodings.LEB128">
+            <summary>
+            Utility class to provide methods for LEB128 encoding (https://en.wikipedia.org/wiki/LEB128)
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Encodings.LEB128.DecodeUnsigned(System.Byte[])">
+            <summary>
+            Takes a byte encoded unsigned LEB128 and converts it to an `UnboundedUInt`
+            </summary>
+            <param name="encodedValue">Byte value of an unsigned LEB128</param>
+            <returns>`UnboundedUInt` of LEB128 value</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Encodings.LEB128.DecodeUnsigned(System.IO.Stream)">
+            <summary>
+            Takes a encoded unsigned LEB128 byte stream and converts it to an `UnboundedUInt`
+            </summary>
+            <param name="stream">Byte stream of an unsigned LEB128</param>
+            <returns>`UnboundedUInt` of LEB128 value</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Encodings.LEB128.DecodeSigned(System.IO.Stream)">
+            <summary>
+            Takes a encoded signed LEB128 byte stream and converts it to an `UnboundedInt`
+            </summary>
+            <param name="stream">Byte stream of a signed LEB128</param>
+            <returns>`UnboundedInt` of LEB128 value</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Encodings.LEB128.EncodeUnsigned(EdjCase.ICP.Candid.Models.UnboundedUInt)">
+            <summary>
+            Takes an `UnboundedUInt` and converts it into an encoded unsigned LEB128 byte array
+            </summary>
+            <param name="value">Value to convert to LEB128 bytes</param>
+            <returns>LEB128 bytes of value</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Encodings.LEB128.EncodeSigned(EdjCase.ICP.Candid.Models.UnboundedInt)">
+            <summary>
+            Takes an `UnboundedInt` and converts it into an encoded signed LEB128 byte array
+            </summary>
+            <param name="value">Value to convert to LEB128 bytes</param>
+            <returns>LEB128 bytes of value</returns>
+        </member>
         <member name="T:EdjCase.ICP.Candid.Exceptions.CandidDecodingException">
             <summary>
             An error that occurs during the decoding of bytes to a candid structure
@@ -83,6 +149,115 @@
         </member>
         <member name="P:EdjCase.ICP.Candid.Exceptions.InvalidCandidException.Message">
             <inheritdoc/>
+        </member>
+        <member name="T:EdjCase.ICP.Candid.Mapping.IObjectMapper">
+            <summary>
+            A custom mapper interface to map a C# type to and from a candid type
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Mapping.IObjectMapper.CandidType">
+            <summary>
+            Candid type to convert to/from
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Mapping.IObjectMapper.Type">
+            <summary>
+            C# type to convert to/from
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Mapping.IObjectMapper.Map(EdjCase.ICP.Candid.Models.Values.CandidValue,EdjCase.ICP.Candid.CandidConverterOptions)">
+            <summary>
+            Maps a candid value to a C# value.
+            Input value will match the `CandidType` type property.
+            Returned value should match the `Type` type property.
+            </summary>
+            <param name="value">Candid value to map to a C# value</param>
+            <param name="options">Options that are being used for the mappings</param>
+            <returns>C# value converted from the candid value</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Mapping.IObjectMapper.Map(System.Object,EdjCase.ICP.Candid.CandidConverterOptions)">
+            <summary>
+            Maps a C# value to a candid value and type.
+            Input value will match the `Type` type property.
+            Returned value should match the `CandidType` type property.
+            </summary>
+            <param name="value">C# value to map to a candid value</param>
+            <param name="options">Options that are being used for the mappings</param>
+            <returns>Candid value and type converted from the C# value</returns>
+        </member>
+        <member name="T:EdjCase.ICP.Candid.Mapping.CandidNameAttribute">
+            <summary>
+            An attribute to specify a candid name to use for serialization. If unspecified 
+            the serializers will use the property names
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Mapping.CandidNameAttribute.Name">
+            <summary>
+            The name to use for serialization of candid values
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Mapping.CandidNameAttribute.#ctor(System.String)">
+            <param name="name">The name to use for serialization of candid values</param>
+        </member>
+        <member name="T:EdjCase.ICP.Candid.Mapping.CustomMapperAttribute">
+            <summary>
+            An attribute that specifies a custom mapper for the class, struct, property or field
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Mapping.CustomMapperAttribute.Mapper">
+            <summary>
+            The object mapper to use for the decorated item
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Mapping.CustomMapperAttribute.#ctor(EdjCase.ICP.Candid.Mapping.IObjectMapper)">
+            <param name="mapper">The object mapper to use for the decorated item</param>
+        </member>
+        <member name="T:EdjCase.ICP.Candid.Mapping.CandidIgnoreAttribute">
+            <summary>
+            An attribute to ignore a property/field of a class during serialization
+            </summary>
+        </member>
+        <member name="T:EdjCase.ICP.Candid.Mapping.VariantAttribute">
+            <summary>
+            An attribute to put on a class to identify it as a variant type for serialization.
+            Requires the use of `VariantTagPropertyAttribute`, `VariantOptionTypeAttribute` and
+            `VariantValuePropertyAttribute` attributes if used
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Mapping.VariantAttribute.TagType">
+            <summary>
+            The enum type to use for specifying the tags of the variant
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Mapping.VariantAttribute.#ctor(System.Type)">
+            <param name="enumType">The enum type to use for specifying the tags of the variant</param>
+            <exception cref="T:System.ArgumentException">Throws if the type is not an enum</exception>
+        </member>
+        <member name="T:EdjCase.ICP.Candid.Mapping.VariantTagPropertyAttribute">
+            <summary>
+            An attribute to put on a property/field that indicates where to hold the 
+            tag enum value. Must match the type passed to the `VariantAttribute`
+            </summary>
+        </member>
+        <member name="T:EdjCase.ICP.Candid.Mapping.VariantValuePropertyAttribute">
+            <summary>
+            An attribute to put on a property/field that indicates where to hold the
+            tag value object. The type must be compatible with all value types, recommend using `object?`
+            </summary>
+        </member>
+        <member name="T:EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute">
+            <summary>
+            An attribute to put on an enum option to specify if the tag has an attached
+            value in the variant, otherwise the attached type will be null
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute.OptionType">
+            <summary>
+            The type of the variant option value to use
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute.#ctor(System.Type)">
+            <param name="optionType">The type of the variant option value to use</param>
         </member>
         <member name="M:EdjCase.ICP.Candid.Models.CandidTag.HashName(System.String)">
             <summary>
