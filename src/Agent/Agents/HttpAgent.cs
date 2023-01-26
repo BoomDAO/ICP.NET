@@ -135,7 +135,7 @@ namespace EdjCase.ICP.Agent.Agents
 					HashTree.EncodedValue r = requestStatus!.GetValue("reply")!.AsLeaf();
 					return RequestStatus.Replied(CandidArg.FromBytes(r));
 				case "rejected":
-					UnboundedUInt code = requestStatus!.GetValue("reject_code")!.AsLeaf().AsNat();
+					RejectCode code = (RejectCode)(ulong)requestStatus!.GetValue("reject_code")!.AsLeaf().AsNat();
 					string message = requestStatus.GetValue("reject_message")!.AsLeaf().AsUtf8();
 					string? errorCode = requestStatus.GetValue("error_code")?.AsLeaf().AsUtf8();
 					return RequestStatus.Rejected(code, message, errorCode);

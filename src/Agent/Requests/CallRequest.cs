@@ -5,6 +5,9 @@ using System.Collections.Generic;
 
 namespace EdjCase.ICP.Agent.Requests
 {
+	/// <summary>
+	/// A model for making call requests to a canister
+	/// </summary>
 	public class CallRequest : IRepresentationIndependentHashItem
 	{
 		/// <summary>
@@ -39,10 +42,16 @@ namespace EdjCase.ICP.Agent.Requests
 		[CborProperty(Properties.NONCE)]
 		public byte[]? Nonce { get; }
 
+		/// <param name="canisterId">The principal of the canister to call</param>
+		/// <param name="method">Name of the canister method to call</param>
+		/// <param name="arg">Argument to pass to the canister method</param>
+		/// <param name="sender">The user who issued the request</param>
+		/// <param name="ingressExpiry">An upper limit on the validity of the request, expressed in nanoseconds since 1970-01-01</param>
+		/// <param name="nonce">Optional. Arbitrary user-provided data, typically randomly generated. This can be used to create distinct requests with otherwise identical fields.</param>
 		public CallRequest(
 			Principal canisterId,
 			string method,
-			CandidArg encodedArgument,
+			CandidArg arg,
 			Principal sender,
 			ICTimestamp ingressExpiry,
 			byte[]? nonce = null
@@ -50,12 +59,13 @@ namespace EdjCase.ICP.Agent.Requests
 		{
 			this.CanisterId = canisterId ?? throw new ArgumentNullException(nameof(canisterId));
 			this.Method = method ?? throw new ArgumentNullException(nameof(method));
-			this.Arg = encodedArgument ?? throw new ArgumentNullException(nameof(encodedArgument));
+			this.Arg = arg ?? throw new ArgumentNullException(nameof(arg));
 			this.Sender = sender ?? throw new ArgumentNullException(nameof(sender));
 			this.IngressExpiry = ingressExpiry ?? throw new ArgumentNullException(nameof(ingressExpiry));
 			this.Nonce = nonce;
 		}
 
+		/// <inheritdoc />
 		public Dictionary<string, IHashable> BuildHashableItem()
 		{
 			var properties = new Dictionary<string, IHashable>

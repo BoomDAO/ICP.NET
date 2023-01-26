@@ -117,7 +117,7 @@ namespace EdjCase.ICP.Agent.Agents
 					case RequestStatus.StatusType.Replied:
 						return requestStatus.AsReplied();
 					case RequestStatus.StatusType.Rejected:
-						(UnboundedUInt code, string message, string? errorCode) = requestStatus.AsRejected();
+						(RejectCode code, string message, string? errorCode) = requestStatus.AsRejected();
 						throw new CallRejectedException(code, message, errorCode);
 					case RequestStatus.StatusType.Done:
 						throw new RequestCleanedUpException();

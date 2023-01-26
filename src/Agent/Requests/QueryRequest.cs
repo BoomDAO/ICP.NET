@@ -5,14 +5,19 @@ using System.Collections.Generic;
 
 namespace EdjCase.ICP.Agent.Requests
 {
-
+	/// <summary>
+	/// A model for making query requests to a canister
+	/// </summary>
 	public class QueryRequest : IRepresentationIndependentHashItem
 	{
+		/// <summary>
+		/// The type of request to send. Will always be 'query'
+		/// </summary>
 		[CborProperty(Properties.REQUEST_TYPE)]
 		public string RequestType { get; } = "query";
 
 		/// <summary>
-		/// The principal of the canister to call.
+		/// The principal of the canister to call
 		/// </summary>
 		[CborProperty(Properties.CANISTER_ID)]
 		public Principal CanisterId { get; }
@@ -24,23 +29,19 @@ namespace EdjCase.ICP.Agent.Requests
 		public string Method { get; }
 
 		/// <summary>
-		/// Argument to pass to the canister method
+		/// Arguments to pass to the canister method
 		/// </summary>
 		[CborProperty(Properties.ARG)]
 		public CandidArg Arg { get; }
 
 		/// <summary>
-		/// Required. The user who issued the request.
+		/// The user who issued the request
 		/// </summary>
 		[CborProperty(Properties.SENDER)]
 		public Principal Sender { get; }
 
 		/// <summary>
-		/// Required.  An upper limit on the validity of the request, expressed in nanoseconds since 
-		/// 1970-01-01 (like ic0.time()). This avoids replay attacks: The IC will not accept requests, 
-		/// or transition requests from status received to status processing, if their expiry date is in 
-		/// the past. The IC may refuse to accept requests with an ingress expiry date too far in the future. 
-		/// This applies to synchronous and asynchronous requests alike (and could have been called request_expiry).
+		/// An upper limit on the validity of the request, expressed in nanoseconds since 1970-01-01
 		/// </summary>
 		[CborProperty(Properties.INGRESS_EXPIRY)]
 		public ICTimestamp IngressExpiry { get; }
@@ -53,15 +54,27 @@ namespace EdjCase.ICP.Agent.Requests
 		[CborProperty(Properties.NONCE)]
 		public byte[]? Nonce { get; }
 
-		public QueryRequest(Principal canisterId, string method, CandidArg encodedArgument, Principal sender, ICTimestamp ingressExpiry)
+		/// <param name="canisterId">The principal of the canister to call</param>
+		/// <param name="method">Name of the canister method to call</param>
+		/// <param name="arg">Arguments to pass to the canister method</param>
+		/// <param name="sender">The user who issued the request</param>
+		/// <param name="ingressExpiry"> The expiration of the request to avoid replay attacks</param>
+		public QueryRequest(
+			Principal canisterId,
+			string method,
+			CandidArg arg,
+			Principal sender,
+			ICTimestamp ingressExpiry
+		)
 		{
 			this.CanisterId = canisterId ?? throw new ArgumentNullException(nameof(canisterId));
 			this.Method = method ?? throw new ArgumentNullException(nameof(method));
-			this.Arg = encodedArgument ?? throw new ArgumentNullException(nameof(encodedArgument));
+			this.Arg = arg ?? throw new ArgumentNullException(nameof(arg));
 			this.Sender = sender ?? throw new ArgumentNullException(nameof(sender));
 			this.IngressExpiry = ingressExpiry ?? throw new ArgumentNullException(nameof(ingressExpiry));
 		}
 
+		/// <inheritdoc />
 		public Dictionary<string, IHashable> BuildHashableItem()
 		{
 			var properties = new Dictionary<string, IHashable>

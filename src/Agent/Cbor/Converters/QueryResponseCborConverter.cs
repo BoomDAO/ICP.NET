@@ -25,7 +25,7 @@ namespace EdjCase.ICP.Agent.Cbor.Converters
 					var reply = new QueryReply(arg);
 					return QueryResponse.Replied(reply);
 				case "rejected":
-					ReplicaRejectCode code = (ReplicaRejectCode)(ulong)context.RejectCode!;
+					RejectCode code = (RejectCode)(ulong)context.RejectCode!;
 					return QueryResponse.Rejected(code, context.RejectMessage);
 				default:
 					throw new NotImplementedException($"Cannot deserialize query response with status '{context.Status}'");

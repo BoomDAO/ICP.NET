@@ -118,6 +118,109 @@
             <param name="cancellationToken">Optional. If specified, will be used to prematurely end the waiting</param>
             <returns>The id of the request that can be used to look up its status with `GetRequestStatusAsync`</returns>
         </member>
+        <member name="T:EdjCase.ICP.Agent.DerEncodedPublicKey">
+            <summary>
+            A helper class to encode and decode public keys to the DER encoding
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.DerEncodedPublicKey.Value">
+            <summary>
+            Raw value of the DER encoded public key
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.DerEncodedPublicKey.#ctor(System.Byte[])">
+            <param name="derEncodedBytes">Raw value of the DER encoded public key</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.DerEncodedPublicKey.ToPrincipal">
+            <summary>
+            Converts the key to a self authenticating principal value
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.DerEncodedPublicKey.AsEd25519">
+            <summary>
+            Converts the DER encoded key to a `Ed25519` key IF a `Ed25519` key
+            otherwise throws an exception
+            </summary>
+            <exception cref="T:EdjCase.ICP.Agent.InvalidPublicKey">Throws if not a `Ed25519` key</exception>
+            <returns>Bytes of the `Ed25519` public key</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.DerEncodedPublicKey.AsBls">
+            <summary>
+            Converts the DER encoded key to a `BLS` key IF a `BLS` key
+            otherwise throws an exception
+            </summary>
+            <exception cref="T:EdjCase.ICP.Agent.InvalidPublicKey">Throws if not a `BLS` key</exception>
+            <returns>Bytes of the `BLS` public key</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.DerEncodedPublicKey.AsCose">
+            <summary>
+            Converts the DER encoded key to a `COSE` key IF a `COSE` key
+            otherwise throws an exception
+            </summary>
+            <exception cref="T:EdjCase.ICP.Agent.InvalidPublicKey">Throws if not a `COSE` key</exception>
+            <returns>Bytes of the `COSE` public key</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.DerEncodedPublicKey.As(System.String)">
+            <summary>
+            Converts the DER encoded key to a raw key based on the OID specified IF its has
+            the specified OID, otherwise throws an exception
+            </summary>
+            <exception cref="T:EdjCase.ICP.Agent.InvalidPublicKey">Throws if not a key with the specified OID</exception>
+            <returns>Bytes of the decoded public key</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.DerEncodedPublicKey.As(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Converts the DER encoded key to a raw key based on the OIDs specified IF its has
+            the specified OIDs, otherwise throws an exception
+            </summary>
+            <exception cref="T:EdjCase.ICP.Agent.InvalidPublicKey">Throws if not a key with the specified OIDs</exception>
+            <returns>Bytes of the decoded public key</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.DerEncodedPublicKey.FromDer(System.Byte[])">
+            <summary>
+            Creates a DER public key from the raw bytes of a DER encoded key. Same as the constructor
+            </summary>
+            <param name="value">DER encoded bytes of a public key</param>
+            <returns>DER encoded key</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.DerEncodedPublicKey.FromEd25519(System.Byte[])">
+            <summary>
+            Creates a DER public key from the raw bytes of a `ED25519` key.
+            </summary>
+            <param name="value">Bytes of a `ED25519` public key</param>
+            <returns>DER encoded key</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.DerEncodedPublicKey.FromBls(System.Byte[])">
+            <summary>
+            Creates a DER public key from the raw bytes of a `BLS` key.
+            </summary>
+            <param name="value">Bytes of a `BLS` public key</param>
+            <returns>DER encoded key</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.DerEncodedPublicKey.FromCose(System.Byte[])">
+            <summary>
+            Creates a DER public key from the raw bytes of a `COSE` key.
+            </summary>
+            <param name="value">Bytes of a `COSE` public key</param>
+            <returns>DER encoded key</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.DerEncodedPublicKey.From(System.Byte[],System.String)">
+            <summary>
+            Creates a DER public key from the raw bytes of a key that has the specified OID
+            </summary>
+            <param name="value">Bytes of a public key</param>
+            <param name="oid">The OID for the DER encoding</param>
+            <returns>DER encoded key</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.DerEncodedPublicKey.From(System.Byte[],System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Creates a DER public key from the raw bytes of a key that has the specified OIDs
+            </summary>
+            <param name="value">Bytes of a public key</param>
+            <param name="oids">The OIDs for the DER encoding</param>
+            <returns>DER encoded key</returns>
+        </member>
         <member name="T:EdjCase.ICP.Agent.RequestCleanedUpException">
             <summary>
             Exception to indicate that a request has been cleaned up.
@@ -125,9 +228,7 @@
             </summary>
         </member>
         <member name="M:EdjCase.ICP.Agent.RequestCleanedUpException.#ctor">
-            <summary>
-            
-            </summary>
+            <summary></summary>
         </member>
         <member name="T:EdjCase.ICP.Agent.InvalidPublicKey">
             <summary>
@@ -135,9 +236,7 @@
             </summary>
         </member>
         <member name="M:EdjCase.ICP.Agent.InvalidPublicKey.#ctor">
-            <summary>
-            
-            </summary>
+            <summary></summary>
         </member>
         <member name="T:EdjCase.ICP.Agent.InvalidCertificateException">
             <summary>
@@ -146,6 +245,53 @@
         </member>
         <member name="M:EdjCase.ICP.Agent.InvalidCertificateException.#ctor(System.String)">
             <param name="message">Specific error message</param>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.CallRejectedException">
+            <summary>
+            Exception for when a call to a canister is rejected/has an error
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.CallRejectedException.RejectCode">
+            <summary>
+            The type of rejection that occurred
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.CallRejectedException.RejectMessage">
+            <summary>
+            The human readable message of the rejection error
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.CallRejectedException.ErrorCode">
+            <summary>
+            Optional. Specific error code for differentiating specific errors
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.CallRejectedException.#ctor(EdjCase.ICP.Agent.Responses.RejectCode,System.String,System.String)">
+            <param name="rejectCode">The type of rejection that occurred</param>
+            <param name="rejectMessage">The human readable message of the rejection error</param>
+            <param name="errorCode">Optional. Specific error code for differentiating specific errors</param>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.QueryRejectedException">
+            <summary>
+            Exception for when a query to a canister is rejected/has an error
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.QueryRejectedException.Code">
+            <summary>
+            The type of rejection that occurred
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.QueryRejectedException.RejectionMessage">
+            <summary>
+            The human readable message of the rejection error
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.QueryRejectedException.#ctor(EdjCase.ICP.Agent.Responses.RejectCode,System.String)">
+            <param name="code">The type of rejection that occurred</param>
+            <param name="message">The human readable message of the rejection error</param>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.QueryRejectedException.Message">
+            <inheritdoc />
         </member>
         <member name="T:EdjCase.ICP.Agent.Identities.DelegationIdentity">
             <summary>
@@ -481,6 +627,11 @@
         <member name="M:EdjCase.ICP.Agent.Models.SignedDelegation.ComputeHash(EdjCase.ICP.Candid.Crypto.IHashFunction)">
             <inheritdoc />
         </member>
+        <member name="T:EdjCase.ICP.Agent.Requests.CallRequest">
+            <summary>
+            A model for making call requests to a canister
+            </summary>
+        </member>
         <member name="P:EdjCase.ICP.Agent.Requests.CallRequest.CanisterId">
             <summary>
             The principal of the canister to call
@@ -511,9 +662,30 @@
             Optional. Arbitrary user-provided data, typically randomly generated. This can be used to create distinct requests with otherwise identical fields.
             </summary>
         </member>
+        <member name="M:EdjCase.ICP.Agent.Requests.CallRequest.#ctor(EdjCase.ICP.Candid.Models.Principal,System.String,EdjCase.ICP.Candid.Models.CandidArg,EdjCase.ICP.Candid.Models.Principal,EdjCase.ICP.Candid.Models.ICTimestamp,System.Byte[])">
+            <param name="canisterId">The principal of the canister to call</param>
+            <param name="method">Name of the canister method to call</param>
+            <param name="arg">Argument to pass to the canister method</param>
+            <param name="sender">The user who issued the request</param>
+            <param name="ingressExpiry">An upper limit on the validity of the request, expressed in nanoseconds since 1970-01-01</param>
+            <param name="nonce">Optional. Arbitrary user-provided data, typically randomly generated. This can be used to create distinct requests with otherwise identical fields.</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Requests.CallRequest.BuildHashableItem">
+            <inheritdoc />
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Requests.QueryRequest">
+            <summary>
+            A model for making query requests to a canister
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Requests.QueryRequest.RequestType">
+            <summary>
+            The type of request to send. Will always be 'query'
+            </summary>
+        </member>
         <member name="P:EdjCase.ICP.Agent.Requests.QueryRequest.CanisterId">
             <summary>
-            The principal of the canister to call.
+            The principal of the canister to call
             </summary>
         </member>
         <member name="P:EdjCase.ICP.Agent.Requests.QueryRequest.Method">
@@ -523,21 +695,17 @@
         </member>
         <member name="P:EdjCase.ICP.Agent.Requests.QueryRequest.Arg">
             <summary>
-            Argument to pass to the canister method
+            Arguments to pass to the canister method
             </summary>
         </member>
         <member name="P:EdjCase.ICP.Agent.Requests.QueryRequest.Sender">
             <summary>
-            Required. The user who issued the request.
+            The user who issued the request
             </summary>
         </member>
         <member name="P:EdjCase.ICP.Agent.Requests.QueryRequest.IngressExpiry">
             <summary>
-            Required.  An upper limit on the validity of the request, expressed in nanoseconds since 
-            1970-01-01 (like ic0.time()). This avoids replay attacks: The IC will not accept requests, 
-            or transition requests from status received to status processing, if their expiry date is in 
-            the past. The IC may refuse to accept requests with an ingress expiry date too far in the future. 
-            This applies to synchronous and asynchronous requests alike (and could have been called request_expiry).
+            An upper limit on the validity of the request, expressed in nanoseconds since 1970-01-01
             </summary>
         </member>
         <member name="P:EdjCase.ICP.Agent.Requests.QueryRequest.Nonce">
@@ -545,6 +713,265 @@
             Optional. Arbitrary user-provided data, typically randomly generated. 
             This can be used to create distinct requests with otherwise identical fields.
             </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Requests.QueryRequest.#ctor(EdjCase.ICP.Candid.Models.Principal,System.String,EdjCase.ICP.Candid.Models.CandidArg,EdjCase.ICP.Candid.Models.Principal,EdjCase.ICP.Candid.Models.ICTimestamp)">
+            <param name="canisterId">The principal of the canister to call</param>
+            <param name="method">Name of the canister method to call</param>
+            <param name="arg">Arguments to pass to the canister method</param>
+            <param name="sender">The user who issued the request</param>
+            <param name="ingressExpiry"> The expiration of the request to avoid replay attacks</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Requests.QueryRequest.BuildHashableItem">
+            <inheritdoc />
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Requests.ReadStateRequest">
+            <summary>
+            A model for making a read state request to a canister
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Requests.ReadStateRequest.REQUEST_TYPE">
+            <summary>
+            The type of request to send. Will always be 'query'
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Requests.ReadStateRequest.Paths">
+            <summary>
+            A list of paths to different state data to obtain. If not specified, data will be pruned and 
+            be unavailable in the response
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Requests.ReadStateRequest.Sender">
+            <summary>
+            The user who is sending the request
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Requests.ReadStateRequest.IngressExpiry">
+            <summary>
+            The expiration of the request to avoid replay attacks
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Requests.ReadStateRequest.#ctor(System.Collections.Generic.List{EdjCase.ICP.Candid.Models.StatePath},EdjCase.ICP.Candid.Models.Principal,EdjCase.ICP.Candid.Models.ICTimestamp)">
+            <param name="paths">A list of paths to different state data to obtain. If not specified, data will be pruned and 
+            be unavailable in the response</param>
+            <param name="sender">The user who is sending the request</param>
+            <param name="ingressExpiry">The expiration of the request to avoid replay attacks</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Requests.ReadStateRequest.BuildHashableItem">
+            <inheritdoc />
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Responses.QueryResponse">
+            <summary>
+            A model representing the response data in the form of a variant
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Responses.QueryResponse.Type">
+            <summary>
+            The type of response returned. Can be used to call the right method
+            to extract the variant data
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Responses.QueryResponse.AsReplied">
+            <summary>
+            Gets the reply data IF the response type is 'replied'. Otherwise will throw exception
+            </summary>
+            <exception cref="T:System.InvalidOperationException">Will throw if not of type 'replied'</exception>
+            <returns>Reply data</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Responses.QueryResponse.AsRejected">
+            <summary>
+            Gets the reply data IF the response type is 'rejected'. Otherwise will throw exception
+            </summary>
+            <exception cref="T:System.InvalidOperationException">Will throw if not of type 'rejected'</exception>
+            <returns>Reject error information</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Responses.QueryResponse.ThrowOrGetReply">
+            <summary>
+            Helper method to either get the reply data or throw an exception
+            that formats the 'rejected' data
+            </summary>
+            <returns>Query reply data</returns>
+            <exception cref="T:EdjCase.ICP.Agent.QueryRejectedException">Throws if 'rejected'</exception>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Responses.QueryResponseType">
+            <summary>
+            The variant options for a query response
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Agent.Responses.QueryResponseType.Replied">
+            <summary>
+            When the canister replies to a query request with no errors
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Agent.Responses.QueryResponseType.Rejected">
+            <summary>
+            When the cansiter request has errors to query request
+            </summary>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Responses.QueryReply">
+            <summary>
+            Wrapper object around the candid arg that is returned
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Responses.QueryReply.Arg">
+            <summary>
+            The candid arg returned from a request
+            </summary>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Responses.ReadStateResponse">
+            <summary>
+            Model for a reponse to a read state request
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Responses.ReadStateResponse.Certificate">
+            <summary>
+            The certificate data of the current canister state
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Responses.ReadStateResponse.#ctor(EdjCase.ICP.Agent.Models.Certificate)">
+            <param name="certificate">The certificate data of the current canister state</param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Responses.RejectCode">
+            <summary>
+            The set of code that are possible from a 'reject' response to a request
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Agent.Responses.RejectCode.SysFatal">
+            <summary>
+            Fatal system error, retry unlikely to be useful
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Agent.Responses.RejectCode.SysTransient">
+            <summary>
+            Transient system error, retry might be possible
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Agent.Responses.RejectCode.DestinationInvalid">
+            <summary>
+            Invalid destination (e.g. canister/account does not exist)
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Agent.Responses.RejectCode.CanisterReject">
+            <summary>
+            Explicit reject by the canister
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Agent.Responses.RejectCode.CanisterError">
+            <summary>
+            Canister error (e.g., trap, no response)
+            </summary>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Responses.RequestStatus">
+            <summary>
+            A variant type of the status of a request that has been sent to a canister
+            </summary>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Responses.RequestStatus.StatusType">
+            <summary>
+            The types of statuses the request can be
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Agent.Responses.RequestStatus.StatusType.Received">
+            <summary>
+            The request has been received by the node, but not yet being processed
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Agent.Responses.RequestStatus.StatusType.Processing">
+            <summary>
+            The request is being processed and does not have a response yet
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Agent.Responses.RequestStatus.StatusType.Replied">
+            <summary>
+            The request has been processed and it has reply data
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Agent.Responses.RequestStatus.StatusType.Rejected">
+            <summary>
+            The request has been processed and has reject data
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Agent.Responses.RequestStatus.StatusType.Done">
+            <summary>
+            The request has been processed but the response data has been removed.
+            This usually happens after a certain amount of time to save space
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Responses.RequestStatus.Type">
+            <summary>
+            The type of status was returned
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Responses.RequestStatus.AsReplied">
+            <summary>
+            Returns the candid arg IF the status is 'replied', otherwise throws exception
+            </summary>
+            <returns>Candid arg of reply</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Responses.RequestStatus.AsRejected">
+            <summary>
+            Returns the reject data IF the status is 'rejected', otherwise throws exception
+            </summary>
+            <returns>Reject error information</returns>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Responses.StatusResponse">
+            <summary>
+            The model for response data from a status request
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Responses.StatusResponse.ICApiVersion">
+            <summary>
+            Identifies the interface version supported, i.e. the version of the present
+            document that the internet computer aims to support, e.g. `0.8.1`.
+            The implementation may also return unversioned to indicate that it does not
+            comply to a particular version, e.g. in between releases.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Responses.StatusResponse.ImplementationSource">
+            <summary>
+            Optional. Identifies the implementation of the Internet Computer Protocol,
+            by convention with the canonical location of the source code 
+            (e.g. https://github.com/dfinity/ic).
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Responses.StatusResponse.ImplementationVersion">
+            <summary>
+             Optional. If the user is talking to a released version of an Internet Computer Protocol
+             implementation, this is the version number. For non-released versions, output
+             of git describe like `0.1.13-13-g2414721` would also be very suitable.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Responses.StatusResponse.ImplementationRevision">
+            <summary>
+            Optional. The precise git revision of the Internet Computer Protocol implementation
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Responses.StatusResponse.DevelopmentRootKey">
+            <summary>
+            The public key (a DER-encoded BLS key) of the root key of this development
+            instance of the Internet Computer Protocol. This must be present in short-lived
+            development instances, to allow the agent to fetch the public key. For the
+            Internet Computer, agents must have an independent trustworthy source for this data,
+            and must not be tempted to fetch it from this insecure location.
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Responses.StatusResponse.#ctor(System.String,System.String,System.String,System.String,System.Byte[])">
+            <param name="icApiVersion">Identifies the interface version supported, i.e. the version of the present
+            document that the internet computer aims to support, e.g. `0.8.1`.
+            The implementation may also return unversioned to indicate that it does not
+            comply to a particular version, e.g. in between releases.</param>
+            <param name="implementationSource">Optional. Identifies the implementation of the Internet Computer Protocol,
+            by convention with the canonical location of the source code 
+            (e.g. https://github.com/dfinity/ic).</param>
+            <param name="implementationVersion">Optional. If the user is talking to a released version of an Internet Computer Protocol
+             implementation, this is the version number. For non-released versions, output
+             of git describe like `0.1.13-13-g2414721` would also be very suitable.</param>
+            <param name="implementationRevision">Optional. The precise git revision of the Internet Computer Protocol implementation</param>
+            <param name="developmentRootKey">The public key (a DER-encoded BLS key) of the root key of this development
+            instance of the Internet Computer Protocol. This must be present in short-lived
+            development instances, to allow the agent to fetch the public key. For the
+            Internet Computer, agents must have an independent trustworthy source for this data,
+            and must not be tempted to fetch it from this insecure location</param>
         </member>
     </members>
 </doc>
