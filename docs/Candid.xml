@@ -772,8 +772,21 @@
             </summary>
             <returns>A opaque candid func</returns>
         </member>
+        <member name="T:EdjCase.ICP.Candid.Models.Values.CandidOptional">
+            <summary>
+            A model representing the value of a candid opt
+            </summary>
+        </member>
         <member name="P:EdjCase.ICP.Candid.Models.Values.CandidOptional.Type">
             <inheritdoc />
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Models.Values.CandidOptional.Value">
+            <summary>
+            The inner value of an opt. If not set, will be a candid null value
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidOptional.#ctor(EdjCase.ICP.Candid.Models.Values.CandidValue)">
+            <param name="value">The inner value of an opt. If not set, will be a candid null value</param>
         </member>
         <member name="M:EdjCase.ICP.Candid.Models.Values.CandidOptional.EncodeValue(EdjCase.ICP.Candid.Models.Types.CandidType,System.Func{EdjCase.ICP.Candid.Models.CandidId,EdjCase.ICP.Candid.Models.Types.CandidCompoundType})">
             <inheritdoc />
@@ -787,14 +800,159 @@
         <member name="M:EdjCase.ICP.Candid.Models.Values.CandidOptional.ToString">
             <inheritdoc />
         </member>
+        <member name="T:EdjCase.ICP.Candid.Models.Values.PrimitiveType">
+            <summary>
+            All the candid primitive types
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.Models.Values.PrimitiveType.Text">
+            <summary>
+            A text/string value
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.Models.Values.PrimitiveType.Nat">
+            <summary>
+            A unbounded unsigned integer (natural number)
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.Models.Values.PrimitiveType.Nat8">
+            <summary>
+            A 8-bit unsigned integer (natural number)
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.Models.Values.PrimitiveType.Nat16">
+            <summary>
+            A 16-bit unsigned integer (natural number)
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.Models.Values.PrimitiveType.Nat32">
+            <summary>
+            A 32-bit unsigned integer (natural number)
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.Models.Values.PrimitiveType.Nat64">
+            <summary>
+            A 64-bit unsigned integer (natural number)
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.Models.Values.PrimitiveType.Int">
+            <summary>
+            A unbounded integer
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.Models.Values.PrimitiveType.Int8">
+            <summary>
+            A 8-bit integer
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.Models.Values.PrimitiveType.Int16">
+            <summary>
+            A 16-bit integer
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.Models.Values.PrimitiveType.Int32">
+            <summary>
+            A 32-bit integer
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.Models.Values.PrimitiveType.Int64">
+            <summary>
+            A 64-bit integer
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.Models.Values.PrimitiveType.Float32">
+            <summary>
+            A 32-bit floating point number
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.Models.Values.PrimitiveType.Float64">
+            <summary>
+            A 64-bit floating point number
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.Models.Values.PrimitiveType.Bool">
+            <summary>
+            A boolean (true/false) value
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.Models.Values.PrimitiveType.Principal">
+            <summary>
+            A candid principal value which works as an identifier for identities/canisters
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.Models.Values.PrimitiveType.Reserved">
+            <summary>
+            A 'any' type value that is a supertype of all types. It allows the removal of a type without breaking
+            the type structure
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.Models.Values.PrimitiveType.Empty">
+            <summary>
+            A value with no data that is considered a subtype of all types. Practical use cases for the empty type are relatively rare.
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.Models.Values.PrimitiveType.Null">
+            <summary>
+            The null value that is a supertype of any `opt t` value
+            </summary>
+        </member>
+        <member name="T:EdjCase.ICP.Candid.Models.Values.CandidPrimitive">
+            <summary>
+            A model representing a candid primitive type
+            </summary>
+        </member>
         <member name="P:EdjCase.ICP.Candid.Models.Values.CandidPrimitive.Type">
             <inheritdoc />
         </member>
-        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidPrimitive.AsPrincipal">
+        <member name="P:EdjCase.ICP.Candid.Models.Values.CandidPrimitive.ValueType">
             <summary>
-            If opaque, returns null, otherwise the principalid
+            The specific primitive type that is represented
             </summary>
-            <returns></returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidPrimitive.AsText">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidPrimitive.AsNat">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidPrimitive.AsNat8">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidPrimitive.AsNat16">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidPrimitive.AsNat32">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidPrimitive.AsNat64">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidPrimitive.AsInt">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidPrimitive.AsInt8">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidPrimitive.AsInt16">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidPrimitive.AsInt32">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidPrimitive.AsInt64">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidPrimitive.AsFloat32">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidPrimitive.AsFloat64">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidPrimitive.AsBool">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidPrimitive.AsPrincipal">
+            <inheritdoc />
         </member>
         <member name="M:EdjCase.ICP.Candid.Models.Values.CandidPrimitive.EncodeValue(EdjCase.ICP.Candid.Models.Types.CandidType,System.Func{EdjCase.ICP.Candid.Models.CandidId,EdjCase.ICP.Candid.Models.Types.CandidCompoundType})">
             <inheritdoc />
@@ -808,8 +966,93 @@
         <member name="M:EdjCase.ICP.Candid.Models.Values.CandidPrimitive.Equals(EdjCase.ICP.Candid.Models.Values.CandidValue)">
             <inheritdoc />
         </member>
+        <member name="T:EdjCase.ICP.Candid.Models.Values.CandidRecord">
+            <summary>
+            A model representing a candid record
+            </summary>
+        </member>
         <member name="P:EdjCase.ICP.Candid.Models.Values.CandidRecord.Type">
             <inheritdoc />
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Models.Values.CandidRecord.Fields">
+            <summary>
+            The mapping of field name to field value for the record
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidRecord.#ctor(System.Collections.Generic.Dictionary{EdjCase.ICP.Candid.Models.CandidTag,EdjCase.ICP.Candid.Models.Values.CandidValue})">
+            <param name="fields">The mapping of field name to field value for the record</param>
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Models.Values.CandidRecord.Item(System.String)">
+            <summary>
+            Gets the candid value of the field with the specified name
+            </summary>
+            <param name="name">Name of the field value to get, case sensitive</param>
+            <exception cref="T:System.Collections.Generic.KeyNotFoundException">Throws if field name is not found</exception>
+            <returns>The field value</returns>
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Models.Values.CandidRecord.Item(System.UInt32)">
+            <summary>
+            Gets the candid value of the field with the specified id (name hash)
+            </summary>
+            <param name="id">Id (name hash) of the field value to get</param>
+            <exception cref="T:System.Collections.Generic.KeyNotFoundException">Throws if field id is not found</exception>
+            <returns>The field value</returns>
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Models.Values.CandidRecord.Item(EdjCase.ICP.Candid.Models.CandidTag)">
+            <summary>
+            Gets the candid value of the field with the specified tag
+            </summary>
+            <param name="tag">Tag of the field value to get</param>
+            <exception cref="T:System.Collections.Generic.KeyNotFoundException">Throws if field tag is not found</exception>
+            <returns>The field value</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidRecord.TryGetField(System.String,EdjCase.ICP.Candid.Models.Values.CandidValue@)">
+            <summary>
+            Tries to get the field based on the specified name. If the field does not exist, will return false,
+            otherwise true. The out value will only be set if returns true, otherwise value will be null
+            </summary>
+            <param name="name">Name of the field value to get, case sensitive</param>
+            <param name="value">Out value that is set only if the method returns true</param>
+            <returns>True if field exists, otherwise false</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidRecord.TryGetField(System.UInt32,EdjCase.ICP.Candid.Models.Values.CandidValue@)">
+            <summary>
+            Tries to get the field based on the specified id (name hash). If the field does not exist, will return false,
+            otherwise true. The out value will only be set if returns true, otherwise value will be null
+            </summary>
+            <param name="id">Id (name hash) of the field value to get</param>
+            <param name="value">Out value that is set only if the method returns true</param>
+            <returns>True if field exists, otherwise false</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidRecord.TryGetField(EdjCase.ICP.Candid.Models.CandidTag,EdjCase.ICP.Candid.Models.Values.CandidValue@)">
+            <summary>
+            Tries to get the field based on the specified tag. If the field does not exist, will return false,
+            otherwise true. The out value will only be set if returns true, otherwise value will be null
+            </summary>
+            <param name="tag">Tag of the field value to get</param>
+            <param name="value">Out value that is set only if the method returns true</param>
+            <returns>True if field exists, otherwise false</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidRecord.FromDictionary(System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.Candid.Models.Values.CandidValue})">
+            <summary>
+            Helper method to create a record value from a dictionary of field names to values
+            </summary>
+            <param name="fields">Dictionary of field names to values for the record</param>
+            <returns>A candid record from the fields specified</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidRecord.FromDictionary(System.Collections.Generic.Dictionary{System.UInt32,EdjCase.ICP.Candid.Models.Values.CandidValue})">
+            <summary>
+            Helper method to create a record value from a dictionary of field ids (name hashes) to values
+            </summary>
+            <param name="fields">Dictionary of ids (name hashes) to values for the record</param>
+            <returns>A candid record from the fields specified</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidRecord.FromDictionary(System.Collections.Generic.Dictionary{EdjCase.ICP.Candid.Models.CandidTag,EdjCase.ICP.Candid.Models.Values.CandidValue})">
+            <summary>
+            Helper method to create a record value from a dictionary of field tags to values
+            </summary>
+            <param name="fields">Dictionary of tags to values for the record</param>
+            <returns>A candid record from the fields specified</returns>
         </member>
         <member name="M:EdjCase.ICP.Candid.Models.Values.CandidRecord.EncodeValue(EdjCase.ICP.Candid.Models.Types.CandidType,System.Func{EdjCase.ICP.Candid.Models.CandidId,EdjCase.ICP.Candid.Models.Types.CandidCompoundType})">
             <inheritdoc />
@@ -823,8 +1066,30 @@
         <member name="M:EdjCase.ICP.Candid.Models.Values.CandidRecord.ToString">
             <inheritdoc />
         </member>
+        <member name="T:EdjCase.ICP.Candid.Models.Values.CandidService">
+            <summary>
+            A model that represents a candid service value
+            </summary>
+        </member>
         <member name="P:EdjCase.ICP.Candid.Models.Values.CandidService.Type">
             <inheritdoc />
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Models.Values.CandidService.IsOpqaueReference">
+            <summary>
+            True if the candid func definition is an opaque (non standard/system specific definition),
+            otherwise false
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidService.#ctor(EdjCase.ICP.Candid.Models.Principal)">
+            <param name="principalId">The id of the canister where the service lives</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidService.GetPrincipal">
+            <summary>
+            Gets the prinicipal of the candid service. If it is an opaque reference, then an exception will
+            be thrown
+            </summary>
+            <returns>Pricipal of the candid service</returns>
+            <exception cref="T:System.InvalidOperationException">Throws if service is an opaque reference</exception>
         </member>
         <member name="M:EdjCase.ICP.Candid.Models.Values.CandidService.EncodeValue(EdjCase.ICP.Candid.Models.Types.CandidType,System.Func{EdjCase.ICP.Candid.Models.CandidId,EdjCase.ICP.Candid.Models.Types.CandidCompoundType})">
             <inheritdoc />
@@ -837,6 +1102,68 @@
         </member>
         <member name="M:EdjCase.ICP.Candid.Models.Values.CandidService.ToString">
             <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidService.OpaqueReference">
+            <summary>
+            Helper method to create an opaque service reference where the id/location 
+            of the service is non-standard/system specific
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:EdjCase.ICP.Candid.Models.Values.CandidValueType">
+            <summary>
+            The options for candid value types
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.Models.Values.CandidValueType.Primitive">
+            <summary>
+            Primitive/simple candid types like nat, int, null, etc...
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.Models.Values.CandidValueType.Vector">
+            <summary>
+            An array of values
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.Models.Values.CandidValueType.Record">
+            <summary>
+            A value with a set of fields, each with a name/id and value
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.Models.Values.CandidValueType.Variant">
+            <summary>
+            A value with a chosen option name/id and value
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.Models.Values.CandidValueType.Func">
+            <summary>
+            A function located in a service
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.Models.Values.CandidValueType.Service">
+            <summary>
+            A location with a set of functions to call
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.Models.Values.CandidValueType.Optional">
+            <summary>
+            A value that is either null or a value
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.Models.Values.CandidValueType.Principal">
+            <summary>
+            An identifier value used for canister ids and identity ids
+            </summary>
+        </member>
+        <member name="T:EdjCase.ICP.Candid.Models.Values.CandidValue">
+            <summary>
+            The base class for all candid value
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Models.Values.CandidValue.Type">
+            <summary>
+            The type of candid value is implemented
+            </summary>
         </member>
         <member name="M:EdjCase.ICP.Candid.Models.Values.CandidValue.GetHashCode">
             <inheritdoc />
@@ -855,6 +1182,51 @@
         </member>
         <member name="M:EdjCase.ICP.Candid.Models.Values.CandidValue.op_Inequality(EdjCase.ICP.Candid.Models.Values.CandidValue,EdjCase.ICP.Candid.Models.Values.CandidValue)">
             <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidValue.AsPrimitive">
+            <summary>
+            Casts the candid value to a primitive type. If the type is not primitive, will throw an exception
+            </summary>
+            <exception cref="T:System.InvalidOperationException">Throws if the type is not primitive</exception>
+            <returns>A primitive value</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidValue.AsVector">
+            <summary>
+            Casts the candid value to a vector type. If the type is not vector, will throw an exception
+            </summary>
+            <exception cref="T:System.InvalidOperationException">Throws if the type is not vector</exception>
+            <returns>A vector value</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidValue.AsVectorAsList``1(System.Func{EdjCase.ICP.Candid.Models.Values.CandidValue,``0})">
+            <summary>
+            Casts the candid value to a vector type and maps it to a List. If the type is not vector,
+            will throw an exception
+            </summary>
+            <param name="converter">The conversion function from candid value to T</param>
+            <exception cref="T:System.InvalidOperationException">Throws if the type is not vector</exception>
+            <returns>A list form of the vector</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidValue.AsVectorAsArray``1(System.Func{EdjCase.ICP.Candid.Models.Values.CandidValue,``0})">
+            <summary>
+            Casts the candid value to a vector type and maps it to an array. If the type is not vector,
+            will throw an exception
+            </summary>
+            <param name="converter">The conversion function from candid value to T</param>
+            <exception cref="T:System.InvalidOperationException">Throws if the type is not vector</exception>
+            <returns>An array form of the vector</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidValue.IsNull">
+            <summary>
+            Checks if the value is null
+            </summary>
+            <returns>Returns true if the value is null, otherwise false</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidValue.AsRecord">
+            <summary>
+            Casts the candid value to a record type. If the type is not record, will throw an exception
+            </summary>
+            <exception cref="T:System.InvalidOperationException">Throws if the type is not record</exception>
+            <returns>A record value</returns>
         </member>
         <member name="M:EdjCase.ICP.Candid.Models.Values.CandidValue.AsPrincipal">
             <summary>

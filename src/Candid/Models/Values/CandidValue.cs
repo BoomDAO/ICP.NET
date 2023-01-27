@@ -5,20 +5,53 @@ using System.Linq;
 
 namespace EdjCase.ICP.Candid.Models.Values
 {
+	/// <summary>
+	/// The options for candid value types
+	/// </summary>
 	public enum CandidValueType
 	{
+		/// <summary>
+		/// Primitive/simple candid types like nat, int, null, etc...
+		/// </summary>
 		Primitive,
+		/// <summary>
+		/// An array of values
+		/// </summary>
 		Vector,
+		/// <summary>
+		/// A value with a set of fields, each with a name/id and value
+		/// </summary>
 		Record,
+		/// <summary>
+		/// A value with a chosen option name/id and value
+		/// </summary>
 		Variant,
+		/// <summary>
+		/// A function located in a service
+		/// </summary>
 		Func,
+		/// <summary>
+		/// A location with a set of functions to call
+		/// </summary>
 		Service,
+		/// <summary>
+		/// A value that is either null or a value
+		/// </summary>
 		Optional,
+		/// <summary>
+		/// An identifier value used for canister ids and identity ids
+		/// </summary>
 		Principal
 	}
 
+	/// <summary>
+	/// The base class for all candid value
+	/// </summary>
 	public abstract class CandidValue : IEquatable<CandidValue>
 	{
+		/// <summary>
+		/// The type of candid value is implemented
+		/// </summary>
 		public abstract CandidValueType Type { get; }
 
 		internal abstract byte[] EncodeValue(CandidType type, Func<CandidId, CandidCompoundType> getReferencedType);
@@ -55,18 +88,35 @@ namespace EdjCase.ICP.Candid.Models.Values
 			return !v1.Equals(v2);
 		}
 
+		/// <summary>
+		/// Casts the candid value to a primitive type. If the type is not primitive, will throw an exception
+		/// </summary>
+		/// <exception cref="InvalidOperationException">Throws if the type is not primitive</exception>
+		/// <returns>A primitive value</returns>
 		public CandidPrimitive AsPrimitive()
 		{
 			this.ValidateType(CandidValueType.Primitive);
 			return (CandidPrimitive)this;
 		}
 
+		/// <summary>
+		/// Casts the candid value to a vector type. If the type is not vector, will throw an exception
+		/// </summary>
+		/// <exception cref="InvalidOperationException">Throws if the type is not vector</exception>
+		/// <returns>A vector value</returns>
 		public CandidVector AsVector()
 		{
 			this.ValidateType(CandidValueType.Vector);
 			return (CandidVector)this;
 		}
 
+		/// <summary>
+		/// Casts the candid value to a vector type and maps it to a List. If the type is not vector,
+		/// will throw an exception
+		/// </summary>
+		/// <param name="converter">The conversion function from candid value to T</param>
+		/// <exception cref="InvalidOperationException">Throws if the type is not vector</exception>
+		/// <returns>A list form of the vector</returns>
 		public List<T> AsVectorAsList<T>(Func<CandidValue, T> converter)
 		{
 			CandidVector vector = this.AsVector();
@@ -75,6 +125,14 @@ namespace EdjCase.ICP.Candid.Models.Values
 				.ToList();
 		}
 
+
+		/// <summary>
+		/// Casts the candid value to a vector type and maps it to an array. If the type is not vector,
+		/// will throw an exception
+		/// </summary>
+		/// <param name="converter">The conversion function from candid value to T</param>
+		/// <exception cref="InvalidOperationException">Throws if the type is not vector</exception>
+		/// <returns>An array form of the vector</returns>
 		public T[] AsVectorAsArray<T>(Func<CandidValue, T> converter)
 		{
 			CandidVector vector = this.AsVector();
@@ -83,16 +141,28 @@ namespace EdjCase.ICP.Candid.Models.Values
 				.ToArray();
 		}
 
+		/// <summary>
+		/// Checks if the value is null
+		/// </summary>
+		/// <returns>Returns true if the value is null, otherwise false</returns>
 		public bool IsNull()
 		{
 			return this is CandidPrimitive p && p.ValueType == PrimitiveType.Null;
 		}
 
+
+		/// <summary>
+		/// Casts the candid value to a record type. If the type is not record, will throw an exception
+		/// </summary>
+		/// <exception cref="InvalidOperationException">Throws if the type is not record</exception>
+		/// <returns>A record value</returns>
 		public CandidRecord AsRecord()
 		{
 			this.ValidateType(CandidValueType.Record);
 			return (CandidRecord)this;
 		}
+
+
 		public T AsRecord<T>(Func<CandidRecord, T> converter)
 		{
 			CandidRecord record = this.AsRecord();

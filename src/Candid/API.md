@@ -65,7 +65,9 @@
   - [#ctor(name)](#M-EdjCase-ICP-Candid-Mapping-CandidNameAttribute-#ctor-System-String- 'EdjCase.ICP.Candid.Mapping.CandidNameAttribute.#ctor(System.String)')
   - [Name](#P-EdjCase-ICP-Candid-Mapping-CandidNameAttribute-Name 'EdjCase.ICP.Candid.Mapping.CandidNameAttribute.Name')
 - [CandidOptional](#T-EdjCase-ICP-Candid-Models-Values-CandidOptional 'EdjCase.ICP.Candid.Models.Values.CandidOptional')
+  - [#ctor(value)](#M-EdjCase-ICP-Candid-Models-Values-CandidOptional-#ctor-EdjCase-ICP-Candid-Models-Values-CandidValue- 'EdjCase.ICP.Candid.Models.Values.CandidOptional.#ctor(EdjCase.ICP.Candid.Models.Values.CandidValue)')
   - [Type](#P-EdjCase-ICP-Candid-Models-Values-CandidOptional-Type 'EdjCase.ICP.Candid.Models.Values.CandidOptional.Type')
+  - [Value](#P-EdjCase-ICP-Candid-Models-Values-CandidOptional-Value 'EdjCase.ICP.Candid.Models.Values.CandidOptional.Value')
   - [EncodeValue()](#M-EdjCase-ICP-Candid-Models-Values-CandidOptional-EncodeValue-EdjCase-ICP-Candid-Models-Types-CandidType,System-Func{EdjCase-ICP-Candid-Models-CandidId,EdjCase-ICP-Candid-Models-Types-CandidCompoundType}- 'EdjCase.ICP.Candid.Models.Values.CandidOptional.EncodeValue(EdjCase.ICP.Candid.Models.Types.CandidType,System.Func{EdjCase.ICP.Candid.Models.CandidId,EdjCase.ICP.Candid.Models.Types.CandidCompoundType})')
   - [Equals()](#M-EdjCase-ICP-Candid-Models-Values-CandidOptional-Equals-EdjCase-ICP-Candid-Models-Values-CandidValue- 'EdjCase.ICP.Candid.Models.Values.CandidOptional.Equals(EdjCase.ICP.Candid.Models.Values.CandidValue)')
   - [GetHashCode()](#M-EdjCase-ICP-Candid-Models-Values-CandidOptional-GetHashCode 'EdjCase.ICP.Candid.Models.Values.CandidOptional.GetHashCode')
@@ -78,7 +80,22 @@
   - [GetHashCode()](#M-EdjCase-ICP-Candid-Models-Types-CandidOptionalType-GetHashCode 'EdjCase.ICP.Candid.Models.Types.CandidOptionalType.GetHashCode')
 - [CandidPrimitive](#T-EdjCase-ICP-Candid-Models-Values-CandidPrimitive 'EdjCase.ICP.Candid.Models.Values.CandidPrimitive')
   - [Type](#P-EdjCase-ICP-Candid-Models-Values-CandidPrimitive-Type 'EdjCase.ICP.Candid.Models.Values.CandidPrimitive.Type')
+  - [ValueType](#P-EdjCase-ICP-Candid-Models-Values-CandidPrimitive-ValueType 'EdjCase.ICP.Candid.Models.Values.CandidPrimitive.ValueType')
+  - [AsBool()](#M-EdjCase-ICP-Candid-Models-Values-CandidPrimitive-AsBool 'EdjCase.ICP.Candid.Models.Values.CandidPrimitive.AsBool')
+  - [AsFloat32()](#M-EdjCase-ICP-Candid-Models-Values-CandidPrimitive-AsFloat32 'EdjCase.ICP.Candid.Models.Values.CandidPrimitive.AsFloat32')
+  - [AsFloat64()](#M-EdjCase-ICP-Candid-Models-Values-CandidPrimitive-AsFloat64 'EdjCase.ICP.Candid.Models.Values.CandidPrimitive.AsFloat64')
+  - [AsInt()](#M-EdjCase-ICP-Candid-Models-Values-CandidPrimitive-AsInt 'EdjCase.ICP.Candid.Models.Values.CandidPrimitive.AsInt')
+  - [AsInt16()](#M-EdjCase-ICP-Candid-Models-Values-CandidPrimitive-AsInt16 'EdjCase.ICP.Candid.Models.Values.CandidPrimitive.AsInt16')
+  - [AsInt32()](#M-EdjCase-ICP-Candid-Models-Values-CandidPrimitive-AsInt32 'EdjCase.ICP.Candid.Models.Values.CandidPrimitive.AsInt32')
+  - [AsInt64()](#M-EdjCase-ICP-Candid-Models-Values-CandidPrimitive-AsInt64 'EdjCase.ICP.Candid.Models.Values.CandidPrimitive.AsInt64')
+  - [AsInt8()](#M-EdjCase-ICP-Candid-Models-Values-CandidPrimitive-AsInt8 'EdjCase.ICP.Candid.Models.Values.CandidPrimitive.AsInt8')
+  - [AsNat()](#M-EdjCase-ICP-Candid-Models-Values-CandidPrimitive-AsNat 'EdjCase.ICP.Candid.Models.Values.CandidPrimitive.AsNat')
+  - [AsNat16()](#M-EdjCase-ICP-Candid-Models-Values-CandidPrimitive-AsNat16 'EdjCase.ICP.Candid.Models.Values.CandidPrimitive.AsNat16')
+  - [AsNat32()](#M-EdjCase-ICP-Candid-Models-Values-CandidPrimitive-AsNat32 'EdjCase.ICP.Candid.Models.Values.CandidPrimitive.AsNat32')
+  - [AsNat64()](#M-EdjCase-ICP-Candid-Models-Values-CandidPrimitive-AsNat64 'EdjCase.ICP.Candid.Models.Values.CandidPrimitive.AsNat64')
+  - [AsNat8()](#M-EdjCase-ICP-Candid-Models-Values-CandidPrimitive-AsNat8 'EdjCase.ICP.Candid.Models.Values.CandidPrimitive.AsNat8')
   - [AsPrincipal()](#M-EdjCase-ICP-Candid-Models-Values-CandidPrimitive-AsPrincipal 'EdjCase.ICP.Candid.Models.Values.CandidPrimitive.AsPrincipal')
+  - [AsText()](#M-EdjCase-ICP-Candid-Models-Values-CandidPrimitive-AsText 'EdjCase.ICP.Candid.Models.Values.CandidPrimitive.AsText')
   - [EncodeValue()](#M-EdjCase-ICP-Candid-Models-Values-CandidPrimitive-EncodeValue-EdjCase-ICP-Candid-Models-Types-CandidType,System-Func{EdjCase-ICP-Candid-Models-CandidId,EdjCase-ICP-Candid-Models-Types-CandidCompoundType}- 'EdjCase.ICP.Candid.Models.Values.CandidPrimitive.EncodeValue(EdjCase.ICP.Candid.Models.Types.CandidType,System.Func{EdjCase.ICP.Candid.Models.CandidId,EdjCase.ICP.Candid.Models.Types.CandidCompoundType})')
   - [Equals()](#M-EdjCase-ICP-Candid-Models-Values-CandidPrimitive-Equals-EdjCase-ICP-Candid-Models-Values-CandidValue- 'EdjCase.ICP.Candid.Models.Values.CandidPrimitive.Equals(EdjCase.ICP.Candid.Models.Values.CandidValue)')
   - [GetHashCode()](#M-EdjCase-ICP-Candid-Models-Values-CandidPrimitive-GetHashCode 'EdjCase.ICP.Candid.Models.Values.CandidPrimitive.GetHashCode')
@@ -87,11 +104,22 @@
   - [Equals()](#M-EdjCase-ICP-Candid-Models-Types-CandidPrimitiveType-Equals-System-Object- 'EdjCase.ICP.Candid.Models.Types.CandidPrimitiveType.Equals(System.Object)')
   - [GetHashCode()](#M-EdjCase-ICP-Candid-Models-Types-CandidPrimitiveType-GetHashCode 'EdjCase.ICP.Candid.Models.Types.CandidPrimitiveType.GetHashCode')
 - [CandidRecord](#T-EdjCase-ICP-Candid-Models-Values-CandidRecord 'EdjCase.ICP.Candid.Models.Values.CandidRecord')
+  - [#ctor(fields)](#M-EdjCase-ICP-Candid-Models-Values-CandidRecord-#ctor-System-Collections-Generic-Dictionary{EdjCase-ICP-Candid-Models-CandidTag,EdjCase-ICP-Candid-Models-Values-CandidValue}- 'EdjCase.ICP.Candid.Models.Values.CandidRecord.#ctor(System.Collections.Generic.Dictionary{EdjCase.ICP.Candid.Models.CandidTag,EdjCase.ICP.Candid.Models.Values.CandidValue})')
+  - [Fields](#P-EdjCase-ICP-Candid-Models-Values-CandidRecord-Fields 'EdjCase.ICP.Candid.Models.Values.CandidRecord.Fields')
+  - [Item](#P-EdjCase-ICP-Candid-Models-Values-CandidRecord-Item-System-String- 'EdjCase.ICP.Candid.Models.Values.CandidRecord.Item(System.String)')
+  - [Item](#P-EdjCase-ICP-Candid-Models-Values-CandidRecord-Item-System-UInt32- 'EdjCase.ICP.Candid.Models.Values.CandidRecord.Item(System.UInt32)')
+  - [Item](#P-EdjCase-ICP-Candid-Models-Values-CandidRecord-Item-EdjCase-ICP-Candid-Models-CandidTag- 'EdjCase.ICP.Candid.Models.Values.CandidRecord.Item(EdjCase.ICP.Candid.Models.CandidTag)')
   - [Type](#P-EdjCase-ICP-Candid-Models-Values-CandidRecord-Type 'EdjCase.ICP.Candid.Models.Values.CandidRecord.Type')
   - [EncodeValue()](#M-EdjCase-ICP-Candid-Models-Values-CandidRecord-EncodeValue-EdjCase-ICP-Candid-Models-Types-CandidType,System-Func{EdjCase-ICP-Candid-Models-CandidId,EdjCase-ICP-Candid-Models-Types-CandidCompoundType}- 'EdjCase.ICP.Candid.Models.Values.CandidRecord.EncodeValue(EdjCase.ICP.Candid.Models.Types.CandidType,System.Func{EdjCase.ICP.Candid.Models.CandidId,EdjCase.ICP.Candid.Models.Types.CandidCompoundType})')
   - [Equals()](#M-EdjCase-ICP-Candid-Models-Values-CandidRecord-Equals-EdjCase-ICP-Candid-Models-Values-CandidValue- 'EdjCase.ICP.Candid.Models.Values.CandidRecord.Equals(EdjCase.ICP.Candid.Models.Values.CandidValue)')
+  - [FromDictionary(fields)](#M-EdjCase-ICP-Candid-Models-Values-CandidRecord-FromDictionary-System-Collections-Generic-Dictionary{System-String,EdjCase-ICP-Candid-Models-Values-CandidValue}- 'EdjCase.ICP.Candid.Models.Values.CandidRecord.FromDictionary(System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.Candid.Models.Values.CandidValue})')
+  - [FromDictionary(fields)](#M-EdjCase-ICP-Candid-Models-Values-CandidRecord-FromDictionary-System-Collections-Generic-Dictionary{System-UInt32,EdjCase-ICP-Candid-Models-Values-CandidValue}- 'EdjCase.ICP.Candid.Models.Values.CandidRecord.FromDictionary(System.Collections.Generic.Dictionary{System.UInt32,EdjCase.ICP.Candid.Models.Values.CandidValue})')
+  - [FromDictionary(fields)](#M-EdjCase-ICP-Candid-Models-Values-CandidRecord-FromDictionary-System-Collections-Generic-Dictionary{EdjCase-ICP-Candid-Models-CandidTag,EdjCase-ICP-Candid-Models-Values-CandidValue}- 'EdjCase.ICP.Candid.Models.Values.CandidRecord.FromDictionary(System.Collections.Generic.Dictionary{EdjCase.ICP.Candid.Models.CandidTag,EdjCase.ICP.Candid.Models.Values.CandidValue})')
   - [GetHashCode()](#M-EdjCase-ICP-Candid-Models-Values-CandidRecord-GetHashCode 'EdjCase.ICP.Candid.Models.Values.CandidRecord.GetHashCode')
   - [ToString()](#M-EdjCase-ICP-Candid-Models-Values-CandidRecord-ToString 'EdjCase.ICP.Candid.Models.Values.CandidRecord.ToString')
+  - [TryGetField(name,value)](#M-EdjCase-ICP-Candid-Models-Values-CandidRecord-TryGetField-System-String,EdjCase-ICP-Candid-Models-Values-CandidValue@- 'EdjCase.ICP.Candid.Models.Values.CandidRecord.TryGetField(System.String,EdjCase.ICP.Candid.Models.Values.CandidValue@)')
+  - [TryGetField(id,value)](#M-EdjCase-ICP-Candid-Models-Values-CandidRecord-TryGetField-System-UInt32,EdjCase-ICP-Candid-Models-Values-CandidValue@- 'EdjCase.ICP.Candid.Models.Values.CandidRecord.TryGetField(System.UInt32,EdjCase.ICP.Candid.Models.Values.CandidValue@)')
+  - [TryGetField(tag,value)](#M-EdjCase-ICP-Candid-Models-Values-CandidRecord-TryGetField-EdjCase-ICP-Candid-Models-CandidTag,EdjCase-ICP-Candid-Models-Values-CandidValue@- 'EdjCase.ICP.Candid.Models.Values.CandidRecord.TryGetField(EdjCase.ICP.Candid.Models.CandidTag,EdjCase.ICP.Candid.Models.Values.CandidValue@)')
 - [CandidRecordOrVariantType](#T-EdjCase-ICP-Candid-Models-Types-CandidRecordOrVariantType 'EdjCase.ICP.Candid.Models.Types.CandidRecordOrVariantType')
   - [#ctor()](#M-EdjCase-ICP-Candid-Models-Types-CandidRecordOrVariantType-#ctor-EdjCase-ICP-Candid-Models-CandidId- 'EdjCase.ICP.Candid.Models.Types.CandidRecordOrVariantType.#ctor(EdjCase.ICP.Candid.Models.CandidId)')
   - [Type](#P-EdjCase-ICP-Candid-Models-Types-CandidRecordOrVariantType-Type 'EdjCase.ICP.Candid.Models.Types.CandidRecordOrVariantType.Type')
@@ -111,10 +139,14 @@
   - [Equals()](#M-EdjCase-ICP-Candid-Models-Types-CandidReferenceType-Equals-System-Object- 'EdjCase.ICP.Candid.Models.Types.CandidReferenceType.Equals(System.Object)')
   - [GetHashCode()](#M-EdjCase-ICP-Candid-Models-Types-CandidReferenceType-GetHashCode 'EdjCase.ICP.Candid.Models.Types.CandidReferenceType.GetHashCode')
 - [CandidService](#T-EdjCase-ICP-Candid-Models-Values-CandidService 'EdjCase.ICP.Candid.Models.Values.CandidService')
+  - [#ctor(principalId)](#M-EdjCase-ICP-Candid-Models-Values-CandidService-#ctor-EdjCase-ICP-Candid-Models-Principal- 'EdjCase.ICP.Candid.Models.Values.CandidService.#ctor(EdjCase.ICP.Candid.Models.Principal)')
+  - [IsOpqaueReference](#P-EdjCase-ICP-Candid-Models-Values-CandidService-IsOpqaueReference 'EdjCase.ICP.Candid.Models.Values.CandidService.IsOpqaueReference')
   - [Type](#P-EdjCase-ICP-Candid-Models-Values-CandidService-Type 'EdjCase.ICP.Candid.Models.Values.CandidService.Type')
   - [EncodeValue()](#M-EdjCase-ICP-Candid-Models-Values-CandidService-EncodeValue-EdjCase-ICP-Candid-Models-Types-CandidType,System-Func{EdjCase-ICP-Candid-Models-CandidId,EdjCase-ICP-Candid-Models-Types-CandidCompoundType}- 'EdjCase.ICP.Candid.Models.Values.CandidService.EncodeValue(EdjCase.ICP.Candid.Models.Types.CandidType,System.Func{EdjCase.ICP.Candid.Models.CandidId,EdjCase.ICP.Candid.Models.Types.CandidCompoundType})')
   - [Equals()](#M-EdjCase-ICP-Candid-Models-Values-CandidService-Equals-EdjCase-ICP-Candid-Models-Values-CandidValue- 'EdjCase.ICP.Candid.Models.Values.CandidService.Equals(EdjCase.ICP.Candid.Models.Values.CandidValue)')
   - [GetHashCode()](#M-EdjCase-ICP-Candid-Models-Values-CandidService-GetHashCode 'EdjCase.ICP.Candid.Models.Values.CandidService.GetHashCode')
+  - [GetPrincipal()](#M-EdjCase-ICP-Candid-Models-Values-CandidService-GetPrincipal 'EdjCase.ICP.Candid.Models.Values.CandidService.GetPrincipal')
+  - [OpaqueReference()](#M-EdjCase-ICP-Candid-Models-Values-CandidService-OpaqueReference 'EdjCase.ICP.Candid.Models.Values.CandidService.OpaqueReference')
   - [ToString()](#M-EdjCase-ICP-Candid-Models-Values-CandidService-ToString 'EdjCase.ICP.Candid.Models.Values.CandidService.ToString')
 - [CandidServiceType](#T-EdjCase-ICP-Candid-Models-Types-CandidServiceType 'EdjCase.ICP.Candid.Models.Types.CandidServiceType')
   - [#ctor(methods,recursiveId)](#M-EdjCase-ICP-Candid-Models-Types-CandidServiceType-#ctor-System-Collections-Generic-Dictionary{EdjCase-ICP-Candid-Models-CandidId,EdjCase-ICP-Candid-Models-Types-CandidFuncType},EdjCase-ICP-Candid-Models-CandidId- 'EdjCase.ICP.Candid.Models.Types.CandidServiceType.#ctor(System.Collections.Generic.Dictionary{EdjCase.ICP.Candid.Models.CandidId,EdjCase.ICP.Candid.Models.Types.CandidFuncType},EdjCase.ICP.Candid.Models.CandidId)')
@@ -156,13 +188,29 @@
 - [CandidTypedValue](#T-EdjCase-ICP-Candid-Models-CandidTypedValue 'EdjCase.ICP.Candid.Models.CandidTypedValue')
   - [AsPrincipal()](#M-EdjCase-ICP-Candid-Models-CandidTypedValue-AsPrincipal 'EdjCase.ICP.Candid.Models.CandidTypedValue.AsPrincipal')
 - [CandidValue](#T-EdjCase-ICP-Candid-Models-Values-CandidValue 'EdjCase.ICP.Candid.Models.Values.CandidValue')
+  - [Type](#P-EdjCase-ICP-Candid-Models-Values-CandidValue-Type 'EdjCase.ICP.Candid.Models.Values.CandidValue.Type')
+  - [AsPrimitive()](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsPrimitive 'EdjCase.ICP.Candid.Models.Values.CandidValue.AsPrimitive')
   - [AsPrincipal()](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsPrincipal 'EdjCase.ICP.Candid.Models.Values.CandidValue.AsPrincipal')
+  - [AsRecord()](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsRecord 'EdjCase.ICP.Candid.Models.Values.CandidValue.AsRecord')
+  - [AsVector()](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsVector 'EdjCase.ICP.Candid.Models.Values.CandidValue.AsVector')
+  - [AsVectorAsArray\`\`1(converter)](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsVectorAsArray``1-System-Func{EdjCase-ICP-Candid-Models-Values-CandidValue,``0}- 'EdjCase.ICP.Candid.Models.Values.CandidValue.AsVectorAsArray``1(System.Func{EdjCase.ICP.Candid.Models.Values.CandidValue,``0})')
+  - [AsVectorAsList\`\`1(converter)](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsVectorAsList``1-System-Func{EdjCase-ICP-Candid-Models-Values-CandidValue,``0}- 'EdjCase.ICP.Candid.Models.Values.CandidValue.AsVectorAsList``1(System.Func{EdjCase.ICP.Candid.Models.Values.CandidValue,``0})')
   - [Equals()](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-Equals-EdjCase-ICP-Candid-Models-Values-CandidValue- 'EdjCase.ICP.Candid.Models.Values.CandidValue.Equals(EdjCase.ICP.Candid.Models.Values.CandidValue)')
   - [Equals()](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-Equals-System-Object- 'EdjCase.ICP.Candid.Models.Values.CandidValue.Equals(System.Object)')
   - [GetHashCode()](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-GetHashCode 'EdjCase.ICP.Candid.Models.Values.CandidValue.GetHashCode')
+  - [IsNull()](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-IsNull 'EdjCase.ICP.Candid.Models.Values.CandidValue.IsNull')
   - [ToString()](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-ToString 'EdjCase.ICP.Candid.Models.Values.CandidValue.ToString')
   - [op_Equality()](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-op_Equality-EdjCase-ICP-Candid-Models-Values-CandidValue,EdjCase-ICP-Candid-Models-Values-CandidValue- 'EdjCase.ICP.Candid.Models.Values.CandidValue.op_Equality(EdjCase.ICP.Candid.Models.Values.CandidValue,EdjCase.ICP.Candid.Models.Values.CandidValue)')
   - [op_Inequality()](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-op_Inequality-EdjCase-ICP-Candid-Models-Values-CandidValue,EdjCase-ICP-Candid-Models-Values-CandidValue- 'EdjCase.ICP.Candid.Models.Values.CandidValue.op_Inequality(EdjCase.ICP.Candid.Models.Values.CandidValue,EdjCase.ICP.Candid.Models.Values.CandidValue)')
+- [CandidValueType](#T-EdjCase-ICP-Candid-Models-Values-CandidValueType 'EdjCase.ICP.Candid.Models.Values.CandidValueType')
+  - [Func](#F-EdjCase-ICP-Candid-Models-Values-CandidValueType-Func 'EdjCase.ICP.Candid.Models.Values.CandidValueType.Func')
+  - [Optional](#F-EdjCase-ICP-Candid-Models-Values-CandidValueType-Optional 'EdjCase.ICP.Candid.Models.Values.CandidValueType.Optional')
+  - [Primitive](#F-EdjCase-ICP-Candid-Models-Values-CandidValueType-Primitive 'EdjCase.ICP.Candid.Models.Values.CandidValueType.Primitive')
+  - [Principal](#F-EdjCase-ICP-Candid-Models-Values-CandidValueType-Principal 'EdjCase.ICP.Candid.Models.Values.CandidValueType.Principal')
+  - [Record](#F-EdjCase-ICP-Candid-Models-Values-CandidValueType-Record 'EdjCase.ICP.Candid.Models.Values.CandidValueType.Record')
+  - [Service](#F-EdjCase-ICP-Candid-Models-Values-CandidValueType-Service 'EdjCase.ICP.Candid.Models.Values.CandidValueType.Service')
+  - [Variant](#F-EdjCase-ICP-Candid-Models-Values-CandidValueType-Variant 'EdjCase.ICP.Candid.Models.Values.CandidValueType.Variant')
+  - [Vector](#F-EdjCase-ICP-Candid-Models-Values-CandidValueType-Vector 'EdjCase.ICP.Candid.Models.Values.CandidValueType.Vector')
 - [CandidVariant](#T-EdjCase-ICP-Candid-Models-Values-CandidVariant 'EdjCase.ICP.Candid.Models.Values.CandidVariant')
   - [Type](#P-EdjCase-ICP-Candid-Models-Values-CandidVariant-Type 'EdjCase.ICP.Candid.Models.Values.CandidVariant.Type')
   - [EncodeValue()](#M-EdjCase-ICP-Candid-Models-Values-CandidVariant-EncodeValue-EdjCase-ICP-Candid-Models-Types-CandidType,System-Func{EdjCase-ICP-Candid-Models-CandidId,EdjCase-ICP-Candid-Models-Types-CandidCompoundType}- 'EdjCase.ICP.Candid.Models.Values.CandidVariant.EncodeValue(EdjCase.ICP.Candid.Models.Types.CandidType,System.Func{EdjCase.ICP.Candid.Models.CandidId,EdjCase.ICP.Candid.Models.Types.CandidCompoundType})')
@@ -209,6 +257,25 @@
   - [DecodeUnsigned(stream)](#M-EdjCase-ICP-Candid-Encodings-LEB128-DecodeUnsigned-System-IO-Stream- 'EdjCase.ICP.Candid.Encodings.LEB128.DecodeUnsigned(System.IO.Stream)')
   - [EncodeSigned(value)](#M-EdjCase-ICP-Candid-Encodings-LEB128-EncodeSigned-EdjCase-ICP-Candid-Models-UnboundedInt- 'EdjCase.ICP.Candid.Encodings.LEB128.EncodeSigned(EdjCase.ICP.Candid.Models.UnboundedInt)')
   - [EncodeUnsigned(value)](#M-EdjCase-ICP-Candid-Encodings-LEB128-EncodeUnsigned-EdjCase-ICP-Candid-Models-UnboundedUInt- 'EdjCase.ICP.Candid.Encodings.LEB128.EncodeUnsigned(EdjCase.ICP.Candid.Models.UnboundedUInt)')
+- [PrimitiveType](#T-EdjCase-ICP-Candid-Models-Values-PrimitiveType 'EdjCase.ICP.Candid.Models.Values.PrimitiveType')
+  - [Bool](#F-EdjCase-ICP-Candid-Models-Values-PrimitiveType-Bool 'EdjCase.ICP.Candid.Models.Values.PrimitiveType.Bool')
+  - [Empty](#F-EdjCase-ICP-Candid-Models-Values-PrimitiveType-Empty 'EdjCase.ICP.Candid.Models.Values.PrimitiveType.Empty')
+  - [Float32](#F-EdjCase-ICP-Candid-Models-Values-PrimitiveType-Float32 'EdjCase.ICP.Candid.Models.Values.PrimitiveType.Float32')
+  - [Float64](#F-EdjCase-ICP-Candid-Models-Values-PrimitiveType-Float64 'EdjCase.ICP.Candid.Models.Values.PrimitiveType.Float64')
+  - [Int](#F-EdjCase-ICP-Candid-Models-Values-PrimitiveType-Int 'EdjCase.ICP.Candid.Models.Values.PrimitiveType.Int')
+  - [Int16](#F-EdjCase-ICP-Candid-Models-Values-PrimitiveType-Int16 'EdjCase.ICP.Candid.Models.Values.PrimitiveType.Int16')
+  - [Int32](#F-EdjCase-ICP-Candid-Models-Values-PrimitiveType-Int32 'EdjCase.ICP.Candid.Models.Values.PrimitiveType.Int32')
+  - [Int64](#F-EdjCase-ICP-Candid-Models-Values-PrimitiveType-Int64 'EdjCase.ICP.Candid.Models.Values.PrimitiveType.Int64')
+  - [Int8](#F-EdjCase-ICP-Candid-Models-Values-PrimitiveType-Int8 'EdjCase.ICP.Candid.Models.Values.PrimitiveType.Int8')
+  - [Nat](#F-EdjCase-ICP-Candid-Models-Values-PrimitiveType-Nat 'EdjCase.ICP.Candid.Models.Values.PrimitiveType.Nat')
+  - [Nat16](#F-EdjCase-ICP-Candid-Models-Values-PrimitiveType-Nat16 'EdjCase.ICP.Candid.Models.Values.PrimitiveType.Nat16')
+  - [Nat32](#F-EdjCase-ICP-Candid-Models-Values-PrimitiveType-Nat32 'EdjCase.ICP.Candid.Models.Values.PrimitiveType.Nat32')
+  - [Nat64](#F-EdjCase-ICP-Candid-Models-Values-PrimitiveType-Nat64 'EdjCase.ICP.Candid.Models.Values.PrimitiveType.Nat64')
+  - [Nat8](#F-EdjCase-ICP-Candid-Models-Values-PrimitiveType-Nat8 'EdjCase.ICP.Candid.Models.Values.PrimitiveType.Nat8')
+  - [Null](#F-EdjCase-ICP-Candid-Models-Values-PrimitiveType-Null 'EdjCase.ICP.Candid.Models.Values.PrimitiveType.Null')
+  - [Principal](#F-EdjCase-ICP-Candid-Models-Values-PrimitiveType-Principal 'EdjCase.ICP.Candid.Models.Values.PrimitiveType.Principal')
+  - [Reserved](#F-EdjCase-ICP-Candid-Models-Values-PrimitiveType-Reserved 'EdjCase.ICP.Candid.Models.Values.PrimitiveType.Reserved')
+  - [Text](#F-EdjCase-ICP-Candid-Models-Values-PrimitiveType-Text 'EdjCase.ICP.Candid.Models.Values.PrimitiveType.Text')
 - [SHA256HashFunction](#T-EdjCase-ICP-Candid-Crypto-SHA256HashFunction 'EdjCase.ICP.Candid.Crypto.SHA256HashFunction')
   - [ComputeHash()](#M-EdjCase-ICP-Candid-Crypto-SHA256HashFunction-ComputeHash-System-Byte[]- 'EdjCase.ICP.Candid.Crypto.SHA256HashFunction.ComputeHash(System.Byte[])')
   - [Create()](#M-EdjCase-ICP-Candid-Crypto-SHA256HashFunction-Create 'EdjCase.ICP.Candid.Crypto.SHA256HashFunction.Create')
@@ -876,12 +943,32 @@ The name to use for serialization of candid values
 
 EdjCase.ICP.Candid.Models.Values
 
+##### Summary
+
+A model representing the value of a candid opt
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidOptional-#ctor-EdjCase-ICP-Candid-Models-Values-CandidValue-'></a>
+### #ctor(value) `constructor`
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| value | [EdjCase.ICP.Candid.Models.Values.CandidValue](#T-EdjCase-ICP-Candid-Models-Values-CandidValue 'EdjCase.ICP.Candid.Models.Values.CandidValue') | The inner value of an opt. If not set, will be a candid null value |
+
 <a name='P-EdjCase-ICP-Candid-Models-Values-CandidOptional-Type'></a>
 ### Type `property`
 
 ##### Summary
 
 *Inherit from parent.*
+
+<a name='P-EdjCase-ICP-Candid-Models-Values-CandidOptional-Value'></a>
+### Value `property`
+
+##### Summary
+
+The inner value of an opt. If not set, will be a candid null value
 
 <a name='M-EdjCase-ICP-Candid-Models-Values-CandidOptional-EncodeValue-EdjCase-ICP-Candid-Models-Types-CandidType,System-Func{EdjCase-ICP-Candid-Models-CandidId,EdjCase-ICP-Candid-Models-Types-CandidCompoundType}-'></a>
 ### EncodeValue() `method`
@@ -992,6 +1079,10 @@ This method has no parameters.
 
 EdjCase.ICP.Candid.Models.Values
 
+##### Summary
+
+A model representing a candid primitive type
+
 <a name='P-EdjCase-ICP-Candid-Models-Values-CandidPrimitive-Type'></a>
 ### Type `property`
 
@@ -999,16 +1090,173 @@ EdjCase.ICP.Candid.Models.Values
 
 *Inherit from parent.*
 
+<a name='P-EdjCase-ICP-Candid-Models-Values-CandidPrimitive-ValueType'></a>
+### ValueType `property`
+
+##### Summary
+
+The specific primitive type that is represented
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidPrimitive-AsBool'></a>
+### AsBool() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidPrimitive-AsFloat32'></a>
+### AsFloat32() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidPrimitive-AsFloat64'></a>
+### AsFloat64() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidPrimitive-AsInt'></a>
+### AsInt() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidPrimitive-AsInt16'></a>
+### AsInt16() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidPrimitive-AsInt32'></a>
+### AsInt32() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidPrimitive-AsInt64'></a>
+### AsInt64() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidPrimitive-AsInt8'></a>
+### AsInt8() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidPrimitive-AsNat'></a>
+### AsNat() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidPrimitive-AsNat16'></a>
+### AsNat16() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidPrimitive-AsNat32'></a>
+### AsNat32() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidPrimitive-AsNat64'></a>
+### AsNat64() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidPrimitive-AsNat8'></a>
+### AsNat8() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
 <a name='M-EdjCase-ICP-Candid-Models-Values-CandidPrimitive-AsPrincipal'></a>
 ### AsPrincipal() `method`
 
 ##### Summary
 
-If opaque, returns null, otherwise the principalid
+*Inherit from parent.*
 
-##### Returns
+##### Parameters
 
+This method has no parameters.
 
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidPrimitive-AsText'></a>
+### AsText() `method`
+
+##### Summary
+
+*Inherit from parent.*
 
 ##### Parameters
 
@@ -1094,6 +1342,95 @@ This method has no parameters.
 
 EdjCase.ICP.Candid.Models.Values
 
+##### Summary
+
+A model representing a candid record
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidRecord-#ctor-System-Collections-Generic-Dictionary{EdjCase-ICP-Candid-Models-CandidTag,EdjCase-ICP-Candid-Models-Values-CandidValue}-'></a>
+### #ctor(fields) `constructor`
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| fields | [System.Collections.Generic.Dictionary{EdjCase.ICP.Candid.Models.CandidTag,EdjCase.ICP.Candid.Models.Values.CandidValue}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.Dictionary 'System.Collections.Generic.Dictionary{EdjCase.ICP.Candid.Models.CandidTag,EdjCase.ICP.Candid.Models.Values.CandidValue}') | The mapping of field name to field value for the record |
+
+<a name='P-EdjCase-ICP-Candid-Models-Values-CandidRecord-Fields'></a>
+### Fields `property`
+
+##### Summary
+
+The mapping of field name to field value for the record
+
+<a name='P-EdjCase-ICP-Candid-Models-Values-CandidRecord-Item-System-String-'></a>
+### Item `property`
+
+##### Summary
+
+Gets the candid value of the field with the specified name
+
+##### Returns
+
+The field value
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| name | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | Name of the field value to get, case sensitive |
+
+##### Exceptions
+
+| Name | Description |
+| ---- | ----------- |
+| [System.Collections.Generic.KeyNotFoundException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.KeyNotFoundException 'System.Collections.Generic.KeyNotFoundException') | Throws if field name is not found |
+
+<a name='P-EdjCase-ICP-Candid-Models-Values-CandidRecord-Item-System-UInt32-'></a>
+### Item `property`
+
+##### Summary
+
+Gets the candid value of the field with the specified id (name hash)
+
+##### Returns
+
+The field value
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| id | [System.UInt32](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.UInt32 'System.UInt32') | Id (name hash) of the field value to get |
+
+##### Exceptions
+
+| Name | Description |
+| ---- | ----------- |
+| [System.Collections.Generic.KeyNotFoundException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.KeyNotFoundException 'System.Collections.Generic.KeyNotFoundException') | Throws if field id is not found |
+
+<a name='P-EdjCase-ICP-Candid-Models-Values-CandidRecord-Item-EdjCase-ICP-Candid-Models-CandidTag-'></a>
+### Item `property`
+
+##### Summary
+
+Gets the candid value of the field with the specified tag
+
+##### Returns
+
+The field value
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| tag | [EdjCase.ICP.Candid.Models.CandidTag](#T-EdjCase-ICP-Candid-Models-CandidTag 'EdjCase.ICP.Candid.Models.CandidTag') | Tag of the field value to get |
+
+##### Exceptions
+
+| Name | Description |
+| ---- | ----------- |
+| [System.Collections.Generic.KeyNotFoundException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.KeyNotFoundException 'System.Collections.Generic.KeyNotFoundException') | Throws if field tag is not found |
+
 <a name='P-EdjCase-ICP-Candid-Models-Values-CandidRecord-Type'></a>
 ### Type `property`
 
@@ -1123,6 +1460,57 @@ This method has no parameters.
 
 This method has no parameters.
 
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidRecord-FromDictionary-System-Collections-Generic-Dictionary{System-String,EdjCase-ICP-Candid-Models-Values-CandidValue}-'></a>
+### FromDictionary(fields) `method`
+
+##### Summary
+
+Helper method to create a record value from a dictionary of field names to values
+
+##### Returns
+
+A candid record from the fields specified
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| fields | [System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.Candid.Models.Values.CandidValue}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.Dictionary 'System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.Candid.Models.Values.CandidValue}') | Dictionary of field names to values for the record |
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidRecord-FromDictionary-System-Collections-Generic-Dictionary{System-UInt32,EdjCase-ICP-Candid-Models-Values-CandidValue}-'></a>
+### FromDictionary(fields) `method`
+
+##### Summary
+
+Helper method to create a record value from a dictionary of field ids (name hashes) to values
+
+##### Returns
+
+A candid record from the fields specified
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| fields | [System.Collections.Generic.Dictionary{System.UInt32,EdjCase.ICP.Candid.Models.Values.CandidValue}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.Dictionary 'System.Collections.Generic.Dictionary{System.UInt32,EdjCase.ICP.Candid.Models.Values.CandidValue}') | Dictionary of ids (name hashes) to values for the record |
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidRecord-FromDictionary-System-Collections-Generic-Dictionary{EdjCase-ICP-Candid-Models-CandidTag,EdjCase-ICP-Candid-Models-Values-CandidValue}-'></a>
+### FromDictionary(fields) `method`
+
+##### Summary
+
+Helper method to create a record value from a dictionary of field tags to values
+
+##### Returns
+
+A candid record from the fields specified
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| fields | [System.Collections.Generic.Dictionary{EdjCase.ICP.Candid.Models.CandidTag,EdjCase.ICP.Candid.Models.Values.CandidValue}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.Dictionary 'System.Collections.Generic.Dictionary{EdjCase.ICP.Candid.Models.CandidTag,EdjCase.ICP.Candid.Models.Values.CandidValue}') | Dictionary of tags to values for the record |
+
 <a name='M-EdjCase-ICP-Candid-Models-Values-CandidRecord-GetHashCode'></a>
 ### GetHashCode() `method`
 
@@ -1144,6 +1532,63 @@ This method has no parameters.
 ##### Parameters
 
 This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidRecord-TryGetField-System-String,EdjCase-ICP-Candid-Models-Values-CandidValue@-'></a>
+### TryGetField(name,value) `method`
+
+##### Summary
+
+Tries to get the field based on the specified name. If the field does not exist, will return false,
+otherwise true. The out value will only be set if returns true, otherwise value will be null
+
+##### Returns
+
+True if field exists, otherwise false
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| name | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | Name of the field value to get, case sensitive |
+| value | [EdjCase.ICP.Candid.Models.Values.CandidValue@](#T-EdjCase-ICP-Candid-Models-Values-CandidValue@ 'EdjCase.ICP.Candid.Models.Values.CandidValue@') | Out value that is set only if the method returns true |
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidRecord-TryGetField-System-UInt32,EdjCase-ICP-Candid-Models-Values-CandidValue@-'></a>
+### TryGetField(id,value) `method`
+
+##### Summary
+
+Tries to get the field based on the specified id (name hash). If the field does not exist, will return false,
+otherwise true. The out value will only be set if returns true, otherwise value will be null
+
+##### Returns
+
+True if field exists, otherwise false
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| id | [System.UInt32](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.UInt32 'System.UInt32') | Id (name hash) of the field value to get |
+| value | [EdjCase.ICP.Candid.Models.Values.CandidValue@](#T-EdjCase-ICP-Candid-Models-Values-CandidValue@ 'EdjCase.ICP.Candid.Models.Values.CandidValue@') | Out value that is set only if the method returns true |
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidRecord-TryGetField-EdjCase-ICP-Candid-Models-CandidTag,EdjCase-ICP-Candid-Models-Values-CandidValue@-'></a>
+### TryGetField(tag,value) `method`
+
+##### Summary
+
+Tries to get the field based on the specified tag. If the field does not exist, will return false,
+otherwise true. The out value will only be set if returns true, otherwise value will be null
+
+##### Returns
+
+True if field exists, otherwise false
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| tag | [EdjCase.ICP.Candid.Models.CandidTag](#T-EdjCase-ICP-Candid-Models-CandidTag 'EdjCase.ICP.Candid.Models.CandidTag') | Tag of the field value to get |
+| value | [EdjCase.ICP.Candid.Models.Values.CandidValue@](#T-EdjCase-ICP-Candid-Models-Values-CandidValue@ 'EdjCase.ICP.Candid.Models.Values.CandidValue@') | Out value that is set only if the method returns true |
 
 <a name='T-EdjCase-ICP-Candid-Models-Types-CandidRecordOrVariantType'></a>
 ## CandidRecordOrVariantType `type`
@@ -1332,6 +1777,27 @@ This method has no parameters.
 
 EdjCase.ICP.Candid.Models.Values
 
+##### Summary
+
+A model that represents a candid service value
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidService-#ctor-EdjCase-ICP-Candid-Models-Principal-'></a>
+### #ctor(principalId) `constructor`
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| principalId | [EdjCase.ICP.Candid.Models.Principal](#T-EdjCase-ICP-Candid-Models-Principal 'EdjCase.ICP.Candid.Models.Principal') | The id of the canister where the service lives |
+
+<a name='P-EdjCase-ICP-Candid-Models-Values-CandidService-IsOpqaueReference'></a>
+### IsOpqaueReference `property`
+
+##### Summary
+
+True if the candid func definition is an opaque (non standard/system specific definition),
+otherwise false
+
 <a name='P-EdjCase-ICP-Candid-Models-Values-CandidService-Type'></a>
 ### Type `property`
 
@@ -1367,6 +1833,44 @@ This method has no parameters.
 ##### Summary
 
 *Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidService-GetPrincipal'></a>
+### GetPrincipal() `method`
+
+##### Summary
+
+Gets the prinicipal of the candid service. If it is an opaque reference, then an exception will
+be thrown
+
+##### Returns
+
+Pricipal of the candid service
+
+##### Parameters
+
+This method has no parameters.
+
+##### Exceptions
+
+| Name | Description |
+| ---- | ----------- |
+| [System.InvalidOperationException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.InvalidOperationException 'System.InvalidOperationException') | Throws if service is an opaque reference |
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidService-OpaqueReference'></a>
+### OpaqueReference() `method`
+
+##### Summary
+
+Helper method to create an opaque service reference where the id/location 
+of the service is non-standard/system specific
+
+##### Returns
+
+
 
 ##### Parameters
 
@@ -1900,6 +2404,38 @@ This method has no parameters.
 
 EdjCase.ICP.Candid.Models.Values
 
+##### Summary
+
+The base class for all candid value
+
+<a name='P-EdjCase-ICP-Candid-Models-Values-CandidValue-Type'></a>
+### Type `property`
+
+##### Summary
+
+The type of candid value is implemented
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsPrimitive'></a>
+### AsPrimitive() `method`
+
+##### Summary
+
+Casts the candid value to a primitive type. If the type is not primitive, will throw an exception
+
+##### Returns
+
+A primitive value
+
+##### Parameters
+
+This method has no parameters.
+
+##### Exceptions
+
+| Name | Description |
+| ---- | ----------- |
+| [System.InvalidOperationException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.InvalidOperationException 'System.InvalidOperationException') | Throws if the type is not primitive |
+
 <a name='M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsPrincipal'></a>
 ### AsPrincipal() `method`
 
@@ -1914,6 +2450,96 @@ If opaque, returns null, otherwise the principalid
 ##### Parameters
 
 This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsRecord'></a>
+### AsRecord() `method`
+
+##### Summary
+
+Casts the candid value to a record type. If the type is not record, will throw an exception
+
+##### Returns
+
+A record value
+
+##### Parameters
+
+This method has no parameters.
+
+##### Exceptions
+
+| Name | Description |
+| ---- | ----------- |
+| [System.InvalidOperationException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.InvalidOperationException 'System.InvalidOperationException') | Throws if the type is not record |
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsVector'></a>
+### AsVector() `method`
+
+##### Summary
+
+Casts the candid value to a vector type. If the type is not vector, will throw an exception
+
+##### Returns
+
+A vector value
+
+##### Parameters
+
+This method has no parameters.
+
+##### Exceptions
+
+| Name | Description |
+| ---- | ----------- |
+| [System.InvalidOperationException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.InvalidOperationException 'System.InvalidOperationException') | Throws if the type is not vector |
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsVectorAsArray``1-System-Func{EdjCase-ICP-Candid-Models-Values-CandidValue,``0}-'></a>
+### AsVectorAsArray\`\`1(converter) `method`
+
+##### Summary
+
+Casts the candid value to a vector type and maps it to an array. If the type is not vector,
+will throw an exception
+
+##### Returns
+
+An array form of the vector
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| converter | [System.Func{EdjCase.ICP.Candid.Models.Values.CandidValue,\`\`0}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Func 'System.Func{EdjCase.ICP.Candid.Models.Values.CandidValue,``0}') | The conversion function from candid value to T |
+
+##### Exceptions
+
+| Name | Description |
+| ---- | ----------- |
+| [System.InvalidOperationException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.InvalidOperationException 'System.InvalidOperationException') | Throws if the type is not vector |
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsVectorAsList``1-System-Func{EdjCase-ICP-Candid-Models-Values-CandidValue,``0}-'></a>
+### AsVectorAsList\`\`1(converter) `method`
+
+##### Summary
+
+Casts the candid value to a vector type and maps it to a List. If the type is not vector,
+will throw an exception
+
+##### Returns
+
+A list form of the vector
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| converter | [System.Func{EdjCase.ICP.Candid.Models.Values.CandidValue,\`\`0}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Func 'System.Func{EdjCase.ICP.Candid.Models.Values.CandidValue,``0}') | The conversion function from candid value to T |
+
+##### Exceptions
+
+| Name | Description |
+| ---- | ----------- |
+| [System.InvalidOperationException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.InvalidOperationException 'System.InvalidOperationException') | Throws if the type is not vector |
 
 <a name='M-EdjCase-ICP-Candid-Models-Values-CandidValue-Equals-EdjCase-ICP-Candid-Models-Values-CandidValue-'></a>
 ### Equals() `method`
@@ -1943,6 +2569,21 @@ This method has no parameters.
 ##### Summary
 
 *Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidValue-IsNull'></a>
+### IsNull() `method`
+
+##### Summary
+
+Checks if the value is null
+
+##### Returns
+
+Returns true if the value is null, otherwise false
 
 ##### Parameters
 
@@ -1980,6 +2621,73 @@ This method has no parameters.
 ##### Parameters
 
 This method has no parameters.
+
+<a name='T-EdjCase-ICP-Candid-Models-Values-CandidValueType'></a>
+## CandidValueType `type`
+
+##### Namespace
+
+EdjCase.ICP.Candid.Models.Values
+
+##### Summary
+
+The options for candid value types
+
+<a name='F-EdjCase-ICP-Candid-Models-Values-CandidValueType-Func'></a>
+### Func `constants`
+
+##### Summary
+
+A function located in a service
+
+<a name='F-EdjCase-ICP-Candid-Models-Values-CandidValueType-Optional'></a>
+### Optional `constants`
+
+##### Summary
+
+A value that is either null or a value
+
+<a name='F-EdjCase-ICP-Candid-Models-Values-CandidValueType-Primitive'></a>
+### Primitive `constants`
+
+##### Summary
+
+Primitive/simple candid types like nat, int, null, etc...
+
+<a name='F-EdjCase-ICP-Candid-Models-Values-CandidValueType-Principal'></a>
+### Principal `constants`
+
+##### Summary
+
+An identifier value used for canister ids and identity ids
+
+<a name='F-EdjCase-ICP-Candid-Models-Values-CandidValueType-Record'></a>
+### Record `constants`
+
+##### Summary
+
+A value with a set of fields, each with a name/id and value
+
+<a name='F-EdjCase-ICP-Candid-Models-Values-CandidValueType-Service'></a>
+### Service `constants`
+
+##### Summary
+
+A location with a set of functions to call
+
+<a name='F-EdjCase-ICP-Candid-Models-Values-CandidValueType-Variant'></a>
+### Variant `constants`
+
+##### Summary
+
+A value with a chosen option name/id and value
+
+<a name='F-EdjCase-ICP-Candid-Models-Values-CandidValueType-Vector'></a>
+### Vector `constants`
+
+##### Summary
+
+An array of values
 
 <a name='T-EdjCase-ICP-Candid-Models-Values-CandidVariant'></a>
 ## CandidVariant `type`
@@ -2474,6 +3182,144 @@ LEB128 bytes of value
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | value | [EdjCase.ICP.Candid.Models.UnboundedUInt](#T-EdjCase-ICP-Candid-Models-UnboundedUInt 'EdjCase.ICP.Candid.Models.UnboundedUInt') | Value to convert to LEB128 bytes |
+
+<a name='T-EdjCase-ICP-Candid-Models-Values-PrimitiveType'></a>
+## PrimitiveType `type`
+
+##### Namespace
+
+EdjCase.ICP.Candid.Models.Values
+
+##### Summary
+
+All the candid primitive types
+
+<a name='F-EdjCase-ICP-Candid-Models-Values-PrimitiveType-Bool'></a>
+### Bool `constants`
+
+##### Summary
+
+A boolean (true/false) value
+
+<a name='F-EdjCase-ICP-Candid-Models-Values-PrimitiveType-Empty'></a>
+### Empty `constants`
+
+##### Summary
+
+A value with no data that is considered a subtype of all types. Practical use cases for the empty type are relatively rare.
+
+<a name='F-EdjCase-ICP-Candid-Models-Values-PrimitiveType-Float32'></a>
+### Float32 `constants`
+
+##### Summary
+
+A 32-bit floating point number
+
+<a name='F-EdjCase-ICP-Candid-Models-Values-PrimitiveType-Float64'></a>
+### Float64 `constants`
+
+##### Summary
+
+A 64-bit floating point number
+
+<a name='F-EdjCase-ICP-Candid-Models-Values-PrimitiveType-Int'></a>
+### Int `constants`
+
+##### Summary
+
+A unbounded integer
+
+<a name='F-EdjCase-ICP-Candid-Models-Values-PrimitiveType-Int16'></a>
+### Int16 `constants`
+
+##### Summary
+
+A 16-bit integer
+
+<a name='F-EdjCase-ICP-Candid-Models-Values-PrimitiveType-Int32'></a>
+### Int32 `constants`
+
+##### Summary
+
+A 32-bit integer
+
+<a name='F-EdjCase-ICP-Candid-Models-Values-PrimitiveType-Int64'></a>
+### Int64 `constants`
+
+##### Summary
+
+A 64-bit integer
+
+<a name='F-EdjCase-ICP-Candid-Models-Values-PrimitiveType-Int8'></a>
+### Int8 `constants`
+
+##### Summary
+
+A 8-bit integer
+
+<a name='F-EdjCase-ICP-Candid-Models-Values-PrimitiveType-Nat'></a>
+### Nat `constants`
+
+##### Summary
+
+A unbounded unsigned integer (natural number)
+
+<a name='F-EdjCase-ICP-Candid-Models-Values-PrimitiveType-Nat16'></a>
+### Nat16 `constants`
+
+##### Summary
+
+A 16-bit unsigned integer (natural number)
+
+<a name='F-EdjCase-ICP-Candid-Models-Values-PrimitiveType-Nat32'></a>
+### Nat32 `constants`
+
+##### Summary
+
+A 32-bit unsigned integer (natural number)
+
+<a name='F-EdjCase-ICP-Candid-Models-Values-PrimitiveType-Nat64'></a>
+### Nat64 `constants`
+
+##### Summary
+
+A 64-bit unsigned integer (natural number)
+
+<a name='F-EdjCase-ICP-Candid-Models-Values-PrimitiveType-Nat8'></a>
+### Nat8 `constants`
+
+##### Summary
+
+A 8-bit unsigned integer (natural number)
+
+<a name='F-EdjCase-ICP-Candid-Models-Values-PrimitiveType-Null'></a>
+### Null `constants`
+
+##### Summary
+
+The null value that is a supertype of any \`opt t\` value
+
+<a name='F-EdjCase-ICP-Candid-Models-Values-PrimitiveType-Principal'></a>
+### Principal `constants`
+
+##### Summary
+
+A candid principal value which works as an identifier for identities/canisters
+
+<a name='F-EdjCase-ICP-Candid-Models-Values-PrimitiveType-Reserved'></a>
+### Reserved `constants`
+
+##### Summary
+
+A 'any' type value that is a supertype of all types. It allows the removal of a type without breaking
+the type structure
+
+<a name='F-EdjCase-ICP-Candid-Models-Values-PrimitiveType-Text'></a>
+### Text `constants`
+
+##### Summary
+
+A text/string value
 
 <a name='T-EdjCase-ICP-Candid-Crypto-SHA256HashFunction'></a>
 ## SHA256HashFunction `type`
