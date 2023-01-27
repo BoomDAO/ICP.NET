@@ -22,6 +22,7 @@ namespace EdjCase.ICP.Candid.Models
 			return new CandidId(value);
 		}
 
+		/// <inheritdoc />
 		public override bool Equals(object? other)
 		{
 			if (other is CandidId id)
@@ -35,11 +36,13 @@ namespace EdjCase.ICP.Candid.Models
 			return false;
 		}
 
+		/// <inheritdoc />
 		public override int GetHashCode()
 		{
 			return this.Value.GetHashCode();
 		}
 
+		/// <inheritdoc />
 		public bool Equals(CandidId? other)
 		{
 			if (object.ReferenceEquals(other, null))
@@ -49,11 +52,13 @@ namespace EdjCase.ICP.Candid.Models
 			return this.Value == other.Value;
 		}
 
+		/// <inheritdoc />
 		public bool Equals(string? other)
 		{
 			return this.Value == other;
 		}
 
+		/// <inheritdoc />
 		public static bool operator ==(CandidId? v1, CandidId? v2)
 		{
 			if (object.ReferenceEquals(v1, null))
@@ -63,16 +68,19 @@ namespace EdjCase.ICP.Candid.Models
 			return v1.Equals(v2);
 		}
 
+		/// <inheritdoc />
 		public static bool operator !=(CandidId? v1, CandidId? v2)
 		{
 			return !(v1 == v2);
 		}
 
+		/// <inheritdoc />
 		public override string ToString()
 		{
 			return this.Value.ToString();
 		}
 
+		/// <inheritdoc />
 		public int CompareTo(CandidId? other)
 		{
 			return this.Value.CompareTo(other?.Value);

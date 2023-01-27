@@ -5,19 +5,59 @@ using System.Linq;
 
 namespace EdjCase.ICP.Candid.Models.Types
 {
+	/// <summary>
+	/// All the possible options for function modes which
+	/// define special attributes of the function
+	/// </summary>
 	public enum FuncMode
 	{
-		Oneway = 2, // No response
+		/// <summary>
+		/// Mode where the function does not generate a response to a request
+		/// </summary>
+		Oneway = 2,
+		/// <summary>
+		/// Mode where the function does not update any state and returns immediately.
+		/// Is useful for faster data retrieval
+		/// </summary>
 		Query = 1 // Response
 	}
+
+	/// <summary>
+	/// A candid type model that defines a func
+	/// </summary>
 	public class CandidFuncType : CandidCompoundType
 	{
+		/// <inheritdoc />
 		public override CandidTypeCode Type { get; } = CandidTypeCode.Func;
 
+		/// <summary>
+		/// A set of different modes the function supports
+		/// </summary>
 		public List<FuncMode> Modes { get; }
+
+		/// <summary>
+		/// A list of all the argument types the function will need in a request.
+		/// The name is optional and is only used for ease of use, the index/position
+		/// of the argument is all that really matters
+		/// </summary>
 		public List<(CandidId? Name, CandidType Type)> ArgTypes { get; }
+
+		/// <summary>
+		/// A list of all the return types the function will supply in respose to a request.
+		/// The name is optional and is only used for ease of use, the index/position
+		/// of the argument is all that really matters
+		/// </summary>
 		public List<(CandidId? Name, CandidType Type)> ReturnTypes { get; }
 
+		/// <param name="modes">A set of different modes the function supports</param>
+		/// <param name="argTypes">A list of all the argument types the function will need in a request.
+		/// The name is optional and is only used for ease of use, the index/position
+		/// of the argument is all that really matters</param>
+		/// <param name="returnTypes">A list of all the return types the function will supply in respose to a request.
+		/// The name is optional and is only used for ease of use, the index/position
+		/// of the argument is all that really matters</param>
+		/// <param name="recursiveId">Optional. Used if this type can be referenced by an inner type recursively.
+		/// The inner type will use `CandidReferenceType` with this id</param>
 		public CandidFuncType(
 			List<FuncMode> modes,
 			List<CandidType> argTypes,
@@ -33,6 +73,15 @@ namespace EdjCase.ICP.Candid.Models.Types
 
 		}
 
+		/// <param name="modes">A set of different modes the function supports</param>
+		/// <param name="argTypes">A list of all the argument types the function will need in a request.
+		/// The name is optional and is only used for ease of use, the index/position
+		/// of the argument is all that really matters</param>
+		/// <param name="returnTypes">A list of all the return types the function will supply in respose to a request.
+		/// The name is optional and is only used for ease of use, the index/position
+		/// of the argument is all that really matters</param>
+		/// <param name="recursiveId">Optional. Used if this type can be referenced by an inner type recursively.
+		/// The inner type will use `CandidReferenceType` with this id</param>
 		public CandidFuncType(
 			List<FuncMode> modes,
 			List<(CandidId? Name, CandidType Type)> argTypes,
@@ -78,6 +127,7 @@ namespace EdjCase.ICP.Candid.Models.Types
 				.Concat(this.ReturnTypes.Select(t => t.Type));
 		}
 
+		/// <inheritdoc />
 		public override bool Equals(object? obj)
 		{
 			if (obj is CandidFuncType sDef)
@@ -94,6 +144,7 @@ namespace EdjCase.ICP.Candid.Models.Types
 			return false;
 		}
 
+		/// <inheritdoc />
 		public override int GetHashCode()
 		{
 			return HashCode.Combine(this.Type, this.Modes, this.ArgTypes, this.ReturnTypes);

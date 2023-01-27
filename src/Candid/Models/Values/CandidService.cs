@@ -6,6 +6,7 @@ namespace EdjCase.ICP.Candid.Models.Values
 {
 	public class CandidService : CandidValue
 	{
+		/// <inheritdoc />
 		public override CandidValueType Type { get; } = CandidValueType.Service;
 		public bool IsOpqaueReference { get; }
 
@@ -32,7 +33,8 @@ namespace EdjCase.ICP.Candid.Models.Values
 			return this.principalId!;
 		}
 
-		public override byte[] EncodeValue(CandidType type, Func<CandidId, CandidCompoundType> getReferencedType)
+		/// <inheritdoc />
+		internal override byte[] EncodeValue(CandidType type, Func<CandidId, CandidCompoundType> getReferencedType)
 		{
 			CandidServiceType t;
 			if (type is CandidReferenceType r)
@@ -51,11 +53,14 @@ namespace EdjCase.ICP.Candid.Models.Values
 				.Concat(this.principalId!.Raw)
 				.ToArray();
 		}
+
+		/// <inheritdoc />
 		public override int GetHashCode()
 		{
 			return HashCode.Combine(this.IsOpqaueReference, this.principalId);
 		}
 
+		/// <inheritdoc />
 		public override bool Equals(CandidValue? other)
 		{
 			if (other is CandidService s)
@@ -74,6 +79,7 @@ namespace EdjCase.ICP.Candid.Models.Values
 			return false;
 		}
 
+		/// <inheritdoc />
 		public override string ToString()
 		{
 			return this.IsOpqaueReference
@@ -81,10 +87,6 @@ namespace EdjCase.ICP.Candid.Models.Values
 				: this.principalId!.ToString();
 		}
 
-		public static CandidService TraparentReference(Principal? principalId)
-		{
-			return new CandidService(principalId);
-		}
 
 		public static CandidService OpaqueReference()
 		{

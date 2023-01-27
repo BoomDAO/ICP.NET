@@ -284,6 +284,37 @@
             </summary>
             <returns>A blob of the hash digest</returns>
         </member>
+        <member name="T:EdjCase.ICP.Candid.Models.Types.CandidKnownType">
+            <summary>
+            A candid type that is NOT a reference type. This type is known before any resolution
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Models.Types.CandidKnownType.Type">
+            <summary>
+            The candid type that this model represents
+            </summary>
+        </member>
+        <member name="T:EdjCase.ICP.Candid.Models.Types.CandidType">
+            <summary>
+            The base candid type model that all candid types inherit
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Types.CandidType.Encode(EdjCase.ICP.Candid.Models.CompoundTypeTable)">
+            <summary>
+            Encodes this type into a byte array 
+            </summary>
+            <param name="compoundTypeTable"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Types.CandidType.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Types.CandidType.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Types.CandidType.ToString">
+            <inheritdoc />
+        </member>
         <member name="M:EdjCase.ICP.Candid.Models.Values.CandidPrimitive.AsPrincipal">
             <summary>
             If opaque, returns null, otherwise the principalid

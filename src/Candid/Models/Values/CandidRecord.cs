@@ -7,6 +7,7 @@ namespace EdjCase.ICP.Candid.Models.Values
 {
 	public class CandidRecord : CandidValue
 	{
+		/// <inheritdoc />
 		public override CandidValueType Type { get; } = CandidValueType.Record;
 
 		public Dictionary<CandidTag, CandidValue> Fields { get; }
@@ -72,7 +73,8 @@ namespace EdjCase.ICP.Candid.Models.Values
 			return new CandidRecord(hashedDict);
 		}
 
-		public override byte[] EncodeValue(CandidType type, Func<CandidId, CandidCompoundType> getReferencedType)
+		/// <inheritdoc />
+		internal override byte[] EncodeValue(CandidType type, Func<CandidId, CandidCompoundType> getReferencedType)
 		{
 			CandidRecordType t;
 			if (type is CandidReferenceType r)
@@ -89,11 +91,14 @@ namespace EdjCase.ICP.Candid.Models.Values
 				.SelectMany(v => this.Fields[v.Key].EncodeValue(v.Value, getReferencedType))
 				.ToArray();
 		}
+
+		/// <inheritdoc />
 		public override int GetHashCode()
 		{
 			return HashCode.Combine(this.Fields);
 		}
 
+		/// <inheritdoc />
 		public override bool Equals(CandidValue? other)
 		{
 			if (other is CandidRecord r)
@@ -111,6 +116,7 @@ namespace EdjCase.ICP.Candid.Models.Values
 					   .OrderBy(f => f.Id);
 		}
 
+		/// <inheritdoc />
 		public override string ToString()
 		{
 			IEnumerable<string> fields = this.Fields.Select(f => $"{f.Key}:{f.Value}");

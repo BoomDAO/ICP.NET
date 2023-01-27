@@ -8,6 +8,7 @@ namespace EdjCase.ICP.Candid.Models.Values
 {
 	public class CandidVariant : CandidValue
 	{
+		/// <inheritdoc />
 		public override CandidValueType Type { get; } = CandidValueType.Variant;
 
 		public CandidTag Tag { get; }
@@ -19,7 +20,8 @@ namespace EdjCase.ICP.Candid.Models.Values
 			this.Value = value ?? CandidPrimitive.Null();
 		}
 
-		public override byte[] EncodeValue(CandidType type, Func<CandidId, CandidCompoundType> getReferencedType)
+		/// <inheritdoc />
+		internal override byte[] EncodeValue(CandidType type, Func<CandidId, CandidCompoundType> getReferencedType)
 		{
 			CandidVariantType t;
 			if (type is CandidReferenceType r)
@@ -44,11 +46,13 @@ namespace EdjCase.ICP.Candid.Models.Values
 				.ToArray();
 		}
 
+		/// <inheritdoc />
 		public override int GetHashCode()
 		{
 			return HashCode.Combine(this.Tag.Id, this.Value);
 		}
 
+		/// <inheritdoc />
 		public override bool Equals(CandidValue? other)
 		{
 			if (other is CandidVariant v)
@@ -58,6 +62,7 @@ namespace EdjCase.ICP.Candid.Models.Values
 			return false;
 		}
 
+		/// <inheritdoc />
 		public override string ToString()
 		{
 			return $"{{{this.Tag}:{this.Value}}}";

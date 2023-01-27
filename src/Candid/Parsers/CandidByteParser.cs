@@ -634,7 +634,7 @@ namespace EdjCase.ICP.Candid.Parsers
 				{
 					CandidService service = this.ReadServiceValue();
 					string method = this.ReadText();
-					return CandidFunc.TrasparentReference(service, method);
+					return CandidFunc.Create(service, method);
 				}
 			}
 

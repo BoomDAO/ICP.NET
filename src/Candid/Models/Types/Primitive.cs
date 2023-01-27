@@ -36,11 +36,12 @@ namespace EdjCase.ICP.Candid.Models.Types
 			};
 		}
 
-		public override byte[] Encode(CompoundTypeTable compoundTypeTable)
+		internal override byte[] Encode(CompoundTypeTable compoundTypeTable)
 		{
 			return LEB128.EncodeSigned((long)this.Type);
 		}
 
+		/// <inheritdoc />
 		public override bool Equals(object? obj)
 		{
 			if (obj is CandidPrimitiveType pDef)
@@ -50,6 +51,7 @@ namespace EdjCase.ICP.Candid.Models.Types
 			return false;
 		}
 
+		/// <inheritdoc />
 		public override int GetHashCode()
 		{
 			return (int)this.Type;

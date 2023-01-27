@@ -8,6 +8,7 @@ namespace EdjCase.ICP.Candid.Models.Values
 {
 	public class CandidVector : CandidValue
 	{
+		/// <inheritdoc />
 		public override CandidValueType Type { get; } = CandidValueType.Vector;
 
 		public CandidValue[] Values { get; }
@@ -22,7 +23,8 @@ namespace EdjCase.ICP.Candid.Models.Values
 			this.Values = values;
 		}
 
-		public override byte[] EncodeValue(CandidType type, Func<CandidId, CandidCompoundType> getReferencedType)
+		/// <inheritdoc />
+		internal override byte[] EncodeValue(CandidType type, Func<CandidId, CandidCompoundType> getReferencedType)
 		{
 			CandidVectorType t;
 			if (type is CandidReferenceType r)
@@ -42,11 +44,13 @@ namespace EdjCase.ICP.Candid.Models.Values
 				.ToArray();
 		}
 
+		/// <inheritdoc />
 		public override int GetHashCode()
 		{
 			return HashCode.Combine(this.Values.Select(v => v.GetHashCode()));
 		}
 
+		/// <inheritdoc />
 		public override bool Equals(CandidValue? other)
 		{
 			if (other is CandidVector v)
@@ -59,6 +63,7 @@ namespace EdjCase.ICP.Candid.Models.Values
 			return false;
 		}
 
+		/// <inheritdoc />
 		public override string ToString()
 		{
 			IEnumerable<string> values = this.Values.Select(v => v.ToString());

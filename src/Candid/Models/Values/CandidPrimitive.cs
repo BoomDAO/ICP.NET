@@ -32,6 +32,7 @@ namespace EdjCase.ICP.Candid.Models.Values
 
 	public class CandidPrimitive : CandidValue
 	{
+		/// <inheritdoc />
 		public override CandidValueType Type { get; } = CandidValueType.Primitive;
 		public PrimitiveType ValueType { get; }
 		private readonly object? value;
@@ -140,7 +141,8 @@ namespace EdjCase.ICP.Candid.Models.Values
 
 
 
-		public override byte[] EncodeValue(CandidType type, Func<CandidId, CandidCompoundType> getReferencedType)
+		/// <inheritdoc />
+		internal override byte[] EncodeValue(CandidType type, Func<CandidId, CandidCompoundType> getReferencedType)
 		{
 			return this.ValueType switch
 			{
@@ -166,6 +168,7 @@ namespace EdjCase.ICP.Candid.Models.Values
 			};
 		}
 
+		/// <inheritdoc />
 		public override string ToString()
 		{
 			return this.ValueType switch
@@ -435,11 +438,13 @@ namespace EdjCase.ICP.Candid.Models.Values
 			}
 		}
 
+		/// <inheritdoc />
 		public override int GetHashCode()
 		{
 			return HashCode.Combine(this.value, this.ValueType);
 		}
 
+		/// <inheritdoc />
 		public override bool Equals(CandidValue? other)
 		{
 			if (other is CandidPrimitive p)

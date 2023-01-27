@@ -21,12 +21,19 @@ namespace EdjCase.ICP.Candid.Models.Values
 	{
 		public abstract CandidValueType Type { get; }
 
-		public abstract byte[] EncodeValue(CandidType type, Func<CandidId, CandidCompoundType> getReferencedType);
+		internal abstract byte[] EncodeValue(CandidType type, Func<CandidId, CandidCompoundType> getReferencedType);
+
+		/// <inheritdoc />
 		public abstract override int GetHashCode();
+
+		/// <inheritdoc />
 		public abstract bool Equals(CandidValue? other);
+
+		/// <inheritdoc />
 		public abstract override string ToString();
 
 
+		/// <inheritdoc />
 		public override bool Equals(object? obj)
 		{
 			if (obj is CandidValue v)
@@ -36,11 +43,13 @@ namespace EdjCase.ICP.Candid.Models.Values
 			return false;
 		}
 
+		/// <inheritdoc />
 		public static bool operator ==(CandidValue v1, CandidValue v2)
 		{
 			return v1.Equals(v2);
 		}
 
+		/// <inheritdoc />
 		public static bool operator !=(CandidValue v1, CandidValue v2)
 		{
 			return !v1.Equals(v2);

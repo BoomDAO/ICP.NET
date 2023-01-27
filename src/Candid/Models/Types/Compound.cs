@@ -5,34 +5,62 @@ using System.Linq;
 
 namespace EdjCase.ICP.Candid.Models.Types
 {
+	/// <summary>
+	/// A candid type that is not primitive or a reference. These types are considered
+	/// more complex and have multiple data structures within them
+	/// </summary>
 	public abstract class CandidCompoundType : CandidKnownType
 	{
+		/// <summary>
+		/// Optional. Used if this type can be referenced by an inner type recursively.
+		/// The inner type will use `CandidReferenceType` with this id
+		/// </summary>
 		public CandidId? RecursiveId { get; set; }
 
+		/// <param name="recursiveId">Optional. Used if this type can be referenced by an inner type recursively.
+		/// The inner type will use `CandidReferenceType` with this id</param>
 		public CandidCompoundType(CandidId? recursiveId)
 		{
 			this.RecursiveId = recursiveId;
 		}
 
+		/// <summary>
+		/// Adds all inner types to the compound table if applicable and returns its encoded type value
+		/// </summary>
+		/// <param name="compoundTypeTable">The collection of compound types for a candid arg</param>
+		/// <returns>Byte array of encoded type</returns>
 		internal abstract byte[] EncodeInnerTypes(CompoundTypeTable compoundTypeTable);
 
 		internal abstract IEnumerable<CandidType> GetInnerTypes();
 
-		public override byte[] Encode(CompoundTypeTable compoundTypeTable)
+		internal override byte[] Encode(CompoundTypeTable compoundTypeTable)
 		{
 			UnboundedUInt index = compoundTypeTable.GetOrAdd(this);
 			return LEB128.EncodeSigned(index);
 		}
 	}
 
-
+	/// <summary>
+	/// A shared class for candid records and variants. Both have a mapping of 
+	/// keys with associated types
+	/// </summary>
 	public abstract class CandidRecordOrVariantType : CandidCompoundType
 	{
+		/// <inheritdoc />
 		public override abstract CandidTypeCode Type { get; }
+
+		/// <summary>
+		/// The string name of the parent type (record or variant)
+		/// </summary>
 		protected abstract string TypeString { get; }
 
+		/// <summary>
+		/// Gets the record fields or variant options to be used for encoding
+		/// </summary>
+		/// <returns></returns>
 		protected abstract Dictionary<CandidTag, CandidType> GetFieldsOrOptions();
 
+		/// <inheritdoc />
 		protected CandidRecordOrVariantType(CandidId? recursiveId) : base(recursiveId)
 		{
 
@@ -59,6 +87,7 @@ namespace EdjCase.ICP.Candid.Models.Types
 			return this.GetFieldsOrOptions().Values;
 		}
 
+		/// <inheritdoc />
 		public override bool Equals(object? obj)
 		{
 			Dictionary<CandidTag, CandidType> fieldsOrOptions = this.GetFieldsOrOptions();
@@ -85,6 +114,7 @@ namespace EdjCase.ICP.Candid.Models.Types
 			return false;
 		}
 
+		/// <inheritdoc />
 		public override int GetHashCode()
 		{
 			Dictionary<CandidTag, CandidType> fieldsOrOptions = this.GetFieldsOrOptions();

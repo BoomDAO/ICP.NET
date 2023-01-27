@@ -5,12 +5,24 @@ using System.Text;
 
 namespace EdjCase.ICP.Candid.Models.Values
 {
+	/// <summary>
+	/// A model to represent the value of a candid func
+	/// </summary>
 	public class CandidFunc : CandidValue
 	{
+		/// <inheritdoc />
 		public override CandidValueType Type { get; } = CandidValueType.Func;
+
+		/// <summary>
+		/// True if the candid func definition is an opaque (non standard/system specific definition),
+		/// otherwise false
+		/// </summary>
 		public bool IsOpaqueReference { get; }
+
 		private readonly (CandidService Service, string Method)? serviceInfo;
 
+		/// <param name="service">The candid service definition the function lives in</param>
+		/// <param name="name">The name of the function</param>
 		public CandidFunc(CandidService service, string name)
 		{
 			this.IsOpaqueReference = false;
@@ -24,8 +36,13 @@ namespace EdjCase.ICP.Candid.Models.Values
 			this.serviceInfo = null;
 		}
 
-		public override byte[] EncodeValue(CandidType type, Func<CandidId, CandidCompoundType> getReferencedType)
+		/// <inheritdoc />
+		internal override byte[] EncodeValue(CandidType type, Func<CandidId, CandidCompoundType> getReferencedType)
 		{
+			if (this.IsOpaqueReference)
+			{
+				return new byte[] { 0 };
+			}
 			CandidFuncType t;
 			if (type is CandidReferenceType r)
 			{
@@ -35,21 +52,20 @@ namespace EdjCase.ICP.Candid.Models.Values
 			{
 				t = (CandidFuncType)type;
 			}
-			if (this.IsOpaqueReference)
-			{
-				return new byte[] { 0 };
-			}
 			(CandidService service, string method) = this.serviceInfo!.Value;
 			return new byte[] { 1 }
 				.Concat(service.EncodeValue(t, getReferencedType))
 				.Concat(Encoding.UTF8.GetBytes(method))
 				.ToArray();
 		}
+
+		/// <inheritdoc />
 		public override int GetHashCode()
 		{
 			return HashCode.Combine(this.IsOpaqueReference, this.serviceInfo);
 		}
 
+		/// <inheritdoc />
 		public override bool Equals(CandidValue? other)
 		{
 			if (other is CandidFunc f)
@@ -68,6 +84,7 @@ namespace EdjCase.ICP.Candid.Models.Values
 			return false;
 		}
 
+		/// <inheritdoc />
 		public override string ToString()
 		{
 			if (this.IsOpaqueReference)
@@ -78,11 +95,11 @@ namespace EdjCase.ICP.Candid.Models.Values
 			return $"(Method: {method}, Service: {service})";
 		}
 
-		public static CandidFunc TrasparentReference(CandidService service, string method)
-		{
-			return new CandidFunc(service, method);
-		}
-
+		/// <summary>
+		/// Creates an opaque reference to a function that is defined by the system
+		/// vs being defined in candid
+		/// </summary>
+		/// <returns>A opaque candid func</returns>
 		public static CandidFunc OpaqueReference()
 		{
 			return new CandidFunc();

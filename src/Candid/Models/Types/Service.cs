@@ -6,18 +6,25 @@ using System.Text;
 
 namespace EdjCase.ICP.Candid.Models.Types
 {
+	/// <summary>
+	/// A model for a candid service type
+	/// </summary>
 	public class CandidServiceType : CandidCompoundType
 	{
+		/// <inheritdoc />
 		public override CandidTypeCode Type { get; } = CandidTypeCode.Service;
 
-		public CandidId? Id { get; }
+		/// <summary>
+		/// A mapping of ids to function types that the service contains
+		/// </summary>
 		public Dictionary<CandidId, CandidFuncType> Methods { get; }
 
-
-		public CandidServiceType(Dictionary<CandidId, CandidFuncType> methods, CandidId? id, CandidId? recursiveId = null) : base(recursiveId)
+		/// <param name="methods">A mapping of ids to function types that the service contains</param>
+		/// <param name="recursiveId">Optional. Used if this type can be referenced by an inner type recursively.
+		/// The inner type will use `CandidReferenceType` with this id</param>
+		public CandidServiceType(Dictionary<CandidId, CandidFuncType> methods, CandidId? recursiveId = null) : base(recursiveId)
 		{
 			this.Methods = methods;
-			this.Id = id;
 		}
 
 		internal override byte[] EncodeInnerTypes(CompoundTypeTable compoundTypeTable)
@@ -43,6 +50,7 @@ namespace EdjCase.ICP.Candid.Models.Types
 			return this.Methods.Values;
 		}
 
+		/// <inheritdoc />
 		public override bool Equals(object? obj)
 		{
 			if (obj is CandidServiceType sDef)
@@ -54,6 +62,7 @@ namespace EdjCase.ICP.Candid.Models.Types
 			return false;
 		}
 
+		/// <inheritdoc />
 		public override int GetHashCode()
 		{
 			return HashCode.Combine(this.Type, this.Methods);

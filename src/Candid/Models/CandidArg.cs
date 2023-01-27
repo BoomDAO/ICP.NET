@@ -15,6 +15,7 @@ namespace EdjCase.ICP.Candid.Models
 			this.Values = values;
 		}
 
+		/// <inheritdoc />
 		public byte[] ComputeHash(IHashFunction hashFunction)
 		{
 			return hashFunction.ComputeHash(this.Encode());
@@ -45,12 +46,14 @@ namespace EdjCase.ICP.Candid.Models
 			return new CandidArg(new List<CandidTypedValue>());
 		}
 
+		/// <inheritdoc />
 		public override string ToString()
 		{
 			IEnumerable<string> args = this.Values.Select(v => v.Value.ToString()!);
 			return $"({string.Join(",", args)})";
 		}
 
+		/// <inheritdoc />
 		public bool Equals(CandidArg? other)
 		{
 			if (object.ReferenceEquals(other, null))
@@ -60,16 +63,19 @@ namespace EdjCase.ICP.Candid.Models
 			return this.Values.SequenceEqual(other.Values);
 		}
 
+		/// <inheritdoc />
 		public override bool Equals(object? obj)
 		{
 			return this.Equals(obj as CandidArg);
 		}
 
+		/// <inheritdoc />
 		public override int GetHashCode()
 		{
 			return HashCode.Combine(this.Values.Select(v => v.GetHashCode()));
 		}
 
+		/// <inheritdoc />
 		public static bool operator ==(CandidArg? v1, CandidArg? v2)
 		{
 			if (object.ReferenceEquals(v1, null))
@@ -79,6 +85,7 @@ namespace EdjCase.ICP.Candid.Models
 			return v1.Equals(v2);
 		}
 
+		/// <inheritdoc />
 		public static bool operator !=(CandidArg? v1, CandidArg? v2)
 		{
 			if (object.ReferenceEquals(v1, null))
