@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>EdjCase.ICP.InternetIdentity</name>
+    </assembly>
+    <members>
+        <member name="M:EdjCase.ICP.InternetIdentity.Authenticator.BuildDeviceIdentityAsync(System.Collections.Generic.IList{EdjCase.ICP.InternetIdentity.DeviceInfo},EdjCase.ICP.Agent.Identities.IIdentity)">
+            <summary>
+            This is responsible for converting a "direct" user identity, which identifies the user,
+            into a delegation identity, which is anonymized, has an expiry, etc.
+            
+            Corresponds to `requestFEDelegation' from @dfinity/internet-identity
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.InternetIdentity.DeviceInfo.PublicKey">
+            <summary>
+            DER encoded public key for the device
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.InternetIdentity.DeviceInfo.CredentialId">
+            <summary>
+            Optional. The credential id bytes for the device
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.InternetIdentity.Fido2Client.CreateSignatureFromAssertion(Fido2Net.FidoAssertionStatement,System.String)">
+            <summary>
+            The signature is a CBOR value consisting of a data item with major type 6 ("Semantic tag")
+            and tag value 55799, followed by a map with three mandatory fields:
+            authenticator_data, client_data_json and signature
+            </summary>
+        </member>
+    </members>
+</doc>
