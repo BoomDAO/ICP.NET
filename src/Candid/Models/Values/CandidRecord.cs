@@ -34,7 +34,7 @@ namespace EdjCase.ICP.Candid.Models.Values
 		{
 			get
 			{
-				return this.Fields[name];
+				return this.Fields[CandidTag.FromName(name)];
 			}
 		}
 

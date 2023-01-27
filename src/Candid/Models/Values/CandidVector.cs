@@ -6,13 +6,21 @@ using System.Linq;
 
 namespace EdjCase.ICP.Candid.Models.Values
 {
+	/// <summary>
+	/// A model representing a candid vector value
+	/// </summary>
 	public class CandidVector : CandidValue
 	{
 		/// <inheritdoc />
 		public override CandidValueType Type { get; } = CandidValueType.Vector;
 
+		/// <summary>
+		/// Each candid value that the vector contains. All must be of the same type
+		/// </summary>
 		public CandidValue[] Values { get; }
 
+		/// <param name="values">Each candid value that the vector contains. All must be of the same type</param>
+		/// <exception cref="ArgumentException">Throws if all the values are not of the same type</exception>
 		public CandidVector(CandidValue[] values)
 		{
 			CandidValueType? valueType = values.FirstOrDefault()?.Type;

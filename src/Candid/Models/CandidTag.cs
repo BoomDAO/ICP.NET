@@ -3,9 +3,19 @@ using System.Text;
 
 namespace EdjCase.ICP.Candid.Models
 {
+	/// <summary>
+	/// A model representing a candid tag which is a positive number id with an optional name
+	/// </summary>
 	public class CandidTag : IComparable<CandidTag>, IComparable, IEquatable<CandidTag>
 	{
+		/// <summary>
+		/// Optional. The name/label of the tag. If set, the `Id` is a hash of the specified name
+		/// </summary>
 		public string? Name { get; }
+
+		/// <summary>
+		/// A positive integer value that is either an index, a hash of a string name or arbitrary
+		/// </summary>
 		public uint Id { get; }
 
 		private CandidTag(uint id, string? name)
@@ -14,27 +24,31 @@ namespace EdjCase.ICP.Candid.Models
 			this.Name = name;
 		}
 
+		/// <param name="id">A positive integer value that is either an index, a hash of a string name or arbitrary</param>
 		public CandidTag(uint id) : this(id, null)
 		{
 
 		}
 
-
+		/// <inheritdoc />
 		public bool Equals(CandidTag? other)
 		{
 			return this.CompareTo(other) == 0;
 		}
 
+		/// <inheritdoc />
 		public override bool Equals(object? obj)
 		{
 			return this.Equals(obj as CandidTag);
 		}
 
+		/// <inheritdoc />
 		public int CompareTo(object? obj)
 		{
 			return this.CompareTo(obj as CandidTag);
 		}
 
+		/// <inheritdoc />
 		public int CompareTo(CandidTag? other)
 		{
 			if (object.ReferenceEquals(other, null))
@@ -43,6 +57,8 @@ namespace EdjCase.ICP.Candid.Models
 			}
 			return this.Id.CompareTo(other.Id);
 		}
+
+		/// <inheritdoc />
 		public static bool operator ==(CandidTag? l1, CandidTag? l2)
 		{
 			if (object.ReferenceEquals(l1, null))
@@ -52,6 +68,7 @@ namespace EdjCase.ICP.Candid.Models
 			return l1.Equals(l2);
 		}
 
+		/// <inheritdoc />
 		public static bool operator !=(CandidTag? l1, CandidTag? l2)
 		{
 			if (object.ReferenceEquals(l1, null))
@@ -61,6 +78,7 @@ namespace EdjCase.ICP.Candid.Models
 			return !l1.Equals(l2);
 		}
 
+		/// <inheritdoc />
 		public override int GetHashCode()
 		{
 			return HashCode.Combine(this.Id);
@@ -84,6 +102,11 @@ namespace EdjCase.ICP.Candid.Models
 			return digest;
 		}
 
+		/// <summary>
+		/// Helper method to create a tag from a name. Will calculate the id by hashing the name
+		/// </summary>
+		/// <param name="name">The name of the tag</param>
+		/// <returns>A candid tag</returns>
 		public static CandidTag FromName(string name)
 		{
 			uint id = CandidTag.HashName(name);
@@ -91,26 +114,44 @@ namespace EdjCase.ICP.Candid.Models
 			return new CandidTag(id, name);
 		}
 
+		/// <summary>
+		/// Helper method to create a tag from an id. No name will be set
+		/// </summary>
+		/// <param name="id">The id of the tag</param>
+		/// <returns>A candid tag</returns>
 		public static CandidTag FromId(uint id)
 		{
 			return new CandidTag(id, null);
 		}
 
-		public static implicit operator CandidTag(string value)
+		/// <summary>
+		/// Converts a string value to a candid tag. Will calculate the id based off a hash of the name
+		/// </summary>
+		/// <param name="name">A string value of the name</param>
+		public static implicit operator CandidTag(string name)
 		{
-			return CandidTag.FromName(value);
+			return CandidTag.FromName(name);
 		}
 
-		public static implicit operator CandidTag(uint value)
+		/// <summary>
+		/// Converts a uint value into a candid tag. Will only set the id; name will not be set
+		/// </summary>
+		/// <param name="id"></param>
+		public static implicit operator CandidTag(uint id)
 		{
-			return CandidTag.FromId(value);
+			return CandidTag.FromId(id);
 		}
 
-		public static implicit operator uint(CandidTag value)
+		/// <summary>
+		/// Converts a candid tag value to a uint by using the id of the tag
+		/// </summary>
+		/// <param name="tag">The candid tag value</param>
+		public static implicit operator uint(CandidTag tag)
 		{
-			return value.Id;
+			return tag.Id;
 		}
 
+		/// <inheritdoc />
 		public override string ToString()
 		{
 			string value = this.Id.ToString();

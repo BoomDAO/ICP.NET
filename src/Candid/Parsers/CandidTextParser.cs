@@ -29,7 +29,7 @@ namespace EdjCase.ICP.Candid.Parsers
 			if (helper.NextToken?.Type == CandidTextTokenType.Colon)
 			{
 				string rawName = helper.CurrentToken.GetTextValueOrThrow();
-				name = CandidId.Parse(rawName);
+				name = CandidId.Create(rawName);
 				helper.MoveNextOrThrow(); // :
 				helper.MoveNextOrThrow(); // type
 			}
@@ -208,7 +208,7 @@ namespace EdjCase.ICP.Candid.Parsers
 				helper.CurrentToken.ValidateType(CandidTextTokenType.Colon);
 				helper.MoveNextOrThrow();
 				CandidFuncType methodType = GetFunc(helper, null);
-				methods.Add(CandidId.Parse(label), methodType);
+				methods.Add(CandidId.Create(label), methodType);
 				if (helper.CurrentToken.Type == CandidTextTokenType.SemiColon)
 				{
 					helper.MoveNext();
@@ -226,7 +226,7 @@ namespace EdjCase.ICP.Candid.Parsers
 			// Check to see if text is recursive id like `μrec_1.record` vs just the type name `record`
 			if (type.StartsWith("μ"))
 			{
-				recursiveId = CandidId.Parse(type.Substring(1));
+				recursiveId = CandidId.Create(type.Substring(1));
 				helper.MoveNextOrThrow();
 				helper.CurrentToken.ValidateType(CandidTextTokenType.Period); // Period seperates recursive id and type
 				helper.MoveNextOrThrow();
@@ -316,7 +316,7 @@ namespace EdjCase.ICP.Candid.Parsers
 					ThrowIfRecursiveIdSet();
 					return new CandidPrimitiveType(PrimitiveType.Null);
 				default:
-					return new CandidReferenceType(CandidId.Parse(type));
+					return new CandidReferenceType(CandidId.Create(type));
 			};
 
 			void ThrowIfRecursiveIdSet()

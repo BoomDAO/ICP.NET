@@ -243,7 +243,7 @@ namespace EdjCase.ICP.Candid.Tests
         executed_timestamp_seconds:nat64
     }
 ) query";
-			CandidId proposalReferenceId = CandidId.Parse("rec_1");
+			CandidId proposalReferenceId = CandidId.Create("rec_1");
 			List<FuncMode> expectedModes = new List<FuncMode> { FuncMode.Query };
 			List<CandidType> expectedArgTypes = new()
 			{

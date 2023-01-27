@@ -3,9 +3,16 @@ using System.Text.RegularExpressions;
 
 namespace EdjCase.ICP.Candid.Models
 {
+	/// <summary>
+	/// A helper model to store and validate a valid candid id value
+	/// </summary>
 	public class CandidId : IEquatable<CandidId>, IEquatable<string>, IComparable<CandidId>
 	{
 		private readonly static Regex idRegex = new Regex("^[a-zA-Z_][a-zA-Z0-9_]*$", RegexOptions.Compiled);
+		
+		/// <summary>
+		/// The string value of the id
+		/// </summary>
 		public string Value { get; }
 
 		private CandidId(string value)
@@ -13,7 +20,13 @@ namespace EdjCase.ICP.Candid.Models
 			this.Value = value ?? throw new ArgumentNullException(nameof(value));
 		}
 
-		public static CandidId Parse(string value)
+		/// <summary>
+		/// Helper method to create a candid id from a string value. Will validate if the string is a valid id
+		/// </summary>
+		/// <param name="value">The string value to use as the id</param>
+		/// <returns>A candid id value</returns>
+		/// <exception cref="ArgumentException">Throws if the string is not a valid candid id</exception>
+		public static CandidId Create(string value)
 		{
 			if (!idRegex.IsMatch(value))
 			{

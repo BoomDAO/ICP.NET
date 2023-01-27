@@ -42,7 +42,7 @@ namespace EdjCase.ICP.InternetIdentity
 			return reply.Arg.Values[0].Value.AsVector().Values
 				.Select(d => d.AsRecord())
 				// Only authentication devices
-				.Where(d => d["purpose"].AsVariant().Tag == "authentication")
+				.Where(d => d["purpose"].AsVariant().Tag == CandidTag.FromName("authentication"))
 				.Select(d => new DeviceInfo(
 					publicKey: d["pubkey"].AsVectorAsArray(v => v.AsNat8()),
 					credentialId: d["credential_id"].AsOptional(o => o.AsVectorAsArray(v => v.AsNat8())).GetValueOrDefault()

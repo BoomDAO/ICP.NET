@@ -9,9 +9,16 @@
   - [ComputeHash(stream)](#M-EdjCase-ICP-Candid-Crypto-CRC32-ComputeHash-System-IO-Stream- 'EdjCase.ICP.Candid.Crypto.CRC32.ComputeHash(System.IO.Stream)')
   - [ComputeHash(data)](#M-EdjCase-ICP-Candid-Crypto-CRC32-ComputeHash-System-Byte[]- 'EdjCase.ICP.Candid.Crypto.CRC32.ComputeHash(System.Byte[])')
 - [CandidArg](#T-EdjCase-ICP-Candid-Models-CandidArg 'EdjCase.ICP.Candid.Models.CandidArg')
+  - [#ctor(values)](#M-EdjCase-ICP-Candid-Models-CandidArg-#ctor-System-Collections-Generic-List{EdjCase-ICP-Candid-Models-CandidTypedValue}- 'EdjCase.ICP.Candid.Models.CandidArg.#ctor(System.Collections.Generic.List{EdjCase.ICP.Candid.Models.CandidTypedValue})')
+  - [Values](#P-EdjCase-ICP-Candid-Models-CandidArg-Values 'EdjCase.ICP.Candid.Models.CandidArg.Values')
   - [ComputeHash()](#M-EdjCase-ICP-Candid-Models-CandidArg-ComputeHash-EdjCase-ICP-Candid-Crypto-IHashFunction- 'EdjCase.ICP.Candid.Models.CandidArg.ComputeHash(EdjCase.ICP.Candid.Crypto.IHashFunction)')
+  - [Empty()](#M-EdjCase-ICP-Candid-Models-CandidArg-Empty 'EdjCase.ICP.Candid.Models.CandidArg.Empty')
+  - [Encode()](#M-EdjCase-ICP-Candid-Models-CandidArg-Encode 'EdjCase.ICP.Candid.Models.CandidArg.Encode')
   - [Equals()](#M-EdjCase-ICP-Candid-Models-CandidArg-Equals-EdjCase-ICP-Candid-Models-CandidArg- 'EdjCase.ICP.Candid.Models.CandidArg.Equals(EdjCase.ICP.Candid.Models.CandidArg)')
   - [Equals()](#M-EdjCase-ICP-Candid-Models-CandidArg-Equals-System-Object- 'EdjCase.ICP.Candid.Models.CandidArg.Equals(System.Object)')
+  - [FromBytes(value)](#M-EdjCase-ICP-Candid-Models-CandidArg-FromBytes-System-Byte[]- 'EdjCase.ICP.Candid.Models.CandidArg.FromBytes(System.Byte[])')
+  - [FromCandid(values)](#M-EdjCase-ICP-Candid-Models-CandidArg-FromCandid-System-Collections-Generic-List{EdjCase-ICP-Candid-Models-CandidTypedValue}- 'EdjCase.ICP.Candid.Models.CandidArg.FromCandid(System.Collections.Generic.List{EdjCase.ICP.Candid.Models.CandidTypedValue})')
+  - [FromCandid(values)](#M-EdjCase-ICP-Candid-Models-CandidArg-FromCandid-EdjCase-ICP-Candid-Models-CandidTypedValue[]- 'EdjCase.ICP.Candid.Models.CandidArg.FromCandid(EdjCase.ICP.Candid.Models.CandidTypedValue[])')
   - [GetHashCode()](#M-EdjCase-ICP-Candid-Models-CandidArg-GetHashCode 'EdjCase.ICP.Candid.Models.CandidArg.GetHashCode')
   - [ToString()](#M-EdjCase-ICP-Candid-Models-CandidArg-ToString 'EdjCase.ICP.Candid.Models.CandidArg.ToString')
   - [op_Equality()](#M-EdjCase-ICP-Candid-Models-CandidArg-op_Equality-EdjCase-ICP-Candid-Models-CandidArg,EdjCase-ICP-Candid-Models-CandidArg- 'EdjCase.ICP.Candid.Models.CandidArg.op_Equality(EdjCase.ICP.Candid.Models.CandidArg,EdjCase.ICP.Candid.Models.CandidArg)')
@@ -50,7 +57,9 @@
   - [Equals()](#M-EdjCase-ICP-Candid-Models-Types-CandidFuncType-Equals-System-Object- 'EdjCase.ICP.Candid.Models.Types.CandidFuncType.Equals(System.Object)')
   - [GetHashCode()](#M-EdjCase-ICP-Candid-Models-Types-CandidFuncType-GetHashCode 'EdjCase.ICP.Candid.Models.Types.CandidFuncType.GetHashCode')
 - [CandidId](#T-EdjCase-ICP-Candid-Models-CandidId 'EdjCase.ICP.Candid.Models.CandidId')
+  - [Value](#P-EdjCase-ICP-Candid-Models-CandidId-Value 'EdjCase.ICP.Candid.Models.CandidId.Value')
   - [CompareTo()](#M-EdjCase-ICP-Candid-Models-CandidId-CompareTo-EdjCase-ICP-Candid-Models-CandidId- 'EdjCase.ICP.Candid.Models.CandidId.CompareTo(EdjCase.ICP.Candid.Models.CandidId)')
+  - [Create(value)](#M-EdjCase-ICP-Candid-Models-CandidId-Create-System-String- 'EdjCase.ICP.Candid.Models.CandidId.Create(System.String)')
   - [Equals()](#M-EdjCase-ICP-Candid-Models-CandidId-Equals-System-Object- 'EdjCase.ICP.Candid.Models.CandidId.Equals(System.Object)')
   - [Equals()](#M-EdjCase-ICP-Candid-Models-CandidId-Equals-EdjCase-ICP-Candid-Models-CandidId- 'EdjCase.ICP.Candid.Models.CandidId.Equals(EdjCase.ICP.Candid.Models.CandidId)')
   - [Equals()](#M-EdjCase-ICP-Candid-Models-CandidId-Equals-System-String- 'EdjCase.ICP.Candid.Models.CandidId.Equals(System.String)')
@@ -155,7 +164,23 @@
   - [Equals()](#M-EdjCase-ICP-Candid-Models-Types-CandidServiceType-Equals-System-Object- 'EdjCase.ICP.Candid.Models.Types.CandidServiceType.Equals(System.Object)')
   - [GetHashCode()](#M-EdjCase-ICP-Candid-Models-Types-CandidServiceType-GetHashCode 'EdjCase.ICP.Candid.Models.Types.CandidServiceType.GetHashCode')
 - [CandidTag](#T-EdjCase-ICP-Candid-Models-CandidTag 'EdjCase.ICP.Candid.Models.CandidTag')
+  - [#ctor(id)](#M-EdjCase-ICP-Candid-Models-CandidTag-#ctor-System-UInt32- 'EdjCase.ICP.Candid.Models.CandidTag.#ctor(System.UInt32)')
+  - [Id](#P-EdjCase-ICP-Candid-Models-CandidTag-Id 'EdjCase.ICP.Candid.Models.CandidTag.Id')
+  - [Name](#P-EdjCase-ICP-Candid-Models-CandidTag-Name 'EdjCase.ICP.Candid.Models.CandidTag.Name')
+  - [CompareTo()](#M-EdjCase-ICP-Candid-Models-CandidTag-CompareTo-System-Object- 'EdjCase.ICP.Candid.Models.CandidTag.CompareTo(System.Object)')
+  - [CompareTo()](#M-EdjCase-ICP-Candid-Models-CandidTag-CompareTo-EdjCase-ICP-Candid-Models-CandidTag- 'EdjCase.ICP.Candid.Models.CandidTag.CompareTo(EdjCase.ICP.Candid.Models.CandidTag)')
+  - [Equals()](#M-EdjCase-ICP-Candid-Models-CandidTag-Equals-EdjCase-ICP-Candid-Models-CandidTag- 'EdjCase.ICP.Candid.Models.CandidTag.Equals(EdjCase.ICP.Candid.Models.CandidTag)')
+  - [Equals()](#M-EdjCase-ICP-Candid-Models-CandidTag-Equals-System-Object- 'EdjCase.ICP.Candid.Models.CandidTag.Equals(System.Object)')
+  - [FromId(id)](#M-EdjCase-ICP-Candid-Models-CandidTag-FromId-System-UInt32- 'EdjCase.ICP.Candid.Models.CandidTag.FromId(System.UInt32)')
+  - [FromName(name)](#M-EdjCase-ICP-Candid-Models-CandidTag-FromName-System-String- 'EdjCase.ICP.Candid.Models.CandidTag.FromName(System.String)')
+  - [GetHashCode()](#M-EdjCase-ICP-Candid-Models-CandidTag-GetHashCode 'EdjCase.ICP.Candid.Models.CandidTag.GetHashCode')
   - [HashName(name)](#M-EdjCase-ICP-Candid-Models-CandidTag-HashName-System-String- 'EdjCase.ICP.Candid.Models.CandidTag.HashName(System.String)')
+  - [ToString()](#M-EdjCase-ICP-Candid-Models-CandidTag-ToString 'EdjCase.ICP.Candid.Models.CandidTag.ToString')
+  - [op_Equality()](#M-EdjCase-ICP-Candid-Models-CandidTag-op_Equality-EdjCase-ICP-Candid-Models-CandidTag,EdjCase-ICP-Candid-Models-CandidTag- 'EdjCase.ICP.Candid.Models.CandidTag.op_Equality(EdjCase.ICP.Candid.Models.CandidTag,EdjCase.ICP.Candid.Models.CandidTag)')
+  - [op_Implicit(name)](#M-EdjCase-ICP-Candid-Models-CandidTag-op_Implicit-System-String-~EdjCase-ICP-Candid-Models-CandidTag 'EdjCase.ICP.Candid.Models.CandidTag.op_Implicit(System.String)~EdjCase.ICP.Candid.Models.CandidTag')
+  - [op_Implicit(id)](#M-EdjCase-ICP-Candid-Models-CandidTag-op_Implicit-System-UInt32-~EdjCase-ICP-Candid-Models-CandidTag 'EdjCase.ICP.Candid.Models.CandidTag.op_Implicit(System.UInt32)~EdjCase.ICP.Candid.Models.CandidTag')
+  - [op_Implicit(tag)](#M-EdjCase-ICP-Candid-Models-CandidTag-op_Implicit-EdjCase-ICP-Candid-Models-CandidTag-~System-UInt32 'EdjCase.ICP.Candid.Models.CandidTag.op_Implicit(EdjCase.ICP.Candid.Models.CandidTag)~System.UInt32')
+  - [op_Inequality()](#M-EdjCase-ICP-Candid-Models-CandidTag-op_Inequality-EdjCase-ICP-Candid-Models-CandidTag,EdjCase-ICP-Candid-Models-CandidTag- 'EdjCase.ICP.Candid.Models.CandidTag.op_Inequality(EdjCase.ICP.Candid.Models.CandidTag,EdjCase.ICP.Candid.Models.CandidTag)')
 - [CandidTextParseException](#T-EdjCase-ICP-Candid-Exceptions-CandidTextParseException 'EdjCase.ICP.Candid.Exceptions.CandidTextParseException')
   - [Message](#P-EdjCase-ICP-Candid-Exceptions-CandidTextParseException-Message 'EdjCase.ICP.Candid.Exceptions.CandidTextParseException.Message')
 - [CandidType](#T-EdjCase-ICP-Candid-Models-Types-CandidType 'EdjCase.ICP.Candid.Models.Types.CandidType')
@@ -186,19 +211,82 @@
   - [op_Equality()](#M-EdjCase-ICP-Candid-Models-Types-CandidType-op_Equality-EdjCase-ICP-Candid-Models-Types-CandidType,EdjCase-ICP-Candid-Models-Types-CandidType- 'EdjCase.ICP.Candid.Models.Types.CandidType.op_Equality(EdjCase.ICP.Candid.Models.Types.CandidType,EdjCase.ICP.Candid.Models.Types.CandidType)')
   - [op_Inequality()](#M-EdjCase-ICP-Candid-Models-Types-CandidType-op_Inequality-EdjCase-ICP-Candid-Models-Types-CandidType,EdjCase-ICP-Candid-Models-Types-CandidType- 'EdjCase.ICP.Candid.Models.Types.CandidType.op_Inequality(EdjCase.ICP.Candid.Models.Types.CandidType,EdjCase.ICP.Candid.Models.Types.CandidType)')
 - [CandidTypedValue](#T-EdjCase-ICP-Candid-Models-CandidTypedValue 'EdjCase.ICP.Candid.Models.CandidTypedValue')
+  - [#ctor(value,type)](#M-EdjCase-ICP-Candid-Models-CandidTypedValue-#ctor-EdjCase-ICP-Candid-Models-Values-CandidValue,EdjCase-ICP-Candid-Models-Types-CandidType- 'EdjCase.ICP.Candid.Models.CandidTypedValue.#ctor(EdjCase.ICP.Candid.Models.Values.CandidValue,EdjCase.ICP.Candid.Models.Types.CandidType)')
+  - [Type](#P-EdjCase-ICP-Candid-Models-CandidTypedValue-Type 'EdjCase.ICP.Candid.Models.CandidTypedValue.Type')
+  - [Value](#P-EdjCase-ICP-Candid-Models-CandidTypedValue-Value 'EdjCase.ICP.Candid.Models.CandidTypedValue.Value')
+  - [AsFunc()](#M-EdjCase-ICP-Candid-Models-CandidTypedValue-AsFunc 'EdjCase.ICP.Candid.Models.CandidTypedValue.AsFunc')
+  - [AsNat()](#M-EdjCase-ICP-Candid-Models-CandidTypedValue-AsNat 'EdjCase.ICP.Candid.Models.CandidTypedValue.AsNat')
+  - [AsNat16()](#M-EdjCase-ICP-Candid-Models-CandidTypedValue-AsNat16 'EdjCase.ICP.Candid.Models.CandidTypedValue.AsNat16')
+  - [AsNat32()](#M-EdjCase-ICP-Candid-Models-CandidTypedValue-AsNat32 'EdjCase.ICP.Candid.Models.CandidTypedValue.AsNat32')
+  - [AsNat64()](#M-EdjCase-ICP-Candid-Models-CandidTypedValue-AsNat64 'EdjCase.ICP.Candid.Models.CandidTypedValue.AsNat64')
+  - [AsNat8()](#M-EdjCase-ICP-Candid-Models-CandidTypedValue-AsNat8 'EdjCase.ICP.Candid.Models.CandidTypedValue.AsNat8')
+  - [AsOptional()](#M-EdjCase-ICP-Candid-Models-CandidTypedValue-AsOptional 'EdjCase.ICP.Candid.Models.CandidTypedValue.AsOptional')
+  - [AsOptional\`\`1()](#M-EdjCase-ICP-Candid-Models-CandidTypedValue-AsOptional``1-System-Func{EdjCase-ICP-Candid-Models-Values-CandidValue,``0}- 'EdjCase.ICP.Candid.Models.CandidTypedValue.AsOptional``1(System.Func{EdjCase.ICP.Candid.Models.Values.CandidValue,``0})')
+  - [AsPrimitive()](#M-EdjCase-ICP-Candid-Models-CandidTypedValue-AsPrimitive 'EdjCase.ICP.Candid.Models.CandidTypedValue.AsPrimitive')
   - [AsPrincipal()](#M-EdjCase-ICP-Candid-Models-CandidTypedValue-AsPrincipal 'EdjCase.ICP.Candid.Models.CandidTypedValue.AsPrincipal')
+  - [AsRecord()](#M-EdjCase-ICP-Candid-Models-CandidTypedValue-AsRecord 'EdjCase.ICP.Candid.Models.CandidTypedValue.AsRecord')
+  - [AsRecord\`\`1()](#M-EdjCase-ICP-Candid-Models-CandidTypedValue-AsRecord``1-System-Func{EdjCase-ICP-Candid-Models-Values-CandidRecord,``0}- 'EdjCase.ICP.Candid.Models.CandidTypedValue.AsRecord``1(System.Func{EdjCase.ICP.Candid.Models.Values.CandidRecord,``0})')
+  - [AsService()](#M-EdjCase-ICP-Candid-Models-CandidTypedValue-AsService 'EdjCase.ICP.Candid.Models.CandidTypedValue.AsService')
+  - [AsText()](#M-EdjCase-ICP-Candid-Models-CandidTypedValue-AsText 'EdjCase.ICP.Candid.Models.CandidTypedValue.AsText')
+  - [AsVariant()](#M-EdjCase-ICP-Candid-Models-CandidTypedValue-AsVariant 'EdjCase.ICP.Candid.Models.CandidTypedValue.AsVariant')
+  - [AsVariant\`\`1()](#M-EdjCase-ICP-Candid-Models-CandidTypedValue-AsVariant``1-System-Func{EdjCase-ICP-Candid-Models-Values-CandidVariant,``0}- 'EdjCase.ICP.Candid.Models.CandidTypedValue.AsVariant``1(System.Func{EdjCase.ICP.Candid.Models.Values.CandidVariant,``0})')
+  - [AsVector()](#M-EdjCase-ICP-Candid-Models-CandidTypedValue-AsVector 'EdjCase.ICP.Candid.Models.CandidTypedValue.AsVector')
+  - [AsVectorAsArray\`\`1()](#M-EdjCase-ICP-Candid-Models-CandidTypedValue-AsVectorAsArray``1-System-Func{EdjCase-ICP-Candid-Models-Values-CandidValue,``0}- 'EdjCase.ICP.Candid.Models.CandidTypedValue.AsVectorAsArray``1(System.Func{EdjCase.ICP.Candid.Models.Values.CandidValue,``0})')
+  - [AsVectorAsList\`\`1()](#M-EdjCase-ICP-Candid-Models-CandidTypedValue-AsVectorAsList``1-System-Func{EdjCase-ICP-Candid-Models-Values-CandidValue,``0}- 'EdjCase.ICP.Candid.Models.CandidTypedValue.AsVectorAsList``1(System.Func{EdjCase.ICP.Candid.Models.Values.CandidValue,``0})')
+  - [IsNull()](#M-EdjCase-ICP-Candid-Models-CandidTypedValue-IsNull 'EdjCase.ICP.Candid.Models.CandidTypedValue.IsNull')
+  - [ToObject\`\`1(converter)](#M-EdjCase-ICP-Candid-Models-CandidTypedValue-ToObject``1-EdjCase-ICP-Candid-CandidConverter- 'EdjCase.ICP.Candid.Models.CandidTypedValue.ToObject``1(EdjCase.ICP.Candid.CandidConverter)')
+  - [ToOptionalObject\`\`1(converter)](#M-EdjCase-ICP-Candid-Models-CandidTypedValue-ToOptionalObject``1-EdjCase-ICP-Candid-CandidConverter- 'EdjCase.ICP.Candid.Models.CandidTypedValue.ToOptionalObject``1(EdjCase.ICP.Candid.CandidConverter)')
 - [CandidValue](#T-EdjCase-ICP-Candid-Models-Values-CandidValue 'EdjCase.ICP.Candid.Models.Values.CandidValue')
   - [Type](#P-EdjCase-ICP-Candid-Models-Values-CandidValue-Type 'EdjCase.ICP.Candid.Models.Values.CandidValue.Type')
+  - [AsBool()](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsBool 'EdjCase.ICP.Candid.Models.Values.CandidValue.AsBool')
+  - [AsFloat32()](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsFloat32 'EdjCase.ICP.Candid.Models.Values.CandidValue.AsFloat32')
+  - [AsFloat64()](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsFloat64 'EdjCase.ICP.Candid.Models.Values.CandidValue.AsFloat64')
+  - [AsFunc()](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsFunc 'EdjCase.ICP.Candid.Models.Values.CandidValue.AsFunc')
+  - [AsInt()](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsInt 'EdjCase.ICP.Candid.Models.Values.CandidValue.AsInt')
+  - [AsInt16()](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsInt16 'EdjCase.ICP.Candid.Models.Values.CandidValue.AsInt16')
+  - [AsInt32()](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsInt32 'EdjCase.ICP.Candid.Models.Values.CandidValue.AsInt32')
+  - [AsInt64()](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsInt64 'EdjCase.ICP.Candid.Models.Values.CandidValue.AsInt64')
+  - [AsInt8()](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsInt8 'EdjCase.ICP.Candid.Models.Values.CandidValue.AsInt8')
+  - [AsNat()](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsNat 'EdjCase.ICP.Candid.Models.Values.CandidValue.AsNat')
+  - [AsNat16()](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsNat16 'EdjCase.ICP.Candid.Models.Values.CandidValue.AsNat16')
+  - [AsNat32()](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsNat32 'EdjCase.ICP.Candid.Models.Values.CandidValue.AsNat32')
+  - [AsNat64()](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsNat64 'EdjCase.ICP.Candid.Models.Values.CandidValue.AsNat64')
+  - [AsNat8()](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsNat8 'EdjCase.ICP.Candid.Models.Values.CandidValue.AsNat8')
+  - [AsOptional()](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsOptional 'EdjCase.ICP.Candid.Models.Values.CandidValue.AsOptional')
+  - [AsOptional\`\`1()](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsOptional``1-System-Func{EdjCase-ICP-Candid-Models-Values-CandidValue,``0}- 'EdjCase.ICP.Candid.Models.Values.CandidValue.AsOptional``1(System.Func{EdjCase.ICP.Candid.Models.Values.CandidValue,``0})')
   - [AsPrimitive()](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsPrimitive 'EdjCase.ICP.Candid.Models.Values.CandidValue.AsPrimitive')
   - [AsPrincipal()](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsPrincipal 'EdjCase.ICP.Candid.Models.Values.CandidValue.AsPrincipal')
   - [AsRecord()](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsRecord 'EdjCase.ICP.Candid.Models.Values.CandidValue.AsRecord')
+  - [AsRecord\`\`1(converter)](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsRecord``1-System-Func{EdjCase-ICP-Candid-Models-Values-CandidRecord,``0}- 'EdjCase.ICP.Candid.Models.Values.CandidValue.AsRecord``1(System.Func{EdjCase.ICP.Candid.Models.Values.CandidRecord,``0})')
+  - [AsService()](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsService 'EdjCase.ICP.Candid.Models.Values.CandidValue.AsService')
+  - [AsText()](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsText 'EdjCase.ICP.Candid.Models.Values.CandidValue.AsText')
+  - [AsVariant()](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsVariant 'EdjCase.ICP.Candid.Models.Values.CandidValue.AsVariant')
+  - [AsVariant\`\`1(converter)](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsVariant``1-System-Func{EdjCase-ICP-Candid-Models-Values-CandidVariant,``0}- 'EdjCase.ICP.Candid.Models.Values.CandidValue.AsVariant``1(System.Func{EdjCase.ICP.Candid.Models.Values.CandidVariant,``0})')
   - [AsVector()](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsVector 'EdjCase.ICP.Candid.Models.Values.CandidValue.AsVector')
   - [AsVectorAsArray\`\`1(converter)](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsVectorAsArray``1-System-Func{EdjCase-ICP-Candid-Models-Values-CandidValue,``0}- 'EdjCase.ICP.Candid.Models.Values.CandidValue.AsVectorAsArray``1(System.Func{EdjCase.ICP.Candid.Models.Values.CandidValue,``0})')
   - [AsVectorAsList\`\`1(converter)](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsVectorAsList``1-System-Func{EdjCase-ICP-Candid-Models-Values-CandidValue,``0}- 'EdjCase.ICP.Candid.Models.Values.CandidValue.AsVectorAsList``1(System.Func{EdjCase.ICP.Candid.Models.Values.CandidValue,``0})')
+  - [Bool(value)](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-Bool-System-Boolean- 'EdjCase.ICP.Candid.Models.Values.CandidValue.Bool(System.Boolean)')
+  - [Empty()](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-Empty 'EdjCase.ICP.Candid.Models.Values.CandidValue.Empty')
   - [Equals()](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-Equals-EdjCase-ICP-Candid-Models-Values-CandidValue- 'EdjCase.ICP.Candid.Models.Values.CandidValue.Equals(EdjCase.ICP.Candid.Models.Values.CandidValue)')
   - [Equals()](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-Equals-System-Object- 'EdjCase.ICP.Candid.Models.Values.CandidValue.Equals(System.Object)')
+  - [Float32(value)](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-Float32-System-Single- 'EdjCase.ICP.Candid.Models.Values.CandidValue.Float32(System.Single)')
+  - [Float64(value)](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-Float64-System-Double- 'EdjCase.ICP.Candid.Models.Values.CandidValue.Float64(System.Double)')
   - [GetHashCode()](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-GetHashCode 'EdjCase.ICP.Candid.Models.Values.CandidValue.GetHashCode')
+  - [Int(value)](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-Int-EdjCase-ICP-Candid-Models-UnboundedInt- 'EdjCase.ICP.Candid.Models.Values.CandidValue.Int(EdjCase.ICP.Candid.Models.UnboundedInt)')
+  - [Int16(value)](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-Int16-System-Int16- 'EdjCase.ICP.Candid.Models.Values.CandidValue.Int16(System.Int16)')
+  - [Int32(value)](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-Int32-System-Int32- 'EdjCase.ICP.Candid.Models.Values.CandidValue.Int32(System.Int32)')
+  - [Int64(value)](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-Int64-System-Int64- 'EdjCase.ICP.Candid.Models.Values.CandidValue.Int64(System.Int64)')
+  - [Int8(value)](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-Int8-System-SByte- 'EdjCase.ICP.Candid.Models.Values.CandidValue.Int8(System.SByte)')
   - [IsNull()](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-IsNull 'EdjCase.ICP.Candid.Models.Values.CandidValue.IsNull')
+  - [Nat(value)](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-Nat-EdjCase-ICP-Candid-Models-UnboundedUInt- 'EdjCase.ICP.Candid.Models.Values.CandidValue.Nat(EdjCase.ICP.Candid.Models.UnboundedUInt)')
+  - [Nat16(value)](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-Nat16-System-UInt16- 'EdjCase.ICP.Candid.Models.Values.CandidValue.Nat16(System.UInt16)')
+  - [Nat32(value)](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-Nat32-System-UInt32- 'EdjCase.ICP.Candid.Models.Values.CandidValue.Nat32(System.UInt32)')
+  - [Nat64(value)](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-Nat64-System-UInt64- 'EdjCase.ICP.Candid.Models.Values.CandidValue.Nat64(System.UInt64)')
+  - [Nat8(value)](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-Nat8-System-Byte- 'EdjCase.ICP.Candid.Models.Values.CandidValue.Nat8(System.Byte)')
+  - [Null()](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-Null 'EdjCase.ICP.Candid.Models.Values.CandidValue.Null')
+  - [Principal(value)](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-Principal-EdjCase-ICP-Candid-Models-Principal- 'EdjCase.ICP.Candid.Models.Values.CandidValue.Principal(EdjCase.ICP.Candid.Models.Principal)')
+  - [Reserved()](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-Reserved 'EdjCase.ICP.Candid.Models.Values.CandidValue.Reserved')
+  - [Text(value)](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-Text-System-String- 'EdjCase.ICP.Candid.Models.Values.CandidValue.Text(System.String)')
   - [ToString()](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-ToString 'EdjCase.ICP.Candid.Models.Values.CandidValue.ToString')
   - [op_Equality()](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-op_Equality-EdjCase-ICP-Candid-Models-Values-CandidValue,EdjCase-ICP-Candid-Models-Values-CandidValue- 'EdjCase.ICP.Candid.Models.Values.CandidValue.op_Equality(EdjCase.ICP.Candid.Models.Values.CandidValue,EdjCase.ICP.Candid.Models.Values.CandidValue)')
   - [op_Inequality()](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-op_Inequality-EdjCase-ICP-Candid-Models-Values-CandidValue,EdjCase-ICP-Candid-Models-Values-CandidValue- 'EdjCase.ICP.Candid.Models.Values.CandidValue.op_Inequality(EdjCase.ICP.Candid.Models.Values.CandidValue,EdjCase.ICP.Candid.Models.Values.CandidValue)')
@@ -212,7 +300,10 @@
   - [Variant](#F-EdjCase-ICP-Candid-Models-Values-CandidValueType-Variant 'EdjCase.ICP.Candid.Models.Values.CandidValueType.Variant')
   - [Vector](#F-EdjCase-ICP-Candid-Models-Values-CandidValueType-Vector 'EdjCase.ICP.Candid.Models.Values.CandidValueType.Vector')
 - [CandidVariant](#T-EdjCase-ICP-Candid-Models-Values-CandidVariant 'EdjCase.ICP.Candid.Models.Values.CandidVariant')
+  - [#ctor(tag,value)](#M-EdjCase-ICP-Candid-Models-Values-CandidVariant-#ctor-EdjCase-ICP-Candid-Models-CandidTag,EdjCase-ICP-Candid-Models-Values-CandidValue- 'EdjCase.ICP.Candid.Models.Values.CandidVariant.#ctor(EdjCase.ICP.Candid.Models.CandidTag,EdjCase.ICP.Candid.Models.Values.CandidValue)')
+  - [Tag](#P-EdjCase-ICP-Candid-Models-Values-CandidVariant-Tag 'EdjCase.ICP.Candid.Models.Values.CandidVariant.Tag')
   - [Type](#P-EdjCase-ICP-Candid-Models-Values-CandidVariant-Type 'EdjCase.ICP.Candid.Models.Values.CandidVariant.Type')
+  - [Value](#P-EdjCase-ICP-Candid-Models-Values-CandidVariant-Value 'EdjCase.ICP.Candid.Models.Values.CandidVariant.Value')
   - [EncodeValue()](#M-EdjCase-ICP-Candid-Models-Values-CandidVariant-EncodeValue-EdjCase-ICP-Candid-Models-Types-CandidType,System-Func{EdjCase-ICP-Candid-Models-CandidId,EdjCase-ICP-Candid-Models-Types-CandidCompoundType}- 'EdjCase.ICP.Candid.Models.Values.CandidVariant.EncodeValue(EdjCase.ICP.Candid.Models.Types.CandidType,System.Func{EdjCase.ICP.Candid.Models.CandidId,EdjCase.ICP.Candid.Models.Types.CandidCompoundType})')
   - [Equals()](#M-EdjCase-ICP-Candid-Models-Values-CandidVariant-Equals-EdjCase-ICP-Candid-Models-Values-CandidValue- 'EdjCase.ICP.Candid.Models.Values.CandidVariant.Equals(EdjCase.ICP.Candid.Models.Values.CandidValue)')
   - [GetHashCode()](#M-EdjCase-ICP-Candid-Models-Values-CandidVariant-GetHashCode 'EdjCase.ICP.Candid.Models.Values.CandidVariant.GetHashCode')
@@ -220,7 +311,9 @@
 - [CandidVariantType](#T-EdjCase-ICP-Candid-Models-Types-CandidVariantType 'EdjCase.ICP.Candid.Models.Types.CandidVariantType')
   - [Type](#P-EdjCase-ICP-Candid-Models-Types-CandidVariantType-Type 'EdjCase.ICP.Candid.Models.Types.CandidVariantType.Type')
 - [CandidVector](#T-EdjCase-ICP-Candid-Models-Values-CandidVector 'EdjCase.ICP.Candid.Models.Values.CandidVector')
+  - [#ctor(values)](#M-EdjCase-ICP-Candid-Models-Values-CandidVector-#ctor-EdjCase-ICP-Candid-Models-Values-CandidValue[]- 'EdjCase.ICP.Candid.Models.Values.CandidVector.#ctor(EdjCase.ICP.Candid.Models.Values.CandidValue[])')
   - [Type](#P-EdjCase-ICP-Candid-Models-Values-CandidVector-Type 'EdjCase.ICP.Candid.Models.Values.CandidVector.Type')
+  - [Values](#P-EdjCase-ICP-Candid-Models-Values-CandidVector-Values 'EdjCase.ICP.Candid.Models.Values.CandidVector.Values')
   - [EncodeValue()](#M-EdjCase-ICP-Candid-Models-Values-CandidVector-EncodeValue-EdjCase-ICP-Candid-Models-Types-CandidType,System-Func{EdjCase-ICP-Candid-Models-CandidId,EdjCase-ICP-Candid-Models-Types-CandidCompoundType}- 'EdjCase.ICP.Candid.Models.Values.CandidVector.EncodeValue(EdjCase.ICP.Candid.Models.Types.CandidType,System.Func{EdjCase.ICP.Candid.Models.CandidId,EdjCase.ICP.Candid.Models.Types.CandidCompoundType})')
   - [Equals()](#M-EdjCase-ICP-Candid-Models-Values-CandidVector-Equals-EdjCase-ICP-Candid-Models-Values-CandidValue- 'EdjCase.ICP.Candid.Models.Values.CandidVector.Equals(EdjCase.ICP.Candid.Models.Values.CandidValue)')
   - [GetHashCode()](#M-EdjCase-ICP-Candid-Models-Values-CandidVector-GetHashCode 'EdjCase.ICP.Candid.Models.Values.CandidVector.GetHashCode')
@@ -357,12 +450,63 @@ Hash of the byte data as a byte array of length of 4
 
 EdjCase.ICP.Candid.Models
 
+##### Summary
+
+A model representing a candid arg. Used as the list of arguments for a function
+
+<a name='M-EdjCase-ICP-Candid-Models-CandidArg-#ctor-System-Collections-Generic-List{EdjCase-ICP-Candid-Models-CandidTypedValue}-'></a>
+### #ctor(values) `constructor`
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| values | [System.Collections.Generic.List{EdjCase.ICP.Candid.Models.CandidTypedValue}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.List 'System.Collections.Generic.List{EdjCase.ICP.Candid.Models.CandidTypedValue}') | Order list of typed values for the arg |
+
+<a name='P-EdjCase-ICP-Candid-Models-CandidArg-Values'></a>
+### Values `property`
+
+##### Summary
+
+Order list of typed values for the arg
+
 <a name='M-EdjCase-ICP-Candid-Models-CandidArg-ComputeHash-EdjCase-ICP-Candid-Crypto-IHashFunction-'></a>
 ### ComputeHash() `method`
 
 ##### Summary
 
 *Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-CandidArg-Empty'></a>
+### Empty() `method`
+
+##### Summary
+
+Helper method to create a candid arg with no typed values
+
+##### Returns
+
+Candid arg value
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-CandidArg-Encode'></a>
+### Encode() `method`
+
+##### Summary
+
+Encodes the candid arg into a byte array which can be used in sending requests to
+a canister
+
+##### Returns
+
+
 
 ##### Parameters
 
@@ -389,6 +533,64 @@ This method has no parameters.
 ##### Parameters
 
 This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-CandidArg-FromBytes-System-Byte[]-'></a>
+### FromBytes(value) `method`
+
+##### Summary
+
+Decodes a byte array into a candid arg value. Must be a valid encoded candid arg value
+
+##### Returns
+
+Candid arg value
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| value | [System.Byte[]](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Byte[] 'System.Byte[]') | Encoded candid arg value |
+
+##### Exceptions
+
+| Name | Description |
+| ---- | ----------- |
+| [EdjCase.ICP.Candid.Exceptions.CandidDecodingException](#T-EdjCase-ICP-Candid-Exceptions-CandidDecodingException 'EdjCase.ICP.Candid.Exceptions.CandidDecodingException') | Throws if the bytes are not valid Candid |
+| [EdjCase.ICP.Candid.Exceptions.InvalidCandidException](#T-EdjCase-ICP-Candid-Exceptions-InvalidCandidException 'EdjCase.ICP.Candid.Exceptions.InvalidCandidException') | Throws if the the candid does not follow the specification |
+
+<a name='M-EdjCase-ICP-Candid-Models-CandidArg-FromCandid-System-Collections-Generic-List{EdjCase-ICP-Candid-Models-CandidTypedValue}-'></a>
+### FromCandid(values) `method`
+
+##### Summary
+
+Converts an ordered list of typed values to a candid arg value
+
+##### Returns
+
+Candid arg value
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| values | [System.Collections.Generic.List{EdjCase.ICP.Candid.Models.CandidTypedValue}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.List 'System.Collections.Generic.List{EdjCase.ICP.Candid.Models.CandidTypedValue}') | Ordered list of typed values |
+
+<a name='M-EdjCase-ICP-Candid-Models-CandidArg-FromCandid-EdjCase-ICP-Candid-Models-CandidTypedValue[]-'></a>
+### FromCandid(values) `method`
+
+##### Summary
+
+Converts an ordered array of typed values to a candid arg value
+
+##### Returns
+
+Candid arg value
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| values | [EdjCase.ICP.Candid.Models.CandidTypedValue[]](#T-EdjCase-ICP-Candid-Models-CandidTypedValue[] 'EdjCase.ICP.Candid.Models.CandidTypedValue[]') | Ordered array of typed values |
 
 <a name='M-EdjCase-ICP-Candid-Models-CandidArg-GetHashCode'></a>
 ### GetHashCode() `method`
@@ -791,6 +993,17 @@ This method has no parameters.
 
 EdjCase.ICP.Candid.Models
 
+##### Summary
+
+A helper model to store and validate a valid candid id value
+
+<a name='P-EdjCase-ICP-Candid-Models-CandidId-Value'></a>
+### Value `property`
+
+##### Summary
+
+The string value of the id
+
 <a name='M-EdjCase-ICP-Candid-Models-CandidId-CompareTo-EdjCase-ICP-Candid-Models-CandidId-'></a>
 ### CompareTo() `method`
 
@@ -801,6 +1014,29 @@ EdjCase.ICP.Candid.Models
 ##### Parameters
 
 This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-CandidId-Create-System-String-'></a>
+### Create(value) `method`
+
+##### Summary
+
+Helper method to create a candid id from a string value. Will validate if the string is a valid id
+
+##### Returns
+
+A candid id value
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| value | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The string value to use as the id |
+
+##### Exceptions
+
+| Name | Description |
+| ---- | ----------- |
+| [System.ArgumentException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.ArgumentException 'System.ArgumentException') | Throws if the string is not a valid candid id |
 
 <a name='M-EdjCase-ICP-Candid-Models-CandidId-Equals-System-Object-'></a>
 ### Equals() `method`
@@ -1952,6 +2188,122 @@ This method has no parameters.
 
 EdjCase.ICP.Candid.Models
 
+##### Summary
+
+A model representing a candid tag which is a positive number id with an optional name
+
+<a name='M-EdjCase-ICP-Candid-Models-CandidTag-#ctor-System-UInt32-'></a>
+### #ctor(id) `constructor`
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| id | [System.UInt32](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.UInt32 'System.UInt32') | A positive integer value that is either an index, a hash of a string name or arbitrary |
+
+<a name='P-EdjCase-ICP-Candid-Models-CandidTag-Id'></a>
+### Id `property`
+
+##### Summary
+
+A positive integer value that is either an index, a hash of a string name or arbitrary
+
+<a name='P-EdjCase-ICP-Candid-Models-CandidTag-Name'></a>
+### Name `property`
+
+##### Summary
+
+Optional. The name/label of the tag. If set, the \`Id\` is a hash of the specified name
+
+<a name='M-EdjCase-ICP-Candid-Models-CandidTag-CompareTo-System-Object-'></a>
+### CompareTo() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-CandidTag-CompareTo-EdjCase-ICP-Candid-Models-CandidTag-'></a>
+### CompareTo() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-CandidTag-Equals-EdjCase-ICP-Candid-Models-CandidTag-'></a>
+### Equals() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-CandidTag-Equals-System-Object-'></a>
+### Equals() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-CandidTag-FromId-System-UInt32-'></a>
+### FromId(id) `method`
+
+##### Summary
+
+Helper method to create a tag from an id. No name will be set
+
+##### Returns
+
+A candid tag
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| id | [System.UInt32](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.UInt32 'System.UInt32') | The id of the tag |
+
+<a name='M-EdjCase-ICP-Candid-Models-CandidTag-FromName-System-String-'></a>
+### FromName(name) `method`
+
+##### Summary
+
+Helper method to create a tag from a name. Will calculate the id by hashing the name
+
+##### Returns
+
+A candid tag
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| name | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The name of the tag |
+
+<a name='M-EdjCase-ICP-Candid-Models-CandidTag-GetHashCode'></a>
+### GetHashCode() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
 <a name='M-EdjCase-ICP-Candid-Models-CandidTag-HashName-System-String-'></a>
 ### HashName(name) `method`
 
@@ -1969,6 +2321,78 @@ Unsigned 32 byte integer hash
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | name | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | Name to hash |
+
+<a name='M-EdjCase-ICP-Candid-Models-CandidTag-ToString'></a>
+### ToString() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-CandidTag-op_Equality-EdjCase-ICP-Candid-Models-CandidTag,EdjCase-ICP-Candid-Models-CandidTag-'></a>
+### op_Equality() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-CandidTag-op_Implicit-System-String-~EdjCase-ICP-Candid-Models-CandidTag'></a>
+### op_Implicit(name) `method`
+
+##### Summary
+
+Converts a string value to a candid tag. Will calculate the id based off a hash of the name
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| name | [System.String)~EdjCase.ICP.Candid.Models.CandidTag](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String)~EdjCase.ICP.Candid.Models.CandidTag 'System.String)~EdjCase.ICP.Candid.Models.CandidTag') | A string value of the name |
+
+<a name='M-EdjCase-ICP-Candid-Models-CandidTag-op_Implicit-System-UInt32-~EdjCase-ICP-Candid-Models-CandidTag'></a>
+### op_Implicit(id) `method`
+
+##### Summary
+
+Converts a uint value into a candid tag. Will only set the id; name will not be set
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| id | [System.UInt32)~EdjCase.ICP.Candid.Models.CandidTag](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.UInt32)~EdjCase.ICP.Candid.Models.CandidTag 'System.UInt32)~EdjCase.ICP.Candid.Models.CandidTag') |  |
+
+<a name='M-EdjCase-ICP-Candid-Models-CandidTag-op_Implicit-EdjCase-ICP-Candid-Models-CandidTag-~System-UInt32'></a>
+### op_Implicit(tag) `method`
+
+##### Summary
+
+Converts a candid tag value to a uint by using the id of the tag
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| tag | [EdjCase.ICP.Candid.Models.CandidTag)~System.UInt32](#T-EdjCase-ICP-Candid-Models-CandidTag-~System-UInt32 'EdjCase.ICP.Candid.Models.CandidTag)~System.UInt32') | The candid tag value |
+
+<a name='M-EdjCase-ICP-Candid-Models-CandidTag-op_Inequality-EdjCase-ICP-Candid-Models-CandidTag,EdjCase-ICP-Candid-Models-CandidTag-'></a>
+### op_Inequality() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
 
 <a name='T-EdjCase-ICP-Candid-Exceptions-CandidTextParseException'></a>
 ## CandidTextParseException `type`
@@ -2382,6 +2806,133 @@ This method has no parameters.
 
 EdjCase.ICP.Candid.Models
 
+##### Summary
+
+A model representing a candid type and value combination. The type and value must match
+
+<a name='M-EdjCase-ICP-Candid-Models-CandidTypedValue-#ctor-EdjCase-ICP-Candid-Models-Values-CandidValue,EdjCase-ICP-Candid-Models-Types-CandidType-'></a>
+### #ctor(value,type) `constructor`
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| value | [EdjCase.ICP.Candid.Models.Values.CandidValue](#T-EdjCase-ICP-Candid-Models-Values-CandidValue 'EdjCase.ICP.Candid.Models.Values.CandidValue') | The candid value |
+| type | [EdjCase.ICP.Candid.Models.Types.CandidType](#T-EdjCase-ICP-Candid-Models-Types-CandidType 'EdjCase.ICP.Candid.Models.Types.CandidType') | The candid type |
+
+<a name='P-EdjCase-ICP-Candid-Models-CandidTypedValue-Type'></a>
+### Type `property`
+
+##### Summary
+
+The candid type
+
+<a name='P-EdjCase-ICP-Candid-Models-CandidTypedValue-Value'></a>
+### Value `property`
+
+##### Summary
+
+The candid value
+
+<a name='M-EdjCase-ICP-Candid-Models-CandidTypedValue-AsFunc'></a>
+### AsFunc() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-CandidTypedValue-AsNat'></a>
+### AsNat() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-CandidTypedValue-AsNat16'></a>
+### AsNat16() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-CandidTypedValue-AsNat32'></a>
+### AsNat32() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-CandidTypedValue-AsNat64'></a>
+### AsNat64() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-CandidTypedValue-AsNat8'></a>
+### AsNat8() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-CandidTypedValue-AsOptional'></a>
+### AsOptional() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-CandidTypedValue-AsOptional``1-System-Func{EdjCase-ICP-Candid-Models-Values-CandidValue,``0}-'></a>
+### AsOptional\`\`1() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-CandidTypedValue-AsPrimitive'></a>
+### AsPrimitive() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
 <a name='M-EdjCase-ICP-Candid-Models-CandidTypedValue-AsPrincipal'></a>
 ### AsPrincipal() `method`
 
@@ -2396,6 +2947,162 @@ If opaque, returns null, otherwise the principalid
 ##### Parameters
 
 This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-CandidTypedValue-AsRecord'></a>
+### AsRecord() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-CandidTypedValue-AsRecord``1-System-Func{EdjCase-ICP-Candid-Models-Values-CandidRecord,``0}-'></a>
+### AsRecord\`\`1() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-CandidTypedValue-AsService'></a>
+### AsService() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-CandidTypedValue-AsText'></a>
+### AsText() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-CandidTypedValue-AsVariant'></a>
+### AsVariant() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-CandidTypedValue-AsVariant``1-System-Func{EdjCase-ICP-Candid-Models-Values-CandidVariant,``0}-'></a>
+### AsVariant\`\`1() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-CandidTypedValue-AsVector'></a>
+### AsVector() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-CandidTypedValue-AsVectorAsArray``1-System-Func{EdjCase-ICP-Candid-Models-Values-CandidValue,``0}-'></a>
+### AsVectorAsArray\`\`1() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-CandidTypedValue-AsVectorAsList``1-System-Func{EdjCase-ICP-Candid-Models-Values-CandidValue,``0}-'></a>
+### AsVectorAsList\`\`1() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-CandidTypedValue-IsNull'></a>
+### IsNull() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-CandidTypedValue-ToObject``1-EdjCase-ICP-Candid-CandidConverter-'></a>
+### ToObject\`\`1(converter) `method`
+
+##### Summary
+
+Helper method to convert a typed value to an generic type value
+
+##### Returns
+
+Value of type T
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| converter | [EdjCase.ICP.Candid.CandidConverter](#T-EdjCase-ICP-Candid-CandidConverter 'EdjCase.ICP.Candid.CandidConverter') | Optional. Converter to use for the conversion, otherwise will use default converter |
+
+##### Generic Types
+
+| Name | Description |
+| ---- | ----------- |
+| T | Type to convert the candid value to |
+
+<a name='M-EdjCase-ICP-Candid-Models-CandidTypedValue-ToOptionalObject``1-EdjCase-ICP-Candid-CandidConverter-'></a>
+### ToOptionalObject\`\`1(converter) `method`
+
+##### Summary
+
+Helper method to convert a typed value to an optional value
+
+##### Returns
+
+Optional value of T
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| converter | [EdjCase.ICP.Candid.CandidConverter](#T-EdjCase-ICP-Candid-CandidConverter 'EdjCase.ICP.Candid.CandidConverter') | Optional. Converter to use for the conversion, otherwise will use default converter |
+
+##### Generic Types
+
+| Name | Description |
+| ---- | ----------- |
+| T | Type to convert the candid value to |
 
 <a name='T-EdjCase-ICP-Candid-Models-Values-CandidValue'></a>
 ## CandidValue `type`
@@ -2415,12 +3122,355 @@ The base class for all candid value
 
 The type of candid value is implemented
 
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsBool'></a>
+### AsBool() `method`
+
+##### Summary
+
+Casts the candid value to a bool type. If the type is not a bool, will throw an exception
+
+##### Returns
+
+A bool value
+
+##### Parameters
+
+This method has no parameters.
+
+##### Exceptions
+
+| Name | Description |
+| ---- | ----------- |
+| [System.InvalidOperationException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.InvalidOperationException 'System.InvalidOperationException') | Throws if the type is not a bool |
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsFloat32'></a>
+### AsFloat32() `method`
+
+##### Summary
+
+Casts the candid value to a float32 type. If the type is not a float32, will throw an exception
+
+##### Returns
+
+A float32 value
+
+##### Parameters
+
+This method has no parameters.
+
+##### Exceptions
+
+| Name | Description |
+| ---- | ----------- |
+| [System.InvalidOperationException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.InvalidOperationException 'System.InvalidOperationException') | Throws if the type is not a float32 |
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsFloat64'></a>
+### AsFloat64() `method`
+
+##### Summary
+
+Casts the candid value to a float64 type. If the type is not a float64, will throw an exception
+
+##### Returns
+
+A float64 value
+
+##### Parameters
+
+This method has no parameters.
+
+##### Exceptions
+
+| Name | Description |
+| ---- | ----------- |
+| [System.InvalidOperationException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.InvalidOperationException 'System.InvalidOperationException') | Throws if the type is not a float64 |
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsFunc'></a>
+### AsFunc() `method`
+
+##### Summary
+
+Casts the candid value to a func type. If the type is not a func, will throw an exception
+
+##### Returns
+
+A func value
+
+##### Parameters
+
+This method has no parameters.
+
+##### Exceptions
+
+| Name | Description |
+| ---- | ----------- |
+| [System.InvalidOperationException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.InvalidOperationException 'System.InvalidOperationException') | Throws if the type is not a func |
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsInt'></a>
+### AsInt() `method`
+
+##### Summary
+
+Casts the candid value to an int type. If the type is not an int, will throw an exception
+
+##### Returns
+
+An unbounded int value
+
+##### Parameters
+
+This method has no parameters.
+
+##### Exceptions
+
+| Name | Description |
+| ---- | ----------- |
+| [System.InvalidOperationException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.InvalidOperationException 'System.InvalidOperationException') | Throws if the type is not an int |
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsInt16'></a>
+### AsInt16() `method`
+
+##### Summary
+
+Casts the candid value to an int16 type. If the type is not an int16, will throw an exception
+
+##### Returns
+
+An int16 value
+
+##### Parameters
+
+This method has no parameters.
+
+##### Exceptions
+
+| Name | Description |
+| ---- | ----------- |
+| [System.InvalidOperationException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.InvalidOperationException 'System.InvalidOperationException') | Throws if the type is not an int16 |
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsInt32'></a>
+### AsInt32() `method`
+
+##### Summary
+
+Casts the candid value to an int32 type. If the type is not an int32, will throw an exception
+
+##### Returns
+
+An int32 value
+
+##### Parameters
+
+This method has no parameters.
+
+##### Exceptions
+
+| Name | Description |
+| ---- | ----------- |
+| [System.InvalidOperationException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.InvalidOperationException 'System.InvalidOperationException') | Throws if the type is not an int32 |
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsInt64'></a>
+### AsInt64() `method`
+
+##### Summary
+
+Casts the candid value to an int64 type. If the type is not an int64, will throw an exception
+
+##### Returns
+
+An int64 value
+
+##### Parameters
+
+This method has no parameters.
+
+##### Exceptions
+
+| Name | Description |
+| ---- | ----------- |
+| [System.InvalidOperationException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.InvalidOperationException 'System.InvalidOperationException') | Throws if the type is not an int64 |
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsInt8'></a>
+### AsInt8() `method`
+
+##### Summary
+
+Casts the candid value to an int8 type. If the type is not an int8, will throw an exception
+
+##### Returns
+
+An int8 value
+
+##### Parameters
+
+This method has no parameters.
+
+##### Exceptions
+
+| Name | Description |
+| ---- | ----------- |
+| [System.InvalidOperationException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.InvalidOperationException 'System.InvalidOperationException') | Throws if the type is not an int8 |
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsNat'></a>
+### AsNat() `method`
+
+##### Summary
+
+Casts the candid value to a nat type. If the type is not a nat, will throw an exception
+
+##### Returns
+
+An unbounded nat value
+
+##### Parameters
+
+This method has no parameters.
+
+##### Exceptions
+
+| Name | Description |
+| ---- | ----------- |
+| [System.InvalidOperationException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.InvalidOperationException 'System.InvalidOperationException') | Throws if the type is not a nat |
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsNat16'></a>
+### AsNat16() `method`
+
+##### Summary
+
+Casts the candid value to a nat16 type. If the type is not a nat16, will throw an exception
+
+##### Returns
+
+A nat16 value
+
+##### Parameters
+
+This method has no parameters.
+
+##### Exceptions
+
+| Name | Description |
+| ---- | ----------- |
+| [System.InvalidOperationException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.InvalidOperationException 'System.InvalidOperationException') | Throws if the type is not a nat16 |
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsNat32'></a>
+### AsNat32() `method`
+
+##### Summary
+
+Casts the candid value to a nat32 type. If the type is not a nat32, will throw an exception
+
+##### Returns
+
+A nat32 value
+
+##### Parameters
+
+This method has no parameters.
+
+##### Exceptions
+
+| Name | Description |
+| ---- | ----------- |
+| [System.InvalidOperationException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.InvalidOperationException 'System.InvalidOperationException') | Throws if the type is not a nat32 |
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsNat64'></a>
+### AsNat64() `method`
+
+##### Summary
+
+Casts the candid value to a nat64 type. If the type is not a nat64, will throw an exception
+
+##### Returns
+
+A nat64 value
+
+##### Parameters
+
+This method has no parameters.
+
+##### Exceptions
+
+| Name | Description |
+| ---- | ----------- |
+| [System.InvalidOperationException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.InvalidOperationException 'System.InvalidOperationException') | Throws if the type is not a nat64 |
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsNat8'></a>
+### AsNat8() `method`
+
+##### Summary
+
+Casts the candid value to a nat8 type. If the type is not a nat8, will throw an exception
+
+##### Returns
+
+A nat8 value
+
+##### Parameters
+
+This method has no parameters.
+
+##### Exceptions
+
+| Name | Description |
+| ---- | ----------- |
+| [System.InvalidOperationException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.InvalidOperationException 'System.InvalidOperationException') | Throws if the type is not a nat8 |
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsOptional'></a>
+### AsOptional() `method`
+
+##### Summary
+
+Casts the candid value to an optional. If the type is not an optional, will throw an exception
+
+##### Returns
+
+An optional value
+
+##### Parameters
+
+This method has no parameters.
+
+##### Exceptions
+
+| Name | Description |
+| ---- | ----------- |
+| [System.InvalidOperationException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.InvalidOperationException 'System.InvalidOperationException') | Throws if the type is not an optional |
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsOptional``1-System-Func{EdjCase-ICP-Candid-Models-Values-CandidValue,``0}-'></a>
+### AsOptional\`\`1() `method`
+
+##### Summary
+
+Casts the candid value to an opt type and maps to a generic type. If the type is not an opt,
+will throw an exception
+
+##### Returns
+
+A generic value wrapped in an \`OptionalValue\`
+
+##### Parameters
+
+This method has no parameters.
+
+##### Generic Types
+
+| Name | Description |
+| ---- | ----------- |
+| T | Type to convert the candid value to |
+
+##### Exceptions
+
+| Name | Description |
+| ---- | ----------- |
+| [System.InvalidOperationException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.InvalidOperationException 'System.InvalidOperationException') | Throws if the type is not an opt |
+
 <a name='M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsPrimitive'></a>
 ### AsPrimitive() `method`
 
 ##### Summary
 
-Casts the candid value to a primitive type. If the type is not primitive, will throw an exception
+Casts the candid value to a primitive type. If the type is not a primitive, will throw an exception
 
 ##### Returns
 
@@ -2434,29 +3484,35 @@ This method has no parameters.
 
 | Name | Description |
 | ---- | ----------- |
-| [System.InvalidOperationException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.InvalidOperationException 'System.InvalidOperationException') | Throws if the type is not primitive |
+| [System.InvalidOperationException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.InvalidOperationException 'System.InvalidOperationException') | Throws if the type is not a primitive |
 
 <a name='M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsPrincipal'></a>
 ### AsPrincipal() `method`
 
 ##### Summary
 
-If opaque, returns null, otherwise the principalid
+Casts the candid value to a principal type. If the type is not a principal, will throw an exception
 
 ##### Returns
 
-
+A principal value
 
 ##### Parameters
 
 This method has no parameters.
+
+##### Exceptions
+
+| Name | Description |
+| ---- | ----------- |
+| [System.InvalidOperationException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.InvalidOperationException 'System.InvalidOperationException') | Throws if the type is not a principal |
 
 <a name='M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsRecord'></a>
 ### AsRecord() `method`
 
 ##### Summary
 
-Casts the candid value to a record type. If the type is not record, will throw an exception
+Casts the candid value to a record type. If the type is not a record, will throw an exception
 
 ##### Returns
 
@@ -2470,14 +3526,137 @@ This method has no parameters.
 
 | Name | Description |
 | ---- | ----------- |
-| [System.InvalidOperationException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.InvalidOperationException 'System.InvalidOperationException') | Throws if the type is not record |
+| [System.InvalidOperationException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.InvalidOperationException 'System.InvalidOperationException') | Throws if the type is not a record |
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsRecord``1-System-Func{EdjCase-ICP-Candid-Models-Values-CandidRecord,``0}-'></a>
+### AsRecord\`\`1(converter) `method`
+
+##### Summary
+
+Casts the candid value to a record type and maps to a generic type. If the type is not a record,
+will throw an exception
+
+##### Returns
+
+A generic value
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| converter | [System.Func{EdjCase.ICP.Candid.Models.Values.CandidRecord,\`\`0}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Func 'System.Func{EdjCase.ICP.Candid.Models.Values.CandidRecord,``0}') | The conversion function from candid record to T |
+
+##### Generic Types
+
+| Name | Description |
+| ---- | ----------- |
+| T | Type to convert the candid value to |
+
+##### Exceptions
+
+| Name | Description |
+| ---- | ----------- |
+| [System.InvalidOperationException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.InvalidOperationException 'System.InvalidOperationException') | Throws if the type is not a record |
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsService'></a>
+### AsService() `method`
+
+##### Summary
+
+Casts the candid value to a service type. If the type is not a service, will throw an exception
+
+##### Returns
+
+A service value
+
+##### Parameters
+
+This method has no parameters.
+
+##### Exceptions
+
+| Name | Description |
+| ---- | ----------- |
+| [System.InvalidOperationException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.InvalidOperationException 'System.InvalidOperationException') | Throws if the type is not a service |
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsText'></a>
+### AsText() `method`
+
+##### Summary
+
+Casts the candid value to a text type. If the type is not text, will throw an exception
+
+##### Returns
+
+A text value
+
+##### Parameters
+
+This method has no parameters.
+
+##### Exceptions
+
+| Name | Description |
+| ---- | ----------- |
+| [System.InvalidOperationException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.InvalidOperationException 'System.InvalidOperationException') | Throws if the type is not text |
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsVariant'></a>
+### AsVariant() `method`
+
+##### Summary
+
+Casts the candid value to a variant type. If the type is not a variant, will throw an exception
+
+##### Returns
+
+A variant value
+
+##### Parameters
+
+This method has no parameters.
+
+##### Exceptions
+
+| Name | Description |
+| ---- | ----------- |
+| [System.InvalidOperationException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.InvalidOperationException 'System.InvalidOperationException') | Throws if the type is not a variant |
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsVariant``1-System-Func{EdjCase-ICP-Candid-Models-Values-CandidVariant,``0}-'></a>
+### AsVariant\`\`1(converter) `method`
+
+##### Summary
+
+Casts the candid value to a variant type and maps to a generic type. If the type is not a variant,
+will throw an exception
+
+##### Returns
+
+A generic value
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| converter | [System.Func{EdjCase.ICP.Candid.Models.Values.CandidVariant,\`\`0}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Func 'System.Func{EdjCase.ICP.Candid.Models.Values.CandidVariant,``0}') | The conversion function from candid variant to T |
+
+##### Generic Types
+
+| Name | Description |
+| ---- | ----------- |
+| T | Type to convert the candid value to |
+
+##### Exceptions
+
+| Name | Description |
+| ---- | ----------- |
+| [System.InvalidOperationException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.InvalidOperationException 'System.InvalidOperationException') | Throws if the type is not a variant |
 
 <a name='M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsVector'></a>
 ### AsVector() `method`
 
 ##### Summary
 
-Casts the candid value to a vector type. If the type is not vector, will throw an exception
+Casts the candid value to a vector type. If the type is not a vector, will throw an exception
 
 ##### Returns
 
@@ -2491,14 +3670,14 @@ This method has no parameters.
 
 | Name | Description |
 | ---- | ----------- |
-| [System.InvalidOperationException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.InvalidOperationException 'System.InvalidOperationException') | Throws if the type is not vector |
+| [System.InvalidOperationException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.InvalidOperationException 'System.InvalidOperationException') | Throws if the type is not a vector |
 
 <a name='M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsVectorAsArray``1-System-Func{EdjCase-ICP-Candid-Models-Values-CandidValue,``0}-'></a>
 ### AsVectorAsArray\`\`1(converter) `method`
 
 ##### Summary
 
-Casts the candid value to a vector type and maps it to an array. If the type is not vector,
+Casts the candid value to a vector type and maps it to an array. If the type is not a vector,
 will throw an exception
 
 ##### Returns
@@ -2515,14 +3694,14 @@ An array form of the vector
 
 | Name | Description |
 | ---- | ----------- |
-| [System.InvalidOperationException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.InvalidOperationException 'System.InvalidOperationException') | Throws if the type is not vector |
+| [System.InvalidOperationException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.InvalidOperationException 'System.InvalidOperationException') | Throws if the type is not a vector |
 
 <a name='M-EdjCase-ICP-Candid-Models-Values-CandidValue-AsVectorAsList``1-System-Func{EdjCase-ICP-Candid-Models-Values-CandidValue,``0}-'></a>
 ### AsVectorAsList\`\`1(converter) `method`
 
 ##### Summary
 
-Casts the candid value to a vector type and maps it to a List. If the type is not vector,
+Casts the candid value to a vector type and maps it to a List. If the type is not a vector,
 will throw an exception
 
 ##### Returns
@@ -2535,11 +3714,49 @@ A list form of the vector
 | ---- | ---- | ----------- |
 | converter | [System.Func{EdjCase.ICP.Candid.Models.Values.CandidValue,\`\`0}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Func 'System.Func{EdjCase.ICP.Candid.Models.Values.CandidValue,``0}') | The conversion function from candid value to T |
 
+##### Generic Types
+
+| Name | Description |
+| ---- | ----------- |
+| T | Type to convert the candid value to |
+
 ##### Exceptions
 
 | Name | Description |
 | ---- | ----------- |
-| [System.InvalidOperationException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.InvalidOperationException 'System.InvalidOperationException') | Throws if the type is not vector |
+| [System.InvalidOperationException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.InvalidOperationException 'System.InvalidOperationException') | Throws if the type is not a vector |
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidValue-Bool-System-Boolean-'></a>
+### Bool(value) `method`
+
+##### Summary
+
+Helper method to create a bool value from a bool
+
+##### Returns
+
+Candid bool value
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| value | [System.Boolean](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Boolean 'System.Boolean') | An bool value to convert to a candid bool |
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidValue-Empty'></a>
+### Empty() `method`
+
+##### Summary
+
+Helper method to create an empty value
+
+##### Returns
+
+Candid empty value
+
+##### Parameters
+
+This method has no parameters.
 
 <a name='M-EdjCase-ICP-Candid-Models-Values-CandidValue-Equals-EdjCase-ICP-Candid-Models-Values-CandidValue-'></a>
 ### Equals() `method`
@@ -2563,6 +3780,40 @@ This method has no parameters.
 
 This method has no parameters.
 
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidValue-Float32-System-Single-'></a>
+### Float32(value) `method`
+
+##### Summary
+
+Helper method to create a float32 value from a float
+
+##### Returns
+
+Candid float32 value
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| value | [System.Single](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Single 'System.Single') | An float value to convert to a candid float32 |
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidValue-Float64-System-Double-'></a>
+### Float64(value) `method`
+
+##### Summary
+
+Helper method to create a float64 value from a double
+
+##### Returns
+
+Candid float64 value
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| value | [System.Double](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Double 'System.Double') | An double value to convert to a candid float64 |
+
 <a name='M-EdjCase-ICP-Candid-Models-Values-CandidValue-GetHashCode'></a>
 ### GetHashCode() `method`
 
@@ -2573,6 +3824,91 @@ This method has no parameters.
 ##### Parameters
 
 This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidValue-Int-EdjCase-ICP-Candid-Models-UnboundedInt-'></a>
+### Int(value) `method`
+
+##### Summary
+
+Helper method to create a int value from an unbounded integer
+
+##### Returns
+
+Candid int value
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| value | [EdjCase.ICP.Candid.Models.UnboundedInt](#T-EdjCase-ICP-Candid-Models-UnboundedInt 'EdjCase.ICP.Candid.Models.UnboundedInt') | A unbounded integer value to convert to a candid int value |
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidValue-Int16-System-Int16-'></a>
+### Int16(value) `method`
+
+##### Summary
+
+Helper method to create a int16 value from a short integer
+
+##### Returns
+
+Candid int16 value
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| value | [System.Int16](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Int16 'System.Int16') | A short integer value to convert to a candid int16 |
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidValue-Int32-System-Int32-'></a>
+### Int32(value) `method`
+
+##### Summary
+
+Helper method to create a int32 value from an integer
+
+##### Returns
+
+Candid int32 value
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| value | [System.Int32](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Int32 'System.Int32') | An integer value to convert to a candid int32 |
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidValue-Int64-System-Int64-'></a>
+### Int64(value) `method`
+
+##### Summary
+
+Helper method to create a int64 value from an long integer
+
+##### Returns
+
+Candid int64 value
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| value | [System.Int64](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Int64 'System.Int64') | An long integer value to convert to a candid int64 |
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidValue-Int8-System-SByte-'></a>
+### Int8(value) `method`
+
+##### Summary
+
+Helper method to create a int8 value from a signed byte
+
+##### Returns
+
+Candid int8 value
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| value | [System.SByte](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.SByte 'System.SByte') | A signed byte value to convert to a candid int8 |
 
 <a name='M-EdjCase-ICP-Candid-Models-Values-CandidValue-IsNull'></a>
 ### IsNull() `method`
@@ -2588,6 +3924,155 @@ Returns true if the value is null, otherwise false
 ##### Parameters
 
 This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidValue-Nat-EdjCase-ICP-Candid-Models-UnboundedUInt-'></a>
+### Nat(value) `method`
+
+##### Summary
+
+Helper method to create a nat value from an unbounded usigned integer
+
+##### Returns
+
+Candid nat value
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| value | [EdjCase.ICP.Candid.Models.UnboundedUInt](#T-EdjCase-ICP-Candid-Models-UnboundedUInt 'EdjCase.ICP.Candid.Models.UnboundedUInt') | A unbounded usigned integer value to convert to a candid nat value |
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidValue-Nat16-System-UInt16-'></a>
+### Nat16(value) `method`
+
+##### Summary
+
+Helper method to create a nat16 value from a unsigned short integer
+
+##### Returns
+
+Candid nat16 value
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| value | [System.UInt16](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.UInt16 'System.UInt16') | A unsigned short integer value to convert to a candid nat16 |
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidValue-Nat32-System-UInt32-'></a>
+### Nat32(value) `method`
+
+##### Summary
+
+Helper method to create a nat32 value from a unsigned integer
+
+##### Returns
+
+Candid nat32 value
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| value | [System.UInt32](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.UInt32 'System.UInt32') | A unsigned integer value to convert to a candid nat32 |
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidValue-Nat64-System-UInt64-'></a>
+### Nat64(value) `method`
+
+##### Summary
+
+Helper method to create a nat64 value from a unsigned long integer
+
+##### Returns
+
+Candid nat64 value
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| value | [System.UInt64](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.UInt64 'System.UInt64') | A unsigned long integer value to convert to a candid nat64 |
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidValue-Nat8-System-Byte-'></a>
+### Nat8(value) `method`
+
+##### Summary
+
+Helper method to create a nat8 value from a byte
+
+##### Returns
+
+Candid nat8 value
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| value | [System.Byte](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Byte 'System.Byte') | A byte value to convert to a candid nat8 |
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidValue-Null'></a>
+### Null() `method`
+
+##### Summary
+
+Helper method to create a null value
+
+##### Returns
+
+Candid null value
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidValue-Principal-EdjCase-ICP-Candid-Models-Principal-'></a>
+### Principal(value) `method`
+
+##### Summary
+
+Helper method to create a principal value from a principal
+
+##### Returns
+
+Candid principal value
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| value | [EdjCase.ICP.Candid.Models.Principal](#T-EdjCase-ICP-Candid-Models-Principal 'EdjCase.ICP.Candid.Models.Principal') | An principal value to convert to a candid principal |
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidValue-Reserved'></a>
+### Reserved() `method`
+
+##### Summary
+
+Helper method to create a reserved value
+
+##### Returns
+
+Candid reserved value
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidValue-Text-System-String-'></a>
+### Text(value) `method`
+
+##### Summary
+
+Helper method to create a text value from a string
+
+##### Returns
+
+Candid text value
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| value | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | A string value to convert to a candid text value |
 
 <a name='M-EdjCase-ICP-Candid-Models-Values-CandidValue-ToString'></a>
 ### ToString() `method`
@@ -2696,12 +4181,40 @@ An array of values
 
 EdjCase.ICP.Candid.Models.Values
 
+##### Summary
+
+A model representing a candid variant value
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidVariant-#ctor-EdjCase-ICP-Candid-Models-CandidTag,EdjCase-ICP-Candid-Models-Values-CandidValue-'></a>
+### #ctor(tag,value) `constructor`
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| tag | [EdjCase.ICP.Candid.Models.CandidTag](#T-EdjCase-ICP-Candid-Models-CandidTag 'EdjCase.ICP.Candid.Models.CandidTag') | The tag (id/name) of the chosen variant option |
+| value | [EdjCase.ICP.Candid.Models.Values.CandidValue](#T-EdjCase-ICP-Candid-Models-Values-CandidValue 'EdjCase.ICP.Candid.Models.Values.CandidValue') | The value of the chosen variant option, whose type is based on the option |
+
+<a name='P-EdjCase-ICP-Candid-Models-Values-CandidVariant-Tag'></a>
+### Tag `property`
+
+##### Summary
+
+The tag (id/name) of the chosen variant option
+
 <a name='P-EdjCase-ICP-Candid-Models-Values-CandidVariant-Type'></a>
 ### Type `property`
 
 ##### Summary
 
 *Inherit from parent.*
+
+<a name='P-EdjCase-ICP-Candid-Models-Values-CandidVariant-Value'></a>
+### Value `property`
+
+##### Summary
+
+The value of the chosen variant option, whose type is based on the option
 
 <a name='M-EdjCase-ICP-Candid-Models-Values-CandidVariant-EncodeValue-EdjCase-ICP-Candid-Models-Types-CandidType,System-Func{EdjCase-ICP-Candid-Models-CandidId,EdjCase-ICP-Candid-Models-Types-CandidCompoundType}-'></a>
 ### EncodeValue() `method`
@@ -2768,12 +4281,38 @@ EdjCase.ICP.Candid.Models.Types
 
 EdjCase.ICP.Candid.Models.Values
 
+##### Summary
+
+A model representing a candid vector value
+
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidVector-#ctor-EdjCase-ICP-Candid-Models-Values-CandidValue[]-'></a>
+### #ctor(values) `constructor`
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| values | [EdjCase.ICP.Candid.Models.Values.CandidValue[]](#T-EdjCase-ICP-Candid-Models-Values-CandidValue[] 'EdjCase.ICP.Candid.Models.Values.CandidValue[]') | Each candid value that the vector contains. All must be of the same type |
+
+##### Exceptions
+
+| Name | Description |
+| ---- | ----------- |
+| [System.ArgumentException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.ArgumentException 'System.ArgumentException') | Throws if all the values are not of the same type |
+
 <a name='P-EdjCase-ICP-Candid-Models-Values-CandidVector-Type'></a>
 ### Type `property`
 
 ##### Summary
 
 *Inherit from parent.*
+
+<a name='P-EdjCase-ICP-Candid-Models-Values-CandidVector-Values'></a>
+### Values `property`
+
+##### Summary
+
+Each candid value that the vector contains. All must be of the same type
 
 <a name='M-EdjCase-ICP-Candid-Models-Values-CandidVector-EncodeValue-EdjCase-ICP-Candid-Models-Types-CandidType,System-Func{EdjCase-ICP-Candid-Models-CandidId,EdjCase-ICP-Candid-Models-Types-CandidCompoundType}-'></a>
 ### EncodeValue() `method`

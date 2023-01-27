@@ -103,7 +103,7 @@ namespace EdjCase.ICP.Candid.Models.Values
 
 		private readonly object? value;
 
-		private CandidPrimitive(PrimitiveType valueType, object? value)
+		internal CandidPrimitive(PrimitiveType valueType, object? value)
 		{
 			this.ValueType = valueType;
 			this.value = value;

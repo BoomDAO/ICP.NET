@@ -73,7 +73,7 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 			if (info.Dependencies.Any())
 			{
 				// Make any recursion stop
-				resolvedDependencies[objType] = new CandidReferenceType(CandidId.Parse("ref"));
+				resolvedDependencies[objType] = new CandidReferenceType(CandidId.Create("ref"));
 
 				foreach (Type depType in info.Dependencies)
 				{

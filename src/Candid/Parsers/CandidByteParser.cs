@@ -162,7 +162,7 @@ namespace EdjCase.ICP.Candid.Parsers
 								return typeInfo.ResolvedType;
 							}
 							// If neither, then it is 'resolving', meaning it is a recursive type
-							typeInfo.RecursiveId = CandidId.Parse($"rec_{referenceIndex}");
+							typeInfo.RecursiveId = CandidId.Create($"rec_{referenceIndex}");
 							this.Tracer.RecursiveReference(typeInfo.RecursiveId);
 							// Give func to resolve the type which WILL be resolved, but not yet
 							return new CandidReferenceType(typeInfo.RecursiveId);
@@ -424,7 +424,7 @@ namespace EdjCase.ICP.Candid.Parsers
 						{
 							string name = this.ReadText();
 							DefintionOrReference type = this.ReadType();
-							return (CandidId.Parse(name), type);
+							return (CandidId.Create(name), type);
 						});
 						return DefintionOrReference.CompoundDefintion(resolver =>
 						{

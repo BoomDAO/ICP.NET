@@ -2,14 +2,22 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using EdjCase.ICP.Candid.Crypto;
+using EdjCase.ICP.Candid.Exceptions;
 using EdjCase.ICP.Candid.Parsers;
 
 namespace EdjCase.ICP.Candid.Models
 {
+	/// <summary>
+	/// A model representing a candid arg. Used as the list of arguments for a function
+	/// </summary>
 	public class CandidArg : IHashable, IEquatable<CandidArg>
 	{
+		/// <summary>
+		/// Order list of typed values for the arg
+		/// </summary>
 		public List<CandidTypedValue> Values { get; }
 
+		/// <param name="values">Order list of typed values for the arg</param>
 		public CandidArg(List<CandidTypedValue> values)
 		{
 			this.Values = values;
@@ -21,26 +29,52 @@ namespace EdjCase.ICP.Candid.Models
 			return hashFunction.ComputeHash(this.Encode());
 		}
 
+		/// <summary>
+		/// Encodes the candid arg into a byte array which can be used in sending requests to
+		/// a canister
+		/// </summary>
+		/// <returns></returns>
 		public byte[] Encode()
 		{
 			return CandidArgBuilder.FromArgs(this.Values).Encode();
 		}
 
+		/// <summary>
+		/// Decodes a byte array into a candid arg value. Must be a valid encoded candid arg value
+		/// </summary>
+		/// <param name="value">Encoded candid arg value</param>
+		/// <exception cref="CandidDecodingException">Throws if the bytes are not valid Candid</exception>
+		/// <exception cref="InvalidCandidException">Throws if the the candid does not follow the specification</exception>
+		/// <returns>Candid arg value</returns>
 		public static CandidArg FromBytes(byte[] value)
 		{
 			return CandidByteParser.Parse(value);
 		}
 
-		public static CandidArg FromCandid(List<CandidTypedValue> args)
+		/// <summary>
+		/// Converts an ordered list of typed values to a candid arg value
+		/// </summary>
+		/// <param name="values">Ordered list of typed values</param>
+		/// <returns>Candid arg value</returns>
+		public static CandidArg FromCandid(List<CandidTypedValue> values)
 		{
-			return new CandidArg(args);
+			return new CandidArg(values);
 		}
 
-		public static CandidArg FromCandid(params CandidTypedValue[] args)
+		/// <summary>
+		/// Converts an ordered array of typed values to a candid arg value
+		/// </summary>
+		/// <param name="values">Ordered array of typed values</param>
+		/// <returns>Candid arg value</returns>
+		public static CandidArg FromCandid(params CandidTypedValue[] values)
 		{
-			return new CandidArg(args.ToList());
+			return new CandidArg(values.ToList());
 		}
 
+		/// <summary>
+		/// Helper method to create a candid arg with no typed values
+		/// </summary>
+		/// <returns>Candid arg value</returns>
 		public static CandidArg Empty()
 		{
 			return new CandidArg(new List<CandidTypedValue>());

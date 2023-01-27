@@ -408,7 +408,7 @@ namespace EdjCase.ICP.Candid.Tests
 					}))
 				}
 			});
-			var referenceId = CandidId.Parse("rec_1");
+			var referenceId = CandidId.Create("rec_1");
 			var type1 = new CandidRecordType(new Dictionary<CandidTag, CandidType>
 			{
 				{

@@ -6,14 +6,26 @@ using EdjCase.ICP.Candid.Exceptions;
 
 namespace EdjCase.ICP.Candid.Models.Values
 {
+	/// <summary>
+	/// A model representing a candid variant value
+	/// </summary>
 	public class CandidVariant : CandidValue
 	{
 		/// <inheritdoc />
 		public override CandidValueType Type { get; } = CandidValueType.Variant;
 
+		/// <summary>
+		/// The tag (id/name) of the chosen variant option
+		/// </summary>
 		public CandidTag Tag { get; }
+
+		/// <summary>
+		/// The value of the chosen variant option, whose type is based on the option
+		/// </summary>
 		public CandidValue Value { get; }
 
+		/// <param name="tag">The tag (id/name) of the chosen variant option</param>
+		/// <param name="value">The value of the chosen variant option, whose type is based on the option</param>
 		public CandidVariant(CandidTag tag, CandidValue? value = null)
 		{
 			this.Tag = tag;

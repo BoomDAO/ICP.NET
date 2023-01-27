@@ -28,7 +28,7 @@ namespace EdjCase.ICP.Candid.Parsers
 					textReader.ReadNextWord("=");
 					string t = GetType(textReader);
 					CandidType type = CandidTextParser.Parse(t);
-					declaredTypes.Add(CandidId.Parse(name), type);
+					declaredTypes.Add(CandidId.Create(name), type);
 					nextWord = textReader.ReadNextWord();
 				}
 				if (nextWord != "service")
