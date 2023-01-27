@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace EdjCase.ICP.Candid.Parsers
 {
-	public static class CandidTextParser
+	internal static class CandidTextParser
 	{
 		public static CandidType Parse(string text)
 		{

@@ -259,6 +259,51 @@
         <member name="M:EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute.#ctor(System.Type)">
             <param name="optionType">The type of the variant option value to use</param>
         </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidArg.ComputeHash(EdjCase.ICP.Candid.Crypto.IHashFunction)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidArg.ToString">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidArg.Equals(EdjCase.ICP.Candid.Models.CandidArg)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidArg.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidArg.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidArg.op_Equality(EdjCase.ICP.Candid.Models.CandidArg,EdjCase.ICP.Candid.Models.CandidArg)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidArg.op_Inequality(EdjCase.ICP.Candid.Models.CandidArg,EdjCase.ICP.Candid.Models.CandidArg)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidId.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidId.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidId.Equals(EdjCase.ICP.Candid.Models.CandidId)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidId.Equals(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidId.op_Equality(EdjCase.ICP.Candid.Models.CandidId,EdjCase.ICP.Candid.Models.CandidId)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidId.op_Inequality(EdjCase.ICP.Candid.Models.CandidId,EdjCase.ICP.Candid.Models.CandidId)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidId.ToString">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidId.CompareTo(EdjCase.ICP.Candid.Models.CandidId)">
+            <inheritdoc />
+        </member>
         <member name="M:EdjCase.ICP.Candid.Models.CandidTag.HashName(System.String)">
             <summary>
             Hashes the name to get the proper id 
@@ -301,10 +346,12 @@
         </member>
         <member name="M:EdjCase.ICP.Candid.Models.Types.CandidType.Encode(EdjCase.ICP.Candid.Models.CompoundTypeTable)">
             <summary>
-            Encodes this type into a byte array 
+            Encodes this type into a byte array. If its a primitive type the value will
+            be an encoded negative number, if its a compound type it will be added to the 
+            type table and be a positive number of the table index where its info is stored
             </summary>
-            <param name="compoundTypeTable"></param>
-            <returns></returns>
+            <param name="compoundTypeTable">The collection of compound types for a candid arg</param>
+            <returns>Byte array of the type number</returns>
         </member>
         <member name="M:EdjCase.ICP.Candid.Models.Types.CandidType.Equals(System.Object)">
             <inheritdoc />
@@ -315,17 +362,535 @@
         <member name="M:EdjCase.ICP.Candid.Models.Types.CandidType.ToString">
             <inheritdoc />
         </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Types.CandidType.Equals(EdjCase.ICP.Candid.Models.Types.CandidType)">
+            <summary>
+            Checks for equality of this type against the specified type
+            </summary>
+            <param name="other">Another type to compare against</param>
+            <returns>True if they are structurally the same, otherwise false</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Types.CandidType.op_Equality(EdjCase.ICP.Candid.Models.Types.CandidType,EdjCase.ICP.Candid.Models.Types.CandidType)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Types.CandidType.op_Inequality(EdjCase.ICP.Candid.Models.Types.CandidType,EdjCase.ICP.Candid.Models.Types.CandidType)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Types.CandidType.Text">
+            <summary>
+            Helper method to create a Text candid type
+            </summary>
+            <returns>Text candid type</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Types.CandidType.Nat">
+            <summary>
+            Helper method to create a Nat candid type
+            </summary>
+            <returns>Nat candid type</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Types.CandidType.Nat8">
+            <summary>
+            Helper method to create a Nat8 candid type
+            </summary>
+            <returns>Nat8 candid type</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Types.CandidType.Nat16">
+            <summary>
+            Helper method to create a Nat16 candid type
+            </summary>
+            <returns>Nat16 candid type</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Types.CandidType.Nat32">
+            <summary>
+            Helper method to create a Nat32 candid type
+            </summary>
+            <returns>Nat32 candid type</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Types.CandidType.Nat64">
+            <summary>
+            Helper method to create a Nat64 candid type
+            </summary>
+            <returns>Nat64 candid type</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Types.CandidType.Int">
+            <summary>
+            Helper method to create a Int candid type
+            </summary>
+            <returns>Int candid type</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Types.CandidType.Int8">
+            <summary>
+            Helper method to create a Int8 candid type
+            </summary>
+            <returns>Int8 candid type</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Types.CandidType.Int16">
+            <summary>
+            Helper method to create a Int16 candid type
+            </summary>
+            <returns>Int16 candid type</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Types.CandidType.Int32">
+            <summary>
+            Helper method to create a Int32 candid type
+            </summary>
+            <returns>Int32 candid type</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Types.CandidType.Int64">
+            <summary>
+            Helper method to create a Int64 candid type
+            </summary>
+            <returns>Int64 candid type</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Types.CandidType.Float32">
+            <summary>
+            Helper method to create a Float32 candid type
+            </summary>
+            <returns>Float32 candid type</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Types.CandidType.Float64">
+            <summary>
+            Helper method to create a Float64 candid type
+            </summary>
+            <returns>Float64 candid type</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Types.CandidType.Bool">
+            <summary>
+            Helper method to create a Bool candid type
+            </summary>
+            <returns>Bool candid type</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Types.CandidType.Principal">
+            <summary>
+            Helper method to create a Principal candid type
+            </summary>
+            <returns>Principal candid type</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Types.CandidType.Null">
+            <summary>
+            Helper method to create a Null candid type
+            </summary>
+            <returns>Null candid type</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Types.CandidType.Reserved">
+            <summary>
+            Helper method to create a Reserved candid type
+            </summary>
+            <returns>Reserved candid type</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Types.CandidType.Empty">
+            <summary>
+            Helper method to create a Empty candid type
+            </summary>
+            <returns>Empty candid type</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Types.CandidType.Opt(EdjCase.ICP.Candid.Models.Types.CandidType)">
+            <summary>
+            Helper method to create a Opt candid type
+            </summary>
+            <returns>Opt candid type</returns>
+        </member>
+        <member name="T:EdjCase.ICP.Candid.Models.Types.CandidCompoundType">
+            <summary>
+            A candid type that is not primitive or a reference. These types are considered
+            more complex and have multiple data structures within them
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Models.Types.CandidCompoundType.RecursiveId">
+            <summary>
+            Optional. Used if this type can be referenced by an inner type recursively.
+            The inner type will use `CandidReferenceType` with this id
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Types.CandidCompoundType.#ctor(EdjCase.ICP.Candid.Models.CandidId)">
+            <param name="recursiveId">Optional. Used if this type can be referenced by an inner type recursively.
+            The inner type will use `CandidReferenceType` with this id</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Types.CandidCompoundType.EncodeInnerTypes(EdjCase.ICP.Candid.Models.CompoundTypeTable)">
+            <summary>
+            Adds all inner types to the compound table if applicable and returns its encoded type value
+            </summary>
+            <param name="compoundTypeTable">The collection of compound types for a candid arg</param>
+            <returns>Byte array of encoded type</returns>
+        </member>
+        <member name="T:EdjCase.ICP.Candid.Models.Types.CandidRecordOrVariantType">
+            <summary>
+            A shared class for candid records and variants. Both have a mapping of 
+            keys with associated types
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Models.Types.CandidRecordOrVariantType.Type">
+            <inheritdoc />
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Models.Types.CandidRecordOrVariantType.TypeString">
+            <summary>
+            The string name of the parent type (record or variant)
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Types.CandidRecordOrVariantType.GetFieldsOrOptions">
+            <summary>
+            Gets the record fields or variant options to be used for encoding
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Types.CandidRecordOrVariantType.#ctor(EdjCase.ICP.Candid.Models.CandidId)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Types.CandidRecordOrVariantType.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Types.CandidRecordOrVariantType.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="T:EdjCase.ICP.Candid.Models.Types.FuncMode">
+            <summary>
+            All the possible options for function modes which
+            define special attributes of the function
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.Models.Types.FuncMode.Oneway">
+            <summary>
+            Mode where the function does not generate a response to a request
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.Models.Types.FuncMode.Query">
+            <summary>
+            Mode where the function does not update any state and returns immediately.
+            Is useful for faster data retrieval
+            </summary>
+        </member>
+        <member name="T:EdjCase.ICP.Candid.Models.Types.CandidFuncType">
+            <summary>
+            A candid type model that defines a func
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Models.Types.CandidFuncType.Type">
+            <inheritdoc />
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Models.Types.CandidFuncType.Modes">
+            <summary>
+            A set of different modes the function supports
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Models.Types.CandidFuncType.ArgTypes">
+            <summary>
+            A list of all the argument types the function will need in a request.
+            The name is optional and is only used for ease of use, the index/position
+            of the argument is all that really matters
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Models.Types.CandidFuncType.ReturnTypes">
+            <summary>
+            A list of all the return types the function will supply in respose to a request.
+            The name is optional and is only used for ease of use, the index/position
+            of the argument is all that really matters
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Types.CandidFuncType.#ctor(System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Types.FuncMode},System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Types.CandidType},System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Types.CandidType},EdjCase.ICP.Candid.Models.CandidId)">
+            <param name="modes">A set of different modes the function supports</param>
+            <param name="argTypes">A list of all the argument types the function will need in a request.
+            The name is optional and is only used for ease of use, the index/position
+            of the argument is all that really matters</param>
+            <param name="returnTypes">A list of all the return types the function will supply in respose to a request.
+            The name is optional and is only used for ease of use, the index/position
+            of the argument is all that really matters</param>
+            <param name="recursiveId">Optional. Used if this type can be referenced by an inner type recursively.
+            The inner type will use `CandidReferenceType` with this id</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Types.CandidFuncType.#ctor(System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Types.FuncMode},System.Collections.Generic.List{System.ValueTuple{EdjCase.ICP.Candid.Models.CandidId,EdjCase.ICP.Candid.Models.Types.CandidType}},System.Collections.Generic.List{System.ValueTuple{EdjCase.ICP.Candid.Models.CandidId,EdjCase.ICP.Candid.Models.Types.CandidType}},EdjCase.ICP.Candid.Models.CandidId)">
+            <param name="modes">A set of different modes the function supports</param>
+            <param name="argTypes">A list of all the argument types the function will need in a request.
+            The name is optional and is only used for ease of use, the index/position
+            of the argument is all that really matters</param>
+            <param name="returnTypes">A list of all the return types the function will supply in respose to a request.
+            The name is optional and is only used for ease of use, the index/position
+            of the argument is all that really matters</param>
+            <param name="recursiveId">Optional. Used if this type can be referenced by an inner type recursively.
+            The inner type will use `CandidReferenceType` with this id</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Types.CandidFuncType.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Types.CandidFuncType.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="T:EdjCase.ICP.Candid.Models.Types.CandidOptionalType">
+            <summary>
+            A model for candid optional types
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Models.Types.CandidOptionalType.Type">
+            <inheritdoc />
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Models.Types.CandidOptionalType.Value">
+            <summary>
+            The inner value type of the optional value, if the value is not null
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Types.CandidOptionalType.#ctor(EdjCase.ICP.Candid.Models.Types.CandidType,EdjCase.ICP.Candid.Models.CandidId)">
+            <param name="value">The inner value type of the optional value, if the value is not null</param>
+            <param name="recursiveId">Optional. Used if this type can be referenced by an inner type recursively.
+            The inner type will use `CandidReferenceType` with this id</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Types.CandidOptionalType.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Types.CandidOptionalType.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Types.CandidPrimitiveType.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Types.CandidPrimitiveType.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="T:EdjCase.ICP.Candid.Models.Types.CandidRecordType">
+            <summary>
+            A model for candid record types
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Models.Types.CandidRecordType.Type">
+            <inheritdoc />
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Models.Types.CandidRecordType.TypeString">
+            <inheritdoc />
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Models.Types.CandidRecordType.Fields">
+            <summary>
+            The collection of field names with the associate type for that field
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Types.CandidRecordType.#ctor(System.Collections.Generic.Dictionary{EdjCase.ICP.Candid.Models.CandidTag,EdjCase.ICP.Candid.Models.Types.CandidType},EdjCase.ICP.Candid.Models.CandidId)">
+            <param name="fields">The collection of field names with the associate type for that field</param>
+            <param name="recursiveId">Optional. Used if this type can be referenced by an inner type recursively.
+            The inner type will use `CandidReferenceType` with this id</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Types.CandidRecordType.GetFieldsOrOptions">
+            <inheritdoc />
+        </member>
+        <member name="T:EdjCase.ICP.Candid.Models.Types.CandidReferenceType">
+            <summary>
+            A special candid type model that is a pointer to a different type.
+            Usually due to recursive types where a parent type has an inner type
+            that references that same parent type. The parent type must have a `RecursiveId`
+            specified and the `Id` of the reference type must match that
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Models.Types.CandidReferenceType.Id">
+            <summary>
+            The id to reference in a parent type. The parent type must have the `RecursiveId` specified
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Types.CandidReferenceType.#ctor(EdjCase.ICP.Candid.Models.CandidId)">
+            <param name="id">The id to reference in a parent type. The parent type must have the `RecursiveId` specified</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Types.CandidReferenceType.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Types.CandidReferenceType.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="T:EdjCase.ICP.Candid.Models.Types.CandidServiceType">
+            <summary>
+            A model for a candid service type
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Models.Types.CandidServiceType.Type">
+            <inheritdoc />
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Models.Types.CandidServiceType.Methods">
+            <summary>
+            A mapping of ids to function types that the service contains
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Types.CandidServiceType.#ctor(System.Collections.Generic.Dictionary{EdjCase.ICP.Candid.Models.CandidId,EdjCase.ICP.Candid.Models.Types.CandidFuncType},EdjCase.ICP.Candid.Models.CandidId)">
+            <param name="methods">A mapping of ids to function types that the service contains</param>
+            <param name="recursiveId">Optional. Used if this type can be referenced by an inner type recursively.
+            The inner type will use `CandidReferenceType` with this id</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Types.CandidServiceType.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Types.CandidServiceType.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Models.Types.CandidVariantType.Type">
+            <inheritdoc />
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Models.Types.CandidVectorType.Type">
+            <inheritdoc />
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Models.Types.CandidVectorType.InnerType">
+            <summary>
+            The type of the vectors inner values
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Types.CandidVectorType.#ctor(EdjCase.ICP.Candid.Models.Types.CandidType,EdjCase.ICP.Candid.Models.CandidId)">
+            <param name="innerType">The type of the vectors inner values</param>
+            <param name="recursiveId">Optional. Used if this type can be referenced by an inner type recursively.
+            The inner type will use `CandidReferenceType` with this id</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Types.CandidVectorType.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Types.CandidVectorType.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="T:EdjCase.ICP.Candid.Models.Values.CandidFunc">
+            <summary>
+            A model to represent the value of a candid func
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Models.Values.CandidFunc.Type">
+            <inheritdoc />
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Models.Values.CandidFunc.IsOpaqueReference">
+            <summary>
+            True if the candid func definition is an opaque (non standard/system specific definition),
+            otherwise false
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidFunc.#ctor(EdjCase.ICP.Candid.Models.Values.CandidService,System.String)">
+            <param name="service">The candid service definition the function lives in</param>
+            <param name="name">The name of the function</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidFunc.EncodeValue(EdjCase.ICP.Candid.Models.Types.CandidType,System.Func{EdjCase.ICP.Candid.Models.CandidId,EdjCase.ICP.Candid.Models.Types.CandidCompoundType})">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidFunc.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidFunc.Equals(EdjCase.ICP.Candid.Models.Values.CandidValue)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidFunc.ToString">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidFunc.OpaqueReference">
+            <summary>
+            Creates an opaque reference to a function that is defined by the system
+            vs being defined in candid
+            </summary>
+            <returns>A opaque candid func</returns>
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Models.Values.CandidOptional.Type">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidOptional.EncodeValue(EdjCase.ICP.Candid.Models.Types.CandidType,System.Func{EdjCase.ICP.Candid.Models.CandidId,EdjCase.ICP.Candid.Models.Types.CandidCompoundType})">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidOptional.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidOptional.Equals(EdjCase.ICP.Candid.Models.Values.CandidValue)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidOptional.ToString">
+            <inheritdoc />
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Models.Values.CandidPrimitive.Type">
+            <inheritdoc />
+        </member>
         <member name="M:EdjCase.ICP.Candid.Models.Values.CandidPrimitive.AsPrincipal">
             <summary>
             If opaque, returns null, otherwise the principalid
             </summary>
             <returns></returns>
         </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidPrimitive.EncodeValue(EdjCase.ICP.Candid.Models.Types.CandidType,System.Func{EdjCase.ICP.Candid.Models.CandidId,EdjCase.ICP.Candid.Models.Types.CandidCompoundType})">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidPrimitive.ToString">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidPrimitive.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidPrimitive.Equals(EdjCase.ICP.Candid.Models.Values.CandidValue)">
+            <inheritdoc />
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Models.Values.CandidRecord.Type">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidRecord.EncodeValue(EdjCase.ICP.Candid.Models.Types.CandidType,System.Func{EdjCase.ICP.Candid.Models.CandidId,EdjCase.ICP.Candid.Models.Types.CandidCompoundType})">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidRecord.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidRecord.Equals(EdjCase.ICP.Candid.Models.Values.CandidValue)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidRecord.ToString">
+            <inheritdoc />
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Models.Values.CandidService.Type">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidService.EncodeValue(EdjCase.ICP.Candid.Models.Types.CandidType,System.Func{EdjCase.ICP.Candid.Models.CandidId,EdjCase.ICP.Candid.Models.Types.CandidCompoundType})">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidService.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidService.Equals(EdjCase.ICP.Candid.Models.Values.CandidValue)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidService.ToString">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidValue.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidValue.Equals(EdjCase.ICP.Candid.Models.Values.CandidValue)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidValue.ToString">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidValue.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidValue.op_Equality(EdjCase.ICP.Candid.Models.Values.CandidValue,EdjCase.ICP.Candid.Models.Values.CandidValue)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidValue.op_Inequality(EdjCase.ICP.Candid.Models.Values.CandidValue,EdjCase.ICP.Candid.Models.Values.CandidValue)">
+            <inheritdoc />
+        </member>
         <member name="M:EdjCase.ICP.Candid.Models.Values.CandidValue.AsPrincipal">
             <summary>
             If opaque, returns null, otherwise the principalid
             </summary>
             <returns></returns>
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Models.Values.CandidVariant.Type">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidVariant.EncodeValue(EdjCase.ICP.Candid.Models.Types.CandidType,System.Func{EdjCase.ICP.Candid.Models.CandidId,EdjCase.ICP.Candid.Models.Types.CandidCompoundType})">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidVariant.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidVariant.Equals(EdjCase.ICP.Candid.Models.Values.CandidValue)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidVariant.ToString">
+            <inheritdoc />
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Models.Values.CandidVector.Type">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidVector.EncodeValue(EdjCase.ICP.Candid.Models.Types.CandidType,System.Func{EdjCase.ICP.Candid.Models.CandidId,EdjCase.ICP.Candid.Models.Types.CandidCompoundType})">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidVector.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidVector.Equals(EdjCase.ICP.Candid.Models.Values.CandidValue)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidVector.ToString">
+            <inheritdoc />
         </member>
         <member name="T:EdjCase.ICP.Candid.Parsers.CandidByteParser">
             <summary>

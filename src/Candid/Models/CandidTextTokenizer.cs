@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace EdjCase.ICP.Candid.Models
 {
-	public class CandidTextTokenHelper
+	internal class CandidTextTokenHelper
 	{
 		public List<CandidTextToken> Tokens { get; }
 		public int CurrentTokenIndex { get; private set; }
@@ -41,7 +41,7 @@ namespace EdjCase.ICP.Candid.Models
 		}
 	}
 
-	public static class CandidTextTokenizer
+	internal static class CandidTextTokenizer
 	{
 		public static CandidTextTokenHelper Tokenize(string candidText)
 		{
@@ -117,7 +117,7 @@ namespace EdjCase.ICP.Candid.Models
 		}
 	}
 
-	public class CandidTextToken
+	internal class CandidTextToken
 	{
 		public CandidTextTokenType Type { get; }
 		private string? Text { get; }
@@ -142,7 +142,7 @@ namespace EdjCase.ICP.Candid.Models
 		}
 	}
 
-	public enum CandidTextTokenType
+	internal enum CandidTextTokenType
 	{
 		OpenParenthesis,
 		CloseParenthesis,
