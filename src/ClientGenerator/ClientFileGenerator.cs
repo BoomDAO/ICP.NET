@@ -27,7 +27,7 @@ namespace EdjCase.ICP.ClientGenerator
 				candidServicePath
 			};
 			var response = await agent.ReadStateAsync(canisterId, paths);
-			string? fileText = response.Certificate.Tree.GetValue(candidServicePath)?.AsLeaf().AsUtf8();
+			string? fileText = response.Certificate.Tree.GetValueOrDefault(candidServicePath)?.AsLeaf().AsUtf8();
 
 			if (string.IsNullOrWhiteSpace(fileText))
 			{

@@ -27,7 +27,7 @@ namespace EdjCase.ICP.Candid.Encodings
 				ulong valueToAdd = (b & 0b0111_1111ul) << (7 * i); // Shift over 7 * i bits to get value to add
 				v += valueToAdd;
 			}
-			return new UnboundedUInt(v);
+			return UnboundedUInt.FromBigInteger(v);
 		}
 
 
@@ -39,7 +39,7 @@ namespace EdjCase.ICP.Candid.Encodings
 		public static UnboundedUInt DecodeUnsigned(Stream stream)
 		{
 			BigInteger v = LEB128.Decode(stream, isUnsigned: true);
-			return new UnboundedUInt(v);
+			return UnboundedUInt.FromBigInteger(v);
 		}
 
 		/// <summary>
@@ -50,7 +50,7 @@ namespace EdjCase.ICP.Candid.Encodings
 		public static UnboundedInt DecodeSigned(Stream stream)
 		{
 			BigInteger v = LEB128.Decode(stream, isUnsigned: false);
-			return new UnboundedInt(v);
+			return UnboundedInt.FromBigInteger(v);
 		}
 
 		/// <summary>

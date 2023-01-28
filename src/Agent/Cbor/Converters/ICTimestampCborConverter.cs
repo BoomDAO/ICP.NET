@@ -21,13 +21,13 @@ namespace EdjCase.ICP.Agent.Cbor.Converters
 					throw new CborException("Unable to read value as Unbounded UInt");
 				}
 				ReadOnlySpan<byte> bytes = reader.ReadByteString();
-				value = new UnboundedUInt(new BigInteger(bytes.ToArray()));
+				value = UnboundedUInt.FromBigInteger(new BigInteger(bytes.ToArray()));
 				
 			}
 			else
 			{
 				ulong ulongValue = reader.ReadUInt64();
-				value = new UnboundedUInt(new BigInteger(ulongValue));
+				value = UnboundedUInt.FromBigInteger(new BigInteger(ulongValue));
 			}
 			return new ICTimestamp(value);
 		}

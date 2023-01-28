@@ -103,7 +103,7 @@ namespace EdjCase.ICP.Agent.Cbor.Converters
 			{
 				case "subnet_id":
 					var prinBytes = reader.ReadByteString()!;
-					context.SubnetId = Principal.FromRaw(prinBytes.ToArray());
+					context.SubnetId = Principal.FromBytes(prinBytes.ToArray());
 					break;
 				case "certificate":
 					var certBytes = reader.ReadByteString()!;

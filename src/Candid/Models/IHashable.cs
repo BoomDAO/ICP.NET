@@ -7,41 +7,61 @@ using EdjCase.ICP.Candid.Crypto;
 
 namespace EdjCase.ICP.Candid.Models
 {
+	/// <summary>
+	/// An interface to specify if a class can be hashed by the `IHashFunction`
+	/// </summary>
 	public interface IHashable
 	{
+		/// <summary>
+		/// Computes the hash for the object using on the hash function
+		/// </summary>
+		/// <param name="hashFunction">A hash function algorithm to use to hash the object</param>
+		/// <returns>A byte array of the hash value</returns>
 		byte[] ComputeHash(IHashFunction hashFunction);
 	}
 
+	/// <summary>
+	/// An interface to specify a representation independent model that can be hashed
+	/// </summary>
 	public interface IRepresentationIndependentHashItem
 	{
+		/// <summary>
+		/// Builds a mapping of fields to hashable values
+		/// </summary>
+		/// <returns>Dictionary of field name to hashable field value</returns>
 		Dictionary<string, IHashable> BuildHashableItem();
 	}
 
-	public class HashableObject : IHashable, IEnumerable<KeyValuePair<string, IHashable>>
+	/// <summary>
+	/// A helper class to turn a dictionary into a `IHashable`
+	/// </summary>
+	internal class HashableObject : IHashable, IEnumerable<KeyValuePair<string, IHashable>>
 	{
+		/// <summary>
+		/// The mapping of property name to hashable value to hash
+		/// </summary>
 		public Dictionary<string, IHashable> Properties { get; }
 
-		public HashableObject(Dictionary<string, IHashable>? properties = null)
+		/// <param name="properties">The mapping of property name to hashable value to hash</param>
+		public HashableObject(Dictionary<string, IHashable> properties)
 		{
-			this.Properties = properties ?? new Dictionary<string, IHashable>();
+			this.Properties = properties ?? throw new ArgumentNullException(nameof(properties));
 		}
 
-		public void Add(string key, IHashable value)
-		{
-			this.Add(key.ToHashable(), value);
-		}
-
+		/// <inheritdoc />
 		public byte[] ComputeHash(IHashFunction hashFunction)
 		{
 			RequestId requestId = RequestId.FromObject(this.Properties, hashFunction);
 			return requestId.RawValue;
 		}
 
+		/// <inheritdoc />
 		public IEnumerator<KeyValuePair<string, IHashable>> GetEnumerator()
 		{
 			return this.Properties.GetEnumerator();
 		}
 
+		/// <inheritdoc />
 		IEnumerator IEnumerable.GetEnumerator()
 		{
 			return this.Properties.GetEnumerator();
@@ -67,7 +87,7 @@ namespace EdjCase.ICP.Candid.Models
 		}
 	}
 
-	public class HashableArray : IHashable
+	internal class HashableArray : IHashable
 	{
 		public HashableArray(List<IHashable>? items = null)
 		{
@@ -84,7 +104,7 @@ namespace EdjCase.ICP.Candid.Models
 		}
 	}
 
-	public abstract class HashableValue : IHashable
+	internal abstract class HashableValue : IHashable
 	{
 		public abstract byte[] GetRawValue();
 
@@ -95,7 +115,7 @@ namespace EdjCase.ICP.Candid.Models
 		}
 	}
 
-	public class HashableString : HashableValue
+	internal class HashableString : HashableValue
 	{
 		public string Value { get; }
 
@@ -124,7 +144,7 @@ namespace EdjCase.ICP.Candid.Models
 		}
 	}
 
-	public class HashableBytes : HashableValue
+	internal class HashableBytes : HashableValue
 	{
 		public byte[] Value { get; }
 
@@ -141,7 +161,7 @@ namespace EdjCase.ICP.Candid.Models
 
 
 
-	public static class HashableExtensions
+	internal static class HashableExtensions
 	{
 		public static HashableArray ToHashable<T>(this IEnumerable<T> items)
 			where T : IHashable

@@ -23,8 +23,8 @@ namespace EdjCase.ICP.Candid.Models
 		/// </summary>
 		public CandidType Type { get; }
 
-		/// <param name="value">The candid value</param>
-		/// <param name="type">The candid type</param>
+		/// <param name="value">The candid value. Must match the specified type</param>
+		/// <param name="type">The candid type. Must match the specified value</param>
 		public CandidTypedValue(CandidValue value, CandidType type)
 		{
 			this.Value = value ?? throw new ArgumentNullException(nameof(value));
@@ -32,14 +32,19 @@ namespace EdjCase.ICP.Candid.Models
 		}
 
 		/// <summary>
-		/// Helper method to convert a typed value to an optional value
+		/// Helper method to convert a typed value to an optional value. The typed value must be an opt
 		/// </summary>
 		/// <typeparam name="T">Type to convert the candid value to</typeparam>
 		/// <param name="converter">Optional. Converter to use for the conversion, otherwise will use default converter</param>
 		/// <returns>Optional value of T</returns>
+		/// <exception cref="InvalidOperationException">Throws if the value is not an opt</exception>
 		public OptionalValue<T> ToOptionalObject<T>(CandidConverter? converter = null)
 		{
-			return (converter ?? CandidConverter.Default).ToOptionalObject<T>(this.Value);
+			if (this.Value is CandidOptional o)
+			{
+				return (converter ?? CandidConverter.Default).ToOptionalObject<T>(o);
+			}
+			throw new InvalidOperationException("Value must be an optional type");
 		}
 
 		/// <summary>
@@ -220,24 +225,31 @@ namespace EdjCase.ICP.Candid.Models
 		{
 			return this.Value.AsPrincipal();
 		}
-		
+
 		/// <summary>
 		/// Helper method to convert a type and a value to a typed value. Type and value must match 
 		/// </summary>
-		/// <param name="value"></param>
-		/// <param name="type"></param>
-		/// <returns></returns>
+		/// <param name="value">The candid value. Must match the specified type</param>
+		/// <param name="type">The candid type. Must match the specified value</param>
+		/// <returns>A candid typed value of the specified type and value</returns>
 		public static CandidTypedValue FromValueAndType(CandidValue value, CandidType type)
 		{
 			return new CandidTypedValue(value, type);
 		}
 
-		public static CandidTypedValue FromObject(object obj, CandidConverter? converter = null)
+		/// <summary>
+		/// Converts the object into a typed value. If a converter is not specified, the default
+		/// converter will be used
+		/// </summary>
+		/// <param name="value">An object that can be converted into a candid type/value</param>
+		/// <param name="converter">Optional. Converter to use for the conversion, otherwise will use default converter</param>
+		/// <returns>A candid typed value based on the specified value</returns>
+		public static CandidTypedValue FromObject(object value, CandidConverter? converter = null)
 		{
-			return (converter ?? CandidConverter.Default).FromObject(obj);
+			return (converter ?? CandidConverter.Default).FromObject(value);
 		}
 
-
+		/// <inheritdoc />
 		public bool Equals(CandidTypedValue? other)
 		{
 			if (object.ReferenceEquals(other, null))
@@ -247,17 +259,19 @@ namespace EdjCase.ICP.Candid.Models
 			return this.Value == other.Value && this.Type == other.Type;
 		}
 
-
+		/// <inheritdoc />
 		public override bool Equals(object? obj)
 		{
 			return this.Equals(obj as CandidTypedValue);
 		}
 
+		/// <inheritdoc />
 		public override int GetHashCode()
 		{
 			return HashCode.Combine(this.Value, this.Type);
 		}
 
+		/// <inheritdoc />
 		public static bool operator ==(CandidTypedValue? v1, CandidTypedValue? v2)
 		{
 			if (object.ReferenceEquals(v1, null))
@@ -267,6 +281,7 @@ namespace EdjCase.ICP.Candid.Models
 			return v1.Equals(v2);
 		}
 
+		/// <inheritdoc />
 		public static bool operator !=(CandidTypedValue? v1, CandidTypedValue? v2)
 		{
 			if (object.ReferenceEquals(v1, null))
@@ -276,6 +291,11 @@ namespace EdjCase.ICP.Candid.Models
 			return !v1.Equals(v2);
 		}
 
+		/// <summary>
+		/// A helper method to create a typed text value
+		/// </summary>
+		/// <param name="value">The value to use for the text</param>
+		/// <returns>A candid typed value of the specified value</returns>
 		public static CandidTypedValue Text(string value)
 		{
 			return new CandidTypedValue(
@@ -284,6 +304,11 @@ namespace EdjCase.ICP.Candid.Models
 			);
 		}
 
+		/// <summary>
+		/// A helper method to create a typed nat value
+		/// </summary>
+		/// <param name="value">The value to use for the nat</param>
+		/// <returns>A candid typed value of the specified value</returns>
 		public static CandidTypedValue Nat(UnboundedUInt value)
 		{
 			return new CandidTypedValue(
@@ -292,6 +317,11 @@ namespace EdjCase.ICP.Candid.Models
 			);
 		}
 
+		/// <summary>
+		/// A helper method to create a typed nat8 value
+		/// </summary>
+		/// <param name="value">The value to use for the nat8</param>
+		/// <returns>A candid typed value of the specified value</returns>
 		public static CandidTypedValue Nat8(byte value)
 		{
 			return new CandidTypedValue(
@@ -300,6 +330,11 @@ namespace EdjCase.ICP.Candid.Models
 			);
 		}
 
+		/// <summary>
+		/// A helper method to create a typed nat16 value
+		/// </summary>
+		/// <param name="value">The value to use for the nat16</param>
+		/// <returns>A candid typed value of the specified value</returns>
 		public static CandidTypedValue Nat16(ushort value)
 		{
 			return new CandidTypedValue(
@@ -308,6 +343,11 @@ namespace EdjCase.ICP.Candid.Models
 			);
 		}
 
+		/// <summary>
+		/// A helper method to create a typed nat32 value
+		/// </summary>
+		/// <param name="value">The value to use for the nat32</param>
+		/// <returns>A candid typed value of the specified value</returns>
 		public static CandidTypedValue Nat32(uint value)
 		{
 			return new CandidTypedValue(
@@ -316,6 +356,11 @@ namespace EdjCase.ICP.Candid.Models
 			);
 		}
 
+		/// <summary>
+		/// A helper method to create a typed nat64 value
+		/// </summary>
+		/// <param name="value">The value to use for the nat64</param>
+		/// <returns>A candid typed value of the specified value</returns>
 		public static CandidTypedValue Nat64(ulong value)
 		{
 			return new CandidTypedValue(
@@ -324,6 +369,11 @@ namespace EdjCase.ICP.Candid.Models
 			);
 		}
 
+		/// <summary>
+		/// A helper method to create a typed int value
+		/// </summary>
+		/// <param name="value">The value to use for the int</param>
+		/// <returns>A candid typed value of the specified value</returns>
 		public static CandidTypedValue Int(UnboundedInt value)
 		{
 			return new CandidTypedValue(
@@ -332,6 +382,11 @@ namespace EdjCase.ICP.Candid.Models
 			);
 		}
 
+		/// <summary>
+		/// A helper method to create a typed int8 value
+		/// </summary>
+		/// <param name="value">The value to use for the int8</param>
+		/// <returns>A candid typed value of the specified value</returns>
 		public static CandidTypedValue Int8(sbyte value)
 		{
 			return new CandidTypedValue(
@@ -340,6 +395,11 @@ namespace EdjCase.ICP.Candid.Models
 			);
 		}
 
+		/// <summary>
+		/// A helper method to create a typed int16 value
+		/// </summary>
+		/// <param name="value">The value to use for the int16</param>
+		/// <returns>A candid typed value of the specified value</returns>
 		public static CandidTypedValue Int16(short value)
 		{
 			return new CandidTypedValue(
@@ -348,6 +408,11 @@ namespace EdjCase.ICP.Candid.Models
 			);
 		}
 
+		/// <summary>
+		/// A helper method to create a typed int32 value
+		/// </summary>
+		/// <param name="value">The value to use for the int32</param>
+		/// <returns>A candid typed value of the specified value</returns>
 		public static CandidTypedValue Int32(int value)
 		{
 			return new CandidTypedValue(
@@ -356,6 +421,11 @@ namespace EdjCase.ICP.Candid.Models
 			);
 		}
 
+		/// <summary>
+		/// A helper method to create a typed int64 value
+		/// </summary>
+		/// <param name="value">The value to use for the int64</param>
+		/// <returns>A candid typed value of the specified value</returns>
 		public static CandidTypedValue Int64(long value)
 		{
 			return new CandidTypedValue(
@@ -364,6 +434,11 @@ namespace EdjCase.ICP.Candid.Models
 			);
 		}
 
+		/// <summary>
+		/// A helper method to create a typed float32 value
+		/// </summary>
+		/// <param name="value">The value to use for the float32</param>
+		/// <returns>A candid typed value of the specified value</returns>
 		public static CandidTypedValue Float32(float value)
 		{
 			return new CandidTypedValue(
@@ -372,6 +447,11 @@ namespace EdjCase.ICP.Candid.Models
 			);
 		}
 
+		/// <summary>
+		/// A helper method to create a typed float64 value
+		/// </summary>
+		/// <param name="value">The value to use for the float64</param>
+		/// <returns>A candid typed value of the specified value</returns>
 		public static CandidTypedValue Float64(double value)
 		{
 			return new CandidTypedValue(
@@ -380,6 +460,11 @@ namespace EdjCase.ICP.Candid.Models
 			);
 		}
 
+		/// <summary>
+		/// A helper method to create a typed bool value
+		/// </summary>
+		/// <param name="value">The value to use for the bool</param>
+		/// <returns>A candid typed value of the specified value</returns>
 		public static CandidTypedValue Bool(bool value)
 		{
 			return new CandidTypedValue(
@@ -387,6 +472,12 @@ namespace EdjCase.ICP.Candid.Models
 				CandidType.Bool()
 			);
 		}
+
+		/// <summary>
+		/// A helper method to create a typed principal value
+		/// </summary>
+		/// <param name="value">The value to use for the principal</param>
+		/// <returns>A candid typed value of the specified value</returns>
 		public static CandidTypedValue Principal(Principal value)
 		{
 			return new CandidTypedValue(
@@ -395,6 +486,10 @@ namespace EdjCase.ICP.Candid.Models
 			);
 		}
 
+		/// <summary>
+		/// A helper method to create a typed null value
+		/// </summary>
+		/// <returns>A candid typed value of null</returns>
 		public static CandidTypedValue Null()
 		{
 			return new CandidTypedValue(
@@ -403,6 +498,10 @@ namespace EdjCase.ICP.Candid.Models
 			);
 		}
 
+		/// <summary>
+		/// A helper method to create a typed reserved value
+		/// </summary>
+		/// <returns>A candid typed value of reserved</returns>
 		public static CandidTypedValue Reserved()
 		{
 			return new CandidTypedValue(
@@ -411,6 +510,10 @@ namespace EdjCase.ICP.Candid.Models
 			);
 		}
 
+		/// <summary>
+		/// A helper method to create a typed empty value
+		/// </summary>
+		/// <returns>A candid typed value of empty</returns>
 		public static CandidTypedValue Empty()
 		{
 			return new CandidTypedValue(
@@ -419,6 +522,12 @@ namespace EdjCase.ICP.Candid.Models
 			);
 		}
 
+
+		/// <summary>
+		/// A helper method to create a typed opt value
+		/// </summary>
+		/// <param name="value">The inner typed value to wrap an opt around</param>
+		/// <returns>A candid typed value of the specified value</returns>
 		public static CandidTypedValue Opt(CandidTypedValue typedValue)
 		{
 			return new CandidTypedValue(
@@ -427,10 +536,18 @@ namespace EdjCase.ICP.Candid.Models
 			);
 		}
 
+		/// <summary>
+		/// A helper method to create a typed vector value
+		/// </summary>
+		/// <param name="innerType">The item type of the vector</param>
+		/// <param name="values">An enumerable of values to use as vector items</param>
+		/// <param name="valueConverter">A function to convert the enumerable type to a candid value</param>
+		/// <returns>A candid typed value of the enumerable</returns>
 		public static CandidTypedValue Vector<T>(
 			CandidType innerType,
 			IEnumerable<T> values,
-			Func<T, CandidValue> valueConverter)
+			Func<T, CandidValue> valueConverter
+		)
 		{
 			return new CandidTypedValue(
 				new CandidVector(values.Select(valueConverter).ToArray()),
@@ -438,6 +555,12 @@ namespace EdjCase.ICP.Candid.Models
 			);
 		}
 
+		/// <summary>
+		/// A helper method to create a typed vector value
+		/// </summary>
+		/// <param name="innerType">The item type of the vector</param>
+		/// <param name="values">An array of values to use as vector items</param>
+		/// <returns>A candid typed value of the array</returns>
 		public static CandidTypedValue Vector(
 			CandidType innerType, 
 			CandidValue[] values

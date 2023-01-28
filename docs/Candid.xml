@@ -24,6 +24,213 @@
             Ordered list of encoded values
             </summary>
         </member>
+        <member name="T:EdjCase.ICP.Candid.CandidConverter">
+            <summary>
+            A class that converts to and from C# and Candid types
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Candid.CandidConverter.Default">
+            <summary>
+            A candid converter with the default settings
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Candid.CandidConverter.Options">
+            <summary>
+            The options for the converter
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.CandidConverter.#ctor(EdjCase.ICP.Candid.CandidConverterOptions)">
+            <param name="options">Optional. The options for the converter. If not set, will use defaults</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.CandidConverter.FromObject(System.Object)">
+            <summary>
+            Converts a C# object into a typed candid value
+            </summary>
+            <param name="obj">The object to convert</param>
+            <returns></returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.CandidConverter.ToObject``1(EdjCase.ICP.Candid.Models.Values.CandidValue)">
+            <summary>
+            Converts a candid value into a C# object
+            </summary>
+            <typeparam name="T">The C# type to convert to</typeparam>
+            <param name="value">The candid value to convert</param>
+            <returns>A C# object of the value</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.CandidConverter.ToOptionalObject``1(EdjCase.ICP.Candid.Models.Values.CandidOptional)">
+            <summary>
+            Converts a candid opt value to an OptionalValue
+            </summary>
+            <typeparam name="T">The C# type to convert the inner type to</typeparam>
+            <param name="value">The opt value</param>
+            <returns>An optional value</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.CandidConverter.ToObject(System.Type,EdjCase.ICP.Candid.Models.Values.CandidValue)">
+            <summary>
+            Converts a candid value into a C# object
+            </summary>
+            <param name="objType">The C# type to convert to</param>
+            <param name="value">The candid value to convert</param>
+            <returns>A C# object of the value</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.CandidConverter.ToOptionalObject(System.Type,EdjCase.ICP.Candid.Models.Values.CandidOptional)">
+            <summary>
+            Converts a candid opt value to an OptionalValue
+            </summary>
+            <param name="objType">The C# type to convert the inner type to</param>
+            <param name="value">The opt value</param>
+            <returns>An optional value</returns>
+        </member>
+        <member name="T:EdjCase.ICP.Candid.CandidConverterOptions">
+            <summary>
+            Options for configuring how candid is convertered
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.CandidConverterOptions.ResolveMapper(System.Type)">
+            <summary>
+            Resolves a mapper from the specified type
+            </summary>
+            <param name="type">The C# type to convert to and from</param>
+            <returns>A mapper for conversion</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.CandidConverterOptions.Default">
+            <summary>
+            Creates the default options with its own mapper resolver
+            </summary>
+            <returns>Default converter options</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.CandidConverterOptions.FromResolver(System.Func{System.Type,EdjCase.ICP.Candid.Mapping.IObjectMapper})">
+            <summary>
+            Creates options with a mapper resolver function, falls back to default if no mappers are found
+            </summary>
+            <param name="resolver">A function to resolve a mapper from a type</param>
+            <returns>Converter options with resolver</returns>
+        </member>
+        <member name="T:EdjCase.ICP.Candid.CandidTypeCode">
+            <summary>
+            Specifies all the possible candid types and their corresponding codes
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.CandidTypeCode.Null">
+            <summary>
+            A null value
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.CandidTypeCode.Bool">
+            <summary>
+            A bool value
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.CandidTypeCode.Nat">
+            <summary>
+            An unbounded uint value
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.CandidTypeCode.Int">
+            <summary>
+            An unbounded int value
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.CandidTypeCode.Nat8">
+            <summary>
+            An UInt8 value
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.CandidTypeCode.Nat16">
+            <summary>
+            An UInt16 value
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.CandidTypeCode.Nat32">
+            <summary>
+            An UInt32 value
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.CandidTypeCode.Nat64">
+            <summary>
+            An UInt64 value
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.CandidTypeCode.Int8">
+            <summary>
+            An Int8 value
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.CandidTypeCode.Int16">
+            <summary>
+            An Int16 value
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.CandidTypeCode.Int32">
+            <summary>
+            An Int32 value
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.CandidTypeCode.Int64">
+            <summary>
+            An Int64 value
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.CandidTypeCode.Float32">
+            <summary>
+            A float32 value
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.CandidTypeCode.Float64">
+            <summary>
+            A float64 value
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.CandidTypeCode.Text">
+            <summary>
+            A string value
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.CandidTypeCode.Reserved">
+            <summary>
+            A reserved value
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.CandidTypeCode.Empty">
+            <summary>
+            An empty value
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.CandidTypeCode.Opt">
+            <summary>
+            An optional value
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.CandidTypeCode.Vector">
+            <summary>
+            An vector value
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.CandidTypeCode.Record">
+            <summary>
+            An record value
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.CandidTypeCode.Variant">
+            <summary>
+            An variant value
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.CandidTypeCode.Func">
+            <summary>
+            An func value
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.CandidTypeCode.Service">
+            <summary>
+            An service value
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.CandidTypeCode.Principal">
+            <summary>
+            An principal value
+            </summary>
+        </member>
         <member name="T:EdjCase.ICP.Candid.Crypto.CRC32">
             <summary>
             Helper class for computing CRC32 hashes/checksums on byte data
@@ -469,16 +676,17 @@
             </summary>
         </member>
         <member name="M:EdjCase.ICP.Candid.Models.CandidTypedValue.#ctor(EdjCase.ICP.Candid.Models.Values.CandidValue,EdjCase.ICP.Candid.Models.Types.CandidType)">
-            <param name="value">The candid value</param>
-            <param name="type">The candid type</param>
+            <param name="value">The candid value. Must match the specified type</param>
+            <param name="type">The candid type. Must match the specified value</param>
         </member>
         <member name="M:EdjCase.ICP.Candid.Models.CandidTypedValue.ToOptionalObject``1(EdjCase.ICP.Candid.CandidConverter)">
             <summary>
-            Helper method to convert a typed value to an optional value
+            Helper method to convert a typed value to an optional value. The typed value must be an opt
             </summary>
             <typeparam name="T">Type to convert the candid value to</typeparam>
             <param name="converter">Optional. Converter to use for the conversion, otherwise will use default converter</param>
             <returns>Optional value of T</returns>
+            <exception cref="T:System.InvalidOperationException">Throws if the value is not an opt</exception>
         </member>
         <member name="M:EdjCase.ICP.Candid.Models.CandidTypedValue.ToObject``1(EdjCase.ICP.Candid.CandidConverter)">
             <summary>
@@ -545,22 +753,789 @@
         <member name="M:EdjCase.ICP.Candid.Models.CandidTypedValue.AsNat64">
             <inheritdoc cref="M:EdjCase.ICP.Candid.Models.Values.CandidValue.AsNat64"/>
         </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidTypedValue.AsInt">
+            <inheritdoc cref="M:EdjCase.ICP.Candid.Models.Values.CandidValue.AsInt"/>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidTypedValue.AsInt8">
+            <inheritdoc cref="M:EdjCase.ICP.Candid.Models.Values.CandidValue.AsInt8"/>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidTypedValue.AsInt16">
+            <inheritdoc cref="M:EdjCase.ICP.Candid.Models.Values.CandidValue.AsInt16"/>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidTypedValue.AsInt32">
+            <inheritdoc cref="M:EdjCase.ICP.Candid.Models.Values.CandidValue.AsInt32"/>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidTypedValue.AsInt64">
+            <inheritdoc cref="M:EdjCase.ICP.Candid.Models.Values.CandidValue.AsInt64"/>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidTypedValue.AsFloat32">
+            <inheritdoc cref="M:EdjCase.ICP.Candid.Models.Values.CandidValue.AsFloat32"/>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidTypedValue.AsFloat64">
+            <inheritdoc cref="M:EdjCase.ICP.Candid.Models.Values.CandidValue.AsFloat64"/>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidTypedValue.AsBool">
+            <inheritdoc cref="M:EdjCase.ICP.Candid.Models.Values.CandidValue.AsBool"/>
+        </member>
         <member name="M:EdjCase.ICP.Candid.Models.CandidTypedValue.AsPrincipal">
+            <inheritdoc cref="M:EdjCase.ICP.Candid.Models.Values.CandidValue.AsPrincipal"/>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidTypedValue.FromValueAndType(EdjCase.ICP.Candid.Models.Values.CandidValue,EdjCase.ICP.Candid.Models.Types.CandidType)">
             <summary>
-            If opaque, returns null, otherwise the principalid
+            Helper method to convert a type and a value to a typed value. Type and value must match 
             </summary>
-            <returns></returns>
+            <param name="value">The candid value. Must match the specified type</param>
+            <param name="type">The candid type. Must match the specified value</param>
+            <returns>A candid typed value of the specified type and value</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidTypedValue.FromObject(System.Object,EdjCase.ICP.Candid.CandidConverter)">
+            <summary>
+            Converts the object into a typed value. If a converter is not specified, the default
+            converter will be used
+            </summary>
+            <param name="value">An object that can be converted into a candid type/value</param>
+            <param name="converter">Optional. Converter to use for the conversion, otherwise will use default converter</param>
+            <returns>A candid typed value based on the specified value</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidTypedValue.Equals(EdjCase.ICP.Candid.Models.CandidTypedValue)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidTypedValue.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidTypedValue.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidTypedValue.op_Equality(EdjCase.ICP.Candid.Models.CandidTypedValue,EdjCase.ICP.Candid.Models.CandidTypedValue)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidTypedValue.op_Inequality(EdjCase.ICP.Candid.Models.CandidTypedValue,EdjCase.ICP.Candid.Models.CandidTypedValue)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidTypedValue.Text(System.String)">
+            <summary>
+            A helper method to create a typed text value
+            </summary>
+            <param name="value">The value to use for the text</param>
+            <returns>A candid typed value of the specified value</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidTypedValue.Nat(EdjCase.ICP.Candid.Models.UnboundedUInt)">
+            <summary>
+            A helper method to create a typed nat value
+            </summary>
+            <param name="value">The value to use for the nat</param>
+            <returns>A candid typed value of the specified value</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidTypedValue.Nat8(System.Byte)">
+            <summary>
+            A helper method to create a typed nat8 value
+            </summary>
+            <param name="value">The value to use for the nat8</param>
+            <returns>A candid typed value of the specified value</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidTypedValue.Nat16(System.UInt16)">
+            <summary>
+            A helper method to create a typed nat16 value
+            </summary>
+            <param name="value">The value to use for the nat16</param>
+            <returns>A candid typed value of the specified value</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidTypedValue.Nat32(System.UInt32)">
+            <summary>
+            A helper method to create a typed nat32 value
+            </summary>
+            <param name="value">The value to use for the nat32</param>
+            <returns>A candid typed value of the specified value</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidTypedValue.Nat64(System.UInt64)">
+            <summary>
+            A helper method to create a typed nat64 value
+            </summary>
+            <param name="value">The value to use for the nat64</param>
+            <returns>A candid typed value of the specified value</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidTypedValue.Int(EdjCase.ICP.Candid.Models.UnboundedInt)">
+            <summary>
+            A helper method to create a typed int value
+            </summary>
+            <param name="value">The value to use for the int</param>
+            <returns>A candid typed value of the specified value</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidTypedValue.Int8(System.SByte)">
+            <summary>
+            A helper method to create a typed int8 value
+            </summary>
+            <param name="value">The value to use for the int8</param>
+            <returns>A candid typed value of the specified value</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidTypedValue.Int16(System.Int16)">
+            <summary>
+            A helper method to create a typed int16 value
+            </summary>
+            <param name="value">The value to use for the int16</param>
+            <returns>A candid typed value of the specified value</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidTypedValue.Int32(System.Int32)">
+            <summary>
+            A helper method to create a typed int32 value
+            </summary>
+            <param name="value">The value to use for the int32</param>
+            <returns>A candid typed value of the specified value</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidTypedValue.Int64(System.Int64)">
+            <summary>
+            A helper method to create a typed int64 value
+            </summary>
+            <param name="value">The value to use for the int64</param>
+            <returns>A candid typed value of the specified value</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidTypedValue.Float32(System.Single)">
+            <summary>
+            A helper method to create a typed float32 value
+            </summary>
+            <param name="value">The value to use for the float32</param>
+            <returns>A candid typed value of the specified value</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidTypedValue.Float64(System.Double)">
+            <summary>
+            A helper method to create a typed float64 value
+            </summary>
+            <param name="value">The value to use for the float64</param>
+            <returns>A candid typed value of the specified value</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidTypedValue.Bool(System.Boolean)">
+            <summary>
+            A helper method to create a typed bool value
+            </summary>
+            <param name="value">The value to use for the bool</param>
+            <returns>A candid typed value of the specified value</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidTypedValue.Principal(EdjCase.ICP.Candid.Models.Principal)">
+            <summary>
+            A helper method to create a typed principal value
+            </summary>
+            <param name="value">The value to use for the principal</param>
+            <returns>A candid typed value of the specified value</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidTypedValue.Null">
+            <summary>
+            A helper method to create a typed null value
+            </summary>
+            <returns>A candid typed value of null</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidTypedValue.Reserved">
+            <summary>
+            A helper method to create a typed reserved value
+            </summary>
+            <returns>A candid typed value of reserved</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidTypedValue.Empty">
+            <summary>
+            A helper method to create a typed empty value
+            </summary>
+            <returns>A candid typed value of empty</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidTypedValue.Opt(EdjCase.ICP.Candid.Models.CandidTypedValue)">
+            <summary>
+            A helper method to create a typed opt value
+            </summary>
+            <param name="value">The inner typed value to wrap an opt around</param>
+            <returns>A candid typed value of the specified value</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidTypedValue.Vector``1(EdjCase.ICP.Candid.Models.Types.CandidType,System.Collections.Generic.IEnumerable{``0},System.Func{``0,EdjCase.ICP.Candid.Models.Values.CandidValue})">
+            <summary>
+            A helper method to create a typed vector value
+            </summary>
+            <param name="innerType">The item type of the vector</param>
+            <param name="values">An enumerable of values to use as vector items</param>
+            <param name="valueConverter">A function to convert the enumerable type to a candid value</param>
+            <returns>A candid typed value of the enumerable</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidTypedValue.Vector(EdjCase.ICP.Candid.Models.Types.CandidType,EdjCase.ICP.Candid.Models.Values.CandidValue[])">
+            <summary>
+            A helper method to create a typed vector value
+            </summary>
+            <param name="innerType">The item type of the vector</param>
+            <param name="values">An array of values to use as vector items</param>
+            <returns>A candid typed value of the array</returns>
         </member>
         <member name="F:EdjCase.ICP.Candid.Models.CompoundTypeTable.CompoundTypeIndexMap">
             <summary>
             A mapping of compound type definition to `EncodedCompoundTypes` index to be used as reference
             </summary>
         </member>
+        <member name="T:EdjCase.ICP.Candid.Models.HashTreeType">
+            <summary>
+            Subtypes of what a hash tree can be
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.Models.HashTreeType.Empty">
+            <summary>
+            An empty branch with no data
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.Models.HashTreeType.Fork">
+            <summary>
+            Left and right branching trees
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.Models.HashTreeType.Labeled">
+            <summary>
+            A branch that is labeled with its own subtree
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.Models.HashTreeType.Leaf">
+            <summary>
+            A branch with data and no subtree
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.Models.HashTreeType.Pruned">
+            <summary>
+            A branch that has been trimmed where its data is the hash of the subtree
+            </summary>
+        </member>
+        <member name="T:EdjCase.ICP.Candid.Models.HashTree">
+            <summary>
+            A variant model representing a hash tree where values can be pruned and labeled in the tree
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Models.HashTree.Type">
+            <summary>
+            The type the tree node is
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.HashTree.AsFork">
+            <summary>
+            Casts the tree to a left and right fork. If the node type is not a fork, then will throw an exception
+            </summary>
+            <returns>Left and right trees</returns>
+            <exception cref="T:System.InvalidOperationException">Throws if tree is not a fork</exception>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.HashTree.AsLabeled">
+            <summary>
+            Casts the tree to a label and a tree. If the node type is not labeled, then will throw an exception
+            </summary>
+            <returns>Label of the node and subtree</returns>
+            <exception cref="T:System.InvalidOperationException">Throws if tree is not labeled</exception>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.HashTree.AsLeaf">
+            <summary>
+            Casts the tree to an encoded value. If the node type is not a leaf, then will throw an exception
+            </summary>
+            <returns>Encoded value of the leaf</returns>
+            <exception cref="T:System.InvalidOperationException">Throws if tree is not a leaf</exception>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.HashTree.AsPruned">
+            <summary>
+            Casts the tree to a pruned hash value. If the node type is not pruned, then will throw an exception
+            </summary>
+            <returns>Byte array hash value of the pruned subtree</returns>
+            <exception cref="T:System.InvalidOperationException">Throws if tree is not pruned</exception>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.HashTree.Empty">
+            <summary>
+            Helper method to create an empty tree
+            </summary>
+            <returns>An empty hash tree</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.HashTree.Fork(EdjCase.ICP.Candid.Models.HashTree,EdjCase.ICP.Candid.Models.HashTree)">
+            <summary>
+            Helper method to create a forked tree
+            </summary>
+            <param name="left">The branch to the left</param>
+            <param name="right">The branch to the right</param>
+            <returns>An forked hash tree</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.HashTree.Labeled(EdjCase.ICP.Candid.Models.HashTree.EncodedValue,EdjCase.ICP.Candid.Models.HashTree)">
+            <summary>
+            Helper method to create a labeled tree
+            </summary>
+            <param name="label">The label for the tree</param>
+            <param name="tree">The subtree for the label</param>
+            <returns>An labeled hash tree</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.HashTree.Leaf(EdjCase.ICP.Candid.Models.HashTree.EncodedValue)">
+            <summary>
+            Helper method to create a leaf tree
+            </summary>
+            <param name="value">The value to store in the leaf</param>
+            <returns>An leaf hash tree</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.HashTree.Pruned(System.Byte[])">
+            <summary>
+            Helper method to create a pruned tree
+            </summary>
+            <param name="treeHash">The hash of the tree that was pruned</param>
+            <returns>An pruned hash tree</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.HashTree.GetValueOrDefault(EdjCase.ICP.Candid.Models.StatePathSegment)">
+            <summary>
+            Gets the value of the subtree specified by the path, returns null if not found
+            </summary>
+            <param name="path">The path segment to get a value from</param>
+            <returns>A hash tree from the path, or null if not found</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.HashTree.GetValueOrDefault(EdjCase.ICP.Candid.Models.StatePath)">
+            <summary>
+            Gets the value of the subtree specified by the path, returns null if not found
+            </summary>
+            <param name="path">The path to get a value from</param>
+            <returns>A hash tree from the path, or null if not found</returns>
+        </member>
         <member name="M:EdjCase.ICP.Candid.Models.HashTree.BuildRootHash">
             <summary>
             Computes the root SHA256 hash of the tree based on the IC certificate spec
             </summary>
-            <returns>A blob of the hash digest</returns>
+            <returns>A byte array of the hash digest</returns>
+        </member>
+        <member name="T:EdjCase.ICP.Candid.Models.HashTree.EncodedValue">
+            <summary>
+            A helper class that wraps around a byte array, giving functions to convert 
+            to common types like text and numbers
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Models.HashTree.EncodedValue.Value">
+            <summary>
+            The raw value
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.HashTree.EncodedValue.#ctor(System.Byte[])">
+            <param name="value">The raw value</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.HashTree.EncodedValue.AsUtf8">
+            <summary>
+            The raw value converted to UTF-8 encoded string
+            </summary>
+            <returns>A UTF-8 string of the value</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.HashTree.EncodedValue.AsNat">
+            <summary>
+            The raw value converted to a LEB128 encoded number
+            </summary>
+            <returns>A unbounded uint of the value</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.HashTree.EncodedValue.ToString">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.HashTree.EncodedValue.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.HashTree.EncodedValue.Equals(EdjCase.ICP.Candid.Models.HashTree.EncodedValue)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.HashTree.EncodedValue.Equals(System.Byte[])">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.HashTree.EncodedValue.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.HashTree.EncodedValue.op_Equality(EdjCase.ICP.Candid.Models.HashTree.EncodedValue,EdjCase.ICP.Candid.Models.HashTree.EncodedValue)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.HashTree.EncodedValue.op_Inequality(EdjCase.ICP.Candid.Models.HashTree.EncodedValue,EdjCase.ICP.Candid.Models.HashTree.EncodedValue)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.HashTree.EncodedValue.op_Implicit(EdjCase.ICP.Candid.Models.HashTree.EncodedValue)~System.Byte[]">
+            <summary>
+            A helper method to implicitly convert an encoded value to a byte array
+            </summary>
+            <param name="value">The encoded value to get the raw value from</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.HashTree.EncodedValue.op_Implicit(System.Byte[])~EdjCase.ICP.Candid.Models.HashTree.EncodedValue">
+            <summary>
+            A helper method to implicitly convert an byte array to an encoded value
+            </summary>
+            <param name="bytes">The raw value to use with the encoded value</param>
+        </member>
+        <member name="T:EdjCase.ICP.Candid.Models.ICTimestamp">
+            <summary>
+            Helper class to wrap around an unbounded uint to represent the nanoseconds since 1970-01-01
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Models.ICTimestamp.NanoSeconds">
+            <summary>
+            The nanoseconds since 1970-01-01
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.ICTimestamp.#ctor(EdjCase.ICP.Candid.Models.UnboundedUInt)">
+            <param name="nanoSeconds">The nanoseconds since 1970-01-01</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.ICTimestamp.FromNanoSeconds(EdjCase.ICP.Candid.Models.UnboundedUInt)">
+            <summary>
+            Helper method to convert nanoseconds from 1970-01-01 to an ICTimestamp
+            </summary>
+            <param name="nanosecondsSinceEpoch">Nanoseconds since 1970-01-01</param>
+            <returns>An ICTimestamp based on the nanoseconds</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.ICTimestamp.From(System.TimeSpan)">
+            <summary>
+            Helper method to convert nanoseconds from 1970-01-01 to an ICTimestamp
+            </summary>
+            <param name="timespan">Time since 1970-01-01</param>
+            <returns>An ICTimestamp based on the nanoseconds</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.ICTimestamp.Now">
+            <summary>
+            Helper method to get the current timestamp
+            </summary>
+            <returns>A timestamp of the current time</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.ICTimestamp.FutureInNanoseconds(EdjCase.ICP.Candid.Models.UnboundedUInt)">
+            <summary>
+            Helper method to get a timestamp for X nanoseconds in the future from NOW instead of 1970-01-01
+            </summary>
+            <param name="nanosecondsFromNow">The nanoseconds from now in the future</param>
+            <returns>A timestamp of the nanoseconds from now</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.ICTimestamp.Future(System.TimeSpan)">
+            <summary>
+            Helper method to get a timestamp for X time in the future from NOW instead of 1970-01-01
+            </summary>
+            <param name="timeFromNow">The time from now in the future</param>
+            <returns>A timestamp of the time from now</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.ICTimestamp.ComputeHash(EdjCase.ICP.Candid.Crypto.IHashFunction)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.ICTimestamp.ToCandid">
+            <summary>
+            Converts the nanoseconds to a candid Nat value
+            </summary>
+            <returns>Candid nat value of the nanoseconds</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.ICTimestamp.ToString">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.ICTimestamp.op_GreaterThanOrEqual(EdjCase.ICP.Candid.Models.ICTimestamp,EdjCase.ICP.Candid.Models.ICTimestamp)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.ICTimestamp.op_LessThanOrEqual(EdjCase.ICP.Candid.Models.ICTimestamp,EdjCase.ICP.Candid.Models.ICTimestamp)">
+            <inheritdoc />
+        </member>
+        <member name="T:EdjCase.ICP.Candid.Models.IHashable">
+            <summary>
+            An interface to specify if a class can be hashed by the `IHashFunction`
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.IHashable.ComputeHash(EdjCase.ICP.Candid.Crypto.IHashFunction)">
+            <summary>
+            Computes the hash for the object using on the hash function
+            </summary>
+            <param name="hashFunction">A hash function algorithm to use to hash the object</param>
+            <returns>A byte array of the hash value</returns>
+        </member>
+        <member name="T:EdjCase.ICP.Candid.Models.IRepresentationIndependentHashItem">
+            <summary>
+            An interface to specify a representation independent model that can be hashed
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.IRepresentationIndependentHashItem.BuildHashableItem">
+            <summary>
+            Builds a mapping of fields to hashable values
+            </summary>
+            <returns>Dictionary of field name to hashable field value</returns>
+        </member>
+        <member name="T:EdjCase.ICP.Candid.Models.HashableObject">
+            <summary>
+            A helper class to turn a dictionary into a `IHashable`
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Models.HashableObject.Properties">
+            <summary>
+            The mapping of property name to hashable value to hash
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.HashableObject.#ctor(System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.Candid.Models.IHashable})">
+            <param name="properties">The mapping of property name to hashable value to hash</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.HashableObject.ComputeHash(EdjCase.ICP.Candid.Crypto.IHashFunction)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.HashableObject.GetEnumerator">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.HashableObject.System#Collections#IEnumerable#GetEnumerator">
+            <inheritdoc />
+        </member>
+        <member name="T:EdjCase.ICP.Candid.Models.OptionalValue`1">
+            <summary>
+            A helper class to represent a candid opt value. This is used instead of just a null value due to 
+            ambiguity in certain scenarios
+            </summary>
+            <typeparam name="T">The inner type of the opt</typeparam>
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Models.OptionalValue`1.HasValue">
+            <summary>
+            Is true if there is a value, false if null
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.OptionalValue`1.#ctor(System.Boolean,`0)">
+            <param name="hasValue">Is true if there is a value, false if null</param>
+            <param name="value">The value</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.OptionalValue`1.GetValueOrThrow">
+            <summary>
+            Gets the value if exists, otherwise throws an exception
+            </summary>
+            <returns>The inner value of the opt</returns>
+            <exception cref="T:System.InvalidOperationException">Throws if there is no value</exception>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.OptionalValue`1.GetValueOrDefault">
+            <summary>
+            Gets the value if exists, otherwise the default value
+            </summary>
+            <returns>The value if exists, otherwise the default value</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.OptionalValue`1.TryGetValue(`0@)">
+            <summary>
+            Tries to get the value from the opt. If a value exists it will return true and the out value will be set,
+            otherwise it will return false and the out value will be the default value
+            </summary>
+            <param name="value">The value, if exists</param>
+            <returns>True if there is a value, otherwise false</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.OptionalValue`1.Cast``1">
+            <summary>
+            Casts the inner type of the optional value to the new type
+            </summary>
+            <typeparam name="T2">The type to cast to for the inner type</typeparam>
+            <returns>An optional value with the new type</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.OptionalValue`1.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.OptionalValue`1.Equals(EdjCase.ICP.Candid.Models.OptionalValue{`0})">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.OptionalValue`1.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.OptionalValue`1.op_Equality(EdjCase.ICP.Candid.Models.OptionalValue{`0},EdjCase.ICP.Candid.Models.OptionalValue{`0})">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.OptionalValue`1.op_Inequality(EdjCase.ICP.Candid.Models.OptionalValue{`0},EdjCase.ICP.Candid.Models.OptionalValue{`0})">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.OptionalValue`1.ToString">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.OptionalValue`1.NoValue">
+            <summary>
+            A helper function to create a optional value with no value
+            </summary>
+            <returns>An empty optional value</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.OptionalValue`1.WithValue(`0)">
+            <summary>
+            A helper function to create a optional value with a value
+            </summary>
+            <returns>An optional value with a value</returns>
+        </member>
+        <member name="T:EdjCase.ICP.Candid.Models.PrincipalType">
+            <summary>
+            The specific type of principal that is encoded
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.Models.PrincipalType.Opaque">
+            <summary>
+            These are always generated by the IC and have no structure of interest outside of it.
+            Typically end with 0x01
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.Models.PrincipalType.SelfAuthenticating">
+            <summary>
+            Used if the key is directly used and not delegated/derived.
+            These have the form `H(public_key) · 0x02` (29 bytes)
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.Models.PrincipalType.Derived">
+            <summary>
+            These ids are treated specially when an id needs to be registered. In such a request, whoever requests an id
+            can provide a derivation_nonce. By hashing that together with the principal of the caller, every principal
+            has a space of ids that only they can register ids from.
+            These have the form `H(|registering_principal| · registering_principal · derivation_nonce) · 0x03` (29 bytes)
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.Models.PrincipalType.Anonymous">
+            <summary>
+            Used when there is no authentication/signature
+            This has the form `0x04`
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Candid.Models.PrincipalType.Reserved">
+            <summary>
+            These have the form of `blob · 0x7f` (29 bytes) where the blob length is between 0 and 28 bytes
+            </summary>
+        </member>
+        <member name="T:EdjCase.ICP.Candid.Models.Principal">
+            <summary>
+            A model representing a principal byte value with helper functions
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Models.Principal.Type">
+            <summary>
+            The kind of the principal
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Models.Principal.Raw">
+            <summary>
+            The raw value of the principal
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Principal.ToText">
+            <summary>
+            Converts the principal into its text format, such as "rrkah-fqaaa-aaaaa-aaaaq-cai"
+            </summary>
+            <returns>A text version of the principal</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Principal.ToString">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Principal.ToHex">
+            <summary>
+            Converts the raw principal value into a hex string in all caps with no delimiters
+            </summary>
+            <returns>Hex value as a string</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Principal.ManagementCanisterId">
+            <summary>
+            Helper method to create the principal for the Internet Computer management cansiter "aaaaa-aa"
+            </summary>
+            <returns>Principal for the management cansiter</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Principal.FromBytes(System.Byte[])">
+            <summary>
+            Converts raw principal bytes to a principal
+            </summary>
+            <param name="raw">Byte array of a principal value</param>
+            <returns>Principal from the bytes</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Principal.FromHex(System.String)">
+            <summary>
+            Creates a principal from a non delimited hex string value
+            </summary>
+            <param name="hex">A string form of a hex value with no delimiters</param>
+            <returns>Principal from the hex value</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Principal.Anonymous">
+            <summary>
+            Creates an anonymous principal
+            </summary>
+            <returns>Anonymous principal</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Principal.SelfAuthenticating(System.Byte[])">
+            <summary>
+            Creates a self authenticating principal with the specified public key
+            </summary>
+            <param name="derEncodedPublicKey">DER encoded public key</param>
+            <returns>Principal from the public key</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Principal.FromText(System.String)">
+            <summary>
+            Converts a text representation of a principal to a principal
+            </summary>
+            <param name="text">The text value of the principal</param>
+            <returns>Principal based on the text</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Principal.ComputeHash(EdjCase.ICP.Candid.Crypto.IHashFunction)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Principal.Equals(EdjCase.ICP.Candid.Models.Principal)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Principal.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Principal.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="T:EdjCase.ICP.Candid.Models.RequestId">
+            <summary>
+            A helper class to wrap around the request id byte array that identifies a request
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Models.RequestId.RawValue">
+            <summary>
+            The raw id value
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.RequestId.#ctor(System.Byte[])">
+            <param name="rawValue">The raw id value</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.RequestId.FromObject(System.Collections.Generic.IDictionary{System.String,EdjCase.ICP.Candid.Models.IHashable},EdjCase.ICP.Candid.Crypto.IHashFunction)">
+            <summary>
+            Converts a hashable object into a request id
+            </summary>
+            <param name="properties">The properties of the object to hash</param>
+            <param name="hashFunction">The hash function to use to generate the hash</param>
+            <returns>A request id object</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.RequestId.ComputeHash(EdjCase.ICP.Candid.Crypto.IHashFunction)">
+            <inheritdoc />
+        </member>
+        <member name="T:EdjCase.ICP.Candid.Models.StatePath">
+            <summary>
+            A model representing a list of path segments, used to navigate a state hash tree
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Models.StatePath.Segments">
+            <summary>
+            The list of segments making up the path
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.StatePath.#ctor(System.Collections.Generic.List{EdjCase.ICP.Candid.Models.StatePathSegment})">
+            <param name="segments">The list of segments making up the path</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.StatePath.FromSegments(EdjCase.ICP.Candid.Models.StatePathSegment[])">
+            <summary>
+            Helper method to create a path from a path segment array
+            </summary>
+            <param name="segments">An array of segments that make up the path</param>
+            <returns>A path object</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.StatePath.ComputeHash(EdjCase.ICP.Candid.Crypto.IHashFunction)">
+            <inheritdoc />
+        </member>
+        <member name="T:EdjCase.ICP.Candid.Models.StatePathSegment">
+            <summary>
+            A model representing a segment of a path for a state hash tree
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Models.StatePathSegment.Value">
+            <summary>
+            The raw value of the path segment
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.StatePathSegment.#ctor(System.Byte[])">
+            <param name="value">The raw value of the path segment</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.StatePathSegment.ComputeHash(EdjCase.ICP.Candid.Crypto.IHashFunction)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.StatePathSegment.FromString(System.String)">
+            <summary>
+            Creates a path segment from a string value by converting the string into UTF-8 bytes
+            </summary>
+            <param name="segment">The path segment to use</param>
+            <returns>A path segment</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.StatePathSegment.op_Implicit(EdjCase.ICP.Candid.Models.StatePathSegment)~System.Byte[]">
+            <summary>
+            A helper method to implicitly convert a path segment to its raw byte array
+            </summary>
+            <param name="value">The segment to convert</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.StatePathSegment.op_Implicit(System.Byte[])~EdjCase.ICP.Candid.Models.StatePathSegment">
+            <summary>
+            A helper method to implicitly convert a raw byte array to a path segment
+            </summary>
+            <param name="value">Byte array to convert</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.StatePathSegment.op_Implicit(System.String)~EdjCase.ICP.Candid.Models.StatePathSegment">
+            <summary>
+            A helper method to implicitly convert a string to a path segment
+            </summary>
+            <param name="value">String value to convert</param>
         </member>
         <member name="T:EdjCase.ICP.Candid.Models.Types.CandidKnownType">
             <summary>
@@ -967,6 +1942,418 @@
         </member>
         <member name="M:EdjCase.ICP.Candid.Models.Types.CandidVectorType.GetHashCode">
             <inheritdoc />
+        </member>
+        <member name="T:EdjCase.ICP.Candid.Models.UnboundedInt">
+            <summary>
+            An integer value with no bounds on how large it can get and variable byte size
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedInt.GetRawBytes(System.Boolean)">
+            <summary>
+            Gets the raw bytes of the number
+            </summary>
+            <param name="isBigEndian">True if the byte order should be big endian (most significant bytes first),
+            otherwise the order will be in little endian (least significant bytes first)</param>
+            <returns>Byte array of the number</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedInt.TryToInt64(System.Int64@)">
+            <summary>
+            Tries to get the Int64 representation of the value, will not if that value is too large to fit
+            into a Int64.
+            </summary>
+            <param name="value">Out parameter that is set ONLY if the return value is true</param>
+            <returns>True if converted, otherwise false</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedInt.ToString">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedInt.FromInt64(System.Int64)">
+            <summary>
+            A helper method to convert a Int64 to a unbounded int
+            </summary>
+            <param name="value">A Int64 value</param>
+            <returns>An unbounded int</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedInt.FromBigInteger(System.Numerics.BigInteger)">
+            <summary>
+            Converts a big integer to an unbounded int
+            </summary>
+            <param name="value">Big integer to convert</param>
+            <returns>An unbounded int</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedInt.ToBigInteger">
+            <summary>
+            Converts a unbounded int to a big integer value
+            </summary>
+            <returns>A big integer</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedInt.Equals(EdjCase.ICP.Candid.Models.UnboundedInt)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedInt.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedInt.CompareTo(EdjCase.ICP.Candid.Models.UnboundedInt)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedInt.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedInt.op_Equality(EdjCase.ICP.Candid.Models.UnboundedInt,EdjCase.ICP.Candid.Models.UnboundedInt)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedInt.op_Inequality(EdjCase.ICP.Candid.Models.UnboundedInt,EdjCase.ICP.Candid.Models.UnboundedInt)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedInt.op_Addition(EdjCase.ICP.Candid.Models.UnboundedInt,EdjCase.ICP.Candid.Models.UnboundedInt)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedInt.op_Subtraction(EdjCase.ICP.Candid.Models.UnboundedInt,EdjCase.ICP.Candid.Models.UnboundedInt)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedInt.op_Multiply(EdjCase.ICP.Candid.Models.UnboundedInt,EdjCase.ICP.Candid.Models.UnboundedInt)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedInt.op_Division(EdjCase.ICP.Candid.Models.UnboundedInt,EdjCase.ICP.Candid.Models.UnboundedInt)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedInt.op_LessThan(EdjCase.ICP.Candid.Models.UnboundedInt,EdjCase.ICP.Candid.Models.UnboundedInt)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedInt.op_GreaterThan(EdjCase.ICP.Candid.Models.UnboundedInt,EdjCase.ICP.Candid.Models.UnboundedInt)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedInt.op_LessThanOrEqual(EdjCase.ICP.Candid.Models.UnboundedInt,EdjCase.ICP.Candid.Models.UnboundedInt)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedInt.op_GreaterThanOrEqual(EdjCase.ICP.Candid.Models.UnboundedInt,EdjCase.ICP.Candid.Models.UnboundedInt)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedInt.op_Increment(EdjCase.ICP.Candid.Models.UnboundedInt)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedInt.op_Decrement(EdjCase.ICP.Candid.Models.UnboundedInt)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedInt.op_Implicit(EdjCase.ICP.Candid.Models.UnboundedUInt)~EdjCase.ICP.Candid.Models.UnboundedInt">
+            <summary>
+            A helper method to implicitly convert a unbounded uint to an unbounded int
+            </summary>
+            <param name="value">An unbounded uint</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedInt.op_Implicit(System.Int64)~EdjCase.ICP.Candid.Models.UnboundedInt">
+            <summary>
+            A helper method to implicitly convert a Int64 to an unbounded int
+            </summary>
+            <param name="value">An Int64 value</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedInt.op_Implicit(System.Int32)~EdjCase.ICP.Candid.Models.UnboundedInt">
+            <summary>
+            A helper method to implicitly convert a Int32 to an unbounded int
+            </summary>
+            <param name="value">An Int32 value</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedInt.op_Implicit(System.Int16)~EdjCase.ICP.Candid.Models.UnboundedInt">
+            <summary>
+            A helper method to implicitly convert a Int16 to an unbounded int
+            </summary>
+            <param name="value">An Int16 value</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedInt.op_Implicit(System.SByte)~EdjCase.ICP.Candid.Models.UnboundedInt">
+            <summary>
+            A helper method to implicitly convert a Int8 to an unbounded int
+            </summary>
+            <param name="value">An Int8 value</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedInt.op_Implicit(System.UInt64)~EdjCase.ICP.Candid.Models.UnboundedInt">
+            <summary>
+            A helper method to implicitly convert a UInt64 to an unbounded int
+            </summary>
+            <param name="value">An UInt64 value</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedInt.op_Implicit(System.UInt32)~EdjCase.ICP.Candid.Models.UnboundedInt">
+            <summary>
+            A helper method to implicitly convert a UInt32 to an unbounded int
+            </summary>
+            <param name="value">An UInt32 value</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedInt.op_Implicit(System.UInt16)~EdjCase.ICP.Candid.Models.UnboundedInt">
+            <summary>
+            A helper method to implicitly convert a UInt16 to an unbounded int
+            </summary>
+            <param name="value">An UInt16 value</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedInt.op_Implicit(System.Byte)~EdjCase.ICP.Candid.Models.UnboundedInt">
+            <summary>
+            A helper method to implicitly convert a UInt8 to an unbounded int
+            </summary>
+            <param name="value">An UInt8 value</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedInt.op_Explicit(EdjCase.ICP.Candid.Models.UnboundedInt)~System.UInt64">
+            <summary>
+            A helper method to explicitly convert an unbounded int to a UInt64
+            </summary>
+            <param name="value">An UInt64</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedInt.op_Explicit(EdjCase.ICP.Candid.Models.UnboundedInt)~System.UInt32">
+            <summary>
+            A helper method to explicitly convert an unbounded int to a UInt32
+            </summary>
+            <param name="value">An UInt32</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedInt.op_Explicit(EdjCase.ICP.Candid.Models.UnboundedInt)~System.UInt16">
+            <summary>
+            A helper method to explicitly convert an unbounded int to a UInt16
+            </summary>
+            <param name="value">An UInt16</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedInt.op_Explicit(EdjCase.ICP.Candid.Models.UnboundedInt)~System.Byte">
+            <summary>
+            A helper method to explicitly convert an unbounded int to a UInt8
+            </summary>
+            <param name="value">An UInt8</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedInt.op_Explicit(EdjCase.ICP.Candid.Models.UnboundedInt)~System.Int64">
+            <summary>
+            A helper method to explicitly convert an unbounded int to a Int64
+            </summary>
+            <param name="value">An Int64</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedInt.op_Explicit(EdjCase.ICP.Candid.Models.UnboundedInt)~System.Int32">
+            <summary>
+            A helper method to explicitly convert an unbounded int to a Int32
+            </summary>
+            <param name="value">An Int32</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedInt.op_Explicit(EdjCase.ICP.Candid.Models.UnboundedInt)~System.Int16">
+            <summary>
+            A helper method to explicitly convert an unbounded int to a Int16
+            </summary>
+            <param name="value">An Int16</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedInt.op_Explicit(EdjCase.ICP.Candid.Models.UnboundedInt)~System.SByte">
+            <summary>
+            A helper method to explicitly convert an unbounded int to a Int8
+            </summary>
+            <param name="value">An Int8</param>
+        </member>
+        <member name="T:EdjCase.ICP.Candid.Models.UnboundedIntExtensions">
+            <summary>
+            Extension methods related to unbounded ints
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedIntExtensions.ToUnbounded(System.Int64)">
+            <summary>
+            Converts a Int64 into an unbounded int
+            </summary>
+            <param name="value">A Int64 value</param>
+            <returns>An unbounded int</returns>
+        </member>
+        <member name="T:EdjCase.ICP.Candid.Models.UnboundedUInt">
+            <summary>
+            An unsigned integer value with no bounds on how large it can get and variable byte size
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedUInt.GetRawBytes(System.Boolean)">
+            <summary>
+            Gets the raw bytes of the number
+            </summary>
+            <param name="isBigEndian">True if the byte order should be big endian (most significant bytes first),
+            otherwise the order will be in little endian (least significant bytes first)</param>
+            <returns>Byte array of the number</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedUInt.TryToUInt64(System.UInt64@)">
+            <summary>
+            Tries to get the UInt64 representation of the value, will not if that value is too large to fit
+            into a UInt64.
+            </summary>
+            <param name="value">Out parameter that is set ONLY if the return value is true</param>
+            <returns>True if converted, otherwise false</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedUInt.FromBigInteger(System.Numerics.BigInteger)">
+            <summary>
+            Converts a big integer to an unbounded uint
+            </summary>
+            <param name="value">Big integer to convert</param>
+            <returns>An unbounded uint</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedUInt.ToBigInteger">
+            <summary>
+            Converts a unbounded uint to a big integer value
+            </summary>
+            <returns>A big integer</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedUInt.ToString">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedUInt.Equals(EdjCase.ICP.Candid.Models.UnboundedUInt)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedUInt.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedUInt.CompareTo(EdjCase.ICP.Candid.Models.UnboundedUInt)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedUInt.FromUInt64(System.UInt64)">
+            <summary>
+            A helper method to convert a UInt64 to a unbounded uint
+            </summary>
+            <param name="value">A UInt64 value</param>
+            <returns>An unbounded uint</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedUInt.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedUInt.op_Equality(EdjCase.ICP.Candid.Models.UnboundedUInt,EdjCase.ICP.Candid.Models.UnboundedUInt)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedUInt.op_Inequality(EdjCase.ICP.Candid.Models.UnboundedUInt,EdjCase.ICP.Candid.Models.UnboundedUInt)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedUInt.op_Addition(EdjCase.ICP.Candid.Models.UnboundedUInt,EdjCase.ICP.Candid.Models.UnboundedUInt)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedUInt.op_Subtraction(EdjCase.ICP.Candid.Models.UnboundedUInt,EdjCase.ICP.Candid.Models.UnboundedUInt)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedUInt.op_Multiply(EdjCase.ICP.Candid.Models.UnboundedUInt,EdjCase.ICP.Candid.Models.UnboundedUInt)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedUInt.op_Division(EdjCase.ICP.Candid.Models.UnboundedUInt,EdjCase.ICP.Candid.Models.UnboundedUInt)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedUInt.op_LessThan(EdjCase.ICP.Candid.Models.UnboundedUInt,EdjCase.ICP.Candid.Models.UnboundedUInt)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedUInt.op_GreaterThan(EdjCase.ICP.Candid.Models.UnboundedUInt,EdjCase.ICP.Candid.Models.UnboundedUInt)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedUInt.op_LessThanOrEqual(EdjCase.ICP.Candid.Models.UnboundedUInt,EdjCase.ICP.Candid.Models.UnboundedUInt)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedUInt.op_GreaterThanOrEqual(EdjCase.ICP.Candid.Models.UnboundedUInt,EdjCase.ICP.Candid.Models.UnboundedUInt)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedUInt.op_Increment(EdjCase.ICP.Candid.Models.UnboundedUInt)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedUInt.op_Decrement(EdjCase.ICP.Candid.Models.UnboundedUInt)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedUInt.op_Explicit(EdjCase.ICP.Candid.Models.UnboundedInt)~EdjCase.ICP.Candid.Models.UnboundedUInt">
+            <summary>
+            A helper method to implicitly convert a unbounded int to an unbounded uint
+            </summary>
+            <param name="value">An unbounded uint</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedUInt.op_Implicit(System.UInt64)~EdjCase.ICP.Candid.Models.UnboundedUInt">
+            <summary>
+            A helper method to implicitly convert a UInt64 to an unbounded uint
+            </summary>
+            <param name="value">An UInt64 value</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedUInt.op_Implicit(System.UInt32)~EdjCase.ICP.Candid.Models.UnboundedUInt">
+            <summary>
+            A helper method to implicitly convert a UInt32 to an unbounded uint
+            </summary>
+            <param name="value">An UInt32 value</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedUInt.op_Implicit(System.UInt16)~EdjCase.ICP.Candid.Models.UnboundedUInt">
+            <summary>
+            A helper method to implicitly convert a UInt16 to an unbounded uint
+            </summary>
+            <param name="value">An UInt16 value</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedUInt.op_Implicit(System.Byte)~EdjCase.ICP.Candid.Models.UnboundedUInt">
+            <summary>
+            A helper method to implicitly convert a UInt8 to an unbounded uint
+            </summary>
+            <param name="value">An UInt8 value</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedUInt.op_Explicit(System.Int64)~EdjCase.ICP.Candid.Models.UnboundedUInt">
+            <summary>
+            A helper method to explicitly convert a Int64 to an unbounded uint
+            </summary>
+            <param name="value">An Int64 value</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedUInt.op_Explicit(System.Int32)~EdjCase.ICP.Candid.Models.UnboundedUInt">
+            <summary>
+            A helper method to explicitly convert a Int32 to an unbounded uint
+            </summary>
+            <param name="value">An Int32 value</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedUInt.op_Explicit(System.Int16)~EdjCase.ICP.Candid.Models.UnboundedUInt">
+            <summary>
+            A helper method to explicitly convert a Int16 to an unbounded uint
+            </summary>
+            <param name="value">An Int16 value</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedUInt.op_Explicit(System.SByte)~EdjCase.ICP.Candid.Models.UnboundedUInt">
+            <summary>
+            A helper method to explicitly convert a Int8 to an unbounded uint
+            </summary>
+            <param name="value">An Int8 value</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedUInt.op_Explicit(EdjCase.ICP.Candid.Models.UnboundedUInt)~System.UInt64">
+            <summary>
+            A helper method to explicitly convert an unbounded uint to a UInt64
+            </summary>
+            <param name="value">A UInt64</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedUInt.op_Explicit(EdjCase.ICP.Candid.Models.UnboundedUInt)~System.UInt32">
+            <summary>
+            A helper method to explicitly convert an unbounded uint to a UInt32
+            </summary>
+            <param name="value">A UInt32</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedUInt.op_Explicit(EdjCase.ICP.Candid.Models.UnboundedUInt)~System.UInt16">
+            <summary>
+            A helper method to explicitly convert an unbounded uint to a UInt16
+            </summary>
+            <param name="value">A UInt16</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedUInt.op_Explicit(EdjCase.ICP.Candid.Models.UnboundedUInt)~System.Byte">
+            <summary>
+            A helper method to explicitly convert an unbounded uint to a UInt8
+            </summary>
+            <param name="value">A UInt8</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedUInt.op_Explicit(EdjCase.ICP.Candid.Models.UnboundedUInt)~System.Int64">
+            <summary>
+            A helper method to explicitly convert an unbounded uint to a Int64
+            </summary>
+            <param name="value">An Int64</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedUInt.op_Explicit(EdjCase.ICP.Candid.Models.UnboundedUInt)~System.Int32">
+            <summary>
+            A helper method to explicitly convert an unbounded uint to a Int32
+            </summary>
+            <param name="value">An Int32</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedUInt.op_Explicit(EdjCase.ICP.Candid.Models.UnboundedUInt)~System.Int16">
+            <summary>
+            A helper method to explicitly convert an unbounded uint to a Int16
+            </summary>
+            <param name="value">An Int16</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedUInt.op_Explicit(EdjCase.ICP.Candid.Models.UnboundedUInt)~System.SByte">
+            <summary>
+            A helper method to explicitly convert an unbounded uint to a Int8
+            </summary>
+            <param name="value">An Int8</param>
+        </member>
+        <member name="T:EdjCase.ICP.Candid.Models.UnboundedUIntExtensions">
+            <summary>
+            Extensions methods around UnboundedUInt
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.UnboundedUIntExtensions.ToUnbounded(System.UInt64)">
+            <summary>
+            Converts a UInt64 to a unbounded uint
+            </summary>
+            <param name="value">Int64 value</param>
+            <returns>An unbounded uint</returns>
         </member>
         <member name="T:EdjCase.ICP.Candid.Models.Values.CandidFunc">
             <summary>

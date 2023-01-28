@@ -6,20 +6,33 @@ using System.Text;
 
 namespace EdjCase.ICP.Candid.Models
 {
+	/// <summary>
+	/// A model representing a list of path segments, used to navigate a state hash tree
+	/// </summary>
 	public class StatePath : IHashable
 	{
-		public IReadOnlyList<StatePathSegment> Segments { get; }
-		public StatePath(IEnumerable<StatePathSegment> segments)
+		/// <summary>
+		/// The list of segments making up the path
+		/// </summary>
+		public List<StatePathSegment> Segments { get; }
+
+		/// <param name="segments">The list of segments making up the path</param>
+		public StatePath(List<StatePathSegment> segments)
 		{
-			this.Segments = segments.ToList();
+			this.Segments = segments;
 		}
 
-
+		/// <summary>
+		/// Helper method to create a path from a path segment array
+		/// </summary>
+		/// <param name="segments">An array of segments that make up the path</param>
+		/// <returns>A path object</returns>
 		public static StatePath FromSegments(params StatePathSegment[] segments)
 		{
-			return new StatePath(segments);
+			return new StatePath(segments.ToList());
 		}
 
+		/// <inheritdoc />
 		public byte[] ComputeHash(IHashFunction hashFunction)
 		{
 			return this.Segments
@@ -28,10 +41,17 @@ namespace EdjCase.ICP.Candid.Models
 		}
 	}
 
+	/// <summary>
+	/// A model representing a segment of a path for a state hash tree
+	/// </summary>
 	public class StatePathSegment : IHashable
 	{
+		/// <summary>
+		/// The raw value of the path segment
+		/// </summary>
 		public byte[] Value { get; }
 
+		/// <param name="value">The raw value of the path segment</param>
 		public StatePathSegment(byte[] value)
 		{
 			if (value == null || value.Length < 1)
@@ -41,11 +61,17 @@ namespace EdjCase.ICP.Candid.Models
 			this.Value = value ?? throw new ArgumentNullException(nameof(value));
 		}
 
+		/// <inheritdoc />
 		public byte[] ComputeHash(IHashFunction hashFunction)
 		{
 			return hashFunction.ComputeHash(this.Value);
 		}
 
+		/// <summary>
+		/// Creates a path segment from a string value by converting the string into UTF-8 bytes
+		/// </summary>
+		/// <param name="segment">The path segment to use</param>
+		/// <returns>A path segment</returns>
 		public static StatePathSegment FromString(string segment)
 		{
 			if (string.IsNullOrEmpty(segment))
@@ -55,16 +81,28 @@ namespace EdjCase.ICP.Candid.Models
 			return new StatePathSegment(Encoding.UTF8.GetBytes(segment));
 		}
 
+		/// <summary>
+		/// A helper method to implicitly convert a path segment to its raw byte array
+		/// </summary>
+		/// <param name="value">The segment to convert</param>
 		public static implicit operator byte[](StatePathSegment value)
 		{
 			return value.Value;
 		}
 
+		/// <summary>
+		/// A helper method to implicitly convert a raw byte array to a path segment
+		/// </summary>
+		/// <param name="value">Byte array to convert</param>
 		public static implicit operator StatePathSegment(byte[] value)
 		{
 			return new StatePathSegment(value);
 		}
 
+		/// <summary>
+		/// A helper method to implicitly convert a string to a path segment
+		/// </summary>
+		/// <param name="value">String value to convert</param>
 		public static implicit operator StatePathSegment(string value)
 		{
 			return StatePathSegment.FromString(value);

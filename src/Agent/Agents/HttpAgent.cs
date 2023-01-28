@@ -120,8 +120,8 @@ namespace EdjCase.ICP.Agent.Agents
 			var pathRequestStatus = StatePath.FromSegments("request_status", id.RawValue);
 			var paths = new List<StatePath> { pathRequestStatus };
 			ReadStateResponse response = await this.ReadStateAsync(canisterId, paths);
-			HashTree? requestStatus = response.Certificate.Tree.GetValue(pathRequestStatus);
-			string? status = requestStatus?.GetValue("status")?.AsLeaf().AsUtf8();
+			HashTree? requestStatus = response.Certificate.Tree.GetValueOrDefault(pathRequestStatus);
+			string? status = requestStatus?.GetValueOrDefault("status")?.AsLeaf().AsUtf8();
 			//received, processing, replied, rejected or done
 			switch (status)
 			{
@@ -132,12 +132,12 @@ namespace EdjCase.ICP.Agent.Agents
 				case "processing":
 					return RequestStatus.Processing();
 				case "replied":
-					HashTree.EncodedValue r = requestStatus!.GetValue("reply")!.AsLeaf();
+					HashTree.EncodedValue r = requestStatus!.GetValueOrDefault("reply")!.AsLeaf();
 					return RequestStatus.Replied(CandidArg.FromBytes(r));
 				case "rejected":
-					RejectCode code = (RejectCode)(ulong)requestStatus!.GetValue("reject_code")!.AsLeaf().AsNat();
-					string message = requestStatus.GetValue("reject_message")!.AsLeaf().AsUtf8();
-					string? errorCode = requestStatus.GetValue("error_code")?.AsLeaf().AsUtf8();
+					RejectCode code = (RejectCode)(ulong)requestStatus!.GetValueOrDefault("reject_code")!.AsLeaf().AsNat();
+					string message = requestStatus.GetValueOrDefault("reject_message")!.AsLeaf().AsUtf8();
+					string? errorCode = requestStatus.GetValueOrDefault("error_code")?.AsLeaf().AsUtf8();
 					return RequestStatus.Rejected(code, message, errorCode);
 				case "done":
 					return RequestStatus.Done();

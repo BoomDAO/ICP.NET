@@ -585,7 +585,7 @@ namespace EdjCase.ICP.Candid.Parsers
 				else
 				{
 					List<byte> bytes = this.ReadVectorInner(() => this.ReadByte());
-					return Principal.FromRaw(bytes.ToArray());
+					return Principal.FromBytes(bytes.ToArray());
 				}
 			}
 

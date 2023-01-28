@@ -31,7 +31,7 @@ namespace EdjCase.ICP.Agent.Cbor.Converters
 					byte[] rawPrincipalId = raw
 						.Slice(i, (int)lengthLong)
 						.ToArray();
-					return Principal.FromRaw(rawPrincipalId);
+					return Principal.FromBytes(rawPrincipalId);
 				}
 			}
 

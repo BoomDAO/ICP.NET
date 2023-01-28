@@ -8,84 +8,161 @@ using System.Text;
 
 namespace EdjCase.ICP.Candid.Models
 {
+	/// <summary>
+	/// Subtypes of what a hash tree can be
+	/// </summary>
+	public enum HashTreeType
+	{
+		/// <summary>
+		/// An empty branch with no data
+		/// </summary>
+		Empty,
+		/// <summary>
+		/// Left and right branching trees
+		/// </summary>
+		Fork,
+		/// <summary>
+		/// A branch that is labeled with its own subtree
+		/// </summary>
+		Labeled,
+		/// <summary>
+		/// A branch with data and no subtree
+		/// </summary>
+		Leaf,
+		/// <summary>
+		/// A branch that has been trimmed where its data is the hash of the subtree
+		/// </summary>
+		Pruned
+	}
+
+	/// <summary>
+	/// A variant model representing a hash tree where values can be pruned and labeled in the tree
+	/// </summary>
 	public class HashTree
 	{
-		public NodeType Type { get; }
+		/// <summary>
+		/// The type the tree node is
+		/// </summary>
+		public HashTreeType Type { get; }
 		private object? value { get; }
 
-		private HashTree(NodeType type, object? value)
+		private HashTree(HashTreeType type, object? value)
 		{
 			this.Type = type;
 			this.value = value;
 		}
 
+		/// <summary>
+		/// Casts the tree to a left and right fork. If the node type is not a fork, then will throw an exception
+		/// </summary>
+		/// <returns>Left and right trees</returns>
+		/// <exception cref="InvalidOperationException">Throws if tree is not a fork</exception>
 		public (HashTree Left, HashTree Right) AsFork()
 		{
-			this.ValidateType(NodeType.Fork);
+			this.ValidateType(HashTreeType.Fork);
 			return ((HashTree, HashTree))this.value!;
 		}
 
+		/// <summary>
+		/// Casts the tree to a label and a tree. If the node type is not labeled, then will throw an exception
+		/// </summary>
+		/// <returns>Label of the node and subtree</returns>
+		/// <exception cref="InvalidOperationException">Throws if tree is not labeled</exception>
 		public (EncodedValue Label, HashTree Tree) AsLabeled()
 		{
-			this.ValidateType(NodeType.Labeled);
+			this.ValidateType(HashTreeType.Labeled);
 			return ((EncodedValue, HashTree))this.value!;
 		}
 
+		/// <summary>
+		/// Casts the tree to an encoded value. If the node type is not a leaf, then will throw an exception
+		/// </summary>
+		/// <returns>Encoded value of the leaf</returns>
+		/// <exception cref="InvalidOperationException">Throws if tree is not a leaf</exception>
 		public EncodedValue AsLeaf()
 		{
-			this.ValidateType(NodeType.Leaf);
+			this.ValidateType(HashTreeType.Leaf);
 			return (EncodedValue)this.value!;
 		}
 
-		public EncodedValue AsPruned()
+		/// <summary>
+		/// Casts the tree to a pruned hash value. If the node type is not pruned, then will throw an exception
+		/// </summary>
+		/// <returns>Byte array hash value of the pruned subtree</returns>
+		/// <exception cref="InvalidOperationException">Throws if tree is not pruned</exception>
+		public byte[] AsPruned()
 		{
-			this.ValidateType(NodeType.Pruned);
+			this.ValidateType(HashTreeType.Pruned);
 			return (EncodedValue)this.value!;
 		}
 
-		private void ValidateType(NodeType nodeType)
-		{
-			if (this.Type != nodeType)
-			{
-				throw new InvalidOperationException($"Node type '{this.Type}' cannot be cast as '{nodeType}'");
-			}
-		}
-
-
-
-
-
-
+		/// <summary>
+		/// Helper method to create an empty tree
+		/// </summary>
+		/// <returns>An empty hash tree</returns>
 		public static HashTree Empty()
 		{
-			return new HashTree(NodeType.Empty, null);
+			return new HashTree(HashTreeType.Empty, null);
 		}
 
+		/// <summary>
+		/// Helper method to create a forked tree
+		/// </summary>
+		/// <param name="left">The branch to the left</param>
+		/// <param name="right">The branch to the right</param>
+		/// <returns>An forked hash tree</returns>
 		public static HashTree Fork(HashTree left, HashTree right)
 		{
-			return new HashTree(NodeType.Fork, (left, right));
+			return new HashTree(HashTreeType.Fork, (left, right));
 		}
 
+		/// <summary>
+		/// Helper method to create a labeled tree
+		/// </summary>
+		/// <param name="label">The label for the tree</param>
+		/// <param name="tree">The subtree for the label</param>
+		/// <returns>An labeled hash tree</returns>
 		public static HashTree Labeled(EncodedValue label, HashTree tree)
 		{
-			return new HashTree(NodeType.Labeled, (label, tree));
+			return new HashTree(HashTreeType.Labeled, (label, tree));
 		}
+
+		/// <summary>
+		/// Helper method to create a leaf tree
+		/// </summary>
+		/// <param name="value">The value to store in the leaf</param>
+		/// <returns>An leaf hash tree</returns>
 		public static HashTree Leaf(EncodedValue value)
 		{
-			return new HashTree(NodeType.Leaf, value);
+			return new HashTree(HashTreeType.Leaf, value);
 		}
 
-		public static HashTree Pruned(EncodedValue blob)
+		/// <summary>
+		/// Helper method to create a pruned tree
+		/// </summary>
+		/// <param name="treeHash">The hash of the tree that was pruned</param>
+		/// <returns>An pruned hash tree</returns>
+		public static HashTree Pruned(byte[] treeHash)
 		{
-			return new HashTree(NodeType.Pruned, blob);
+			return new HashTree(HashTreeType.Pruned, treeHash);
 		}
 
-		public HashTree? GetValue(StatePathSegment path)
+		/// <summary>
+		/// Gets the value of the subtree specified by the path, returns null if not found
+		/// </summary>
+		/// <param name="path">The path segment to get a value from</param>
+		/// <returns>A hash tree from the path, or null if not found</returns>
+		public HashTree? GetValueOrDefault(StatePathSegment path)
 		{
-			return this.GetValue(new StatePath(new List<StatePathSegment> { path }));
+			return this.GetValueOrDefault(new StatePath(new List<StatePathSegment> { path }));
 		}
 
-		public HashTree? GetValue(StatePath path)
+		/// <summary>
+		/// Gets the value of the subtree specified by the path, returns null if not found
+		/// </summary>
+		/// <param name="path">The path to get a value from</param>
+		/// <returns>A hash tree from the path, or null if not found</returns>
+		public HashTree? GetValueOrDefault(StatePath path)
 		{
 			if (!path.Segments.Any())
 			{
@@ -98,9 +175,9 @@ namespace EdjCase.ICP.Candid.Models
 				HashTree newTree;
 				switch (currentTree.Type)
 				{
-					case NodeType.Leaf:
+					case HashTreeType.Leaf:
 						return null;
-					case NodeType.Labeled:
+					case HashTreeType.Labeled:
 						(EncodedValue label, HashTree tree) = currentTree.AsLabeled();
 						bool areEqual = label == segment.Value;
 						if (!areEqual)
@@ -109,19 +186,19 @@ namespace EdjCase.ICP.Candid.Models
 						}
 						newTree = tree;
 						break;
-					case NodeType.Pruned:
+					case HashTreeType.Pruned:
 						return null;
-					case NodeType.Empty:
+					case HashTreeType.Empty:
 						return null;
-					case NodeType.Fork:
+					case HashTreeType.Fork:
 						(HashTree left, HashTree right) = currentTree.AsFork();
-						var remainingPath = new StatePath(path.Segments.Skip(i));
-						HashTree? l = left.GetValue(remainingPath);
+						var remainingPath = new StatePath(path.Segments.Skip(i).ToList());
+						HashTree? l = left.GetValueOrDefault(remainingPath);
 						if (l != null)
 						{
 							return l;
 						}
-						HashTree? r = right.GetValue(remainingPath);
+						HashTree? r = right.GetValueOrDefault(remainingPath);
 						if (r != null)
 						{
 							return r;
@@ -139,8 +216,8 @@ namespace EdjCase.ICP.Candid.Models
 		/// <summary>
 		/// Computes the root SHA256 hash of the tree based on the IC certificate spec
 		/// </summary>
-		/// <returns>A blob of the hash digest</returns>
-		public EncodedValue BuildRootHash()
+		/// <returns>A byte array of the hash digest</returns>
+		public byte[] BuildRootHash()
 		{
 			/*
 				verify_cert(cert) =
@@ -162,62 +239,48 @@ namespace EdjCase.ICP.Candid.Models
 			return EncodedValue.WithDomainSeperator("ic-state-root", rootHash);
 		}
 
-		private EncodedValue BuildHashInternal(SHA256HashFunction hashFunction)
-		{
-			EncodedValue encodedValue;
-			switch (this.Type)
-			{
-				case NodeType.Empty:
-					encodedValue = EncodedValue.WithDomainSeperator("ic-hashtree-empty");
-					break;
-				case NodeType.Fork:
-					(HashTree left, HashTree right) = this.AsFork();
-					EncodedValue leftHash = left.BuildHashInternal(hashFunction);
-					EncodedValue rightHash = right.BuildHashInternal(hashFunction);
-					encodedValue = EncodedValue.WithDomainSeperator("ic-hashtree-fork", leftHash, rightHash);
-					break;
-				case NodeType.Labeled:
-					(EncodedValue label, HashTree tree) = this.AsLabeled();
-					EncodedValue treeHash = tree.BuildHashInternal(hashFunction);
-					encodedValue = EncodedValue.WithDomainSeperator("ic-hashtree-labeled", label, treeHash);
-					break;
-				case NodeType.Leaf:
-					EncodedValue leaf = this.AsLeaf();
-					encodedValue = EncodedValue.WithDomainSeperator("ic-hashtree-leaf", leaf);
-					break;
-				case NodeType.Pruned:
-					encodedValue = this.AsPruned().Value;
-					break;
-				default:
-					throw new NotImplementedException("Node type: " + this.Type);
-			}
-			return hashFunction.ComputeHash(encodedValue.Value);
-		}
-
-
+		/// <summary>
+		/// A helper class that wraps around a byte array, giving functions to convert 
+		/// to common types like text and numbers
+		/// </summary>
 		public class EncodedValue : IEquatable<EncodedValue>
 		{
+			/// <summary>
+			/// The raw value
+			/// </summary>
 			public byte[] Value { get; }
+
+			/// <param name="value">The raw value</param>
 			public EncodedValue(byte[] value)
 			{
 				this.Value = value;
 			}
 
+			/// <summary>
+			/// The raw value converted to UTF-8 encoded string
+			/// </summary>
+			/// <returns>A UTF-8 string of the value</returns>
 			public string AsUtf8()
 			{
 				return Encoding.UTF8.GetString(this.Value);
 			}
 
+			/// <summary>
+			/// The raw value converted to a LEB128 encoded number
+			/// </summary>
+			/// <returns>A unbounded uint of the value</returns>
 			public UnboundedUInt AsNat()
 			{
 				return LEB128.DecodeUnsigned(this.Value);
 			}
 
+			/// <inheritdoc />
 			public override string ToString()
 			{
 				return this.AsUtf8();
 			}
 
+			/// <inheritdoc />
 			public override bool Equals(object? obj)
 			{
 				if (obj is EncodedValue b)
@@ -235,11 +298,13 @@ namespace EdjCase.ICP.Candid.Models
 				return false;
 			}
 
+			/// <inheritdoc />
 			public bool Equals(EncodedValue? other)
 			{
 				return this.Equals(other?.Value);
 			}
 
+			/// <inheritdoc />
 			public bool Equals(byte[]? other)
 			{
 				if (object.ReferenceEquals(other, null))
@@ -248,11 +313,14 @@ namespace EdjCase.ICP.Candid.Models
 				};
 				return this.Value.AsSpan().SequenceEqual(other);
 			}
+
+			/// <inheritdoc />
 			public override int GetHashCode()
 			{
 				return this.Value.GetHashCode();
 			}
 
+			/// <inheritdoc />
 			public static bool operator ==(EncodedValue? v1, EncodedValue? v2)
 			{
 				if (object.ReferenceEquals(v1, null))
@@ -262,6 +330,7 @@ namespace EdjCase.ICP.Candid.Models
 				return v1.Equals(v2);
 			}
 
+			/// <inheritdoc />
 			public static bool operator !=(EncodedValue? v1, EncodedValue? v2)
 			{
 				if (object.ReferenceEquals(v1, null))
@@ -271,9 +340,26 @@ namespace EdjCase.ICP.Candid.Models
 				return !v1.Equals(v2);
 			}
 
+			/// <summary>
+			/// A helper method to implicitly convert an encoded value to a byte array
+			/// </summary>
+			/// <param name="value">The encoded value to get the raw value from</param>
+			public static implicit operator byte[](EncodedValue value)
+			{
+				return value.Value;
+			}
+
+			/// <summary>
+			/// A helper method to implicitly convert an byte array to an encoded value
+			/// </summary>
+			/// <param name="bytes">The raw value to use with the encoded value</param>
+			public static implicit operator EncodedValue(byte[] bytes)
+			{
+				return new EncodedValue(bytes);
+			}
 
 
-			public static EncodedValue WithDomainSeperator(string value, params EncodedValue[] encodedValues)
+			internal static byte[] WithDomainSeperator(string value, params EncodedValue[] encodedValues)
 			{
 				// domain_sep(s) = byte(|s|) · s
 				byte[] textBytes = Encoding.UTF8.GetBytes(value);
@@ -289,28 +375,48 @@ namespace EdjCase.ICP.Candid.Models
 				}
 				return new EncodedValue(bytes);
 			}
+		}
 
-
-
-
-			public static implicit operator byte[](EncodedValue blob)
+		private byte[] BuildHashInternal(SHA256HashFunction hashFunction)
+		{
+			byte[] encodedValue;
+			switch (this.Type)
 			{
-				return blob.Value;
+				case HashTreeType.Empty:
+					encodedValue = EncodedValue.WithDomainSeperator("ic-hashtree-empty");
+					break;
+				case HashTreeType.Fork:
+					(HashTree left, HashTree right) = this.AsFork();
+					EncodedValue leftHash = left.BuildHashInternal(hashFunction);
+					EncodedValue rightHash = right.BuildHashInternal(hashFunction);
+					encodedValue = EncodedValue.WithDomainSeperator("ic-hashtree-fork", leftHash, rightHash);
+					break;
+				case HashTreeType.Labeled:
+					(EncodedValue label, HashTree tree) = this.AsLabeled();
+					EncodedValue treeHash = tree.BuildHashInternal(hashFunction);
+					encodedValue = EncodedValue.WithDomainSeperator("ic-hashtree-labeled", label, treeHash);
+					break;
+				case HashTreeType.Leaf:
+					EncodedValue leaf = this.AsLeaf();
+					encodedValue = EncodedValue.WithDomainSeperator("ic-hashtree-leaf", leaf);
+					break;
+				case HashTreeType.Pruned:
+					encodedValue = this.AsPruned();
+					break;
+				default:
+					throw new NotImplementedException("Node type: " + this.Type);
 			}
+			return hashFunction.ComputeHash(encodedValue);
+		}
 
-			public static implicit operator EncodedValue(byte[] bytes)
+
+
+		private void ValidateType(HashTreeType nodeType)
+		{
+			if (this.Type != nodeType)
 			{
-				return new EncodedValue(bytes);
+				throw new InvalidOperationException($"Node type '{this.Type}' cannot be cast as '{nodeType}'");
 			}
 		}
-	}
-
-	public enum NodeType
-	{
-		Empty,
-		Fork,
-		Labeled,
-		Leaf,
-		Pruned
 	}
 }

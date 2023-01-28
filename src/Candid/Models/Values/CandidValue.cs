@@ -572,7 +572,7 @@ namespace EdjCase.ICP.Candid.Models.Values
 		/// <returns>Candid reserved value</returns>
 		public static CandidPrimitive Reserved()
 		{
-			return new CandidPrimitive(PrimitiveType.Empty, null);
+			return new CandidPrimitive(PrimitiveType.Reserved, null);
 		}
 
 		/// <summary>
@@ -581,7 +581,7 @@ namespace EdjCase.ICP.Candid.Models.Values
 		/// <returns>Candid empty value</returns>
 		public static CandidPrimitive Empty()
 		{
-			return new CandidPrimitive(PrimitiveType.Reserved, null);
+			return new CandidPrimitive(PrimitiveType.Empty, null);
 		}
 
 		private void ValidateType(CandidValueType type)
