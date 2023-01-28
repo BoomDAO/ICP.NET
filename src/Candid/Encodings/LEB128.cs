@@ -8,8 +8,16 @@ using System.Numerics;
 
 namespace EdjCase.ICP.Candid.Encodings
 {
+	/// <summary>
+	/// Utility class to provide methods for LEB128 encoding (https://en.wikipedia.org/wiki/LEB128)
+	/// </summary>
 	public static class LEB128
 	{
+		/// <summary>
+		/// Takes a byte encoded unsigned LEB128 and converts it to an `UnboundedUInt`
+		/// </summary>
+		/// <param name="encodedValue">Byte value of an unsigned LEB128</param>
+		/// <returns>`UnboundedUInt` of LEB128 value</returns>
 		public static UnboundedUInt DecodeUnsigned(byte[] encodedValue)
 		{
 			BigInteger v = 0;
@@ -19,19 +27,52 @@ namespace EdjCase.ICP.Candid.Encodings
 				ulong valueToAdd = (b & 0b0111_1111ul) << (7 * i); // Shift over 7 * i bits to get value to add
 				v += valueToAdd;
 			}
-			return new UnboundedUInt(v);
+			return UnboundedUInt.FromBigInteger(v);
 		}
+
+
+		/// <summary>
+		/// Takes a encoded unsigned LEB128 byte stream and converts it to an `UnboundedUInt`
+		/// </summary>
+		/// <param name="stream">Byte stream of an unsigned LEB128</param>
+		/// <returns>`UnboundedUInt` of LEB128 value</returns>
 		public static UnboundedUInt DecodeUnsigned(Stream stream)
 		{
 			BigInteger v = LEB128.Decode(stream, isUnsigned: true);
-			return new UnboundedUInt(v);
+			return UnboundedUInt.FromBigInteger(v);
 		}
 
+		/// <summary>
+		/// Takes a encoded signed LEB128 byte stream and converts it to an `UnboundedInt`
+		/// </summary>
+		/// <param name="stream">Byte stream of a signed LEB128</param>
+		/// <returns>`UnboundedInt` of LEB128 value</returns>
 		public static UnboundedInt DecodeSigned(Stream stream)
 		{
 			BigInteger v = LEB128.Decode(stream, isUnsigned: false);
-			return new UnboundedInt(v);
+			return UnboundedInt.FromBigInteger(v);
 		}
+
+		/// <summary>
+		/// Takes an `UnboundedUInt` and converts it into an encoded unsigned LEB128 byte array
+		/// </summary>
+		/// <param name="value">Value to convert to LEB128 bytes</param>
+		/// <returns>LEB128 bytes of value</returns>
+		public static byte[] EncodeUnsigned(UnboundedUInt value)
+		{
+			return LEB128.EncodeUnsigned(value.ToBigInteger());
+		}
+
+		/// <summary>
+		/// Takes an `UnboundedInt` and converts it into an encoded signed LEB128 byte array
+		/// </summary>
+		/// <param name="value">Value to convert to LEB128 bytes</param>
+		/// <returns>LEB128 bytes of value</returns>
+		public static byte[] EncodeSigned(UnboundedInt value)
+		{
+			return LEB128.EncodeSigned(value.ToBigInteger());
+		}
+
 
 		private static BigInteger Decode(Stream stream, bool isUnsigned)
 		{
@@ -104,15 +145,6 @@ namespace EdjCase.ICP.Candid.Encodings
 			}
 		}
 
-		public static byte[] EncodeUnsigned(UnboundedUInt value)
-		{
-			return LEB128.EncodeUnsigned(value.ToBigInteger());
-		}
-
-		public static byte[] EncodeSigned(UnboundedInt unboundedInt)
-		{
-			return LEB128.EncodeSigned(unboundedInt.ToBigInteger());
-		}
 
 		private static byte[] EncodeUnsigned(BigInteger value)
 		{

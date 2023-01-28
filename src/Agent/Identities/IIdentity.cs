@@ -36,11 +36,15 @@ namespace EdjCase.ICP.Agent.Identities
 		public Task<byte[]> SignAsync(byte[] data);
 	}
 
+	/// <summary>
+	/// Extension methods for the IIdentity interface
+	/// </summary>
 	public static class IIdentityExtensions
 	{
 		/// <summary>
 		/// Signs the hashable content
 		/// </summary>
+		/// <param name="identity">The identity to sign the content with</param>
 		/// <param name="content">The data that needs to be signed</param>
 		/// <returns>The content with signature(s) from the identity</returns>
 		public static async Task<SignedContent> SignContentAsync(this IIdentity identity, Dictionary<string, IHashable> content)

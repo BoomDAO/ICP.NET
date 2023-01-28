@@ -4,14 +4,24 @@ using System.Linq;
 
 namespace EdjCase.ICP.Candid.Models.Values
 {
+	/// <summary>
+	/// A model that represents a candid service value
+	/// </summary>
 	public class CandidService : CandidValue
 	{
+		/// <inheritdoc />
 		public override CandidValueType Type { get; } = CandidValueType.Service;
+
+		/// <summary>
+		/// True if the candid func definition is an opaque (non standard/system specific definition),
+		/// otherwise false
+		/// </summary>
 		public bool IsOpqaueReference { get; }
 
 		private readonly Principal? principalId;
 
-		public CandidService(Principal? principalId)
+		/// <param name="principalId">The id of the canister where the service lives</param>
+		public CandidService(Principal principalId)
 		{
 			this.principalId = principalId ?? throw new ArgumentNullException(nameof(principalId));
 			this.IsOpqaueReference = false;
@@ -23,7 +33,13 @@ namespace EdjCase.ICP.Candid.Models.Values
 			this.IsOpqaueReference = true;
 		}
 
-		public Principal GetAsPrincipal()
+		/// <summary>
+		/// Gets the prinicipal of the candid service. If it is an opaque reference, then an exception will
+		/// be thrown
+		/// </summary>
+		/// <returns>Pricipal of the candid service</returns>
+		/// <exception cref="InvalidOperationException">Throws if service is an opaque reference</exception>
+		public Principal GetPrincipal()
 		{
 			if (this.IsOpqaueReference)
 			{
@@ -32,7 +48,8 @@ namespace EdjCase.ICP.Candid.Models.Values
 			return this.principalId!;
 		}
 
-		public override byte[] EncodeValue(CandidType type, Func<CandidId, CandidCompoundType> getReferencedType)
+		/// <inheritdoc />
+		internal override byte[] EncodeValue(CandidType type, Func<CandidId, CandidCompoundType> getReferencedType)
 		{
 			CandidServiceType t;
 			if (type is CandidReferenceType r)
@@ -51,11 +68,14 @@ namespace EdjCase.ICP.Candid.Models.Values
 				.Concat(this.principalId!.Raw)
 				.ToArray();
 		}
+
+		/// <inheritdoc />
 		public override int GetHashCode()
 		{
 			return HashCode.Combine(this.IsOpqaueReference, this.principalId);
 		}
 
+		/// <inheritdoc />
 		public override bool Equals(CandidValue? other)
 		{
 			if (other is CandidService s)
@@ -74,6 +94,7 @@ namespace EdjCase.ICP.Candid.Models.Values
 			return false;
 		}
 
+		/// <inheritdoc />
 		public override string ToString()
 		{
 			return this.IsOpqaueReference
@@ -81,11 +102,11 @@ namespace EdjCase.ICP.Candid.Models.Values
 				: this.principalId!.ToString();
 		}
 
-		public static CandidService TraparentReference(Principal? principalId)
-		{
-			return new CandidService(principalId);
-		}
-
+		/// <summary>
+		/// Helper method to create an opaque service reference where the id/location 
+		/// of the service is non-standard/system specific
+		/// </summary>
+		/// <returns></returns>
 		public static CandidService OpaqueReference()
 		{
 			return new CandidService();

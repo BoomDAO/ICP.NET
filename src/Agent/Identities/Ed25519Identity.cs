@@ -25,7 +25,7 @@ namespace EdjCase.ICP.Agent.Identities
 		/// <param name="privateKey">The private key of the identity</param>
 		public Ed25519Identity(DerEncodedPublicKey publicKey, byte[] privateKey)
 		{
-			// TODO validate that pub+priv match
+			// TODO validate that pub+priv match?
 			this.PublicKey = publicKey;
 			this.PrivateKey = privateKey;
 		}

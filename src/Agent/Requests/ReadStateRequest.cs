@@ -1,27 +1,56 @@
+using Dahomey.Cbor.Attributes;
 using EdjCase.ICP.Candid.Models;
 using System;
 using System.Collections.Generic;
 
 namespace EdjCase.ICP.Agent.Requests
 {
+	/// <summary>
+	/// A model for making a read state request to a canister
+	/// </summary>
 	public class ReadStateRequest : IRepresentationIndependentHashItem
 	{
-		[Dahomey.Cbor.Attributes.CborProperty(Properties.REQUEST_TYPE)]
+		/// <summary>
+		/// The type of request to send. Will always be 'query'
+		/// </summary>
+		[CborProperty(Properties.REQUEST_TYPE)]
 		public string REQUEST_TYPE { get; } = "query";
-		[Dahomey.Cbor.Attributes.CborProperty(Properties.PATHS)]
+
+		/// <summary>
+		/// A list of paths to different state data to obtain. If not specified, data will be pruned and 
+		/// be unavailable in the response
+		/// </summary>
+		[CborProperty(Properties.PATHS)]
 		public List<StatePath> Paths { get; }
-		[Dahomey.Cbor.Attributes.CborProperty(Properties.SENDER)]
+
+		/// <summary>
+		/// The user who is sending the request
+		/// </summary>
+		[CborProperty(Properties.SENDER)]
 		public Principal Sender { get; }
-		[Dahomey.Cbor.Attributes.CborProperty(Properties.INGRESS_EXPIRY)]
+
+		/// <summary>
+		/// The expiration of the request to avoid replay attacks
+		/// </summary>
+		[CborProperty(Properties.INGRESS_EXPIRY)]
 		public ICTimestamp IngressExpiry { get; }
 
-		public ReadStateRequest(List<StatePath> paths, Principal sender, ICTimestamp ingressExpiry)
+		/// <param name="paths">A list of paths to different state data to obtain. If not specified, data will be pruned and 
+		/// be unavailable in the response</param>
+		/// <param name="sender">The user who is sending the request</param>
+		/// <param name="ingressExpiry">The expiration of the request to avoid replay attacks</param>
+		public ReadStateRequest(
+			List<StatePath> paths,
+			Principal sender,
+			ICTimestamp ingressExpiry
+		)
 		{
 			this.Paths = paths ?? throw new ArgumentNullException(nameof(paths));
 			this.IngressExpiry = ingressExpiry ?? throw new ArgumentNullException(nameof(ingressExpiry));
 			this.Sender = sender ?? throw new ArgumentNullException(nameof(sender));
 		}
 
+		/// <inheritdoc />
 		public Dictionary<string, IHashable> BuildHashableItem()
 		{
 			return new Dictionary<string, IHashable>

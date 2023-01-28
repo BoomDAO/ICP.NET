@@ -8,128 +8,206 @@ using System.Text;
 
 namespace EdjCase.ICP.Candid.Models.Values
 {
+	/// <summary>
+	/// All the candid primitive types
+	/// </summary>
 	public enum PrimitiveType
 	{
+		/// <summary>
+		/// A text/string value
+		/// </summary>
 		Text,
+		/// <summary>
+		/// A unbounded unsigned integer (natural number)
+		/// </summary>
 		Nat,
+		/// <summary>
+		/// A 8-bit unsigned integer (natural number)
+		/// </summary>
 		Nat8,
+		/// <summary>
+		/// A 16-bit unsigned integer (natural number)
+		/// </summary>
 		Nat16,
+		/// <summary>
+		/// A 32-bit unsigned integer (natural number)
+		/// </summary>
 		Nat32,
+		/// <summary>
+		/// A 64-bit unsigned integer (natural number)
+		/// </summary>
 		Nat64,
+		/// <summary>
+		/// A unbounded integer
+		/// </summary>
 		Int,
+		/// <summary>
+		/// A 8-bit integer
+		/// </summary>
 		Int8,
+		/// <summary>
+		/// A 16-bit integer
+		/// </summary>
 		Int16,
+		/// <summary>
+		/// A 32-bit integer
+		/// </summary>
 		Int32,
+		/// <summary>
+		/// A 64-bit integer
+		/// </summary>
 		Int64,
+		/// <summary>
+		/// A 32-bit floating point number
+		/// </summary>
 		Float32,
+		/// <summary>
+		/// A 64-bit floating point number
+		/// </summary>
 		Float64,
+		/// <summary>
+		/// A boolean (true/false) value
+		/// </summary>
 		Bool,
+		/// <summary>
+		/// A candid principal value which works as an identifier for identities/canisters
+		/// </summary>
 		Principal,
+		/// <summary>
+		/// A 'any' type value that is a supertype of all types. It allows the removal of a type without breaking
+		/// the type structure
+		/// </summary>
 		Reserved,
+		/// <summary>
+		/// A value with no data that is considered a subtype of all types. Practical use cases for the empty type are relatively rare.
+		/// </summary>
 		Empty,
+		/// <summary>
+		/// The null value that is a supertype of any `opt t` value
+		/// </summary>
 		Null
 	}
 
+	/// <summary>
+	/// A model representing a candid primitive type
+	/// </summary>
 	public class CandidPrimitive : CandidValue
 	{
+		/// <inheritdoc />
 		public override CandidValueType Type { get; } = CandidValueType.Primitive;
+
+		/// <summary>
+		/// The specific primitive type that is represented
+		/// </summary>
 		public PrimitiveType ValueType { get; }
+
 		private readonly object? value;
 
-		private CandidPrimitive(PrimitiveType valueType, object? value)
+		internal CandidPrimitive(PrimitiveType valueType, object? value)
 		{
 			this.ValueType = valueType;
 			this.value = value;
 		}
 
+		/// <inheritdoc />
 		public new string AsText()
 		{
 			this.ValidateType(PrimitiveType.Text);
 			return (string)this.value!;
 		}
 
+		/// <inheritdoc />
 		public new UnboundedUInt AsNat()
 		{
 			this.ValidateType(PrimitiveType.Nat);
 			return (UnboundedUInt)this.value!;
 		}
 
+		/// <inheritdoc />
 		public new byte AsNat8()
 		{
 			this.ValidateType(PrimitiveType.Nat8);
 			return (byte)this.value!;
 		}
 
+		/// <inheritdoc />
 		public new ushort AsNat16()
 		{
 			this.ValidateType(PrimitiveType.Nat16);
 			return (ushort)this.value!;
 		}
 
+		/// <inheritdoc />
 		public new uint AsNat32()
 		{
 			this.ValidateType(PrimitiveType.Nat32);
 			return (uint)this.value!;
 		}
 
+		/// <inheritdoc />
 		public new ulong AsNat64()
 		{
 			this.ValidateType(PrimitiveType.Nat64);
 			return (ulong)this.value!;
 		}
 
+		/// <inheritdoc />
 		public new UnboundedInt AsInt()
 		{
 			this.ValidateType(PrimitiveType.Int);
 			return (UnboundedInt)this.value!;
 		}
 
+		/// <inheritdoc />
 		public new sbyte AsInt8()
 		{
 			this.ValidateType(PrimitiveType.Int8);
 			return (sbyte)this.value!;
 		}
 
+		/// <inheritdoc />
 		public new short AsInt16()
 		{
 			this.ValidateType(PrimitiveType.Int16);
 			return (short)this.value!;
 		}
 
+		/// <inheritdoc />
 		public new int AsInt32()
 		{
 			this.ValidateType(PrimitiveType.Int32);
 			return (int)this.value!;
 		}
 
+		/// <inheritdoc />
 		public new long AsInt64()
 		{
 			this.ValidateType(PrimitiveType.Int64);
 			return (long)this.value!;
 		}
 
+		/// <inheritdoc />
 		public new float AsFloat32()
 		{
 			this.ValidateType(PrimitiveType.Float32);
 			return (float)this.value!;
 		}
 
+		/// <inheritdoc />
 		public new double AsFloat64()
 		{
 			this.ValidateType(PrimitiveType.Float64);
 			return (double)this.value!;
 		}
 
+		/// <inheritdoc />
 		public new bool AsBool()
 		{
 			this.ValidateType(PrimitiveType.Bool);
 			return (bool)this.value!;
 		}
 
-		/// <summary>
-		/// If opaque, returns null, otherwise the principalid
-		/// </summary>
-		/// <returns></returns>
+		/// <inheritdoc />
 		public new Principal AsPrincipal()
 		{
 			this.ValidateType(PrimitiveType.Principal);
@@ -140,7 +218,8 @@ namespace EdjCase.ICP.Candid.Models.Values
 
 
 
-		public override byte[] EncodeValue(CandidType type, Func<CandidId, CandidCompoundType> getReferencedType)
+		/// <inheritdoc />
+		internal override byte[] EncodeValue(CandidType type, Func<CandidId, CandidCompoundType> getReferencedType)
 		{
 			return this.ValueType switch
 			{
@@ -166,6 +245,7 @@ namespace EdjCase.ICP.Candid.Models.Values
 			};
 		}
 
+		/// <inheritdoc />
 		public override string ToString()
 		{
 			return this.ValueType switch
@@ -328,106 +408,7 @@ namespace EdjCase.ICP.Candid.Models.Values
 		}
 
 
-
-		public static CandidPrimitive Text(string value)
-		{
-			return new CandidPrimitive(PrimitiveType.Text, value);
-		}
-
-		public static CandidPrimitive Nat(UnboundedUInt value)
-		{
-			return new CandidPrimitive(PrimitiveType.Nat, value);
-		}
-
-		public static CandidPrimitive Nat8(byte value)
-		{
-			return new CandidPrimitive(PrimitiveType.Nat8, value);
-		}
-
-		public static CandidPrimitive Nat16(ushort value)
-		{
-			return new CandidPrimitive(PrimitiveType.Nat16, value);
-		}
-
-		public static CandidPrimitive Nat32(uint value)
-		{
-			return new CandidPrimitive(PrimitiveType.Nat32, value);
-		}
-
-		public static CandidPrimitive Nat64(ulong value)
-		{
-			return new CandidPrimitive(PrimitiveType.Nat64, value);
-		}
-
-		public static CandidPrimitive Int(UnboundedInt value)
-		{
-			return new CandidPrimitive(PrimitiveType.Int, value);
-		}
-
-		public static CandidPrimitive Int8(sbyte value)
-		{
-			return new CandidPrimitive(PrimitiveType.Int8, value);
-		}
-
-		public static CandidPrimitive Int16(short value)
-		{
-			return new CandidPrimitive(PrimitiveType.Int16, value);
-		}
-
-		public static CandidPrimitive Int32(int value)
-		{
-			return new CandidPrimitive(PrimitiveType.Int32, value);
-		}
-
-		public static CandidPrimitive Int64(long value)
-		{
-			return new CandidPrimitive(PrimitiveType.Int64, value);
-		}
-
-		public static CandidPrimitive Float32(float value)
-		{
-			return new CandidPrimitive(PrimitiveType.Float32, value);
-		}
-
-		public static CandidPrimitive Float64(double value)
-		{
-			return new CandidPrimitive(PrimitiveType.Float64, value);
-		}
-
-		public static CandidPrimitive Bool(bool value)
-		{
-			return new CandidPrimitive(PrimitiveType.Bool, value);
-		}
-		public static CandidPrimitive Principal(Principal value)
-		{
-			return new CandidPrimitive(PrimitiveType.Principal, value);
-		}
-
-		public static CandidPrimitive Null()
-		{
-			return new CandidPrimitive(PrimitiveType.Null, null);
-		}
-
-		public static CandidPrimitive Reserved()
-		{
-			return new CandidPrimitive(PrimitiveType.Reserved, null);
-		}
-
-		public static CandidPrimitive Empty()
-		{
-			return new CandidPrimitive(PrimitiveType.Empty, null);
-		}
-
-
-
-
-
-
-
-
-
-
-		protected void ValidateType(PrimitiveType type)
+		private void ValidateType(PrimitiveType type)
 		{
 			if (this.ValueType != type)
 			{
@@ -435,11 +416,13 @@ namespace EdjCase.ICP.Candid.Models.Values
 			}
 		}
 
+		/// <inheritdoc />
 		public override int GetHashCode()
 		{
 			return HashCode.Combine(this.value, this.ValueType);
 		}
 
+		/// <inheritdoc />
 		public override bool Equals(CandidValue? other)
 		{
 			if (other is CandidPrimitive p)

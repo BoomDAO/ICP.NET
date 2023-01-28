@@ -4,15 +4,28 @@ using System.Linq;
 
 namespace EdjCase.ICP.Candid.Models
 {
+	/// <summary>
+	/// A helper class to wrap around the request id byte array that identifies a request
+	/// </summary>
 	public class RequestId : IHashable
 	{
+		/// <summary>
+		/// The raw id value
+		/// </summary>
 		public byte[] RawValue { get; }
 
+		/// <param name="rawValue">The raw id value</param>
 		public RequestId(byte[] rawValue)
 		{
 			this.RawValue = rawValue;
 		}
 
+		/// <summary>
+		/// Converts a hashable object into a request id
+		/// </summary>
+		/// <param name="properties">The properties of the object to hash</param>
+		/// <param name="hashFunction">The hash function to use to generate the hash</param>
+		/// <returns>A request id object</returns>
 		public static RequestId FromObject(IDictionary<string, IHashable> properties, IHashFunction hashFunction)
 		{
 			var orderedProperties = properties
@@ -31,6 +44,7 @@ namespace EdjCase.ICP.Candid.Models
 			return new RequestId(hashFunction.ComputeHash(bytes));
 		}
 
+		/// <inheritdoc />
 		public byte[] ComputeHash(IHashFunction hashFunction)
 		{
 			return hashFunction.ComputeHash(this.RawValue);

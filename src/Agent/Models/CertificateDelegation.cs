@@ -39,7 +39,7 @@ namespace EdjCase.ICP.Agent.Models
 				this.SubnetId.Raw,
 				"public_key"
 			);
-			HashTree? publicKey = this.Certificate.Tree.GetValue(path);
+			HashTree? publicKey = this.Certificate.Tree.GetValueOrDefault(path);
 			if (publicKey == null)
 			{
 				throw new InvalidCertificateException("Certificate does not contain the subnet public key");

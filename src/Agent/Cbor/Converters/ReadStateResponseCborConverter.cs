@@ -6,14 +6,14 @@ using EdjCase.ICP.Agent.Responses;
 using EdjCase.ICP.Candid.Models;
 using System;
 
-namespace Agent.Cbor
+namespace EdjCase.ICP.Agent.Cbor.Converters
 {
 	internal class ReadStateResponseCborConverter : CborConverterBase<ReadStateResponse>
 	{
 		public override ReadStateResponse Read(ref CborReader reader)
 		{
 			var context = new Context();
-			CborReaderUtil.ReadMap(ref reader, ref context, this.SetReadStateContext);
+			CborUtil.ReadMap(ref reader, ref context, this.SetReadStateContext);
 			return new ReadStateResponse(context.Certificate!);
 		}
 
@@ -59,7 +59,7 @@ namespace Agent.Cbor
 		private static Certificate ReadCert(ref CborReader reader)
 		{
 			var context = new CertContext();
-			CborReaderUtil.ReadMap(ref reader, ref context, SetCertValue);
+			CborUtil.ReadMap(ref reader, ref context, SetCertValue);
 			return new Certificate(context.HashTree!, context.Signature!, context.Delegation);
 		}
 		private static void SetCertValue(string name, ref CborReader reader, ref CertContext context)
@@ -89,7 +89,7 @@ namespace Agent.Cbor
 		private static CertificateDelegation ReadDelegation(ref CborReader reader)
 		{
 			var context = new CertDelContext();
-			CborReaderUtil.ReadMap(ref reader, ref context, SetDelValue);
+			CborUtil.ReadMap(ref reader, ref context, SetDelValue);
 
 			return new CertificateDelegation(
 				context.SubnetId,
@@ -103,7 +103,7 @@ namespace Agent.Cbor
 			{
 				case "subnet_id":
 					var prinBytes = reader.ReadByteString()!;
-					context.SubnetId = Principal.FromRaw(prinBytes.ToArray());
+					context.SubnetId = Principal.FromBytes(prinBytes.ToArray());
 					break;
 				case "certificate":
 					var certBytes = reader.ReadByteString()!;

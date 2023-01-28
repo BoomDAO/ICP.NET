@@ -1,17 +1,17 @@
+using Dahomey.Cbor;
 using Dahomey.Cbor.Serialization;
 using Dahomey.Cbor.Serialization.Converters;
 using EdjCase.ICP.Candid.Models;
 using System;
 
-namespace Agent.Cbor
+namespace EdjCase.ICP.Agent.Cbor.Converters
 {
 	internal class HashableCborConverter : CborConverterBase<IHashable>
 	{
-		private readonly CborConverterRegistry registry;
-
-		public HashableCborConverter(CborConverterRegistry registry)
+		private CborOptions cborOptions { get; }
+		public HashableCborConverter(CborOptions options)
 		{
-			this.registry = registry;
+			this.cborOptions = options;
 		}
 
 		public override IHashable Read(ref CborReader reader)
@@ -38,7 +38,7 @@ namespace Agent.Cbor
 			}
 			else
 			{
-				ICborConverter converter = this.registry.Lookup(value.GetType());
+				ICborConverter converter = this.cborOptions.Registry.ConverterRegistry.Lookup(value.GetType());
 				converter.Write(ref writer, value);
 			}
 		}

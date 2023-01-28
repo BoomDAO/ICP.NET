@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace EdjCase.ICP.Candid.Models
 {
-	public class CandidServiceDescription
+	internal class CandidServiceDescription
 	{
 		public CandidId? ServiceReferenceId { get; }
 		public CandidServiceType Service { get; }

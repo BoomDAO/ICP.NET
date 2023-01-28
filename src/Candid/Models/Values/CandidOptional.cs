@@ -4,17 +4,27 @@ using System.Linq;
 
 namespace EdjCase.ICP.Candid.Models.Values
 {
+	/// <summary>
+	/// A model representing the value of a candid opt
+	/// </summary>
 	public class CandidOptional : CandidValue
 	{
+		/// <inheritdoc />
 		public override CandidValueType Type { get; } = CandidValueType.Optional;
+
+		/// <summary>
+		/// The inner value of an opt. If not set, will be a candid null value
+		/// </summary>
 		public CandidValue Value { get; }
 
+		/// <param name="value">The inner value of an opt. If not set, will be a candid null value</param>
 		public CandidOptional(CandidValue? value = null)
 		{
 			this.Value = value ?? CandidPrimitive.Null();
 		}
 
-		public override byte[] EncodeValue(CandidType type, Func<CandidId, CandidCompoundType> getReferencedType)
+		/// <inheritdoc />
+		internal override byte[] EncodeValue(CandidType type, Func<CandidId, CandidCompoundType> getReferencedType)
 		{
 			CandidOptionalType t;
 			if (type is CandidReferenceType r)
@@ -34,11 +44,14 @@ namespace EdjCase.ICP.Candid.Models.Values
 				.Concat(this.Value.EncodeValue(t.Value, getReferencedType))
 				.ToArray();
 		}
+
+		/// <inheritdoc />
 		public override int GetHashCode()
 		{
 			return HashCode.Combine(this.Value);
 		}
 
+		/// <inheritdoc />
 		public override bool Equals(CandidValue? other)
 		{
 			if (other is CandidOptional o)
@@ -48,6 +61,7 @@ namespace EdjCase.ICP.Candid.Models.Values
 			return false;
 		}
 
+		/// <inheritdoc />
 		public override string ToString()
 		{
 			return $"opt {this.Value}";

@@ -12,9 +12,14 @@ namespace EdjCase.ICP.ClientGenerator
 {
 	public static class ClientFileGenerator
 	{
-		public static async Task GenerateClientFromCanisterAsync(Principal canisterId, string outputDirectory, string baseNamespace, string? clientName = null, Uri? baseUrl = null)
+		public static async Task GenerateClientFromCanisterAsync(
+			Principal canisterId,
+			string outputDirectory,
+			string baseNamespace,
+			string? clientName = null,
+			Uri? baseUrl = null
+		)
 		{
-
 			var agent = new HttpAgent(identity: null, httpBoundryNodeUrl: baseUrl);
 			var candidServicePath = StatePath.FromSegments("canister", canisterId.Raw, "metadata", "candid:service");
 			var paths = new List<StatePath>
@@ -22,7 +27,7 @@ namespace EdjCase.ICP.ClientGenerator
 				candidServicePath
 			};
 			var response = await agent.ReadStateAsync(canisterId, paths);
-			string? fileText = response.Certificate.Tree.GetValue(candidServicePath)?.AsLeaf().AsUtf8();
+			string? fileText = response.Certificate.Tree.GetValueOrDefault(candidServicePath)?.AsLeaf().AsUtf8();
 
 			if (string.IsNullOrWhiteSpace(fileText))
 			{
@@ -31,7 +36,12 @@ namespace EdjCase.ICP.ClientGenerator
 			WriteClientFiles(fileText, outputDirectory, baseNamespace, clientName ?? "Service");
 		}
 
-		public static void GenerateClientFromFile(string candidFilePath, string outputDirectory, string baseNamespace, string? clientName = null)
+		public static void GenerateClientFromFile(
+			string candidFilePath,
+			string outputDirectory,
+			string baseNamespace,
+			string? clientName = null
+		)
 		{
 			Console.WriteLine($"Reading text from {candidFilePath}...");
 			string fileText = File.ReadAllText(candidFilePath);
@@ -43,7 +53,12 @@ namespace EdjCase.ICP.ClientGenerator
 			WriteClientFiles(fileText, outputDirectory, baseNamespace, clientName);
 		}
 
-		private static void WriteClientFiles(string fileText, string outputDirectory, string baseNamespace, string clientName)
+		private static void WriteClientFiles(
+			string fileText,
+			string outputDirectory,
+			string baseNamespace,
+			string clientName
+		)
 		{
 			fileText = string.Join("\n",
 				fileText.Split(new[] { '\r', '\n' })

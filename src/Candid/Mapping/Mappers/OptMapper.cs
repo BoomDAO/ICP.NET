@@ -44,7 +44,7 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 				innerValue = null;
 				hasValue = false;
 			}
-			return Activator.CreateInstance(this.Type, hasValue, innerValue);
+			return Activator.CreateInstance(this.Type, BindingFlags.NonPublic | BindingFlags.Instance, null, new object?[] { hasValue, innerValue }, null);
 		}
 
 		public CandidTypedValue Map(object obj, CandidConverterOptions options)

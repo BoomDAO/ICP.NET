@@ -16,6 +16,7 @@
 	  <PackageId>EdjCase.ICP.Candid</PackageId>
 	  <GenerateDocumentationFile>True</GenerateDocumentationFile>
 	  <DocumentationFile>..\..\docs\Candid.xml</DocumentationFile>
+	  <DocumentationMarkdown>$(MSBuildProjectDirectory)\API.md</DocumentationMarkdown>
   </PropertyGroup>
 
   <ItemGroup>
@@ -29,6 +30,10 @@
 	  <PackageReference Include="Microsoft.Bcl.HashCode" Version="1.1.1" />
 	  <PackageReference Include="System.Memory" Version="4.5.5" />
 	  <PackageReference Include="System.Formats.Asn1" Version="7.0.0" />
+	  <PackageReference Include="Vsxmd" Version="1.4.5">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	  </PackageReference>
   </ItemGroup>
 
 </Project>

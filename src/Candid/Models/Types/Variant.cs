@@ -4,6 +4,7 @@ namespace EdjCase.ICP.Candid.Models.Types
 {
 	public class CandidVariantType : CandidRecordOrVariantType
 	{
+		/// <inheritdoc />
 		public override CandidTypeCode Type { get; } = CandidTypeCode.Variant;
 
 		protected override string TypeString { get; } = "variant";

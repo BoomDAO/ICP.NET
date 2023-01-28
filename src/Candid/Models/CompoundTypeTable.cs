@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace EdjCase.ICP.Candid.Models
 {
-	public class CompoundTypeTable
+	internal class CompoundTypeTable
 	{
 
 		/// <summary>

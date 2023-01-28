@@ -6,12 +6,21 @@ using System.Linq;
 
 namespace EdjCase.ICP.Candid.Models.Values
 {
+	/// <summary>
+	/// A model representing a candid vector value
+	/// </summary>
 	public class CandidVector : CandidValue
 	{
+		/// <inheritdoc />
 		public override CandidValueType Type { get; } = CandidValueType.Vector;
 
+		/// <summary>
+		/// Each candid value that the vector contains. All must be of the same type
+		/// </summary>
 		public CandidValue[] Values { get; }
 
+		/// <param name="values">Each candid value that the vector contains. All must be of the same type</param>
+		/// <exception cref="ArgumentException">Throws if all the values are not of the same type</exception>
 		public CandidVector(CandidValue[] values)
 		{
 			CandidValueType? valueType = values.FirstOrDefault()?.Type;
@@ -22,7 +31,8 @@ namespace EdjCase.ICP.Candid.Models.Values
 			this.Values = values;
 		}
 
-		public override byte[] EncodeValue(CandidType type, Func<CandidId, CandidCompoundType> getReferencedType)
+		/// <inheritdoc />
+		internal override byte[] EncodeValue(CandidType type, Func<CandidId, CandidCompoundType> getReferencedType)
 		{
 			CandidVectorType t;
 			if (type is CandidReferenceType r)
@@ -42,11 +52,13 @@ namespace EdjCase.ICP.Candid.Models.Values
 				.ToArray();
 		}
 
+		/// <inheritdoc />
 		public override int GetHashCode()
 		{
 			return HashCode.Combine(this.Values.Select(v => v.GetHashCode()));
 		}
 
+		/// <inheritdoc />
 		public override bool Equals(CandidValue? other)
 		{
 			if (other is CandidVector v)
@@ -59,6 +71,7 @@ namespace EdjCase.ICP.Candid.Models.Values
 			return false;
 		}
 
+		/// <inheritdoc />
 		public override string ToString()
 		{
 			IEnumerable<string> values = this.Values.Select(v => v.ToString());

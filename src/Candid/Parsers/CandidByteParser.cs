@@ -118,10 +118,10 @@ namespace EdjCase.ICP.Candid.Parsers
 			Primitive
 		}
 
-        private class DefinitionResolver
-        {
-            private List<TypeInfo> Types { get; }
-            public CandidDebugTracer Tracer { get; }
+		private class DefinitionResolver
+		{
+			private List<TypeInfo> Types { get; }
+			public CandidDebugTracer Tracer { get; }
 
 
 			public DefinitionResolver(List<Func<DefinitionResolver, CandidCompoundType>> types)
@@ -130,14 +130,14 @@ namespace EdjCase.ICP.Candid.Parsers
 				this.Tracer = new CandidDebugTracer();
 			}
 
-            public CandidType Resolve(DefintionOrReference defOrRef)
-            {
-                this.Tracer.Indent();
-                try
-                {
-                    switch (defOrRef.Type)
-                    {
-                        case DefintionOrReferenceType.Reference:
+			public CandidType Resolve(DefintionOrReference defOrRef)
+			{
+				this.Tracer.Indent();
+				try
+				{
+					switch (defOrRef.Type)
+					{
+						case DefintionOrReferenceType.Reference:
 							var referenceIndex = (int)defOrRef.ReferenceIndex!;
 							TypeInfo typeInfo = this.Types[(int)defOrRef.ReferenceIndex!];
 
@@ -154,38 +154,38 @@ namespace EdjCase.ICP.Candid.Parsers
 									typeInfo.ResolvedType.RecursiveId = typeInfo.RecursiveId;
 								}
 
-                                return typeInfo.ResolvedType;
-                            }
-                            // If already resolved, use it
-                            if (typeInfo.ResolvedType != null)
-                            {
-                                return typeInfo.ResolvedType;
-                            }
-                            // If neither, then it is 'resolving', meaning it is a recursive type
-                            typeInfo.RecursiveId = CandidId.Parse($"rec_{referenceIndex}");
-                            this.Tracer.RecursiveReference(typeInfo.RecursiveId);
-                            // Give func to resolve the type which WILL be resolved, but not yet
-                            return new CandidReferenceType(typeInfo.RecursiveId);
-                        case DefintionOrReferenceType.Compound:
-                            return defOrRef.DefinitionFunc!(this);
-                        case DefintionOrReferenceType.Primitive:
-                            this.Tracer.Primitive(defOrRef.Definition!.PrimitiveType);
-                            return defOrRef.Definition!;
-                        default:
-                            throw new NotImplementedException();
-                    }
-                }
-                finally
-                {
-                    this.Tracer.Unindent();
-                }
-            }
-            public class TypeInfo
-            {
-                public Func<DefinitionResolver, CandidCompoundType> ResolveFunc { get; }
-                public CandidCompoundType? ResolvedType { get; set; }
-                public bool ResolvingOrResolved { get; set; }
-                public CandidId? RecursiveId { get; set; }
+								return typeInfo.ResolvedType;
+							}
+							// If already resolved, use it
+							if (typeInfo.ResolvedType != null)
+							{
+								return typeInfo.ResolvedType;
+							}
+							// If neither, then it is 'resolving', meaning it is a recursive type
+							typeInfo.RecursiveId = CandidId.Create($"rec_{referenceIndex}");
+							this.Tracer.RecursiveReference(typeInfo.RecursiveId);
+							// Give func to resolve the type which WILL be resolved, but not yet
+							return new CandidReferenceType(typeInfo.RecursiveId);
+						case DefintionOrReferenceType.Compound:
+							return defOrRef.DefinitionFunc!(this);
+						case DefintionOrReferenceType.Primitive:
+							this.Tracer.Primitive(defOrRef.Definition!.PrimitiveType);
+							return defOrRef.Definition!;
+						default:
+							throw new NotImplementedException();
+					}
+				}
+				finally
+				{
+					this.Tracer.Unindent();
+				}
+			}
+			public class TypeInfo
+			{
+				public Func<DefinitionResolver, CandidCompoundType> ResolveFunc { get; }
+				public CandidCompoundType? ResolvedType { get; set; }
+				public bool ResolvingOrResolved { get; set; }
+				public CandidId? RecursiveId { get; set; }
 
 				public TypeInfo(Func<DefinitionResolver, CandidCompoundType> resolveFunc)
 				{
@@ -424,7 +424,7 @@ namespace EdjCase.ICP.Candid.Parsers
 						{
 							string name = this.ReadText();
 							DefintionOrReference type = this.ReadType();
-							return (CandidId.Parse(name), type);
+							return (CandidId.Create(name), type);
 						});
 						return DefintionOrReference.CompoundDefintion(resolver =>
 						{
@@ -441,7 +441,7 @@ namespace EdjCase.ICP.Candid.Parsers
 									throw new InvalidCandidException($"Service method values can only be Func types. Actual type '{type}'", resolver.Tracer.ToString());
 								});
 							resolver.Tracer.EndCompound("Service");
-							return new CandidServiceType(m, id: null);
+							return new CandidServiceType(m);
 						});
 					default:
 						throw new NotImplementedException($"Invalid type code '{typeCodeInt}'");
@@ -585,7 +585,7 @@ namespace EdjCase.ICP.Candid.Parsers
 				else
 				{
 					List<byte> bytes = this.ReadVectorInner(() => this.ReadByte());
-					return Principal.FromRaw(bytes.ToArray());
+					return Principal.FromBytes(bytes.ToArray());
 				}
 			}
 
@@ -634,7 +634,7 @@ namespace EdjCase.ICP.Candid.Parsers
 				{
 					CandidService service = this.ReadServiceValue();
 					string method = this.ReadText();
-					return CandidFunc.TrasparentReference(service, method);
+					return new CandidFunc(service, method);
 				}
 			}
 
@@ -648,7 +648,7 @@ namespace EdjCase.ICP.Candid.Parsers
 				else
 				{
 					Principal? principalId = this.ReadPrincipal();
-					return CandidService.TraparentReference(principalId);
+					return new CandidService(principalId);
 				}
 			}
 

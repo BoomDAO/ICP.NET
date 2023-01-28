@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace EdjCase.ICP.Candid
 {
-	public static class CandidTextGenerator
+	internal static class CandidTextGenerator
 	{
 		public enum IndentType
 		{
@@ -109,7 +109,7 @@ namespace EdjCase.ICP.Candid
 			List<KeyValueTextComponent> methods = s.Methods
 				.Select(f => new KeyValueTextComponent(f.Key.ToString(), GenerateInternal(f.Value)))
 				.ToList();
-			var type = new KeyValueTextComponent("service", new ConstantTextComponent($"({s.Id})"));
+			var type = new KeyValueTextComponent("service", new ConstantTextComponent($"()"));
 			return new CompoundTypeTextComponent(type, " -> ", new CurlyBraceTypeTextComponent<KeyValueTextComponent>(methods), s.RecursiveId);
 		}
 
