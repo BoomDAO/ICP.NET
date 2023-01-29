@@ -14,9 +14,9 @@ namespace EdjCase.ICP.Candid
 		public bool MostSignificantBit => this.bits[this.bits.Length - 1];
 
 		/// <param name="bits">Least signifcant to most ordered bits</param>
-		public BinarySequence(bool[] bits)
+		public BinarySequence(ReadOnlySpan<bool> bits)
 		{
-			this.bits = bits;
+			this.bits = bits.ToArray();
 		}
 
 		public BinarySequence ToTwosCompliment()
@@ -85,30 +85,28 @@ namespace EdjCase.ICP.Candid
 			return stringBuilder.ToString();
 		}
 
-		public static BinarySequence FromBytes(byte[] bytes, bool isBigEndian)
+		public static BinarySequence FromBytes(Memory<byte> bytes, bool isBigEndian)
 		{
-			IEnumerable<byte> byteSeq = bytes;
-			if (isBigEndian)
+			Span<bool> bits = stackalloc bool[bytes.Length * 8];
+			for (int i = 0; i < bytes.Length; i++)
 			{
-				byteSeq = byteSeq.Reverse();
+				byte b = isBigEndian
+					// If is big endian, reverse the bytes
+					? bytes.Span[bytes.Span.Length - 1 - i]
+					: bytes.Span[i];
+				int bitsIndex = i * 8;
+				// Least significant first
+				bits[bitsIndex++] = (b & 0b00000001) == 0b00000001;
+				bits[bitsIndex++] = (b & 0b00000010) == 0b00000010;
+				bits[bitsIndex++] = (b & 0b00000100) == 0b00000100;
+				bits[bitsIndex++] = (b & 0b00001000) == 0b00001000;
+				bits[bitsIndex++] = (b & 0b00010000) == 0b00010000;
+				bits[bitsIndex++] = (b & 0b00100000) == 0b00100000;
+				bits[bitsIndex++] = (b & 0b01000000) == 0b01000000;
+				bits[bitsIndex++] = (b & 0b10000000) == 0b10000000;
 			}
-			bool[] bits = byteSeq
-				.SelectMany(ByteToBits)
-				.ToArray();
 			return new BinarySequence(bits);
 
-			IEnumerable<bool> ByteToBits(byte b)
-			{
-				// Least significant first
-				yield return (b & 0b00000001) == 0b00000001;
-				yield return (b & 0b00000010) == 0b00000010;
-				yield return (b & 0b00000100) == 0b00000100;
-				yield return (b & 0b00001000) == 0b00001000;
-				yield return (b & 0b00010000) == 0b00010000;
-				yield return (b & 0b00100000) == 0b00100000;
-				yield return (b & 0b01000000) == 0b01000000;
-				yield return (b & 0b10000000) == 0b10000000;
-			}
 		}
 
 		private IEnumerable<bool> ToTwosComplimentInternal()

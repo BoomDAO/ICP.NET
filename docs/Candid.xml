@@ -4,7 +4,7 @@
         <name>EdjCase.ICP.Candid</name>
     </assembly>
     <members>
-        <member name="M:EdjCase.ICP.Candid.BinarySequence.#ctor(System.Boolean[])">
+        <member name="M:EdjCase.ICP.Candid.BinarySequence.#ctor(System.ReadOnlySpan{System.Boolean})">
             <param name="bits">Least signifcant to most ordered bits</param>
         </member>
         <member name="F:EdjCase.ICP.Candid.CandidArgBuilder.compoundTypeTable">
@@ -237,14 +237,7 @@
             Useful for calculating checksums on data
             </summary>
         </member>
-        <member name="M:EdjCase.ICP.Candid.Crypto.CRC32.ComputeHash(System.IO.Stream)">
-            <summary>
-            Computes the 32-bit hash on the stream of data provided
-            </summary>
-            <param name="stream">Byte data. Will use the whole stream</param>
-            <returns>Hash of the byte data as a byte array of length of 4</returns>
-        </member>
-        <member name="M:EdjCase.ICP.Candid.Crypto.CRC32.ComputeHash(System.Byte[])">
+        <member name="M:EdjCase.ICP.Candid.Crypto.CRC32.ComputeHash(System.ReadOnlySpan{System.Byte})">
             <summary>
             Computes the 32-bit hash on the data bytes provided
             </summary>
@@ -282,7 +275,7 @@
             Utility class to provide methods for LEB128 encoding (https://en.wikipedia.org/wiki/LEB128)
             </summary>
         </member>
-        <member name="M:EdjCase.ICP.Candid.Encodings.LEB128.DecodeUnsigned(System.Byte[])">
+        <member name="M:EdjCase.ICP.Candid.Encodings.LEB128.DecodeUnsigned(System.ReadOnlySpan{System.Byte})">
             <summary>
             Takes a byte encoded unsigned LEB128 and converts it to an `UnboundedUInt`
             </summary>
@@ -1268,10 +1261,6 @@
             <summary>
             Is true if there is a value, false if null
             </summary>
-        </member>
-        <member name="M:EdjCase.ICP.Candid.Models.OptionalValue`1.#ctor(System.Boolean,`0)">
-            <param name="hasValue">Is true if there is a value, false if null</param>
-            <param name="value">The value</param>
         </member>
         <member name="M:EdjCase.ICP.Candid.Models.OptionalValue`1.GetValueOrThrow">
             <summary>

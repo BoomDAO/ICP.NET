@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace EdjCase.ICP.Candid.Crypto
 {
@@ -32,20 +33,20 @@ namespace EdjCase.ICP.Candid.Crypto
 				.ToArray();
 		}, true);
 
+
 		/// <summary>
-		/// Computes the 32-bit hash on the stream of data provided
+		/// Computes the 32-bit hash on the data bytes provided
 		/// </summary>
-		/// <param name="stream">Byte data. Will use the whole stream</param>
+		/// <param name="data">Byte data</param>
 		/// <returns>Hash of the byte data as a byte array of length of 4</returns>
-		public static byte[] ComputeHash(Stream stream)
+		public static byte[] ComputeHash(ReadOnlySpan<byte> data)
 		{
 			uint hash32Value = 0xFFFFFFFF;
 
-			int currentByte;
-			while ((currentByte = stream.ReadByte()) != -1)
+			for(int i = 0; i < data.Length; i++)
 			{
 				// Use rightmost byte and xor it to the current byte to get the table index
-				uint checksumIndex = (hash32Value & 0xFF) ^ (byte)currentByte;
+				uint checksumIndex = (hash32Value & 0xFF) ^ data[i];
 				// Use all other bytes besides that byte and xor it with the checksum table value
 				uint otherBytes = hash32Value >> 8;
 				hash32Value = CRC32.ChecksumTable.Value[checksumIndex] ^ otherBytes;
@@ -54,19 +55,6 @@ namespace EdjCase.ICP.Candid.Crypto
 			byte[] hash = BitConverter.GetBytes(~hash32Value);
 			Array.Reverse(hash);
 			return hash;
-		}
-
-		/// <summary>
-		/// Computes the 32-bit hash on the data bytes provided
-		/// </summary>
-		/// <param name="data">Byte data</param>
-		/// <returns>Hash of the byte data as a byte array of length of 4</returns>
-		public static byte[] ComputeHash(byte[] data)
-		{
-			using (MemoryStream stream = new MemoryStream(data))
-			{
-				return CRC32.ComputeHash(stream);
-			}
 		}
 	}
 }

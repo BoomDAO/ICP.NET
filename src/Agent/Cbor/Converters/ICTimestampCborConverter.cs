@@ -43,7 +43,7 @@ namespace EdjCase.ICP.Agent.Cbor.Converters
 				writer.WriteSemanticTag(2);
 				byte[] raw = value.NanoSeconds.GetRawBytes(isBigEndian: true);
 				byte[] lengthBytes = new BigInteger(raw.Length)
-					.ToByteArray(unsignedBits: true, bigEndian: true);
+					.ToByteArray(isUnsigned: true, isBigEndian: true);
 				writer.WriteByteString(lengthBytes);
 				writer.WriteByteString(raw);
 			}

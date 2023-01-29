@@ -4,10 +4,9 @@
 ## Contents
 
 - [BinarySequence](#T-EdjCase-ICP-Candid-BinarySequence 'EdjCase.ICP.Candid.BinarySequence')
-  - [#ctor(bits)](#M-EdjCase-ICP-Candid-BinarySequence-#ctor-System-Boolean[]- 'EdjCase.ICP.Candid.BinarySequence.#ctor(System.Boolean[])')
+  - [#ctor(bits)](#M-EdjCase-ICP-Candid-BinarySequence-#ctor-System-ReadOnlySpan{System-Boolean}- 'EdjCase.ICP.Candid.BinarySequence.#ctor(System.ReadOnlySpan{System.Boolean})')
 - [CRC32](#T-EdjCase-ICP-Candid-Crypto-CRC32 'EdjCase.ICP.Candid.Crypto.CRC32')
-  - [ComputeHash(stream)](#M-EdjCase-ICP-Candid-Crypto-CRC32-ComputeHash-System-IO-Stream- 'EdjCase.ICP.Candid.Crypto.CRC32.ComputeHash(System.IO.Stream)')
-  - [ComputeHash(data)](#M-EdjCase-ICP-Candid-Crypto-CRC32-ComputeHash-System-Byte[]- 'EdjCase.ICP.Candid.Crypto.CRC32.ComputeHash(System.Byte[])')
+  - [ComputeHash(data)](#M-EdjCase-ICP-Candid-Crypto-CRC32-ComputeHash-System-ReadOnlySpan{System-Byte}- 'EdjCase.ICP.Candid.Crypto.CRC32.ComputeHash(System.ReadOnlySpan{System.Byte})')
 - [CandidArg](#T-EdjCase-ICP-Candid-Models-CandidArg 'EdjCase.ICP.Candid.Models.CandidArg')
   - [#ctor(values)](#M-EdjCase-ICP-Candid-Models-CandidArg-#ctor-System-Collections-Generic-List{EdjCase-ICP-Candid-Models-CandidTypedValue}- 'EdjCase.ICP.Candid.Models.CandidArg.#ctor(System.Collections.Generic.List{EdjCase.ICP.Candid.Models.CandidTypedValue})')
   - [Values](#P-EdjCase-ICP-Candid-Models-CandidArg-Values 'EdjCase.ICP.Candid.Models.CandidArg.Values')
@@ -475,12 +474,11 @@
 - [IsExternalInit](#T-System-Runtime-CompilerServices-IsExternalInit 'System.Runtime.CompilerServices.IsExternalInit')
 - [LEB128](#T-EdjCase-ICP-Candid-Encodings-LEB128 'EdjCase.ICP.Candid.Encodings.LEB128')
   - [DecodeSigned(stream)](#M-EdjCase-ICP-Candid-Encodings-LEB128-DecodeSigned-System-IO-Stream- 'EdjCase.ICP.Candid.Encodings.LEB128.DecodeSigned(System.IO.Stream)')
-  - [DecodeUnsigned(encodedValue)](#M-EdjCase-ICP-Candid-Encodings-LEB128-DecodeUnsigned-System-Byte[]- 'EdjCase.ICP.Candid.Encodings.LEB128.DecodeUnsigned(System.Byte[])')
+  - [DecodeUnsigned(encodedValue)](#M-EdjCase-ICP-Candid-Encodings-LEB128-DecodeUnsigned-System-ReadOnlySpan{System-Byte}- 'EdjCase.ICP.Candid.Encodings.LEB128.DecodeUnsigned(System.ReadOnlySpan{System.Byte})')
   - [DecodeUnsigned(stream)](#M-EdjCase-ICP-Candid-Encodings-LEB128-DecodeUnsigned-System-IO-Stream- 'EdjCase.ICP.Candid.Encodings.LEB128.DecodeUnsigned(System.IO.Stream)')
   - [EncodeSigned(value)](#M-EdjCase-ICP-Candid-Encodings-LEB128-EncodeSigned-EdjCase-ICP-Candid-Models-UnboundedInt- 'EdjCase.ICP.Candid.Encodings.LEB128.EncodeSigned(EdjCase.ICP.Candid.Models.UnboundedInt)')
   - [EncodeUnsigned(value)](#M-EdjCase-ICP-Candid-Encodings-LEB128-EncodeUnsigned-EdjCase-ICP-Candid-Models-UnboundedUInt- 'EdjCase.ICP.Candid.Encodings.LEB128.EncodeUnsigned(EdjCase.ICP.Candid.Models.UnboundedUInt)')
 - [OptionalValue\`1](#T-EdjCase-ICP-Candid-Models-OptionalValue`1 'EdjCase.ICP.Candid.Models.OptionalValue`1')
-  - [#ctor(hasValue,value)](#M-EdjCase-ICP-Candid-Models-OptionalValue`1-#ctor-System-Boolean,`0- 'EdjCase.ICP.Candid.Models.OptionalValue`1.#ctor(System.Boolean,`0)')
   - [HasValue](#P-EdjCase-ICP-Candid-Models-OptionalValue`1-HasValue 'EdjCase.ICP.Candid.Models.OptionalValue`1.HasValue')
   - [Cast\`\`1()](#M-EdjCase-ICP-Candid-Models-OptionalValue`1-Cast``1 'EdjCase.ICP.Candid.Models.OptionalValue`1.Cast``1')
   - [Equals()](#M-EdjCase-ICP-Candid-Models-OptionalValue`1-Equals-System-Object- 'EdjCase.ICP.Candid.Models.OptionalValue`1.Equals(System.Object)')
@@ -656,14 +654,14 @@
 
 EdjCase.ICP.Candid
 
-<a name='M-EdjCase-ICP-Candid-BinarySequence-#ctor-System-Boolean[]-'></a>
+<a name='M-EdjCase-ICP-Candid-BinarySequence-#ctor-System-ReadOnlySpan{System-Boolean}-'></a>
 ### #ctor(bits) `constructor`
 
 ##### Parameters
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| bits | [System.Boolean[]](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Boolean[] 'System.Boolean[]') | Least signifcant to most ordered bits |
+| bits | [System.ReadOnlySpan{System.Boolean}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.ReadOnlySpan 'System.ReadOnlySpan{System.Boolean}') | Least signifcant to most ordered bits |
 
 <a name='T-EdjCase-ICP-Candid-Crypto-CRC32'></a>
 ## CRC32 `type`
@@ -677,24 +675,7 @@ EdjCase.ICP.Candid.Crypto
 Helper class for computing CRC32 hashes/checksums on byte data
 Useful for calculating checksums on data
 
-<a name='M-EdjCase-ICP-Candid-Crypto-CRC32-ComputeHash-System-IO-Stream-'></a>
-### ComputeHash(stream) `method`
-
-##### Summary
-
-Computes the 32-bit hash on the stream of data provided
-
-##### Returns
-
-Hash of the byte data as a byte array of length of 4
-
-##### Parameters
-
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| stream | [System.IO.Stream](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.IO.Stream 'System.IO.Stream') | Byte data. Will use the whole stream |
-
-<a name='M-EdjCase-ICP-Candid-Crypto-CRC32-ComputeHash-System-Byte[]-'></a>
+<a name='M-EdjCase-ICP-Candid-Crypto-CRC32-ComputeHash-System-ReadOnlySpan{System-Byte}-'></a>
 ### ComputeHash(data) `method`
 
 ##### Summary
@@ -709,7 +690,7 @@ Hash of the byte data as a byte array of length of 4
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| data | [System.Byte[]](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Byte[] 'System.Byte[]') | Byte data |
+| data | [System.ReadOnlySpan{System.Byte}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.ReadOnlySpan 'System.ReadOnlySpan{System.Byte}') | Byte data |
 
 <a name='T-EdjCase-ICP-Candid-Models-CandidArg'></a>
 ## CandidArg `type`
@@ -6534,7 +6515,7 @@ Takes a encoded signed LEB128 byte stream and converts it to an \`UnboundedInt\`
 | ---- | ---- | ----------- |
 | stream | [System.IO.Stream](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.IO.Stream 'System.IO.Stream') | Byte stream of a signed LEB128 |
 
-<a name='M-EdjCase-ICP-Candid-Encodings-LEB128-DecodeUnsigned-System-Byte[]-'></a>
+<a name='M-EdjCase-ICP-Candid-Encodings-LEB128-DecodeUnsigned-System-ReadOnlySpan{System-Byte}-'></a>
 ### DecodeUnsigned(encodedValue) `method`
 
 ##### Summary
@@ -6549,7 +6530,7 @@ Takes a byte encoded unsigned LEB128 and converts it to an \`UnboundedUInt\`
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| encodedValue | [System.Byte[]](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Byte[] 'System.Byte[]') | Byte value of an unsigned LEB128 |
+| encodedValue | [System.ReadOnlySpan{System.Byte}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.ReadOnlySpan 'System.ReadOnlySpan{System.Byte}') | Byte value of an unsigned LEB128 |
 
 <a name='M-EdjCase-ICP-Candid-Encodings-LEB128-DecodeUnsigned-System-IO-Stream-'></a>
 ### DecodeUnsigned(stream) `method`
@@ -6619,16 +6600,6 @@ ambiguity in certain scenarios
 | Name | Description |
 | ---- | ----------- |
 | T | The inner type of the opt |
-
-<a name='M-EdjCase-ICP-Candid-Models-OptionalValue`1-#ctor-System-Boolean,`0-'></a>
-### #ctor(hasValue,value) `constructor`
-
-##### Parameters
-
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| hasValue | [System.Boolean](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Boolean 'System.Boolean') | Is true if there is a value, false if null |
-| value | [\`0](#T-`0 '`0') | The value |
 
 <a name='P-EdjCase-ICP-Candid-Models-OptionalValue`1-HasValue'></a>
 ### HasValue `property`

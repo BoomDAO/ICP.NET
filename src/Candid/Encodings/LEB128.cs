@@ -18,7 +18,7 @@ namespace EdjCase.ICP.Candid.Encodings
 		/// </summary>
 		/// <param name="encodedValue">Byte value of an unsigned LEB128</param>
 		/// <returns>`UnboundedUInt` of LEB128 value</returns>
-		public static UnboundedUInt DecodeUnsigned(byte[] encodedValue)
+		public static UnboundedUInt DecodeUnsigned(ReadOnlySpan<byte> encodedValue)
 		{
 			BigInteger v = 0;
 			for (int i = 0; i < encodedValue.Length; i++)
