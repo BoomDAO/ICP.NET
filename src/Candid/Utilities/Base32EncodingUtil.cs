@@ -5,17 +5,16 @@ namespace EdjCase.ICP.Candid.Utilities
 {
 	internal static class Base32EncodingUtil
 	{
-		public static byte[] ToBytes(string input)
+		public static byte[] ToBytes(ReadOnlySpan<char> input)
 		{
-			if (string.IsNullOrEmpty(input))
+			if (input.IsEmpty)
 			{
 				throw new ArgumentNullException("input");
 			}
-			bool grouped = input.Contains("-");
-			if(grouped)
-			{
-				//Remove checksum and dashes
-				input = new string(input.Skip(8).Where(i => i != '-').ToArray());
+			bool grouped = input.IndexOf('-') >= 0;
+			if (grouped)
+			{				
+				input = input.Slice(8); // Remove checksum
 			}
 			else
 			{
@@ -30,6 +29,11 @@ namespace EdjCase.ICP.Candid.Utilities
 
 			foreach (char c in input)
 			{
+				if (c == '-')
+				{
+					// Skip dashes
+					continue;
+				}
 				int cValue = CharToValue(c);
 				int mask;
 				if (bitsRemaining > 5)
@@ -57,7 +61,7 @@ namespace EdjCase.ICP.Candid.Utilities
 			return returnArray;
 		}
 
-		public static string FromBytes(byte[] input, bool groupedWithChecksum = true)
+		public static string FromBytes(ReadOnlySpan<byte> input, bool groupedWithChecksum = true)
 		{
 			if (input == null || input.Length == 0)
 			{
@@ -65,7 +69,7 @@ namespace EdjCase.ICP.Candid.Utilities
 			}
 
 			int charCount = (int)Math.Ceiling(input.Length / 5d) * 8;
-			char[] characterArray = new char[charCount];
+			Span<char> characterArray = stackalloc char[charCount];
 
 			byte nextChar = 0, bitsRemaining = 5;
 			int arrayIndex = 0;
