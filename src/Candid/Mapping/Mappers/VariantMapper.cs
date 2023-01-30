@@ -70,7 +70,7 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 			}
 			else
 			{
-				innerValue = CandidPrimitive.Null();
+				innerValue = CandidValue.Null();
 			}
 			return new CandidTypedValue(new CandidVariant(innerTag, innerValue), this.CandidType);
 		}

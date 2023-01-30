@@ -46,14 +46,14 @@ namespace EdjCase.ICP.Agent.Models
 		/// <param name="targets">Optional. List of canister ids to limit delegation to</param>
 		/// <param name="senders">Optional. List of pricipals where requests can originate from</param>
 		/// <returns>A delegation signed by the delegating identity</returns>
-		public static async Task<SignedDelegation> CreateAsync(
+		public static SignedDelegation Create(
 			DerEncodedPublicKey keyToDelegateTo,
 			IIdentity delegatingIdentity,
 			ICTimestamp expiration,
 			List<Principal>? targets = null,
 			List<Principal>? senders = null)
 		{
-			return await CreateAsync(keyToDelegateTo, delegatingIdentity.Sign, expiration, targets, senders);
+			return Create(keyToDelegateTo, delegatingIdentity.Sign, expiration, targets, senders);
 		}
 
 		/// <summary>
@@ -65,7 +65,7 @@ namespace EdjCase.ICP.Agent.Models
 		/// <param name="targets">Optional. List of canister ids to limit delegation to</param>
 		/// <param name="senders">Optional. List of pricipals where requests can originate from</param>
 		/// <returns>A delegation signed by the delegating identity</returns>
-		public static async Task<SignedDelegation> CreateAsync(
+		public static SignedDelegation Create(
 			DerEncodedPublicKey keyToDelegateTo,
 			Func<byte[], byte[]> signingFunc,
 			ICTimestamp expiration,

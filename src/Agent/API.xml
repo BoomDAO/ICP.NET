@@ -566,7 +566,7 @@
             <param name="publicKey">The public key of the identity that has delegated authority</param>
             <param name="delegations">The chain of delegations to authorize a key</param>
         </member>
-        <member name="M:EdjCase.ICP.Agent.Models.DelegationChain.CreateAsync(EdjCase.ICP.Agent.DerEncodedPublicKey,EdjCase.ICP.Agent.Identities.IIdentity,EdjCase.ICP.Candid.Models.ICTimestamp,System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal},System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal})">
+        <member name="M:EdjCase.ICP.Agent.Models.DelegationChain.Create(EdjCase.ICP.Agent.DerEncodedPublicKey,EdjCase.ICP.Agent.Identities.IIdentity,EdjCase.ICP.Candid.Models.ICTimestamp,System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal},System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal})">
             <summary>
             Creates a delegation chain from the specified keys
             </summary>
@@ -632,7 +632,7 @@
             <param name="delegation">The delegation that is signed</param>
             <param name="signature">The signature for the delegation</param>
         </member>
-        <member name="M:EdjCase.ICP.Agent.Models.SignedDelegation.CreateAsync(EdjCase.ICP.Agent.DerEncodedPublicKey,EdjCase.ICP.Agent.Identities.IIdentity,EdjCase.ICP.Candid.Models.ICTimestamp,System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal},System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal})">
+        <member name="M:EdjCase.ICP.Agent.Models.SignedDelegation.Create(EdjCase.ICP.Agent.DerEncodedPublicKey,EdjCase.ICP.Agent.Identities.IIdentity,EdjCase.ICP.Candid.Models.ICTimestamp,System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal},System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal})">
             <summary>
             Creates a delegation signed by the delegating identity, authorizing the public key
             </summary>
@@ -643,7 +643,7 @@
             <param name="senders">Optional. List of pricipals where requests can originate from</param>
             <returns>A delegation signed by the delegating identity</returns>
         </member>
-        <member name="M:EdjCase.ICP.Agent.Models.SignedDelegation.CreateAsync(EdjCase.ICP.Agent.DerEncodedPublicKey,System.Func{System.Byte[],System.Byte[]},EdjCase.ICP.Candid.Models.ICTimestamp,System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal},System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal})">
+        <member name="M:EdjCase.ICP.Agent.Models.SignedDelegation.Create(EdjCase.ICP.Agent.DerEncodedPublicKey,System.Func{System.Byte[],System.Byte[]},EdjCase.ICP.Candid.Models.ICTimestamp,System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal},System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal})">
             <summary>
             Creates a delegation signed by the delegating identity, authorizing the public key
             </summary>

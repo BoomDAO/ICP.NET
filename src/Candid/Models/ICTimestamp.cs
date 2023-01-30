@@ -86,7 +86,7 @@ namespace EdjCase.ICP.Candid.Models
 		/// <returns>Candid nat value of the nanoseconds</returns>
 		public CandidValue ToCandid()
 		{
-			return CandidPrimitive.Nat(this.NanoSeconds);
+			return CandidValue.Nat(this.NanoSeconds);
 		}
 
 		/// <inheritdoc />

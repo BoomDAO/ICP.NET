@@ -120,9 +120,9 @@ namespace EdjCase.ICP.Candid.Models
 		/// <inheritdoc />
 		public static bool operator ==(OptionalValue<T> x, OptionalValue<T> y)
 		{
-			if (object.ReferenceEquals(x, null))
+			if (ReferenceEquals(x, null))
 			{
-				return object.ReferenceEquals(y, null);
+				return ReferenceEquals(y, null);
 			}
 			return x.Equals(y);
 		}

@@ -15,7 +15,7 @@ namespace ICP.Candid.Tests
 		{
 			var arg = CandidArg.FromCandid(
 				CandidTypedValue.FromValueAndType(
-					CandidPrimitive.Text("https://www.theverge.com/rss/index.xml"),
+					CandidValue.Text("https://www.theverge.com/rss/index.xml"),
 					new CandidPrimitiveType(PrimitiveType.Text)
 				),
 				CandidTypedValue.FromValueAndType(
@@ -23,7 +23,7 @@ namespace ICP.Candid.Tests
 					{
 							{
 								CandidTag.FromName("title"),
-								CandidPrimitive.Text("The Title")
+								CandidValue.Text("The Title")
 							},
 							{
 								CandidTag.FromName("body"),
@@ -31,37 +31,37 @@ namespace ICP.Candid.Tests
 								{
 									{
 										CandidTag.FromName("format"),
-										new CandidOptional(CandidPrimitive.Text("text/html"))
+										new CandidOptional(CandidValue.Text("text/html"))
 									},
 									{
 										CandidTag.FromName("value"),
-										CandidPrimitive.Text("<h1>Hello</h1>")
+										CandidValue.Text("<h1>Hello</h1>")
 									}
 								})
 							},
 							{
 								CandidTag.FromName("link"),
-								CandidPrimitive.Text("https://www.theverge.com/rss/index.xml")
+								CandidValue.Text("https://www.theverge.com/rss/index.xml")
 							},
 							{
 								CandidTag.FromName("authors"),
 								new CandidVector(new CandidValue[]
 								{
-									new CandidVariant("name", CandidPrimitive.Text("author1")),
-									new CandidVariant("name", CandidPrimitive.Text("author2"))
+									new CandidVariant("name", CandidValue.Text("author1")),
+									new CandidVariant("name", CandidValue.Text("author2"))
 								})
 							},
 							{
 								CandidTag.FromName("imageLink"),
-								new CandidOptional(CandidPrimitive.Text("https://google.com"))
+								new CandidOptional(CandidValue.Text("https://google.com"))
 							},
 							{
 								CandidTag.FromName("language"),
-								new CandidOptional(CandidPrimitive.Text("en-us"))
+								new CandidOptional(CandidValue.Text("en-us"))
 							},
 							{
 								CandidTag.FromName("date"),
-								CandidPrimitive.Int(0)
+								CandidValue.Int(0)
 							}
 							}),
 							new CandidRecordType(new Dictionary<CandidTag, CandidType>

@@ -160,7 +160,7 @@ namespace EdjCase.ICP.Agent.Agents
 			if (this.rootKeyCache == null)
 			{
 				StatusResponse jsonObject = await this.GetReplicaStatusAsync();
-				this.rootKeyCache = jsonObject.DevelopmentRootKey ?? HttpAgent.mainnetRootKey;
+				this.rootKeyCache = jsonObject.DevelopmentRootKey ?? mainnetRootKey;
 			}
 			return this.rootKeyCache;
 		}
@@ -188,7 +188,7 @@ namespace EdjCase.ICP.Agent.Agents
 			Func<Task<Stream>> streamFunc = await this.SendRawAsync(url, null);
 			Stream stream = await streamFunc();
 
-			return await Dahomey.Cbor.Cbor.DeserializeAsync<TResponse>(stream, HttpAgent.cborOptionsLazy.Value);
+			return await Dahomey.Cbor.Cbor.DeserializeAsync<TResponse>(stream, cborOptionsLazy.Value);
 		}
 
 		private async Task<TResponse> SendAsync<TRequest, TResponse>(string url, Func<Principal, ICTimestamp, TRequest> getRequest)
@@ -206,7 +206,7 @@ namespace EdjCase.ICP.Agent.Agents
 			}
 			stream.Position = 0;
 #endif
-			return await Dahomey.Cbor.Cbor.DeserializeAsync<TResponse>(stream, HttpAgent.cborOptionsLazy.Value);
+			return await Dahomey.Cbor.Cbor.DeserializeAsync<TResponse>(stream, cborOptionsLazy.Value);
 		}
 
 		private async Task<(Func<Task<Stream>> ResponseFunc, RequestId RequestId)> SendInternalAsync<TRequest>(string url, Func<Principal, ICTimestamp, TRequest> getRequest)
@@ -254,7 +254,7 @@ namespace EdjCase.ICP.Agent.Agents
 				var writer = new CborWriter(bufferWriter);
 				writer.WriteSemanticTag(55799);
 				IBufferWriter<byte> b = bufferWriter;
-				Dahomey.Cbor.Cbor.Serialize(signedContent, in b, HttpAgent.cborOptionsLazy.Value);
+				Dahomey.Cbor.Cbor.Serialize(signedContent, in b, cborOptionsLazy.Value);
 				return bufferWriter.WrittenSpan.ToArray();
 			}
 		}

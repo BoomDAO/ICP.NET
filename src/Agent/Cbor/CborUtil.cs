@@ -30,7 +30,7 @@ namespace EdjCase.ICP.Agent.Cbor
 
 			T GetValueFunc(ref CborReader reader)
 			{
-				return CborUtil.Read<T>(ref reader, options);
+				return Read<T>(ref reader, options);
 			}
 		}
 
@@ -49,7 +49,7 @@ namespace EdjCase.ICP.Agent.Cbor
 
 			T GetValueFunc(ref CborReader reader)
 			{
-				return CborUtil.Read<T>(ref reader, options);
+				return Read<T>(ref reader, options);
 			}
 		}
 

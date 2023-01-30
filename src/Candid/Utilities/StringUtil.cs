@@ -8,18 +8,18 @@ namespace EdjCase.ICP.Candid.Models.Values
 	{
 		public static string ToSnakeCase(string value)
 		{
-			IEnumerable<string> tokens = StringUtil.GetTokens(value);
+			IEnumerable<string> tokens = GetTokens(value);
 			return string.Join("_", tokens);
 		}
 		public static string ToPascalCase(string value)
 		{
-			IEnumerable<string> tokens = StringUtil.GetTokens(value)
+			IEnumerable<string> tokens = GetTokens(value)
 				.Select(t => char.ToUpper(t[0]) + t.Substring(1));
 			return string.Join("", tokens);
 		}
 		public static string ToCamelCase(string value)
 		{
-			IEnumerable<string> tokens = StringUtil.GetTokens(value)
+			IEnumerable<string> tokens = GetTokens(value)
 				.Select((t, i) => (i == 0 ? t[0] : char.ToUpper(t[0])) + t.Substring(1));
 			return string.Join("", tokens);
 		}

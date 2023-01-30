@@ -49,7 +49,7 @@ namespace EdjCase.ICP.Candid.Crypto
 				uint checksumIndex = (hash32Value & 0xFF) ^ data[i];
 				// Use all other bytes besides that byte and xor it with the checksum table value
 				uint otherBytes = hash32Value >> 8;
-				hash32Value = CRC32.ChecksumTable.Value[checksumIndex] ^ otherBytes;
+				hash32Value = ChecksumTable.Value[checksumIndex] ^ otherBytes;
 			}
 			// Invert and convert the 32-bit value into a byte array
 			byte[] hash = BitConverter.GetBytes(~hash32Value);

@@ -13,7 +13,7 @@ namespace Agent.Cbor
 		private static readonly Lazy<Dictionary<Type, Func<CborOptions, ICborConverter>>> providerMapLazy = new(BuildMap, isThreadSafe: true);
 		public ICborConverter? GetConverter(Type type, CborOptions options)
 		{
-			return CborConverterProvider.providerMapLazy.Value.GetValueOrDefault(type)?.Invoke(options);
+			return providerMapLazy.Value.GetValueOrDefault(type)?.Invoke(options);
 		}
 
 		private static Dictionary<Type, Func<CborOptions, ICborConverter>> BuildMap()

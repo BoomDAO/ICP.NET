@@ -98,7 +98,7 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 				return BuildPrimitive(
 					objType,
 					new CandidPrimitiveType(PrimitiveType.Text),
-					(o, options) => CandidPrimitive.Text((string)o),
+					(o, options) => CandidValue.Text((string)o),
 					(v, options) => v.AsText()
 				);
 			}
@@ -107,7 +107,7 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 				return BuildPrimitive(
 					objType,
 					new CandidPrimitiveType(PrimitiveType.Bool),
-					(o, options) => CandidPrimitive.Bool((bool)o),
+					(o, options) => CandidValue.Bool((bool)o),
 					(v, options) => v.AsBool()
 				);
 			}
@@ -116,7 +116,7 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 				return BuildPrimitive(
 					objType,
 					new CandidPrimitiveType(PrimitiveType.Nat8),
-					(o, options) => CandidPrimitive.Nat8((byte)o),
+					(o, options) => CandidValue.Nat8((byte)o),
 					(v, options) => v.AsNat8()
 				);
 			}
@@ -125,7 +125,7 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 				return BuildPrimitive(
 					objType,
 					new CandidPrimitiveType(PrimitiveType.Nat16),
-					(o, options) => CandidPrimitive.Nat16((ushort)o),
+					(o, options) => CandidValue.Nat16((ushort)o),
 					(v, options) => v.AsNat16()
 				);
 			}
@@ -134,7 +134,7 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 				return BuildPrimitive(
 					objType,
 					new CandidPrimitiveType(PrimitiveType.Nat32),
-					(o, options) => CandidPrimitive.Nat32((uint)o),
+					(o, options) => CandidValue.Nat32((uint)o),
 					(v, options) => v.AsNat32()
 				);
 			}
@@ -143,7 +143,7 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 				return BuildPrimitive(
 					objType,
 					new CandidPrimitiveType(PrimitiveType.Nat64),
-					(o, options) => CandidPrimitive.Nat64((ulong)o),
+					(o, options) => CandidValue.Nat64((ulong)o),
 					(v, options) => v.AsNat64()
 				);
 			}
@@ -152,7 +152,7 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 				return BuildPrimitive(
 					objType,
 					new CandidPrimitiveType(PrimitiveType.Nat),
-					(o, options) => CandidPrimitive.Nat((UnboundedUInt)o),
+					(o, options) => CandidValue.Nat((UnboundedUInt)o),
 					(v, options) => v.AsNat()
 				);
 			}
@@ -161,7 +161,7 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 				return BuildPrimitive(
 					objType,
 					new CandidPrimitiveType(PrimitiveType.Int8),
-					(o, options) => CandidPrimitive.Int8((sbyte)o),
+					(o, options) => CandidValue.Int8((sbyte)o),
 					(v, options) => v.AsInt8()
 				);
 			}
@@ -170,7 +170,7 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 				return BuildPrimitive(
 					objType,
 					new CandidPrimitiveType(PrimitiveType.Int16),
-					(o, options) => CandidPrimitive.Int16((short)o),
+					(o, options) => CandidValue.Int16((short)o),
 					(v, options) => v.AsInt16()
 				);
 			}
@@ -179,7 +179,7 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 				return BuildPrimitive(
 					objType,
 					new CandidPrimitiveType(PrimitiveType.Int32),
-					(o, options) => CandidPrimitive.Int32((int)o),
+					(o, options) => CandidValue.Int32((int)o),
 					(v, options) => v.AsInt32()
 				);
 			}
@@ -188,7 +188,7 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 				return BuildPrimitive(
 					objType,
 					new CandidPrimitiveType(PrimitiveType.Int64),
-					(o, options) => CandidPrimitive.Int64((long)o),
+					(o, options) => CandidValue.Int64((long)o),
 					(v, options) => v.AsInt64()
 				);
 			}
@@ -197,7 +197,7 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 				return BuildPrimitive(
 					objType,
 					new CandidPrimitiveType(PrimitiveType.Int),
-					(o, options) => CandidPrimitive.Int((UnboundedInt)o),
+					(o, options) => CandidValue.Int((UnboundedInt)o),
 					(v, options) => v.AsInt()
 				);
 			}
@@ -206,7 +206,7 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 				return BuildPrimitive(
 					objType,
 					new CandidPrimitiveType(PrimitiveType.Float32),
-					(o, options) => CandidPrimitive.Float32((float)o),
+					(o, options) => CandidValue.Float32((float)o),
 					(v, options) => v.AsFloat32()
 				);
 			}
@@ -215,7 +215,7 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 				return BuildPrimitive(
 					objType,
 					new CandidPrimitiveType(PrimitiveType.Float64),
-					(o, options) => CandidPrimitive.Float64((double)o),
+					(o, options) => CandidValue.Float64((double)o),
 					(v, options) => v.AsFloat64()
 				);
 			}
@@ -225,7 +225,7 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 				return BuildPrimitive(
 					objType,
 					new CandidPrimitiveType(PrimitiveType.Float64),
-					(o, options) => CandidPrimitive.Float64((double)o),
+					(o, options) => CandidValue.Float64((double)o),
 					(v, options) => (decimal)v.AsFloat64()
 				);
 			}
@@ -234,7 +234,7 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 				return BuildPrimitive(
 					objType,
 					new CandidPrimitiveType(PrimitiveType.Principal),
-					(o, options) => CandidPrimitive.Principal((Principal)o),
+					(o, options) => CandidValue.Principal((Principal)o),
 					(v, options) => v.AsPrincipal()
 				);
 			}

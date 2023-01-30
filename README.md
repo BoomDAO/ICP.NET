@@ -274,11 +274,10 @@ string hostname = "nns.ic0.app"; // Hostname to login to
 LoginResult result = await Authenticator
     .WithHttpAgent() // Use http agent to communicate to the Internet Identity canister
     .LoginAsync(anchor, hostname);
+    
+DelegationIdentity identity = result.GetIdentityOrThrow(); // Gets the generated identity or throws if login failed
 
-result.ThrowIfFailed(); // Throws a `InternetIdentityLoginException` if failed
-
-DelegationIdentity identity = result.AsSuccessful(); // Get the generated identity
-var agent = new HttpAgent(identity); // Authenticated agent
+var agent = new HttpAgent(identity); // Use in agent to make authenticated requests
 ```
 
 # Links

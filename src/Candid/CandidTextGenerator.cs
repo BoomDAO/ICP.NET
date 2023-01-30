@@ -23,7 +23,7 @@ namespace EdjCase.ICP.Candid
 
 		public static string Generate(CandidType t, IndentType indentType = IndentType.None)
 		{
-			var textComponent = CandidTextGenerator.GenerateInternal(t);
+			var textComponent = GenerateInternal(t);
 			string? tabString = indentType switch
 			{
 				IndentType.None => "",
@@ -166,14 +166,14 @@ namespace EdjCase.ICP.Candid
 		private static CompoundTypeTextComponent GenerateFunc(CandidFuncType func)
 		{
 			List<TextComponentBase> argTypes = func.ArgTypes
-				.Select(t => CandidTextGenerator.GenerateInternal(t.Name, t.Type))
+				.Select(t => GenerateInternal(t.Name, t.Type))
 				.ToList();
 			List<TextComponentBase> returnTypes = func.ReturnTypes
-				.Select(t => CandidTextGenerator.GenerateInternal(t.Name, t.Type))
+				.Select(t => GenerateInternal(t.Name, t.Type))
 				.ToList();
 
 			List<string> modes = func.Modes
-				.Select(t => CandidTextGenerator.GenerateMode(t))
+				.Select(t => GenerateMode(t))
 				.ToList();
 
 			var innerValue = new TupleWithSuffixTextComponent(new TupleTextComponent(returnTypes), modes);

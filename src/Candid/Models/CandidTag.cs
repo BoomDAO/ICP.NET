@@ -51,7 +51,7 @@ namespace EdjCase.ICP.Candid.Models
 		/// <inheritdoc />
 		public int CompareTo(CandidTag? other)
 		{
-			if (object.ReferenceEquals(other, null))
+			if (ReferenceEquals(other, null))
 			{
 				return 1;
 			}
@@ -61,9 +61,9 @@ namespace EdjCase.ICP.Candid.Models
 		/// <inheritdoc />
 		public static bool operator ==(CandidTag? l1, CandidTag? l2)
 		{
-			if (object.ReferenceEquals(l1, null))
+			if (ReferenceEquals(l1, null))
 			{
-				return object.ReferenceEquals(l2, null);
+				return ReferenceEquals(l2, null);
 			}
 			return l1.Equals(l2);
 		}
@@ -71,9 +71,9 @@ namespace EdjCase.ICP.Candid.Models
 		/// <inheritdoc />
 		public static bool operator !=(CandidTag? l1, CandidTag? l2)
 		{
-			if (object.ReferenceEquals(l1, null))
+			if (ReferenceEquals(l1, null))
 			{
-				return !object.ReferenceEquals(l2, null);
+				return !ReferenceEquals(l2, null);
 			}
 			return !l1.Equals(l2);
 		}
@@ -109,7 +109,7 @@ namespace EdjCase.ICP.Candid.Models
 		/// <returns>A candid tag</returns>
 		public static CandidTag FromName(string name)
 		{
-			uint id = CandidTag.HashName(name);
+			uint id = HashName(name);
 
 			return new CandidTag(id, name);
 		}
@@ -130,7 +130,7 @@ namespace EdjCase.ICP.Candid.Models
 		/// <param name="name">A string value of the name</param>
 		public static implicit operator CandidTag(string name)
 		{
-			return CandidTag.FromName(name);
+			return FromName(name);
 		}
 
 		/// <summary>
@@ -139,7 +139,7 @@ namespace EdjCase.ICP.Candid.Models
 		/// <param name="id"></param>
 		public static implicit operator CandidTag(uint id)
 		{
-			return CandidTag.FromId(id);
+			return FromId(id);
 		}
 
 		/// <summary>

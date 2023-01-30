@@ -935,7 +935,7 @@
             <summary>
             A helper method to create a typed opt value
             </summary>
-            <param name="value">The inner typed value to wrap an opt around</param>
+            <param name="typedValue">The inner typed value to wrap an opt around</param>
             <returns>A candid typed value of the specified value</returns>
         </member>
         <member name="M:EdjCase.ICP.Candid.Models.CandidTypedValue.Vector``1(EdjCase.ICP.Candid.Models.Types.CandidType,System.Collections.Generic.IEnumerable{``0},System.Func{``0,EdjCase.ICP.Candid.Models.Values.CandidValue})">
@@ -1828,6 +1828,24 @@
         <member name="M:EdjCase.ICP.Candid.Models.Types.CandidOptionalType.GetHashCode">
             <inheritdoc />
         </member>
+        <member name="T:EdjCase.ICP.Candid.Models.Types.CandidPrimitiveType">
+            <summary>
+            A model representing any of the primitive candid types
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Models.Types.CandidPrimitiveType.Type">
+            <summary>
+            The candid type this model represents
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Models.Types.CandidPrimitiveType.PrimitiveType">
+            <summary>
+            The primitive type this model represents
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Types.CandidPrimitiveType.#ctor(EdjCase.ICP.Candid.Models.Values.PrimitiveType)">
+            <param name="type">The primitive type this model represents</param>
+        </member>
         <member name="M:EdjCase.ICP.Candid.Models.Types.CandidPrimitiveType.Equals(System.Object)">
             <inheritdoc />
         </member>
@@ -1904,8 +1922,34 @@
         <member name="M:EdjCase.ICP.Candid.Models.Types.CandidServiceType.GetHashCode">
             <inheritdoc />
         </member>
+        <member name="T:EdjCase.ICP.Candid.Models.Types.CandidVariantType">
+            <summary>
+            A model representing a type definition of a candid variant
+            </summary>
+        </member>
         <member name="P:EdjCase.ICP.Candid.Models.Types.CandidVariantType.Type">
             <inheritdoc />
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Models.Types.CandidVariantType.TypeString">
+            <inheritdoc />
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Models.Types.CandidVariantType.Options">
+            <summary>
+            All the potential options and the option types for a variant
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Types.CandidVariantType.#ctor(System.Collections.Generic.Dictionary{EdjCase.ICP.Candid.Models.CandidTag,EdjCase.ICP.Candid.Models.Types.CandidType},EdjCase.ICP.Candid.Models.CandidId)">
+            <param name="options">All the potential options and the option types for a variant</param>
+            <param name="recursiveId">Optional. Used if this type can be referenced by an inner type recursively.
+            The inner type will use `CandidReferenceType` with this id</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Types.CandidVariantType.GetFieldsOrOptions">
+            <inheritdoc />
+        </member>
+        <member name="T:EdjCase.ICP.Candid.Models.Types.CandidVectorType">
+            <summary>
+            A model representing the type definition of a candid vector
+            </summary>
         </member>
         <member name="P:EdjCase.ICP.Candid.Models.Types.CandidVectorType.Type">
             <inheritdoc />

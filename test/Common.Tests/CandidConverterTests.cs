@@ -16,7 +16,7 @@ namespace ICP.Candid.Tests
 		public void Text_From_String()
 		{
 			string value = "Test";
-			CandidValue expectedValue = CandidPrimitive.Text(value);
+			CandidValue expectedValue = CandidValue.Text(value);
 			CandidType expectedType = new CandidPrimitiveType(PrimitiveType.Text);
 			CandidTypedValue expected = CandidTypedValue.FromValueAndType(expectedValue, expectedType);
 
@@ -32,7 +32,7 @@ namespace ICP.Candid.Tests
 				"2",
 				"3"
 			};
-			CandidValue expectedValue = new CandidVector(values.Select(v => CandidPrimitive.Text(v)).ToArray());
+			CandidValue expectedValue = new CandidVector(values.Select(v => CandidValue.Text(v)).ToArray());
 			CandidType expectedType = new CandidVectorType(new CandidPrimitiveType(PrimitiveType.Text));
 			CandidTypedValue expected = CandidTypedValue.FromValueAndType(expectedValue, expectedType);
 
@@ -48,7 +48,7 @@ namespace ICP.Candid.Tests
 				"2",
 				"3"
 			};
-			CandidValue expectedValue = new CandidVector(values.Select(v => CandidPrimitive.Text(v)).ToArray());
+			CandidValue expectedValue = new CandidVector(values.Select(v => CandidValue.Text(v)).ToArray());
 			CandidType expectedType = new CandidVectorType(new CandidPrimitiveType(PrimitiveType.Text));
 			CandidTypedValue expected = CandidTypedValue.FromValueAndType(expectedValue, expectedType);
 
@@ -88,8 +88,8 @@ namespace ICP.Candid.Tests
 			CandidTag intFieldName = CandidTag.FromName("IntField");
 			var fields = new Dictionary<CandidTag, CandidValue>
 			{
-				{stringFieldName, CandidPrimitive.Text("StringValue")},
-				{intFieldName, CandidPrimitive.Int32(2)}
+				{stringFieldName, CandidValue.Text("StringValue")},
+				{intFieldName, CandidValue.Int32(2)}
 			};
 			CandidValue expectedValue = new CandidRecord(fields);
 
@@ -143,7 +143,7 @@ namespace ICP.Candid.Tests
 				Type = VariantValueClassType.V4,
 				Value = OptionalValue<string>.WithValue("text")
 			};
-			CandidValue expectedValue = new CandidVariant("v4", new CandidOptional(CandidPrimitive.Text("text")));
+			CandidValue expectedValue = new CandidVariant("v4", new CandidOptional(CandidValue.Text("text")));
 
 			var optionTypes = new Dictionary<CandidTag, CandidType>
 			{
@@ -160,9 +160,9 @@ namespace ICP.Candid.Tests
 				expected,
 				(x, y) =>
 				{
-					if (!object.ReferenceEquals(x.Value, null))
+					if (!ReferenceEquals(x.Value, null))
 					{
-						if (!object.ReferenceEquals(y.Value, null))
+						if (!ReferenceEquals(y.Value, null))
 						{
 							return x.Type == y.Type && x.Value!.Equals(y.Value);
 						}

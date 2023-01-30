@@ -30,7 +30,7 @@ namespace EdjCase.ICP.Candid.Models.Values
 		public CandidVariant(CandidTag tag, CandidValue? value = null)
 		{
 			this.Tag = tag;
-			this.Value = value ?? CandidPrimitive.Null();
+			this.Value = value ?? Null();
 		}
 
 		/// <inheritdoc />

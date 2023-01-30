@@ -127,7 +127,7 @@ namespace EdjCase.ICP.Candid.Models
 		public static Principal FromHex(string hex)
 		{
 			byte[] bytes = ByteUtil.FromHexString(hex);
-			return Principal.FromBytes(bytes);
+			return FromBytes(bytes);
 		}
 
 		/// <summary>
@@ -174,7 +174,7 @@ namespace EdjCase.ICP.Candid.Models
 				.Slice(4)
 				.ToArray();
 
-			var principal = Principal.FromBytes(bytes);
+			var principal = FromBytes(bytes);
 			string parsedText = principal.ToText();
 			if (parsedText != text)
 			{

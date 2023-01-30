@@ -307,7 +307,7 @@ namespace EdjCase.ICP.Candid.Models
 			/// <inheritdoc />
 			public bool Equals(byte[]? other)
 			{
-				if (object.ReferenceEquals(other, null))
+				if (ReferenceEquals(other, null))
 				{
 					return false;
 				};
@@ -323,9 +323,9 @@ namespace EdjCase.ICP.Candid.Models
 			/// <inheritdoc />
 			public static bool operator ==(EncodedValue? v1, EncodedValue? v2)
 			{
-				if (object.ReferenceEquals(v1, null))
+				if (ReferenceEquals(v1, null))
 				{
-					return object.ReferenceEquals(v2, null);
+					return ReferenceEquals(v2, null);
 				}
 				return v1.Equals(v2);
 			}
@@ -333,9 +333,9 @@ namespace EdjCase.ICP.Candid.Models
 			/// <inheritdoc />
 			public static bool operator !=(EncodedValue? v1, EncodedValue? v2)
 			{
-				if (object.ReferenceEquals(v1, null))
+				if (ReferenceEquals(v1, null))
 				{
-					return object.ReferenceEquals(v2, null);
+					return ReferenceEquals(v2, null);
 				}
 				return !v1.Equals(v2);
 			}

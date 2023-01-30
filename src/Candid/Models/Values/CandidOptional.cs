@@ -22,7 +22,7 @@ namespace EdjCase.ICP.Candid.Models.Values
 		/// <param name="value">The inner value of an opt. If not set, will be a candid null value</param>
 		public CandidOptional(CandidValue? value = null)
 		{
-			this.Value = value ?? CandidPrimitive.Null();
+			this.Value = value ?? Null();
 		}
 
 		/// <inheritdoc />

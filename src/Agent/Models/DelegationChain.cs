@@ -43,7 +43,7 @@ namespace EdjCase.ICP.Agent.Models
 		/// <param name="targets">Optional. List of canister ids to limit delegation to</param>
 		/// <param name="senders">Optional. List of pricipals where requests can originate from</param>
 		/// <returns>A delegation chain signed by the delegating identity</returns>
-		public static async Task<DelegationChain> CreateAsync(
+		public static DelegationChain Create(
 			DerEncodedPublicKey keyToDelegateTo,
 			IIdentity delegatingIdentity,
 			ICTimestamp expiration,
@@ -51,7 +51,7 @@ namespace EdjCase.ICP.Agent.Models
 			List<Principal>? senders = null
 		)
 		{
-			SignedDelegation signedDelegation = await SignedDelegation.CreateAsync(
+			SignedDelegation signedDelegation = SignedDelegation.Create(
 				keyToDelegateTo,
 				delegatingIdentity,
 				expiration,

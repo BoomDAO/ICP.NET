@@ -13,6 +13,10 @@ using System.Threading.Tasks;
 
 namespace EdjCase.ICP.InternetIdentity
 {
+	/// <summary>
+	/// Authenticator for Internet Identity. Facilitates the login flow for using
+	/// the fido device and connecting to the identity canister backend
+	/// </summary>
 	public class Authenticator
 	{
 		private IInternetIdentityClient identityClient { get; }
@@ -24,6 +28,14 @@ namespace EdjCase.ICP.InternetIdentity
 			this.fidoClient = fidoClient;
 		}
 
+		/// <summary>
+		/// Attempts to create a delegation identity from the Internet Identity flow
+		/// </summary>
+		/// <param name="anchor">Anchor id (user id for internet identity)</param>
+		/// <param name="clientHostname">Hostname of the client application to authorize</param>
+		/// <param name="sessionIdentity">Optional. Specifies the identity to delegate to. If not specified, will generate a new identity</param>
+		/// <param name="maxTimeToLive">Max time for the login session/identity to last</param>
+		/// <returns></returns>
 		public async Task<LoginResult> LoginAsync(
 			ulong anchor,
 			string clientHostname,
@@ -69,9 +81,18 @@ namespace EdjCase.ICP.InternetIdentity
 
 		}
 
-		public static Authenticator WithHttpAgent(Principal? identityCanisterOverride = null)
+		/// <summary>
+		/// Creates a new instance using an http client
+		/// </summary>
+		/// <param name="httpBoundryNodeUrl">Optional. Speicifes the url of the boundry node url. If not specified, will use default</param>
+		/// <param name="identityCanisterOverride">Optional. Specifies the Internet Identity backend canister, if not specified, will use default</param>
+		/// <returns></returns>
+		public static Authenticator WithHttpAgent(
+			Uri? httpBoundryNodeUrl = null,
+			Principal? identityCanisterOverride = null
+		)
 		{
-			var agent = new HttpAgent();
+			var agent = new HttpAgent(httpBoundryNodeUrl: httpBoundryNodeUrl);
 			IInternetIdentityClient client = new AgentInternetIdentityClient(agent, identityCanisterOverride);
 			IFido2Client fido2Signer = new Fido2Client();
 			return new Authenticator(client, fido2Signer);

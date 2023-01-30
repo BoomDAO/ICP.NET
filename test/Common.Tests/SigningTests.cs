@@ -16,13 +16,13 @@ namespace ICP.Candid.Tests
 	public class SigningTests
 	{
 		[Fact]
-		public async Task Sign_QueryRequest()
+		public void Sign_QueryRequest()
 		{
 			Principal canisterId = Principal.FromText("rrkah-fqaaa-aaaaa-aaaaq-cai");
 			string method = "get_proposal_info";
 			CandidArg arg = CandidArg.FromCandid(
 				CandidTypedValue.FromValueAndType(
-					value: CandidPrimitive.Nat64(1),
+					value: CandidValue.Nat64(1),
 					type: new CandidPrimitiveType(PrimitiveType.Nat64)
 				)
 			);

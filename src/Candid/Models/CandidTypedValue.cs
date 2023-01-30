@@ -252,7 +252,7 @@ namespace EdjCase.ICP.Candid.Models
 		/// <inheritdoc />
 		public bool Equals(CandidTypedValue? other)
 		{
-			if (object.ReferenceEquals(other, null))
+			if (ReferenceEquals(other, null))
 			{
 				return false;
 			}
@@ -274,9 +274,9 @@ namespace EdjCase.ICP.Candid.Models
 		/// <inheritdoc />
 		public static bool operator ==(CandidTypedValue? v1, CandidTypedValue? v2)
 		{
-			if (object.ReferenceEquals(v1, null))
+			if (ReferenceEquals(v1, null))
 			{
-				return object.ReferenceEquals(v2, null);
+				return ReferenceEquals(v2, null);
 			}
 			return v1.Equals(v2);
 		}
@@ -284,9 +284,9 @@ namespace EdjCase.ICP.Candid.Models
 		/// <inheritdoc />
 		public static bool operator !=(CandidTypedValue? v1, CandidTypedValue? v2)
 		{
-			if (object.ReferenceEquals(v1, null))
+			if (ReferenceEquals(v1, null))
 			{
-				return object.ReferenceEquals(v2, null);
+				return ReferenceEquals(v2, null);
 			}
 			return !v1.Equals(v2);
 		}
@@ -299,7 +299,7 @@ namespace EdjCase.ICP.Candid.Models
 		public static CandidTypedValue Text(string value)
 		{
 			return new CandidTypedValue(
-				CandidPrimitive.Text(value),
+				CandidValue.Text(value),
 				CandidType.Text()
 			);
 		}
@@ -312,7 +312,7 @@ namespace EdjCase.ICP.Candid.Models
 		public static CandidTypedValue Nat(UnboundedUInt value)
 		{
 			return new CandidTypedValue(
-				CandidPrimitive.Nat(value),
+				CandidValue.Nat(value),
 				CandidType.Nat()
 			);
 		}
@@ -325,7 +325,7 @@ namespace EdjCase.ICP.Candid.Models
 		public static CandidTypedValue Nat8(byte value)
 		{
 			return new CandidTypedValue(
-				CandidPrimitive.Nat8(value),
+				CandidValue.Nat8(value),
 				CandidType.Nat8()
 			);
 		}
@@ -338,7 +338,7 @@ namespace EdjCase.ICP.Candid.Models
 		public static CandidTypedValue Nat16(ushort value)
 		{
 			return new CandidTypedValue(
-				CandidPrimitive.Nat16(value),
+				CandidValue.Nat16(value),
 				CandidType.Nat16()
 			);
 		}
@@ -351,7 +351,7 @@ namespace EdjCase.ICP.Candid.Models
 		public static CandidTypedValue Nat32(uint value)
 		{
 			return new CandidTypedValue(
-				CandidPrimitive.Nat32(value),
+				CandidValue.Nat32(value),
 				CandidType.Nat32()
 			);
 		}
@@ -364,7 +364,7 @@ namespace EdjCase.ICP.Candid.Models
 		public static CandidTypedValue Nat64(ulong value)
 		{
 			return new CandidTypedValue(
-				CandidPrimitive.Nat64(value),
+				CandidValue.Nat64(value),
 				CandidType.Nat64()
 			);
 		}
@@ -377,7 +377,7 @@ namespace EdjCase.ICP.Candid.Models
 		public static CandidTypedValue Int(UnboundedInt value)
 		{
 			return new CandidTypedValue(
-				CandidPrimitive.Int(value),
+				CandidValue.Int(value),
 				CandidType.Int()
 			);
 		}
@@ -390,7 +390,7 @@ namespace EdjCase.ICP.Candid.Models
 		public static CandidTypedValue Int8(sbyte value)
 		{
 			return new CandidTypedValue(
-				CandidPrimitive.Int8(value),
+				CandidValue.Int8(value),
 				CandidType.Int8()
 			);
 		}
@@ -403,7 +403,7 @@ namespace EdjCase.ICP.Candid.Models
 		public static CandidTypedValue Int16(short value)
 		{
 			return new CandidTypedValue(
-				CandidPrimitive.Int16(value),
+				CandidValue.Int16(value),
 				CandidType.Int16()
 			);
 		}
@@ -416,7 +416,7 @@ namespace EdjCase.ICP.Candid.Models
 		public static CandidTypedValue Int32(int value)
 		{
 			return new CandidTypedValue(
-				CandidPrimitive.Int32(value),
+				CandidValue.Int32(value),
 				CandidType.Int32()
 			);
 		}
@@ -429,7 +429,7 @@ namespace EdjCase.ICP.Candid.Models
 		public static CandidTypedValue Int64(long value)
 		{
 			return new CandidTypedValue(
-				CandidPrimitive.Int64(value),
+				CandidValue.Int64(value),
 				CandidType.Int64()
 			);
 		}
@@ -442,7 +442,7 @@ namespace EdjCase.ICP.Candid.Models
 		public static CandidTypedValue Float32(float value)
 		{
 			return new CandidTypedValue(
-				CandidPrimitive.Float32(value),
+				CandidValue.Float32(value),
 				CandidType.Float32()
 			);
 		}
@@ -455,7 +455,7 @@ namespace EdjCase.ICP.Candid.Models
 		public static CandidTypedValue Float64(double value)
 		{
 			return new CandidTypedValue(
-				CandidPrimitive.Float64(value),
+				CandidValue.Float64(value),
 				CandidType.Float64()
 			);
 		}
@@ -468,7 +468,7 @@ namespace EdjCase.ICP.Candid.Models
 		public static CandidTypedValue Bool(bool value)
 		{
 			return new CandidTypedValue(
-				CandidPrimitive.Bool(value),
+				CandidValue.Bool(value),
 				CandidType.Bool()
 			);
 		}
@@ -481,7 +481,7 @@ namespace EdjCase.ICP.Candid.Models
 		public static CandidTypedValue Principal(Principal value)
 		{
 			return new CandidTypedValue(
-				CandidPrimitive.Principal(value),
+				CandidValue.Principal(value),
 				CandidType.Principal()
 			);
 		}
@@ -493,7 +493,7 @@ namespace EdjCase.ICP.Candid.Models
 		public static CandidTypedValue Null()
 		{
 			return new CandidTypedValue(
-				CandidPrimitive.Null(),
+				CandidValue.Null(),
 				CandidType.Null()
 			);
 		}
@@ -505,7 +505,7 @@ namespace EdjCase.ICP.Candid.Models
 		public static CandidTypedValue Reserved()
 		{
 			return new CandidTypedValue(
-				CandidPrimitive.Reserved(),
+				CandidValue.Reserved(),
 				CandidType.Reserved()
 			);
 		}
@@ -517,7 +517,7 @@ namespace EdjCase.ICP.Candid.Models
 		public static CandidTypedValue Empty()
 		{
 			return new CandidTypedValue(
-				CandidPrimitive.Empty(),
+				CandidValue.Empty(),
 				CandidType.Empty()
 			);
 		}
@@ -526,7 +526,7 @@ namespace EdjCase.ICP.Candid.Models
 		/// <summary>
 		/// A helper method to create a typed opt value
 		/// </summary>
-		/// <param name="value">The inner typed value to wrap an opt around</param>
+		/// <param name="typedValue">The inner typed value to wrap an opt around</param>
 		/// <returns>A candid typed value of the specified value</returns>
 		public static CandidTypedValue Opt(CandidTypedValue typedValue)
 		{

@@ -552,35 +552,35 @@ namespace EdjCase.ICP.Candid.Parsers
 			{
 				return type switch
 				{
-					PrimitiveType.Text => CandidPrimitive.Text(this.ReadText()),
-					PrimitiveType.Nat => CandidPrimitive.Nat(this.ReadNat()),
-					PrimitiveType.Nat8 => CandidPrimitive.Nat8(this.ReadByte()),
-					PrimitiveType.Nat16 => CandidPrimitive.Nat16(this.Reader.ReadUInt16()),
-					PrimitiveType.Nat32 => CandidPrimitive.Nat32(this.Reader.ReadUInt32()),
-					PrimitiveType.Nat64 => CandidPrimitive.Nat64(this.Reader.ReadUInt64()),
-					PrimitiveType.Int => CandidPrimitive.Int(this.ReadInt()),
-					PrimitiveType.Int8 => CandidPrimitive.Int8(this.ReadInt8()),
-					PrimitiveType.Int16 => CandidPrimitive.Int16(this.ReadInt16()),
-					PrimitiveType.Int32 => CandidPrimitive.Int32(this.ReadInt32()),
-					PrimitiveType.Int64 => CandidPrimitive.Int64(this.ReadInt64()),
-					PrimitiveType.Float32 => CandidPrimitive.Float32(BitConverter.ToSingle(this.Reader.ReadBytes(4), 0)),
-					PrimitiveType.Float64 => CandidPrimitive.Float64(BitConverter.ToDouble(this.Reader.ReadBytes(8), 0)),
-					PrimitiveType.Bool => CandidPrimitive.Bool(this.Reader.ReadByte() > 0),
-					PrimitiveType.Principal => CandidPrimitive.Principal(this.ReadPrincipal()),
-					PrimitiveType.Reserved => CandidPrimitive.Reserved(),
-					PrimitiveType.Empty => CandidPrimitive.Empty(),
-					PrimitiveType.Null => CandidPrimitive.Null(),
+					PrimitiveType.Text => CandidValue.Text(this.ReadText()),
+					PrimitiveType.Nat => CandidValue.Nat(this.ReadNat()),
+					PrimitiveType.Nat8 => CandidValue.Nat8(this.ReadByte()),
+					PrimitiveType.Nat16 => CandidValue.Nat16(this.Reader.ReadUInt16()),
+					PrimitiveType.Nat32 => CandidValue.Nat32(this.Reader.ReadUInt32()),
+					PrimitiveType.Nat64 => CandidValue.Nat64(this.Reader.ReadUInt64()),
+					PrimitiveType.Int => CandidValue.Int(this.ReadInt()),
+					PrimitiveType.Int8 => CandidValue.Int8(this.ReadInt8()),
+					PrimitiveType.Int16 => CandidValue.Int16(this.ReadInt16()),
+					PrimitiveType.Int32 => CandidValue.Int32(this.ReadInt32()),
+					PrimitiveType.Int64 => CandidValue.Int64(this.ReadInt64()),
+					PrimitiveType.Float32 => CandidValue.Float32(BitConverter.ToSingle(this.Reader.ReadBytes(4), 0)),
+					PrimitiveType.Float64 => CandidValue.Float64(BitConverter.ToDouble(this.Reader.ReadBytes(8), 0)),
+					PrimitiveType.Bool => CandidValue.Bool(this.Reader.ReadByte() > 0),
+					PrimitiveType.Principal => CandidValue.Principal(this.ReadPrincipal()),
+					PrimitiveType.Reserved => CandidValue.Reserved(),
+					PrimitiveType.Empty => CandidValue.Empty(),
+					PrimitiveType.Null => CandidValue.Null(),
 					_ => throw new NotImplementedException(),
 				};
 			}
 
-			public Principal? ReadPrincipal()
+			public Principal ReadPrincipal()
 			{
 				bool isRef = !this.ReadBool();
 				if (isRef)
 				{
 					// Opaque reference
-					return null;
+					throw new NotImplementedException();
 				}
 				else
 				{

@@ -105,7 +105,7 @@ namespace EdjCase.ICP.Candid.Models
 		/// <param name="value">String value to convert</param>
 		public static implicit operator StatePathSegment(string value)
 		{
-			return StatePathSegment.FromString(value);
+			return FromString(value);
 		}
 	}
 }

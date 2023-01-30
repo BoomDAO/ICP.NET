@@ -4,5 +4,31 @@
         <name>EdjCase.ICP.ClientGenerator</name>
     </assembly>
     <members>
+        <member name="T:EdjCase.ICP.ClientGenerator.ClientFileGenerator">
+            <summary>
+            Generator to create client files based of candid definitions from `.did` files
+            or from a canister id
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.ClientGenerator.ClientFileGenerator.GenerateClientFromCanisterAsync(EdjCase.ICP.Candid.Models.Principal,System.String,System.String,System.String,System.Uri)">
+            <summary>
+            Creates client files for a canister based on its id. This only works if 
+            the canister has the `candid:service` meta data available in its public state
+            </summary>
+            <param name="canisterId">The canister to get the definition from</param>
+            <param name="outputDirectory">The directory to output to</param>
+            <param name="baseNamespace">The base namespace to use in the generated files</param>
+            <param name="clientName">Optional. The name of the client class and file to use. Defaults to 'Service'</param>
+            <param name="httpBoundryNodeUrl">Optional. The http boundry node url to use, otherwise uses the default</param>
+        </member>
+        <member name="M:EdjCase.ICP.ClientGenerator.ClientFileGenerator.GenerateClientFromFile(System.String,System.String,System.String,System.String)">
+            <summary>
+            Generates client files for a canister based on a `.did` file definition
+            </summary>
+            <param name="outputDirectory">The directory to output to</param>
+            <param name="baseNamespace">The base namespace to use in the generated files</param>
+            <param name="clientName">Optional. The name of the client class and file to use. Defaults to 'Service'</param>
+            <param name="candidFilePath">The path where the `.did` definition file is located</param>
+        </member>
     </members>
 </doc>

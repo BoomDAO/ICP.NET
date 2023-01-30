@@ -46,11 +46,11 @@ namespace EdjCase.ICP.Candid.Parsers
 					CandidType typeDef = GetNamedType(helper);
 					return typeDef;
 				case CandidTextTokenType.OpenParenthesis:
-					return CandidTextParser.GetFunc(helper, null);
+					return GetFunc(helper, null);
 				case CandidTextTokenType.OpenCurlyBrace:
-					return CandidTextParser.GetRecord(helper, null);
+					return GetRecord(helper, null);
 				case CandidTextTokenType.OpenBracket:
-					return CandidTextParser.GetVec(helper, null);
+					return GetVec(helper, null);
 				default:
 					// TODO
 					throw new NotImplementedException($"Parsing encountered unimplemented candid type, next token is {helper.CurrentToken.Type}");
@@ -235,7 +235,7 @@ namespace EdjCase.ICP.Candid.Parsers
 
 			helper.MoveNext();
 
-			CandidType t = CandidTextParser.GetNamedType(type, helper, recursiveId);
+			CandidType t = GetNamedType(type, helper, recursiveId);
 			if (helper.CurrentToken.Type == CandidTextTokenType.SemiColon)
 			{
 				helper.MoveNextOrThrow();
@@ -249,19 +249,19 @@ namespace EdjCase.ICP.Candid.Parsers
 			switch (type)
 			{
 				case "opt":
-					return CandidTextParser.GetOpt(helper, recursiveId);
+					return GetOpt(helper, recursiveId);
 				case "record":
-					return CandidTextParser.GetRecord(helper, recursiveId);
+					return GetRecord(helper, recursiveId);
 				case "vec":
-					return CandidTextParser.GetVec(helper, recursiveId);
+					return GetVec(helper, recursiveId);
 				case "blob": // Shorthand
 					return new CandidVectorType(new CandidPrimitiveType(PrimitiveType.Nat8));
 				case "variant":
-					return CandidTextParser.GetVariant(helper, recursiveId);
+					return GetVariant(helper, recursiveId);
 				case "service":
-					return CandidTextParser.GetService(helper, recursiveId);
+					return GetService(helper, recursiveId);
 				case "func":
-					return CandidTextParser.GetFunc(helper, recursiveId);
+					return GetFunc(helper, recursiveId);
 				case "int8":
 					ThrowIfRecursiveIdSet();
 					return new CandidPrimitiveType(PrimitiveType.Int8);

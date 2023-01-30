@@ -49,9 +49,9 @@ namespace EdjCase.ICP.Candid.Models.Types
 		/// <inheritdoc />
 		public static bool operator ==(CandidType? def1, CandidType? def2)
 		{
-			if (object.ReferenceEquals(def1, null))
+			if (ReferenceEquals(def1, null))
 			{
-				return object.ReferenceEquals(def2, null);
+				return ReferenceEquals(def2, null);
 			}
 			return def1.Equals(def2);
 		}
@@ -59,9 +59,9 @@ namespace EdjCase.ICP.Candid.Models.Types
 				/// <inheritdoc />
 		public static bool operator !=(CandidType? def1, CandidType? def2)
 		{
-			if (object.ReferenceEquals(def1, null))
+			if (ReferenceEquals(def1, null))
 			{
-				return !object.ReferenceEquals(def2, null);
+				return !ReferenceEquals(def2, null);
 			}
 			return !def1.Equals(def2);
 		}

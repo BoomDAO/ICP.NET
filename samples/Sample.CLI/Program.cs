@@ -55,9 +55,8 @@ public class Program
 		LoginResult result = await Authenticator
 			.WithHttpAgent()
 			.LoginAsync(anchor, hostname);
-		result.ThrowIfFailed();
+		DelegationIdentity identity = result.GetIdentityOrThrow();
 		Console.WriteLine("Login success!");
-		DelegationIdentity identity = result.AsSuccessful();
 		var agent = new HttpAgent(identity);
 		Principal canisterId = Principal.FromText("rrkah-fqaaa-aaaaa-aaaaq-cai");
 		var client = new GovernanceApiClient(agent, canisterId);

@@ -36,7 +36,7 @@ namespace EdjCase.ICP.Candid
 		/// <returns></returns>
 		public CandidTypedValue FromObject(object obj)
 		{
-			if (object.ReferenceEquals(obj, null))
+			if (ReferenceEquals(obj, null))
 			{
 				throw new ArgumentNullException(nameof(obj));
 			}

@@ -98,7 +98,7 @@ namespace EdjCase.ICP.ClientGenerator
 			if (type.IsGenericType)
 			{
 				genericTypes = type.GetGenericArguments()
-					.Select(TypeName.FromType)
+					.Select(FromType)
 					.ToList();
 			}
 			return new TypeName(type.Name, type.Namespace, genericTypes?.ToArray() ?? new TypeName[0]);

@@ -166,7 +166,7 @@ namespace EdjCase.ICP.Candid.Models
 		public static HashableArray ToHashable<T>(this IEnumerable<T> items)
 			where T : IHashable
 		{
-			return HashableExtensions.ToHashable<T>(items, i => i);
+			return ToHashable(items, i => i);
 		}
 
 		public static HashableArray ToHashable<T>(this IEnumerable<T> items, Func<T, IHashable> converter)

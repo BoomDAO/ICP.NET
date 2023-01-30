@@ -5,11 +5,21 @@ using System.Buffers;
 
 namespace EdjCase.ICP.Candid.Models.Types
 {
+	/// <summary>
+	/// A model representing any of the primitive candid types
+	/// </summary>
 	public class CandidPrimitiveType : CandidKnownType
 	{
+		/// <summary>
+		/// The candid type this model represents
+		/// </summary>
 		public override CandidTypeCode Type { get; }
+		/// <summary>
+		/// The primitive type this model represents
+		/// </summary>
 		public PrimitiveType PrimitiveType { get; }
 
+		/// <param name="type">The primitive type this model represents</param>
 		public CandidPrimitiveType(PrimitiveType type)
 		{
 			this.PrimitiveType = type;

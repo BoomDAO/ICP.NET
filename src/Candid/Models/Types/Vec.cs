@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 namespace EdjCase.ICP.Candid.Models.Types
 {
+	/// <summary>
+	/// A model representing the type definition of a candid vector
+	/// </summary>
 	public class CandidVectorType : CandidCompoundType
 	{
 		/// <inheritdoc />

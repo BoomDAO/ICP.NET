@@ -82,8 +82,8 @@ namespace EdjCase.ICP.Agent.Cbor.Converters
 
 		private class CertDelContext
 		{
-			public Principal SubnetId { get; set; }
-			public Certificate Certificate { get; set; }
+			public Principal? SubnetId { get; set; }
+			public Certificate? Certificate { get; set; }
 		}
 
 		private static CertificateDelegation ReadDelegation(ref CborReader reader)
@@ -92,8 +92,8 @@ namespace EdjCase.ICP.Agent.Cbor.Converters
 			CborUtil.ReadMap(ref reader, ref context, SetDelValue);
 
 			return new CertificateDelegation(
-				context.SubnetId,
-				context.Certificate
+				context.SubnetId ?? throw new Exception("Missing subnet id from delegation"),
+				context.Certificate ?? throw new Exception("Missing certificate from delegation")
 			);
 		}
 

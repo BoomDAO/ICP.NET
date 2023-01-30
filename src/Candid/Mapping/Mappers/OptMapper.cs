@@ -34,7 +34,7 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 
 			object? innerValue;
 			bool hasValue;
-			if (opt.Value != CandidPrimitive.Null())
+			if (opt.Value != CandidValue.Null())
 			{
 				innerValue = (this.OverrideInnerMapper ?? options.ResolveMapper(this.InnerType)).Map(opt.Value, options);
 				hasValue = true;

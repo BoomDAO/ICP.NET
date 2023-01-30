@@ -4,6 +4,30 @@
         <name>EdjCase.ICP.InternetIdentity</name>
     </assembly>
     <members>
+        <member name="T:EdjCase.ICP.InternetIdentity.Authenticator">
+            <summary>
+            Authenticator for Internet Identity. Facilitates the login flow for using
+            the fido device and connecting to the identity canister backend
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.InternetIdentity.Authenticator.LoginAsync(System.UInt64,System.String,EdjCase.ICP.Agent.Identities.IIdentity,System.Nullable{System.TimeSpan})">
+            <summary>
+            Attempts to create a delegation identity from the Internet Identity flow
+            </summary>
+            <param name="anchor">Anchor id (user id for internet identity)</param>
+            <param name="clientHostname">Hostname of the client application to authorize</param>
+            <param name="sessionIdentity">Optional. Specifies the identity to delegate to. If not specified, will generate a new identity</param>
+            <param name="maxTimeToLive">Max time for the login session/identity to last</param>
+            <returns></returns>
+        </member>
+        <member name="M:EdjCase.ICP.InternetIdentity.Authenticator.WithHttpAgent(System.Uri,EdjCase.ICP.Candid.Models.Principal)">
+            <summary>
+            Creates a new instance using an http client
+            </summary>
+            <param name="httpBoundryNodeUrl">Optional. Speicifes the url of the boundry node url. If not specified, will use default</param>
+            <param name="identityCanisterOverride">Optional. Specifies the Internet Identity backend canister, if not specified, will use default</param>
+            <returns></returns>
+        </member>
         <member name="M:EdjCase.ICP.InternetIdentity.Authenticator.BuildDeviceIdentityAsync(System.Collections.Generic.IList{EdjCase.ICP.InternetIdentity.DeviceInfo},EdjCase.ICP.Agent.Identities.IIdentity)">
             <summary>
             This is responsible for converting a "direct" user identity, which identifies the user,
@@ -27,6 +51,61 @@
             The signature is a CBOR value consisting of a data item with major type 6 ("Semantic tag")
             and tag value 55799, followed by a map with three mandatory fields:
             authenticator_data, client_data_json and signature
+            </summary>
+        </member>
+        <member name="T:EdjCase.ICP.InternetIdentity.LoginResult">
+            <summary>
+            A result variant that either contains the delegation identity or and error 
+            if failed
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.InternetIdentity.LoginResult.IsSuccessful">
+            <summary>
+            Indicator if the login attempt was successful. If not the 
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.InternetIdentity.LoginResult.AsFailure">
+            <summary>
+            Method to extract the error type if `IsSuccessful` is false, otherwise
+            will throw an exception
+            </summary>
+            <returns>The error type of the failure</returns>
+            <exception cref="T:System.InvalidOperationException">Throws if `IsSuccessful` is true</exception>
+        </member>
+        <member name="M:EdjCase.ICP.InternetIdentity.LoginResult.AsSuccessful">
+            <summary>
+            Method to extract the identity if `IsSuccessful` is true, otherwise will
+            throw an exception
+            </summary>
+            <returns>The session identity</returns>
+            <exception cref="T:System.InvalidOperationException">Throws if `IsSuccessful` is false</exception>
+        </member>
+        <member name="M:EdjCase.ICP.InternetIdentity.LoginResult.GetIdentityOrThrow">
+            <summary>
+            Helper function to get the identity or throw an exception if there 
+            is a failure
+            </summary>
+            <returns>Result identity</returns>
+            <exception cref="T:EdjCase.ICP.InternetIdentity.InternetIdentityLoginException">Throws if `IsSuccessful` is false</exception>
+        </member>
+        <member name="T:EdjCase.ICP.InternetIdentity.ErrorType">
+            <summary>
+            The different errors for a login failure
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.InternetIdentity.ErrorType.CouldNotAuthenticate">
+            <summary>
+            If the fido2 device fails to be unlocked and cannot sign
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.InternetIdentity.ErrorType.NoMatchingDevice">
+            <summary>
+            The fido2 device does not match any devices in Internet Identity
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.InternetIdentity.ErrorType.InvalidAnchorOrNoDevices">
+            <summary>
+            Either the anchor id does not exist or the anchor has no devices associated with it
             </summary>
         </member>
     </members>
