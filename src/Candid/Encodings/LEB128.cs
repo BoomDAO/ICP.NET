@@ -105,7 +105,6 @@ namespace EdjCase.ICP.Candid.Encodings
 		{
 			IEnumerable<bool> bits = LEB128.GetValueBits(stream, isUnsigned);
 			ArrayBufferWriter<byte> destination = new();
-
 			int i = 1;
 			byte byteValue = 0;
 			foreach (bool bit in bits)
