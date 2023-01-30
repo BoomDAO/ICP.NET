@@ -1,6 +1,7 @@
 using EdjCase.ICP.Candid.Encodings;
 using EdjCase.ICP.Candid.Models.Types;
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -32,22 +33,20 @@ namespace EdjCase.ICP.Candid.Models
 			return index;
 		}
 
-		private byte[] EncodeFunc(CandidCompoundType typeDef)
+		private void EncodeFunc(CandidCompoundType typeDef, IBufferWriter<byte> destination)
 		{
-			byte[] encodedInnerValue = typeDef.EncodeInnerTypes(this);
-			return LEB128.EncodeSigned((UnboundedInt)(long)typeDef.Type)
-				.Concat(encodedInnerValue)
-				.ToArray();
+			LEB128.EncodeSigned((UnboundedInt)(long)typeDef.Type, destination);
+			typeDef.EncodeInnerTypes(this, destination);
 		}
 
-		public IEnumerable<byte> Encode()
+		public void Encode(IBufferWriter<byte> destination)
 		{
-			byte[] compoundTypesCount = LEB128.EncodeUnsigned((UnboundedUInt)this.CompoundTypeIndexMap.Count);
-			IEnumerable<byte> encodedTypes = this.CompoundTypeIndexMap
-				.OrderBy(x => x.Value)
-				.SelectMany(t => this.EncodeFunc(t.Key));
-			return compoundTypesCount
-				.Concat(encodedTypes);
+			LEB128.EncodeUnsigned((UnboundedUInt)this.CompoundTypeIndexMap.Count, destination);
+
+			foreach(var t in this.CompoundTypeIndexMap.OrderBy(x => x.Value))
+			{
+				this.EncodeFunc(t.Key, destination);
+			}
 		}
 
 		public static CompoundTypeTable FromTypes(List<CandidCompoundType> types)

@@ -1,5 +1,6 @@
 using EdjCase.ICP.Candid.Models.Types;
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -151,7 +152,7 @@ namespace EdjCase.ICP.Candid.Models.Values
 		}
 
 		/// <inheritdoc />
-		internal override byte[] EncodeValue(CandidType type, Func<CandidId, CandidCompoundType> getReferencedType)
+		internal override void EncodeValue(CandidType type, Func<CandidId, CandidCompoundType> getReferencedType, IBufferWriter<byte> destination)
 		{
 			CandidRecordType t;
 			if (type is CandidReferenceType r)
@@ -163,10 +164,10 @@ namespace EdjCase.ICP.Candid.Models.Values
 				t = (CandidRecordType)type;
 			}
 			// bytes = ordered keys by hash hashes added together
-			return t.Fields
-				.OrderBy(l => l.Key)
-				.SelectMany(v => this.Fields[v.Key].EncodeValue(v.Value, getReferencedType))
-				.ToArray();
+			foreach(var f in t.Fields.OrderBy(l => l.Key))
+			{
+				this.Fields[f.Key].EncodeValue(f.Value, getReferencedType, destination); // Encode value
+			}
 		}
 
 		/// <inheritdoc />

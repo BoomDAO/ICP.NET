@@ -1,5 +1,6 @@
 using EdjCase.ICP.Candid.Encodings;
 using System;
+using System.Buffers;
 
 namespace EdjCase.ICP.Candid.Models.Types
 {
@@ -22,10 +23,10 @@ namespace EdjCase.ICP.Candid.Models.Types
 			this.Id = id;
 		}
 
-		internal override byte[] Encode(CompoundTypeTable compoundTypeTable)
+		internal override void Encode(CompoundTypeTable compoundTypeTable, IBufferWriter<byte> destination)
 		{
 			uint index = compoundTypeTable.GetReferenceById(this.Id).Index;
-			return LEB128.EncodeUnsigned(index);
+			LEB128.EncodeUnsigned(index, destination);
 		}
 
 		/// <inheritdoc />

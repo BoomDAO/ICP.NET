@@ -17,6 +17,8 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using EdjCase.ICP.Agent.Cbor.Converters;
+using EdjCase.ICP.Agent.Agents.Http;
+using System.Net.Http.Headers;
 
 namespace EdjCase.ICP.Agent.Agents
 {
@@ -44,20 +46,25 @@ namespace EdjCase.ICP.Agent.Agents
 		/// </summary>
 		public IIdentity? Identity { get; set; }
 
-		private readonly HttpClient httpClient;
+		private readonly IHttpClient httpClient;
+
+		/// <param name="identity">Optional. Identity to use for each request. If unspecified, will use anonymous identity</param>
+		/// <param name="httpClient">Optional. Sets the http client to use, otherwise will use the default http client</param>
+		public HttpAgent(IHttpClient httpClient, IIdentity? identity = null)
+		{
+			this.Identity = identity;
+			this.httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+		}
 
 		/// <param name="identity">Optional. Identity to use for each request. If unspecified, will use anonymous identity</param>
 		/// <param name="httpBoundryNodeUrl">Url to the boundry node to connect to. Defaults to `https://ic0.app/`</param>
 		public HttpAgent(IIdentity? identity = null, Uri? httpBoundryNodeUrl = null)
 		{
 			this.Identity = identity;
-			this.httpClient = new HttpClient
+			this.httpClient = new DefaultHttpClient(new HttpClient()
 			{
 				BaseAddress = httpBoundryNodeUrl ?? new Uri("https://ic0.app/")
-			};
-			this.httpClient.DefaultRequestHeaders
-				.Accept
-				.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(CBOR_CONTENT_TYPE));
+			});
 		}
 
 
@@ -225,7 +232,7 @@ namespace EdjCase.ICP.Agent.Agents
 			}
 			else
 			{
-				signedContent = await this.Identity.SignContentAsync(content);
+				signedContent = this.Identity.SignContent(content);
 			}
 
 
@@ -264,6 +271,7 @@ namespace EdjCase.ICP.Agent.Agents
 				{
 					Content = content
 				};
+				request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(CBOR_CONTENT_TYPE));
 			}
 			else
 			{
@@ -277,9 +285,10 @@ namespace EdjCase.ICP.Agent.Agents
 				string message = Encoding.UTF8.GetString(bytes);
 				throw new Exception($"Response returned a failed status. HttpStatusCode={response.StatusCode} Reason={response.ReasonPhrase} Message={message}");
 			}
-			return async () => await response.Content.ReadAsStreamAsync();
+			return response.Content.ReadAsStreamAsync;
 		}
 	}
+
 }
 
 

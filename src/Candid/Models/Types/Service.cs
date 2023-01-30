@@ -1,5 +1,7 @@
 using EdjCase.ICP.Candid.Encodings;
+using EdjCase.ICP.Candid.Utilities;
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -27,22 +29,15 @@ namespace EdjCase.ICP.Candid.Models.Types
 			this.Methods = methods;
 		}
 
-		internal override byte[] EncodeInnerTypes(CompoundTypeTable compoundTypeTable)
+		internal override void EncodeInnerTypes(CompoundTypeTable compoundTypeTable, IBufferWriter<byte> destination)
 		{
-			byte[] methodCount = LEB128.EncodeSigned(this.Methods.Count);
-			IEnumerable<byte> methodTypes = this.Methods
-				.OrderBy(m => m.Key) // Ordered by method name
-				.SelectMany(m =>
-				{
-					byte[] encodedName = Encoding.UTF8.GetBytes(m.Key.ToString());
-					byte[] encodedNameLength = LEB128.EncodeSigned(encodedName.Length);
-					return encodedNameLength
-					.Concat(encodedName)
-					.Concat(m.Value.Encode(compoundTypeTable));
-				});
-			return methodCount
-				.Concat(methodTypes)
-				.ToArray();
+			LEB128.EncodeSigned(this.Methods.Count, destination);
+
+			foreach (var method in this.Methods.OrderBy(m => m.Key)) // Ordered by method name)
+			{
+				destination.WriteUtf8LebAndValue(method.Key.Value); // Encode name
+				method.Value.Encode(compoundTypeTable, destination); // Encode value
+			}
 		}
 
 		internal override IEnumerable<CandidType> GetInnerTypes()

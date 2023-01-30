@@ -1,5 +1,6 @@
 using EdjCase.ICP.Candid.Encodings;
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -94,30 +95,31 @@ namespace EdjCase.ICP.Candid.Models.Types
 			this.ReturnTypes = returnTypes;
 		}
 
-		internal override byte[] EncodeInnerTypes(CompoundTypeTable compoundTypeTable)
+		internal override void EncodeInnerTypes(CompoundTypeTable compoundTypeTable, IBufferWriter<byte> destination)
 		{
-			byte[] argsCount = LEB128.EncodeSigned(this.ArgTypes.Count);
+			// Arg types
+			LEB128.EncodeSigned(this.ArgTypes.Count, destination); // Encode arg count
+			
+			foreach(var argType in this.ArgTypes)
+			{
+				argType.Type.Encode(compoundTypeTable, destination); // Encode arg types
+			}
 
-			IEnumerable<byte> argTypes = this.ArgTypes
-				.SelectMany(a => a.Type.Encode(compoundTypeTable));
+			// Return types
+			LEB128.EncodeSigned(this.ReturnTypes.Count, destination); // Encode return type count
 
-			byte[] returnsCount = LEB128.EncodeSigned(this.ReturnTypes.Count);
+			foreach (var returnType in this.ReturnTypes)
+			{
+				returnType.Type.Encode(compoundTypeTable, destination); // Encode return types
+			}
 
-			IEnumerable<byte> returnTypes = this.ReturnTypes
-				.SelectMany(a => a.Type.Encode(compoundTypeTable));
+			// Modes
+			LEB128.EncodeSigned(this.Modes.Count,destination); // Encode mode count
 
-			byte[] modesCount = LEB128.EncodeSigned(this.Modes.Count);
-
-			IEnumerable<byte> modeTypes = this.Modes
-				.SelectMany(m => LEB128.EncodeSigned((UnboundedInt)(long)m));
-
-			return argsCount
-				.Concat(argTypes)
-				.Concat(returnsCount)
-				.Concat(returnTypes)
-				.Concat(modesCount)
-				.Concat(modeTypes)
-				.ToArray();
+			foreach(FuncMode mode in this.Modes)
+			{
+				LEB128.EncodeSigned((UnboundedInt)(long)mode, destination); // Encode modes
+			}
 		}
 
 		internal override IEnumerable<CandidType> GetInnerTypes()

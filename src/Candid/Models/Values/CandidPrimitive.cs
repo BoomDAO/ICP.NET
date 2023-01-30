@@ -2,6 +2,7 @@ using EdjCase.ICP.Candid.Encodings;
 using EdjCase.ICP.Candid.Models.Types;
 using EdjCase.ICP.Candid.Utilities;
 using System;
+using System.Buffers;
 using System.Linq;
 using System.Numerics;
 using System.Text;
@@ -219,30 +220,31 @@ namespace EdjCase.ICP.Candid.Models.Values
 
 
 		/// <inheritdoc />
-		internal override byte[] EncodeValue(CandidType type, Func<CandidId, CandidCompoundType> getReferencedType)
+		internal override void EncodeValue(CandidType type, Func<CandidId, CandidCompoundType> getReferencedType, IBufferWriter<byte> destination)
 		{
-			return this.ValueType switch
+			Action<IBufferWriter<byte>> encode = this.ValueType switch
 			{
-				PrimitiveType.Text => this.EncodeText(),
-				PrimitiveType.Nat => this.EncodeNat(),
-				PrimitiveType.Nat8 => this.EncodeNat8(),
-				PrimitiveType.Nat16 => this.EncodeNat16(),
-				PrimitiveType.Nat32 => this.EncodeNat32(),
-				PrimitiveType.Nat64 => this.EncodeNat64(),
-				PrimitiveType.Int => this.EncodeInt(),
-				PrimitiveType.Int8 => this.EncodeInt8(),
-				PrimitiveType.Int16 => this.EncodeInt16(),
-				PrimitiveType.Int32 => this.EncodeInt32(),
-				PrimitiveType.Int64 => this.EncodeInt64(),
-				PrimitiveType.Float32 => this.EncodeFloat32(),
-				PrimitiveType.Float64 => this.EncodeFloat64(),
-				PrimitiveType.Principal => this.EncodePrincipal(),
-				PrimitiveType.Bool => this.EncodeBool(),
-				PrimitiveType.Null => this.EncodeNull(),
-				PrimitiveType.Reserved => this.EncodeReserved(),
+				PrimitiveType.Text => this.EncodeText,
+				PrimitiveType.Nat => this.EncodeNat,
+				PrimitiveType.Nat8 => this.EncodeNat8,
+				PrimitiveType.Nat16 => this.EncodeNat16,
+				PrimitiveType.Nat32 => this.EncodeNat32,
+				PrimitiveType.Nat64 => this.EncodeNat64,
+				PrimitiveType.Int => this.EncodeInt,
+				PrimitiveType.Int8 => this.EncodeInt8,
+				PrimitiveType.Int16 => this.EncodeInt16,
+				PrimitiveType.Int32 => this.EncodeInt32,
+				PrimitiveType.Int64 => this.EncodeInt64,
+				PrimitiveType.Float32 => this.EncodeFloat32,
+				PrimitiveType.Float64 => this.EncodeFloat64,
+				PrimitiveType.Principal => this.EncodePrincipal,
+				PrimitiveType.Bool => this.EncodeBool,
+				PrimitiveType.Null => this.EncodeNull,
+				PrimitiveType.Reserved => this.EncodeReserved,
 				// exclude empty, will never be encoded
 				_ => throw new NotImplementedException()
 			};
+			encode(destination);
 		}
 
 		/// <inheritdoc />
@@ -272,140 +274,141 @@ namespace EdjCase.ICP.Candid.Models.Values
 			};
 		}
 
-		private byte[] EncodeText()
+		private void EncodeText(IBufferWriter<byte> destination)
 		{
 			string value = this.AsText();
-			byte[] bytes = Encoding.UTF8.GetBytes(value);
 			// bytes = Length (LEB128) + text (UTF8)
-			return LEB128.EncodeSigned(bytes.Length)
-					   .Concat(bytes)
-					   .ToArray();
+			destination.WriteUtf8LebAndValue(value);
 		}
 
-		private byte[] EncodeNat()
+		private void EncodeNat(IBufferWriter<byte> destination)
 		{
 			UnboundedUInt value = this.AsNat();
-			return LEB128.EncodeUnsigned(value);
+			LEB128.EncodeUnsigned(value, destination);
 		}
 
-		private byte[] EncodeNat8()
+		private void EncodeNat8(IBufferWriter<byte> destination)
 		{
 			byte value = this.AsNat8();
-			return new byte[] { value };
+			destination.WriteOne(value);
 		}
 
-		private byte[] EncodeNat16()
+		private void EncodeNat16(IBufferWriter<byte> destination)
 		{
 			ushort value = this.AsNat16();
-
-			byte[] bytes = new BigInteger(value).ToByteArray(isUnsigned: true, isBigEndian: false);
-			return CandidPrimitive.PadBytes(bytes, 2, isPositive: true);
+			this.EncodeBigInteger(value, destination, isUnsigned: true, byteSize: 2, isPositive: true);
 		}
 
-		private byte[] EncodeNat32()
+		private void EncodeNat32(IBufferWriter<byte> destination)
 		{
 			uint value = this.AsNat32();
-			byte[] bytes = new BigInteger(value).ToByteArray(isUnsigned: true, isBigEndian: false);
-			return CandidPrimitive.PadBytes(bytes, 4, isPositive: true);
+			this.EncodeBigInteger(value, destination, isUnsigned: true, byteSize: 4, isPositive: true);
 		}
 
-		private byte[] EncodeNat64()
+		private void EncodeNat64(IBufferWriter<byte> destination)
 		{
 			ulong value = this.AsNat64();
-			byte[] bytes = new BigInteger(value).ToByteArray(isUnsigned: true, isBigEndian: false);
-			return CandidPrimitive.PadBytes(bytes, 8, isPositive: true);
+			this.EncodeBigInteger(value, destination, isUnsigned: true, byteSize: 8, isPositive: true);
 		}
 
-		private byte[] EncodeInt()
+		private void EncodeInt(IBufferWriter<byte> destination)
 		{
 			UnboundedInt value = this.AsInt();
-			return LEB128.EncodeSigned(value);
+			LEB128.EncodeSigned(value, destination);
 		}
 
-		private byte[] EncodeInt8()
+		private void EncodeInt8(IBufferWriter<byte> destination)
 		{
 			sbyte value = this.AsInt8();
-			return new byte[] { (byte)value };
+			destination.WriteOne((byte)value);
 		}
 
-		private byte[] EncodeInt16()
+		private void EncodeInt16(IBufferWriter<byte> destination)
 		{
 			short value = this.AsInt16();
-			byte[] bytes = new BigInteger(value).ToByteArray(isUnsigned: false, isBigEndian: false);
-
-			return CandidPrimitive.PadBytes(bytes, 2, isPositive: value >= 0);
+			this.EncodeBigInteger(value, destination, isUnsigned: false, byteSize: 2, isPositive: value >= 0);
 		}
 
-		private byte[] EncodeInt32()
+		private void EncodeInt32(IBufferWriter<byte> destination)
 		{
 			int value = this.AsInt32();
-			byte[] bytes = new BigInteger(value).ToByteArray(isUnsigned: false, isBigEndian: false);
-			return CandidPrimitive.PadBytes(bytes, 4, isPositive: value >= 0);
+			this.EncodeBigInteger(value, destination, isUnsigned: false, byteSize: 4, isPositive: value >= 0);
 		}
 
-		private byte[] EncodeInt64()
+		private void EncodeInt64(IBufferWriter<byte> destination)
 		{
 			long value = this.AsInt64();
-			byte[] bytes = new BigInteger(value).ToByteArray(isUnsigned: false, isBigEndian: false);
-			return CandidPrimitive.PadBytes(bytes, 8, isPositive: value >= 0);
+			this.EncodeBigInteger(value, destination, isUnsigned: false, byteSize: 8, isPositive: value >= 0);
 		}
 
-		private byte[] EncodeFloat32()
+		private void EncodeFloat32(IBufferWriter<byte> destination)
 		{
 			float value = this.AsFloat32();
-			return BitConverter.GetBytes(value);
+			Span<byte> span = destination.GetSpan(4); // 32 bits
+			BitConverter.TryWriteBytes(span, value); // Encode value
+			destination.Advance(4);
 		}
 
-		private byte[] EncodeFloat64()
+		private void EncodeFloat64(IBufferWriter<byte> destination)
 		{
 			double value = this.AsFloat64();
-			return BitConverter.GetBytes(value);
+			Span<byte> span = destination.GetSpan(8); // 64 bits
+			BitConverter.TryWriteBytes(span, value); // Encode value
+			destination.Advance(8);
 		}
 
-		private byte[] EncodePrincipal()
+		private void EncodePrincipal(IBufferWriter<byte> destination)
 		{
 			// TODO how to do opaque?
 			Principal principalId = this.AsPrincipal();
-			byte[] value = principalId.Raw;
-			byte[] encodedValueLength = LEB128.EncodeSigned(value.Length);
-			return new byte[] { 1 }
-				.Concat(encodedValueLength)
-				.Concat(value)
-				.ToArray();
+
+			destination.WriteOne<byte>(1); // Encode indication that it is not an opaque reference
+			LEB128.EncodeSigned(principalId.Raw.Length, destination); // Encode byte length
+			destination.Write(principalId.Raw); // Encode bytes
 		}
 
-		private byte[] EncodeBool()
+		private void EncodeBool(IBufferWriter<byte> destination)
 		{
 			bool value = this.AsBool();
-			return BitConverter.GetBytes(value);
+			Span<byte> span = destination.GetSpan(1); // 1 byte
+			BitConverter.TryWriteBytes(span, value); // Encode value
+			destination.Advance(1);
 		}
 
-		private byte[] EncodeNull()
+		private void EncodeNull(IBufferWriter<byte> destination)
 		{
-			return new byte[0];
+			// No encoding
 		}
 
-		private byte[] EncodeReserved()
+		private void EncodeReserved(IBufferWriter<byte> destination)
 		{
-			return new byte[0];
+			// No encoding
 		}
 
-		private static byte[] PadBytes(byte[] bytes, int byteSize, bool isPositive)
+		private void EncodeBigInteger(BigInteger value, IBufferWriter<byte> destination, bool isUnsigned, int byteSize, bool isPositive)
 		{
-			if (bytes.Length > byteSize)
+			Span<byte> span = destination.GetSpan(value.GetByteCount(isUnsigned));
+			value.TryWriteBytes(span, out int bytesWritten, isUnsigned, isBigEndian: false); // write big int
+			destination.Advance(bytesWritten);
+			if (bytesWritten > byteSize)
 			{
-				throw new ArgumentException("Bytes is already too large");
+				throw new InvalidOperationException("Bytes is already too large");
 			}
-			if (bytes.Length == byteSize)
+			if (bytesWritten == byteSize)
 			{
-				return bytes;
+				return; // No padding required
 			}
-			int paddingSize = byteSize - bytes.Length;
+			int paddingSize = byteSize - bytesWritten;
 			byte paddingByte = isPositive ? (byte)0 : (byte)0b1111_1111; // Pad with 0s when posiive. 1's when negative
-			return bytes
-				.Concat(Enumerable.Range(0, paddingSize).Select(x => paddingByte))
-				.ToArray();
+
+			Span<byte> paddingBytes = destination.GetSpan(paddingSize);
+			for (int i = 0; i < paddingSize; i++)
+			{
+				paddingBytes[i] = paddingByte; // Pad bytes
+			}
+			destination.Advance(paddingSize);
 		}
+
 
 
 		private void ValidateType(PrimitiveType type)

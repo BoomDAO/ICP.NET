@@ -1,5 +1,7 @@
 using EdjCase.ICP.Candid.Models.Types;
+using EdjCase.ICP.Candid.Utilities;
 using System;
+using System.Buffers;
 using System.Linq;
 using System.Text;
 
@@ -37,11 +39,12 @@ namespace EdjCase.ICP.Candid.Models.Values
 		}
 
 		/// <inheritdoc />
-		internal override byte[] EncodeValue(CandidType type, Func<CandidId, CandidCompoundType> getReferencedType)
+		internal override void EncodeValue(CandidType type, Func<CandidId, CandidCompoundType> getReferencedType, IBufferWriter<byte> destination)
 		{
 			if (this.IsOpaqueReference)
 			{
-				return new byte[] { 0 };
+				destination.WriteOne<byte>(0);
+				return;
 			}
 			CandidFuncType t;
 			if (type is CandidReferenceType r)
@@ -53,10 +56,9 @@ namespace EdjCase.ICP.Candid.Models.Values
 				t = (CandidFuncType)type;
 			}
 			(CandidService service, string method) = this.serviceInfo!.Value;
-			return new byte[] { 1 }
-				.Concat(service.EncodeValue(t, getReferencedType))
-				.Concat(Encoding.UTF8.GetBytes(method))
-				.ToArray();
+			destination.WriteOne<byte>(1); // Encode bit to indicate it is not opaque
+			service.EncodeValue(t, getReferencedType, destination); // Encode value
+			destination.WriteUtf8LebAndValue(method); // Encode method name
 		}
 
 		/// <inheritdoc />

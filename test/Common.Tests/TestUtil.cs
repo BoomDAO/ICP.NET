@@ -11,9 +11,10 @@ namespace EdjCase.ICP.Candid.Tests
 		public static void AssertEncodedCandid(string expectedHex, string expectedPrefix, CandidValue value, CandidType typeDef)
 		{
 			// Encode test
-			var builder = new CandidArgBuilder();
-			builder.Add(CandidTypedValue.FromValueAndType(value, typeDef));
-			byte[] actualBytes = builder.Encode();
+			CandidArg arg = CandidArg.FromCandid(
+				CandidTypedValue.FromValueAndType(value, typeDef)
+			);
+			byte[] actualBytes = arg.Encode();
 			string actualHex = Convert.ToHexString(actualBytes);
 			const string didlPrefix = "4449444C";
 			Assert.StartsWith(didlPrefix, actualHex);

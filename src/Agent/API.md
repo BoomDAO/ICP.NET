@@ -29,6 +29,9 @@
   - [SubnetId](#P-EdjCase-ICP-Agent-Models-CertificateDelegation-SubnetId 'EdjCase.ICP.Agent.Models.CertificateDelegation.SubnetId')
   - [GetPublicKey()](#M-EdjCase-ICP-Agent-Models-CertificateDelegation-GetPublicKey 'EdjCase.ICP.Agent.Models.CertificateDelegation.GetPublicKey')
   - [IsValid(publicKey)](#M-EdjCase-ICP-Agent-Models-CertificateDelegation-IsValid-System-Byte[]@- 'EdjCase.ICP.Agent.Models.CertificateDelegation.IsValid(System.Byte[]@)')
+- [DefaultHttpClient](#T-EdjCase-ICP-Agent-Agents-Http-DefaultHttpClient 'EdjCase.ICP.Agent.Agents.Http.DefaultHttpClient')
+  - [#ctor(client)](#M-EdjCase-ICP-Agent-Agents-Http-DefaultHttpClient-#ctor-System-Net-Http-HttpClient- 'EdjCase.ICP.Agent.Agents.Http.DefaultHttpClient.#ctor(System.Net.Http.HttpClient)')
+  - [SendAsync()](#M-EdjCase-ICP-Agent-Agents-Http-DefaultHttpClient-SendAsync-System-Net-Http-HttpRequestMessage- 'EdjCase.ICP.Agent.Agents.Http.DefaultHttpClient.SendAsync(System.Net.Http.HttpRequestMessage)')
 - [Delegation](#T-EdjCase-ICP-Agent-Models-Delegation 'EdjCase.ICP.Agent.Models.Delegation')
   - [#ctor(publicKey,expiration,targets,senders)](#M-EdjCase-ICP-Agent-Models-Delegation-#ctor-System-Byte[],EdjCase-ICP-Candid-Models-ICTimestamp,System-Collections-Generic-List{EdjCase-ICP-Candid-Models-Principal},System-Collections-Generic-List{EdjCase-ICP-Candid-Models-Principal}- 'EdjCase.ICP.Agent.Models.Delegation.#ctor(System.Byte[],EdjCase.ICP.Candid.Models.ICTimestamp,System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal},System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal})')
   - [Expiration](#P-EdjCase-ICP-Agent-Models-Delegation-Expiration 'EdjCase.ICP.Agent.Models.Delegation.Expiration')
@@ -49,7 +52,7 @@
   - [Identity](#P-EdjCase-ICP-Agent-Identities-DelegationIdentity-Identity 'EdjCase.ICP.Agent.Identities.DelegationIdentity.Identity')
   - [GetPublicKey()](#M-EdjCase-ICP-Agent-Identities-DelegationIdentity-GetPublicKey 'EdjCase.ICP.Agent.Identities.DelegationIdentity.GetPublicKey')
   - [GetSenderDelegations()](#M-EdjCase-ICP-Agent-Identities-DelegationIdentity-GetSenderDelegations 'EdjCase.ICP.Agent.Identities.DelegationIdentity.GetSenderDelegations')
-  - [SignAsync()](#M-EdjCase-ICP-Agent-Identities-DelegationIdentity-SignAsync-System-Byte[]- 'EdjCase.ICP.Agent.Identities.DelegationIdentity.SignAsync(System.Byte[])')
+  - [Sign()](#M-EdjCase-ICP-Agent-Identities-DelegationIdentity-Sign-System-Byte[]- 'EdjCase.ICP.Agent.Identities.DelegationIdentity.Sign(System.Byte[])')
 - [DerEncodedPublicKey](#T-EdjCase-ICP-Agent-DerEncodedPublicKey 'EdjCase.ICP.Agent.DerEncodedPublicKey')
   - [#ctor(derEncodedBytes)](#M-EdjCase-ICP-Agent-DerEncodedPublicKey-#ctor-System-Byte[]- 'EdjCase.ICP.Agent.DerEncodedPublicKey.#ctor(System.Byte[])')
   - [Value](#P-EdjCase-ICP-Agent-DerEncodedPublicKey-Value 'EdjCase.ICP.Agent.DerEncodedPublicKey.Value')
@@ -69,11 +72,12 @@
   - [#ctor(publicKey,privateKey)](#M-EdjCase-ICP-Agent-Identities-Ed25519Identity-#ctor-EdjCase-ICP-Agent-DerEncodedPublicKey,System-Byte[]- 'EdjCase.ICP.Agent.Identities.Ed25519Identity.#ctor(EdjCase.ICP.Agent.DerEncodedPublicKey,System.Byte[])')
   - [PrivateKey](#P-EdjCase-ICP-Agent-Identities-Ed25519Identity-PrivateKey 'EdjCase.ICP.Agent.Identities.Ed25519Identity.PrivateKey')
   - [PublicKey](#P-EdjCase-ICP-Agent-Identities-Ed25519Identity-PublicKey 'EdjCase.ICP.Agent.Identities.Ed25519Identity.PublicKey')
-  - [Generate()](#M-EdjCase-ICP-Agent-Identities-Ed25519Identity-Generate 'EdjCase.ICP.Agent.Identities.Ed25519Identity.Generate')
+  - [Create()](#M-EdjCase-ICP-Agent-Identities-Ed25519Identity-Create 'EdjCase.ICP.Agent.Identities.Ed25519Identity.Create')
   - [GetPublicKey()](#M-EdjCase-ICP-Agent-Identities-Ed25519Identity-GetPublicKey 'EdjCase.ICP.Agent.Identities.Ed25519Identity.GetPublicKey')
   - [GetSenderDelegations()](#M-EdjCase-ICP-Agent-Identities-Ed25519Identity-GetSenderDelegations 'EdjCase.ICP.Agent.Identities.Ed25519Identity.GetSenderDelegations')
-  - [SignAsync()](#M-EdjCase-ICP-Agent-Identities-Ed25519Identity-SignAsync-System-Byte[]- 'EdjCase.ICP.Agent.Identities.Ed25519Identity.SignAsync(System.Byte[])')
+  - [Sign()](#M-EdjCase-ICP-Agent-Identities-Ed25519Identity-Sign-System-Byte[]- 'EdjCase.ICP.Agent.Identities.Ed25519Identity.Sign(System.Byte[])')
 - [HttpAgent](#T-EdjCase-ICP-Agent-Agents-HttpAgent 'EdjCase.ICP.Agent.Agents.HttpAgent')
+  - [#ctor(identity,httpClient)](#M-EdjCase-ICP-Agent-Agents-HttpAgent-#ctor-EdjCase-ICP-Agent-Agents-Http-IHttpClient,EdjCase-ICP-Agent-Identities-IIdentity- 'EdjCase.ICP.Agent.Agents.HttpAgent.#ctor(EdjCase.ICP.Agent.Agents.Http.IHttpClient,EdjCase.ICP.Agent.Identities.IIdentity)')
   - [#ctor(identity,httpBoundryNodeUrl)](#M-EdjCase-ICP-Agent-Agents-HttpAgent-#ctor-EdjCase-ICP-Agent-Identities-IIdentity,System-Uri- 'EdjCase.ICP.Agent.Agents.HttpAgent.#ctor(EdjCase.ICP.Agent.Identities.IIdentity,System.Uri)')
   - [Identity](#P-EdjCase-ICP-Agent-Agents-HttpAgent-Identity 'EdjCase.ICP.Agent.Agents.HttpAgent.Identity')
   - [CallAsync()](#M-EdjCase-ICP-Agent-Agents-HttpAgent-CallAsync-EdjCase-ICP-Candid-Models-Principal,System-String,EdjCase-ICP-Candid-Models-CandidArg,EdjCase-ICP-Candid-Models-Principal- 'EdjCase.ICP.Agent.Agents.HttpAgent.CallAsync(EdjCase.ICP.Candid.Models.Principal,System.String,EdjCase.ICP.Candid.Models.CandidArg,EdjCase.ICP.Candid.Models.Principal)')
@@ -92,12 +96,14 @@
   - [ReadStateAsync(canisterId,paths)](#M-EdjCase-ICP-Agent-Agents-IAgent-ReadStateAsync-EdjCase-ICP-Candid-Models-Principal,System-Collections-Generic-List{EdjCase-ICP-Candid-Models-StatePath}- 'EdjCase.ICP.Agent.Agents.IAgent.ReadStateAsync(EdjCase.ICP.Candid.Models.Principal,System.Collections.Generic.List{EdjCase.ICP.Candid.Models.StatePath})')
 - [IAgentExtensions](#T-EdjCase-ICP-Agent-Agents-IAgentExtensions 'EdjCase.ICP.Agent.Agents.IAgentExtensions')
   - [CallAndWaitAsync(agent,canisterId,method,arg,effectiveCanisterId,cancellationToken)](#M-EdjCase-ICP-Agent-Agents-IAgentExtensions-CallAndWaitAsync-EdjCase-ICP-Agent-Agents-IAgent,EdjCase-ICP-Candid-Models-Principal,System-String,EdjCase-ICP-Candid-Models-CandidArg,EdjCase-ICP-Candid-Models-Principal,System-Nullable{System-Threading-CancellationToken}- 'EdjCase.ICP.Agent.Agents.IAgentExtensions.CallAndWaitAsync(EdjCase.ICP.Agent.Agents.IAgent,EdjCase.ICP.Candid.Models.Principal,System.String,EdjCase.ICP.Candid.Models.CandidArg,EdjCase.ICP.Candid.Models.Principal,System.Nullable{System.Threading.CancellationToken})')
+- [IHttpClient](#T-EdjCase-ICP-Agent-Agents-Http-IHttpClient 'EdjCase.ICP.Agent.Agents.Http.IHttpClient')
+  - [SendAsync(message)](#M-EdjCase-ICP-Agent-Agents-Http-IHttpClient-SendAsync-System-Net-Http-HttpRequestMessage- 'EdjCase.ICP.Agent.Agents.Http.IHttpClient.SendAsync(System.Net.Http.HttpRequestMessage)')
 - [IIdentity](#T-EdjCase-ICP-Agent-Identities-IIdentity 'EdjCase.ICP.Agent.Identities.IIdentity')
   - [GetPublicKey()](#M-EdjCase-ICP-Agent-Identities-IIdentity-GetPublicKey 'EdjCase.ICP.Agent.Identities.IIdentity.GetPublicKey')
   - [GetSenderDelegations()](#M-EdjCase-ICP-Agent-Identities-IIdentity-GetSenderDelegations 'EdjCase.ICP.Agent.Identities.IIdentity.GetSenderDelegations')
-  - [SignAsync(data)](#M-EdjCase-ICP-Agent-Identities-IIdentity-SignAsync-System-Byte[]- 'EdjCase.ICP.Agent.Identities.IIdentity.SignAsync(System.Byte[])')
+  - [Sign(data)](#M-EdjCase-ICP-Agent-Identities-IIdentity-Sign-System-Byte[]- 'EdjCase.ICP.Agent.Identities.IIdentity.Sign(System.Byte[])')
 - [IIdentityExtensions](#T-EdjCase-ICP-Agent-Identities-IIdentityExtensions 'EdjCase.ICP.Agent.Identities.IIdentityExtensions')
-  - [SignContentAsync(identity,content)](#M-EdjCase-ICP-Agent-Identities-IIdentityExtensions-SignContentAsync-EdjCase-ICP-Agent-Identities-IIdentity,System-Collections-Generic-Dictionary{System-String,EdjCase-ICP-Candid-Models-IHashable}- 'EdjCase.ICP.Agent.Identities.IIdentityExtensions.SignContentAsync(EdjCase.ICP.Agent.Identities.IIdentity,System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.Candid.Models.IHashable})')
+  - [SignContent(identity,content)](#M-EdjCase-ICP-Agent-Identities-IIdentityExtensions-SignContent-EdjCase-ICP-Agent-Identities-IIdentity,System-Collections-Generic-Dictionary{System-String,EdjCase-ICP-Candid-Models-IHashable}- 'EdjCase.ICP.Agent.Identities.IIdentityExtensions.SignContent(EdjCase.ICP.Agent.Identities.IIdentity,System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.Candid.Models.IHashable})')
 - [InvalidCertificateException](#T-EdjCase-ICP-Agent-InvalidCertificateException 'EdjCase.ICP.Agent.InvalidCertificateException')
   - [#ctor(message)](#M-EdjCase-ICP-Agent-InvalidCertificateException-#ctor-System-String- 'EdjCase.ICP.Agent.InvalidCertificateException.#ctor(System.String)')
 - [InvalidPublicKey](#T-EdjCase-ICP-Agent-InvalidPublicKey 'EdjCase.ICP.Agent.InvalidPublicKey')
@@ -162,7 +168,7 @@
   - [Signature](#P-EdjCase-ICP-Agent-Models-SignedDelegation-Signature 'EdjCase.ICP.Agent.Models.SignedDelegation.Signature')
   - [ComputeHash()](#M-EdjCase-ICP-Agent-Models-SignedDelegation-ComputeHash-EdjCase-ICP-Candid-Crypto-IHashFunction- 'EdjCase.ICP.Agent.Models.SignedDelegation.ComputeHash(EdjCase.ICP.Candid.Crypto.IHashFunction)')
   - [CreateAsync(keyToDelegateTo,delegatingIdentity,expiration,targets,senders)](#M-EdjCase-ICP-Agent-Models-SignedDelegation-CreateAsync-EdjCase-ICP-Agent-DerEncodedPublicKey,EdjCase-ICP-Agent-Identities-IIdentity,EdjCase-ICP-Candid-Models-ICTimestamp,System-Collections-Generic-List{EdjCase-ICP-Candid-Models-Principal},System-Collections-Generic-List{EdjCase-ICP-Candid-Models-Principal}- 'EdjCase.ICP.Agent.Models.SignedDelegation.CreateAsync(EdjCase.ICP.Agent.DerEncodedPublicKey,EdjCase.ICP.Agent.Identities.IIdentity,EdjCase.ICP.Candid.Models.ICTimestamp,System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal},System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal})')
-  - [CreateAsync(keyToDelegateTo,signingFunc,expiration,targets,senders)](#M-EdjCase-ICP-Agent-Models-SignedDelegation-CreateAsync-EdjCase-ICP-Agent-DerEncodedPublicKey,System-Func{System-Byte[],System-Threading-Tasks-Task{System-Byte[]}},EdjCase-ICP-Candid-Models-ICTimestamp,System-Collections-Generic-List{EdjCase-ICP-Candid-Models-Principal},System-Collections-Generic-List{EdjCase-ICP-Candid-Models-Principal}- 'EdjCase.ICP.Agent.Models.SignedDelegation.CreateAsync(EdjCase.ICP.Agent.DerEncodedPublicKey,System.Func{System.Byte[],System.Threading.Tasks.Task{System.Byte[]}},EdjCase.ICP.Candid.Models.ICTimestamp,System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal},System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal})')
+  - [CreateAsync(keyToDelegateTo,signingFunc,expiration,targets,senders)](#M-EdjCase-ICP-Agent-Models-SignedDelegation-CreateAsync-EdjCase-ICP-Agent-DerEncodedPublicKey,System-Func{System-Byte[],System-Byte[]},EdjCase-ICP-Candid-Models-ICTimestamp,System-Collections-Generic-List{EdjCase-ICP-Candid-Models-Principal},System-Collections-Generic-List{EdjCase-ICP-Candid-Models-Principal}- 'EdjCase.ICP.Agent.Models.SignedDelegation.CreateAsync(EdjCase.ICP.Agent.DerEncodedPublicKey,System.Func{System.Byte[],System.Byte[]},EdjCase.ICP.Candid.Models.ICTimestamp,System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal},System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal})')
 - [StatusResponse](#T-EdjCase-ICP-Agent-Responses-StatusResponse 'EdjCase.ICP.Agent.Responses.StatusResponse')
   - [#ctor(icApiVersion,implementationSource,implementationVersion,implementationRevision,developmentRootKey)](#M-EdjCase-ICP-Agent-Responses-StatusResponse-#ctor-System-String,System-String,System-String,System-String,System-Byte[]- 'EdjCase.ICP.Agent.Responses.StatusResponse.#ctor(System.String,System.String,System.String,System.String,System.Byte[])')
   - [DevelopmentRootKey](#P-EdjCase-ICP-Agent-Responses-StatusResponse-DevelopmentRootKey 'EdjCase.ICP.Agent.Responses.StatusResponse.DevelopmentRootKey')
@@ -446,6 +452,41 @@ True if the certificate signature is valid, otherwise false
 | ---- | ---- | ----------- |
 | publicKey | [System.Byte[]@](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Byte[]@ 'System.Byte[]@') | The public key of the delegation |
 
+<a name='T-EdjCase-ICP-Agent-Agents-Http-DefaultHttpClient'></a>
+## DefaultHttpClient `type`
+
+##### Namespace
+
+EdjCase.ICP.Agent.Agents.Http
+
+##### Summary
+
+The default http client to use with the built in \`HttpClient\`
+
+<a name='M-EdjCase-ICP-Agent-Agents-Http-DefaultHttpClient-#ctor-System-Net-Http-HttpClient-'></a>
+### #ctor(client) `constructor`
+
+##### Summary
+
+Default constructor
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| client | [System.Net.Http.HttpClient](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Net.Http.HttpClient 'System.Net.Http.HttpClient') | HTTP client to use |
+
+<a name='M-EdjCase-ICP-Agent-Agents-Http-DefaultHttpClient-SendAsync-System-Net-Http-HttpRequestMessage-'></a>
+### SendAsync() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
 <a name='T-EdjCase-ICP-Agent-Models-Delegation'></a>
 ## Delegation `type`
 
@@ -662,8 +703,8 @@ This method has no parameters.
 
 This method has no parameters.
 
-<a name='M-EdjCase-ICP-Agent-Identities-DelegationIdentity-SignAsync-System-Byte[]-'></a>
-### SignAsync() `method`
+<a name='M-EdjCase-ICP-Agent-Identities-DelegationIdentity-Sign-System-Byte[]-'></a>
+### Sign() `method`
 
 ##### Summary
 
@@ -964,8 +1005,8 @@ The private key of the identity
 
 The public key of the identity
 
-<a name='M-EdjCase-ICP-Agent-Identities-Ed25519Identity-Generate'></a>
-### Generate() `method`
+<a name='M-EdjCase-ICP-Agent-Identities-Ed25519Identity-Create'></a>
+### Create() `method`
 
 ##### Summary
 
@@ -1001,8 +1042,8 @@ This method has no parameters.
 
 This method has no parameters.
 
-<a name='M-EdjCase-ICP-Agent-Identities-Ed25519Identity-SignAsync-System-Byte[]-'></a>
-### SignAsync() `method`
+<a name='M-EdjCase-ICP-Agent-Identities-Ed25519Identity-Sign-System-Byte[]-'></a>
+### Sign() `method`
 
 ##### Summary
 
@@ -1022,6 +1063,16 @@ EdjCase.ICP.Agent.Agents
 ##### Summary
 
 An \`IAgent\` implementation using HTTP to make requests to the IC
+
+<a name='M-EdjCase-ICP-Agent-Agents-HttpAgent-#ctor-EdjCase-ICP-Agent-Agents-Http-IHttpClient,EdjCase-ICP-Agent-Identities-IIdentity-'></a>
+### #ctor(identity,httpClient) `constructor`
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| identity | [EdjCase.ICP.Agent.Agents.Http.IHttpClient](#T-EdjCase-ICP-Agent-Agents-Http-IHttpClient 'EdjCase.ICP.Agent.Agents.Http.IHttpClient') | Optional. Identity to use for each request. If unspecified, will use anonymous identity |
+| httpClient | [EdjCase.ICP.Agent.Identities.IIdentity](#T-EdjCase-ICP-Agent-Identities-IIdentity 'EdjCase.ICP.Agent.Identities.IIdentity') | Optional. Sets the http client to use, otherwise will use the default http client |
 
 <a name='M-EdjCase-ICP-Agent-Agents-HttpAgent-#ctor-EdjCase-ICP-Agent-Identities-IIdentity,System-Uri-'></a>
 ### #ctor(identity,httpBoundryNodeUrl) `constructor`
@@ -1270,6 +1321,34 @@ The id of the request that can be used to look up its status with \`GetRequestSt
 | effectiveCanisterId | [EdjCase.ICP.Candid.Models.Principal](#T-EdjCase-ICP-Candid-Models-Principal 'EdjCase.ICP.Candid.Models.Principal') | Optional. Specifies the relevant canister id if calling the root canister |
 | cancellationToken | [System.Nullable{System.Threading.CancellationToken}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Nullable 'System.Nullable{System.Threading.CancellationToken}') | Optional. If specified, will be used to prematurely end the waiting |
 
+<a name='T-EdjCase-ICP-Agent-Agents-Http-IHttpClient'></a>
+## IHttpClient `type`
+
+##### Namespace
+
+EdjCase.ICP.Agent.Agents.Http
+
+##### Summary
+
+A simple http request interface for sending messages
+
+<a name='M-EdjCase-ICP-Agent-Agents-Http-IHttpClient-SendAsync-System-Net-Http-HttpRequestMessage-'></a>
+### SendAsync(message) `method`
+
+##### Summary
+
+Sends an http request and awaits a response
+
+##### Returns
+
+Response from the request
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| message | [System.Net.Http.HttpRequestMessage](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Net.Http.HttpRequestMessage 'System.Net.Http.HttpRequestMessage') | Http request to send |
+
 <a name='T-EdjCase-ICP-Agent-Identities-IIdentity'></a>
 ## IIdentity `type`
 
@@ -1313,8 +1392,8 @@ The signed delegations, otherwise an empty list
 
 This method has no parameters.
 
-<a name='M-EdjCase-ICP-Agent-Identities-IIdentity-SignAsync-System-Byte[]-'></a>
-### SignAsync(data) `method`
+<a name='M-EdjCase-ICP-Agent-Identities-IIdentity-Sign-System-Byte[]-'></a>
+### Sign(data) `method`
 
 ##### Summary
 
@@ -1341,8 +1420,8 @@ EdjCase.ICP.Agent.Identities
 
 Extension methods for the IIdentity interface
 
-<a name='M-EdjCase-ICP-Agent-Identities-IIdentityExtensions-SignContentAsync-EdjCase-ICP-Agent-Identities-IIdentity,System-Collections-Generic-Dictionary{System-String,EdjCase-ICP-Candid-Models-IHashable}-'></a>
-### SignContentAsync(identity,content) `method`
+<a name='M-EdjCase-ICP-Agent-Identities-IIdentityExtensions-SignContent-EdjCase-ICP-Agent-Identities-IIdentity,System-Collections-Generic-Dictionary{System-String,EdjCase-ICP-Candid-Models-IHashable}-'></a>
+### SignContent(identity,content) `method`
 
 ##### Summary
 
@@ -1998,7 +2077,7 @@ A delegation signed by the delegating identity
 | targets | [System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.List 'System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal}') | Optional. List of canister ids to limit delegation to |
 | senders | [System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.List 'System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal}') | Optional. List of pricipals where requests can originate from |
 
-<a name='M-EdjCase-ICP-Agent-Models-SignedDelegation-CreateAsync-EdjCase-ICP-Agent-DerEncodedPublicKey,System-Func{System-Byte[],System-Threading-Tasks-Task{System-Byte[]}},EdjCase-ICP-Candid-Models-ICTimestamp,System-Collections-Generic-List{EdjCase-ICP-Candid-Models-Principal},System-Collections-Generic-List{EdjCase-ICP-Candid-Models-Principal}-'></a>
+<a name='M-EdjCase-ICP-Agent-Models-SignedDelegation-CreateAsync-EdjCase-ICP-Agent-DerEncodedPublicKey,System-Func{System-Byte[],System-Byte[]},EdjCase-ICP-Candid-Models-ICTimestamp,System-Collections-Generic-List{EdjCase-ICP-Candid-Models-Principal},System-Collections-Generic-List{EdjCase-ICP-Candid-Models-Principal}-'></a>
 ### CreateAsync(keyToDelegateTo,signingFunc,expiration,targets,senders) `method`
 
 ##### Summary
@@ -2014,7 +2093,7 @@ A delegation signed by the delegating identity
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | keyToDelegateTo | [EdjCase.ICP.Agent.DerEncodedPublicKey](#T-EdjCase-ICP-Agent-DerEncodedPublicKey 'EdjCase.ICP.Agent.DerEncodedPublicKey') | The key to delegate authority to |
-| signingFunc | [System.Func{System.Byte[],System.Threading.Tasks.Task{System.Byte[]}}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Func 'System.Func{System.Byte[],System.Threading.Tasks.Task{System.Byte[]}}') | Function to sign the delegation bytes |
+| signingFunc | [System.Func{System.Byte[],System.Byte[]}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Func 'System.Func{System.Byte[],System.Byte[]}') | Function to sign the delegation bytes |
 | expiration | [EdjCase.ICP.Candid.Models.ICTimestamp](#T-EdjCase-ICP-Candid-Models-ICTimestamp 'EdjCase.ICP.Candid.Models.ICTimestamp') | How long to delegate for |
 | targets | [System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.List 'System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal}') | Optional. List of canister ids to limit delegation to |
 | senders | [System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.List 'System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal}') | Optional. List of pricipals where requests can originate from |

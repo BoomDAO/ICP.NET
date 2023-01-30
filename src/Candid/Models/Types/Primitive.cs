@@ -1,6 +1,7 @@
 using EdjCase.ICP.Candid.Encodings;
 using EdjCase.ICP.Candid.Models.Values;
 using System;
+using System.Buffers;
 
 namespace EdjCase.ICP.Candid.Models.Types
 {
@@ -36,9 +37,9 @@ namespace EdjCase.ICP.Candid.Models.Types
 			};
 		}
 
-		internal override byte[] Encode(CompoundTypeTable compoundTypeTable)
+		internal override void Encode(CompoundTypeTable compoundTypeTable, IBufferWriter<byte> destination)
 		{
-			return LEB128.EncodeSigned((long)this.Type);
+			LEB128.EncodeSigned((long)this.Type, destination);
 		}
 
 		/// <inheritdoc />

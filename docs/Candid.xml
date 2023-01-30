@@ -4,26 +4,6 @@
         <name>EdjCase.ICP.Candid</name>
     </assembly>
     <members>
-        <member name="M:EdjCase.ICP.Candid.BinarySequence.#ctor(System.ReadOnlySpan{System.Boolean})">
-            <param name="bits">Least signifcant to most ordered bits</param>
-        </member>
-        <member name="F:EdjCase.ICP.Candid.CandidArgBuilder.compoundTypeTable">
-            <summary>
-            Helper to capture compound types
-            </summary>
-        </member>
-        <member name="F:EdjCase.ICP.Candid.CandidArgBuilder.EncodedTypes">
-            <summary>
-            Ordered list of encoded types (encoded with SLEB128).
-            If SLEB value is positive, it is an index for `EncodedCompoundTypes` for a compound type
-            If SLEB value is negative, it is type code for a primitive value
-            </summary>
-        </member>
-        <member name="F:EdjCase.ICP.Candid.CandidArgBuilder.EncodedValues">
-            <summary>
-            Ordered list of encoded values
-            </summary>
-        </member>
         <member name="T:EdjCase.ICP.Candid.CandidConverter">
             <summary>
             A class that converts to and from C# and Candid types
@@ -303,11 +283,27 @@
             <param name="value">Value to convert to LEB128 bytes</param>
             <returns>LEB128 bytes of value</returns>
         </member>
+        <member name="M:EdjCase.ICP.Candid.Encodings.LEB128.EncodeUnsigned(EdjCase.ICP.Candid.Models.UnboundedInt,System.Buffers.IBufferWriter{System.Byte})">
+            <summary>
+            Takes an `UnboundedUInt` and converts it into an encoded unsigned LEB128 byte array
+            </summary>
+            <param name="value">Value to convert to LEB128 bytes</param>
+            <param name="destination">Buffer writer to write bytes to</param>
+            <returns>LEB128 bytes of value</returns>
+        </member>
         <member name="M:EdjCase.ICP.Candid.Encodings.LEB128.EncodeSigned(EdjCase.ICP.Candid.Models.UnboundedInt)">
             <summary>
             Takes an `UnboundedInt` and converts it into an encoded signed LEB128 byte array
             </summary>
             <param name="value">Value to convert to LEB128 bytes</param>
+            <returns>LEB128 bytes of value</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Encodings.LEB128.EncodeSigned(EdjCase.ICP.Candid.Models.UnboundedInt,System.Buffers.IBufferWriter{System.Byte})">
+            <summary>
+            Takes an `UnboundedInt` and converts it into an encoded signed LEB128 byte array
+            </summary>
+            <param name="value">Value to convert to LEB128 bytes</param>
+            <param name="destination">Buffer writer to write bytes to</param>
             <returns>LEB128 bytes of value</returns>
         </member>
         <member name="T:EdjCase.ICP.Candid.Exceptions.CandidDecodingException">
@@ -476,6 +472,13 @@
             <inheritdoc />
         </member>
         <member name="M:EdjCase.ICP.Candid.Models.CandidArg.Encode">
+            <summary>
+            Encodes the candid arg into a byte array which can be used in sending requests to
+            a canister
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidArg.Encode(System.Buffers.IBufferWriter{System.Byte})">
             <summary>
             Encodes the candid arg into a byte array which can be used in sending requests to
             a canister
@@ -1541,15 +1544,6 @@
             The base candid type model that all candid types inherit
             </summary>
         </member>
-        <member name="M:EdjCase.ICP.Candid.Models.Types.CandidType.Encode(EdjCase.ICP.Candid.Models.CompoundTypeTable)">
-            <summary>
-            Encodes this type into a byte array. If its a primitive type the value will
-            be an encoded negative number, if its a compound type it will be added to the 
-            type table and be a positive number of the table index where its info is stored
-            </summary>
-            <param name="compoundTypeTable">The collection of compound types for a candid arg</param>
-            <returns>Byte array of the type number</returns>
-        </member>
         <member name="M:EdjCase.ICP.Candid.Models.Types.CandidType.Equals(System.Object)">
             <inheritdoc />
         </member>
@@ -1701,13 +1695,6 @@
         <member name="M:EdjCase.ICP.Candid.Models.Types.CandidCompoundType.#ctor(EdjCase.ICP.Candid.Models.CandidId)">
             <param name="recursiveId">Optional. Used if this type can be referenced by an inner type recursively.
             The inner type will use `CandidReferenceType` with this id</param>
-        </member>
-        <member name="M:EdjCase.ICP.Candid.Models.Types.CandidCompoundType.EncodeInnerTypes(EdjCase.ICP.Candid.Models.CompoundTypeTable)">
-            <summary>
-            Adds all inner types to the compound table if applicable and returns its encoded type value
-            </summary>
-            <param name="compoundTypeTable">The collection of compound types for a candid arg</param>
-            <returns>Byte array of encoded type</returns>
         </member>
         <member name="T:EdjCase.ICP.Candid.Models.Types.CandidRecordOrVariantType">
             <summary>
@@ -2362,7 +2349,7 @@
             <param name="service">The candid service definition the function lives in</param>
             <param name="name">The name of the function</param>
         </member>
-        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidFunc.EncodeValue(EdjCase.ICP.Candid.Models.Types.CandidType,System.Func{EdjCase.ICP.Candid.Models.CandidId,EdjCase.ICP.Candid.Models.Types.CandidCompoundType})">
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidFunc.EncodeValue(EdjCase.ICP.Candid.Models.Types.CandidType,System.Func{EdjCase.ICP.Candid.Models.CandidId,EdjCase.ICP.Candid.Models.Types.CandidCompoundType},System.Buffers.IBufferWriter{System.Byte})">
             <inheritdoc />
         </member>
         <member name="M:EdjCase.ICP.Candid.Models.Values.CandidFunc.GetHashCode">
@@ -2397,7 +2384,7 @@
         <member name="M:EdjCase.ICP.Candid.Models.Values.CandidOptional.#ctor(EdjCase.ICP.Candid.Models.Values.CandidValue)">
             <param name="value">The inner value of an opt. If not set, will be a candid null value</param>
         </member>
-        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidOptional.EncodeValue(EdjCase.ICP.Candid.Models.Types.CandidType,System.Func{EdjCase.ICP.Candid.Models.CandidId,EdjCase.ICP.Candid.Models.Types.CandidCompoundType})">
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidOptional.EncodeValue(EdjCase.ICP.Candid.Models.Types.CandidType,System.Func{EdjCase.ICP.Candid.Models.CandidId,EdjCase.ICP.Candid.Models.Types.CandidCompoundType},System.Buffers.IBufferWriter{System.Byte})">
             <inheritdoc />
         </member>
         <member name="M:EdjCase.ICP.Candid.Models.Values.CandidOptional.GetHashCode">
@@ -2563,7 +2550,7 @@
         <member name="M:EdjCase.ICP.Candid.Models.Values.CandidPrimitive.AsPrincipal">
             <inheritdoc />
         </member>
-        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidPrimitive.EncodeValue(EdjCase.ICP.Candid.Models.Types.CandidType,System.Func{EdjCase.ICP.Candid.Models.CandidId,EdjCase.ICP.Candid.Models.Types.CandidCompoundType})">
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidPrimitive.EncodeValue(EdjCase.ICP.Candid.Models.Types.CandidType,System.Func{EdjCase.ICP.Candid.Models.CandidId,EdjCase.ICP.Candid.Models.Types.CandidCompoundType},System.Buffers.IBufferWriter{System.Byte})">
             <inheritdoc />
         </member>
         <member name="M:EdjCase.ICP.Candid.Models.Values.CandidPrimitive.ToString">
@@ -2663,7 +2650,7 @@
             <param name="fields">Dictionary of tags to values for the record</param>
             <returns>A candid record from the fields specified</returns>
         </member>
-        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidRecord.EncodeValue(EdjCase.ICP.Candid.Models.Types.CandidType,System.Func{EdjCase.ICP.Candid.Models.CandidId,EdjCase.ICP.Candid.Models.Types.CandidCompoundType})">
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidRecord.EncodeValue(EdjCase.ICP.Candid.Models.Types.CandidType,System.Func{EdjCase.ICP.Candid.Models.CandidId,EdjCase.ICP.Candid.Models.Types.CandidCompoundType},System.Buffers.IBufferWriter{System.Byte})">
             <inheritdoc />
         </member>
         <member name="M:EdjCase.ICP.Candid.Models.Values.CandidRecord.GetHashCode">
@@ -2700,7 +2687,7 @@
             <returns>Pricipal of the candid service</returns>
             <exception cref="T:System.InvalidOperationException">Throws if service is an opaque reference</exception>
         </member>
-        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidService.EncodeValue(EdjCase.ICP.Candid.Models.Types.CandidType,System.Func{EdjCase.ICP.Candid.Models.CandidId,EdjCase.ICP.Candid.Models.Types.CandidCompoundType})">
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidService.EncodeValue(EdjCase.ICP.Candid.Models.Types.CandidType,System.Func{EdjCase.ICP.Candid.Models.CandidId,EdjCase.ICP.Candid.Models.Types.CandidCompoundType},System.Buffers.IBufferWriter{System.Byte})">
             <inheritdoc />
         </member>
         <member name="M:EdjCase.ICP.Candid.Models.Values.CandidService.GetHashCode">
@@ -3145,7 +3132,7 @@
             <param name="tag">The tag (id/name) of the chosen variant option</param>
             <param name="value">The value of the chosen variant option, whose type is based on the option</param>
         </member>
-        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidVariant.EncodeValue(EdjCase.ICP.Candid.Models.Types.CandidType,System.Func{EdjCase.ICP.Candid.Models.CandidId,EdjCase.ICP.Candid.Models.Types.CandidCompoundType})">
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidVariant.EncodeValue(EdjCase.ICP.Candid.Models.Types.CandidType,System.Func{EdjCase.ICP.Candid.Models.CandidId,EdjCase.ICP.Candid.Models.Types.CandidCompoundType},System.Buffers.IBufferWriter{System.Byte})">
             <inheritdoc />
         </member>
         <member name="M:EdjCase.ICP.Candid.Models.Values.CandidVariant.GetHashCode">
@@ -3174,7 +3161,7 @@
             <param name="values">Each candid value that the vector contains. All must be of the same type</param>
             <exception cref="T:System.ArgumentException">Throws if all the values are not of the same type</exception>
         </member>
-        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidVector.EncodeValue(EdjCase.ICP.Candid.Models.Types.CandidType,System.Func{EdjCase.ICP.Candid.Models.CandidId,EdjCase.ICP.Candid.Models.Types.CandidCompoundType})">
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidVector.EncodeValue(EdjCase.ICP.Candid.Models.Types.CandidType,System.Func{EdjCase.ICP.Candid.Models.CandidId,EdjCase.ICP.Candid.Models.Types.CandidCompoundType},System.Buffers.IBufferWriter{System.Byte})">
             <inheritdoc />
         </member>
         <member name="M:EdjCase.ICP.Candid.Models.Values.CandidVector.GetHashCode">

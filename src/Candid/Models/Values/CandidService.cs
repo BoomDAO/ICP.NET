@@ -1,5 +1,7 @@
 using EdjCase.ICP.Candid.Models.Types;
+using EdjCase.ICP.Candid.Utilities;
 using System;
+using System.Buffers;
 using System.Linq;
 
 namespace EdjCase.ICP.Candid.Models.Values
@@ -49,24 +51,18 @@ namespace EdjCase.ICP.Candid.Models.Values
 		}
 
 		/// <inheritdoc />
-		internal override byte[] EncodeValue(CandidType type, Func<CandidId, CandidCompoundType> getReferencedType)
+		internal override void EncodeValue(CandidType type, Func<CandidId, CandidCompoundType> getReferencedType, IBufferWriter<byte> destination)
 		{
-			CandidServiceType t;
-			if (type is CandidReferenceType r)
-			{
-				t = (CandidServiceType)getReferencedType(r.Id);
-			}
-			else
-			{
-				t = (CandidServiceType)type;
-			}
 			if (this.IsOpqaueReference)
 			{
-				return new byte[] { 0 };
+				destination.WriteOne<byte>(0);
+				return;
 			}
-			return new byte[] { 1 }
-				.Concat(this.principalId!.Raw)
-				.ToArray();
+			int size = this.principalId!.Raw.Length + 1;
+			Span<byte> bytes = destination.GetSpan(size);
+			bytes[0] = 1; // Set first byte to 1
+			this.principalId.Raw.CopyTo(bytes[1..]); // Set other bytes to raw id
+			destination.Advance(size);
 		}
 
 		/// <inheritdoc />

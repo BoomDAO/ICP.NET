@@ -1,5 +1,6 @@
 using EdjCase.ICP.Candid.Encodings;
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -24,19 +25,15 @@ namespace EdjCase.ICP.Candid.Models.Types
 			this.RecursiveId = recursiveId;
 		}
 
-		/// <summary>
-		/// Adds all inner types to the compound table if applicable and returns its encoded type value
-		/// </summary>
-		/// <param name="compoundTypeTable">The collection of compound types for a candid arg</param>
-		/// <returns>Byte array of encoded type</returns>
-		internal abstract byte[] EncodeInnerTypes(CompoundTypeTable compoundTypeTable);
+
+		internal abstract void EncodeInnerTypes(CompoundTypeTable compoundTypeTable, IBufferWriter<byte> destination);
 
 		internal abstract IEnumerable<CandidType> GetInnerTypes();
 
-		internal override byte[] Encode(CompoundTypeTable compoundTypeTable)
+		internal override void Encode(CompoundTypeTable compoundTypeTable, IBufferWriter<byte> destination)
 		{
 			UnboundedUInt index = compoundTypeTable.GetOrAdd(this);
-			return LEB128.EncodeSigned(index);
+			LEB128.EncodeSigned(index, destination); // Encode index on where it is in the type table
 		}
 	}
 
@@ -66,20 +63,17 @@ namespace EdjCase.ICP.Candid.Models.Types
 
 		}
 
-		internal override byte[] EncodeInnerTypes(CompoundTypeTable compoundTypeTable)
+		internal override void EncodeInnerTypes(CompoundTypeTable compoundTypeTable, IBufferWriter<byte> destination)
 		{
 			Dictionary<CandidTag, CandidType> fieldsOrOptions = this.GetFieldsOrOptions();
-			byte[] fieldCount = LEB128.EncodeSigned(fieldsOrOptions.Count);
-			IEnumerable<byte> fieldTypes = fieldsOrOptions
-				.OrderBy(f => f.Key)
-				.SelectMany(f =>
-				{
-					return LEB128.EncodeUnsigned(f.Key.Id)
-						.Concat(f.Value.Encode(compoundTypeTable));
-				});
-			return fieldCount
-				.Concat(fieldTypes)
-				.ToArray(); ;
+
+			LEB128.EncodeSigned(fieldsOrOptions.Count, destination); // Encode field/option count
+
+			foreach(var f in fieldsOrOptions.OrderBy(f => f.Key))
+			{
+				LEB128.EncodeUnsigned(f.Key.Id, destination); // Encode key
+				f.Value.Encode(compoundTypeTable, destination); // Encode value
+			}
 		}
 
 		internal override IEnumerable<CandidType> GetInnerTypes()

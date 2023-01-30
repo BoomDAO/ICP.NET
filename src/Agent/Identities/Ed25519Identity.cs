@@ -1,5 +1,6 @@
 using Chaos.NaCl;
 using EdjCase.ICP.Agent.Models;
+using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
@@ -38,10 +39,9 @@ namespace EdjCase.ICP.Agent.Identities
 
 
 		/// <inheritdoc/>
-		public Task<byte[]> SignAsync(byte[] message)
+		public byte[] Sign(byte[] message)
 		{
-			byte[] signature = Ed25519.Sign(message, this.PrivateKey);
-			return Task.FromResult(signature);
+			return Ed25519.Sign(message, this.PrivateKey);
 		}
 
 		/// <inheritdoc/>
@@ -54,7 +54,7 @@ namespace EdjCase.ICP.Agent.Identities
 		/// Generates an identity with a new Ed25519 key pair
 		/// </summary>
 		/// <returns>A Ed25519 identity</returns>
-		public static Ed25519Identity Generate()
+		public static Ed25519Identity Create()
 		{
 			byte[] seed = new byte[Ed25519.PrivateKeySeedSizeInBytes];
 			using (var cryptoRng = new RNGCryptoServiceProvider())
