@@ -84,7 +84,7 @@ namespace EdjCase.ICP.Candid.Encodings
 		/// <returns>LEB128 bytes of value</returns>
 		public static byte[] EncodeSigned(UnboundedInt value)
 		{
-			ArrayBufferWriter<byte> destination = new ();
+			ArrayBufferWriter<byte> destination = new();
 			LEB128.EncodeSigned(value.ToBigInteger(), destination);
 			return destination.WrittenMemory.ToArray();
 		}
@@ -104,8 +104,7 @@ namespace EdjCase.ICP.Candid.Encodings
 		private static BigInteger Decode(Stream stream, bool isUnsigned)
 		{
 			IEnumerable<bool> bits = LEB128.GetValueBits(stream, isUnsigned);
-			IEnumerator<bool> bitEnumerator = bits.GetEnumerator();
-			ArrayBufferWriter<byte> destination = new ();
+			ArrayBufferWriter<byte> destination = new();
 
 			int i = 1;
 			byte byteValue = 0;
@@ -115,12 +114,18 @@ namespace EdjCase.ICP.Candid.Encodings
 				{
 					byteValue |= (byte)(1 << (i - 1));
 				}
-				if (i % 8 == 0)
+				if (i == 8)
 				{
 					destination.WriteOne(byteValue);
 					byteValue = 0;
+					i = 0;
 				}
 				i++;
+			}
+			if (i != 1)
+			{
+				// Expect 8 byte chunks
+				throw new EndOfStreamException();
 			}
 			return new BigInteger(destination.WrittenSpan, isUnsigned, isBigEndian: false);
 		}

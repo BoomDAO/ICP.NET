@@ -32,12 +32,13 @@ namespace Performance.Tests.Benchmarks
 					new CandidVectorType(CandidType.Nat())
 				)
 			).Encode(destination);
+
 		}
 
 		[Benchmark]
 		public void Decode()
 		{
-
+			//CandidArg.FromBytes()
 		}
 	}
 }

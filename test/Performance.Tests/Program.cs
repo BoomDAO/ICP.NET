@@ -24,15 +24,15 @@ const int interationCount = 1000;
 
 
 
-//BenchmarkRunner.Run<LEB128Benchmarks>();
+BenchmarkRunner.Run<LEB128Benchmarks>();
 //BenchmarkRunner.Run(typeof(Program).Assembly);
 
 
-var a = new CandidSerializationBenchmarks();
-for (int i = 0; i < interationCount; i++)
-{
-	a.Encode();
-}
+//var a = new CandidSerializationBenchmarks();
+//for (int i = 0; i < interationCount; i++)
+//{
+//	a.Encode();
+//}
 
 
 
