@@ -15,24 +15,41 @@ using System.Threading.Tasks;
 namespace Performance.Tests.Benchmarks
 {
 	[MemoryDiagnoser]
-	public class CandidSerializationBenchmarks
+	public class LEB128Benchmarks
 	{
 		private const ulong value_leb128 = 10000000000000000000L;
 		private readonly byte[] bytes_leb128 = LEB128.EncodeUnsigned(value_leb128);
 		private IBufferWriter<byte> destination = new ArrayBufferWriter<byte>();
 
-		private CandidValue[] vectorValues = Enumerable.Range(0, 10_000).Select(r => CandidValue.Nat(value_leb128)).ToArray();
-
 
 		[Benchmark]
-		public void Encode()
+		public void LEB128_EncodeSigned()
 		{
-			CandidArg.FromCandid(
-				new CandidTypedValue(
-					new CandidVector(this.vectorValues),
-					new CandidVectorType(CandidType.Nat())
-				)
-			).Encode(this.destination);
+			LEB128.EncodeSigned(value_leb128, this.destination);
+		}
+
+		[Benchmark]
+		public void LEB128_EncodeUnsigned()
+		{
+			LEB128.EncodeUnsigned(value_leb128, this.destination);
+		}
+
+		[Benchmark]
+		public void LEB128_DecodeSigned()
+		{
+			using (MemoryStream stream = new MemoryStream(this.bytes_leb128))
+			{
+				_ = LEB128.DecodeSigned(stream);
+			}
+		}
+
+		[Benchmark]
+		public void LEB128_DecodeUnsigned()
+		{
+			using (MemoryStream stream = new MemoryStream(this.bytes_leb128))
+			{
+				_ = LEB128.DecodeUnsigned(stream);
+			}
 		}
 	}
 }

@@ -32,7 +32,7 @@ namespace EdjCase.ICP.Candid.Models.Types
 
 		internal override void Encode(CompoundTypeTable compoundTypeTable, IBufferWriter<byte> destination)
 		{
-			UnboundedUInt index = compoundTypeTable.GetOrAdd(this);
+			UnboundedUInt index = compoundTypeTable.GetOrThrow(this);
 			LEB128.EncodeSigned(index, destination); // Encode index on where it is in the type table
 		}
 	}

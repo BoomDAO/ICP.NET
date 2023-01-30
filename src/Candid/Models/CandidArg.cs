@@ -57,7 +57,8 @@ namespace EdjCase.ICP.Candid.Models
 			destination.Advance(bytesWritten);
 
 			// Type table
-			CompoundTypeTable compoundTypeTable = new();
+			CompoundTypeTable compoundTypeTable = CompoundTypeTable.FromTypes(this.Values);
+
 			compoundTypeTable.Encode(destination); // Encode type table
 
 

@@ -352,9 +352,9 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 			object? variant = Activator.CreateInstance(objType, nonPublic: true);
 
 			Dictionary<CandidTag, VariantMapper.Option> options = attribute.TagType.GetEnumValues()
-				.Select(tagObject =>
+				.Cast<Enum>()
+				.Select(tagEnum =>
 				{
-					Enum tagEnum = (Enum)tagObject;
 					string tagName = Enum.GetName(attribute.TagType, tagEnum);
 					MemberInfo field = attribute.TagType.GetMember(tagName).First();
 					var typeAttribute = field.GetCustomAttribute<VariantOptionTypeAttribute>();

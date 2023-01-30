@@ -392,6 +392,7 @@
   - [GetHashCode()](#M-EdjCase-ICP-Candid-Models-Types-CandidVectorType-GetHashCode 'EdjCase.ICP.Candid.Models.Types.CandidVectorType.GetHashCode')
 - [CompoundTypeTable](#T-EdjCase-ICP-Candid-Models-CompoundTypeTable 'EdjCase.ICP.Candid.Models.CompoundTypeTable')
   - [CompoundTypeIndexMap](#F-EdjCase-ICP-Candid-Models-CompoundTypeTable-CompoundTypeIndexMap 'EdjCase.ICP.Candid.Models.CompoundTypeTable.CompoundTypeIndexMap')
+  - [TryAdd(typeDef)](#M-EdjCase-ICP-Candid-Models-CompoundTypeTable-TryAdd-EdjCase-ICP-Candid-Models-Types-CandidCompoundType- 'EdjCase.ICP.Candid.Models.CompoundTypeTable.TryAdd(EdjCase.ICP.Candid.Models.Types.CandidCompoundType)')
 - [CustomMapperAttribute](#T-EdjCase-ICP-Candid-Mapping-CustomMapperAttribute 'EdjCase.ICP.Candid.Mapping.CustomMapperAttribute')
   - [#ctor(mapper)](#M-EdjCase-ICP-Candid-Mapping-CustomMapperAttribute-#ctor-EdjCase-ICP-Candid-Mapping-IObjectMapper- 'EdjCase.ICP.Candid.Mapping.CustomMapperAttribute.#ctor(EdjCase.ICP.Candid.Mapping.IObjectMapper)')
   - [Mapper](#P-EdjCase-ICP-Candid-Mapping-CustomMapperAttribute-Mapper 'EdjCase.ICP.Candid.Mapping.CustomMapperAttribute.Mapper')
@@ -472,7 +473,7 @@
   - [EncodeSigned(value)](#M-EdjCase-ICP-Candid-Encodings-LEB128-EncodeSigned-EdjCase-ICP-Candid-Models-UnboundedInt- 'EdjCase.ICP.Candid.Encodings.LEB128.EncodeSigned(EdjCase.ICP.Candid.Models.UnboundedInt)')
   - [EncodeSigned(value,destination)](#M-EdjCase-ICP-Candid-Encodings-LEB128-EncodeSigned-EdjCase-ICP-Candid-Models-UnboundedInt,System-Buffers-IBufferWriter{System-Byte}- 'EdjCase.ICP.Candid.Encodings.LEB128.EncodeSigned(EdjCase.ICP.Candid.Models.UnboundedInt,System.Buffers.IBufferWriter{System.Byte})')
   - [EncodeUnsigned(value)](#M-EdjCase-ICP-Candid-Encodings-LEB128-EncodeUnsigned-EdjCase-ICP-Candid-Models-UnboundedUInt- 'EdjCase.ICP.Candid.Encodings.LEB128.EncodeUnsigned(EdjCase.ICP.Candid.Models.UnboundedUInt)')
-  - [EncodeUnsigned(value,destination)](#M-EdjCase-ICP-Candid-Encodings-LEB128-EncodeUnsigned-EdjCase-ICP-Candid-Models-UnboundedInt,System-Buffers-IBufferWriter{System-Byte}- 'EdjCase.ICP.Candid.Encodings.LEB128.EncodeUnsigned(EdjCase.ICP.Candid.Models.UnboundedInt,System.Buffers.IBufferWriter{System.Byte})')
+  - [EncodeUnsigned(value,destination)](#M-EdjCase-ICP-Candid-Encodings-LEB128-EncodeUnsigned-EdjCase-ICP-Candid-Models-UnboundedUInt,System-Buffers-IBufferWriter{System-Byte}- 'EdjCase.ICP.Candid.Encodings.LEB128.EncodeUnsigned(EdjCase.ICP.Candid.Models.UnboundedUInt,System.Buffers.IBufferWriter{System.Byte})')
 - [OptionalValue\`1](#T-EdjCase-ICP-Candid-Models-OptionalValue`1 'EdjCase.ICP.Candid.Models.OptionalValue`1')
   - [HasValue](#P-EdjCase-ICP-Candid-Models-OptionalValue`1-HasValue 'EdjCase.ICP.Candid.Models.OptionalValue`1.HasValue')
   - [Cast\`\`1()](#M-EdjCase-ICP-Candid-Models-OptionalValue`1-Cast``1 'EdjCase.ICP.Candid.Models.OptionalValue`1.Cast``1')
@@ -5512,6 +5513,23 @@ EdjCase.ICP.Candid.Models
 
 A mapping of compound type definition to \`EncodedCompoundTypes\` index to be used as reference
 
+<a name='M-EdjCase-ICP-Candid-Models-CompoundTypeTable-TryAdd-EdjCase-ICP-Candid-Models-Types-CandidCompoundType-'></a>
+### TryAdd(typeDef) `method`
+
+##### Summary
+
+Adds type to the table unless the type already exists
+
+##### Returns
+
+True if added, otherwise false
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| typeDef | [EdjCase.ICP.Candid.Models.Types.CandidCompoundType](#T-EdjCase-ICP-Candid-Models-Types-CandidCompoundType 'EdjCase.ICP.Candid.Models.Types.CandidCompoundType') | Type to add to table |
+
 <a name='T-EdjCase-ICP-Candid-Mapping-CustomMapperAttribute'></a>
 ## CustomMapperAttribute `type`
 
@@ -6530,7 +6548,7 @@ LEB128 bytes of value
 | ---- | ---- | ----------- |
 | value | [EdjCase.ICP.Candid.Models.UnboundedUInt](#T-EdjCase-ICP-Candid-Models-UnboundedUInt 'EdjCase.ICP.Candid.Models.UnboundedUInt') | Value to convert to LEB128 bytes |
 
-<a name='M-EdjCase-ICP-Candid-Encodings-LEB128-EncodeUnsigned-EdjCase-ICP-Candid-Models-UnboundedInt,System-Buffers-IBufferWriter{System-Byte}-'></a>
+<a name='M-EdjCase-ICP-Candid-Encodings-LEB128-EncodeUnsigned-EdjCase-ICP-Candid-Models-UnboundedUInt,System-Buffers-IBufferWriter{System-Byte}-'></a>
 ### EncodeUnsigned(value,destination) `method`
 
 ##### Summary
@@ -6545,7 +6563,7 @@ LEB128 bytes of value
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| value | [EdjCase.ICP.Candid.Models.UnboundedInt](#T-EdjCase-ICP-Candid-Models-UnboundedInt 'EdjCase.ICP.Candid.Models.UnboundedInt') | Value to convert to LEB128 bytes |
+| value | [EdjCase.ICP.Candid.Models.UnboundedUInt](#T-EdjCase-ICP-Candid-Models-UnboundedUInt 'EdjCase.ICP.Candid.Models.UnboundedUInt') | Value to convert to LEB128 bytes |
 | destination | [System.Buffers.IBufferWriter{System.Byte}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Buffers.IBufferWriter 'System.Buffers.IBufferWriter{System.Byte}') | Buffer writer to write bytes to |
 
 <a name='T-EdjCase-ICP-Candid-Models-OptionalValue`1'></a>

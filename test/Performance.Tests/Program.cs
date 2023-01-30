@@ -7,6 +7,8 @@ using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid.Utilities;
 using Performance.Tests.Benchmarks;
 
+const int interationCount = 1000;
+
 //var identity = Ed25519Identity.Create();
 //var httpClient = new FakeHttpClient();
 //var agent = new HttpAgent(httpClient, identity);
@@ -14,7 +16,6 @@ using Performance.Tests.Benchmarks;
 //string method = "get_proposal_info";
 //CandidArg arg = CandidArg.FromCandid(CandidTypedValue.Nat64(1999));
 
-//const int interationCount = 10_000;
 //for (int i = 0; i < interationCount; i++)
 //{
 //	await agent.QueryAsync(canisterId, method, arg);
@@ -23,11 +24,15 @@ using Performance.Tests.Benchmarks;
 
 
 
-//BenchmarkRunner.Run<HashingBenchmarks>();
-//BenchmarkRunner.Run<SignatureBenchmarks>();
-//BenchmarkRunner.Run<SignatureBenchmarks>();
-BenchmarkRunner.Run(typeof(Program).Assembly);
+//BenchmarkRunner.Run<LEB128Benchmarks>();
+//BenchmarkRunner.Run(typeof(Program).Assembly);
 
+
+var a = new CandidSerializationBenchmarks();
+for (int i = 0; i < interationCount; i++)
+{
+	a.Encode();
+}
 
 
 

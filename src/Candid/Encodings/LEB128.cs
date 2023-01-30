@@ -25,7 +25,7 @@ namespace EdjCase.ICP.Candid.Encodings
 			for (int i = 0; i < encodedValue.Length; i++)
 			{
 				byte b = encodedValue[i];
-				ulong valueToAdd = (b & 0b0111_1111ul) << (7 * i); // Shift over 7 * i bits to get value to add
+				ulong valueToAdd = (b & 0b0111_1111u) << (7 * i); // Shift over 7 * i bits to get value to add
 				v += valueToAdd;
 			}
 			return UnboundedUInt.FromBigInteger(v);
@@ -72,7 +72,7 @@ namespace EdjCase.ICP.Candid.Encodings
 		/// <param name="value">Value to convert to LEB128 bytes</param>
 		/// <param name="destination">Buffer writer to write bytes to</param>
 		/// <returns>LEB128 bytes of value</returns>
-		public static void EncodeUnsigned(UnboundedInt value, IBufferWriter<byte> destination)
+		public static void EncodeUnsigned(UnboundedUInt value, IBufferWriter<byte> destination)
 		{
 			LEB128.EncodeUnsigned(value.ToBigInteger(), destination);
 		}
@@ -103,24 +103,26 @@ namespace EdjCase.ICP.Candid.Encodings
 
 		private static BigInteger Decode(Stream stream, bool isUnsigned)
 		{
-			byte[] bytes = LEB128.GetValueBits(stream, isUnsigned)
-				.Chunk(8)
-				.Select(bits =>
+			IEnumerable<bool> bits = LEB128.GetValueBits(stream, isUnsigned);
+			IEnumerator<bool> bitEnumerator = bits.GetEnumerator();
+			ArrayBufferWriter<byte> destination = new ();
+
+			int i = 1;
+			byte byteValue = 0;
+			foreach (bool bit in bits)
+			{
+				if (bit)
 				{
-					byte b = 0;
-					for (int i = bits.Length - 1; i >= 0; i--)
-					{
-						bool bit = bits[i];
-						b |= bit ? (byte)1 : (byte)0;
-						if (i > 0)
-						{
-							b <<= 1;
-						}
-					}
-					return b;
-				})
-				.ToArray();
-			return new BigInteger(bytes, isUnsigned: isUnsigned, isBigEndian: false);
+					byteValue |= (byte)(1 << (i - 1));
+				}
+				if (i % 8 == 0)
+				{
+					destination.WriteOne(byteValue);
+					byteValue = 0;
+				}
+				i++;
+			}
+			return new BigInteger(destination.WrittenSpan, isUnsigned, isBigEndian: false);
 		}
 		private static IEnumerable<bool> GetValueBits(Stream stream, bool isUnsigned)
 		{
@@ -191,22 +193,25 @@ namespace EdjCase.ICP.Candid.Encodings
 			//  0100110  0001110  1100101  Split into 7-bit groups
 			// 00100110 10001110 11100101  Add high 1 bits on all but last (most significant) group to form bytes
 
-			long bitCount = value.GetBitLength();
-			int byteCount = (int)Math.Ceiling(bitCount / 7m); // 7, not 8, the 8th bit is to indicate end of number
-
-			Span<byte> lebBytes = destination.GetSpan(byteCount);
-			for (int i = 0; i < byteCount; i++)
+			Span<byte> buffer = stackalloc byte[1];
+			while (value != 0)
 			{
-				byte byteValue = (value & 0b0111_1111).ToByteArray()[0]; // Get the last 7 bits
+				BigInteger nextByte = (value & 0b0111_1111); // Get the next 7 bits
+
+				// Optimization to use the buffer to get byte value
+				nextByte.TryWriteBytes(buffer, out _, isUnsigned: true, isBigEndian: false);
+
+				byte byteValue = buffer[0]; // Get next byte from the buffer
+
+
 				value = value >> 7; // Chop off last 7 bits
 				if (value != 0)
 				{
 					// Have most left of byte be 1 if there is another byte
 					byteValue |= 0b10000000;
 				}
-				lebBytes[i] = byteValue;
+				destination.WriteOne(byteValue);
 			}
-			destination.Advance(byteCount);
 		}
 
 		private static void EncodeSigned(BigInteger value, IBufferWriter<byte> destination)
@@ -230,12 +235,13 @@ namespace EdjCase.ICP.Candid.Encodings
 			Span<byte> buffer = stackalloc byte[1];
 			while (more)
 			{
-				BigInteger nextByte = (value & 0b0111_1111); // Get the next byte
+				BigInteger nextByte = (value & 0b0111_1111); // Get the next 7 bits
 
 				// Optimization to use the buffer to get byte value
-				nextByte.TryWriteBytes(buffer, out _, isUnsigned: true, isBigEndian: true);
+				nextByte.TryWriteBytes(buffer, out _, isUnsigned: true, isBigEndian: false);
 
-				byte byteValue = buffer[0]; // Get the last 7 bits
+				byte byteValue = buffer[0]; // Get next byte from the buffer
+
 				value >>= 7; // Shift over 7 bits to setup the next byte
 				bool mostSignficantBitIsSet = (byteValue & 0b0100_0000) != 0;
 				if (value == 0) // no more bits => end

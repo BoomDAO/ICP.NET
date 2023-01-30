@@ -71,7 +71,7 @@ namespace EdjCase.ICP.Candid.Utilities
 			{
 				return (char)(value + 48); // 0->9
 			}
-			return (char)(value + 65); // A->F ASCII
+			return (char)(value + 65 - 10); // A->F ASCII
 		}
 
 		private static byte GetByte(char char1, char char2)

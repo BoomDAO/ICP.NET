@@ -283,7 +283,7 @@
             <param name="value">Value to convert to LEB128 bytes</param>
             <returns>LEB128 bytes of value</returns>
         </member>
-        <member name="M:EdjCase.ICP.Candid.Encodings.LEB128.EncodeUnsigned(EdjCase.ICP.Candid.Models.UnboundedInt,System.Buffers.IBufferWriter{System.Byte})">
+        <member name="M:EdjCase.ICP.Candid.Encodings.LEB128.EncodeUnsigned(EdjCase.ICP.Candid.Models.UnboundedUInt,System.Buffers.IBufferWriter{System.Byte})">
             <summary>
             Takes an `UnboundedUInt` and converts it into an encoded unsigned LEB128 byte array
             </summary>
@@ -959,6 +959,13 @@
             <summary>
             A mapping of compound type definition to `EncodedCompoundTypes` index to be used as reference
             </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CompoundTypeTable.TryAdd(EdjCase.ICP.Candid.Models.Types.CandidCompoundType)">
+            <summary>
+            Adds type to the table unless the type already exists
+            </summary>
+            <param name="typeDef">Type to add to table</param>
+            <returns>True if added, otherwise false</returns>
         </member>
         <member name="T:EdjCase.ICP.Candid.Models.HashTreeType">
             <summary>

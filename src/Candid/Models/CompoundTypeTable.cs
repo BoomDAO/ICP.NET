@@ -4,6 +4,7 @@ using System;
 using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace EdjCase.ICP.Candid.Models
 {
@@ -13,24 +14,46 @@ namespace EdjCase.ICP.Candid.Models
 		/// <summary>
 		/// A mapping of compound type definition to `EncodedCompoundTypes` index to be used as reference
 		/// </summary>
-		private readonly Dictionary<CandidCompoundType, uint> CompoundTypeIndexMap = new Dictionary<CandidCompoundType, uint>();
+		private readonly Dictionary<CandidCompoundType, uint> CompoundTypeIndexMap = new();
 
-		public UnboundedUInt GetOrAdd(CandidCompoundType typeDef)
+		public UnboundedUInt GetOrThrow(CandidCompoundType typeDef)
 		{
+			if (!this.TryGet(typeDef, out UnboundedUInt index))
+			{
+				throw new InvalidOperationException("Compound type not found in the type table");
+			}
+			return index;
+		}
+
+		public bool TryGet(CandidCompoundType typeDef, out UnboundedUInt index)
+		{
+			bool found = this.CompoundTypeIndexMap.TryGetValue(typeDef, out uint i);
+			index = i;
+			return found;
+		}
+
+		/// <summary>
+		/// Adds type to the table unless the type already exists
+		/// </summary>
+		/// <param name="typeDef">Type to add to table</param>
+		/// <returns>True if added, otherwise false</returns>
+		public bool TryAdd(CandidCompoundType typeDef)
+		{
+			if (this.TryGet(typeDef, out _))
+			{
+				return false; // already added
+			}
 			foreach (CandidType innerType in typeDef.GetInnerTypes())
 			{
 				// Recursively go through and add the inner types before adding the parent type
 				if (innerType is CandidCompoundType innerCompoundType)
 				{
-					this.GetOrAdd(innerCompoundType);
+					this.TryAdd(innerCompoundType);
 				}
 			}
-			if (!this.CompoundTypeIndexMap.TryGetValue(typeDef, out uint index))
-			{
-				index = (uint)this.CompoundTypeIndexMap.Count;
-				this.CompoundTypeIndexMap.Add(typeDef, index);
-			}
-			return index;
+			uint i = (uint)this.CompoundTypeIndexMap.Count;
+			this.CompoundTypeIndexMap.Add(typeDef, i);
+			return false;
 		}
 
 		private void EncodeFunc(CandidCompoundType typeDef, IBufferWriter<byte> destination)
@@ -43,18 +66,21 @@ namespace EdjCase.ICP.Candid.Models
 		{
 			LEB128.EncodeUnsigned((UnboundedUInt)this.CompoundTypeIndexMap.Count, destination);
 
-			foreach(var t in this.CompoundTypeIndexMap.OrderBy(x => x.Value))
+			foreach (var t in this.CompoundTypeIndexMap.OrderBy(x => x.Value))
 			{
 				this.EncodeFunc(t.Key, destination);
 			}
 		}
 
-		public static CompoundTypeTable FromTypes(List<CandidCompoundType> types)
+		public static CompoundTypeTable FromTypes(List<CandidTypedValue> types)
 		{
 			var table = new CompoundTypeTable();
-			foreach (CandidCompoundType? type in types)
+			foreach (CandidTypedValue type in types)
 			{
-				table.GetOrAdd(type);
+				if (type.Type is CandidCompoundType c)
+				{
+					table.TryAdd(c);
+				}
 			}
 			return table;
 		}
