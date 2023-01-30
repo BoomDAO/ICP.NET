@@ -3,17 +3,15 @@
 
 ## Contents
 
-- [BinarySequence](#T-EdjCase-ICP-Candid-BinarySequence 'EdjCase.ICP.Candid.BinarySequence')
-  - [#ctor(bits)](#M-EdjCase-ICP-Candid-BinarySequence-#ctor-System-Boolean[]- 'EdjCase.ICP.Candid.BinarySequence.#ctor(System.Boolean[])')
 - [CRC32](#T-EdjCase-ICP-Candid-Crypto-CRC32 'EdjCase.ICP.Candid.Crypto.CRC32')
-  - [ComputeHash(stream)](#M-EdjCase-ICP-Candid-Crypto-CRC32-ComputeHash-System-IO-Stream- 'EdjCase.ICP.Candid.Crypto.CRC32.ComputeHash(System.IO.Stream)')
-  - [ComputeHash(data)](#M-EdjCase-ICP-Candid-Crypto-CRC32-ComputeHash-System-Byte[]- 'EdjCase.ICP.Candid.Crypto.CRC32.ComputeHash(System.Byte[])')
+  - [ComputeHash(data)](#M-EdjCase-ICP-Candid-Crypto-CRC32-ComputeHash-System-ReadOnlySpan{System-Byte}- 'EdjCase.ICP.Candid.Crypto.CRC32.ComputeHash(System.ReadOnlySpan{System.Byte})')
 - [CandidArg](#T-EdjCase-ICP-Candid-Models-CandidArg 'EdjCase.ICP.Candid.Models.CandidArg')
   - [#ctor(values)](#M-EdjCase-ICP-Candid-Models-CandidArg-#ctor-System-Collections-Generic-List{EdjCase-ICP-Candid-Models-CandidTypedValue}- 'EdjCase.ICP.Candid.Models.CandidArg.#ctor(System.Collections.Generic.List{EdjCase.ICP.Candid.Models.CandidTypedValue})')
   - [Values](#P-EdjCase-ICP-Candid-Models-CandidArg-Values 'EdjCase.ICP.Candid.Models.CandidArg.Values')
   - [ComputeHash()](#M-EdjCase-ICP-Candid-Models-CandidArg-ComputeHash-EdjCase-ICP-Candid-Crypto-IHashFunction- 'EdjCase.ICP.Candid.Models.CandidArg.ComputeHash(EdjCase.ICP.Candid.Crypto.IHashFunction)')
   - [Empty()](#M-EdjCase-ICP-Candid-Models-CandidArg-Empty 'EdjCase.ICP.Candid.Models.CandidArg.Empty')
   - [Encode()](#M-EdjCase-ICP-Candid-Models-CandidArg-Encode 'EdjCase.ICP.Candid.Models.CandidArg.Encode')
+  - [Encode()](#M-EdjCase-ICP-Candid-Models-CandidArg-Encode-System-Buffers-IBufferWriter{System-Byte}- 'EdjCase.ICP.Candid.Models.CandidArg.Encode(System.Buffers.IBufferWriter{System.Byte})')
   - [Equals()](#M-EdjCase-ICP-Candid-Models-CandidArg-Equals-EdjCase-ICP-Candid-Models-CandidArg- 'EdjCase.ICP.Candid.Models.CandidArg.Equals(EdjCase.ICP.Candid.Models.CandidArg)')
   - [Equals()](#M-EdjCase-ICP-Candid-Models-CandidArg-Equals-System-Object- 'EdjCase.ICP.Candid.Models.CandidArg.Equals(System.Object)')
   - [FromBytes(value)](#M-EdjCase-ICP-Candid-Models-CandidArg-FromBytes-System-Byte[]- 'EdjCase.ICP.Candid.Models.CandidArg.FromBytes(System.Byte[])')
@@ -23,16 +21,11 @@
   - [ToString()](#M-EdjCase-ICP-Candid-Models-CandidArg-ToString 'EdjCase.ICP.Candid.Models.CandidArg.ToString')
   - [op_Equality()](#M-EdjCase-ICP-Candid-Models-CandidArg-op_Equality-EdjCase-ICP-Candid-Models-CandidArg,EdjCase-ICP-Candid-Models-CandidArg- 'EdjCase.ICP.Candid.Models.CandidArg.op_Equality(EdjCase.ICP.Candid.Models.CandidArg,EdjCase.ICP.Candid.Models.CandidArg)')
   - [op_Inequality()](#M-EdjCase-ICP-Candid-Models-CandidArg-op_Inequality-EdjCase-ICP-Candid-Models-CandidArg,EdjCase-ICP-Candid-Models-CandidArg- 'EdjCase.ICP.Candid.Models.CandidArg.op_Inequality(EdjCase.ICP.Candid.Models.CandidArg,EdjCase.ICP.Candid.Models.CandidArg)')
-- [CandidArgBuilder](#T-EdjCase-ICP-Candid-CandidArgBuilder 'EdjCase.ICP.Candid.CandidArgBuilder')
-  - [EncodedTypes](#F-EdjCase-ICP-Candid-CandidArgBuilder-EncodedTypes 'EdjCase.ICP.Candid.CandidArgBuilder.EncodedTypes')
-  - [EncodedValues](#F-EdjCase-ICP-Candid-CandidArgBuilder-EncodedValues 'EdjCase.ICP.Candid.CandidArgBuilder.EncodedValues')
-  - [compoundTypeTable](#F-EdjCase-ICP-Candid-CandidArgBuilder-compoundTypeTable 'EdjCase.ICP.Candid.CandidArgBuilder.compoundTypeTable')
 - [CandidByteParser](#T-EdjCase-ICP-Candid-Parsers-CandidByteParser 'EdjCase.ICP.Candid.Parsers.CandidByteParser')
   - [Parse(value)](#M-EdjCase-ICP-Candid-Parsers-CandidByteParser-Parse-System-Byte[]- 'EdjCase.ICP.Candid.Parsers.CandidByteParser.Parse(System.Byte[])')
 - [CandidCompoundType](#T-EdjCase-ICP-Candid-Models-Types-CandidCompoundType 'EdjCase.ICP.Candid.Models.Types.CandidCompoundType')
   - [#ctor(recursiveId)](#M-EdjCase-ICP-Candid-Models-Types-CandidCompoundType-#ctor-EdjCase-ICP-Candid-Models-CandidId- 'EdjCase.ICP.Candid.Models.Types.CandidCompoundType.#ctor(EdjCase.ICP.Candid.Models.CandidId)')
   - [RecursiveId](#P-EdjCase-ICP-Candid-Models-Types-CandidCompoundType-RecursiveId 'EdjCase.ICP.Candid.Models.Types.CandidCompoundType.RecursiveId')
-  - [EncodeInnerTypes(compoundTypeTable)](#M-EdjCase-ICP-Candid-Models-Types-CandidCompoundType-EncodeInnerTypes-EdjCase-ICP-Candid-Models-CompoundTypeTable- 'EdjCase.ICP.Candid.Models.Types.CandidCompoundType.EncodeInnerTypes(EdjCase.ICP.Candid.Models.CompoundTypeTable)')
 - [CandidConverter](#T-EdjCase-ICP-Candid-CandidConverter 'EdjCase.ICP.Candid.CandidConverter')
   - [#ctor(options)](#M-EdjCase-ICP-Candid-CandidConverter-#ctor-EdjCase-ICP-Candid-CandidConverterOptions- 'EdjCase.ICP.Candid.CandidConverter.#ctor(EdjCase.ICP.Candid.CandidConverterOptions)')
   - [Default](#P-EdjCase-ICP-Candid-CandidConverter-Default 'EdjCase.ICP.Candid.CandidConverter.Default')
@@ -55,7 +48,7 @@
   - [#ctor(service,name)](#M-EdjCase-ICP-Candid-Models-Values-CandidFunc-#ctor-EdjCase-ICP-Candid-Models-Values-CandidService,System-String- 'EdjCase.ICP.Candid.Models.Values.CandidFunc.#ctor(EdjCase.ICP.Candid.Models.Values.CandidService,System.String)')
   - [IsOpaqueReference](#P-EdjCase-ICP-Candid-Models-Values-CandidFunc-IsOpaqueReference 'EdjCase.ICP.Candid.Models.Values.CandidFunc.IsOpaqueReference')
   - [Type](#P-EdjCase-ICP-Candid-Models-Values-CandidFunc-Type 'EdjCase.ICP.Candid.Models.Values.CandidFunc.Type')
-  - [EncodeValue()](#M-EdjCase-ICP-Candid-Models-Values-CandidFunc-EncodeValue-EdjCase-ICP-Candid-Models-Types-CandidType,System-Func{EdjCase-ICP-Candid-Models-CandidId,EdjCase-ICP-Candid-Models-Types-CandidCompoundType}- 'EdjCase.ICP.Candid.Models.Values.CandidFunc.EncodeValue(EdjCase.ICP.Candid.Models.Types.CandidType,System.Func{EdjCase.ICP.Candid.Models.CandidId,EdjCase.ICP.Candid.Models.Types.CandidCompoundType})')
+  - [EncodeValue()](#M-EdjCase-ICP-Candid-Models-Values-CandidFunc-EncodeValue-EdjCase-ICP-Candid-Models-Types-CandidType,System-Func{EdjCase-ICP-Candid-Models-CandidId,EdjCase-ICP-Candid-Models-Types-CandidCompoundType},System-Buffers-IBufferWriter{System-Byte}- 'EdjCase.ICP.Candid.Models.Values.CandidFunc.EncodeValue(EdjCase.ICP.Candid.Models.Types.CandidType,System.Func{EdjCase.ICP.Candid.Models.CandidId,EdjCase.ICP.Candid.Models.Types.CandidCompoundType},System.Buffers.IBufferWriter{System.Byte})')
   - [Equals()](#M-EdjCase-ICP-Candid-Models-Values-CandidFunc-Equals-EdjCase-ICP-Candid-Models-Values-CandidValue- 'EdjCase.ICP.Candid.Models.Values.CandidFunc.Equals(EdjCase.ICP.Candid.Models.Values.CandidValue)')
   - [GetHashCode()](#M-EdjCase-ICP-Candid-Models-Values-CandidFunc-GetHashCode 'EdjCase.ICP.Candid.Models.Values.CandidFunc.GetHashCode')
   - [OpaqueReference()](#M-EdjCase-ICP-Candid-Models-Values-CandidFunc-OpaqueReference 'EdjCase.ICP.Candid.Models.Values.CandidFunc.OpaqueReference')
@@ -90,7 +83,7 @@
   - [#ctor(value)](#M-EdjCase-ICP-Candid-Models-Values-CandidOptional-#ctor-EdjCase-ICP-Candid-Models-Values-CandidValue- 'EdjCase.ICP.Candid.Models.Values.CandidOptional.#ctor(EdjCase.ICP.Candid.Models.Values.CandidValue)')
   - [Type](#P-EdjCase-ICP-Candid-Models-Values-CandidOptional-Type 'EdjCase.ICP.Candid.Models.Values.CandidOptional.Type')
   - [Value](#P-EdjCase-ICP-Candid-Models-Values-CandidOptional-Value 'EdjCase.ICP.Candid.Models.Values.CandidOptional.Value')
-  - [EncodeValue()](#M-EdjCase-ICP-Candid-Models-Values-CandidOptional-EncodeValue-EdjCase-ICP-Candid-Models-Types-CandidType,System-Func{EdjCase-ICP-Candid-Models-CandidId,EdjCase-ICP-Candid-Models-Types-CandidCompoundType}- 'EdjCase.ICP.Candid.Models.Values.CandidOptional.EncodeValue(EdjCase.ICP.Candid.Models.Types.CandidType,System.Func{EdjCase.ICP.Candid.Models.CandidId,EdjCase.ICP.Candid.Models.Types.CandidCompoundType})')
+  - [EncodeValue()](#M-EdjCase-ICP-Candid-Models-Values-CandidOptional-EncodeValue-EdjCase-ICP-Candid-Models-Types-CandidType,System-Func{EdjCase-ICP-Candid-Models-CandidId,EdjCase-ICP-Candid-Models-Types-CandidCompoundType},System-Buffers-IBufferWriter{System-Byte}- 'EdjCase.ICP.Candid.Models.Values.CandidOptional.EncodeValue(EdjCase.ICP.Candid.Models.Types.CandidType,System.Func{EdjCase.ICP.Candid.Models.CandidId,EdjCase.ICP.Candid.Models.Types.CandidCompoundType},System.Buffers.IBufferWriter{System.Byte})')
   - [Equals()](#M-EdjCase-ICP-Candid-Models-Values-CandidOptional-Equals-EdjCase-ICP-Candid-Models-Values-CandidValue- 'EdjCase.ICP.Candid.Models.Values.CandidOptional.Equals(EdjCase.ICP.Candid.Models.Values.CandidValue)')
   - [GetHashCode()](#M-EdjCase-ICP-Candid-Models-Values-CandidOptional-GetHashCode 'EdjCase.ICP.Candid.Models.Values.CandidOptional.GetHashCode')
   - [ToString()](#M-EdjCase-ICP-Candid-Models-Values-CandidOptional-ToString 'EdjCase.ICP.Candid.Models.Values.CandidOptional.ToString')
@@ -118,7 +111,7 @@
   - [AsNat8()](#M-EdjCase-ICP-Candid-Models-Values-CandidPrimitive-AsNat8 'EdjCase.ICP.Candid.Models.Values.CandidPrimitive.AsNat8')
   - [AsPrincipal()](#M-EdjCase-ICP-Candid-Models-Values-CandidPrimitive-AsPrincipal 'EdjCase.ICP.Candid.Models.Values.CandidPrimitive.AsPrincipal')
   - [AsText()](#M-EdjCase-ICP-Candid-Models-Values-CandidPrimitive-AsText 'EdjCase.ICP.Candid.Models.Values.CandidPrimitive.AsText')
-  - [EncodeValue()](#M-EdjCase-ICP-Candid-Models-Values-CandidPrimitive-EncodeValue-EdjCase-ICP-Candid-Models-Types-CandidType,System-Func{EdjCase-ICP-Candid-Models-CandidId,EdjCase-ICP-Candid-Models-Types-CandidCompoundType}- 'EdjCase.ICP.Candid.Models.Values.CandidPrimitive.EncodeValue(EdjCase.ICP.Candid.Models.Types.CandidType,System.Func{EdjCase.ICP.Candid.Models.CandidId,EdjCase.ICP.Candid.Models.Types.CandidCompoundType})')
+  - [EncodeValue()](#M-EdjCase-ICP-Candid-Models-Values-CandidPrimitive-EncodeValue-EdjCase-ICP-Candid-Models-Types-CandidType,System-Func{EdjCase-ICP-Candid-Models-CandidId,EdjCase-ICP-Candid-Models-Types-CandidCompoundType},System-Buffers-IBufferWriter{System-Byte}- 'EdjCase.ICP.Candid.Models.Values.CandidPrimitive.EncodeValue(EdjCase.ICP.Candid.Models.Types.CandidType,System.Func{EdjCase.ICP.Candid.Models.CandidId,EdjCase.ICP.Candid.Models.Types.CandidCompoundType},System.Buffers.IBufferWriter{System.Byte})')
   - [Equals()](#M-EdjCase-ICP-Candid-Models-Values-CandidPrimitive-Equals-EdjCase-ICP-Candid-Models-Values-CandidValue- 'EdjCase.ICP.Candid.Models.Values.CandidPrimitive.Equals(EdjCase.ICP.Candid.Models.Values.CandidValue)')
   - [GetHashCode()](#M-EdjCase-ICP-Candid-Models-Values-CandidPrimitive-GetHashCode 'EdjCase.ICP.Candid.Models.Values.CandidPrimitive.GetHashCode')
   - [ToString()](#M-EdjCase-ICP-Candid-Models-Values-CandidPrimitive-ToString 'EdjCase.ICP.Candid.Models.Values.CandidPrimitive.ToString')
@@ -132,7 +125,7 @@
   - [Item](#P-EdjCase-ICP-Candid-Models-Values-CandidRecord-Item-System-UInt32- 'EdjCase.ICP.Candid.Models.Values.CandidRecord.Item(System.UInt32)')
   - [Item](#P-EdjCase-ICP-Candid-Models-Values-CandidRecord-Item-EdjCase-ICP-Candid-Models-CandidTag- 'EdjCase.ICP.Candid.Models.Values.CandidRecord.Item(EdjCase.ICP.Candid.Models.CandidTag)')
   - [Type](#P-EdjCase-ICP-Candid-Models-Values-CandidRecord-Type 'EdjCase.ICP.Candid.Models.Values.CandidRecord.Type')
-  - [EncodeValue()](#M-EdjCase-ICP-Candid-Models-Values-CandidRecord-EncodeValue-EdjCase-ICP-Candid-Models-Types-CandidType,System-Func{EdjCase-ICP-Candid-Models-CandidId,EdjCase-ICP-Candid-Models-Types-CandidCompoundType}- 'EdjCase.ICP.Candid.Models.Values.CandidRecord.EncodeValue(EdjCase.ICP.Candid.Models.Types.CandidType,System.Func{EdjCase.ICP.Candid.Models.CandidId,EdjCase.ICP.Candid.Models.Types.CandidCompoundType})')
+  - [EncodeValue()](#M-EdjCase-ICP-Candid-Models-Values-CandidRecord-EncodeValue-EdjCase-ICP-Candid-Models-Types-CandidType,System-Func{EdjCase-ICP-Candid-Models-CandidId,EdjCase-ICP-Candid-Models-Types-CandidCompoundType},System-Buffers-IBufferWriter{System-Byte}- 'EdjCase.ICP.Candid.Models.Values.CandidRecord.EncodeValue(EdjCase.ICP.Candid.Models.Types.CandidType,System.Func{EdjCase.ICP.Candid.Models.CandidId,EdjCase.ICP.Candid.Models.Types.CandidCompoundType},System.Buffers.IBufferWriter{System.Byte})')
   - [Equals()](#M-EdjCase-ICP-Candid-Models-Values-CandidRecord-Equals-EdjCase-ICP-Candid-Models-Values-CandidValue- 'EdjCase.ICP.Candid.Models.Values.CandidRecord.Equals(EdjCase.ICP.Candid.Models.Values.CandidValue)')
   - [FromDictionary(fields)](#M-EdjCase-ICP-Candid-Models-Values-CandidRecord-FromDictionary-System-Collections-Generic-Dictionary{System-String,EdjCase-ICP-Candid-Models-Values-CandidValue}- 'EdjCase.ICP.Candid.Models.Values.CandidRecord.FromDictionary(System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.Candid.Models.Values.CandidValue})')
   - [FromDictionary(fields)](#M-EdjCase-ICP-Candid-Models-Values-CandidRecord-FromDictionary-System-Collections-Generic-Dictionary{System-UInt32,EdjCase-ICP-Candid-Models-Values-CandidValue}- 'EdjCase.ICP.Candid.Models.Values.CandidRecord.FromDictionary(System.Collections.Generic.Dictionary{System.UInt32,EdjCase.ICP.Candid.Models.Values.CandidValue})')
@@ -164,7 +157,7 @@
   - [#ctor(principalId)](#M-EdjCase-ICP-Candid-Models-Values-CandidService-#ctor-EdjCase-ICP-Candid-Models-Principal- 'EdjCase.ICP.Candid.Models.Values.CandidService.#ctor(EdjCase.ICP.Candid.Models.Principal)')
   - [IsOpqaueReference](#P-EdjCase-ICP-Candid-Models-Values-CandidService-IsOpqaueReference 'EdjCase.ICP.Candid.Models.Values.CandidService.IsOpqaueReference')
   - [Type](#P-EdjCase-ICP-Candid-Models-Values-CandidService-Type 'EdjCase.ICP.Candid.Models.Values.CandidService.Type')
-  - [EncodeValue()](#M-EdjCase-ICP-Candid-Models-Values-CandidService-EncodeValue-EdjCase-ICP-Candid-Models-Types-CandidType,System-Func{EdjCase-ICP-Candid-Models-CandidId,EdjCase-ICP-Candid-Models-Types-CandidCompoundType}- 'EdjCase.ICP.Candid.Models.Values.CandidService.EncodeValue(EdjCase.ICP.Candid.Models.Types.CandidType,System.Func{EdjCase.ICP.Candid.Models.CandidId,EdjCase.ICP.Candid.Models.Types.CandidCompoundType})')
+  - [EncodeValue()](#M-EdjCase-ICP-Candid-Models-Values-CandidService-EncodeValue-EdjCase-ICP-Candid-Models-Types-CandidType,System-Func{EdjCase-ICP-Candid-Models-CandidId,EdjCase-ICP-Candid-Models-Types-CandidCompoundType},System-Buffers-IBufferWriter{System-Byte}- 'EdjCase.ICP.Candid.Models.Values.CandidService.EncodeValue(EdjCase.ICP.Candid.Models.Types.CandidType,System.Func{EdjCase.ICP.Candid.Models.CandidId,EdjCase.ICP.Candid.Models.Types.CandidCompoundType},System.Buffers.IBufferWriter{System.Byte})')
   - [Equals()](#M-EdjCase-ICP-Candid-Models-Values-CandidService-Equals-EdjCase-ICP-Candid-Models-Values-CandidValue- 'EdjCase.ICP.Candid.Models.Values.CandidService.Equals(EdjCase.ICP.Candid.Models.Values.CandidValue)')
   - [GetHashCode()](#M-EdjCase-ICP-Candid-Models-Values-CandidService-GetHashCode 'EdjCase.ICP.Candid.Models.Values.CandidService.GetHashCode')
   - [GetPrincipal()](#M-EdjCase-ICP-Candid-Models-Values-CandidService-GetPrincipal 'EdjCase.ICP.Candid.Models.Values.CandidService.GetPrincipal')
@@ -199,7 +192,6 @@
 - [CandidType](#T-EdjCase-ICP-Candid-Models-Types-CandidType 'EdjCase.ICP.Candid.Models.Types.CandidType')
   - [Bool()](#M-EdjCase-ICP-Candid-Models-Types-CandidType-Bool 'EdjCase.ICP.Candid.Models.Types.CandidType.Bool')
   - [Empty()](#M-EdjCase-ICP-Candid-Models-Types-CandidType-Empty 'EdjCase.ICP.Candid.Models.Types.CandidType.Empty')
-  - [Encode(compoundTypeTable)](#M-EdjCase-ICP-Candid-Models-Types-CandidType-Encode-EdjCase-ICP-Candid-Models-CompoundTypeTable- 'EdjCase.ICP.Candid.Models.Types.CandidType.Encode(EdjCase.ICP.Candid.Models.CompoundTypeTable)')
   - [Equals()](#M-EdjCase-ICP-Candid-Models-Types-CandidType-Equals-System-Object- 'EdjCase.ICP.Candid.Models.Types.CandidType.Equals(System.Object)')
   - [Equals(other)](#M-EdjCase-ICP-Candid-Models-Types-CandidType-Equals-EdjCase-ICP-Candid-Models-Types-CandidType- 'EdjCase.ICP.Candid.Models.Types.CandidType.Equals(EdjCase.ICP.Candid.Models.Types.CandidType)')
   - [Float32()](#M-EdjCase-ICP-Candid-Models-Types-CandidType-Float32 'EdjCase.ICP.Candid.Models.Types.CandidType.Float32')
@@ -378,7 +370,7 @@
   - [Tag](#P-EdjCase-ICP-Candid-Models-Values-CandidVariant-Tag 'EdjCase.ICP.Candid.Models.Values.CandidVariant.Tag')
   - [Type](#P-EdjCase-ICP-Candid-Models-Values-CandidVariant-Type 'EdjCase.ICP.Candid.Models.Values.CandidVariant.Type')
   - [Value](#P-EdjCase-ICP-Candid-Models-Values-CandidVariant-Value 'EdjCase.ICP.Candid.Models.Values.CandidVariant.Value')
-  - [EncodeValue()](#M-EdjCase-ICP-Candid-Models-Values-CandidVariant-EncodeValue-EdjCase-ICP-Candid-Models-Types-CandidType,System-Func{EdjCase-ICP-Candid-Models-CandidId,EdjCase-ICP-Candid-Models-Types-CandidCompoundType}- 'EdjCase.ICP.Candid.Models.Values.CandidVariant.EncodeValue(EdjCase.ICP.Candid.Models.Types.CandidType,System.Func{EdjCase.ICP.Candid.Models.CandidId,EdjCase.ICP.Candid.Models.Types.CandidCompoundType})')
+  - [EncodeValue()](#M-EdjCase-ICP-Candid-Models-Values-CandidVariant-EncodeValue-EdjCase-ICP-Candid-Models-Types-CandidType,System-Func{EdjCase-ICP-Candid-Models-CandidId,EdjCase-ICP-Candid-Models-Types-CandidCompoundType},System-Buffers-IBufferWriter{System-Byte}- 'EdjCase.ICP.Candid.Models.Values.CandidVariant.EncodeValue(EdjCase.ICP.Candid.Models.Types.CandidType,System.Func{EdjCase.ICP.Candid.Models.CandidId,EdjCase.ICP.Candid.Models.Types.CandidCompoundType},System.Buffers.IBufferWriter{System.Byte})')
   - [Equals()](#M-EdjCase-ICP-Candid-Models-Values-CandidVariant-Equals-EdjCase-ICP-Candid-Models-Values-CandidValue- 'EdjCase.ICP.Candid.Models.Values.CandidVariant.Equals(EdjCase.ICP.Candid.Models.Values.CandidValue)')
   - [GetHashCode()](#M-EdjCase-ICP-Candid-Models-Values-CandidVariant-GetHashCode 'EdjCase.ICP.Candid.Models.Values.CandidVariant.GetHashCode')
   - [ToString()](#M-EdjCase-ICP-Candid-Models-Values-CandidVariant-ToString 'EdjCase.ICP.Candid.Models.Values.CandidVariant.ToString')
@@ -388,7 +380,7 @@
   - [#ctor(values)](#M-EdjCase-ICP-Candid-Models-Values-CandidVector-#ctor-EdjCase-ICP-Candid-Models-Values-CandidValue[]- 'EdjCase.ICP.Candid.Models.Values.CandidVector.#ctor(EdjCase.ICP.Candid.Models.Values.CandidValue[])')
   - [Type](#P-EdjCase-ICP-Candid-Models-Values-CandidVector-Type 'EdjCase.ICP.Candid.Models.Values.CandidVector.Type')
   - [Values](#P-EdjCase-ICP-Candid-Models-Values-CandidVector-Values 'EdjCase.ICP.Candid.Models.Values.CandidVector.Values')
-  - [EncodeValue()](#M-EdjCase-ICP-Candid-Models-Values-CandidVector-EncodeValue-EdjCase-ICP-Candid-Models-Types-CandidType,System-Func{EdjCase-ICP-Candid-Models-CandidId,EdjCase-ICP-Candid-Models-Types-CandidCompoundType}- 'EdjCase.ICP.Candid.Models.Values.CandidVector.EncodeValue(EdjCase.ICP.Candid.Models.Types.CandidType,System.Func{EdjCase.ICP.Candid.Models.CandidId,EdjCase.ICP.Candid.Models.Types.CandidCompoundType})')
+  - [EncodeValue()](#M-EdjCase-ICP-Candid-Models-Values-CandidVector-EncodeValue-EdjCase-ICP-Candid-Models-Types-CandidType,System-Func{EdjCase-ICP-Candid-Models-CandidId,EdjCase-ICP-Candid-Models-Types-CandidCompoundType},System-Buffers-IBufferWriter{System-Byte}- 'EdjCase.ICP.Candid.Models.Values.CandidVector.EncodeValue(EdjCase.ICP.Candid.Models.Types.CandidType,System.Func{EdjCase.ICP.Candid.Models.CandidId,EdjCase.ICP.Candid.Models.Types.CandidCompoundType},System.Buffers.IBufferWriter{System.Byte})')
   - [Equals()](#M-EdjCase-ICP-Candid-Models-Values-CandidVector-Equals-EdjCase-ICP-Candid-Models-Values-CandidValue- 'EdjCase.ICP.Candid.Models.Values.CandidVector.Equals(EdjCase.ICP.Candid.Models.Values.CandidValue)')
   - [GetHashCode()](#M-EdjCase-ICP-Candid-Models-Values-CandidVector-GetHashCode 'EdjCase.ICP.Candid.Models.Values.CandidVector.GetHashCode')
   - [ToString()](#M-EdjCase-ICP-Candid-Models-Values-CandidVector-ToString 'EdjCase.ICP.Candid.Models.Values.CandidVector.ToString')
@@ -400,6 +392,7 @@
   - [GetHashCode()](#M-EdjCase-ICP-Candid-Models-Types-CandidVectorType-GetHashCode 'EdjCase.ICP.Candid.Models.Types.CandidVectorType.GetHashCode')
 - [CompoundTypeTable](#T-EdjCase-ICP-Candid-Models-CompoundTypeTable 'EdjCase.ICP.Candid.Models.CompoundTypeTable')
   - [CompoundTypeIndexMap](#F-EdjCase-ICP-Candid-Models-CompoundTypeTable-CompoundTypeIndexMap 'EdjCase.ICP.Candid.Models.CompoundTypeTable.CompoundTypeIndexMap')
+  - [TryAdd(typeDef)](#M-EdjCase-ICP-Candid-Models-CompoundTypeTable-TryAdd-EdjCase-ICP-Candid-Models-Types-CandidCompoundType- 'EdjCase.ICP.Candid.Models.CompoundTypeTable.TryAdd(EdjCase.ICP.Candid.Models.Types.CandidCompoundType)')
 - [CustomMapperAttribute](#T-EdjCase-ICP-Candid-Mapping-CustomMapperAttribute 'EdjCase.ICP.Candid.Mapping.CustomMapperAttribute')
   - [#ctor(mapper)](#M-EdjCase-ICP-Candid-Mapping-CustomMapperAttribute-#ctor-EdjCase-ICP-Candid-Mapping-IObjectMapper- 'EdjCase.ICP.Candid.Mapping.CustomMapperAttribute.#ctor(EdjCase.ICP.Candid.Mapping.IObjectMapper)')
   - [Mapper](#P-EdjCase-ICP-Candid-Mapping-CustomMapperAttribute-Mapper 'EdjCase.ICP.Candid.Mapping.CustomMapperAttribute.Mapper')
@@ -475,12 +468,13 @@
 - [IsExternalInit](#T-System-Runtime-CompilerServices-IsExternalInit 'System.Runtime.CompilerServices.IsExternalInit')
 - [LEB128](#T-EdjCase-ICP-Candid-Encodings-LEB128 'EdjCase.ICP.Candid.Encodings.LEB128')
   - [DecodeSigned(stream)](#M-EdjCase-ICP-Candid-Encodings-LEB128-DecodeSigned-System-IO-Stream- 'EdjCase.ICP.Candid.Encodings.LEB128.DecodeSigned(System.IO.Stream)')
-  - [DecodeUnsigned(encodedValue)](#M-EdjCase-ICP-Candid-Encodings-LEB128-DecodeUnsigned-System-Byte[]- 'EdjCase.ICP.Candid.Encodings.LEB128.DecodeUnsigned(System.Byte[])')
+  - [DecodeUnsigned(encodedValue)](#M-EdjCase-ICP-Candid-Encodings-LEB128-DecodeUnsigned-System-ReadOnlySpan{System-Byte}- 'EdjCase.ICP.Candid.Encodings.LEB128.DecodeUnsigned(System.ReadOnlySpan{System.Byte})')
   - [DecodeUnsigned(stream)](#M-EdjCase-ICP-Candid-Encodings-LEB128-DecodeUnsigned-System-IO-Stream- 'EdjCase.ICP.Candid.Encodings.LEB128.DecodeUnsigned(System.IO.Stream)')
   - [EncodeSigned(value)](#M-EdjCase-ICP-Candid-Encodings-LEB128-EncodeSigned-EdjCase-ICP-Candid-Models-UnboundedInt- 'EdjCase.ICP.Candid.Encodings.LEB128.EncodeSigned(EdjCase.ICP.Candid.Models.UnboundedInt)')
+  - [EncodeSigned(value,destination)](#M-EdjCase-ICP-Candid-Encodings-LEB128-EncodeSigned-EdjCase-ICP-Candid-Models-UnboundedInt,System-Buffers-IBufferWriter{System-Byte}- 'EdjCase.ICP.Candid.Encodings.LEB128.EncodeSigned(EdjCase.ICP.Candid.Models.UnboundedInt,System.Buffers.IBufferWriter{System.Byte})')
   - [EncodeUnsigned(value)](#M-EdjCase-ICP-Candid-Encodings-LEB128-EncodeUnsigned-EdjCase-ICP-Candid-Models-UnboundedUInt- 'EdjCase.ICP.Candid.Encodings.LEB128.EncodeUnsigned(EdjCase.ICP.Candid.Models.UnboundedUInt)')
+  - [EncodeUnsigned(value,destination)](#M-EdjCase-ICP-Candid-Encodings-LEB128-EncodeUnsigned-EdjCase-ICP-Candid-Models-UnboundedUInt,System-Buffers-IBufferWriter{System-Byte}- 'EdjCase.ICP.Candid.Encodings.LEB128.EncodeUnsigned(EdjCase.ICP.Candid.Models.UnboundedUInt,System.Buffers.IBufferWriter{System.Byte})')
 - [OptionalValue\`1](#T-EdjCase-ICP-Candid-Models-OptionalValue`1 'EdjCase.ICP.Candid.Models.OptionalValue`1')
-  - [#ctor(hasValue,value)](#M-EdjCase-ICP-Candid-Models-OptionalValue`1-#ctor-System-Boolean,`0- 'EdjCase.ICP.Candid.Models.OptionalValue`1.#ctor(System.Boolean,`0)')
   - [HasValue](#P-EdjCase-ICP-Candid-Models-OptionalValue`1-HasValue 'EdjCase.ICP.Candid.Models.OptionalValue`1.HasValue')
   - [Cast\`\`1()](#M-EdjCase-ICP-Candid-Models-OptionalValue`1-Cast``1 'EdjCase.ICP.Candid.Models.OptionalValue`1.Cast``1')
   - [Equals()](#M-EdjCase-ICP-Candid-Models-OptionalValue`1-Equals-System-Object- 'EdjCase.ICP.Candid.Models.OptionalValue`1.Equals(System.Object)')
@@ -649,22 +643,6 @@
 - [VariantTagPropertyAttribute](#T-EdjCase-ICP-Candid-Mapping-VariantTagPropertyAttribute 'EdjCase.ICP.Candid.Mapping.VariantTagPropertyAttribute')
 - [VariantValuePropertyAttribute](#T-EdjCase-ICP-Candid-Mapping-VariantValuePropertyAttribute 'EdjCase.ICP.Candid.Mapping.VariantValuePropertyAttribute')
 
-<a name='T-EdjCase-ICP-Candid-BinarySequence'></a>
-## BinarySequence `type`
-
-##### Namespace
-
-EdjCase.ICP.Candid
-
-<a name='M-EdjCase-ICP-Candid-BinarySequence-#ctor-System-Boolean[]-'></a>
-### #ctor(bits) `constructor`
-
-##### Parameters
-
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| bits | [System.Boolean[]](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Boolean[] 'System.Boolean[]') | Least signifcant to most ordered bits |
-
 <a name='T-EdjCase-ICP-Candid-Crypto-CRC32'></a>
 ## CRC32 `type`
 
@@ -677,24 +655,7 @@ EdjCase.ICP.Candid.Crypto
 Helper class for computing CRC32 hashes/checksums on byte data
 Useful for calculating checksums on data
 
-<a name='M-EdjCase-ICP-Candid-Crypto-CRC32-ComputeHash-System-IO-Stream-'></a>
-### ComputeHash(stream) `method`
-
-##### Summary
-
-Computes the 32-bit hash on the stream of data provided
-
-##### Returns
-
-Hash of the byte data as a byte array of length of 4
-
-##### Parameters
-
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| stream | [System.IO.Stream](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.IO.Stream 'System.IO.Stream') | Byte data. Will use the whole stream |
-
-<a name='M-EdjCase-ICP-Candid-Crypto-CRC32-ComputeHash-System-Byte[]-'></a>
+<a name='M-EdjCase-ICP-Candid-Crypto-CRC32-ComputeHash-System-ReadOnlySpan{System-Byte}-'></a>
 ### ComputeHash(data) `method`
 
 ##### Summary
@@ -709,7 +670,7 @@ Hash of the byte data as a byte array of length of 4
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| data | [System.Byte[]](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Byte[] 'System.Byte[]') | Byte data |
+| data | [System.ReadOnlySpan{System.Byte}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.ReadOnlySpan 'System.ReadOnlySpan{System.Byte}') | Byte data |
 
 <a name='T-EdjCase-ICP-Candid-Models-CandidArg'></a>
 ## CandidArg `type`
@@ -765,6 +726,22 @@ Candid arg value
 This method has no parameters.
 
 <a name='M-EdjCase-ICP-Candid-Models-CandidArg-Encode'></a>
+### Encode() `method`
+
+##### Summary
+
+Encodes the candid arg into a byte array which can be used in sending requests to
+a canister
+
+##### Returns
+
+
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-CandidArg-Encode-System-Buffers-IBufferWriter{System-Byte}-'></a>
 ### Encode() `method`
 
 ##### Summary
@@ -904,36 +881,6 @@ This method has no parameters.
 
 This method has no parameters.
 
-<a name='T-EdjCase-ICP-Candid-CandidArgBuilder'></a>
-## CandidArgBuilder `type`
-
-##### Namespace
-
-EdjCase.ICP.Candid
-
-<a name='F-EdjCase-ICP-Candid-CandidArgBuilder-EncodedTypes'></a>
-### EncodedTypes `constants`
-
-##### Summary
-
-Ordered list of encoded types (encoded with SLEB128).
-If SLEB value is positive, it is an index for \`EncodedCompoundTypes\` for a compound type
-If SLEB value is negative, it is type code for a primitive value
-
-<a name='F-EdjCase-ICP-Candid-CandidArgBuilder-EncodedValues'></a>
-### EncodedValues `constants`
-
-##### Summary
-
-Ordered list of encoded values
-
-<a name='F-EdjCase-ICP-Candid-CandidArgBuilder-compoundTypeTable'></a>
-### compoundTypeTable `constants`
-
-##### Summary
-
-Helper to capture compound types
-
 <a name='T-EdjCase-ICP-Candid-Parsers-CandidByteParser'></a>
 ## CandidByteParser `type`
 
@@ -998,23 +945,6 @@ The inner type will use \`CandidReferenceType\` with this id |
 
 Optional. Used if this type can be referenced by an inner type recursively.
 The inner type will use \`CandidReferenceType\` with this id
-
-<a name='M-EdjCase-ICP-Candid-Models-Types-CandidCompoundType-EncodeInnerTypes-EdjCase-ICP-Candid-Models-CompoundTypeTable-'></a>
-### EncodeInnerTypes(compoundTypeTable) `method`
-
-##### Summary
-
-Adds all inner types to the compound table if applicable and returns its encoded type value
-
-##### Returns
-
-Byte array of encoded type
-
-##### Parameters
-
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| compoundTypeTable | [EdjCase.ICP.Candid.Models.CompoundTypeTable](#T-EdjCase-ICP-Candid-Models-CompoundTypeTable 'EdjCase.ICP.Candid.Models.CompoundTypeTable') | The collection of compound types for a candid arg |
 
 <a name='T-EdjCase-ICP-Candid-CandidConverter'></a>
 ## CandidConverter `type`
@@ -1288,7 +1218,7 @@ otherwise false
 
 *Inherit from parent.*
 
-<a name='M-EdjCase-ICP-Candid-Models-Values-CandidFunc-EncodeValue-EdjCase-ICP-Candid-Models-Types-CandidType,System-Func{EdjCase-ICP-Candid-Models-CandidId,EdjCase-ICP-Candid-Models-Types-CandidCompoundType}-'></a>
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidFunc-EncodeValue-EdjCase-ICP-Candid-Models-Types-CandidType,System-Func{EdjCase-ICP-Candid-Models-CandidId,EdjCase-ICP-Candid-Models-Types-CandidCompoundType},System-Buffers-IBufferWriter{System-Byte}-'></a>
 ### EncodeValue() `method`
 
 ##### Summary
@@ -1667,7 +1597,7 @@ A model representing the value of a candid opt
 
 The inner value of an opt. If not set, will be a candid null value
 
-<a name='M-EdjCase-ICP-Candid-Models-Values-CandidOptional-EncodeValue-EdjCase-ICP-Candid-Models-Types-CandidType,System-Func{EdjCase-ICP-Candid-Models-CandidId,EdjCase-ICP-Candid-Models-Types-CandidCompoundType}-'></a>
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidOptional-EncodeValue-EdjCase-ICP-Candid-Models-Types-CandidType,System-Func{EdjCase-ICP-Candid-Models-CandidId,EdjCase-ICP-Candid-Models-Types-CandidCompoundType},System-Buffers-IBufferWriter{System-Byte}-'></a>
 ### EncodeValue() `method`
 
 ##### Summary
@@ -1959,7 +1889,7 @@ This method has no parameters.
 
 This method has no parameters.
 
-<a name='M-EdjCase-ICP-Candid-Models-Values-CandidPrimitive-EncodeValue-EdjCase-ICP-Candid-Models-Types-CandidType,System-Func{EdjCase-ICP-Candid-Models-CandidId,EdjCase-ICP-Candid-Models-Types-CandidCompoundType}-'></a>
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidPrimitive-EncodeValue-EdjCase-ICP-Candid-Models-Types-CandidType,System-Func{EdjCase-ICP-Candid-Models-CandidId,EdjCase-ICP-Candid-Models-Types-CandidCompoundType},System-Buffers-IBufferWriter{System-Byte}-'></a>
 ### EncodeValue() `method`
 
 ##### Summary
@@ -2135,7 +2065,7 @@ The field value
 
 *Inherit from parent.*
 
-<a name='M-EdjCase-ICP-Candid-Models-Values-CandidRecord-EncodeValue-EdjCase-ICP-Candid-Models-Types-CandidType,System-Func{EdjCase-ICP-Candid-Models-CandidId,EdjCase-ICP-Candid-Models-Types-CandidCompoundType}-'></a>
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidRecord-EncodeValue-EdjCase-ICP-Candid-Models-Types-CandidType,System-Func{EdjCase-ICP-Candid-Models-CandidId,EdjCase-ICP-Candid-Models-Types-CandidCompoundType},System-Buffers-IBufferWriter{System-Byte}-'></a>
 ### EncodeValue() `method`
 
 ##### Summary
@@ -2502,7 +2432,7 @@ otherwise false
 
 *Inherit from parent.*
 
-<a name='M-EdjCase-ICP-Candid-Models-Values-CandidService-EncodeValue-EdjCase-ICP-Candid-Models-Types-CandidType,System-Func{EdjCase-ICP-Candid-Models-CandidId,EdjCase-ICP-Candid-Models-Types-CandidCompoundType}-'></a>
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidService-EncodeValue-EdjCase-ICP-Candid-Models-Types-CandidType,System-Func{EdjCase-ICP-Candid-Models-CandidId,EdjCase-ICP-Candid-Models-Types-CandidCompoundType},System-Buffers-IBufferWriter{System-Byte}-'></a>
 ### EncodeValue() `method`
 
 ##### Summary
@@ -2913,25 +2843,6 @@ Empty candid type
 ##### Parameters
 
 This method has no parameters.
-
-<a name='M-EdjCase-ICP-Candid-Models-Types-CandidType-Encode-EdjCase-ICP-Candid-Models-CompoundTypeTable-'></a>
-### Encode(compoundTypeTable) `method`
-
-##### Summary
-
-Encodes this type into a byte array. If its a primitive type the value will
-be an encoded negative number, if its a compound type it will be added to the 
-type table and be a positive number of the table index where its info is stored
-
-##### Returns
-
-Byte array of the type number
-
-##### Parameters
-
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| compoundTypeTable | [EdjCase.ICP.Candid.Models.CompoundTypeTable](#T-EdjCase-ICP-Candid-Models-CompoundTypeTable 'EdjCase.ICP.Candid.Models.CompoundTypeTable') | The collection of compound types for a candid arg |
 
 <a name='M-EdjCase-ICP-Candid-Models-Types-CandidType-Equals-System-Object-'></a>
 ### Equals() `method`
@@ -5392,7 +5303,7 @@ The tag (id/name) of the chosen variant option
 
 The value of the chosen variant option, whose type is based on the option
 
-<a name='M-EdjCase-ICP-Candid-Models-Values-CandidVariant-EncodeValue-EdjCase-ICP-Candid-Models-Types-CandidType,System-Func{EdjCase-ICP-Candid-Models-CandidId,EdjCase-ICP-Candid-Models-Types-CandidCompoundType}-'></a>
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidVariant-EncodeValue-EdjCase-ICP-Candid-Models-Types-CandidType,System-Func{EdjCase-ICP-Candid-Models-CandidId,EdjCase-ICP-Candid-Models-Types-CandidCompoundType},System-Buffers-IBufferWriter{System-Byte}-'></a>
 ### EncodeValue() `method`
 
 ##### Summary
@@ -5490,7 +5401,7 @@ A model representing a candid vector value
 
 Each candid value that the vector contains. All must be of the same type
 
-<a name='M-EdjCase-ICP-Candid-Models-Values-CandidVector-EncodeValue-EdjCase-ICP-Candid-Models-Types-CandidType,System-Func{EdjCase-ICP-Candid-Models-CandidId,EdjCase-ICP-Candid-Models-Types-CandidCompoundType}-'></a>
+<a name='M-EdjCase-ICP-Candid-Models-Values-CandidVector-EncodeValue-EdjCase-ICP-Candid-Models-Types-CandidType,System-Func{EdjCase-ICP-Candid-Models-CandidId,EdjCase-ICP-Candid-Models-Types-CandidCompoundType},System-Buffers-IBufferWriter{System-Byte}-'></a>
 ### EncodeValue() `method`
 
 ##### Summary
@@ -5601,6 +5512,23 @@ EdjCase.ICP.Candid.Models
 ##### Summary
 
 A mapping of compound type definition to \`EncodedCompoundTypes\` index to be used as reference
+
+<a name='M-EdjCase-ICP-Candid-Models-CompoundTypeTable-TryAdd-EdjCase-ICP-Candid-Models-Types-CandidCompoundType-'></a>
+### TryAdd(typeDef) `method`
+
+##### Summary
+
+Adds type to the table unless the type already exists
+
+##### Returns
+
+True if added, otherwise false
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| typeDef | [EdjCase.ICP.Candid.Models.Types.CandidCompoundType](#T-EdjCase-ICP-Candid-Models-Types-CandidCompoundType 'EdjCase.ICP.Candid.Models.Types.CandidCompoundType') | Type to add to table |
 
 <a name='T-EdjCase-ICP-Candid-Mapping-CustomMapperAttribute'></a>
 ## CustomMapperAttribute `type`
@@ -6534,7 +6462,7 @@ Takes a encoded signed LEB128 byte stream and converts it to an \`UnboundedInt\`
 | ---- | ---- | ----------- |
 | stream | [System.IO.Stream](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.IO.Stream 'System.IO.Stream') | Byte stream of a signed LEB128 |
 
-<a name='M-EdjCase-ICP-Candid-Encodings-LEB128-DecodeUnsigned-System-Byte[]-'></a>
+<a name='M-EdjCase-ICP-Candid-Encodings-LEB128-DecodeUnsigned-System-ReadOnlySpan{System-Byte}-'></a>
 ### DecodeUnsigned(encodedValue) `method`
 
 ##### Summary
@@ -6549,7 +6477,7 @@ Takes a byte encoded unsigned LEB128 and converts it to an \`UnboundedUInt\`
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| encodedValue | [System.Byte[]](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Byte[] 'System.Byte[]') | Byte value of an unsigned LEB128 |
+| encodedValue | [System.ReadOnlySpan{System.Byte}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.ReadOnlySpan 'System.ReadOnlySpan{System.Byte}') | Byte value of an unsigned LEB128 |
 
 <a name='M-EdjCase-ICP-Candid-Encodings-LEB128-DecodeUnsigned-System-IO-Stream-'></a>
 ### DecodeUnsigned(stream) `method`
@@ -6585,6 +6513,24 @@ LEB128 bytes of value
 | ---- | ---- | ----------- |
 | value | [EdjCase.ICP.Candid.Models.UnboundedInt](#T-EdjCase-ICP-Candid-Models-UnboundedInt 'EdjCase.ICP.Candid.Models.UnboundedInt') | Value to convert to LEB128 bytes |
 
+<a name='M-EdjCase-ICP-Candid-Encodings-LEB128-EncodeSigned-EdjCase-ICP-Candid-Models-UnboundedInt,System-Buffers-IBufferWriter{System-Byte}-'></a>
+### EncodeSigned(value,destination) `method`
+
+##### Summary
+
+Takes an \`UnboundedInt\` and converts it into an encoded signed LEB128 byte array
+
+##### Returns
+
+LEB128 bytes of value
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| value | [EdjCase.ICP.Candid.Models.UnboundedInt](#T-EdjCase-ICP-Candid-Models-UnboundedInt 'EdjCase.ICP.Candid.Models.UnboundedInt') | Value to convert to LEB128 bytes |
+| destination | [System.Buffers.IBufferWriter{System.Byte}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Buffers.IBufferWriter 'System.Buffers.IBufferWriter{System.Byte}') | Buffer writer to write bytes to |
+
 <a name='M-EdjCase-ICP-Candid-Encodings-LEB128-EncodeUnsigned-EdjCase-ICP-Candid-Models-UnboundedUInt-'></a>
 ### EncodeUnsigned(value) `method`
 
@@ -6601,6 +6547,24 @@ LEB128 bytes of value
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | value | [EdjCase.ICP.Candid.Models.UnboundedUInt](#T-EdjCase-ICP-Candid-Models-UnboundedUInt 'EdjCase.ICP.Candid.Models.UnboundedUInt') | Value to convert to LEB128 bytes |
+
+<a name='M-EdjCase-ICP-Candid-Encodings-LEB128-EncodeUnsigned-EdjCase-ICP-Candid-Models-UnboundedUInt,System-Buffers-IBufferWriter{System-Byte}-'></a>
+### EncodeUnsigned(value,destination) `method`
+
+##### Summary
+
+Takes an \`UnboundedUInt\` and converts it into an encoded unsigned LEB128 byte array
+
+##### Returns
+
+LEB128 bytes of value
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| value | [EdjCase.ICP.Candid.Models.UnboundedUInt](#T-EdjCase-ICP-Candid-Models-UnboundedUInt 'EdjCase.ICP.Candid.Models.UnboundedUInt') | Value to convert to LEB128 bytes |
+| destination | [System.Buffers.IBufferWriter{System.Byte}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Buffers.IBufferWriter 'System.Buffers.IBufferWriter{System.Byte}') | Buffer writer to write bytes to |
 
 <a name='T-EdjCase-ICP-Candid-Models-OptionalValue`1'></a>
 ## OptionalValue\`1 `type`
@@ -6619,16 +6583,6 @@ ambiguity in certain scenarios
 | Name | Description |
 | ---- | ----------- |
 | T | The inner type of the opt |
-
-<a name='M-EdjCase-ICP-Candid-Models-OptionalValue`1-#ctor-System-Boolean,`0-'></a>
-### #ctor(hasValue,value) `constructor`
-
-##### Parameters
-
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| hasValue | [System.Boolean](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Boolean 'System.Boolean') | Is true if there is a value, false if null |
-| value | [\`0](#T-`0 '`0') | The value |
 
 <a name='P-EdjCase-ICP-Candid-Models-OptionalValue`1-HasValue'></a>
 ### HasValue `property`

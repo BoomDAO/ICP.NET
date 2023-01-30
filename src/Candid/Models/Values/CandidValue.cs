@@ -1,5 +1,6 @@
 using EdjCase.ICP.Candid.Models.Types;
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -54,7 +55,7 @@ namespace EdjCase.ICP.Candid.Models.Values
 		/// </summary>
 		public abstract CandidValueType Type { get; }
 
-		internal abstract byte[] EncodeValue(CandidType type, Func<CandidId, CandidCompoundType> getReferencedType);
+		internal abstract void EncodeValue(CandidType type, Func<CandidId, CandidCompoundType> getReferencedType, IBufferWriter<byte> destination);
 
 		/// <inheritdoc />
 		public abstract override int GetHashCode();

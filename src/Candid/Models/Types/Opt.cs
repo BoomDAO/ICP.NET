@@ -1,4 +1,5 @@
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 
 namespace EdjCase.ICP.Candid.Models.Types
@@ -24,9 +25,9 @@ namespace EdjCase.ICP.Candid.Models.Types
 			this.Value = value ?? throw new ArgumentNullException(nameof(value));
 		}
 
-		internal override byte[] EncodeInnerTypes(CompoundTypeTable compoundTypeTable)
+		internal override void EncodeInnerTypes(CompoundTypeTable compoundTypeTable, IBufferWriter<byte> destination)
 		{
-			return this.Value.Encode(compoundTypeTable);
+			this.Value.Encode(compoundTypeTable, destination);
 		}
 
 		internal override IEnumerable<CandidType> GetInnerTypes()

@@ -3,6 +3,7 @@ using System;
 using System.Linq;
 using EdjCase.ICP.Candid.Models.Types;
 using EdjCase.ICP.Candid.Exceptions;
+using System.Buffers;
 
 namespace EdjCase.ICP.Candid.Models.Values
 {
@@ -33,7 +34,7 @@ namespace EdjCase.ICP.Candid.Models.Values
 		}
 
 		/// <inheritdoc />
-		internal override byte[] EncodeValue(CandidType type, Func<CandidId, CandidCompoundType> getReferencedType)
+		internal override void EncodeValue(CandidType type, Func<CandidId, CandidCompoundType> getReferencedType, IBufferWriter<byte> destination)
 		{
 			CandidVariantType t;
 			if (type is CandidReferenceType r)
@@ -44,18 +45,25 @@ namespace EdjCase.ICP.Candid.Models.Values
 			{
 				t = (CandidVariantType)type;
 			}
-			int index = t.Options.AsEnumerable()
-				.OrderBy(f => f.Key)
-				.ToList()
-				.FindIndex(f => f.Key == this.Tag);
-			if (index < 0)
+			// Order the options by key and get the index of the variant option
+			// This is used for encoding vs the tag value
+			uint optionIndex = 0;
+			foreach(var option in t.Options.AsEnumerable().OrderBy(o => o.Key))
+			{
+				if (option.Key == this.Tag)
+				{
+					// If the tag was matched, then use this index
+					break;
+				}
+				optionIndex++;
+			}
+			if (optionIndex >= t.Options.Count)
 			{
 				throw new InvalidCandidException($"Variant option '{this.Tag}' was not found in the type", null);
 			}
 			// bytes = index (LEB128) + encoded value
-			return LEB128.EncodeUnsigned((uint)index)
-				.Concat(this.Value.EncodeValue(t.Options[this.Tag], getReferencedType))
-				.ToArray();
+			LEB128.EncodeUnsigned(optionIndex, destination);// Encode chosen option index
+			this.Value.EncodeValue(t.Options[this.Tag], getReferencedType, destination); // Encode option value
 		}
 
 		/// <inheritdoc />

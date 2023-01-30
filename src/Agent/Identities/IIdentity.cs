@@ -1,6 +1,7 @@
 using EdjCase.ICP.Agent.Models;
 using EdjCase.ICP.Candid.Crypto;
 using EdjCase.ICP.Candid.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -33,7 +34,7 @@ namespace EdjCase.ICP.Agent.Identities
 		/// </summary>
 		/// <param name="data">The byte data to sign</param>
 		/// <returns>The signature bytes of the specified data bytes</returns>
-		public Task<byte[]> SignAsync(byte[] data);
+		public byte[] Sign(byte[] data);
 	}
 
 	/// <summary>
@@ -47,13 +48,13 @@ namespace EdjCase.ICP.Agent.Identities
 		/// <param name="identity">The identity to sign the content with</param>
 		/// <param name="content">The data that needs to be signed</param>
 		/// <returns>The content with signature(s) from the identity</returns>
-		public static async Task<SignedContent> SignContentAsync(this IIdentity identity, Dictionary<string, IHashable> content)
+		public static SignedContent SignContent(this IIdentity identity, Dictionary<string, IHashable> content)
 		{
 			DerEncodedPublicKey senderPublicKey = identity.GetPublicKey();
 			var sha256 = SHA256HashFunction.Create();
 			byte[] contentHash = content.ToHashable().ComputeHash(sha256);
 			byte[] domainSeparator = Encoding.UTF8.GetBytes("\x0Aic-request");
-			byte[] senderSignature = await identity.SignAsync(domainSeparator.Concat(contentHash).ToArray());
+			byte[] senderSignature = identity.Sign(domainSeparator.Concat(contentHash).ToArray());
 			List<SignedDelegation>? senderDelegations = identity.GetSenderDelegations();
 			return new SignedContent(content, senderPublicKey.Value, senderDelegations, senderSignature);
 		}

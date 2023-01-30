@@ -1,6 +1,8 @@
 using EdjCase.ICP.Candid.Models.Types;
 using System;
+using System.Buffers;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace EdjCase.ICP.Candid.Models.Values
@@ -74,9 +76,7 @@ namespace EdjCase.ICP.Candid.Models.Values
 		/// <param name="value">Out value that is set only if the method returns true</param>
 		/// <returns>True if field exists, otherwise false</returns>
 		public bool TryGetField(string name,
-#if !NETSTANDARD2_0
-		[NotNullWhen(true)]
-#endif
+			[NotNullWhen(true)]
 			out CandidValue? value)
 		{
 			CandidTag hashedName = CandidTag.FromName(name);
@@ -91,9 +91,7 @@ namespace EdjCase.ICP.Candid.Models.Values
 		/// <param name="value">Out value that is set only if the method returns true</param>
 		/// <returns>True if field exists, otherwise false</returns>
 		public bool TryGetField(uint id,
-#if !NETSTANDARD2_0
-		[NotNullWhen(true)]
-#endif
+			[NotNullWhen(true)]
 			out CandidValue? value)
 		{
 			CandidTag hashedName = CandidTag.FromId(id);
@@ -108,9 +106,7 @@ namespace EdjCase.ICP.Candid.Models.Values
 		/// <param name="value">Out value that is set only if the method returns true</param>
 		/// <returns>True if field exists, otherwise false</returns>
 		public bool TryGetField(CandidTag tag,
-#if !NETSTANDARD2_0
-		[NotNullWhen(true)]
-#endif
+			[NotNullWhen(true)]
 			out CandidValue? value)
 		{
 			return this.Fields.TryGetValue(tag, out value);
@@ -156,7 +152,7 @@ namespace EdjCase.ICP.Candid.Models.Values
 		}
 
 		/// <inheritdoc />
-		internal override byte[] EncodeValue(CandidType type, Func<CandidId, CandidCompoundType> getReferencedType)
+		internal override void EncodeValue(CandidType type, Func<CandidId, CandidCompoundType> getReferencedType, IBufferWriter<byte> destination)
 		{
 			CandidRecordType t;
 			if (type is CandidReferenceType r)
@@ -168,10 +164,10 @@ namespace EdjCase.ICP.Candid.Models.Values
 				t = (CandidRecordType)type;
 			}
 			// bytes = ordered keys by hash hashes added together
-			return t.Fields
-				.OrderBy(l => l.Key)
-				.SelectMany(v => this.Fields[v.Key].EncodeValue(v.Value, getReferencedType))
-				.ToArray();
+			foreach(var f in t.Fields.OrderBy(l => l.Key))
+			{
+				this.Fields[f.Key].EncodeValue(f.Value, getReferencedType, destination); // Encode value
+			}
 		}
 
 		/// <inheritdoc />

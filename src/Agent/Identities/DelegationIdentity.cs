@@ -39,9 +39,9 @@ namespace EdjCase.ICP.Agent.Identities
 		}
 
 		/// <inheritdoc/>
-		public async Task<byte[]> SignAsync(byte[] blob)
+		public byte[] Sign(byte[] message)
 		{
-			return await this.Identity.SignAsync(blob);
+			return this.Identity.Sign(message);
 		}
 
 		/// <inheritdoc/>

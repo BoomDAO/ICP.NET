@@ -53,7 +53,7 @@ namespace EdjCase.ICP.Agent.Models
 			List<Principal>? targets = null,
 			List<Principal>? senders = null)
 		{
-			return await CreateAsync(keyToDelegateTo, delegatingIdentity.SignAsync, expiration, targets, senders);
+			return await CreateAsync(keyToDelegateTo, delegatingIdentity.Sign, expiration, targets, senders);
 		}
 
 		/// <summary>
@@ -67,14 +67,14 @@ namespace EdjCase.ICP.Agent.Models
 		/// <returns>A delegation signed by the delegating identity</returns>
 		public static async Task<SignedDelegation> CreateAsync(
 			DerEncodedPublicKey keyToDelegateTo,
-			Func<byte[], Task<byte[]>> signingFunc,
+			Func<byte[], byte[]> signingFunc,
 			ICTimestamp expiration,
 			List<Principal>? targets = null,
 			List<Principal>? senders = null)
 		{
 			var delegation = new Delegation(keyToDelegateTo.Value, expiration, targets, senders);
 			byte[] challenge = delegation.BuildSigningChallenge();
-			byte[] signature = await signingFunc(challenge);
+			byte[] signature = signingFunc(challenge);
 			return new SignedDelegation(delegation, signature);
 		}
 

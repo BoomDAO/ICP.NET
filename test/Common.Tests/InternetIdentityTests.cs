@@ -18,7 +18,7 @@ namespace ICP.Candid.Tests
 		[Fact]
 		public async Task Authenticator__LoginAsync()
 		{
-			Ed25519Identity deviceIdentity = Ed25519Identity.Generate();
+			Ed25519Identity deviceIdentity = Ed25519Identity.Create();
 
 			List<DeviceInfo> devices = new List<DeviceInfo>
 			{
@@ -26,13 +26,13 @@ namespace ICP.Candid.Tests
 			};
 			ulong anchor = 1;
 			string clientHostname = "nns.ic0.app";
-			Ed25519Identity sessionIdentity = Ed25519Identity.Generate();
+			Ed25519Identity sessionIdentity = Ed25519Identity.Create();
 			TimeSpan maxTimeToLive = TimeSpan.FromSeconds(60);
 			byte[] challenge = new byte[32];
 			var canisterId = Principal.FromText("rrkah-fqaaa-aaaaa-aaaaq-cai");
 
 			var delegation = new Delegation(sessionIdentity.PublicKey.Value, ICTimestamp.Future(maxTimeToLive), targets: null, senders: null);
-			byte[] deviceSignature = await deviceIdentity.SignAsync(challenge);
+			byte[] deviceSignature = deviceIdentity.Sign(challenge);
 			var delegations = new List<SignedDelegation>
 			{
 				new SignedDelegation(delegation, deviceSignature)
@@ -66,12 +66,12 @@ namespace ICP.Candid.Tests
 		[Fact]
 		public async Task Authenticator__LoginAsync__No_Devices__Error()
 		{
-			Ed25519Identity deviceIdentity = Ed25519Identity.Generate();
+			Ed25519Identity deviceIdentity = Ed25519Identity.Create();
 
 			List<DeviceInfo> devices = new List<DeviceInfo>();
 			ulong anchor = 1;
 			string clientHostname = "nns.ic0.app";
-			Ed25519Identity sessionIdentity = Ed25519Identity.Generate();
+			Ed25519Identity sessionIdentity = Ed25519Identity.Create();
 			TimeSpan maxTimeToLive = TimeSpan.FromSeconds(60);
 			byte[] challenge = new byte[32];
 
@@ -92,20 +92,20 @@ namespace ICP.Candid.Tests
 		[Fact]
 		public async Task Authenticator__LoginAsync__Auth_Fail__Error()
 		{
-			Ed25519Identity deviceIdentity = Ed25519Identity.Generate();
+			Ed25519Identity deviceIdentity = Ed25519Identity.Create();
 			List<DeviceInfo> devices = new List<DeviceInfo>
 			{
 				new DeviceInfo(deviceIdentity.PublicKey, null)
 			};
 			ulong anchor = 1;
 			string clientHostname = "nns.ic0.app";
-			Ed25519Identity sessionIdentity = Ed25519Identity.Generate();
+			Ed25519Identity sessionIdentity = Ed25519Identity.Create();
 			TimeSpan maxTimeToLive = TimeSpan.FromSeconds(60);
 			byte[] challenge = new byte[32];
 			var canisterId = Principal.FromText("rrkah-fqaaa-aaaaa-aaaaq-cai");
 
 			var delegation = new Delegation(sessionIdentity.PublicKey.Value, ICTimestamp.Future(maxTimeToLive), targets: null, senders: null);
-			byte[] deviceSignature = await deviceIdentity.SignAsync(challenge);
+			byte[] deviceSignature = deviceIdentity.Sign(challenge);
 			var delegations = new List<SignedDelegation>
 			{
 				new SignedDelegation(delegation, deviceSignature)
@@ -138,20 +138,20 @@ namespace ICP.Candid.Tests
 		[Fact]
 		public async Task Authenticator__LoginAsync__No_Matching_Device__Error()
 		{
-			Ed25519Identity deviceIdentity = Ed25519Identity.Generate();
+			Ed25519Identity deviceIdentity = Ed25519Identity.Create();
 			List<DeviceInfo> devices = new List<DeviceInfo>
 			{
 				new DeviceInfo(deviceIdentity.PublicKey, null)
 			};
 			ulong anchor = 1;
 			string clientHostname = "nns.ic0.app";
-			Ed25519Identity sessionIdentity = Ed25519Identity.Generate();
+			Ed25519Identity sessionIdentity = Ed25519Identity.Create();
 			TimeSpan maxTimeToLive = TimeSpan.FromSeconds(60);
 			byte[] challenge = new byte[32];
 			var canisterId = Principal.FromText("rrkah-fqaaa-aaaaa-aaaaq-cai");
 
 			var delegation = new Delegation(sessionIdentity.PublicKey.Value, ICTimestamp.Future(maxTimeToLive), targets: null, senders: null);
-			byte[] deviceSignature = await deviceIdentity.SignAsync(challenge);
+			byte[] deviceSignature = deviceIdentity.Sign(challenge);
 			var delegations = new List<SignedDelegation>
 			{
 				new SignedDelegation(delegation, deviceSignature)

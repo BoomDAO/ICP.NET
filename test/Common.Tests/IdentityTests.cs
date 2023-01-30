@@ -19,13 +19,13 @@ namespace ICP.Candid.Tests
 		}
 		[Theory]
 		[InlineData("302a300506032b65700321005987fc68902ecf4644fe6c7d82b9f0e957817a8f9f8c58da5d2c9d3d19915229", "d8c5d3d2bcb82f16b399d40ed6ff1801bc5eb31fc301dc1ad517e2ed8c3f268e5987fc68902ecf4644fe6c7d82b9f0e957817a8f9f8c58da5d2c9d3d19915229")]
-		public async Task ED25519Identity_SignAsync(string publicKeyHex, string privateKeyHex)
+		public void ED25519Identity_Sign(string publicKeyHex, string privateKeyHex)
 		{
 			byte[] publicKeyBytes = ByteUtil.FromHexString(publicKeyHex);
 			var publicKey = DerEncodedPublicKey.FromEd25519(publicKeyBytes);
 			byte[] privateKeyBytes = ByteUtil.FromHexString(privateKeyHex);
 			var identity = new Ed25519Identity(publicKey, privateKeyBytes);
-			byte[] signature = await identity.SignAsync(new byte[] { 1, 2, 3, 4 });
+			byte[] signature = identity.Sign(new byte[] { 1, 2, 3, 4 });
 			Snapshot.Match(signature);
 		}
 	}

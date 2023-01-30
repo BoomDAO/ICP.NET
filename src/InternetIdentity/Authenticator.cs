@@ -36,7 +36,7 @@ namespace EdjCase.ICP.InternetIdentity
 				return LoginResult.FromError(ErrorType.InvalidAnchorOrNoDevices);
 			}
 
-			sessionIdentity = sessionIdentity ?? Ed25519Identity.Generate();
+			sessionIdentity = sessionIdentity ?? Ed25519Identity.Create();
 
 			try
 			{

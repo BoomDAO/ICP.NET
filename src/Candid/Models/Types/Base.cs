@@ -1,5 +1,6 @@
 using EdjCase.ICP.Candid.Models.Values;
 using System;
+using System.Buffers;
 
 namespace EdjCase.ICP.Candid.Models.Types
 {
@@ -19,14 +20,7 @@ namespace EdjCase.ICP.Candid.Models.Types
 	/// </summary>
 	public abstract class CandidType : IEquatable<CandidType>
 	{
-		/// <summary>
-		/// Encodes this type into a byte array. If its a primitive type the value will
-		/// be an encoded negative number, if its a compound type it will be added to the 
-		/// type table and be a positive number of the table index where its info is stored
-		/// </summary>
-		/// <param name="compoundTypeTable">The collection of compound types for a candid arg</param>
-		/// <returns>Byte array of the type number</returns>
-		internal abstract byte[] Encode(CompoundTypeTable compoundTypeTable);
+		internal abstract void Encode(CompoundTypeTable compoundTypeTable, IBufferWriter<byte> destination);
 
 
 

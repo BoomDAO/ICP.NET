@@ -28,7 +28,7 @@ namespace EdjCase.ICP.Candid.Models
 		/// <returns>Byte array of the number</returns>
 		public byte[] GetRawBytes(bool isBigEndian)
 		{
-			return this.value.ToByteArray(unsignedBits: true, bigEndian: isBigEndian);
+			return this.value.ToByteArray(isUnsigned: true, isBigEndian: isBigEndian);
 		}
 
 		/// <summary>

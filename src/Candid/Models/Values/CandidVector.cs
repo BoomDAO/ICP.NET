@@ -1,6 +1,7 @@
 using EdjCase.ICP.Candid.Encodings;
 using EdjCase.ICP.Candid.Models.Types;
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -32,7 +33,7 @@ namespace EdjCase.ICP.Candid.Models.Values
 		}
 
 		/// <inheritdoc />
-		internal override byte[] EncodeValue(CandidType type, Func<CandidId, CandidCompoundType> getReferencedType)
+		internal override void EncodeValue(CandidType type, Func<CandidId, CandidCompoundType> getReferencedType, IBufferWriter<byte> destination)
 		{
 			CandidVectorType t;
 			if (type is CandidReferenceType r)
@@ -43,13 +44,11 @@ namespace EdjCase.ICP.Candid.Models.Values
 			{
 				t = (CandidVectorType)type;
 			}
-			byte[] valueListBytes = this.Values
-				.SelectMany(v => v.EncodeValue(t.InnerType, getReferencedType))
-				.ToArray();
-			byte[] valueCountBytes = LEB128.EncodeSigned(this.Values.Length);
-			return valueCountBytes
-				.Concat(valueListBytes)
-				.ToArray();
+			LEB128.EncodeSigned(this.Values.Length, destination); // Encode vector length
+			foreach (CandidValue value in this.Values)
+			{
+				value.EncodeValue(t.InnerType, getReferencedType, destination); // Encode vector values
+			}
 		}
 
 		/// <inheritdoc />

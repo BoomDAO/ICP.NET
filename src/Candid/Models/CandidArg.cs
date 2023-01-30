@@ -1,8 +1,12 @@
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using EdjCase.ICP.Candid.Crypto;
+using EdjCase.ICP.Candid.Encodings;
 using EdjCase.ICP.Candid.Exceptions;
+using EdjCase.ICP.Candid.Models.Types;
 using EdjCase.ICP.Candid.Parsers;
 
 namespace EdjCase.ICP.Candid.Models
@@ -36,7 +40,43 @@ namespace EdjCase.ICP.Candid.Models
 		/// <returns></returns>
 		public byte[] Encode()
 		{
-			return CandidArgBuilder.FromArgs(this.Values).Encode();
+			ArrayBufferWriter<byte> bufferWriter = new();
+			this.Encode(bufferWriter);
+			return bufferWriter.WrittenMemory.ToArray();
+		}
+
+		/// <summary>
+		/// Encodes the candid arg into a byte array which can be used in sending requests to
+		/// a canister
+		/// </summary>
+		/// <returns></returns>
+		public void Encode(IBufferWriter<byte> destination)
+		{
+			// Header
+			int bytesWritten = Encoding.UTF8.GetBytes("DIDL", destination.GetSpan(4));
+			destination.Advance(bytesWritten);
+
+			// Type table
+			CompoundTypeTable compoundTypeTable = CompoundTypeTable.FromTypes(this.Values);
+
+			compoundTypeTable.Encode(destination); // Encode type table
+
+
+			// Types
+			LEB128.EncodeSigned(this.Values.Count, destination); // Encode type count
+			foreach (CandidTypedValue typedValue in this.Values)
+			{
+				typedValue.Type.Encode(compoundTypeTable, destination); // Encode type
+			}
+
+			// Build method to resolve the referenced types
+			Func<CandidId, CandidCompoundType> getReferenceType = (id) => compoundTypeTable.GetReferenceById(id).Type;
+
+			// Values
+			foreach (CandidTypedValue typedValue in this.Values)
+			{
+				typedValue.Value.EncodeValue(typedValue.Type, getReferenceType, destination); // Encode value
+			}
 		}
 
 		/// <summary>

@@ -1,6 +1,7 @@
 using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid.Utilities;
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -18,13 +19,13 @@ namespace EdjCase.ICP.Candid.Encodings
 		/// </summary>
 		/// <param name="encodedValue">Byte value of an unsigned LEB128</param>
 		/// <returns>`UnboundedUInt` of LEB128 value</returns>
-		public static UnboundedUInt DecodeUnsigned(byte[] encodedValue)
+		public static UnboundedUInt DecodeUnsigned(ReadOnlySpan<byte> encodedValue)
 		{
 			BigInteger v = 0;
 			for (int i = 0; i < encodedValue.Length; i++)
 			{
 				byte b = encodedValue[i];
-				ulong valueToAdd = (b & 0b0111_1111ul) << (7 * i); // Shift over 7 * i bits to get value to add
+				ulong valueToAdd = (b & 0b0111_1111u) << (7 * i); // Shift over 7 * i bits to get value to add
 				v += valueToAdd;
 			}
 			return UnboundedUInt.FromBigInteger(v);
@@ -60,7 +61,20 @@ namespace EdjCase.ICP.Candid.Encodings
 		/// <returns>LEB128 bytes of value</returns>
 		public static byte[] EncodeUnsigned(UnboundedUInt value)
 		{
-			return LEB128.EncodeUnsigned(value.ToBigInteger());
+			ArrayBufferWriter<byte> destination = new();
+			LEB128.EncodeUnsigned(value.ToBigInteger(), destination);
+			return destination.WrittenMemory.ToArray();
+		}
+
+		/// <summary>
+		/// Takes an `UnboundedUInt` and converts it into an encoded unsigned LEB128 byte array
+		/// </summary>
+		/// <param name="value">Value to convert to LEB128 bytes</param>
+		/// <param name="destination">Buffer writer to write bytes to</param>
+		/// <returns>LEB128 bytes of value</returns>
+		public static void EncodeUnsigned(UnboundedUInt value, IBufferWriter<byte> destination)
+		{
+			LEB128.EncodeUnsigned(value.ToBigInteger(), destination);
 		}
 
 		/// <summary>
@@ -70,30 +84,49 @@ namespace EdjCase.ICP.Candid.Encodings
 		/// <returns>LEB128 bytes of value</returns>
 		public static byte[] EncodeSigned(UnboundedInt value)
 		{
-			return LEB128.EncodeSigned(value.ToBigInteger());
+			ArrayBufferWriter<byte> destination = new();
+			LEB128.EncodeSigned(value.ToBigInteger(), destination);
+			return destination.WrittenMemory.ToArray();
+		}
+
+		/// <summary>
+		/// Takes an `UnboundedInt` and converts it into an encoded signed LEB128 byte array
+		/// </summary>
+		/// <param name="value">Value to convert to LEB128 bytes</param>
+		/// <param name="destination">Buffer writer to write bytes to</param>
+		/// <returns>LEB128 bytes of value</returns>
+		public static void EncodeSigned(UnboundedInt value, IBufferWriter<byte> destination)
+		{
+			LEB128.EncodeSigned(value.ToBigInteger(), destination);
 		}
 
 
 		private static BigInteger Decode(Stream stream, bool isUnsigned)
 		{
-			byte[] bytes = LEB128.GetValueBits(stream, isUnsigned)
-				.Chunk(8)
-				.Select(bits =>
+			IEnumerable<bool> bits = LEB128.GetValueBits(stream, isUnsigned);
+			ArrayBufferWriter<byte> destination = new();
+			int i = 1;
+			byte byteValue = 0;
+			foreach (bool bit in bits)
+			{
+				if (bit)
 				{
-					byte b = 0;
-					for (int i = bits.Length - 1; i >= 0; i--)
-					{
-						bool bit = bits[i];
-						b |= bit ? (byte)1 : (byte)0;
-						if (i > 0)
-						{
-							b <<= 1;
-						}
-					}
-					return b;
-				})
-				.ToArray();
-			return bytes.ToBigInteger(isUnsigned: isUnsigned, isBigEndian: false);
+					byteValue |= (byte)(1 << (i - 1));
+				}
+				if (i == 8)
+				{
+					destination.WriteOne(byteValue);
+					byteValue = 0;
+					i = 0;
+				}
+				i++;
+			}
+			if (i != 1)
+			{
+				// Expect 8 byte chunks
+				throw new EndOfStreamException();
+			}
+			return new BigInteger(destination.WrittenSpan, isUnsigned, isBigEndian: false);
 		}
 		private static IEnumerable<bool> GetValueBits(Stream stream, bool isUnsigned)
 		{
@@ -146,7 +179,7 @@ namespace EdjCase.ICP.Candid.Encodings
 		}
 
 
-		private static byte[] EncodeUnsigned(BigInteger value)
+		private static void EncodeUnsigned(BigInteger value, IBufferWriter<byte> destination)
 		{
 			if (value < 0)
 			{
@@ -154,7 +187,8 @@ namespace EdjCase.ICP.Candid.Encodings
 			}
 			if (value == 0)
 			{
-				return new byte[] { 0b0 };
+				destination.WriteOne<byte>(0);
+				return;
 			}
 
 			// Unsigned LEB128 - https://en.wikipedia.org/wiki/LEB128#Unsigned_LEB128
@@ -163,29 +197,33 @@ namespace EdjCase.ICP.Candid.Encodings
 			//  0100110  0001110  1100101  Split into 7-bit groups
 			// 00100110 10001110 11100101  Add high 1 bits on all but last (most significant) group to form bytes
 
-			long bitCount = value.GetBitLength();
-			long byteCount = (long)Math.Ceiling(bitCount / 7m); // 7, not 8, the 8th bit is to indicate end of number
-			byte[] lebBytes = new byte[byteCount];
-
-			for (int i = 0; i < byteCount; i++)
+			Span<byte> buffer = stackalloc byte[1];
+			while (value != 0)
 			{
-				byte byteValue = (value & 0b0111_1111).ToByteArray()[0]; // Get the last 7 bits
+				BigInteger nextByte = (value & 0b0111_1111); // Get the next 7 bits
+
+				// Optimization to use the buffer to get byte value
+				nextByte.TryWriteBytes(buffer, out _, isUnsigned: true, isBigEndian: false);
+
+				byte byteValue = buffer[0]; // Get next byte from the buffer
+
+
 				value = value >> 7; // Chop off last 7 bits
 				if (value != 0)
 				{
 					// Have most left of byte be 1 if there is another byte
 					byteValue |= 0b10000000;
 				}
-				lebBytes[i] = byteValue;
+				destination.WriteOne(byteValue);
 			}
-			return lebBytes;
 		}
 
-		private static byte[] EncodeSigned(BigInteger value)
+		private static void EncodeSigned(BigInteger value, IBufferWriter<byte> destination)
 		{
 			if (value == 0)
 			{
-				return new byte[] { 0b0 };
+				destination.WriteOne<byte>(0);
+				return;
 			}
 
 			// Signed LEB128 - https://en.wikipedia.org/wiki/LEB128#Signed_LEB128
@@ -196,12 +234,19 @@ namespace EdjCase.ICP.Candid.Encodings
 			// 1111000  0111011  1000000  Split into 7-bit groups
 			//01111000 10111011 11000000  Add high 1 bits on all but last (most significant) group to form bytes
 
-			var bytes = new List<byte>();
 			bool more = true;
+			int i = 0;
+			Span<byte> buffer = stackalloc byte[1];
 			while (more)
 			{
-				byte byteValue = (value & 0b0111_1111).ToByteArray()[0]; // Get the last 7 bits
-				value = value >> 7; // Shift over 7 bits to setup the next byte
+				BigInteger nextByte = (value & 0b0111_1111); // Get the next 7 bits
+
+				// Optimization to use the buffer to get byte value
+				nextByte.TryWriteBytes(buffer, out _, isUnsigned: true, isBigEndian: false);
+
+				byte byteValue = buffer[0]; // Get next byte from the buffer
+
+				value >>= 7; // Shift over 7 bits to setup the next byte
 				bool mostSignficantBitIsSet = (byteValue & 0b0100_0000) != 0;
 				if (value == 0) // no more bits => end
 				{
@@ -209,10 +254,10 @@ namespace EdjCase.ICP.Candid.Encodings
 					{
 						// If last bit is a 1, add another 0 value byte
 						AddByteWithMoreFlag(byteValue);
-						bytes.Add(0b0000_0000);
+						AddByte(0b0000_0000);
 						break;
 					}
-					bytes.Add(byteValue);
+					AddByte(byteValue);
 					break;
 				}
 				if (value == -1) // -1 == only bit remaining is a sign bit (with backfilled 1's from a right shift) => end
@@ -228,19 +273,23 @@ namespace EdjCase.ICP.Candid.Encodings
 					{
 						// If last bit is a 1, add another 111_1111 value byte
 						AddByteWithMoreFlag(byteValue);
-						bytes.Add(0b0111_1111);
+						AddByte(0b0111_1111);
 						break;
 					}
-					bytes.Add(byteValue);
+					AddByte(byteValue);
 					break;
 				}
 				AddByteWithMoreFlag(byteValue);
 			}
-			return bytes.ToArray();
 
 			void AddByteWithMoreFlag(byte byteValue)
 			{
-				bytes.Add((byte)(byteValue | 0b1000_0000));
+				AddByte((byte)(byteValue | 0b1000_0000));
+			}
+
+			void AddByte(byte byteValue)
+			{
+				destination.WriteOne(byteValue);
 			}
 		}
 	}
