@@ -15,7 +15,7 @@
 	  <Authors>Gekctek</Authors>
 	  <PackageId>EdjCase.ICP.Candid</PackageId>
 	  <GenerateDocumentationFile>True</GenerateDocumentationFile>
-	  <DocumentationFile>..\..\docs\Candid.xml</DocumentationFile>
+	  <DocumentationFile>API.xml</DocumentationFile>
 	  <DocumentationMarkdown>$(MSBuildProjectDirectory)\API.md</DocumentationMarkdown>
   </PropertyGroup>
 

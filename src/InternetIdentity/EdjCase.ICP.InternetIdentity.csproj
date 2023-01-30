@@ -15,7 +15,7 @@
 		<Authors>Gekctek</Authors>
 		<PackageId>EdjCase.ICP.InternetIdentity</PackageId>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
-		<DocumentationFile>..\..\docs\InternetIdentity.xml</DocumentationFile>
+		<DocumentationFile>API.xml</DocumentationFile>
 		<DocumentationMarkdown>$(MSBuildProjectDirectory)\API.md</DocumentationMarkdown>
 	</PropertyGroup>
 

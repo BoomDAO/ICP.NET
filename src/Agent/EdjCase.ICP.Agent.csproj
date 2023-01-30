@@ -15,7 +15,7 @@
 		<Authors>Gekctek</Authors>
 		<PackageId>EdjCase.ICP.Agent</PackageId>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
-		<DocumentationFile>..\..\docs\Agent.xml</DocumentationFile>
+		<DocumentationFile>API.xml</DocumentationFile>
 		<DocumentationMarkdown>$(MSBuildProjectDirectory)\API.md</DocumentationMarkdown>
 	</PropertyGroup>
 
