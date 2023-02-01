@@ -2,6 +2,7 @@ using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid.Utilities;
 using System;
 using System.Buffers;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -104,29 +105,42 @@ namespace EdjCase.ICP.Candid.Encodings
 		private static BigInteger Decode(Stream stream, bool isUnsigned)
 		{
 			IEnumerable<bool> bits = GetValueBits(stream, isUnsigned);
-			ArrayBufferWriter<byte> destination = new();
-			int i = 1;
-			byte byteValue = 0;
-			foreach (bool bit in bits)
+			byte[] pooledMemory = ArrayPool<byte>.Shared.Rent(10);
+			try
 			{
-				if (bit)
+				int bitIndex = 0;
+				int byteIndex = 0;
+				byte byteValue = 0;
+				foreach (bool bit in bits)
 				{
-					byteValue |= (byte)(1 << (i - 1));
+					if (bit)
+					{
+						// Set bit on byte
+						byteValue |= (byte)(1 << bitIndex);
+					}
+					if (bitIndex == 7)
+					{
+						SetPooledMemoryByte(ref pooledMemory, ref byteIndex, byteValue);
+						byteValue = 0; // Reset byte to empty
+						bitIndex = 0; // Reset index back to beginning of byte
+					}
+					else
+					{
+						bitIndex++;
+					}
 				}
-				if (i == 8)
+				if (bitIndex != 0)
 				{
-					destination.WriteOne(byteValue);
-					byteValue = 0;
-					i = 0;
+					// Expect 8 byte chunks
+					throw new EndOfStreamException();
 				}
-				i++;
+				return new BigInteger(pooledMemory.AsSpan()[..byteIndex], isUnsigned, isBigEndian: false);
 			}
-			if (i != 1)
+			finally
 			{
-				// Expect 8 byte chunks
-				throw new EndOfStreamException();
+				// Return shared memory
+				ArrayPool<byte>.Shared.Return(pooledMemory);
 			}
-			return new BigInteger(destination.WrittenSpan, isUnsigned, isBigEndian: false);
 		}
 		private static IEnumerable<bool> GetValueBits(Stream stream, bool isUnsigned)
 		{
@@ -197,25 +211,38 @@ namespace EdjCase.ICP.Candid.Encodings
 			//  0100110  0001110  1100101  Split into 7-bit groups
 			// 00100110 10001110 11100101  Add high 1 bits on all but last (most significant) group to form bytes
 
-			Span<byte> buffer = stackalloc byte[1];
-			while (value != 0)
+			byte[] pooledMemory = ArrayPool<byte>.Shared.Rent(10); // Use shared memory to avoid allocations
+			try
 			{
-				BigInteger nextByte = (value & 0b0111_1111); // Get the next 7 bits
-
-				// Optimization to use the buffer to get byte value
-				nextByte.TryWriteBytes(buffer, out _, isUnsigned: true, isBigEndian: false);
-
-				byte byteValue = buffer[0]; // Get next byte from the buffer
-
-
-				value = value >> 7; // Chop off last 7 bits
-				if (value != 0)
+				Span<byte> buffer = stackalloc byte[1];
+				int byteIndex = 0;
+				while (value != 0)
 				{
-					// Have most left of byte be 1 if there is another byte
-					byteValue |= 0b10000000;
+					BigInteger nextByte = (value & 0b0111_1111); // Get the next 7 bits
+
+					// Optimization to use the buffer to get byte value
+					nextByte.TryWriteBytes(buffer, out _, isUnsigned: true, isBigEndian: false);
+
+					byte byteValue = buffer[0]; // Get next byte from the buffer
+
+
+					value = value >> 7; // Chop off last 7 bits
+					if (value != 0)
+					{
+						// Have most left of byte be 1 if there is another byte
+						byteValue |= 0b10000000;
+					}
+
+					SetPooledMemoryByte(ref pooledMemory, ref  byteIndex, byteValue);
 				}
-				destination.WriteOne(byteValue);
+				destination.Write(pooledMemory.AsSpan()[..byteIndex]); // Write to the 
 			}
+			finally
+			{
+				// Return shared memory
+				ArrayPool<byte>.Shared.Return(pooledMemory);
+			}
+
 		}
 
 		private static void EncodeSigned(BigInteger value, IBufferWriter<byte> destination)
@@ -234,51 +261,62 @@ namespace EdjCase.ICP.Candid.Encodings
 			// 1111000  0111011  1000000  Split into 7-bit groups
 			//01111000 10111011 11000000  Add high 1 bits on all but last (most significant) group to form bytes
 
-			bool more = true;
-			Span<byte> buffer = stackalloc byte[1];
-			while (more)
+			int byteIndex = 0;
+			byte[] pooledMemory = ArrayPool<byte>.Shared.Rent(10); // Use shared memory to avoid allocations
+			try
 			{
-				BigInteger nextByte = (value & 0b0111_1111); // Get the next 7 bits
-
-				// Optimization to use the buffer to get byte value
-				nextByte.TryWriteBytes(buffer, out _, isUnsigned: true, isBigEndian: false);
-
-				byte byteValue = buffer[0]; // Get next byte from the buffer
-
-				value >>= 7; // Shift over 7 bits to setup the next byte
-				bool mostSignficantBitIsSet = (byteValue & 0b0100_0000) != 0;
-				if (value == 0) // no more bits => end
+				bool more = true;
+				Span<byte> buffer = stackalloc byte[1];
+				while (more)
 				{
-					if (mostSignficantBitIsSet)
+					BigInteger nextByte = (value & 0b0111_1111); // Get the next 7 bits
+
+					// Optimization to use the buffer to get byte value
+					nextByte.TryWriteBytes(buffer, out _, isUnsigned: true, isBigEndian: false);
+
+					byte byteValue = buffer[0]; // Get next byte from the buffer
+
+					value >>= 7; // Shift over 7 bits to setup the next byte
+					bool mostSignficantBitIsSet = (byteValue & 0b0100_0000) != 0;
+					if (value == 0) // no more bits => end
 					{
-						// If last bit is a 1, add another 0 value byte
-						AddByteWithMoreFlag(byteValue);
-						AddByte(0b0000_0000);
+						if (mostSignficantBitIsSet)
+						{
+							// If last bit is a 1, add another 0 value byte
+							AddByteWithMoreFlag(byteValue);
+							AddByte(0b0000_0000);
+							break;
+						}
+						AddByte(byteValue);
 						break;
 					}
-					AddByte(byteValue);
-					break;
-				}
-				if (value == -1) // -1 == only bit remaining is a sign bit (with backfilled 1's from a right shift) => end
-				{
-					// -1 is equivalent to all 1's in the binary sequence/255 if unsigned
-					// AND since if the number is negative, 1 is used to fill vacated bit positions
-					// meaning the remaining value is just the sign bit
-
-					// IF the most signficant bit is not set, set the final byte to 0b0111_1111
-					// otherwise end
-
-					if (!mostSignficantBitIsSet)
+					if (value == -1) // -1 == only bit remaining is a sign bit (with backfilled 1's from a right shift) => end
 					{
-						// If last bit is a 1, add another 111_1111 value byte
-						AddByteWithMoreFlag(byteValue);
-						AddByte(0b0111_1111);
+						// -1 is equivalent to all 1's in the binary sequence/255 if unsigned
+						// AND since if the number is negative, 1 is used to fill vacated bit positions
+						// meaning the remaining value is just the sign bit
+
+						// IF the most signficant bit is not set, set the final byte to 0b0111_1111
+						// otherwise end
+
+						if (!mostSignficantBitIsSet)
+						{
+							// If last bit is a 1, add another 111_1111 value byte
+							AddByteWithMoreFlag(byteValue);
+							AddByte(0b0111_1111);
+							break;
+						}
+						AddByte(byteValue);
 						break;
 					}
-					AddByte(byteValue);
-					break;
+					AddByteWithMoreFlag(byteValue);
 				}
-				AddByteWithMoreFlag(byteValue);
+				destination.Write(pooledMemory.AsSpan()[..byteIndex]); // Write bytes to destination
+			}
+			finally
+			{
+				// Return shared memory
+				ArrayPool<byte>.Shared.Return(pooledMemory);
 			}
 
 			void AddByteWithMoreFlag(byte byteValue)
@@ -288,8 +326,21 @@ namespace EdjCase.ICP.Candid.Encodings
 
 			void AddByte(byte byteValue)
 			{
-				destination.WriteOne(byteValue);
+				SetPooledMemoryByte(ref pooledMemory, ref byteIndex, byteValue);
 			}
+		}
+
+		private static void SetPooledMemoryByte(ref byte[] pooledMemory, ref int byteIndex, byte byteValue)
+		{
+			if (byteIndex >= pooledMemory.Length)
+			{
+				// If pooled memory is too small, create bigger array
+				var newPooledMemory = ArrayPool<byte>.Shared.Rent(pooledMemory.Length + 10);
+				pooledMemory.AsSpan().CopyTo(newPooledMemory);
+				ArrayPool<byte>.Shared.Return(pooledMemory);
+				pooledMemory = newPooledMemory;
+			}
+			pooledMemory[byteIndex++] = byteValue;
 		}
 	}
 }
