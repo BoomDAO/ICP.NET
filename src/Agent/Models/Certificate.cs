@@ -44,7 +44,7 @@ namespace EdjCase.ICP.Agent.Models
 		/// <returns>True if the certificate is valid, otherwise false</returns>
 		public bool IsValid(byte[] rootPublicKey)
 		{
-			HashTree.EncodedValue rootHash = this.Tree.BuildRootHash();
+			byte[] rootHash = this.Tree.BuildRootHash();
 			if (this.Delegation != null)
 			{
 				// override the root key to the delegated one
@@ -55,7 +55,7 @@ namespace EdjCase.ICP.Agent.Models
 				}
 			}
 			var blsKey = new DerEncodedPublicKey(rootPublicKey).AsBls();
-			return BlsUtil.VerifySignature(blsKey, rootHash.Value, this.Signature);
+			return BlsUtil.VerifySignature(blsKey, rootHash, this.Signature);
 		}
 	}
 

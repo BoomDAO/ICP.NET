@@ -93,7 +93,7 @@ namespace EdjCase.ICP.Candid.Models
 		public byte[] AsPruned()
 		{
 			this.ValidateType(HashTreeType.Pruned);
-			return (EncodedValue)this.value!;
+			return (byte[])this.value!;
 		}
 
 		/// <summary>
@@ -235,7 +235,7 @@ namespace EdjCase.ICP.Candid.Models
 				domain_sep(s) = byte(|s|) · s
 			 */
 			SHA256HashFunction hashFunction = new(SHA256.Create());
-			EncodedValue rootHash = this.BuildHashInternal(hashFunction);
+			byte[] rootHash = this.BuildHashInternal(hashFunction);
 			return EncodedValue.WithDomainSeperator("ic-state-root", rootHash);
 		}
 
@@ -359,21 +359,21 @@ namespace EdjCase.ICP.Candid.Models
 			}
 
 
-			internal static byte[] WithDomainSeperator(string value, params EncodedValue[] encodedValues)
+			internal static byte[] WithDomainSeperator(string value, params byte[][] encodedValues)
 			{
 				// domain_sep(s) = byte(|s|) · s
 				byte[] textBytes = Encoding.UTF8.GetBytes(value);
-				byte[] bytes = new byte[textBytes.Length + 1 + encodedValues.Sum(v => v.Value.Length)];
+				byte[] bytes = new byte[textBytes.Length + 1 + encodedValues.Sum(v => v.Length)];
 				bytes[0] = (byte)textBytes.Length;
 				int index = 1;
 				textBytes.CopyTo(bytes, index);
 				index++;
-				foreach (EncodedValue encodedValue in encodedValues)
+				foreach (byte[] encodedValue in encodedValues)
 				{
-					encodedValue.Value.CopyTo(bytes, index);
-					index += encodedValue.Value.Length;
+					encodedValue.CopyTo(bytes, index);
+					index += encodedValue.Length;
 				}
-				return new EncodedValue(bytes);
+				return bytes;
 			}
 		}
 
@@ -387,18 +387,18 @@ namespace EdjCase.ICP.Candid.Models
 					break;
 				case HashTreeType.Fork:
 					(HashTree left, HashTree right) = this.AsFork();
-					EncodedValue leftHash = left.BuildHashInternal(hashFunction);
-					EncodedValue rightHash = right.BuildHashInternal(hashFunction);
+					byte[] leftHash = left.BuildHashInternal(hashFunction);
+					byte[] rightHash = right.BuildHashInternal(hashFunction);
 					encodedValue = EncodedValue.WithDomainSeperator("ic-hashtree-fork", leftHash, rightHash);
 					break;
 				case HashTreeType.Labeled:
 					(EncodedValue label, HashTree tree) = this.AsLabeled();
-					EncodedValue treeHash = tree.BuildHashInternal(hashFunction);
-					encodedValue = EncodedValue.WithDomainSeperator("ic-hashtree-labeled", label, treeHash);
+					byte[] treeHash = tree.BuildHashInternal(hashFunction);
+					encodedValue = EncodedValue.WithDomainSeperator("ic-hashtree-labeled", label.Value, treeHash);
 					break;
 				case HashTreeType.Leaf:
 					EncodedValue leaf = this.AsLeaf();
-					encodedValue = EncodedValue.WithDomainSeperator("ic-hashtree-leaf", leaf);
+					encodedValue = EncodedValue.WithDomainSeperator("ic-hashtree-leaf", leaf.Value);
 					break;
 				case HashTreeType.Pruned:
 					encodedValue = this.AsPruned();

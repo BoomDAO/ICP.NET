@@ -232,6 +232,11 @@ namespace EdjCase.ICP.Candid.Models.Values
 		/// <returns>An optional value</returns>
 		public CandidOptional AsOptional()
 		{
+			if (this.IsNull())
+			{
+				// TODO is this the best way to handle this?
+				return new CandidOptional(null);
+			}
 			this.ValidateType(CandidValueType.Optional);
 			return (CandidOptional)this;
 		}
