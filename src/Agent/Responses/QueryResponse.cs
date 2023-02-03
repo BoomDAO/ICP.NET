@@ -37,10 +37,10 @@ namespace EdjCase.ICP.Agent.Responses
 		/// </summary>
 		/// <exception cref="InvalidOperationException">Will throw if not of type 'rejected'</exception>
 		/// <returns>Reject error information</returns>
-		public (RejectCode Code, string? Message) AsRejected()
+		public QueryRejectInfo AsRejected()
 		{
 			this.ThrowIfWrongType(QueryResponseType.Rejected);
-			return (ValueTuple<RejectCode, string>)this.value;
+			return (QueryRejectInfo)this.value;
 		}
 
 		private void ThrowIfWrongType(QueryResponseType type)
@@ -61,15 +61,15 @@ namespace EdjCase.ICP.Agent.Responses
 		{
 			if (this.Type == QueryResponseType.Rejected)
 			{
-				(RejectCode code, string? message) = this.AsRejected();
-				throw new QueryRejectedException(code, message);
+				QueryRejectInfo rejectInfo = this.AsRejected();
+				throw new QueryRejectedException(rejectInfo);
 			}
 			return this.AsReplied();
 		}
 
-		internal static QueryResponse Rejected(RejectCode code, string? message)
+		internal static QueryResponse Rejected(RejectCode code, string? message, string? errorCode)
 		{
-			return new QueryResponse(QueryResponseType.Rejected, (code, message));
+			return new QueryResponse(QueryResponseType.Rejected, new QueryRejectInfo(code, message, errorCode));
 		}
 
 		internal static QueryResponse Replied(QueryReply reply)
@@ -109,4 +109,31 @@ namespace EdjCase.ICP.Agent.Responses
 		}
 	}
 
+	/// <summary>
+	/// Data from a query response that has been rejected
+	/// </summary>
+	public class QueryRejectInfo
+	{
+		/// <summary>
+		/// The type of query reject
+		/// </summary>
+		public RejectCode Code { get; }
+
+		/// <summary>
+		/// Optional. A human readable message about the rejection
+		/// </summary>
+		public string? Message { get; }
+
+		/// <summary>
+		/// Optional. A specific error id for the reject
+		/// </summary>
+		public string? ErrorCode { get; }
+
+		internal QueryRejectInfo(RejectCode code, string? message, string? errorCode)
+		{
+			this.Code = code;
+			this.Message = message;
+			this.ErrorCode = errorCode;
+		}
+	}
 }

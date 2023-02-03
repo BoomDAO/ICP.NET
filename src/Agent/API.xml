@@ -306,19 +306,13 @@
             Exception for when a query to a canister is rejected/has an error
             </summary>
         </member>
-        <member name="P:EdjCase.ICP.Agent.QueryRejectedException.Code">
+        <member name="P:EdjCase.ICP.Agent.QueryRejectedException.Info">
             <summary>
-            The type of rejection that occurred
+            The details of the rejection
             </summary>
         </member>
-        <member name="P:EdjCase.ICP.Agent.QueryRejectedException.RejectionMessage">
-            <summary>
-            The human readable message of the rejection error
-            </summary>
-        </member>
-        <member name="M:EdjCase.ICP.Agent.QueryRejectedException.#ctor(EdjCase.ICP.Agent.Responses.RejectCode,System.String)">
-            <param name="code">The type of rejection that occurred</param>
-            <param name="message">The human readable message of the rejection error</param>
+        <member name="M:EdjCase.ICP.Agent.QueryRejectedException.#ctor(EdjCase.ICP.Agent.Responses.QueryRejectInfo)">
+            <param name="info">The type of rejection that occurred</param>
         </member>
         <member name="P:EdjCase.ICP.Agent.QueryRejectedException.Message">
             <inheritdoc />
@@ -845,6 +839,26 @@
         <member name="P:EdjCase.ICP.Agent.Responses.QueryReply.Arg">
             <summary>
             The candid arg returned from a request
+            </summary>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Responses.QueryRejectInfo">
+            <summary>
+            Data from a query response that has been rejected
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Responses.QueryRejectInfo.Code">
+            <summary>
+            The type of query reject
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Responses.QueryRejectInfo.Message">
+            <summary>
+            Optional. A human readable message about the rejection
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Responses.QueryRejectInfo.ErrorCode">
+            <summary>
+            Optional. A specific error id for the reject
             </summary>
         </member>
         <member name="T:EdjCase.ICP.Agent.Responses.ReadStateResponse">

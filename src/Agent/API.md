@@ -108,11 +108,14 @@
   - [#ctor(message)](#M-EdjCase-ICP-Agent-InvalidCertificateException-#ctor-System-String- 'EdjCase.ICP.Agent.InvalidCertificateException.#ctor(System.String)')
 - [InvalidPublicKey](#T-EdjCase-ICP-Agent-InvalidPublicKey 'EdjCase.ICP.Agent.InvalidPublicKey')
   - [#ctor()](#M-EdjCase-ICP-Agent-InvalidPublicKey-#ctor 'EdjCase.ICP.Agent.InvalidPublicKey.#ctor')
+- [QueryRejectInfo](#T-EdjCase-ICP-Agent-Responses-QueryRejectInfo 'EdjCase.ICP.Agent.Responses.QueryRejectInfo')
+  - [Code](#P-EdjCase-ICP-Agent-Responses-QueryRejectInfo-Code 'EdjCase.ICP.Agent.Responses.QueryRejectInfo.Code')
+  - [ErrorCode](#P-EdjCase-ICP-Agent-Responses-QueryRejectInfo-ErrorCode 'EdjCase.ICP.Agent.Responses.QueryRejectInfo.ErrorCode')
+  - [Message](#P-EdjCase-ICP-Agent-Responses-QueryRejectInfo-Message 'EdjCase.ICP.Agent.Responses.QueryRejectInfo.Message')
 - [QueryRejectedException](#T-EdjCase-ICP-Agent-QueryRejectedException 'EdjCase.ICP.Agent.QueryRejectedException')
-  - [#ctor(code,message)](#M-EdjCase-ICP-Agent-QueryRejectedException-#ctor-EdjCase-ICP-Agent-Responses-RejectCode,System-String- 'EdjCase.ICP.Agent.QueryRejectedException.#ctor(EdjCase.ICP.Agent.Responses.RejectCode,System.String)')
-  - [Code](#P-EdjCase-ICP-Agent-QueryRejectedException-Code 'EdjCase.ICP.Agent.QueryRejectedException.Code')
+  - [#ctor(info)](#M-EdjCase-ICP-Agent-QueryRejectedException-#ctor-EdjCase-ICP-Agent-Responses-QueryRejectInfo- 'EdjCase.ICP.Agent.QueryRejectedException.#ctor(EdjCase.ICP.Agent.Responses.QueryRejectInfo)')
+  - [Info](#P-EdjCase-ICP-Agent-QueryRejectedException-Info 'EdjCase.ICP.Agent.QueryRejectedException.Info')
   - [Message](#P-EdjCase-ICP-Agent-QueryRejectedException-Message 'EdjCase.ICP.Agent.QueryRejectedException.Message')
-  - [RejectionMessage](#P-EdjCase-ICP-Agent-QueryRejectedException-RejectionMessage 'EdjCase.ICP.Agent.QueryRejectedException.RejectionMessage')
 - [QueryReply](#T-EdjCase-ICP-Agent-Responses-QueryReply 'EdjCase.ICP.Agent.Responses.QueryReply')
   - [Arg](#P-EdjCase-ICP-Agent-Responses-QueryReply-Arg 'EdjCase.ICP.Agent.Responses.QueryReply.Arg')
 - [QueryRequest](#T-EdjCase-ICP-Agent-Requests-QueryRequest 'EdjCase.ICP.Agent.Requests.QueryRequest')
@@ -1480,6 +1483,38 @@ Exception to indicate that the specified BLS public key is invalid
 
 This constructor has no parameters.
 
+<a name='T-EdjCase-ICP-Agent-Responses-QueryRejectInfo'></a>
+## QueryRejectInfo `type`
+
+##### Namespace
+
+EdjCase.ICP.Agent.Responses
+
+##### Summary
+
+Data from a query response that has been rejected
+
+<a name='P-EdjCase-ICP-Agent-Responses-QueryRejectInfo-Code'></a>
+### Code `property`
+
+##### Summary
+
+The type of query reject
+
+<a name='P-EdjCase-ICP-Agent-Responses-QueryRejectInfo-ErrorCode'></a>
+### ErrorCode `property`
+
+##### Summary
+
+Optional. A specific error id for the reject
+
+<a name='P-EdjCase-ICP-Agent-Responses-QueryRejectInfo-Message'></a>
+### Message `property`
+
+##### Summary
+
+Optional. A human readable message about the rejection
+
 <a name='T-EdjCase-ICP-Agent-QueryRejectedException'></a>
 ## QueryRejectedException `type`
 
@@ -1491,22 +1526,21 @@ EdjCase.ICP.Agent
 
 Exception for when a query to a canister is rejected/has an error
 
-<a name='M-EdjCase-ICP-Agent-QueryRejectedException-#ctor-EdjCase-ICP-Agent-Responses-RejectCode,System-String-'></a>
-### #ctor(code,message) `constructor`
+<a name='M-EdjCase-ICP-Agent-QueryRejectedException-#ctor-EdjCase-ICP-Agent-Responses-QueryRejectInfo-'></a>
+### #ctor(info) `constructor`
 
 ##### Parameters
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| code | [EdjCase.ICP.Agent.Responses.RejectCode](#T-EdjCase-ICP-Agent-Responses-RejectCode 'EdjCase.ICP.Agent.Responses.RejectCode') | The type of rejection that occurred |
-| message | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The human readable message of the rejection error |
+| info | [EdjCase.ICP.Agent.Responses.QueryRejectInfo](#T-EdjCase-ICP-Agent-Responses-QueryRejectInfo 'EdjCase.ICP.Agent.Responses.QueryRejectInfo') | The type of rejection that occurred |
 
-<a name='P-EdjCase-ICP-Agent-QueryRejectedException-Code'></a>
-### Code `property`
+<a name='P-EdjCase-ICP-Agent-QueryRejectedException-Info'></a>
+### Info `property`
 
 ##### Summary
 
-The type of rejection that occurred
+The details of the rejection
 
 <a name='P-EdjCase-ICP-Agent-QueryRejectedException-Message'></a>
 ### Message `property`
@@ -1514,13 +1548,6 @@ The type of rejection that occurred
 ##### Summary
 
 *Inherit from parent.*
-
-<a name='P-EdjCase-ICP-Agent-QueryRejectedException-RejectionMessage'></a>
-### RejectionMessage `property`
-
-##### Summary
-
-The human readable message of the rejection error
 
 <a name='T-EdjCase-ICP-Agent-Responses-QueryReply'></a>
 ## QueryReply `type`
