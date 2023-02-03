@@ -78,24 +78,17 @@ namespace EdjCase.ICP.Agent
 	public class QueryRejectedException : Exception
 	{
 		/// <summary>
-		/// The type of rejection that occurred
+		/// The details of the rejection
 		/// </summary>
-		public RejectCode Code { get; }
+		public QueryRejectInfo Info { get; }
 
-		/// <summary>
-		/// The human readable message of the rejection error
-		/// </summary>
-		public string? RejectionMessage { get; }
-
-		/// <param name="code">The type of rejection that occurred</param>
-		/// <param name="message">The human readable message of the rejection error</param>
-		public QueryRejectedException(RejectCode code, string? message)
+		/// <param name="info">The type of rejection that occurred</param>
+		internal QueryRejectedException(QueryRejectInfo info)
 		{
-			this.Code = code;
-			this.RejectionMessage = message;
+			this.Info = info;
 		}
 
 		/// <inheritdoc />
-		public override string Message => $"Query was rejected. Code: {this.Code}, Message: {this.Message}";
+		public override string Message => $"Query was rejected. Code: {this.Info.Code}, Message: {this.Info.Message}, ErrorCode: {this.Info.ErrorCode}";
 	}
 }

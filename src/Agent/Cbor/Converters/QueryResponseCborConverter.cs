@@ -26,7 +26,7 @@ namespace EdjCase.ICP.Agent.Cbor.Converters
 					return QueryResponse.Replied(reply);
 				case "rejected":
 					RejectCode code = (RejectCode)(ulong)context.RejectCode!;
-					return QueryResponse.Rejected(code, context.RejectMessage);
+					return QueryResponse.Rejected(code, context.RejectMessage, context.ErrorCode);
 				default:
 					throw new NotImplementedException($"Cannot deserialize query response with status '{context.Status}'");
 			}
@@ -63,6 +63,9 @@ namespace EdjCase.ICP.Agent.Cbor.Converters
 				case "reject_message":
 					context.RejectMessage = reader.ReadString();
 					break;
+				case "error_code":
+					context.ErrorCode = reader.ReadString();
+					break;
 				default:
 					throw new NotImplementedException($"Cannot deserialize query response. Unknown field '{name}'");
 			}
@@ -93,5 +96,6 @@ namespace EdjCase.ICP.Agent.Cbor.Converters
 		public byte[]? ReplyArg { get; set; }
 		public UnboundedUInt? RejectCode { get; set; }
 		public string? RejectMessage { get; set; }
+		public string? ErrorCode { get; set; }
 	}
 }
