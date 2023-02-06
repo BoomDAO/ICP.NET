@@ -675,15 +675,6 @@
             <param name="value">The candid value. Must match the specified type</param>
             <param name="type">The candid type. Must match the specified value</param>
         </member>
-        <member name="M:EdjCase.ICP.Candid.Models.CandidTypedValue.ToOptionalObject``1(EdjCase.ICP.Candid.CandidConverter)">
-            <summary>
-            Helper method to convert a typed value to an optional value. The typed value must be an opt
-            </summary>
-            <typeparam name="T">Type to convert the candid value to</typeparam>
-            <param name="converter">Optional. Converter to use for the conversion, otherwise will use default converter</param>
-            <returns>Optional value of T</returns>
-            <exception cref="T:System.InvalidOperationException">Throws if the value is not an opt</exception>
-        </member>
         <member name="M:EdjCase.ICP.Candid.Models.CandidTypedValue.ToObject``1(EdjCase.ICP.Candid.CandidConverter)">
             <summary>
             Helper method to convert a typed value to an generic type value

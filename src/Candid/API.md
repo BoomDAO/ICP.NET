@@ -300,7 +300,6 @@
   - [Reserved()](#M-EdjCase-ICP-Candid-Models-CandidTypedValue-Reserved 'EdjCase.ICP.Candid.Models.CandidTypedValue.Reserved')
   - [Text(value)](#M-EdjCase-ICP-Candid-Models-CandidTypedValue-Text-System-String- 'EdjCase.ICP.Candid.Models.CandidTypedValue.Text(System.String)')
   - [ToObject\`\`1(converter)](#M-EdjCase-ICP-Candid-Models-CandidTypedValue-ToObject``1-EdjCase-ICP-Candid-CandidConverter- 'EdjCase.ICP.Candid.Models.CandidTypedValue.ToObject``1(EdjCase.ICP.Candid.CandidConverter)')
-  - [ToOptionalObject\`\`1(converter)](#M-EdjCase-ICP-Candid-Models-CandidTypedValue-ToOptionalObject``1-EdjCase-ICP-Candid-CandidConverter- 'EdjCase.ICP.Candid.Models.CandidTypedValue.ToOptionalObject``1(EdjCase.ICP.Candid.CandidConverter)')
   - [Vector(innerType,values)](#M-EdjCase-ICP-Candid-Models-CandidTypedValue-Vector-EdjCase-ICP-Candid-Models-Types-CandidType,EdjCase-ICP-Candid-Models-Values-CandidValue[]- 'EdjCase.ICP.Candid.Models.CandidTypedValue.Vector(EdjCase.ICP.Candid.Models.Types.CandidType,EdjCase.ICP.Candid.Models.Values.CandidValue[])')
   - [Vector\`\`1(innerType,values,valueConverter)](#M-EdjCase-ICP-Candid-Models-CandidTypedValue-Vector``1-EdjCase-ICP-Candid-Models-Types-CandidType,System-Collections-Generic-IEnumerable{``0},System-Func{``0,EdjCase-ICP-Candid-Models-Values-CandidValue}- 'EdjCase.ICP.Candid.Models.CandidTypedValue.Vector``1(EdjCase.ICP.Candid.Models.Types.CandidType,System.Collections.Generic.IEnumerable{``0},System.Func{``0,EdjCase.ICP.Candid.Models.Values.CandidValue})')
   - [op_Equality()](#M-EdjCase-ICP-Candid-Models-CandidTypedValue-op_Equality-EdjCase-ICP-Candid-Models-CandidTypedValue,EdjCase-ICP-Candid-Models-CandidTypedValue- 'EdjCase.ICP.Candid.Models.CandidTypedValue.op_Equality(EdjCase.ICP.Candid.Models.CandidTypedValue,EdjCase.ICP.Candid.Models.CandidTypedValue)')
@@ -4136,35 +4135,6 @@ Value of type T
 | Name | Description |
 | ---- | ----------- |
 | T | Type to convert the candid value to |
-
-<a name='M-EdjCase-ICP-Candid-Models-CandidTypedValue-ToOptionalObject``1-EdjCase-ICP-Candid-CandidConverter-'></a>
-### ToOptionalObject\`\`1(converter) `method`
-
-##### Summary
-
-Helper method to convert a typed value to an optional value. The typed value must be an opt
-
-##### Returns
-
-Optional value of T
-
-##### Parameters
-
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| converter | [EdjCase.ICP.Candid.CandidConverter](#T-EdjCase-ICP-Candid-CandidConverter 'EdjCase.ICP.Candid.CandidConverter') | Optional. Converter to use for the conversion, otherwise will use default converter |
-
-##### Generic Types
-
-| Name | Description |
-| ---- | ----------- |
-| T | Type to convert the candid value to |
-
-##### Exceptions
-
-| Name | Description |
-| ---- | ----------- |
-| [System.InvalidOperationException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.InvalidOperationException 'System.InvalidOperationException') | Throws if the value is not an opt |
 
 <a name='M-EdjCase-ICP-Candid-Models-CandidTypedValue-Vector-EdjCase-ICP-Candid-Models-Types-CandidType,EdjCase-ICP-Candid-Models-Values-CandidValue[]-'></a>
 ### Vector(innerType,values) `method`

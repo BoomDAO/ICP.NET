@@ -30,23 +30,7 @@ namespace EdjCase.ICP.Candid.Models
 			this.Value = value ?? throw new ArgumentNullException(nameof(value));
 			this.Type = type ?? throw new ArgumentNullException(nameof(type));
 		}
-
-		/// <summary>
-		/// Helper method to convert a typed value to an optional value. The typed value must be an opt
-		/// </summary>
-		/// <typeparam name="T">Type to convert the candid value to</typeparam>
-		/// <param name="converter">Optional. Converter to use for the conversion, otherwise will use default converter</param>
-		/// <returns>Optional value of T</returns>
-		/// <exception cref="InvalidOperationException">Throws if the value is not an opt</exception>
-		public OptionalValue<T> ToOptionalObject<T>(CandidConverter? converter = null)
-		{
-			if (this.Value is CandidOptional o)
-			{
-				return (converter ?? CandidConverter.Default).ToOptionalObject<T>(o);
-			}
-			throw new InvalidOperationException("Value must be an optional type");
-		}
-
+		
 		/// <summary>
 		/// Helper method to convert a typed value to an generic type value
 		/// </summary>
@@ -55,7 +39,7 @@ namespace EdjCase.ICP.Candid.Models
 		/// <returns>Value of type T</returns>
 		public T ToObject<T>(CandidConverter? converter = null)
 		{
-			return this.ToOptionalObject<T>(converter).GetValueOrThrow();
+			return (converter ?? CandidConverter.Default).ToObject<T>(this.Value);
 		}
 
 		/// <inheritdoc cref="CandidValue.AsPrimitive"/>
