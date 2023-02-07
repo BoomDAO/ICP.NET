@@ -38,8 +38,8 @@ namespace EdjCase.ICP.InternetIdentity
 				CandidTypedValue.Nat64(anchor)
 			);
 			QueryResponse response = await this.agent.QueryAsync(this.identityCanisterId, "lookup", arg);
-			QueryReply reply = response.ThrowOrGetReply();
-			return reply.Arg.Values[0].Value.AsVector().Values
+			CandidArg reply = response.ThrowOrGetReply();
+			return reply.Values[0].Value.AsVector().Values
 				.Select(d => d.AsRecord())
 				// Only authentication devices
 				.Where(d => d["purpose"].AsVariant().Tag == CandidTag.FromName("authentication"))
@@ -96,8 +96,8 @@ namespace EdjCase.ICP.InternetIdentity
 			);
 			// Get the delegation from the preperation
 			QueryResponse response = await this.agent.QueryAsync(this.identityCanisterId, "get_delegation", getArg);
-			QueryReply reply = response.ThrowOrGetReply();
-			CandidVariant responseVariant = reply.Arg.Values[0].Value.AsVariant();
+			CandidArg reply = response.ThrowOrGetReply();
+			CandidVariant responseVariant = reply.Values[0].Value.AsVariant();
 
 			switch (responseVariant.Tag.Id)
 			{

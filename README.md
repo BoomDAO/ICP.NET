@@ -54,7 +54,7 @@ string method = "get_proposal_info";
 Principal governanceCanisterId = Principal.FromText("rrkah-fqaaa-aaaaa-aaaaq-cai");
 QueryResponse response = await agent.QueryAsync(governanceCanisterId, method, arg);
 
-QueryReply reply = response.ThrowOrGetReply();
+CandidArg reply = response.ThrowOrGetReply();
 // Convert to custom class
 OptionalValue<ProposalInfo> info = reply.Arg.Values[0].ToOptionalObject<ProposalInfo>()
 ```
@@ -79,7 +79,7 @@ string method = "get_proposal_info";
 Principal governanceCanisterId = Principal.FromText("rrkah-fqaaa-aaaaa-aaaaq-cai");
 QueryResponse response = await agent.QueryAsync(governanceCanisterId, method, arg);
 
-QueryReply reply = response.ThrowOrGetReply();
+CandidArg reply = response.ThrowOrGetReply();
 // Convert to custom class
 OptionalValue<ProposalInfo> info = reply.Arg.Values[0].ToOptionalObject<ProposalInfo>() // Conversion to custom or C# types
 ```

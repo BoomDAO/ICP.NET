@@ -176,8 +176,8 @@ namespace ICP.ClientGenerator
 							if (funcDesc.IsQuery)
 							{
 								builder.AppendLine("QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg);");
-								builder.AppendLine("QueryReply reply = response.ThrowOrGetReply();");
-								argVariableName = "reply.Arg";
+								builder.AppendLine("CandidArg reply = response.ThrowOrGetReply();");
+								argVariableName = "reply";
 							}
 							else
 							{

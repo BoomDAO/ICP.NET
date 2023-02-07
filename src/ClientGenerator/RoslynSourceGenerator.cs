@@ -1,4 +1,5 @@
 using EdjCase.ICP.Agent.Agents;
+using EdjCase.ICP.Agent.Responses;
 using EdjCase.ICP.Candid.Models;
 using ICP.ClientGenerator;
 using Microsoft.CodeAnalysis;
@@ -7,6 +8,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -56,7 +58,7 @@ namespace EdjCase.ICP.ClientGenerator
 		{
 			BlockSyntax body = GenerateFuncMethodBody(name.PascalCaseValue, info);
 			List<TypedValueName> returnTypes = info.ReturnTypes
-				.Select(t => new TypedValueName(t.));
+				.Select(t => new TypedValueName(t.Name.PascalCaseValue, t.Type.));
 			List<TypedValueName> parameters = info.ArgTypes
 				.Select(t => new TypedValueName(t.));
 			return GenerateMethod(
@@ -70,7 +72,10 @@ namespace EdjCase.ICP.ClientGenerator
 			);
 		}
 
-		private static BlockSyntax GenerateFuncMethodBody(string methodName, ServiceSourceCodeType.Func info)
+		private static BlockSyntax GenerateFuncMethodBody(
+			string methodName,
+			ServiceSourceCodeType.Func info
+		)
 		{
 			// Build arguments for conversion to CandidArg
 			IEnumerable<ArgumentSyntax> fromCandidArguments = info.ArgTypes
@@ -123,18 +128,144 @@ namespace EdjCase.ICP.ClientGenerator
 						)
 					)
 				);
-			InvocationExpressionSyntax apiCall;
+
+			var statements = new List<StatementSyntax>
+			{
+				SyntaxFactory.LocalDeclarationStatement(argVariable),
+			};
+
+			const string variableName = "reply";
 			if (info.IsQuery)
 			{
+				const string responseName = "response";
 				// `QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, {methodName}, arg);`
-				// `QueryReply reply = response.ThrowOrGetReply();`
-				apiCall = ;
+				StatementSyntax invokeQueryCall = GenerateQueryCall(methodName, argName, responseName);
+				statements.Add(invokeQueryCall);
+
+				// `CandidArg reply = response.ThrowOrGetReply();`
+				StatementSyntax invokeThrowOrGetReply = GenerateThrowOrGetReply(variableName, responseName);
+				statements.Add(invokeThrowOrGetReply);
 
 			}
 			else
 			{
-				// `CandidArg response = this.Agent.CallAndWaitAsync(this.CanisterId, {methodName}, arg)`
-				apiCall = SyntaxFactory.InvocationExpression(
+				// `CandidArg reply = this.Agent.CallAndWaitAsync(this.CanisterId, {methodName}, arg)`
+				StatementSyntax invokeCallAndWait = GenerateCallAndWait(methodName, argName, variableName);
+				statements.Add(invokeCallAndWait);
+					
+			}
+			statements.Add(
+				// `return reply.ToObject<{T1}, {T2}, ...>();`
+				SyntaxFactory.ReturnStatement(
+					SyntaxFactory.InvocationExpression(
+						SyntaxFactory.MemberAccessExpression(
+							SyntaxKind.SimpleMemberAccessExpression,
+							SyntaxFactory.IdentifierName(variableName),
+							SyntaxFactory.GenericName(
+								SyntaxFactory.Identifier(nameof(CandidArg.ToObject))
+							)
+							.WithTypeArgumentList(
+								SyntaxFactory.TypeArgumentList(
+									SyntaxFactory.SeparatedList<TypeSyntax>(
+										argumentTypes
+									)
+								)
+							)
+						)
+					)
+				)
+			);
+			return SyntaxFactory.Block(statements);
+		}
+
+		private static StatementSyntax GenerateThrowOrGetReply(string variableName, string responseName)
+		{
+			return SyntaxFactory.LocalDeclarationStatement(
+				SyntaxFactory.VariableDeclaration(
+					SyntaxFactory.IdentifierName(nameof(CandidArg))
+				)
+				.WithVariables(
+					SyntaxFactory.SingletonSeparatedList(
+						SyntaxFactory.VariableDeclarator(
+							SyntaxFactory.Identifier(variableName)
+						)
+						.WithInitializer(
+							SyntaxFactory.EqualsValueClause(
+								SyntaxFactory.InvocationExpression(
+									SyntaxFactory.MemberAccessExpression(
+										SyntaxKind.SimpleMemberAccessExpression,
+										SyntaxFactory.IdentifierName(responseName),
+										SyntaxFactory.IdentifierName(nameof(QueryResponse.ThrowOrGetReply))
+									)
+								)
+							)
+						)
+					)
+				)
+			);
+		}
+
+		private static StatementSyntax GenerateQueryCall(string methodName, string argName, string responseName)
+		{
+			return SyntaxFactory.LocalDeclarationStatement(
+					SyntaxFactory.VariableDeclaration(
+						SyntaxFactory.IdentifierName(nameof(QueryResponse))
+					)
+					.WithVariables(
+						SyntaxFactory.SingletonSeparatedList(
+							SyntaxFactory.VariableDeclarator(
+								SyntaxFactory.Identifier(responseName)
+							)
+							.WithInitializer(
+								SyntaxFactory.EqualsValueClause(
+									SyntaxFactory.AwaitExpression(
+										SyntaxFactory.InvocationExpression(
+											SyntaxFactory.MemberAccessExpression(
+												SyntaxKind.SimpleMemberAccessExpression,
+												SyntaxFactory.MemberAccessExpression(
+													SyntaxKind.SimpleMemberAccessExpression,
+													SyntaxFactory.ThisExpression(),
+													SyntaxFactory.IdentifierName("Agent")
+												),
+												SyntaxFactory.IdentifierName(nameof(IAgent.QueryAsync))
+											)
+										)
+										.WithArgumentList(
+											SyntaxFactory.ArgumentList(
+												SyntaxFactory.SeparatedList<ArgumentSyntax>(
+													new SyntaxNodeOrToken[]{
+														SyntaxFactory.Argument(
+															SyntaxFactory.MemberAccessExpression(
+																SyntaxKind.SimpleMemberAccessExpression,
+																SyntaxFactory.ThisExpression(),
+																SyntaxFactory.IdentifierName("CanisterId")
+															)
+														),
+														SyntaxFactory.Token(SyntaxKind.CommaToken),
+														SyntaxFactory.Argument(
+															SyntaxFactory.IdentifierName(
+																SyntaxFactory.Identifier(methodName)
+															)
+														),
+														SyntaxFactory.Token(SyntaxKind.CommaToken),
+														SyntaxFactory.Argument(
+															SyntaxFactory.IdentifierName(argName)
+														)
+													}
+												)
+											)
+										)
+									)
+								)
+							)
+						)
+					)
+				);
+		}
+
+		private static StatementSyntax GenerateCallAndWait(string methodName, string argName, string variableName)
+		{
+			InvocationExpressionSyntax apiCall = SyntaxFactory.InvocationExpression(
 					SyntaxFactory.MemberAccessExpression(
 						SyntaxKind.SimpleMemberAccessExpression,
 						SyntaxFactory.MemberAccessExpression(
@@ -171,41 +302,18 @@ namespace EdjCase.ICP.ClientGenerator
 						)
 					)
 				);
-
-				var responseArg =
-						SyntaxFactory.VariableDeclaration(
-							SyntaxFactory.IdentifierName(nameof(CandidArg))
+			return SyntaxFactory.LocalDeclarationStatement(
+				SyntaxFactory.VariableDeclaration(
+					SyntaxFactory.IdentifierName(nameof(CandidArg))
+				)
+				.WithVariables(
+					SyntaxFactory.SingletonSeparatedList(
+						SyntaxFactory.VariableDeclarator(
+							SyntaxFactory.Identifier(variableName)
 						)
-						.WithVariables(
-							SyntaxFactory.SingletonSeparatedList(
-								SyntaxFactory.VariableDeclarator(
-									SyntaxFactory.Identifier("responseArg")
-								)
-								.WithInitializer(
-									SyntaxFactory.EqualsValueClause(
-										SyntaxFactory.AwaitExpression(apiCall)
-									)
-								)
-							)
-						);
-			}
-			return SyntaxFactory.Block(
-				SyntaxFactory.LocalDeclarationStatement(argVariable),
-				SyntaxFactory.LocalDeclarationStatement(responseArg),
-				SyntaxFactory.ReturnStatement(
-					SyntaxFactory.InvocationExpression(
-						SyntaxFactory.MemberAccessExpression(
-							SyntaxKind.SimpleMemberAccessExpression,
-							SyntaxFactory.IdentifierName("responseArg"),
-							SyntaxFactory.GenericName(
-								SyntaxFactory.Identifier("ToObject")
-							)
-							.WithTypeArgumentList(
-								SyntaxFactory.TypeArgumentList(
-									SyntaxFactory.SingletonSeparatedList<TypeSyntax>(
-										SyntaxFactory.IdentifierName("CancelOrderReceipt")
-									)
-								)
+						.WithInitializer(
+							SyntaxFactory.EqualsValueClause(
+								SyntaxFactory.AwaitExpression(apiCall)
 							)
 						)
 					)

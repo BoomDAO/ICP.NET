@@ -77,8 +77,8 @@ namespace Sample.Shared.Dex
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg);
-			QueryReply reply = response.ThrowOrGetReply();
-			System.Collections.Generic.List<Balance> r0 = reply.Arg.Values[0].ToObject<System.Collections.Generic.List<Balance>>();
+			CandidArg reply = response.ThrowOrGetReply();
+			System.Collections.Generic.List<Balance> r0 = reply.Values[0].ToObject<System.Collections.Generic.List<Balance>>();
 			return (r0);
 		}
 		public async Task<UnboundedUInt> GetBalance(Token arg0)
@@ -91,8 +91,8 @@ namespace Sample.Shared.Dex
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg);
-			QueryReply reply = response.ThrowOrGetReply();
-			UnboundedUInt r0 = reply.Arg.Values[0].ToObject<UnboundedUInt>();
+			CandidArg reply = response.ThrowOrGetReply();
+			UnboundedUInt r0 = reply.Values[0].ToObject<UnboundedUInt>();
 			return (r0);
 		}
 		public async Task<System.Collections.Generic.List<Balance>> GetBalances()
@@ -103,8 +103,8 @@ namespace Sample.Shared.Dex
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg);
-			QueryReply reply = response.ThrowOrGetReply();
-			System.Collections.Generic.List<Balance> r0 = reply.Arg.Values[0].ToObject<System.Collections.Generic.List<Balance>>();
+			CandidArg reply = response.ThrowOrGetReply();
+			System.Collections.Generic.List<Balance> r0 = reply.Values[0].ToObject<System.Collections.Generic.List<Balance>>();
 			return (r0);
 		}
 		public async Task<System.Collections.Generic.List<byte>> GetDepositAddress()
@@ -182,8 +182,8 @@ namespace Sample.Shared.Dex
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg);
-			QueryReply reply = response.ThrowOrGetReply();
-			EdjCase.ICP.Candid.Models.Principal r0 = reply.Arg.Values[0].ToObject<EdjCase.ICP.Candid.Models.Principal>();
+			CandidArg reply = response.ThrowOrGetReply();
+			EdjCase.ICP.Candid.Models.Principal r0 = reply.Values[0].ToObject<EdjCase.ICP.Candid.Models.Principal>();
 			return (r0);
 		}
 		public async Task<WithdrawReceipt> Withdraw(Token arg0, UnboundedUInt arg1, EdjCase.ICP.Candid.Models.Principal arg2)

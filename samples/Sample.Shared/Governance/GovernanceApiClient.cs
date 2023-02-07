@@ -53,8 +53,8 @@ namespace Sample.Shared.Governance
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg);
-			QueryReply reply = response.ThrowOrGetReply();
-			string r0 = reply.Arg.Values[0].ToObject<string>();
+			CandidArg reply = response.ThrowOrGetReply();
+			string r0 = reply.Values[0].ToObject<string>();
 			return (r0);
 		}
 		public async Task<Result2> GetFullNeuron(ulong arg0)
@@ -67,8 +67,8 @@ namespace Sample.Shared.Governance
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg);
-			QueryReply reply = response.ThrowOrGetReply();
-			Result2 r0 = reply.Arg.Values[0].ToObject<Result2>();
+			CandidArg reply = response.ThrowOrGetReply();
+			Result2 r0 = reply.Values[0].ToObject<Result2>();
 			return (r0);
 		}
 		public async Task<Result2> GetFullNeuronByIdOrSubaccount(NeuronIdOrSubaccount arg0)
@@ -81,8 +81,8 @@ namespace Sample.Shared.Governance
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg);
-			QueryReply reply = response.ThrowOrGetReply();
-			Result2 r0 = reply.Arg.Values[0].ToObject<Result2>();
+			CandidArg reply = response.ThrowOrGetReply();
+			Result2 r0 = reply.Values[0].ToObject<Result2>();
 			return (r0);
 		}
 		public async Task<Result3> GetMonthlyNodeProviderRewards()
@@ -104,8 +104,8 @@ namespace Sample.Shared.Governance
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg);
-			QueryReply reply = response.ThrowOrGetReply();
-			NetworkEconomics r0 = reply.Arg.Values[0].ToObject<NetworkEconomics>();
+			CandidArg reply = response.ThrowOrGetReply();
+			NetworkEconomics r0 = reply.Values[0].ToObject<NetworkEconomics>();
 			return (r0);
 		}
 		public async Task<System.Collections.Generic.List<ulong>> GetNeuronIds()
@@ -116,8 +116,8 @@ namespace Sample.Shared.Governance
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg);
-			QueryReply reply = response.ThrowOrGetReply();
-			System.Collections.Generic.List<ulong> r0 = reply.Arg.Values[0].ToObject<System.Collections.Generic.List<ulong>>();
+			CandidArg reply = response.ThrowOrGetReply();
+			System.Collections.Generic.List<ulong> r0 = reply.Values[0].ToObject<System.Collections.Generic.List<ulong>>();
 			return (r0);
 		}
 		public async Task<Result4> GetNeuronInfo(ulong arg0)
@@ -130,8 +130,8 @@ namespace Sample.Shared.Governance
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg);
-			QueryReply reply = response.ThrowOrGetReply();
-			Result4 r0 = reply.Arg.Values[0].ToObject<Result4>();
+			CandidArg reply = response.ThrowOrGetReply();
+			Result4 r0 = reply.Values[0].ToObject<Result4>();
 			return (r0);
 		}
 		public async Task<Result4> GetNeuronInfoByIdOrSubaccount(NeuronIdOrSubaccount arg0)
@@ -144,8 +144,8 @@ namespace Sample.Shared.Governance
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg);
-			QueryReply reply = response.ThrowOrGetReply();
-			Result4 r0 = reply.Arg.Values[0].ToObject<Result4>();
+			CandidArg reply = response.ThrowOrGetReply();
+			Result4 r0 = reply.Values[0].ToObject<Result4>();
 			return (r0);
 		}
 		public async Task<Result5> GetNodeProviderByCaller()
@@ -156,8 +156,8 @@ namespace Sample.Shared.Governance
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg);
-			QueryReply reply = response.ThrowOrGetReply();
-			Result5 r0 = reply.Arg.Values[0].ToObject<Result5>();
+			CandidArg reply = response.ThrowOrGetReply();
+			Result5 r0 = reply.Values[0].ToObject<Result5>();
 			return (r0);
 		}
 		public async Task<System.Collections.Generic.List<ProposalInfo>> GetPendingProposals()
@@ -168,8 +168,8 @@ namespace Sample.Shared.Governance
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg);
-			QueryReply reply = response.ThrowOrGetReply();
-			System.Collections.Generic.List<ProposalInfo> r0 = reply.Arg.Values[0].ToObject<System.Collections.Generic.List<ProposalInfo>>();
+			CandidArg reply = response.ThrowOrGetReply();
+			System.Collections.Generic.List<ProposalInfo> r0 = reply.Values[0].ToObject<System.Collections.Generic.List<ProposalInfo>>();
 			return (r0);
 		}
 		public async Task<EdjCase.ICP.Candid.Models.OptionalValue<ProposalInfo>> GetProposalInfo(ulong arg0)
@@ -182,8 +182,8 @@ namespace Sample.Shared.Governance
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg);
-			QueryReply reply = response.ThrowOrGetReply();
-			EdjCase.ICP.Candid.Models.OptionalValue<ProposalInfo> r0 = reply.Arg.Values[0].ToObject<EdjCase.ICP.Candid.Models.OptionalValue<ProposalInfo>>();
+			CandidArg reply = response.ThrowOrGetReply();
+			EdjCase.ICP.Candid.Models.OptionalValue<ProposalInfo> r0 = reply.Values[0].ToObject<EdjCase.ICP.Candid.Models.OptionalValue<ProposalInfo>>();
 			return (r0);
 		}
 		public async Task<ListKnownNeuronsResponse> ListKnownNeurons()
@@ -194,8 +194,8 @@ namespace Sample.Shared.Governance
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg);
-			QueryReply reply = response.ThrowOrGetReply();
-			ListKnownNeuronsResponse r0 = reply.Arg.Values[0].ToObject<ListKnownNeuronsResponse>();
+			CandidArg reply = response.ThrowOrGetReply();
+			ListKnownNeuronsResponse r0 = reply.Values[0].ToObject<ListKnownNeuronsResponse>();
 			return (r0);
 		}
 		public async Task<ListNeuronsResponse> ListNeurons(ListNeurons arg0)
@@ -208,8 +208,8 @@ namespace Sample.Shared.Governance
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg);
-			QueryReply reply = response.ThrowOrGetReply();
-			ListNeuronsResponse r0 = reply.Arg.Values[0].ToObject<ListNeuronsResponse>();
+			CandidArg reply = response.ThrowOrGetReply();
+			ListNeuronsResponse r0 = reply.Values[0].ToObject<ListNeuronsResponse>();
 			return (r0);
 		}
 		public async Task<ListNodeProvidersResponse> ListNodeProviders()
@@ -220,8 +220,8 @@ namespace Sample.Shared.Governance
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg);
-			QueryReply reply = response.ThrowOrGetReply();
-			ListNodeProvidersResponse r0 = reply.Arg.Values[0].ToObject<ListNodeProvidersResponse>();
+			CandidArg reply = response.ThrowOrGetReply();
+			ListNodeProvidersResponse r0 = reply.Values[0].ToObject<ListNodeProvidersResponse>();
 			return (r0);
 		}
 		public async Task<ListProposalInfoResponse> ListProposals(ListProposalInfo arg0)
@@ -234,8 +234,8 @@ namespace Sample.Shared.Governance
 			};
 			CandidArg arg = CandidArg.FromCandid(candidArgs);
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg);
-			QueryReply reply = response.ThrowOrGetReply();
-			ListProposalInfoResponse r0 = reply.Arg.Values[0].ToObject<ListProposalInfoResponse>();
+			CandidArg reply = response.ThrowOrGetReply();
+			ListProposalInfoResponse r0 = reply.Values[0].ToObject<ListProposalInfoResponse>();
 			return (r0);
 		}
 		public async Task<ManageNeuronResponse> ManageNeuron(ManageNeuron arg0)
