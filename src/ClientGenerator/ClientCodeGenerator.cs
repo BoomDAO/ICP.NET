@@ -3,6 +3,9 @@ using EdjCase.ICP.Candid.Models.Types;
 using EdjCase.ICP.Candid.Models.Values;
 using ICP.ClientGenerator;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Editing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,6 +31,7 @@ namespace EdjCase.ICP.ClientGenerator
 	{
 		public static ClientCodeResult FromService(string serviceName, string baseNamespace, CandidServiceDescription service)
 		{
+
 			var typeSourceGenerator = new TypeSourceGenerator();
 
 			// Mapping of A => Type
@@ -91,7 +95,7 @@ namespace EdjCase.ICP.ClientGenerator
 				.ToList();
 			TypeName clientName = new TypeName(StringUtil.ToPascalCase(serviceName) + "ApiClient", baseNamespace);
 			ServiceSourceCodeType serviceSourceType = ResolveService(service.Service);
-			string clientSource = typeSourceGenerator.GenerateClientSourceCode(clientName, baseNamespace, serviceSourceType, importedNamespaces);
+			string clientSource = RoslynSourceGenerator.GenerateClientSourceCode(clientName, baseNamespace, serviceSourceType, importedNamespaces);
 
 			string? aliasFile = null; // TODO? global using only supported in C# 10+
 			return new ClientCodeResult(clientName, clientSource, typeFiles, aliasFile);

@@ -22,8 +22,7 @@ namespace EdjCase.ICP.Agent.Cbor.Converters
 					string argHex = ByteUtil.ToHexString(context.ReplyArg!);
 #endif
 					var arg = CandidArg.FromBytes(context.ReplyArg!);
-					var reply = new QueryReply(arg);
-					return QueryResponse.Replied(reply);
+					return QueryResponse.Replied(arg);
 				case "rejected":
 					RejectCode code = (RejectCode)(ulong)context.RejectCode!;
 					return QueryResponse.Rejected(code, context.RejectMessage, context.ErrorCode);

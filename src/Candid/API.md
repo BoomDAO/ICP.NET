@@ -18,6 +18,14 @@
   - [FromCandid(values)](#M-EdjCase-ICP-Candid-Models-CandidArg-FromCandid-System-Collections-Generic-List{EdjCase-ICP-Candid-Models-CandidTypedValue}- 'EdjCase.ICP.Candid.Models.CandidArg.FromCandid(System.Collections.Generic.List{EdjCase.ICP.Candid.Models.CandidTypedValue})')
   - [FromCandid(values)](#M-EdjCase-ICP-Candid-Models-CandidArg-FromCandid-EdjCase-ICP-Candid-Models-CandidTypedValue[]- 'EdjCase.ICP.Candid.Models.CandidArg.FromCandid(EdjCase.ICP.Candid.Models.CandidTypedValue[])')
   - [GetHashCode()](#M-EdjCase-ICP-Candid-Models-CandidArg-GetHashCode 'EdjCase.ICP.Candid.Models.CandidArg.GetHashCode')
+  - [ToObject\`\`1(candidConverter)](#M-EdjCase-ICP-Candid-Models-CandidArg-ToObject``1-EdjCase-ICP-Candid-CandidConverter- 'EdjCase.ICP.Candid.Models.CandidArg.ToObject``1(EdjCase.ICP.Candid.CandidConverter)')
+  - [ToObjects\`\`2(candidConverter)](#M-EdjCase-ICP-Candid-Models-CandidArg-ToObjects``2-EdjCase-ICP-Candid-CandidConverter- 'EdjCase.ICP.Candid.Models.CandidArg.ToObjects``2(EdjCase.ICP.Candid.CandidConverter)')
+  - [ToObjects\`\`3(candidConverter)](#M-EdjCase-ICP-Candid-Models-CandidArg-ToObjects``3-EdjCase-ICP-Candid-CandidConverter- 'EdjCase.ICP.Candid.Models.CandidArg.ToObjects``3(EdjCase.ICP.Candid.CandidConverter)')
+  - [ToObjects\`\`4(candidConverter)](#M-EdjCase-ICP-Candid-Models-CandidArg-ToObjects``4-EdjCase-ICP-Candid-CandidConverter- 'EdjCase.ICP.Candid.Models.CandidArg.ToObjects``4(EdjCase.ICP.Candid.CandidConverter)')
+  - [ToObjects\`\`5(candidConverter)](#M-EdjCase-ICP-Candid-Models-CandidArg-ToObjects``5-EdjCase-ICP-Candid-CandidConverter- 'EdjCase.ICP.Candid.Models.CandidArg.ToObjects``5(EdjCase.ICP.Candid.CandidConverter)')
+  - [ToObjects\`\`6(candidConverter)](#M-EdjCase-ICP-Candid-Models-CandidArg-ToObjects``6-EdjCase-ICP-Candid-CandidConverter- 'EdjCase.ICP.Candid.Models.CandidArg.ToObjects``6(EdjCase.ICP.Candid.CandidConverter)')
+  - [ToObjects\`\`7(candidConverter)](#M-EdjCase-ICP-Candid-Models-CandidArg-ToObjects``7-EdjCase-ICP-Candid-CandidConverter- 'EdjCase.ICP.Candid.Models.CandidArg.ToObjects``7(EdjCase.ICP.Candid.CandidConverter)')
+  - [ToObjects\`\`8(candidConverter)](#M-EdjCase-ICP-Candid-Models-CandidArg-ToObjects``8-EdjCase-ICP-Candid-CandidConverter- 'EdjCase.ICP.Candid.Models.CandidArg.ToObjects``8(EdjCase.ICP.Candid.CandidConverter)')
   - [ToString()](#M-EdjCase-ICP-Candid-Models-CandidArg-ToString 'EdjCase.ICP.Candid.Models.CandidArg.ToString')
   - [op_Equality()](#M-EdjCase-ICP-Candid-Models-CandidArg-op_Equality-EdjCase-ICP-Candid-Models-CandidArg,EdjCase-ICP-Candid-Models-CandidArg- 'EdjCase.ICP.Candid.Models.CandidArg.op_Equality(EdjCase.ICP.Candid.Models.CandidArg,EdjCase.ICP.Candid.Models.CandidArg)')
   - [op_Inequality()](#M-EdjCase-ICP-Candid-Models-CandidArg-op_Inequality-EdjCase-ICP-Candid-Models-CandidArg,EdjCase-ICP-Candid-Models-CandidArg- 'EdjCase.ICP.Candid.Models.CandidArg.op_Inequality(EdjCase.ICP.Candid.Models.CandidArg,EdjCase.ICP.Candid.Models.CandidArg)')
@@ -853,6 +861,218 @@ Candid arg value
 ##### Parameters
 
 This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-CandidArg-ToObject``1-EdjCase-ICP-Candid-CandidConverter-'></a>
+### ToObject\`\`1(candidConverter) `method`
+
+##### Summary
+
+Takes the first arg value and converts it to the specified type
+
+##### Returns
+
+The converted object of the first arg value
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| candidConverter | [EdjCase.ICP.Candid.CandidConverter](#T-EdjCase-ICP-Candid-CandidConverter 'EdjCase.ICP.Candid.CandidConverter') | Optional. Specifies the converter to use, othewise uses the default |
+
+##### Generic Types
+
+| Name | Description |
+| ---- | ----------- |
+| T1 | The type to convert the first arg value to |
+
+<a name='M-EdjCase-ICP-Candid-Models-CandidArg-ToObjects``2-EdjCase-ICP-Candid-CandidConverter-'></a>
+### ToObjects\`\`2(candidConverter) `method`
+
+##### Summary
+
+Takes the arg values 1->2 and converts them to the specified types
+
+##### Returns
+
+The tuple of all specified arg values
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| candidConverter | [EdjCase.ICP.Candid.CandidConverter](#T-EdjCase-ICP-Candid-CandidConverter 'EdjCase.ICP.Candid.CandidConverter') | Optional. Specifies the converter to use, othewise uses the default |
+
+##### Generic Types
+
+| Name | Description |
+| ---- | ----------- |
+| T1 | The type to convert the first arg value to |
+| T2 | The type to convert the second arg value to |
+
+<a name='M-EdjCase-ICP-Candid-Models-CandidArg-ToObjects``3-EdjCase-ICP-Candid-CandidConverter-'></a>
+### ToObjects\`\`3(candidConverter) `method`
+
+##### Summary
+
+Takes the arg values 1->3 and converts them to the specified types
+
+##### Returns
+
+The tuple of all specified arg values
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| candidConverter | [EdjCase.ICP.Candid.CandidConverter](#T-EdjCase-ICP-Candid-CandidConverter 'EdjCase.ICP.Candid.CandidConverter') | Optional. Specifies the converter to use, othewise uses the default |
+
+##### Generic Types
+
+| Name | Description |
+| ---- | ----------- |
+| T1 | The type to convert the first arg value to |
+| T2 | The type to convert the second arg value to |
+| T3 | The type to convert the third arg value to |
+
+<a name='M-EdjCase-ICP-Candid-Models-CandidArg-ToObjects``4-EdjCase-ICP-Candid-CandidConverter-'></a>
+### ToObjects\`\`4(candidConverter) `method`
+
+##### Summary
+
+Takes the arg values 1->4 and converts them to the specified types
+
+##### Returns
+
+The tuple of all specified arg values
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| candidConverter | [EdjCase.ICP.Candid.CandidConverter](#T-EdjCase-ICP-Candid-CandidConverter 'EdjCase.ICP.Candid.CandidConverter') | Optional. Specifies the converter to use, othewise uses the default |
+
+##### Generic Types
+
+| Name | Description |
+| ---- | ----------- |
+| T1 | The type to convert the first arg value to |
+| T2 | The type to convert the second arg value to |
+| T3 | The type to convert the third arg value to |
+| T4 | The type to convert the fourth arg value to |
+
+<a name='M-EdjCase-ICP-Candid-Models-CandidArg-ToObjects``5-EdjCase-ICP-Candid-CandidConverter-'></a>
+### ToObjects\`\`5(candidConverter) `method`
+
+##### Summary
+
+Takes the arg values 1->5 and converts them to the specified types
+
+##### Returns
+
+The tuple of all specified arg values
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| candidConverter | [EdjCase.ICP.Candid.CandidConverter](#T-EdjCase-ICP-Candid-CandidConverter 'EdjCase.ICP.Candid.CandidConverter') | Optional. Specifies the converter to use, othewise uses the default |
+
+##### Generic Types
+
+| Name | Description |
+| ---- | ----------- |
+| T1 | The type to convert the first arg value to |
+| T2 | The type to convert the second arg value to |
+| T3 | The type to convert the third arg value to |
+| T4 | The type to convert the fourth arg value to |
+| T5 | The type to convert the fifth arg value to |
+
+<a name='M-EdjCase-ICP-Candid-Models-CandidArg-ToObjects``6-EdjCase-ICP-Candid-CandidConverter-'></a>
+### ToObjects\`\`6(candidConverter) `method`
+
+##### Summary
+
+Takes the arg value 1->6 and converts them to the specified types
+
+##### Returns
+
+The tuple of all specified arg values
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| candidConverter | [EdjCase.ICP.Candid.CandidConverter](#T-EdjCase-ICP-Candid-CandidConverter 'EdjCase.ICP.Candid.CandidConverter') | Optional. Specifies the converter to use, othewise uses the default |
+
+##### Generic Types
+
+| Name | Description |
+| ---- | ----------- |
+| T1 | The type to convert the first arg value to |
+| T2 | The type to convert the second arg value to |
+| T3 | The type to convert the third arg value to |
+| T4 | The type to convert the fourth arg value to |
+| T5 | The type to convert the fifth arg value to |
+| T6 | The type to convert the sixth arg value to |
+
+<a name='M-EdjCase-ICP-Candid-Models-CandidArg-ToObjects``7-EdjCase-ICP-Candid-CandidConverter-'></a>
+### ToObjects\`\`7(candidConverter) `method`
+
+##### Summary
+
+Takes the arg value 1->7 and converts them to the specified types
+
+##### Returns
+
+The tuple of all specified arg values
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| candidConverter | [EdjCase.ICP.Candid.CandidConverter](#T-EdjCase-ICP-Candid-CandidConverter 'EdjCase.ICP.Candid.CandidConverter') | Optional. Specifies the converter to use, othewise uses the default |
+
+##### Generic Types
+
+| Name | Description |
+| ---- | ----------- |
+| T1 | The type to convert the first arg value to |
+| T2 | The type to convert the second arg value to |
+| T3 | The type to convert the third arg value to |
+| T4 | The type to convert the fourth arg value to |
+| T5 | The type to convert the fifth arg value to |
+| T6 | The type to convert the sixth arg value to |
+| T7 | The type to convert the seventh arg value to |
+
+<a name='M-EdjCase-ICP-Candid-Models-CandidArg-ToObjects``8-EdjCase-ICP-Candid-CandidConverter-'></a>
+### ToObjects\`\`8(candidConverter) `method`
+
+##### Summary
+
+Takes the arg value 1->8 and converts them to the specified types
+
+##### Returns
+
+The tuple of all specified arg values
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| candidConverter | [EdjCase.ICP.Candid.CandidConverter](#T-EdjCase-ICP-Candid-CandidConverter 'EdjCase.ICP.Candid.CandidConverter') | Optional. Specifies the converter to use, othewise uses the default |
+
+##### Generic Types
+
+| Name | Description |
+| ---- | ----------- |
+| T1 | The type to convert the first arg value to |
+| T2 | The type to convert the second arg value to |
+| T3 | The type to convert the third arg value to |
+| T4 | The type to convert the fourth arg value to |
+| T5 | The type to convert the fifth arg value to |
+| T6 | The type to convert the sixth arg value to |
+| T7 | The type to convert the seventh arg value to |
+| T8 | The type to convert the eighth arg value to |
 
 <a name='M-EdjCase-ICP-Candid-Models-CandidArg-ToString'></a>
 ### ToString() `method`

@@ -485,6 +485,98 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidArg.ToObject``1(EdjCase.ICP.Candid.CandidConverter)">
+            <summary>
+            Takes the first arg value and converts it to the specified type
+            </summary>
+            <typeparam name="T1">The type to convert the first arg value to</typeparam>
+            <param name="candidConverter">Optional. Specifies the converter to use, othewise uses the default</param>
+            <returns>The converted object of the first arg value</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidArg.ToObjects``2(EdjCase.ICP.Candid.CandidConverter)">
+            <summary>
+            Takes the arg values 1->2 and converts them to the specified types
+            </summary>
+            <typeparam name="T1">The type to convert the first arg value to</typeparam>
+            <typeparam name="T2">The type to convert the second arg value to</typeparam>
+            <param name="candidConverter">Optional. Specifies the converter to use, othewise uses the default</param>
+            <returns>The tuple of all specified arg values</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidArg.ToObjects``3(EdjCase.ICP.Candid.CandidConverter)">
+            <summary>
+            Takes the arg values 1->3 and converts them to the specified types
+            </summary>
+            <typeparam name="T1">The type to convert the first arg value to</typeparam>
+            <typeparam name="T2">The type to convert the second arg value to</typeparam>
+            <typeparam name="T3">The type to convert the third arg value to</typeparam>
+            <param name="candidConverter">Optional. Specifies the converter to use, othewise uses the default</param>
+            <returns>The tuple of all specified arg values</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidArg.ToObjects``4(EdjCase.ICP.Candid.CandidConverter)">
+            <summary>
+            Takes the arg values 1->4 and converts them to the specified types
+            </summary>
+            <typeparam name="T1">The type to convert the first arg value to</typeparam>
+            <typeparam name="T2">The type to convert the second arg value to</typeparam>
+            <typeparam name="T3">The type to convert the third arg value to</typeparam>
+            <typeparam name="T4">The type to convert the fourth arg value to</typeparam>
+            <param name="candidConverter">Optional. Specifies the converter to use, othewise uses the default</param>
+            <returns>The tuple of all specified arg values</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidArg.ToObjects``5(EdjCase.ICP.Candid.CandidConverter)">
+            <summary>
+            Takes the arg values 1->5 and converts them to the specified types
+            </summary>
+            <typeparam name="T1">The type to convert the first arg value to</typeparam>
+            <typeparam name="T2">The type to convert the second arg value to</typeparam>
+            <typeparam name="T3">The type to convert the third arg value to</typeparam>
+            <typeparam name="T4">The type to convert the fourth arg value to</typeparam>
+            <typeparam name="T5">The type to convert the fifth arg value to</typeparam>
+            <param name="candidConverter">Optional. Specifies the converter to use, othewise uses the default</param>
+            <returns>The tuple of all specified arg values</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidArg.ToObjects``6(EdjCase.ICP.Candid.CandidConverter)">
+            <summary>
+            Takes the arg value 1->6 and converts them to the specified types
+            </summary>
+            <typeparam name="T1">The type to convert the first arg value to</typeparam>
+            <typeparam name="T2">The type to convert the second arg value to</typeparam>
+            <typeparam name="T3">The type to convert the third arg value to</typeparam>
+            <typeparam name="T4">The type to convert the fourth arg value to</typeparam>
+            <typeparam name="T5">The type to convert the fifth arg value to</typeparam>
+            <typeparam name="T6">The type to convert the sixth arg value to</typeparam>
+            <param name="candidConverter">Optional. Specifies the converter to use, othewise uses the default</param>
+            <returns>The tuple of all specified arg values</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidArg.ToObjects``7(EdjCase.ICP.Candid.CandidConverter)">
+            <summary>
+            Takes the arg value 1->7 and converts them to the specified types
+            </summary>
+            <typeparam name="T1">The type to convert the first arg value to</typeparam>
+            <typeparam name="T2">The type to convert the second arg value to</typeparam>
+            <typeparam name="T3">The type to convert the third arg value to</typeparam>
+            <typeparam name="T4">The type to convert the fourth arg value to</typeparam>
+            <typeparam name="T5">The type to convert the fifth arg value to</typeparam>
+            <typeparam name="T6">The type to convert the sixth arg value to</typeparam>
+            <typeparam name="T7">The type to convert the seventh arg value to</typeparam>
+            <param name="candidConverter">Optional. Specifies the converter to use, othewise uses the default</param>
+            <returns>The tuple of all specified arg values</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidArg.ToObjects``8(EdjCase.ICP.Candid.CandidConverter)">
+            <summary>
+            Takes the arg value 1->8 and converts them to the specified types
+            </summary>
+            <typeparam name="T1">The type to convert the first arg value to</typeparam>
+            <typeparam name="T2">The type to convert the second arg value to</typeparam>
+            <typeparam name="T3">The type to convert the third arg value to</typeparam>
+            <typeparam name="T4">The type to convert the fourth arg value to</typeparam>
+            <typeparam name="T5">The type to convert the fifth arg value to</typeparam>
+            <typeparam name="T6">The type to convert the sixth arg value to</typeparam>
+            <typeparam name="T7">The type to convert the seventh arg value to</typeparam>
+            <typeparam name="T8">The type to convert the eighth arg value to</typeparam>
+            <param name="candidConverter">Optional. Specifies the converter to use, othewise uses the default</param>
+            <returns>The tuple of all specified arg values</returns>
+        </member>
         <member name="M:EdjCase.ICP.Candid.Models.CandidArg.FromBytes(System.Byte[])">
             <summary>
             Decodes a byte array into a candid arg value. Must be a valid encoded candid arg value

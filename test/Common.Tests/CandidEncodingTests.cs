@@ -426,7 +426,9 @@ namespace EdjCase.ICP.Candid.Tests
 
 			string expectedHex = Convert.ToHexString(expectedArg.Encode());
 
+#pragma warning disable xUnit2000 // Constants and literals should be the expected argument
 			Assert.Equal(expectedHex, actualHex);
+#pragma warning restore xUnit2000 // Constants and literals should be the expected argument
 			Assert.Equal(expectedArg, actualArg);
 		}
 

@@ -26,10 +26,10 @@ namespace EdjCase.ICP.Agent.Responses
 		/// </summary>
 		/// <exception cref="InvalidOperationException">Will throw if not of type 'replied'</exception>
 		/// <returns>Reply data</returns>
-		public QueryReply AsReplied()
+		public CandidArg AsReplied()
 		{
 			this.ThrowIfWrongType(QueryResponseType.Replied);
-			return (QueryReply)this.value;
+			return (CandidArg)this.value;
 		}
 
 		/// <summary>
@@ -57,7 +57,7 @@ namespace EdjCase.ICP.Agent.Responses
 		/// </summary>
 		/// <returns>Query reply data</returns>
 		/// <exception cref="QueryRejectedException">Throws if 'rejected'</exception>
-		public QueryReply ThrowOrGetReply()
+		public CandidArg ThrowOrGetReply()
 		{
 			if (this.Type == QueryResponseType.Rejected)
 			{
@@ -72,7 +72,7 @@ namespace EdjCase.ICP.Agent.Responses
 			return new QueryResponse(QueryResponseType.Rejected, new QueryRejectInfo(code, message, errorCode));
 		}
 
-		internal static QueryResponse Replied(QueryReply reply)
+		internal static QueryResponse Replied(CandidArg reply)
 		{
 			return new QueryResponse(QueryResponseType.Replied, reply);
 		}
@@ -91,22 +91,6 @@ namespace EdjCase.ICP.Agent.Responses
 		/// When the cansiter request has errors to query request
 		/// </summary>
 		Rejected
-	}
-
-	/// <summary>
-	/// Wrapper object around the candid arg that is returned
-	/// </summary>
-	public class QueryReply
-	{
-		/// <summary>
-		/// The candid arg returned from a request
-		/// </summary>
-		public CandidArg Arg { get; }
-
-		internal QueryReply(CandidArg arg)
-		{
-			this.Arg = arg;
-		}
 	}
 
 	/// <summary>

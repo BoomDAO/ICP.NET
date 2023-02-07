@@ -2,9 +2,14 @@ using EdjCase.ICP.Agent.Identities;
 using EdjCase.ICP.Candid.Mapping;
 using EdjCase.ICP.Candid.Models.Values;
 using EdjCase.ICP.ClientGenerator;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using EdjCase.ICP.Agent.Agents;
+using EdjCase.ICP.Candid.Models;
 
 namespace ICP.ClientGenerator
 {
@@ -698,5 +703,6 @@ namespace ICP.ClientGenerator
 			}
 			builder.AppendLine("}");
 		}
+
 	}
 }

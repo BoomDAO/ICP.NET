@@ -831,16 +831,6 @@
             When the cansiter request has errors to query request
             </summary>
         </member>
-        <member name="T:EdjCase.ICP.Agent.Responses.QueryReply">
-            <summary>
-            Wrapper object around the candid arg that is returned
-            </summary>
-        </member>
-        <member name="P:EdjCase.ICP.Agent.Responses.QueryReply.Arg">
-            <summary>
-            The candid arg returned from a request
-            </summary>
-        </member>
         <member name="T:EdjCase.ICP.Agent.Responses.QueryRejectInfo">
             <summary>
             Data from a query response that has been rejected
