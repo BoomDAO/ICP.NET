@@ -101,7 +101,8 @@ namespace EdjCase.ICP.ClientGenerator
 					.Select(FromType)
 					.ToList();
 			}
-			return new TypeName(type.Name, type.Namespace, genericTypes?.ToArray() ?? new TypeName[0]);
+			// TODO handle `fake` nullables like `object?`
+			return new TypeName(type.Name, type.Namespace, genericTypes?.ToArray() ?? Array.Empty<TypeName>());
 		}
 
 		internal TypeName WithParentType(TypeName parent)

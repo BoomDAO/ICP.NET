@@ -15,17 +15,17 @@ namespace ICP.ClientGenerator
 	}
 
 
-	internal class CsharpTypeSourceCodeType : SourceCodeType
+	internal class CsharpBuiltInTypeSourceCodeType : SourceCodeType
 	{
 		public Type Type { get; }
 		public List<SourceCodeType> GenericTypes { get; }
 
-		public CsharpTypeSourceCodeType(Type type, SourceCodeType? genericType = null)
+		public CsharpBuiltInTypeSourceCodeType(Type type, SourceCodeType? genericType = null)
 		{
 			this.Type = type ?? throw new ArgumentNullException(nameof(type));
 			this.GenericTypes = genericType == null ? new List<SourceCodeType>() : new List<SourceCodeType> { genericType };
 		}
-		public CsharpTypeSourceCodeType(Type type, List<SourceCodeType> genericTypes)
+		public CsharpBuiltInTypeSourceCodeType(Type type, List<SourceCodeType> genericTypes)
 		{
 			this.Type = type ?? throw new ArgumentNullException(nameof(type));
 			this.GenericTypes = genericTypes ?? new List<SourceCodeType>();
