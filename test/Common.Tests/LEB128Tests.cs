@@ -6,7 +6,7 @@ using System;
 using System.IO;
 using Xunit;
 
-namespace ICP.Candid.Tests
+namespace EdjCase.ICP.Candid.Tests
 {
 	public class LEB128Tests
 	{

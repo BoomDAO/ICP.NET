@@ -11,7 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace ICP.Candid.Tests
+namespace EdjCase.ICP.Candid.Tests
 {
 	public class InternetIdentityTests
 	{

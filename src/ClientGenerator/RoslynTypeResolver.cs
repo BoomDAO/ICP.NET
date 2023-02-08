@@ -1,20 +1,14 @@
-using EdjCase.ICP.Candid.Mapping;
-using EdjCase.ICP.Candid.Models.Values;
-using ICP.ClientGenerator;
+using EdjCase.ICP.ClientGenerator;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using EdjCase.ICP.Agent.Agents;
-using EdjCase.ICP.Agent.Responses;
 using EdjCase.ICP.Candid.Models;
-using System.Xml.Linq;
-using CommandLine;
-using Microsoft.VisualBasic.FileIO;
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid.Models.Values;
 
 namespace EdjCase.ICP.ClientGenerator
 {
@@ -100,19 +94,19 @@ namespace EdjCase.ICP.ClientGenerator
 
 				case VariantSourceCodeType v:
 					{
-						TypeName variantName = new (nameContext, null);
+						TypeName variantName = new(nameContext, null);
 						(ClassDeclarationSyntax classSyntax, EnumDeclarationSyntax typeSyntax) = this.GenerateVariant(variantName, v);
 						return new ResolvedType(variantName, classSyntax, typeSyntax);
 					}
 				case RecordSourceCodeType r:
 					{
-						TypeName recordName = new TypeName(nameContext, null);
+						TypeName recordName = new(nameContext, null);
 						ClassDeclarationSyntax classSyntax = this.GenerateRecord(recordName, r);
 						return new ResolvedType(recordName, classSyntax);
 					}
 				case ServiceSourceCodeType s:
 					{
-						TypeName serviceName = new TypeName(nameContext, null);
+						TypeName serviceName = new(nameContext, null);
 						ClassDeclarationSyntax classSyntax = this.GenerateService(serviceName, s);
 						return new ResolvedType(serviceName, classSyntax);
 					}
@@ -121,10 +115,6 @@ namespace EdjCase.ICP.ClientGenerator
 			}
 		}
 
-		public ClassDeclarationSyntax GenerateType(ValueName id)
-		{
-
-		}
 
 		public ClassDeclarationSyntax GenerateClient(TypeName clientName, ServiceSourceCodeType service)
 		{
@@ -201,16 +191,61 @@ namespace EdjCase.ICP.ClientGenerator
 		}
 
 		internal (ClassDeclarationSyntax Class, EnumDeclarationSyntax Type) GenerateVariant(
-			TypeName variantName,
+			TypeName variantTypeName,
 			VariantSourceCodeType variant
 		)
 		{
-			TypeName enumTypeName = new(variantName.GetName() + "Tag", null);
-			var implementationTypes = new List<TypeName>();
-			var enumOptions = new List<(ValueName Name, TypeName? Type)>();
+			TypeName enumTypeName = new(variantTypeName.GetName() + "Tag", null);
 
-			List<MethodDeclarationSyntax> methods = this.GenerateVariantMethods(variantName, variant)
+			List<(ValueName Name, ResolvedType? Type)> resolvedOptions = variant.Options
+				.Select((o, i) => (o.Tag, this.ResolveType(o.Type, "O" + i)))
 				.ToList();
+
+			List<(ValueName Name, TypeName? Type)> enumOptions = resolvedOptions
+				.Select(o => (o.Name, o.Type?.Name))
+				.ToList();
+
+			List<MethodDeclarationSyntax> methods = new();
+
+			ValueName optionValueParamName = ValueName.Default("info");
+			
+			// Creation methods
+			// public static {VariantType} {OptionName}({VariantOptionType} value)
+			// or if there is no type:
+			// public static {VariantType} {OptionName}()
+			methods.AddRange(
+				resolvedOptions
+					.Select(o => this.GenerateVariantOptionCreationMethod(
+						variantTypeName,
+						enumTypeName,
+						o.Name,
+						o.Type,
+						optionValueParamName
+					))
+			);
+
+			// As methods (if has option type)
+			// public {VariantOptionType} As{OptionName}()
+			methods.AddRange(
+				resolvedOptions
+				.Where(r => r.Type != null)
+				.Select(o => this.GenerateVariantOptionAsMethod(o.Name, o.Type!, optionValueParamName))
+			);
+
+			// TODO
+			//if (resolvedType.Name != null && customType)
+			//{
+			//	// Prefix with parent name if subtype
+			//	optionTypeName = optionTypeName.WithParentType(variantTypeName);
+			//}
+
+			bool anyOptionsWithType = resolvedOptions.Any(o => o.Type != null);
+			if (anyOptionsWithType)
+			{
+				// If there are any types, then create the helper method 'ValidateType' that
+				// they all use
+				methods.Add(this.GenerateVariantValidateTypeMethod(enumTypeName, ValueName.Default("Tag")));
+			}
 			List<ClassProperty> properties = new()
 			{
 				new ClassProperty(
@@ -236,7 +271,7 @@ namespace EdjCase.ICP.ClientGenerator
 			};
 
 			ClassDeclarationSyntax classSyntax = GenerateClass(
-				name: variantName,
+				name: variantTypeName,
 				properties: properties,
 				methods: methods,
 				attributes: attributes,
@@ -246,141 +281,259 @@ namespace EdjCase.ICP.ClientGenerator
 			return (classSyntax, enumSyntax);
 		}
 
-		private IEnumerable<MethodDeclarationSyntax> GenerateVariantMethods(
-			TypeName variantTypeName,
-			VariantSourceCodeType variant
+		private MethodDeclarationSyntax GenerateVariantValidateTypeMethod(TypeName enumTypeName, ValueName tagName)
+		{
+			//private void ValidateTag({VariantEnum} tag)
+			//{
+			//	if (!this.Tag.Equals(tag))
+			//	{
+			//		throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
+			//	}
+			//}
+			BlockSyntax body = SyntaxFactory.Block(
+				SyntaxFactory.IfStatement(
+				SyntaxFactory.PrefixUnaryExpression(
+					SyntaxKind.LogicalNotExpression,
+					SyntaxFactory.InvocationExpression(
+						SyntaxFactory.MemberAccessExpression(
+							SyntaxKind.SimpleMemberAccessExpression,
+							SyntaxFactory.MemberAccessExpression(
+								SyntaxKind.SimpleMemberAccessExpression,
+								SyntaxFactory.ThisExpression(),
+								SyntaxFactory.IdentifierName(tagName.PascalCaseValue)
+							),
+							SyntaxFactory.IdentifierName(nameof(CandidTag.Equals))
+						)
+					)
+					.WithArgumentList(
+						SyntaxFactory.ArgumentList(
+							SyntaxFactory.SingletonSeparatedList<ArgumentSyntax>(
+								SyntaxFactory.Argument(
+									SyntaxFactory.IdentifierName(tagName.CamelCaseValue)
+								)
+							)
+						)
+					)
+				),
+				SyntaxFactory.Block(
+					SyntaxFactory.SingletonList<StatementSyntax>(
+						SyntaxFactory.ThrowStatement(
+							SyntaxFactory.ObjectCreationExpression(
+								SyntaxFactory.IdentifierName(nameof(InvalidOperationException))
+							)
+							.WithArgumentList(
+								SyntaxFactory.ArgumentList(
+									SyntaxFactory.SingletonSeparatedList<ArgumentSyntax>(
+										SyntaxFactory.Argument(
+											SyntaxFactory.InterpolatedStringExpression(
+												SyntaxFactory.Token(SyntaxKind.InterpolatedStringStartToken)
+											)
+											.WithContents(
+												SyntaxFactory.List<InterpolatedStringContentSyntax>(
+													new InterpolatedStringContentSyntax[]{
+														SyntaxFactory.InterpolatedStringText()
+														.WithTextToken(
+															SyntaxFactory.Token(
+																SyntaxFactory.TriviaList(),
+																SyntaxKind.InterpolatedStringTextToken,
+																"Cannot cast '",
+																"Cannot cast '",
+																SyntaxFactory.TriviaList()
+															)
+														),
+														SyntaxFactory.Interpolation(
+															SyntaxFactory.MemberAccessExpression(
+																SyntaxKind.SimpleMemberAccessExpression,
+																SyntaxFactory.ThisExpression(),
+																SyntaxFactory.IdentifierName(tagName.PascalCaseValue)
+															)
+														),
+														SyntaxFactory.InterpolatedStringText()
+														.WithTextToken(
+															SyntaxFactory.Token(
+																SyntaxFactory.TriviaList(),
+																SyntaxKind.InterpolatedStringTextToken,
+																"' to type '",
+																"' to type '",
+																SyntaxFactory.TriviaList()
+															)
+														),
+														SyntaxFactory.Interpolation(
+															SyntaxFactory.IdentifierName(tagName.CamelCaseValue)
+														),
+														SyntaxFactory.InterpolatedStringText()
+														.WithTextToken(
+															SyntaxFactory.Token(
+																SyntaxFactory.TriviaList(),
+																SyntaxKind.InterpolatedStringTextToken,
+																"'",
+																"'",
+																SyntaxFactory.TriviaList()
+															)
+														)
+													}
+												)
+											)
+										)
+									)
+								)
+							)
+						)
+					)
+				)
+			));
+			return GenerateMethod(
+				body: body,
+				access: AccessType.Private,
+				isStatic: false,
+				isAsync: false,
+				returnType: null,
+				name: "ValidateTag",
+				new TypedParam(enumTypeName.GetNamespacedName(), "tag")
+			);
+		}
+
+		private MethodDeclarationSyntax GenerateVariantOptionAsMethod(
+			ValueName optionName,
+			ResolvedType optionType,
+			ValueName optionValueParamName
 		)
 		{
-
-
-			bool anyOptionsWithType = false;
-			int i = 0;
-			foreach ((ValueName optionName, SourceCodeType optionType) in variant.Options)
-			{
-				string backupOptionName = "O" + i;
-				i++;
-				ResolvedType resolvedType = this.ResolveType(optionType, backupOptionName);
-
-				if (resolvedType.GeneratedSyntax != null)
-				{
-					optionTypeBuilder(builder);
-				}
-				if (optionTypeName != null && customType)
-				{
-					// Prefix with parent name if subtype
-					optionTypeName = optionTypeName.WithParentType(variantTypeName);
-				}
-				enumOptions.Add((optionName, optionTypeName));
-				if (optionTypeName == null)
-				{
-					WriteMethod(
-						builder,
-						inner: () =>
-						{
-							builder.AppendLine($"return new {variantTypeName.GetNamespacedName()}({enumTypeName.GetNamespacedName()}.{optionName.PascalCaseValue}, null);");
-						},
-						access: "public",
-						isStatic: true,
-						isAsync: false,
-						isConstructor: false,
-						returnType: new TypedValueName(variantTypeName, optionName),
-						name: optionName.PascalCaseValue
-					);
-				}
-				else
-				{
-					anyOptionsWithType = true;
-					ValueName paramName = ValueName.Default("info");
-					WriteMethod(
-						builder,
-						inner: () =>
-						{
-							builder.AppendLine($"return new {variantTypeName.GetNamespacedName()}({enumTypeName.GetNamespacedName()}.{optionName.PascalCaseValue}, {paramName.CamelCaseValue});");
-						},
-						access: "public",
-						isStatic: true,
-						isAsync: false,
-						isConstructor: false,
-						returnType: new TypedValueName(variantTypeName, ValueName.Default("type")),
-						name: optionName.PascalCaseValue,
-						baseConstructorParams: null,
-						TypedParam.FromType(optionTypeName, paramName)
-					);
-					builder.AppendLine("");
-
-					WriteMethod(
-						builder,
-						inner: () =>
-						{
-							builder.AppendLine($"this.ValidateTag({enumTypeName.GetNamespacedName()}.{optionName.PascalCaseValue});");
-							builder.AppendLine($"return ({optionTypeName.GetNamespacedName()})this.Value!;");
-						},
-						access: "public",
+			return GenerateMethod(
+						body: SyntaxFactory.Block(
+							SyntaxFactory.ExpressionStatement(
+								SyntaxFactory.InvocationExpression(
+									SyntaxFactory.MemberAccessExpression(
+										SyntaxKind.SimpleMemberAccessExpression,
+										SyntaxFactory.ThisExpression(),
+										SyntaxFactory.IdentifierName("ValidateTag")
+									)
+								)
+								.WithArgumentList(
+									SyntaxFactory.ArgumentList(
+										SyntaxFactory.SingletonSeparatedList<ArgumentSyntax>(
+											SyntaxFactory.Argument(
+												SyntaxFactory.MemberAccessExpression(
+													SyntaxKind.SimpleMemberAccessExpression,
+													SyntaxFactory.IdentifierName("Enum"),
+													SyntaxFactory.IdentifierName("Option")
+												)
+											)
+										)
+									)
+								)
+							),
+							SyntaxFactory.ReturnStatement(
+								SyntaxFactory.CastExpression(
+									SyntaxFactory.IdentifierName("OptionType"),
+									SyntaxFactory.PostfixUnaryExpression(
+										SyntaxKind.SuppressNullableWarningExpression,
+										SyntaxFactory.MemberAccessExpression(
+											SyntaxKind.SimpleMemberAccessExpression,
+											SyntaxFactory.ThisExpression(),
+											SyntaxFactory.IdentifierName("Value")
+										)
+									)
+								)
+							)
+						),
+						access: AccessType.Public,
 						isStatic: false,
 						isAsync: false,
-						isConstructor: false,
-						returnType: new TypedValueName(optionTypeName, optionName),
+						returnType: new TypedValueName(optionType.Name, optionName),
 						name: "As" + optionName.PascalCaseValue
 					);
-				}
-				builder.AppendLine("");
+		}
 
-			}
+		private MethodDeclarationSyntax GenerateVariantOptionCreationMethod(
+			TypeName variantTypeName,
+			TypeName enumTypeName,
+			ValueName optionTypeName,
+			ResolvedType? optionType,
+			ValueName optionValueParamName
+		)
+		{
+			ExpressionSyntax arg = optionType == null
+						// If option type is not specified, then use `null`
+						? SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression)
+						// If option type is specified, then use param
+						: SyntaxFactory.IdentifierName(optionValueParamName.CamelCaseValue);
 
-			if (anyOptionsWithType)
+			var creationParameters = new List<TypedParam>();
+			if (optionType != null)
 			{
-				WriteMethod(
-					builder,
-					inner: () =>
-					{
-						builder.AppendLine($"if (!this.Tag.Equals(tag))");
-						builder.AppendLine("{");
-						builder.AppendLine("	throw new InvalidOperationException($\"Cannot cast '{this.Tag}' to type '{tag}'\");");
-						builder.AppendLine("}");
-					},
-					access: "private",
-					isStatic: false,
-					isAsync: false,
-					isConstructor: false,
-					returnType: null,
-					name: "ValidateTag",
-					baseConstructorParams: null,
-					new TypedParam(enumTypeName.GetNamespacedName(), "tag")
-				);
+				creationParameters.Add(TypedParam.FromType(optionType.Name, optionValueParamName));
 			}
+			return GenerateMethod(
+				// return new VariantType(VariantEnum.Option, value);
+				body: SyntaxFactory.Block(
+				SyntaxFactory.ReturnStatement(
+					SyntaxFactory.ObjectCreationExpression(
+						SyntaxFactory.IdentifierName(variantTypeName.GetNamespacedName())
+					)
+					.WithArgumentList(
+						SyntaxFactory.ArgumentList(
+							SyntaxFactory.SeparatedList<ArgumentSyntax>(
+								new SyntaxNodeOrToken[]{
+										SyntaxFactory.Argument(
+											SyntaxFactory.MemberAccessExpression(
+												SyntaxKind.SimpleMemberAccessExpression,
+												SyntaxFactory.IdentifierName(enumTypeName.GetNamespacedName()),
+												SyntaxFactory.IdentifierName(optionTypeName.PascalCaseValue)
+											)
+										),
+										SyntaxFactory.Token(SyntaxKind.CommaToken),
+										SyntaxFactory.Argument(arg)
+								}
+							)
+						)
+					)
+				)
+				),
+				access: AccessType.Public,
+				isStatic: true,
+				isAsync: false,
+				returnType: new TypedValueName(variantTypeName, optionTypeName),
+				name: optionTypeName.PascalCaseValue,
+				parameters: creationParameters?.ToArray() ?? Array.Empty<TypedParam>()
+			);
 		}
 
 		internal ClassDeclarationSyntax GenerateRecord(TypeName recordName, RecordSourceCodeType record)
 		{
+			List<(ValueName Tag, ResolvedType? Type)> resolvedFields = record.Fields
+				.Select((f, i) => (f.Tag, this.ResolveType(f.Type, "R" + i)))
+				.ToList();
+			IEnumerable<MemberDeclarationSyntax> subItems = resolvedFields
+				.SelectMany(f => f.Type?.GeneratedSyntax ?? Array.Empty<MemberDeclarationSyntax>());
 
-			IEnumerable<TypedValueName> properties = record.Fields.Select((f, i) =>
+			IEnumerable<ClassProperty> properties = resolvedFields.Select((f, i) =>
 			{
-				ResolvedType resolvedField = this.ResolveType(f.Type, "R" + i);
-				i++;
-				if (resolvedField.GeneratedSyntax != null)
-				{
-					typeBuilder(builder);
-				}
-
 				string propertyName = f.Tag.PascalCaseValue;
 				if (propertyName == recordName.GetName())
 				{
 					// Cant match the class name
 					propertyName += "_"; // TODO best way to escape it. @ does not work
 				}
-				builder.AppendLine($"[{typeof(CandidNameAttribute).FullName}(\"{fieldName.CandidName}\")]");
-				builder.AppendLine($"public {fieldTypeName!.GetNamespacedName()} {propertyName} {{ get; set; }}");
-				builder.AppendLine("");
-				return new ClassProperty();
+
+				// [CandidName("{fieldCandidName}")]
+				// public {fieldType} {fieldName} {{ get; set; }}
+				return new ClassProperty(
+					name: ValueName.Default(propertyName),
+					type: f.Type.Name,
+					access: AccessType.Public,
+					hasSetter: true,
+					new AttributeInfo(typeof(CandidNameAttribute), f.Tag.CandidName)
+				);
 			});
 
-			return GenerateClass(recordName, properties, methods, implementTypes);
+			return GenerateClass(recordName, properties, methods, implementTypes, subItems);
 
 		}
 
 		private static PropertyDeclarationSyntax GenerateProperty(ClassProperty property)
 		{
-			List<AccessorDeclarationSyntax> accessors = new ()
+			List<AccessorDeclarationSyntax> accessors = new()
 			{
 				// Add get in `{ get; }
 				SyntaxFactory
@@ -407,7 +560,7 @@ namespace EdjCase.ICP.ClientGenerator
 
 			// Add `public`, `private`, etc...
 			SyntaxToken? accessSyntaxToken = GenerateAccessToken(property.Access);
-			if(accessSyntaxToken != null)
+			if (accessSyntaxToken != null)
 			{
 				propertySyntax = propertySyntax
 					.WithModifiers(SyntaxTokenList.Create(accessSyntaxToken.Value));
@@ -856,7 +1009,7 @@ namespace EdjCase.ICP.ClientGenerator
 
 			// Add access (public, private, ...)
 			SyntaxToken? accessSyntaxToken = GenerateAccessToken(access);
-			if(accessSyntaxToken != null)
+			if (accessSyntaxToken != null)
 			{
 				constructor = constructor
 					.WithModifiers(
@@ -986,6 +1139,7 @@ namespace EdjCase.ICP.ClientGenerator
 			List<MethodDeclarationSyntax> methods,
 			List<TypeName>? implementTypes = null,
 			List<AttributeListSyntax>? attributes = null,
+			bool propertyContructor = true,
 			bool emptyReflectionContructor = false)
 		{
 			IEnumerable<PropertyDeclarationSyntax> properySyntxList = properties
@@ -1032,7 +1186,7 @@ namespace EdjCase.ICP.ClientGenerator
 						)
 					);
 			}
-			if(attributes?.Any() == true)
+			if (attributes?.Any() == true)
 			{
 				classSyntax = classSyntax
 					.WithAttributeLists(

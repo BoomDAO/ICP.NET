@@ -6,7 +6,7 @@ using EdjCase.ICP.Candid.Utilities;
 using System.Collections.Generic;
 using Xunit;
 
-namespace ICP.Candid.Tests
+namespace EdjCase.ICP.Candid.Tests
 {
 	public class ArgTests
 	{

@@ -2,7 +2,7 @@ using EdjCase.ICP.Candid.Mapping.Mappers;
 using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid.Models.Types;
 using EdjCase.ICP.Candid.Models.Values;
-using ICP.ClientGenerator;
+using EdjCase.ICP.ClientGenerator;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -38,45 +38,23 @@ namespace EdjCase.ICP.ClientGenerator
 			// Mapping of A => Type
 			// where candid is: type A = Type;
 			Dictionary<ValueName, SourceCodeType> declaredTypes = service.DeclaredTypes
-				.Where(t => !(t.Value is CandidServiceType)) // avoid duplication service of type
+				.Where(t => t.Value is not CandidServiceType) // avoid duplication service of type
 				.ToDictionary(t => ValueName.Default(t.Key.ToString()), t => ResolveSourceCodeType(t.Value));
 
 			Dictionary<ValueName, TypeName> aliases = new();
 			var typeFiles = new List<(string FileName, string Source)>();
 			foreach ((ValueName id, SourceCodeType typeInfo) in declaredTypes)
 			{
-				ResolvedType type = typeResolver.ResolveTypeDeclaration(id, typeInfo);
-				if (name == null)
+				(string Name, string Source)? file = RoslynSourceGenerator.GenerateTypeSourceCode(id, typeInfo, baseNamespace, typeResolver);
+				if (file != null)
 				{
-					// Skip null, empty and reserved types
-					continue;
+					typeFiles.Add((file.Value.Name, file.Value.Source));
 				}
-
-				if (customType)
-				{
-					if (typeBuilder == null)
-					{
-						throw new NotImplementedException("No type builder made for custom type");
-					}
-					typeFiles.Add(
-						RoslynSourceGenerator.GenerateTypeSourceCode(id, baseNamespace, typeResolver)
-					);
-				}
-				else
-				{
-					aliases.Add(id, name);
-					if (typeBuilder != null)
-					{
-						typeFiles.Add(
-							RoslynSourceGenerator.GenerateTypeSourceCode(id, baseNamespace, typeResolver)
-						);
-					}
-				}
-
+				// TODO aliases
 			}
 
 
-			TypeName clientName = new TypeName(StringUtil.ToPascalCase(serviceName) + "ApiClient", baseNamespace);
+			TypeName clientName = new (StringUtil.ToPascalCase(serviceName) + "ApiClient", baseNamespace);
 			ServiceSourceCodeType serviceSourceType = ResolveService(service.Service);
 			string clientSource = RoslynSourceGenerator.GenerateClientSourceCode(clientName, baseNamespace, serviceSourceType, typeResolver);
 

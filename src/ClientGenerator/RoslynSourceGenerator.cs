@@ -1,9 +1,10 @@
+using CommandLine;
 using EdjCase.ICP.Agent.Agents;
 using EdjCase.ICP.Agent.Responses;
 using EdjCase.ICP.Candid.Mapping;
 using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid.Models.Values;
-using ICP.ClientGenerator;
+using EdjCase.ICP.ClientGenerator;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -17,8 +18,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace EdjCase.ICP.ClientGenerator
 {
@@ -27,38 +30,44 @@ namespace EdjCase.ICP.ClientGenerator
 		public static string GenerateClientSourceCode(
 			TypeName clientName,
 			string baseNamespace,
-			ServiceSourceCodeType desc,
+			ServiceSourceCodeType service,
 			RoslynTypeResolver typeResolver
 		)
 		{
 			// Generate client class
-			ClassDeclarationSyntax clientClass = typeResolver.GenerateClient(clientName, desc);
+			ClassDeclarationSyntax clientClass = typeResolver.GenerateClient(clientName, service);
 
 			return PostProcessSourceCode(baseNamespace, clientClass);
 		}
 
 
-		public static (string FileName, string SourceCode) GenerateTypeSourceCode(
+		public static (string FileName, string SourceCode)? GenerateTypeSourceCode(
 			ValueName id,
+			SourceCodeType type,
 			string baseNamespace,
 			RoslynTypeResolver typeResolver
 		)
 		{
 
 			// Generate client class
-			ClassDeclarationSyntax modelClass = typeResolver.GenerateType(id);
+			ResolvedType? resolvedType = typeResolver.ResolveType(type, id.PascalCaseValue);
 
-			string source = PostProcessSourceCode(baseNamespace + ".Models", modelClass);
+			if (resolvedType?.GeneratedSyntax == null)
+			{
+				return null;
+			}
+
+			string source = PostProcessSourceCode(baseNamespace + ".Models", resolvedType.GeneratedSyntax);
 
 			return (id.PascalCaseValue, source);
 		}
 
-		private static string PostProcessSourceCode(string baseNamespace, MemberDeclarationSyntax member)
+		private static string PostProcessSourceCode(string baseNamespace, params MemberDeclarationSyntax[] members)
 		{
 			// Generate namespace with class in it
 			NamespaceDeclarationSyntax @namespace = SyntaxFactory
 				.NamespaceDeclaration(SyntaxFactory.ParseName(baseNamespace))
-				.WithMembers(SyntaxFactory.SingletonList<MemberDeclarationSyntax>(member));
+				.WithMembers(SyntaxFactory.List(members));
 
 			// Generate file with all code
 			CompilationUnitSyntax compilationUnit = SyntaxFactory
@@ -108,7 +117,7 @@ namespace EdjCase.ICP.ClientGenerator
 				.DescendantNodes()
 				.OfType<IdentifierNameSyntax>();
 			List<UsingDirectiveSyntax> usingDirectives = new();
-			foreach(IdentifierNameSyntax id in identifiers)
+			foreach (IdentifierNameSyntax id in identifiers)
 			{
 				// TODO
 				//if(id.)

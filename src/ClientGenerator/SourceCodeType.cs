@@ -3,7 +3,7 @@ using EdjCase.ICP.ClientGenerator;
 using System;
 using System.Collections.Generic;
 
-namespace ICP.ClientGenerator
+namespace EdjCase.ICP.ClientGenerator
 {
 	internal abstract class SourceCodeType
 	{
