@@ -410,6 +410,7 @@
 - [CustomMapperAttribute](#T-EdjCase-ICP-Candid-Mapping-CustomMapperAttribute 'EdjCase.ICP.Candid.Mapping.CustomMapperAttribute')
   - [#ctor(mapper)](#M-EdjCase-ICP-Candid-Mapping-CustomMapperAttribute-#ctor-EdjCase-ICP-Candid-Mapping-IObjectMapper- 'EdjCase.ICP.Candid.Mapping.CustomMapperAttribute.#ctor(EdjCase.ICP.Candid.Mapping.IObjectMapper)')
   - [Mapper](#P-EdjCase-ICP-Candid-Mapping-CustomMapperAttribute-Mapper 'EdjCase.ICP.Candid.Mapping.CustomMapperAttribute.Mapper')
+- [EmptyValue](#T-EdjCase-ICP-Candid-Models-EmptyValue 'EdjCase.ICP.Candid.Models.EmptyValue')
 - [EncodedValue](#T-EdjCase-ICP-Candid-Models-HashTree-EncodedValue 'EdjCase.ICP.Candid.Models.HashTree.EncodedValue')
   - [#ctor(value)](#M-EdjCase-ICP-Candid-Models-HashTree-EncodedValue-#ctor-System-Byte[]- 'EdjCase.ICP.Candid.Models.HashTree.EncodedValue.#ctor(System.Byte[])')
   - [Value](#P-EdjCase-ICP-Candid-Models-HashTree-EncodedValue-Value 'EdjCase.ICP.Candid.Models.HashTree.EncodedValue.Value')
@@ -488,6 +489,7 @@
   - [EncodeSigned(value,destination)](#M-EdjCase-ICP-Candid-Encodings-LEB128-EncodeSigned-EdjCase-ICP-Candid-Models-UnboundedInt,System-Buffers-IBufferWriter{System-Byte}- 'EdjCase.ICP.Candid.Encodings.LEB128.EncodeSigned(EdjCase.ICP.Candid.Models.UnboundedInt,System.Buffers.IBufferWriter{System.Byte})')
   - [EncodeUnsigned(value)](#M-EdjCase-ICP-Candid-Encodings-LEB128-EncodeUnsigned-EdjCase-ICP-Candid-Models-UnboundedUInt- 'EdjCase.ICP.Candid.Encodings.LEB128.EncodeUnsigned(EdjCase.ICP.Candid.Models.UnboundedUInt)')
   - [EncodeUnsigned(value,destination)](#M-EdjCase-ICP-Candid-Encodings-LEB128-EncodeUnsigned-EdjCase-ICP-Candid-Models-UnboundedUInt,System-Buffers-IBufferWriter{System-Byte}- 'EdjCase.ICP.Candid.Encodings.LEB128.EncodeUnsigned(EdjCase.ICP.Candid.Models.UnboundedUInt,System.Buffers.IBufferWriter{System.Byte})')
+- [NullValue](#T-EdjCase-ICP-Candid-Models-NullValue 'EdjCase.ICP.Candid.Models.NullValue')
 - [OptionalValue\`1](#T-EdjCase-ICP-Candid-Models-OptionalValue`1 'EdjCase.ICP.Candid.Models.OptionalValue`1')
   - [HasValue](#P-EdjCase-ICP-Candid-Models-OptionalValue`1-HasValue 'EdjCase.ICP.Candid.Models.OptionalValue`1.HasValue')
   - [Cast\`\`1()](#M-EdjCase-ICP-Candid-Models-OptionalValue`1-Cast``1 'EdjCase.ICP.Candid.Models.OptionalValue`1.Cast``1')
@@ -548,6 +550,7 @@
   - [RawValue](#P-EdjCase-ICP-Candid-Models-RequestId-RawValue 'EdjCase.ICP.Candid.Models.RequestId.RawValue')
   - [ComputeHash()](#M-EdjCase-ICP-Candid-Models-RequestId-ComputeHash-EdjCase-ICP-Candid-Crypto-IHashFunction- 'EdjCase.ICP.Candid.Models.RequestId.ComputeHash(EdjCase.ICP.Candid.Crypto.IHashFunction)')
   - [FromObject(properties,hashFunction)](#M-EdjCase-ICP-Candid-Models-RequestId-FromObject-System-Collections-Generic-IDictionary{System-String,EdjCase-ICP-Candid-Models-IHashable},EdjCase-ICP-Candid-Crypto-IHashFunction- 'EdjCase.ICP.Candid.Models.RequestId.FromObject(System.Collections.Generic.IDictionary{System.String,EdjCase.ICP.Candid.Models.IHashable},EdjCase.ICP.Candid.Crypto.IHashFunction)')
+- [ReservedValue](#T-EdjCase-ICP-Candid-Models-ReservedValue 'EdjCase.ICP.Candid.Models.ReservedValue')
 - [SHA256HashFunction](#T-EdjCase-ICP-Candid-Crypto-SHA256HashFunction 'EdjCase.ICP.Candid.Crypto.SHA256HashFunction')
   - [ComputeHash()](#M-EdjCase-ICP-Candid-Crypto-SHA256HashFunction-ComputeHash-System-Byte[]- 'EdjCase.ICP.Candid.Crypto.SHA256HashFunction.ComputeHash(System.Byte[])')
   - [Create()](#M-EdjCase-ICP-Candid-Crypto-SHA256HashFunction-Create 'EdjCase.ICP.Candid.Crypto.SHA256HashFunction.Create')
@@ -5825,6 +5828,17 @@ An attribute that specifies a custom mapper for the class, struct, property or f
 
 The object mapper to use for the decorated item
 
+<a name='T-EdjCase-ICP-Candid-Models-EmptyValue'></a>
+## EmptyValue `type`
+
+##### Namespace
+
+EdjCase.ICP.Candid.Models
+
+##### Summary
+
+Dummy struct to represent the \`empty\` candid type's value
+
 <a name='T-EdjCase-ICP-Candid-Models-HashTree-EncodedValue'></a>
 ## EncodedValue `type`
 
@@ -6834,6 +6848,17 @@ LEB128 bytes of value
 | value | [EdjCase.ICP.Candid.Models.UnboundedUInt](#T-EdjCase-ICP-Candid-Models-UnboundedUInt 'EdjCase.ICP.Candid.Models.UnboundedUInt') | Value to convert to LEB128 bytes |
 | destination | [System.Buffers.IBufferWriter{System.Byte}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Buffers.IBufferWriter 'System.Buffers.IBufferWriter{System.Byte}') | Buffer writer to write bytes to |
 
+<a name='T-EdjCase-ICP-Candid-Models-NullValue'></a>
+## NullValue `type`
+
+##### Namespace
+
+EdjCase.ICP.Candid.Models
+
+##### Summary
+
+Dummy struct to represent the \`null\` candid type's value
+
 <a name='T-EdjCase-ICP-Candid-Models-OptionalValue`1'></a>
 ## OptionalValue\`1 `type`
 
@@ -7483,6 +7508,17 @@ A request id object
 | ---- | ---- | ----------- |
 | properties | [System.Collections.Generic.IDictionary{System.String,EdjCase.ICP.Candid.Models.IHashable}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.IDictionary 'System.Collections.Generic.IDictionary{System.String,EdjCase.ICP.Candid.Models.IHashable}') | The properties of the object to hash |
 | hashFunction | [EdjCase.ICP.Candid.Crypto.IHashFunction](#T-EdjCase-ICP-Candid-Crypto-IHashFunction 'EdjCase.ICP.Candid.Crypto.IHashFunction') | The hash function to use to generate the hash |
+
+<a name='T-EdjCase-ICP-Candid-Models-ReservedValue'></a>
+## ReservedValue `type`
+
+##### Namespace
+
+EdjCase.ICP.Candid.Models
+
+##### Summary
+
+Dummy struct to represent the \`reserved\` candid type's value
 
 <a name='T-EdjCase-ICP-Candid-Crypto-SHA256HashFunction'></a>
 ## SHA256HashFunction `type`

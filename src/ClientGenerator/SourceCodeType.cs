@@ -9,23 +9,17 @@ namespace EdjCase.ICP.ClientGenerator
 	{
 	}
 
-	internal class NullEmptyOrReservedSourceCodeType : SourceCodeType
-	{
-
-	}
-
-
-	internal class CsharpBuiltInTypeSourceCodeType : SourceCodeType
+	internal class CompiledTypeSourceCodeType : SourceCodeType
 	{
 		public Type Type { get; }
 		public List<SourceCodeType> GenericTypes { get; }
 
-		public CsharpBuiltInTypeSourceCodeType(Type type, SourceCodeType? genericType = null)
+		public CompiledTypeSourceCodeType(Type type, SourceCodeType? genericType = null)
 		{
 			this.Type = type ?? throw new ArgumentNullException(nameof(type));
 			this.GenericTypes = genericType == null ? new List<SourceCodeType>() : new List<SourceCodeType> { genericType };
 		}
-		public CsharpBuiltInTypeSourceCodeType(Type type, List<SourceCodeType> genericTypes)
+		public CompiledTypeSourceCodeType(Type type, List<SourceCodeType> genericTypes)
 		{
 			this.Type = type ?? throw new ArgumentNullException(nameof(type));
 			this.GenericTypes = genericTypes ?? new List<SourceCodeType>();
@@ -55,9 +49,9 @@ namespace EdjCase.ICP.ClientGenerator
 
 	internal class VariantSourceCodeType : SourceCodeType
 	{
-		public List<(ValueName Tag, SourceCodeType Type)> Options { get; }
+		public List<(ValueName Tag, SourceCodeType? Type)> Options { get; }
 
-		public VariantSourceCodeType(List<(ValueName Tag, SourceCodeType Type)> options)
+		public VariantSourceCodeType(List<(ValueName Tag, SourceCodeType? Type)> options)
 		{
 			this.Options = options ?? throw new ArgumentNullException(nameof(options));
 		}

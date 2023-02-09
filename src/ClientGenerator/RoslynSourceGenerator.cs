@@ -73,6 +73,7 @@ namespace EdjCase.ICP.ClientGenerator
 			CompilationUnitSyntax compilationUnit = SyntaxFactory
 				.CompilationUnit()
 				.WithMembers(SyntaxFactory.SingletonList<MemberDeclarationSyntax>(@namespace));
+			SyntaxTree tree = SyntaxFactory.SyntaxTree(compilationUnit);
 
 			// Moves all namespaces to usings from the Type declarations
 			SetUsings(ref compilationUnit);
@@ -111,21 +112,47 @@ namespace EdjCase.ICP.ClientGenerator
 			//};
 		}
 
-		private static void SetUsings(ref CompilationUnitSyntax compilationUnit)
+		private static void SetUsings(ref CompilationUnitSyntax root)
 		{
-			IEnumerable<IdentifierNameSyntax> identifiers = compilationUnit
+			var compilation = CSharpCompilation.Create("T")
+				.AddSyntaxTrees(root.SyntaxTree);
+			var semanticModel = compilation.GetSemanticModel(root.SyntaxTree, ignoreAccessibility: false);
+
+
+			IEnumerable<TypeSyntax> typeNodes = root
 				.DescendantNodes()
-				.OfType<IdentifierNameSyntax>();
+				.OfType<TypeSyntax>();
+
+			HashSet<string> uniqueNamespaces = new HashSet<string>();
 			List<UsingDirectiveSyntax> usingDirectives = new();
-			foreach (IdentifierNameSyntax id in identifiers)
+			foreach (TypeSyntax typeNode in typeNodes)
 			{
-				// TODO
-				//if(id.)
-				//compilationUnit.ReplaceNode(id, newId);
-				usingDirectives.Add(SyntaxFactory.UsingDirective(id));
+				INamedTypeSymbol? type;
+				try
+				{
+					type = semanticModel.GetTypeInfo(typeNode).Type as INamedTypeSymbol;
+				}
+				catch(Exception ex)
+				{
+					type = null;
+				}
+				// TODO better detection than contains '.'
+				if (type == null || type.IsNamespace || !type.Name.Contains('.'))
+				{
+					continue;
+				}
+				string @namespace = type.Name[..type.Name.LastIndexOf('.')];
+				var identifierName = SyntaxFactory.IdentifierName(type.Name);
+				root = root.ReplaceNode(typeNode, identifierName);
+				uniqueNamespaces.Add(@namespace);
+
 			}
-			compilationUnit = compilationUnit
-				.AddUsings(usingDirectives.ToArray());
+			root = root
+				.AddUsings(
+					uniqueNamespaces
+					.Select(n => SyntaxFactory.UsingDirective(SyntaxFactory.IdentifierName(n)))
+					.ToArray()
+				);
 		}
 	}
 }

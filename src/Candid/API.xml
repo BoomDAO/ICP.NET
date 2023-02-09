@@ -1050,6 +1050,11 @@
             <param name="typeDef">Type to add to table</param>
             <returns>True if added, otherwise false</returns>
         </member>
+        <member name="T:EdjCase.ICP.Candid.Models.EmptyValue">
+            <summary>
+            Dummy struct to represent the `empty` candid type's value
+            </summary>
+        </member>
         <member name="T:EdjCase.ICP.Candid.Models.HashTreeType">
             <summary>
             Subtypes of what a hash tree can be
@@ -1343,6 +1348,11 @@
         <member name="M:EdjCase.ICP.Candid.Models.HashableObject.System#Collections#IEnumerable#GetEnumerator">
             <inheritdoc />
         </member>
+        <member name="T:EdjCase.ICP.Candid.Models.NullValue">
+            <summary>
+            Dummy struct to represent the `null` candid type's value
+            </summary>
+        </member>
         <member name="T:EdjCase.ICP.Candid.Models.OptionalValue`1">
             <summary>
             A helper class to represent a candid opt value. This is used instead of just a null value due to 
@@ -1554,6 +1564,11 @@
         </member>
         <member name="M:EdjCase.ICP.Candid.Models.RequestId.ComputeHash(EdjCase.ICP.Candid.Crypto.IHashFunction)">
             <inheritdoc />
+        </member>
+        <member name="T:EdjCase.ICP.Candid.Models.ReservedValue">
+            <summary>
+            Dummy struct to represent the `reserved` candid type's value
+            </summary>
         </member>
         <member name="T:EdjCase.ICP.Candid.Models.StatePath">
             <summary>
