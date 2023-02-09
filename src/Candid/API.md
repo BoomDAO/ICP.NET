@@ -18,7 +18,7 @@
   - [FromCandid(values)](#M-EdjCase-ICP-Candid-Models-CandidArg-FromCandid-System-Collections-Generic-List{EdjCase-ICP-Candid-Models-CandidTypedValue}- 'EdjCase.ICP.Candid.Models.CandidArg.FromCandid(System.Collections.Generic.List{EdjCase.ICP.Candid.Models.CandidTypedValue})')
   - [FromCandid(values)](#M-EdjCase-ICP-Candid-Models-CandidArg-FromCandid-EdjCase-ICP-Candid-Models-CandidTypedValue[]- 'EdjCase.ICP.Candid.Models.CandidArg.FromCandid(EdjCase.ICP.Candid.Models.CandidTypedValue[])')
   - [GetHashCode()](#M-EdjCase-ICP-Candid-Models-CandidArg-GetHashCode 'EdjCase.ICP.Candid.Models.CandidArg.GetHashCode')
-  - [ToObject\`\`1(candidConverter)](#M-EdjCase-ICP-Candid-Models-CandidArg-ToObject``1-EdjCase-ICP-Candid-CandidConverter- 'EdjCase.ICP.Candid.Models.CandidArg.ToObject``1(EdjCase.ICP.Candid.CandidConverter)')
+  - [ToObjects\`\`1(candidConverter)](#M-EdjCase-ICP-Candid-Models-CandidArg-ToObjects``1-EdjCase-ICP-Candid-CandidConverter- 'EdjCase.ICP.Candid.Models.CandidArg.ToObjects``1(EdjCase.ICP.Candid.CandidConverter)')
   - [ToObjects\`\`2(candidConverter)](#M-EdjCase-ICP-Candid-Models-CandidArg-ToObjects``2-EdjCase-ICP-Candid-CandidConverter- 'EdjCase.ICP.Candid.Models.CandidArg.ToObjects``2(EdjCase.ICP.Candid.CandidConverter)')
   - [ToObjects\`\`3(candidConverter)](#M-EdjCase-ICP-Candid-Models-CandidArg-ToObjects``3-EdjCase-ICP-Candid-CandidConverter- 'EdjCase.ICP.Candid.Models.CandidArg.ToObjects``3(EdjCase.ICP.Candid.CandidConverter)')
   - [ToObjects\`\`4(candidConverter)](#M-EdjCase-ICP-Candid-Models-CandidArg-ToObjects``4-EdjCase-ICP-Candid-CandidConverter- 'EdjCase.ICP.Candid.Models.CandidArg.ToObjects``4(EdjCase.ICP.Candid.CandidConverter)')
@@ -865,8 +865,8 @@ Candid arg value
 
 This method has no parameters.
 
-<a name='M-EdjCase-ICP-Candid-Models-CandidArg-ToObject``1-EdjCase-ICP-Candid-CandidConverter-'></a>
-### ToObject\`\`1(candidConverter) `method`
+<a name='M-EdjCase-ICP-Candid-Models-CandidArg-ToObjects``1-EdjCase-ICP-Candid-CandidConverter-'></a>
+### ToObjects\`\`1(candidConverter) `method`
 
 ##### Summary
 

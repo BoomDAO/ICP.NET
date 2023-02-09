@@ -9,6 +9,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Editing;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace EdjCase.ICP.ClientGenerator
@@ -33,7 +34,6 @@ namespace EdjCase.ICP.ClientGenerator
 		public static ClientCodeResult FromService(string serviceName, string baseNamespace, CandidServiceDescription service)
 		{
 
-			var typeResolver = new RoslynTypeResolver();
 
 			// Mapping of A => Type
 			// where candid is: type A = Type;
@@ -44,22 +44,35 @@ namespace EdjCase.ICP.ClientGenerator
 					t => ResolveSourceCodeType(t.Value)
 				);
 
-			Dictionary<ValueName, TypeName> aliases = new();
+			string modelNamespace = baseNamespace + ".Models";
+			HashSet<ValueName> aliases = declaredTypes
+				.Where(t => t.Value is CompiledTypeSourceCodeType || t.Value is ReferenceSourceCodeType)
+				.Select(t => t.Key)
+				.ToHashSet();
+
+			var typeResolver = new RoslynTypeResolver(modelNamespace, aliases);
+			Dictionary<ValueName, ResolvedType> resolvedTypes = declaredTypes
+				.ToDictionary(
+					t => t.Key,
+					t => typeResolver.ResolveTypeDeclaration(t.Key, t.Value)
+				);
+
 			var typeFiles = new List<(string FileName, string Source)>();
-			foreach ((ValueName id, SourceCodeType typeInfo) in declaredTypes)
+			Dictionary<ValueName, TypeName> aliasTypes = aliases
+				.ToDictionary(t => t, t => resolvedTypes[t].Name);
+			foreach ((ValueName id, ResolvedType typeInfo) in resolvedTypes)
 			{
-				(string Name, string Source)? file = RoslynSourceGenerator.GenerateTypeSourceCode(id, typeInfo, baseNamespace, typeResolver);
-				if (file != null)
+				string? sourceCode = RoslynSourceGenerator.GenerateTypeSourceCode(typeInfo, typeResolver.ModelNamespace, aliasTypes);
+				if (sourceCode != null)
 				{
-					typeFiles.Add((file.Value.Name, file.Value.Source));
+					typeFiles.Add((typeInfo.Name.GetName(), sourceCode));
 				}
-				// TODO aliases
 			}
 
 
 			TypeName clientName = new(StringUtil.ToPascalCase(serviceName) + "ApiClient", baseNamespace);
 			ServiceSourceCodeType serviceSourceType = ResolveService(service.Service);
-			string clientSource = RoslynSourceGenerator.GenerateClientSourceCode(clientName, baseNamespace, serviceSourceType, typeResolver);
+			string clientSource = RoslynSourceGenerator.GenerateClientSourceCode(clientName, baseNamespace, serviceSourceType, typeResolver, aliasTypes);
 
 			string? aliasFile = null; // TODO? global using only supported in C# 10+
 			return new ClientCodeResult(clientName, clientSource, typeFiles, aliasFile);

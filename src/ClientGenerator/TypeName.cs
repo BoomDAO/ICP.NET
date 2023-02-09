@@ -78,6 +78,11 @@ namespace EdjCase.ICP.ClientGenerator
 			return value;
 		}
 
+		public override string ToString()
+		{
+			return this.GetNamespacedName();
+		}
+
 		public static TypeName Optional(TypeName type)
 		{
 			return new TypeName(
@@ -87,28 +92,27 @@ namespace EdjCase.ICP.ClientGenerator
 			);
 		}
 
-		public static TypeName FromType<T>()
+		public static TypeName FromType<T>(bool isNullable = false)
 		{
-			return FromType(typeof(T));
+			return FromType(typeof(T), isNullable);
 		}
 
-		public static TypeName FromType(Type type)
+		public static TypeName FromType(Type type, bool isNullable = false)
 		{
-			List<TypeName>? genericTypes = null;
 			if (type.IsGenericType)
 			{
-				genericTypes = type.GetGenericArguments()
-					.Select(FromType)
-					.ToList();
+				// TODO?
+				throw new NotImplementedException();
 			}
 			// TODO handle `fake` nullables like `object?`
-			return new TypeName(type.Name, type.Namespace, genericTypes?.ToArray() ?? Array.Empty<TypeName>());
+			string name = isNullable ? type.Name + "?" : type.Name;
+			return new TypeName(name, type.Namespace);
 		}
 
-		internal TypeName WithParentType(TypeName parent)
+		internal static TypeName FromParentType(string name, TypeName parent, params TypeName[] genericTypes)
 		{
-			string name = parent.GetName() + "." + this.GetName();
-			return new TypeName(name, parent.@namespace, parent.genericTypes);
+			name = parent.GetNamespacedName() + "." + name;
+			return new TypeName(name, parent.@namespace, genericTypes);
 		}
 	}
 

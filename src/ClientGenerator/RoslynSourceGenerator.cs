@@ -16,6 +16,7 @@ using Microsoft.CodeAnalysis.Host;
 using Microsoft.CodeAnalysis.Options;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -31,52 +32,66 @@ namespace EdjCase.ICP.ClientGenerator
 			TypeName clientName,
 			string baseNamespace,
 			ServiceSourceCodeType service,
-			RoslynTypeResolver typeResolver
+			RoslynTypeResolver typeResolver,
+			Dictionary<ValueName, TypeName> aliases
 		)
 		{
 			// Generate client class
 			ClassDeclarationSyntax clientClass = typeResolver.GenerateClient(clientName, service);
 
-			return PostProcessSourceCode(baseNamespace, clientClass);
+			return PostProcessSourceCode(baseNamespace, aliases, clientClass);
 		}
 
 
-		public static (string FileName, string SourceCode)? GenerateTypeSourceCode(
-			ValueName id,
-			SourceCodeType type,
-			string baseNamespace,
-			RoslynTypeResolver typeResolver
+		public static string? GenerateTypeSourceCode(
+			ResolvedType type,
+			string modelNamespace,
+			Dictionary<ValueName, TypeName> aliases
 		)
 		{
-
 			// Generate client class
-			ResolvedType? resolvedType = typeResolver.ResolveType(type, id.PascalCaseValue);
 
-			if (resolvedType?.GeneratedSyntax == null)
+			if (type.GeneratedSyntax?.Any() != true)
 			{
 				return null;
 			}
 
-			string source = PostProcessSourceCode(baseNamespace + ".Models", resolvedType.GeneratedSyntax);
-
-			return (id.PascalCaseValue, source);
+			return PostProcessSourceCode(modelNamespace, aliases, type.GeneratedSyntax);
 		}
 
-		private static string PostProcessSourceCode(string baseNamespace, params MemberDeclarationSyntax[] members)
+		private static string PostProcessSourceCode(
+			string modelNamespace,
+			Dictionary<ValueName, TypeName> aliases,
+			params MemberDeclarationSyntax[] members)
 		{
 			// Generate namespace with class in it
 			NamespaceDeclarationSyntax @namespace = SyntaxFactory
-				.NamespaceDeclaration(SyntaxFactory.ParseName(baseNamespace))
+				.NamespaceDeclaration(SyntaxFactory.ParseName(modelNamespace))
 				.WithMembers(SyntaxFactory.List(members));
 
 			// Generate file with all code
 			CompilationUnitSyntax compilationUnit = SyntaxFactory
 				.CompilationUnit()
-				.WithMembers(SyntaxFactory.SingletonList<MemberDeclarationSyntax>(@namespace));
+				.WithMembers(SyntaxFactory.SingletonList<MemberDeclarationSyntax>(@namespace))
+				.WithUsings(SyntaxFactory.List(
+					aliases
+						.Select(a => SyntaxFactory.UsingDirective(
+							alias: SyntaxFactory.NameEquals(a.Key.PascalCaseValue),
+							name: SyntaxFactory.IdentifierName(a.Value.GetNamespacedName())
+						))
+					)
+				);
 			SyntaxTree tree = SyntaxFactory.SyntaxTree(compilationUnit);
+			CSharpCompilation compilation = CSharpCompilation.Create(null).AddSyntaxTrees(tree);
+			//ImmutableArray<Diagnostic> diagnostics = compilation.GetDiagnostics();
+			//foreach(Diagnostic d in diagnostics)
+			//{
+			//	Console.WriteLine(d.ToString());
+			//}
+
 
 			// Moves all namespaces to usings from the Type declarations
-			SetUsings(ref compilationUnit);
+			//SetUsings(ref compilationUnit);
 			BuildSourceWithShorthands(ref compilationUnit);
 
 			// Setup formatting options
@@ -114,36 +129,49 @@ namespace EdjCase.ICP.ClientGenerator
 
 		private static void SetUsings(ref CompilationUnitSyntax root)
 		{
+			// TODO this does not work
 			var compilation = CSharpCompilation.Create("T")
 				.AddSyntaxTrees(root.SyntaxTree);
 			var semanticModel = compilation.GetSemanticModel(root.SyntaxTree, ignoreAccessibility: false);
 
 
-			IEnumerable<TypeSyntax> typeNodes = root
-				.DescendantNodes()
-				.OfType<TypeSyntax>();
+			IEnumerable<SyntaxNode> nodes = root
+				.DescendantNodes(descendIntoTrivia: true);
 
-			HashSet<string> uniqueNamespaces = new HashSet<string>();
+			HashSet<string> uniqueNamespaces = new ();
 			List<UsingDirectiveSyntax> usingDirectives = new();
-			foreach (TypeSyntax typeNode in typeNodes)
+			foreach (SyntaxNode node in nodes)
 			{
-				INamedTypeSymbol? type;
+				INamedTypeSymbol type;
 				try
 				{
-					type = semanticModel.GetTypeInfo(typeNode).Type as INamedTypeSymbol;
+					ITypeSymbol? typeSymbol = semanticModel.GetTypeInfo(node).Type;
+					if(typeSymbol is not INamedTypeSymbol namedTypeSymbol)
+					{
+						continue;
+					}
+					type = namedTypeSymbol;
 				}
 				catch(Exception ex)
 				{
-					type = null;
+					Console.WriteLine(ex);
+					continue;
 				}
-				// TODO better detection than contains '.'
-				if (type == null || type.IsNamespace || !type.Name.Contains('.'))
+				string typeName = type.ToString()!;
+				if (type.IsGenericType)
+				{
+					typeName = typeName[..typeName.IndexOf('<')];
+				}
+				if (type.IsNamespace
+					//|| type.TypeKind == TypeKind.Error
+					// TODO better detection than contains '.'
+					|| !typeName.Contains('.'))
 				{
 					continue;
 				}
-				string @namespace = type.Name[..type.Name.LastIndexOf('.')];
+				string @namespace = typeName[..typeName.LastIndexOf('.')];
 				var identifierName = SyntaxFactory.IdentifierName(type.Name);
-				root = root.ReplaceNode(typeNode, identifierName);
+				root = root.ReplaceNode(node, identifierName);
 				uniqueNamespaces.Add(@namespace);
 
 			}

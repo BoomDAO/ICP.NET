@@ -485,7 +485,7 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:EdjCase.ICP.Candid.Models.CandidArg.ToObject``1(EdjCase.ICP.Candid.CandidConverter)">
+        <member name="M:EdjCase.ICP.Candid.Models.CandidArg.ToObjects``1(EdjCase.ICP.Candid.CandidConverter)">
             <summary>
             Takes the first arg value and converts it to the specified type
             </summary>

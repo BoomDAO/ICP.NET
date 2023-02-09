@@ -85,7 +85,7 @@ namespace EdjCase.ICP.Candid.Models
 		/// <typeparam name="T1">The type to convert the first arg value to</typeparam>
 		/// <param name="candidConverter">Optional. Specifies the converter to use, othewise uses the default</param>
 		/// <returns>The converted object of the first arg value</returns>
-		public T1 ToObject<T1>(CandidConverter? candidConverter = null)
+		public T1 ToObjects<T1>(CandidConverter? candidConverter = null)
 		{
 			return this.Values[0].ToObject<T1>(candidConverter);
 		}

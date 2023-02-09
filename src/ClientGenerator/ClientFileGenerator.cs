@@ -112,6 +112,11 @@ namespace EdjCase.ICP.ClientGenerator
 
 			void WriteFile(string? directory, string fileName, string text)
 			{
+				// Fix any bad chars
+				char[] invalidFileNameChars = Path.GetInvalidFileNameChars();
+				string[] split = fileName
+					.Split(invalidFileNameChars, StringSplitOptions.RemoveEmptyEntries);
+				fileName = string.Join("_", split).TrimEnd('.');
 				directory = directory == null
 					? outputDirectory
 					: Path.Combine(outputDirectory, directory);
