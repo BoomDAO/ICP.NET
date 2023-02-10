@@ -284,14 +284,36 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 					);
 				}
 			}
+
+			if (objType == typeof(NullValue))
+			{
+				return BuildStruct(CandidType.Null(), new NullValue(), CandidValue.Null);
+			}
+			if (objType == typeof(ReservedValue))
+			{
+				return BuildStruct(CandidType.Reserved(), new ReservedValue(), CandidValue.Reserved);
+			}
+			if (objType == typeof(EmptyValue))
+			{
+				return BuildStruct(CandidType.Empty(), new EmptyValue(), CandidValue.Empty);
+			}
+
 			// Variants are objects with a [Variant] on the class
 			VariantAttribute? variantAttribute = objType.GetCustomAttribute<VariantAttribute>();
 			if (variantAttribute != null)
 			{
 				return BuildVariant(objType, variantAttribute);
 			}
+
+
 			// Assume anything else is a record
 			return BuildRecord(objType);
+		}
+
+		private static IResolvableTypeInfo BuildStruct<T>(CandidType candidType, T value, Func<CandidValue> valueGetter)
+			where T : struct
+		{
+			return new ResolvedTypeInfo(typeof(T), new EmptyStructMapper<T>(candidType, value, valueGetter));
 		}
 
 		private static IResolvableTypeInfo BuildPrimitive(

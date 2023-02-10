@@ -1,10 +1,15 @@
+using EdjCase.ICP.Candid.Mapping.Mappers;
 using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid.Models.Types;
 using EdjCase.ICP.Candid.Models.Values;
-using ICP.ClientGenerator;
+using EdjCase.ICP.ClientGenerator;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Editing;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace EdjCase.ICP.ClientGenerator
@@ -28,70 +33,46 @@ namespace EdjCase.ICP.ClientGenerator
 	{
 		public static ClientCodeResult FromService(string serviceName, string baseNamespace, CandidServiceDescription service)
 		{
-			var typeSourceGenerator = new TypeSourceGenerator();
+
 
 			// Mapping of A => Type
 			// where candid is: type A = Type;
 			Dictionary<ValueName, SourceCodeType> declaredTypes = service.DeclaredTypes
-				.Where(t => !(t.Value is CandidServiceType)) // avoid duplication service of type
-				.ToDictionary(t => ValueName.Default(t.Key.ToString()), t => ResolveSourceCodeType(t.Value));
+				.Where(t => t.Value is not CandidServiceType) // avoid duplication service of type
+				.ToDictionary(
+					t => ValueName.Default(t.Key.ToString()),
+					t => ResolveSourceCodeType(t.Value)
+				);
 
-			Dictionary<ValueName, TypeName> aliases = new();
-			var typeFileGenerators = new List<Func<List<string>, (string Name, string SourceCode)>>();
-			foreach ((ValueName id, SourceCodeType typeInfo) in declaredTypes)
+			string modelNamespace = baseNamespace + ".Models";
+			HashSet<ValueName> aliases = declaredTypes
+				.Where(t => t.Value is CompiledTypeSourceCodeType || t.Value is ReferenceSourceCodeType)
+				.Select(t => t.Key)
+				.ToHashSet();
+
+			var typeResolver = new RoslynTypeResolver(modelNamespace, aliases);
+			Dictionary<ValueName, ResolvedType> resolvedTypes = declaredTypes
+				.ToDictionary(
+					t => t.Key,
+					t => typeResolver.ResolveTypeDeclaration(t.Key, t.Value)
+				);
+
+			var typeFiles = new List<(string FileName, string Source)>();
+			Dictionary<ValueName, TypeName> aliasTypes = aliases
+				.ToDictionary(t => t, t => resolvedTypes[t].Name);
+			foreach ((ValueName id, ResolvedType typeInfo) in resolvedTypes)
 			{
-				(TypeName? name, bool customType) = typeSourceGenerator.ResolveTypeDeclaration(id, typeInfo, out Action<IndentedStringBuilder>? typeBuilder);
-				if (name == null)
+				string? sourceCode = RoslynSourceGenerator.GenerateTypeSourceCode(typeInfo, typeResolver.ModelNamespace, aliasTypes);
+				if (sourceCode != null)
 				{
-					// Skip null, empty and reserved types
-					continue;
+					typeFiles.Add((typeInfo.Name.GetName(), sourceCode));
 				}
-
-				if (customType)
-				{
-					if (typeBuilder == null)
-					{
-						throw new NotImplementedException("No type builder made for custom type");
-					}
-					typeFileGenerators.Add((importedNamespaces) =>
-					{
-						return TypeSourceGenerator.GenerateTypeSourceCode(id, baseNamespace, typeBuilder, importedNamespaces);
-					});
-				}
-				else
-				{
-					aliases.Add(id, name);
-					if (typeBuilder != null)
-					{
-						typeFileGenerators.Add((importedNamespaces) =>
-						{
-							return TypeSourceGenerator.GenerateTypeSourceCode(id, baseNamespace, typeBuilder, importedNamespaces);
-						});
-					}
-				}
-
 			}
 
-			List<string> importedNamespaces = new List<string>()
-			{
-				"System",
-				"System.Threading.Tasks",
-				"System.Collections.Generic",
-				"EdjCase.ICP.Candid.Mapping",
-				"EdjCase.ICP.Candid"
-			}
-			.Concat(aliases
-				.Select(a => $"{a.Key.PascalCaseValue} = {a.Value.GetNamespacedName()}")
-			)
-			.ToList();
 
-			List<(string Name, string SourceCode)> typeFiles = typeFileGenerators
-				.Select(g => g(importedNamespaces))
-				.Select(g => (g.Name, g.SourceCode))
-				.ToList();
-			TypeName clientName = new TypeName(StringUtil.ToPascalCase(serviceName) + "ApiClient", baseNamespace);
+			TypeName clientName = new(StringUtil.ToPascalCase(serviceName) + "ApiClient", baseNamespace, prefix: null);
 			ServiceSourceCodeType serviceSourceType = ResolveService(service.Service);
-			string clientSource = typeSourceGenerator.GenerateClientSourceCode(clientName, baseNamespace, serviceSourceType, importedNamespaces);
+			string clientSource = RoslynSourceGenerator.GenerateClientSourceCode(clientName, baseNamespace, serviceSourceType, typeResolver, aliasTypes);
 
 			string? aliasFile = null; // TODO? global using only supported in C# 10+
 			return new ClientCodeResult(clientName, clientSource, typeFiles, aliasFile);
@@ -104,30 +85,30 @@ namespace EdjCase.ICP.ClientGenerator
 			{
 				case CandidFuncType f:
 					{
-						return new CsharpTypeSourceCodeType(typeof(CandidFunc));
+						return new CompiledTypeSourceCodeType(typeof(CandidFunc));
 					}
 				case CandidPrimitiveType p:
 					{
 						return p.PrimitiveType switch
 						{
-							PrimitiveType.Text => new CsharpTypeSourceCodeType(typeof(string)),
-							PrimitiveType.Nat => new CsharpTypeSourceCodeType(typeof(UnboundedUInt)),
-							PrimitiveType.Nat8 => new CsharpTypeSourceCodeType(typeof(byte)),
-							PrimitiveType.Nat16 => new CsharpTypeSourceCodeType(typeof(ushort)),
-							PrimitiveType.Nat32 => new CsharpTypeSourceCodeType(typeof(uint)),
-							PrimitiveType.Nat64 => new CsharpTypeSourceCodeType(typeof(ulong)),
-							PrimitiveType.Int => new CsharpTypeSourceCodeType(typeof(UnboundedInt)),
-							PrimitiveType.Int8 => new CsharpTypeSourceCodeType(typeof(sbyte)),
-							PrimitiveType.Int16 => new CsharpTypeSourceCodeType(typeof(short)),
-							PrimitiveType.Int32 => new CsharpTypeSourceCodeType(typeof(int)),
-							PrimitiveType.Int64 => new CsharpTypeSourceCodeType(typeof(long)),
-							PrimitiveType.Float32 => new CsharpTypeSourceCodeType(typeof(float)),
-							PrimitiveType.Float64 => new CsharpTypeSourceCodeType(typeof(double)),
-							PrimitiveType.Bool => new CsharpTypeSourceCodeType(typeof(bool)),
-							PrimitiveType.Principal => new CsharpTypeSourceCodeType(typeof(Principal)),
-							PrimitiveType.Reserved => new NullEmptyOrReservedSourceCodeType(),
-							PrimitiveType.Empty => new NullEmptyOrReservedSourceCodeType(),
-							PrimitiveType.Null => new NullEmptyOrReservedSourceCodeType(),
+							PrimitiveType.Text => new CompiledTypeSourceCodeType(typeof(string)),
+							PrimitiveType.Nat => new CompiledTypeSourceCodeType(typeof(UnboundedUInt)),
+							PrimitiveType.Nat8 => new CompiledTypeSourceCodeType(typeof(byte)),
+							PrimitiveType.Nat16 => new CompiledTypeSourceCodeType(typeof(ushort)),
+							PrimitiveType.Nat32 => new CompiledTypeSourceCodeType(typeof(uint)),
+							PrimitiveType.Nat64 => new CompiledTypeSourceCodeType(typeof(ulong)),
+							PrimitiveType.Int => new CompiledTypeSourceCodeType(typeof(UnboundedInt)),
+							PrimitiveType.Int8 => new CompiledTypeSourceCodeType(typeof(sbyte)),
+							PrimitiveType.Int16 => new CompiledTypeSourceCodeType(typeof(short)),
+							PrimitiveType.Int32 => new CompiledTypeSourceCodeType(typeof(int)),
+							PrimitiveType.Int64 => new CompiledTypeSourceCodeType(typeof(long)),
+							PrimitiveType.Float32 => new CompiledTypeSourceCodeType(typeof(float)),
+							PrimitiveType.Float64 => new CompiledTypeSourceCodeType(typeof(double)),
+							PrimitiveType.Bool => new CompiledTypeSourceCodeType(typeof(bool)),
+							PrimitiveType.Principal => new CompiledTypeSourceCodeType(typeof(Principal)),
+							PrimitiveType.Reserved => new CompiledTypeSourceCodeType(typeof(ReservedValue)),
+							PrimitiveType.Empty => new CompiledTypeSourceCodeType(typeof(EmptyValue)),
+							PrimitiveType.Null => new CompiledTypeSourceCodeType(typeof(NullValue)),
 							_ => throw new NotImplementedException(),
 						};
 					}
@@ -138,24 +119,32 @@ namespace EdjCase.ICP.ClientGenerator
 				case CandidVectorType v:
 					{
 						SourceCodeType innerType = ResolveSourceCodeType(v.InnerType);
-						return new CsharpTypeSourceCodeType(typeof(List<>), innerType);
+						return new CompiledTypeSourceCodeType(typeof(List<>), innerType);
 					}
 				case CandidOptionalType o:
 					{
 						SourceCodeType innerType = ResolveSourceCodeType(o.Value);
-						return new CsharpTypeSourceCodeType(typeof(OptionalValue<>), innerType);
+						return new CompiledTypeSourceCodeType(typeof(OptionalValue<>), innerType);
 					}
 				case CandidRecordType o:
 					{
 						List<(ValueName Key, SourceCodeType Type)> fields = o.Fields
 							.Select(f => (ValueName.Default(f.Key), ResolveSourceCodeType(f.Value)))
-							.ToList();
+							.Where(f => f.Item2 != null)
+							.ToList()!;
 						return new RecordSourceCodeType(fields);
 					}
 				case CandidVariantType va:
 					{
-						List<(ValueName Key, SourceCodeType Type)> fields = va.Options
-							.Select(f => (ValueName.Default(f.Key), ResolveSourceCodeType(f.Value)))
+						List<(ValueName Key, SourceCodeType? Type)> fields = va.Options
+							.Select(f =>
+							{
+								// If type is null, then just be a typeless variant
+								SourceCodeType? sourceCodeType = f.Value == CandidType.Null()
+									? null
+									: ResolveSourceCodeType(f.Value);
+								return (ValueName.Default(f.Key), sourceCodeType);
+							})
 							.ToList();
 						return new VariantSourceCodeType(fields);
 					}

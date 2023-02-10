@@ -8,7 +8,7 @@ namespace EdjCase.ICP.ClientGenerator
 		public ValueName Value { get; }
 		public TypedValueName(TypeName type, ValueName value)
 		{
-			this.Type = type ?? throw new ArgumentNullException(nameof(type));
+			this.Type = type;
 			this.Value = value ?? throw new ArgumentNullException(nameof(value));
 		}
 	}

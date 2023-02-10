@@ -1,7 +1,7 @@
 using EdjCase.ICP.Candid.Models.Values;
 using Xunit;
 
-namespace ICP.Candid.Tests
+namespace EdjCase.ICP.Candid.Tests
 {
 	public class StringUtilTests
 	{

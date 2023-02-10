@@ -3,29 +3,23 @@ using EdjCase.ICP.ClientGenerator;
 using System;
 using System.Collections.Generic;
 
-namespace ICP.ClientGenerator
+namespace EdjCase.ICP.ClientGenerator
 {
 	internal abstract class SourceCodeType
 	{
 	}
 
-	internal class NullEmptyOrReservedSourceCodeType : SourceCodeType
-	{
-
-	}
-
-
-	internal class CsharpTypeSourceCodeType : SourceCodeType
+	internal class CompiledTypeSourceCodeType : SourceCodeType
 	{
 		public Type Type { get; }
 		public List<SourceCodeType> GenericTypes { get; }
 
-		public CsharpTypeSourceCodeType(Type type, SourceCodeType? genericType = null)
+		public CompiledTypeSourceCodeType(Type type, SourceCodeType? genericType = null)
 		{
 			this.Type = type ?? throw new ArgumentNullException(nameof(type));
 			this.GenericTypes = genericType == null ? new List<SourceCodeType>() : new List<SourceCodeType> { genericType };
 		}
-		public CsharpTypeSourceCodeType(Type type, List<SourceCodeType> genericTypes)
+		public CompiledTypeSourceCodeType(Type type, List<SourceCodeType> genericTypes)
 		{
 			this.Type = type ?? throw new ArgumentNullException(nameof(type));
 			this.GenericTypes = genericTypes ?? new List<SourceCodeType>();
@@ -55,9 +49,9 @@ namespace ICP.ClientGenerator
 
 	internal class VariantSourceCodeType : SourceCodeType
 	{
-		public List<(ValueName Tag, SourceCodeType Type)> Options { get; }
+		public List<(ValueName Tag, SourceCodeType? Type)> Options { get; }
 
-		public VariantSourceCodeType(List<(ValueName Tag, SourceCodeType Type)> options)
+		public VariantSourceCodeType(List<(ValueName Tag, SourceCodeType? Type)> options)
 		{
 			this.Options = options ?? throw new ArgumentNullException(nameof(options));
 		}

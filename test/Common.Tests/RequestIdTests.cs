@@ -3,7 +3,7 @@ using EdjCase.ICP.Candid.Models;
 using System.Collections.Generic;
 using Xunit;
 
-namespace ICP.Candid.Tests
+namespace EdjCase.ICP.Candid.Tests
 {
 	public class RequestIdTests
 	{

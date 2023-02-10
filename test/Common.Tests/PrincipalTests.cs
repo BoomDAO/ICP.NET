@@ -3,7 +3,7 @@ using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid.Utilities;
 using Xunit;
 
-namespace ICP.Candid.Tests
+namespace EdjCase.ICP.Candid.Tests
 {
 	public class PrincipalTests
 	{

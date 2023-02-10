@@ -1,9 +1,10 @@
 using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid.Models.Values;
+using System;
 
 namespace EdjCase.ICP.ClientGenerator
 {
-	internal class ValueName
+	internal class ValueName : IEquatable<ValueName>
 	{
 		public string PascalCaseValue { get; }
 		public string CamelCaseValue { get; }
@@ -14,6 +15,26 @@ namespace EdjCase.ICP.ClientGenerator
 			this.PascalCaseValue = propertyName;
 			this.CamelCaseValue = variableName;
 			this.CandidName = candidName;
+		}
+
+		public override string ToString()
+		{
+			return this.CandidName + "/" + this.PascalCaseValue;
+		}
+
+		public override bool Equals(object? obj)
+		{
+			return this.Equals(obj as ValueName);
+		}
+
+		public bool Equals(ValueName? other)
+		{
+			return this.CandidName == other?.CandidName;
+		}
+
+		public override int GetHashCode()
+		{
+			return this.CandidName.GetHashCode();
 		}
 
 		public static ValueName Default(CandidTag value)

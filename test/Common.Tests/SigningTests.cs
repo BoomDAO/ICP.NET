@@ -11,7 +11,7 @@ using EdjCase.ICP.Agent.Models;
 using System.Threading.Tasks;
 using EdjCase.ICP.Agent;
 
-namespace ICP.Candid.Tests
+namespace EdjCase.ICP.Candid.Tests
 {
 	public class SigningTests
 	{

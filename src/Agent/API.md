@@ -116,8 +116,6 @@
   - [#ctor(info)](#M-EdjCase-ICP-Agent-QueryRejectedException-#ctor-EdjCase-ICP-Agent-Responses-QueryRejectInfo- 'EdjCase.ICP.Agent.QueryRejectedException.#ctor(EdjCase.ICP.Agent.Responses.QueryRejectInfo)')
   - [Info](#P-EdjCase-ICP-Agent-QueryRejectedException-Info 'EdjCase.ICP.Agent.QueryRejectedException.Info')
   - [Message](#P-EdjCase-ICP-Agent-QueryRejectedException-Message 'EdjCase.ICP.Agent.QueryRejectedException.Message')
-- [QueryReply](#T-EdjCase-ICP-Agent-Responses-QueryReply 'EdjCase.ICP.Agent.Responses.QueryReply')
-  - [Arg](#P-EdjCase-ICP-Agent-Responses-QueryReply-Arg 'EdjCase.ICP.Agent.Responses.QueryReply.Arg')
 - [QueryRequest](#T-EdjCase-ICP-Agent-Requests-QueryRequest 'EdjCase.ICP.Agent.Requests.QueryRequest')
   - [#ctor(canisterId,method,arg,sender,ingressExpiry)](#M-EdjCase-ICP-Agent-Requests-QueryRequest-#ctor-EdjCase-ICP-Candid-Models-Principal,System-String,EdjCase-ICP-Candid-Models-CandidArg,EdjCase-ICP-Candid-Models-Principal,EdjCase-ICP-Candid-Models-ICTimestamp- 'EdjCase.ICP.Agent.Requests.QueryRequest.#ctor(EdjCase.ICP.Candid.Models.Principal,System.String,EdjCase.ICP.Candid.Models.CandidArg,EdjCase.ICP.Candid.Models.Principal,EdjCase.ICP.Candid.Models.ICTimestamp)')
   - [Arg](#P-EdjCase-ICP-Agent-Requests-QueryRequest-Arg 'EdjCase.ICP.Agent.Requests.QueryRequest.Arg')
@@ -1548,24 +1546,6 @@ The details of the rejection
 ##### Summary
 
 *Inherit from parent.*
-
-<a name='T-EdjCase-ICP-Agent-Responses-QueryReply'></a>
-## QueryReply `type`
-
-##### Namespace
-
-EdjCase.ICP.Agent.Responses
-
-##### Summary
-
-Wrapper object around the candid arg that is returned
-
-<a name='P-EdjCase-ICP-Agent-Responses-QueryReply-Arg'></a>
-### Arg `property`
-
-##### Summary
-
-The candid arg returned from a request
 
 <a name='T-EdjCase-ICP-Agent-Requests-QueryRequest'></a>
 ## QueryRequest `type`
