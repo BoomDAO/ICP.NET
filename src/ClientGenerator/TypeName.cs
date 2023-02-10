@@ -8,21 +8,25 @@ namespace EdjCase.ICP.ClientGenerator
 	internal class TypeName
 	{
 		private string? @namespace { get; }
+		private string? prefix { get; } // used for parent classes
 		private string name { get; }
 		private List<TypeName> genericTypes { get; }
 		private string? nameCache { get; set; }
 		private string? namespacedNameCache { get; set; }
 
-		public TypeName(string name, string? @namespace, List<TypeName> genericTypes)
+		public TypeName(string name, string? @namespace, string? prefix, List<TypeName> genericTypes)
 		{
 			this.name = name;
 			this.@namespace = @namespace;
+			this.prefix = prefix;
 			this.genericTypes = genericTypes ?? new List<TypeName>();
 		}
-		public TypeName(string name, string? @namespace, params TypeName[] genericTypes) : this(name, @namespace, genericTypes.ToList())
+		public TypeName(string name, string? @namespace, string? prefix, params TypeName[] genericTypes) : this(name, @namespace, prefix, genericTypes.ToList())
 		{
 
 		}
+
+		public bool HasPrefix => this.prefix != null;
 
 		public string GetName()
 		{
@@ -58,7 +62,13 @@ namespace EdjCase.ICP.ClientGenerator
 					builder.Append(this.@namespace);
 					builder.Append('.');
 				}
+				if (this.prefix != null)
+				{
+					builder.Append(this.prefix);
+					builder.Append('.');
+				}
 			}
+			builder.Append(this.prefix);
 			builder.Append(this.name);
 			if (this.genericTypes.Any())
 			{
@@ -83,14 +93,6 @@ namespace EdjCase.ICP.ClientGenerator
 			return this.GetNamespacedName();
 		}
 
-		public static TypeName Optional(TypeName type)
-		{
-			return new TypeName(
-				"OptionalValue",
-				"EdjCase.ICP.Candid.Models",
-				type
-			);
-		}
 
 		public static TypeName FromType<T>(bool isNullable = false)
 		{
@@ -106,14 +108,9 @@ namespace EdjCase.ICP.ClientGenerator
 			}
 			// TODO handle `fake` nullables like `object?`
 			string name = isNullable ? type.Name + "?" : type.Name;
-			return new TypeName(name, type.Namespace);
+			return new TypeName(name, type.Namespace, prefix: null); // TODO prefix
 		}
 
-		internal static TypeName FromParentType(string name, TypeName parent, params TypeName[] genericTypes)
-		{
-			name = parent.GetNamespacedName() + "." + name;
-			return new TypeName(name, parent.@namespace, genericTypes);
-		}
 	}
 
 }

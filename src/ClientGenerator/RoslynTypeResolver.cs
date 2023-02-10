@@ -81,6 +81,7 @@ namespace EdjCase.ICP.ClientGenerator
 						var cType = new TypeName(
 							typeName,
 							c.Type.Namespace,
+							prefix: null,
 							genericTypes.Select(t => t.Name).ToArray()
 						);
 
@@ -96,7 +97,11 @@ namespace EdjCase.ICP.ClientGenerator
 						bool isAlias = this.Aliases.Contains(correctedRefId);
 
 						string? @namespace = isAlias ? null : this.ModelNamespace;
-						return new ResolvedType(new TypeName(correctedRefId.PascalCaseValue, @namespace));
+						return new ResolvedType(new TypeName(
+							correctedRefId.PascalCaseValue,
+							@namespace,
+							prefix: null
+						));
 
 					}
 				case VariantSourceCodeType v:
@@ -160,7 +165,7 @@ namespace EdjCase.ICP.ClientGenerator
 			TypeName enumTypeName = this.BuildType(variantTypeName.GetName() + "Tag", parentType);
 
 			List<(ValueName Name, ResolvedType? Type)> resolvedOptions = variant.Options
-				.Select((o, i) => (o.Tag, o.Type == null ? null : this.ResolveType(o.Type, "O" + i, enumTypeName)))
+				.Select((o, i) => (o.Tag, o.Type == null ? null : this.ResolveType(o.Type, "O" + i, variantTypeName)))
 				.ToList();
 
 			List<(ValueName Name, TypeName? Type)> enumOptions = resolvedOptions
@@ -222,7 +227,7 @@ namespace EdjCase.ICP.ClientGenerator
 				),
 				new ClassProperty(
 					valueName,
-					TypeName.FromType<object>(),
+					TypeName.FromType<object>(isNullable: true),
 					access: AccessType.Private, // TODO public?
 					hasSetter: true,
 					AttributeInfo.FromType<VariantValuePropertyAttribute>()
@@ -240,7 +245,10 @@ namespace EdjCase.ICP.ClientGenerator
 				properties: properties,
 				methods: methods,
 				attributes: attributes,
-				emptyReflectionContructor: true
+				emptyReflectionContructor: true,
+				subTypes: resolvedOptions
+					.SelectMany(o => o.Type?.GeneratedSyntax ?? Array.Empty<MemberDeclarationSyntax>())
+					.ToList()
 			);
 			EnumDeclarationSyntax enumSyntax = GenerateEnum(enumTypeName, enumOptions);
 			return (classSyntax, enumSyntax);
@@ -248,8 +256,20 @@ namespace EdjCase.ICP.ClientGenerator
 
 		private TypeName BuildType(string name, TypeName? parentType)
 		{
-			string @namespace = parentType?.GetNamespacedName() ?? this.ModelNamespace;
-			return new TypeName(name, @namespace);
+			string @namespace;
+			string? prefix = null;
+			if(parentType == null)
+			{
+				@namespace = this.ModelNamespace;
+			}
+			else
+			{
+				@namespace = parentType.GetNamespacedName();
+				int lastDotIndex = @namespace.LastIndexOf('.');
+				prefix = @namespace[(lastDotIndex + 1)..];
+				@namespace = @namespace[..lastDotIndex];
+			}
+			return new TypeName(name, @namespace, prefix);
 		}
 
 		private MethodDeclarationSyntax GenerateVariantValidateTypeMethod(TypeName enumTypeName, ValueName tagName)

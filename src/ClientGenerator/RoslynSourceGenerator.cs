@@ -72,15 +72,8 @@ namespace EdjCase.ICP.ClientGenerator
 			// Generate file with all code
 			CompilationUnitSyntax compilationUnit = SyntaxFactory
 				.CompilationUnit()
-				.WithMembers(SyntaxFactory.SingletonList<MemberDeclarationSyntax>(@namespace))
-				.WithUsings(SyntaxFactory.List(
-					aliases
-						.Select(a => SyntaxFactory.UsingDirective(
-							alias: SyntaxFactory.NameEquals(a.Key.PascalCaseValue),
-							name: SyntaxFactory.IdentifierName(a.Value.GetNamespacedName())
-						))
-					)
-				);
+				.WithMembers(SyntaxFactory.SingletonList<MemberDeclarationSyntax>(@namespace));
+
 			SyntaxTree tree = SyntaxFactory.SyntaxTree(compilationUnit);
 			CSharpCompilation compilation = CSharpCompilation.Create(null).AddSyntaxTrees(tree);
 			//ImmutableArray<Diagnostic> diagnostics = compilation.GetDiagnostics();
@@ -100,7 +93,19 @@ namespace EdjCase.ICP.ClientGenerator
 				.WithChangedOption(FormattingOptions.UseTabs, LanguageNames.CSharp, value: true)
 				.WithChangedOption(FormattingOptions.NewLine, LanguageNames.CSharp, value: Environment.NewLine);
 
-			compilationUnit = compilationUnit.NormalizeWhitespace();
+			compilationUnit = compilationUnit
+				// Add alias using statements
+				.AddUsings(aliases
+						.Select(a => SyntaxFactory.UsingDirective(
+							alias: SyntaxFactory.NameEquals(a.Key.PascalCaseValue),
+							name: SyntaxFactory.IdentifierName(a.Value.GetNamespacedName())
+						))
+						.ToArray()
+				)
+				// TODO replace
+				.AddUsings(SyntaxFactory.UsingDirective(SyntaxFactory.IdentifierName("EdjCase.ICP.Agent.Agents")))
+				// Format
+				.NormalizeWhitespace();
 
 
 			return Formatter.Format(compilationUnit, workspace, options).ToFullString();
@@ -133,34 +138,35 @@ namespace EdjCase.ICP.ClientGenerator
 			var compilation = CSharpCompilation.Create("T")
 				.AddSyntaxTrees(root.SyntaxTree);
 			var semanticModel = compilation.GetSemanticModel(root.SyntaxTree, ignoreAccessibility: false);
-
-
 			IEnumerable<SyntaxNode> nodes = root
-				.DescendantNodes(descendIntoTrivia: true);
+				.DescendantNodes();
 
-			HashSet<string> uniqueNamespaces = new ();
-			List<UsingDirectiveSyntax> usingDirectives = new();
+			//NamespacePrefixRemover rewriter = new NamespacePrefixRemover();
+			//root = (CompilationUnitSyntax)rewriter.Visit(root);
+			HashSet<string> uniqueNamespaces = new();
 			foreach (SyntaxNode node in nodes)
 			{
 				INamedTypeSymbol type;
 				try
 				{
 					ITypeSymbol? typeSymbol = semanticModel.GetTypeInfo(node).Type;
-					if(typeSymbol is not INamedTypeSymbol namedTypeSymbol)
+					if (typeSymbol is not INamedTypeSymbol namedTypeSymbol)
 					{
 						continue;
 					}
 					type = namedTypeSymbol;
 				}
-				catch(Exception ex)
+				catch (Exception ex)
 				{
 					Console.WriteLine(ex);
 					continue;
 				}
 				string typeName = type.ToString()!;
-				if (type.IsGenericType)
+				//if (type.IsGenericType) TODO
+				int genericTypeStartIndex = typeName.IndexOf('<');
+				if (genericTypeStartIndex >= 0)
 				{
-					typeName = typeName[..typeName.IndexOf('<')];
+					typeName = typeName[..genericTypeStartIndex];
 				}
 				if (type.IsNamespace
 					//|| type.TypeKind == TypeKind.Error
@@ -169,9 +175,17 @@ namespace EdjCase.ICP.ClientGenerator
 				{
 					continue;
 				}
-				string @namespace = typeName[..typeName.LastIndexOf('.')];
-				var identifierName = SyntaxFactory.IdentifierName(type.Name);
-				root = root.ReplaceNode(node, identifierName);
+				int namespaceSeperatorIndex = typeName.LastIndexOf('.');
+				string @namespace = typeName[..namespaceSeperatorIndex];
+				IdentifierNameSyntax identifierName = SyntaxFactory.IdentifierName(typeName[(namespaceSeperatorIndex + 1)..]);
+				//root = root.ReplaceNode(node, identifierName);
+
+
+				//bool isSubType = type.ContainingType != null; // TODO this is bad
+				//if (isSubType)
+				//{
+				//	continue;
+				//}
 				uniqueNamespaces.Add(@namespace);
 
 			}
@@ -181,6 +195,30 @@ namespace EdjCase.ICP.ClientGenerator
 					.Select(n => SyntaxFactory.UsingDirective(SyntaxFactory.IdentifierName(n)))
 					.ToArray()
 				);
+		}
+
+
+		private class NamespacePrefixRemover : CSharpSyntaxRewriter
+		{
+			public HashSet<string> UniqueNamespaces { get; }
+
+			public NamespacePrefixRemover()
+			{
+				this.UniqueNamespaces = new();
+			}
+
+			public override SyntaxNode? VisitQualifiedName(QualifiedNameSyntax node)
+			{
+				var identifier = node.Right as IdentifierNameSyntax;
+				if (identifier != null)
+				{
+					var namespaceName = node.Left.ToString();
+					this.UniqueNamespaces.Add(namespaceName);
+					return SyntaxFactory.ParseName(identifier.ToString().Replace(namespaceName + ".", ""));
+				}
+
+				return base.VisitQualifiedName(node);
+			}
 		}
 	}
 }

@@ -70,7 +70,7 @@ namespace EdjCase.ICP.ClientGenerator
 			}
 
 
-			TypeName clientName = new(StringUtil.ToPascalCase(serviceName) + "ApiClient", baseNamespace);
+			TypeName clientName = new(StringUtil.ToPascalCase(serviceName) + "ApiClient", baseNamespace, prefix: null);
 			ServiceSourceCodeType serviceSourceType = ResolveService(service.Service);
 			string clientSource = RoslynSourceGenerator.GenerateClientSourceCode(clientName, baseNamespace, serviceSourceType, typeResolver, aliasTypes);
 
