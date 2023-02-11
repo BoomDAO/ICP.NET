@@ -683,7 +683,7 @@ namespace EdjCase.ICP.ClientGenerator
 				.ToList();
 
 			BlockSyntax body = GenerateFuncMethodBody(
-				methodName: name.PascalCaseValue,
+				methodName: name,
 				argTypes,
 				returnTypes,
 				isQuery: info.IsQuery,
@@ -711,7 +711,7 @@ namespace EdjCase.ICP.ClientGenerator
 		}
 
 		private static BlockSyntax GenerateFuncMethodBody(
-			string methodName,
+			ValueName methodName,
 			List<TypedValueName> argTypes,
 			List<TypedValueName> returnTypes,
 			bool isQuery,
@@ -794,7 +794,7 @@ namespace EdjCase.ICP.ClientGenerator
 			{
 				const string responseName = "response";
 				// `QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, {methodName}, arg);`
-				StatementSyntax invokeQueryCall = GenerateQueryCall(methodName, argName, responseName);
+				StatementSyntax invokeQueryCall = GenerateQueryCall(methodName.CandidName, argName, responseName);
 				statements.Add(invokeQueryCall);
 
 				// `CandidArg reply = response.ThrowOrGetReply();`
@@ -805,7 +805,7 @@ namespace EdjCase.ICP.ClientGenerator
 			else
 			{
 				// `CandidArg reply = this.Agent.CallAndWaitAsync(this.CanisterId, {methodName}, arg)`
-				StatementSyntax invokeCallAndWait = GenerateCallAndWait(methodName, argName, variableName);
+				StatementSyntax invokeCallAndWait = GenerateCallAndWait(methodName.CandidName, argName, variableName);
 				statements.Add(invokeCallAndWait);
 
 			}
