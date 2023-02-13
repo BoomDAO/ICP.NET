@@ -4,6 +4,10 @@ using EdjCase.ICP.Candid.Models;
 using System.Reflection;
 using System.IO;
 using Snapshooter.Xunit;
+using Microsoft.CodeAnalysis.Formatting;
+using Microsoft.CodeAnalysis.Options;
+using Microsoft.CodeAnalysis;
+using System;
 
 namespace EdjCase.ICP.Candid.Tests.Generators
 {
@@ -17,8 +21,25 @@ namespace EdjCase.ICP.Candid.Tests.Generators
 			string fileText = GetFileText(serviceName + ".did");
 			string baseNamespace = "Test";
 			CandidServiceDescription serviceFile = CandidServiceDescription.Parse(fileText);
-			ClientCode source = ClientCodeGenerator.FromService(serviceName, baseNamespace, serviceFile);
-			Snapshot.Match(source, serviceName);
+			ClientSyntax syntax = ClientCodeGenerator.GenerateClient(serviceName, baseNamespace, serviceFile);
+
+			AdhocWorkspace workspace = new();
+			OptionSet options = workspace.Options
+				.WithChangedOption(FormattingOptions.UseTabs, LanguageNames.CSharp, value: true)
+				.WithChangedOption(FormattingOptions.NewLine, LanguageNames.CSharp, value: Environment.NewLine);
+
+			string clientCode = Formatter.Format(syntax.ClientFile, workspace, options).ToFullString();
+
+			foreach (var f in syntax.TypeFiles)
+			{
+				clientCode += "\n\n";
+				clientCode += Formatter.Format(f.Syntax, workspace, options).ToFullString();
+			}
+
+			Snapshot.Match(clientCode, serviceName);
+
+
+
 		}
 
 		private static string GetFileText(string fileName)

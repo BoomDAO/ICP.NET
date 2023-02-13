@@ -45,10 +45,15 @@ namespace EdjCase.ICP.ClientGenerator
 				ParserResult<Options> result = await Parser.Default.ParseArguments<Options>(args)
 					.WithParsedAsync<Options>(async o =>
 					{
-						ClientSource source;
+						ClientSyntax source;
 						if (string.IsNullOrWhiteSpace(o.CanisterId))
 						{
-							source = ClientCodeGenerator.GenerateClientFromFile(o.CandidFilePath!, o.Namespace, o.ClientName);
+							string candidFilePath = o.CandidFilePath!;
+							Console.WriteLine($"Reading text from {candidFilePath}...");
+							string fileText = File.ReadAllText(candidFilePath);
+							// Use file name for client name
+							string clientName = o.ClientName ?? Path.GetFileNameWithoutExtension(candidFilePath);
+							source = ClientCodeGenerator.GenerateClientFromFile(fileText, o.Namespace, clientName);
 						}
 						else
 						{
@@ -76,60 +81,53 @@ namespace EdjCase.ICP.ClientGenerator
 #endif
 		}
 
-		private static void WriteClient(ClientSource result)
+		private static void WriteClient(ClientSyntax result, string outputDirectory)
 		{
-			Console.WriteLine($"Writing client file ./{result.Name.GetName()}.cs...");
-			WriteFile(null, result.Name.GetName(), result.ClientFile);
+			Console.WriteLine($"Writing client file ./{result.Name}.cs...");
+			WriteFile(null, result.Name, result.ClientFile);
 
 
-			foreach ((string name, CompilationUnitSyntax sourceCode) in result.DataModelFiles)
+			foreach ((string name, CompilationUnitSyntax sourceCode) in result.TypeFiles)
 			{
 				Console.WriteLine($"Writing data model file ./Models/{name}.cs...");
 				WriteFile("Models", name, sourceCode);
 			}
 
-			if (result.AliasFile != null)
+			void WriteFile(
+				string? subDirectory,
+				string fileName,
+				CompilationUnitSyntax syntax
+			)
 			{
-				Console.WriteLine($"Writing aliases file ./Aliases.cs...");
-				WriteFile(null, "Aliases", result.AliasFile);
+				// Fix any bad chars
+				char[] invalidFileNameChars = Path.GetInvalidFileNameChars();
+				string[] split = fileName
+					.Split(invalidFileNameChars, StringSplitOptions.RemoveEmptyEntries);
+				fileName = string.Join("_", split).TrimEnd('.');
+				string directory = subDirectory == null
+					? outputDirectory
+					: Path.Combine(outputDirectory, subDirectory);
+				Directory.CreateDirectory(directory);
+				string filePath = Path.Combine(directory, fileName + ".cs");
+				// TODO?
+				//CSharpCompilation compilation = CSharpCompilation
+				//	.Create(null)
+				//	.AddSyntaxTrees(tree);
+				//ImmutableArray<Diagnostic> diagnostics = compilation.GetDiagnostics();
+				//foreach(Diagnostic d in diagnostics)
+				//{
+				//	Console.WriteLine(d.ToString());
+				//}
+				// Setup formatting options
+				AdhocWorkspace workspace = new();
+				OptionSet options = workspace.Options
+					.WithChangedOption(FormattingOptions.UseTabs, LanguageNames.CSharp, value: true)
+					.WithChangedOption(FormattingOptions.NewLine, LanguageNames.CSharp, value: Environment.NewLine);
+
+				string text = Formatter.Format(syntax, workspace, options).ToFullString();
+
+				File.WriteAllText(filePath, text);
 			}
-			else
-			{
-				Console.WriteLine($"No aliases found. Skipping aliases file generation...");
-			}
-		}
-
-		private static void WriteFile(
-			string directory,
-			string fileName,
-			CompilationUnitSyntax syntax)
-		{
-			// Fix any bad chars
-			char[] invalidFileNameChars = Path.GetInvalidFileNameChars();
-			string[] split = fileName
-				.Split(invalidFileNameChars, StringSplitOptions.RemoveEmptyEntries);
-			fileName = string.Join("_", split).TrimEnd('.');
-			Directory.CreateDirectory(directory);
-			string filePath = Path.Combine(directory, fileName + ".cs");
-
-			// TODO?
-			//CSharpCompilation compilation = CSharpCompilation
-			//	.Create(null)
-			//	.AddSyntaxTrees(tree);
-			//ImmutableArray<Diagnostic> diagnostics = compilation.GetDiagnostics();
-			//foreach(Diagnostic d in diagnostics)
-			//{
-			//	Console.WriteLine(d.ToString());
-			//}
-			// Setup formatting options
-			AdhocWorkspace workspace = new();
-			OptionSet options = workspace.Options
-				.WithChangedOption(FormattingOptions.UseTabs, LanguageNames.CSharp, value: true)
-				.WithChangedOption(FormattingOptions.NewLine, LanguageNames.CSharp, value: Environment.NewLine);
-
-			string text = Formatter.Format(syntax, workspace, options).ToFullString();
-
-			File.WriteAllText(filePath, text);
 		}
 	}
 }

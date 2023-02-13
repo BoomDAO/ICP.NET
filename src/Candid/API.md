@@ -174,6 +174,12 @@
   - [GetPrincipal()](#M-EdjCase-ICP-Candid-Models-Values-CandidService-GetPrincipal 'EdjCase.ICP.Candid.Models.Values.CandidService.GetPrincipal')
   - [OpaqueReference()](#M-EdjCase-ICP-Candid-Models-Values-CandidService-OpaqueReference 'EdjCase.ICP.Candid.Models.Values.CandidService.OpaqueReference')
   - [ToString()](#M-EdjCase-ICP-Candid-Models-Values-CandidService-ToString 'EdjCase.ICP.Candid.Models.Values.CandidService.ToString')
+- [CandidServiceDescription](#T-EdjCase-ICP-Candid-Models-CandidServiceDescription 'EdjCase.ICP.Candid.Models.CandidServiceDescription')
+  - [#ctor(service,declaredTypes,serviceReferenceId)](#M-EdjCase-ICP-Candid-Models-CandidServiceDescription-#ctor-EdjCase-ICP-Candid-Models-Types-CandidServiceType,System-Collections-Generic-Dictionary{EdjCase-ICP-Candid-Models-CandidId,EdjCase-ICP-Candid-Models-Types-CandidType},EdjCase-ICP-Candid-Models-CandidId- 'EdjCase.ICP.Candid.Models.CandidServiceDescription.#ctor(EdjCase.ICP.Candid.Models.Types.CandidServiceType,System.Collections.Generic.Dictionary{EdjCase.ICP.Candid.Models.CandidId,EdjCase.ICP.Candid.Models.Types.CandidType},EdjCase.ICP.Candid.Models.CandidId)')
+  - [DeclaredTypes](#P-EdjCase-ICP-Candid-Models-CandidServiceDescription-DeclaredTypes 'EdjCase.ICP.Candid.Models.CandidServiceDescription.DeclaredTypes')
+  - [Service](#P-EdjCase-ICP-Candid-Models-CandidServiceDescription-Service 'EdjCase.ICP.Candid.Models.CandidServiceDescription.Service')
+  - [ServiceReferenceId](#P-EdjCase-ICP-Candid-Models-CandidServiceDescription-ServiceReferenceId 'EdjCase.ICP.Candid.Models.CandidServiceDescription.ServiceReferenceId')
+  - [Parse(text)](#M-EdjCase-ICP-Candid-Models-CandidServiceDescription-Parse-System-String- 'EdjCase.ICP.Candid.Models.CandidServiceDescription.Parse(System.String)')
 - [CandidServiceType](#T-EdjCase-ICP-Candid-Models-Types-CandidServiceType 'EdjCase.ICP.Candid.Models.Types.CandidServiceType')
   - [#ctor(methods,recursiveId)](#M-EdjCase-ICP-Candid-Models-Types-CandidServiceType-#ctor-System-Collections-Generic-Dictionary{EdjCase-ICP-Candid-Models-CandidId,EdjCase-ICP-Candid-Models-Types-CandidFuncType},EdjCase-ICP-Candid-Models-CandidId- 'EdjCase.ICP.Candid.Models.Types.CandidServiceType.#ctor(System.Collections.Generic.Dictionary{EdjCase.ICP.Candid.Models.CandidId,EdjCase.ICP.Candid.Models.Types.CandidFuncType},EdjCase.ICP.Candid.Models.CandidId)')
   - [Methods](#P-EdjCase-ICP-Candid-Models-Types-CandidServiceType-Methods 'EdjCase.ICP.Candid.Models.Types.CandidServiceType.Methods')
@@ -2769,6 +2775,67 @@ This method has no parameters.
 ##### Parameters
 
 This method has no parameters.
+
+<a name='T-EdjCase-ICP-Candid-Models-CandidServiceDescription'></a>
+## CandidServiceDescription `type`
+
+##### Namespace
+
+EdjCase.ICP.Candid.Models
+
+##### Summary
+
+A model representing a \`*.did\` file with the definition of the candid 
+service and the types associated to it
+
+<a name='M-EdjCase-ICP-Candid-Models-CandidServiceDescription-#ctor-EdjCase-ICP-Candid-Models-Types-CandidServiceType,System-Collections-Generic-Dictionary{EdjCase-ICP-Candid-Models-CandidId,EdjCase-ICP-Candid-Models-Types-CandidType},EdjCase-ICP-Candid-Models-CandidId-'></a>
+### #ctor(service,declaredTypes,serviceReferenceId) `constructor`
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| service | [EdjCase.ICP.Candid.Models.Types.CandidServiceType](#T-EdjCase-ICP-Candid-Models-Types-CandidServiceType 'EdjCase.ICP.Candid.Models.Types.CandidServiceType') | The type information of the service |
+| declaredTypes | [System.Collections.Generic.Dictionary{EdjCase.ICP.Candid.Models.CandidId,EdjCase.ICP.Candid.Models.Types.CandidType}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.Dictionary 'System.Collections.Generic.Dictionary{EdjCase.ICP.Candid.Models.CandidId,EdjCase.ICP.Candid.Models.Types.CandidType}') | The types declared outside of the service definition |
+| serviceReferenceId | [EdjCase.ICP.Candid.Models.CandidId](#T-EdjCase-ICP-Candid-Models-CandidId 'EdjCase.ICP.Candid.Models.CandidId') | Optional. The id given to the service |
+
+<a name='P-EdjCase-ICP-Candid-Models-CandidServiceDescription-DeclaredTypes'></a>
+### DeclaredTypes `property`
+
+##### Summary
+
+The types declared outside of the service definition
+
+<a name='P-EdjCase-ICP-Candid-Models-CandidServiceDescription-Service'></a>
+### Service `property`
+
+##### Summary
+
+The type information of the service
+
+<a name='P-EdjCase-ICP-Candid-Models-CandidServiceDescription-ServiceReferenceId'></a>
+### ServiceReferenceId `property`
+
+##### Summary
+
+Optional. The id given to the service
+
+<a name='M-EdjCase-ICP-Candid-Models-CandidServiceDescription-Parse-System-String-'></a>
+### Parse(text) `method`
+
+##### Summary
+
+Parse the service defintion from a \`*.did\` file contents
+
+##### Returns
+
+The parsed candid service defintion
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| text | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The contents of the \`*.did\` file |
 
 <a name='T-EdjCase-ICP-Candid-Models-Types-CandidServiceType'></a>
 ## CandidServiceType `type`

@@ -14,19 +14,34 @@ using System.Linq;
 
 namespace EdjCase.ICP.ClientGenerator
 {
-	public class ClientCode
+	/// <summary>
+	/// A model containing the client code to be rendered
+	/// </summary>
+	public class ClientSyntax
 	{
+		/// <summary>
+		/// The name of the client
+		/// </summary>
 		public string Name { get; }
-		public CompilationUnitSyntax ClientFile { get; }
-		public List<(string Name, CompilationUnitSyntax SourceCode)> DataModelFiles { get; }
-		public CompilationUnitSyntax? AliasFile { get; }
 
-		public ClientCode(string name, CompilationUnitSyntax clientFile, List<(string Name, CompilationUnitSyntax SourceCode)> typeFiles, CompilationUnitSyntax? aliasFile)
+		/// <summary>
+		/// The syntax of the client file
+		/// </summary>
+		public CompilationUnitSyntax ClientFile { get; }
+
+		/// <summary>
+		/// The syntax of different declared types for the client
+		/// </summary>
+		public List<(string Name, CompilationUnitSyntax Syntax)> TypeFiles { get; }
+
+		/// <param name="name">The name of the client</param>
+		/// <param name="clientFile">The syntax of the client file</param>
+		/// <param name="typeFiles">The syntax of different declared types for the client</param>
+		public ClientSyntax(string name, CompilationUnitSyntax clientFile, List<(string Name, CompilationUnitSyntax Syntax)> typeFiles)
 		{
 			this.Name = name ?? throw new ArgumentNullException(nameof(name));
 			this.ClientFile = clientFile ?? throw new ArgumentNullException(nameof(clientFile));
-			this.DataModelFiles = typeFiles ?? throw new ArgumentNullException(nameof(typeFiles));
-			this.AliasFile = aliasFile;
+			this.TypeFiles = typeFiles ?? throw new ArgumentNullException(nameof(typeFiles));
 		}
 	}
 
