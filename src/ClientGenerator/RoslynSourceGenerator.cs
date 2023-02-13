@@ -23,12 +23,13 @@ using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using static EdjCase.ICP.ClientGenerator.Tool;
 
 namespace EdjCase.ICP.ClientGenerator
 {
 	internal class RoslynSourceGenerator
 	{
-		public static string GenerateClientSourceCode(
+		public static CompilationUnitSyntax GenerateClientSourceCode(
 			TypeName clientName,
 			string baseNamespace,
 			ServiceSourceCodeType service,
@@ -43,7 +44,7 @@ namespace EdjCase.ICP.ClientGenerator
 		}
 
 
-		public static string? GenerateTypeSourceCode(
+		public static CompilationUnitSyntax? GenerateTypeSourceCode(
 			ResolvedType type,
 			string modelNamespace,
 			Dictionary<ValueName, TypeName> aliases
@@ -59,7 +60,7 @@ namespace EdjCase.ICP.ClientGenerator
 			return PostProcessSourceCode(modelNamespace, aliases, type.GeneratedSyntax);
 		}
 
-		private static string PostProcessSourceCode(
+		private static CompilationUnitSyntax PostProcessSourceCode(
 			string modelNamespace,
 			Dictionary<ValueName, TypeName> aliases,
 			params MemberDeclarationSyntax[] members)
@@ -74,24 +75,11 @@ namespace EdjCase.ICP.ClientGenerator
 				.CompilationUnit()
 				.WithMembers(SyntaxFactory.SingletonList<MemberDeclarationSyntax>(@namespace));
 
-			SyntaxTree tree = SyntaxFactory.SyntaxTree(compilationUnit);
-			CSharpCompilation compilation = CSharpCompilation.Create(null).AddSyntaxTrees(tree);
-			//ImmutableArray<Diagnostic> diagnostics = compilation.GetDiagnostics();
-			//foreach(Diagnostic d in diagnostics)
-			//{
-			//	Console.WriteLine(d.ToString());
-			//}
 
 
 			// Moves all namespaces to usings from the Type declarations
 			//SetUsings(ref compilationUnit);
 			BuildSourceWithShorthands(ref compilationUnit);
-
-			// Setup formatting options
-			AdhocWorkspace workspace = new();
-			OptionSet options = workspace.Options
-				.WithChangedOption(FormattingOptions.UseTabs, LanguageNames.CSharp, value: true)
-				.WithChangedOption(FormattingOptions.NewLine, LanguageNames.CSharp, value: Environment.NewLine);
 
 			compilationUnit = compilationUnit
 				// Add alias using statements
@@ -108,9 +96,8 @@ namespace EdjCase.ICP.ClientGenerator
 				.NormalizeWhitespace();
 
 
-			return Formatter.Format(compilationUnit, workspace, options).ToFullString();
+			return compilationUnit;
 		}
-
 
 		private static void BuildSourceWithShorthands(ref CompilationUnitSyntax compilationUnit)
 		{

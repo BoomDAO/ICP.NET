@@ -1,40 +1,102 @@
-using EdjCase.ICP.Candid.Mapping.Mappers;
+using EdjCase.ICP.Agent.Agents;
+using EdjCase.ICP.Agent.Identities;
 using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid.Models.Types;
 using EdjCase.ICP.Candid.Models.Values;
-using EdjCase.ICP.ClientGenerator;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.Editing;
+using Microsoft.CodeAnalysis.Formatting;
+using Microsoft.CodeAnalysis.Options;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using static EdjCase.ICP.ClientGenerator.Tool;
 
 namespace EdjCase.ICP.ClientGenerator
 {
-	internal class ClientCodeResult
+	/// <summary>
+	/// Generator to create client source code based of candid definitions from `.did` files
+	/// or from a canister id
+	/// </summary>
+	public static class ClientCodeGenerator
 	{
-		public TypeName Name { get; }
-		public string ClientFile { get; }
-		public List<(string Name, string SourceCode)> DataModelFiles { get; }
-		public string? AliasFile { get; }
-
-		public ClientCodeResult(TypeName name, string clientFile, List<(string Name, string SourceCode)> typeFiles, string? aliasFile)
+		/// <summary>
+		/// Creates client source code for a canister based on its id. This only works if 
+		/// the canister has the `candid:service` meta data available in its public state
+		/// </summary>
+		/// <param name="canisterId">The canister to get the definition from</param>
+		/// <param name="baseNamespace">The base namespace to use in the generated files</param>
+		/// <param name="clientName">Optional. The name of the client class and file to use. Defaults to 'Service'</param>
+		/// <param name="httpBoundryNodeUrl">Optional. The http boundry node url to use, otherwise uses the default</param>
+		public static async Task<ClientCode> GenerateClientFromCanisterAsync(
+			Principal canisterId,
+			string baseNamespace,
+			string? clientName = null,
+			Uri? httpBoundryNodeUrl = null
+		)
 		{
-			this.Name = name ?? throw new ArgumentNullException(nameof(name));
-			this.ClientFile = clientFile ?? throw new ArgumentNullException(nameof(clientFile));
-			this.DataModelFiles = typeFiles ?? throw new ArgumentNullException(nameof(typeFiles));
-			this.AliasFile = aliasFile;
+			var agent = new HttpAgent(identity: null, httpBoundryNodeUrl: httpBoundryNodeUrl);
+			var candidServicePath = StatePath.FromSegments("canister", canisterId.Raw, "metadata", "candid:service");
+			var paths = new List<StatePath>
+			{
+				candidServicePath
+			};
+			var response = await agent.ReadStateAsync(canisterId, paths);
+			string? fileText = response.Certificate.Tree.GetValueOrDefault(candidServicePath)?.AsLeaf().AsUtf8();
+
+			if (string.IsNullOrWhiteSpace(fileText))
+			{
+				throw new Exception("Canister does not have 'candid:service' exposed");
+			}
+
+			return GetClientSource(fileText, baseNamespace, clientName ?? "Service");
 		}
-	}
-	internal static class ClientCodeGenerator
-	{
-		public static ClientCodeResult FromService(string serviceName, string baseNamespace, CandidServiceDescription service)
+
+		/// <summary>
+		/// Generates client source code for a canister based on a `.did` file definition
+		/// </summary>
+		/// <param name="baseNamespace">The base namespace to use in the generated files</param>
+		/// <param name="clientName">Optional. The name of the client class and file to use. Defaults to 'Service'</param>
+		/// <param name="candidFilePath">The path where the `.did` definition file is located</param>
+		public static ClientCode GenerateClientFromFile(
+			string candidFilePath,
+			string baseNamespace,
+			string? clientName = null
+		)
 		{
+			Console.WriteLine($"Reading text from {candidFilePath}...");
+			string fileText = File.ReadAllText(candidFilePath);
+			// Use file name for client name
+			clientName ??= Path.GetFileNameWithoutExtension(candidFilePath);
+
+			return GetClientSource(fileText, baseNamespace, clientName);
+		}
+
+		private static ClientCode GetClientSource(
+			string fileText,
+			string baseNamespace,
+			string clientName
+		)
+		{
+			fileText = string.Join("\n",
+				fileText.Split(new[] { '\r', '\n' })
+						.Where(l => !l.TrimStart().StartsWith("//"))
+			);
+
+			Console.WriteLine($"Parsing file contents...");
+			CandidServiceDescription serviceFile = CandidServiceDescription.Parse(fileText);
+
+			Console.WriteLine($"Generating client '{clientName}' from parse candid file...");
+			return FromService(clientName, baseNamespace, serviceFile);
+		}
 
 
+		private static ClientCode FromService(string serviceName, string baseNamespace, CandidServiceDescription service)
+		{
 			// Mapping of A => Type
 			// where candid is: type A = Type;
 			Dictionary<ValueName, SourceCodeType> declaredTypes = service.DeclaredTypes
@@ -57,12 +119,12 @@ namespace EdjCase.ICP.ClientGenerator
 					t => typeResolver.ResolveTypeDeclaration(t.Key, t.Value)
 				);
 
-			var typeFiles = new List<(string FileName, string Source)>();
+			var typeFiles = new List<(string FileName, CompilationUnitSyntax Source)>();
 			Dictionary<ValueName, TypeName> aliasTypes = aliases
 				.ToDictionary(t => t, t => resolvedTypes[t].Name);
 			foreach ((ValueName id, ResolvedType typeInfo) in resolvedTypes)
 			{
-				string? sourceCode = RoslynSourceGenerator.GenerateTypeSourceCode(typeInfo, typeResolver.ModelNamespace, aliasTypes);
+				CompilationUnitSyntax? sourceCode = RoslynSourceGenerator.GenerateTypeSourceCode(typeInfo, typeResolver.ModelNamespace, aliasTypes);
 				if (sourceCode != null)
 				{
 					typeFiles.Add((typeInfo.Name.GetName(), sourceCode));
@@ -70,12 +132,13 @@ namespace EdjCase.ICP.ClientGenerator
 			}
 
 
-			TypeName clientName = new(StringUtil.ToPascalCase(serviceName) + "ApiClient", baseNamespace, prefix: null);
+			string clientName = StringUtil.ToPascalCase(serviceName) + "ApiClient";
+			TypeName clientTypeName = new(clientName, baseNamespace, prefix: null);
 			ServiceSourceCodeType serviceSourceType = ResolveService(service.Service);
-			string clientSource = RoslynSourceGenerator.GenerateClientSourceCode(clientName, baseNamespace, serviceSourceType, typeResolver, aliasTypes);
+			CompilationUnitSyntax clientSource = RoslynSourceGenerator.GenerateClientSourceCode(clientTypeName, baseNamespace, serviceSourceType, typeResolver, aliasTypes);
 
-			string? aliasFile = null; // TODO? global using only supported in C# 10+
-			return new ClientCodeResult(clientName, clientSource, typeFiles, aliasFile);
+			CompilationUnitSyntax? aliasFile = null; // TODO? global using only supported in C# 10+
+			return new ClientCode(clientName, clientSource, typeFiles, aliasFile);
 		}
 
 		private static SourceCodeType ResolveSourceCodeType(CandidType type)
@@ -182,6 +245,6 @@ namespace EdjCase.ICP.ClientGenerator
 			}
 		}
 
-	}
 
+	}
 }
