@@ -666,6 +666,39 @@
         <member name="M:EdjCase.ICP.Candid.Models.CandidId.CompareTo(EdjCase.ICP.Candid.Models.CandidId)">
             <inheritdoc />
         </member>
+        <member name="T:EdjCase.ICP.Candid.Models.CandidServiceDescription">
+            <summary>
+            A model representing a `*.did` file with the definition of the candid 
+            service and the types associated to it
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Models.CandidServiceDescription.ServiceReferenceId">
+            <summary>
+            Optional. The id given to the service
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Models.CandidServiceDescription.Service">
+            <summary>
+            The type information of the service
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Models.CandidServiceDescription.DeclaredTypes">
+            <summary>
+            The types declared outside of the service definition
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidServiceDescription.#ctor(EdjCase.ICP.Candid.Models.Types.CandidServiceType,System.Collections.Generic.Dictionary{EdjCase.ICP.Candid.Models.CandidId,EdjCase.ICP.Candid.Models.Types.CandidType},EdjCase.ICP.Candid.Models.CandidId)">
+            <param name="service">The type information of the service</param>
+            <param name="declaredTypes">The types declared outside of the service definition</param>
+            <param name="serviceReferenceId">Optional. The id given to the service</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidServiceDescription.Parse(System.String)">
+            <summary>
+            Parse the service defintion from a `*.did` file contents
+            </summary>
+            <param name="text">The contents of the `*.did` file</param>
+            <returns>The parsed candid service defintion</returns>
+        </member>
         <member name="T:EdjCase.ICP.Candid.Models.CandidTag">
             <summary>
             A model representing a candid tag which is a positive number id with an optional name

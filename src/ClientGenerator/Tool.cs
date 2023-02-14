@@ -1,6 +1,11 @@
 using CommandLine;
 using EdjCase.ICP.Candid.Models;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Formatting;
+using Microsoft.CodeAnalysis.Options;
+using Microsoft.CodeAnalysis;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace EdjCase.ICP.ClientGenerator
@@ -40,16 +45,23 @@ namespace EdjCase.ICP.ClientGenerator
 				ParserResult<Options> result = await Parser.Default.ParseArguments<Options>(args)
 					.WithParsedAsync<Options>(async o =>
 					{
+						ClientSyntax source;
 						if (string.IsNullOrWhiteSpace(o.CanisterId))
 						{
-							ClientFileGenerator.GenerateClientFromFile(o.CandidFilePath!, o.OutputDirectory, o.Namespace, o.ClientName);
+							string candidFilePath = o.CandidFilePath!;
+							Console.WriteLine($"Reading text from {candidFilePath}...");
+							string fileText = File.ReadAllText(candidFilePath);
+							// Use file name for client name
+							string clientName = o.ClientName ?? Path.GetFileNameWithoutExtension(candidFilePath);
+							source = ClientCodeGenerator.GenerateClientFromFile(fileText, o.Namespace, clientName);
 						}
 						else
 						{
 							Principal canisterId = Principal.FromText(o.CanisterId);
 							Uri? baseUrl = string.IsNullOrWhiteSpace(o.BaseUrl) ? null : new Uri(o.BaseUrl);
-							await ClientFileGenerator.GenerateClientFromCanisterAsync(canisterId, o.OutputDirectory, o.Namespace, o.ClientName, baseUrl);
+							source = await ClientCodeGenerator.GenerateClientFromCanisterAsync(canisterId, o.Namespace, o.ClientName, baseUrl);
 						}
+						WriteClient(source, o.OutputDirectory);
 					});
 
 #if DEBUG
@@ -67,6 +79,47 @@ namespace EdjCase.ICP.ClientGenerator
 				}
 			}
 #endif
+		}
+
+		private static void WriteClient(ClientSyntax result, string outputDirectory)
+		{
+			Console.WriteLine($"Writing client file ./{result.Name}.cs...");
+			WriteFile(null, result.Name, result.ClientFile);
+
+
+			foreach ((string name, CompilationUnitSyntax sourceCode) in result.TypeFiles)
+			{
+				Console.WriteLine($"Writing data model file ./Models/{name}.cs...");
+				WriteFile("Models", name, sourceCode);
+			}
+
+			void WriteFile(
+				string? subDirectory,
+				string fileName,
+				CompilationUnitSyntax syntax
+			)
+			{
+				// Fix any bad chars
+				char[] invalidFileNameChars = Path.GetInvalidFileNameChars();
+				string[] split = fileName
+					.Split(invalidFileNameChars, StringSplitOptions.RemoveEmptyEntries);
+				fileName = string.Join("_", split).TrimEnd('.');
+				string directory = subDirectory == null
+					? outputDirectory
+					: Path.Combine(outputDirectory, subDirectory);
+				Directory.CreateDirectory(directory);
+				string filePath = Path.Combine(directory, fileName + ".cs");
+				
+				// Setup formatting options
+				AdhocWorkspace workspace = new();
+				OptionSet options = workspace.Options
+					.WithChangedOption(FormattingOptions.UseTabs, LanguageNames.CSharp, value: true)
+					.WithChangedOption(FormattingOptions.NewLine, LanguageNames.CSharp, value: Environment.NewLine);
+
+				string text = Formatter.Format(syntax, workspace, options).ToFullString();
+
+				File.WriteAllText(filePath, text);
+			}
 		}
 	}
 }

@@ -71,7 +71,7 @@ namespace EdjCase.ICP.Candid.Parsers
 					service = (CandidServiceType)declaredTypes[reference.Id];
 				}
 
-				return new CandidServiceDescription(serviceReferenceId, service, declaredTypes);
+				return new CandidServiceDescription(service, declaredTypes, serviceReferenceId);
 			}
 		}
 

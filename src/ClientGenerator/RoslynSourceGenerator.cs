@@ -5,6 +5,7 @@ using EdjCase.ICP.Candid.Mapping;
 using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid.Models.Values;
 using EdjCase.ICP.ClientGenerator;
+using EdjCase.ICP.ClientGenerator.SyntaxRewriters;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -23,14 +24,15 @@ using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using static EdjCase.ICP.ClientGenerator.Tool;
 
 namespace EdjCase.ICP.ClientGenerator
 {
 	internal class RoslynSourceGenerator
 	{
-		public static string GenerateClientSourceCode(
+		public static CompilationUnitSyntax GenerateClientSourceCode(
 			TypeName clientName,
-			string baseNamespace,
+			string modelNamespace,
 			ServiceSourceCodeType service,
 			RoslynTypeResolver typeResolver,
 			Dictionary<ValueName, TypeName> aliases
@@ -39,11 +41,11 @@ namespace EdjCase.ICP.ClientGenerator
 			// Generate client class
 			ClassDeclarationSyntax clientClass = typeResolver.GenerateClient(clientName, service);
 
-			return PostProcessSourceCode(baseNamespace, aliases, clientClass);
+			return PostProcessSourceCode(modelNamespace, aliases, clientClass);
 		}
 
 
-		public static string? GenerateTypeSourceCode(
+		public static CompilationUnitSyntax? GenerateTypeSourceCode(
 			ResolvedType type,
 			string modelNamespace,
 			Dictionary<ValueName, TypeName> aliases
@@ -59,7 +61,7 @@ namespace EdjCase.ICP.ClientGenerator
 			return PostProcessSourceCode(modelNamespace, aliases, type.GeneratedSyntax);
 		}
 
-		private static string PostProcessSourceCode(
+		private static CompilationUnitSyntax PostProcessSourceCode(
 			string modelNamespace,
 			Dictionary<ValueName, TypeName> aliases,
 			params MemberDeclarationSyntax[] members)
@@ -74,43 +76,36 @@ namespace EdjCase.ICP.ClientGenerator
 				.CompilationUnit()
 				.WithMembers(SyntaxFactory.SingletonList<MemberDeclarationSyntax>(@namespace));
 
-			SyntaxTree tree = SyntaxFactory.SyntaxTree(compilationUnit);
-			CSharpCompilation compilation = CSharpCompilation.Create(null).AddSyntaxTrees(tree);
-			//ImmutableArray<Diagnostic> diagnostics = compilation.GetDiagnostics();
-			//foreach(Diagnostic d in diagnostics)
-			//{
-			//	Console.WriteLine(d.ToString());
-			//}
 
 
 			// Moves all namespaces to usings from the Type declarations
 			//SetUsings(ref compilationUnit);
 			BuildSourceWithShorthands(ref compilationUnit);
 
-			// Setup formatting options
-			AdhocWorkspace workspace = new();
-			OptionSet options = workspace.Options
-				.WithChangedOption(FormattingOptions.UseTabs, LanguageNames.CSharp, value: true)
-				.WithChangedOption(FormattingOptions.NewLine, LanguageNames.CSharp, value: Environment.NewLine);
+			var namespaceRemover = new NamespacePrefixRemover(modelNamespace);
+			compilationUnit = (CompilationUnitSyntax)namespaceRemover.Visit(compilationUnit)!;
+
 
 			compilationUnit = compilationUnit
 				// Add alias using statements
 				.AddUsings(aliases
 						.Select(a => SyntaxFactory.UsingDirective(
-							alias: SyntaxFactory.NameEquals(a.Key.PascalCaseValue),
+							alias: SyntaxFactory.NameEquals(a.Key.PropertyName),
 							name: SyntaxFactory.IdentifierName(a.Value.GetNamespacedName())
 						))
 						.ToArray()
 				)
-				// TODO replace
-				.AddUsings(SyntaxFactory.UsingDirective(SyntaxFactory.IdentifierName("EdjCase.ICP.Agent.Agents")))
+				// Add namespaces used in files after cleanup
+				.AddUsings(
+					namespaceRemover.UniqueNamespaces
+					.Select(n => SyntaxFactory.UsingDirective(SyntaxFactory.IdentifierName(n)))
+					.ToArray()
+				)
 				// Format
 				.NormalizeWhitespace();
 
-
-			return Formatter.Format(compilationUnit, workspace, options).ToFullString();
+			return compilationUnit;
 		}
-
 
 		private static void BuildSourceWithShorthands(ref CompilationUnitSyntax compilationUnit)
 		{
@@ -195,30 +190,6 @@ namespace EdjCase.ICP.ClientGenerator
 					.Select(n => SyntaxFactory.UsingDirective(SyntaxFactory.IdentifierName(n)))
 					.ToArray()
 				);
-		}
-
-
-		private class NamespacePrefixRemover : CSharpSyntaxRewriter
-		{
-			public HashSet<string> UniqueNamespaces { get; }
-
-			public NamespacePrefixRemover()
-			{
-				this.UniqueNamespaces = new();
-			}
-
-			public override SyntaxNode? VisitQualifiedName(QualifiedNameSyntax node)
-			{
-				var identifier = node.Right as IdentifierNameSyntax;
-				if (identifier != null)
-				{
-					var namespaceName = node.Left.ToString();
-					this.UniqueNamespaces.Add(namespaceName);
-					return SyntaxFactory.ParseName(identifier.ToString().Replace(namespaceName + ".", ""));
-				}
-
-				return base.VisitQualifiedName(node);
-			}
 		}
 	}
 }
