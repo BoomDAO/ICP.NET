@@ -238,7 +238,7 @@ namespace EdjCase.ICP.ClientGenerator
 				properties: properties,
 				methods: methods,
 				attributes: attributes,
-				emptyReflectionContructor: true,
+				emptyConstructorAccess: AccessType.Protected,
 				subTypes: resolvedOptions
 					.SelectMany(o => o.Type?.GeneratedSyntax ?? Array.Empty<MemberDeclarationSyntax>())
 					.ToList()
@@ -526,7 +526,8 @@ namespace EdjCase.ICP.ClientGenerator
 			return GenerateClass(
 				name: recordTypeName,
 				properties: properties,
-				subTypes: subItems
+				subTypes: subItems,
+				emptyConstructorAccess: AccessType.Public
 			);
 
 		}
@@ -1193,7 +1194,7 @@ namespace EdjCase.ICP.ClientGenerator
 			List<MethodDeclarationSyntax>? methods = null,
 			List<TypeName>? implementTypes = null,
 			List<AttributeListSyntax>? attributes = null,
-			bool emptyReflectionContructor = false,
+			AccessType? emptyConstructorAccess = null,
 			List<MemberDeclarationSyntax>? subTypes = null)
 		{
 			if (properties.Any(p => p.Type == null))
@@ -1201,20 +1202,21 @@ namespace EdjCase.ICP.ClientGenerator
 				// TODO
 				throw new NotImplementedException("Null, empty or reserved properties are not yet supported");
 			}
-			IEnumerable<PropertyDeclarationSyntax> properySyntxList = properties
+			List<ConstructorDeclarationSyntax> constructors = new();
+			IEnumerable<PropertyDeclarationSyntax> properySyntaxList = properties
 				.Select(GenerateProperty)
 				.Where(p => p != null)!;
-
-			List<ConstructorDeclarationSyntax> constructors = new()
+			if (properties.Any())
 			{
-				GenerateConstructor(name, AccessType.Public, properties)
-			};
-			if (emptyReflectionContructor)
+				// Only create constructor if there are properties
+				constructors.Add(GenerateConstructor(name, AccessType.Public, properties));
+			}
+			if (emptyConstructorAccess != null)
 			{
 				// Empty Constrcutor for reflection
 				constructors.Add(GenerateConstructor(
 					name: name,
-					access: AccessType.Protected,
+					access: emptyConstructorAccess.Value,
 					properties: new List<ClassProperty>()
 				));
 			}
@@ -1226,7 +1228,7 @@ namespace EdjCase.ICP.ClientGenerator
 				))
 				.WithMembers(SyntaxFactory.List(
 					// Properties
-					properySyntxList.Cast<MemberDeclarationSyntax>()
+					properySyntaxList.Cast<MemberDeclarationSyntax>()
 					// Constructors
 					.Concat(constructors.Cast<MemberDeclarationSyntax>())
 					// Methods

@@ -22,17 +22,6 @@ namespace EdjCase.ICP.ClientGenerator.SyntaxRewriters
 			this.ModelNamespace = modelNamespace;
 		}
 
-		[return: NotNullIfNotNull("node")]
-		public override SyntaxNode? Visit(SyntaxNode? node)
-		{
-			string? a = node?.ToString();
-			if (a != null && a.StartsWith("EdjCase.ICP.Agent.Agents"))
-			{
-				int b = 2;
-			}
-			return base.Visit(node);
-		}
-
 		public override SyntaxNode? VisitIdentifierName(IdentifierNameSyntax node)
 		{
 			return this.VisitInternal(node, base.VisitIdentifierName);

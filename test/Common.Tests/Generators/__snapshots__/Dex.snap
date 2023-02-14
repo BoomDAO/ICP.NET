@@ -404,6 +404,10 @@ namespace Test.Models
 			this.To = to;
 			this.ToAmount = toAmount;
 		}
+
+		public Order()
+		{
+		}
 	}
 }
 
@@ -673,6 +677,10 @@ namespace Test.Models
 			this.Amount = amount;
 			this.Owner = owner;
 			this.Token = token;
+		}
+
+		public Balance()
+		{
 		}
 	}
 }

@@ -192,6 +192,10 @@ namespace Test.Models
 		{
 			this.Hash = hash;
 		}
+
+		public AccountIdentifier()
+		{
+		}
 	}
 }
 
@@ -392,6 +396,10 @@ namespace Test.Models
 		{
 			this.NewHotKey = newHotKey;
 		}
+
+		public AddHotKey()
+		{
+		}
 	}
 }
 
@@ -412,6 +420,10 @@ namespace Test.Models
 		{
 			this.Change = change;
 		}
+
+		public AddOrRemoveNodeProvider()
+		{
+		}
 	}
 }
 
@@ -430,6 +442,10 @@ namespace Test.Models
 		public Amount(UInt64 e8s)
 		{
 			this.E8s = e8s;
+		}
+
+		public Amount()
+		{
 		}
 	}
 }
@@ -450,6 +466,10 @@ namespace Test.Models
 		public ApproveGenesisKyc(List<Principal> principals)
 		{
 			this.Principals = principals;
+		}
+
+		public ApproveGenesisKyc()
+		{
 		}
 	}
 }
@@ -473,6 +493,10 @@ namespace Test.Models
 		{
 			this.Vote = vote;
 			this.VotingPower = votingPower;
+		}
+
+		public Ballot()
+		{
 		}
 	}
 }
@@ -498,6 +522,10 @@ namespace Test.Models
 		{
 			this.Vote = vote;
 			this.ProposalId = proposalId;
+		}
+
+		public BallotInfo()
+		{
 		}
 	}
 }
@@ -678,6 +706,10 @@ namespace Test.Models
 		{
 			this.By = by;
 		}
+
+		public ClaimOrRefresh()
+		{
+		}
 	}
 }
 
@@ -702,6 +734,10 @@ namespace Test.Models
 			this.Controller = controller;
 			this.Memo = memo;
 		}
+
+		public ClaimOrRefreshNeuronFromAccount()
+		{
+		}
 	}
 }
 
@@ -722,6 +758,10 @@ namespace Test.Models
 		{
 			this.Result = result;
 		}
+
+		public ClaimOrRefreshNeuronFromAccountResponse()
+		{
+		}
 	}
 }
 
@@ -741,6 +781,10 @@ namespace Test.Models
 		public ClaimOrRefreshResponse(OptionalValue<NeuronId> refreshedNeuronId)
 		{
 			this.RefreshedNeuronId = refreshedNeuronId;
+		}
+
+		public ClaimOrRefreshResponse()
+		{
 		}
 	}
 }
@@ -1347,6 +1391,10 @@ namespace Test.Models
 		{
 			this.Operation = operation;
 		}
+
+		public Configure()
+		{
+		}
 	}
 }
 
@@ -1371,6 +1419,10 @@ namespace Test.Models
 			this.ToAccount = toAccount;
 			this.Amount = amount;
 		}
+
+		public Disburse()
+		{
+		}
 	}
 }
 
@@ -1389,6 +1441,10 @@ namespace Test.Models
 		public DisburseResponse(UInt64 transferBlockHeight)
 		{
 			this.TransferBlockHeight = transferBlockHeight;
+		}
+
+		public DisburseResponse()
+		{
 		}
 	}
 }
@@ -1425,6 +1481,10 @@ namespace Test.Models
 			this.AmountE8s = amountE8s;
 			this.NewController = newController;
 			this.Nonce = nonce;
+		}
+
+		public DisburseToNeuron()
+		{
 		}
 	}
 }
@@ -1519,6 +1579,10 @@ namespace Test.Models
 			this.NnsFunction = nnsFunction;
 			this.Payload = payload;
 		}
+
+		public ExecuteNnsFunction()
+		{
+		}
 	}
 }
 
@@ -1544,6 +1608,10 @@ namespace Test.Models
 			this.Topic = topic;
 			this.Followees = followees;
 		}
+
+		public Follow()
+		{
+		}
 	}
 }
 
@@ -1563,6 +1631,10 @@ namespace Test.Models
 		public Followees(List<NeuronId> followees)
 		{
 			this.Followees_ = followees;
+		}
+
+		public Followees()
+		{
 		}
 	}
 }
@@ -1631,6 +1703,10 @@ namespace Test.Models
 			this.GenesisTimestampSeconds = genesisTimestampSeconds;
 		}
 
+		public Governance()
+		{
+		}
+
 		public class GovernanceR0V0
 		{
 			[CandidName("0")]
@@ -1643,6 +1719,10 @@ namespace Test.Models
 			{
 				this.F0 = f0;
 				this.F1 = f1;
+			}
+
+			public GovernanceR0V0()
+			{
 			}
 		}
 
@@ -1659,6 +1739,10 @@ namespace Test.Models
 				this.F0 = f0;
 				this.F1 = f1;
 			}
+
+			public GovernanceR8V0()
+			{
+			}
 		}
 
 		public class GovernanceR9V0
@@ -1674,6 +1758,10 @@ namespace Test.Models
 				this.F0 = f0;
 				this.F1 = f1;
 			}
+
+			public GovernanceR9V0()
+			{
+			}
 		}
 
 		public class GovernanceR10V0
@@ -1688,6 +1776,10 @@ namespace Test.Models
 			{
 				this.F0 = f0;
 				this.F1 = f1;
+			}
+
+			public GovernanceR10V0()
+			{
 			}
 		}
 	}
@@ -1772,6 +1864,10 @@ namespace Test.Models
 			this.TimestampSeconds = timestampSeconds;
 		}
 
+		public GovernanceCachedMetrics()
+		{
+		}
+
 		public class GovernanceCachedMetricsR0V0
 		{
 			[CandidName("0")]
@@ -1784,6 +1880,10 @@ namespace Test.Models
 			{
 				this.F0 = f0;
 				this.F1 = f1;
+			}
+
+			public GovernanceCachedMetricsR0V0()
+			{
 			}
 		}
 
@@ -1800,6 +1900,10 @@ namespace Test.Models
 				this.F0 = f0;
 				this.F1 = f1;
 			}
+
+			public GovernanceCachedMetricsR3V0()
+			{
+			}
 		}
 
 		public class GovernanceCachedMetricsR11V0
@@ -1815,6 +1919,10 @@ namespace Test.Models
 				this.F0 = f0;
 				this.F1 = f1;
 			}
+
+			public GovernanceCachedMetricsR11V0()
+			{
+			}
 		}
 
 		public class GovernanceCachedMetricsR13V0
@@ -1829,6 +1937,10 @@ namespace Test.Models
 			{
 				this.F0 = f0;
 				this.F1 = f1;
+			}
+
+			public GovernanceCachedMetricsR13V0()
+			{
 			}
 		}
 	}
@@ -1854,6 +1966,10 @@ namespace Test.Models
 			this.ErrorMessage = errorMessage;
 			this.ErrorType = errorType;
 		}
+
+		public GovernanceError()
+		{
+		}
 	}
 }
 
@@ -1872,6 +1988,10 @@ namespace Test.Models
 		public IncreaseDissolveDelay(UInt32 additionalDissolveDelaySeconds)
 		{
 			this.AdditionalDissolveDelaySeconds = additionalDissolveDelaySeconds;
+		}
+
+		public IncreaseDissolveDelay()
+		{
 		}
 	}
 }
@@ -1897,6 +2017,10 @@ namespace Test.Models
 			this.Id = id;
 			this.KnownNeuronData = knownNeuronData;
 		}
+
+		public KnownNeuron()
+		{
+		}
 	}
 }
 
@@ -1921,6 +2045,10 @@ namespace Test.Models
 			this.Name = name;
 			this.Description = description;
 		}
+
+		public KnownNeuronData()
+		{
+		}
 	}
 }
 
@@ -1940,6 +2068,10 @@ namespace Test.Models
 		public ListKnownNeuronsResponse(List<KnownNeuron> knownNeurons)
 		{
 			this.KnownNeurons = knownNeurons;
+		}
+
+		public ListKnownNeuronsResponse()
+		{
 		}
 	}
 }
@@ -1964,6 +2096,10 @@ namespace Test.Models
 		{
 			this.NeuronIds = neuronIds;
 			this.IncludeNeuronsReadableByCaller = includeNeuronsReadableByCaller;
+		}
+
+		public ListNeurons()
+		{
 		}
 	}
 }
@@ -1991,6 +2127,10 @@ namespace Test.Models
 			this.FullNeurons = fullNeurons;
 		}
 
+		public ListNeuronsResponse()
+		{
+		}
+
 		public class ListNeuronsResponseR0V0
 		{
 			[CandidName("0")]
@@ -2003,6 +2143,10 @@ namespace Test.Models
 			{
 				this.F0 = f0;
 				this.F1 = f1;
+			}
+
+			public ListNeuronsResponseR0V0()
+			{
 			}
 		}
 	}
@@ -2024,6 +2168,10 @@ namespace Test.Models
 		public ListNodeProvidersResponse(List<NodeProvider> nodeProviders)
 		{
 			this.NodeProviders = nodeProviders;
+		}
+
+		public ListNodeProvidersResponse()
+		{
 		}
 	}
 }
@@ -2063,6 +2211,10 @@ namespace Test.Models
 			this.ExcludeTopic = excludeTopic;
 			this.IncludeStatus = includeStatus;
 		}
+
+		public ListProposalInfo()
+		{
+		}
 	}
 }
 
@@ -2083,6 +2235,10 @@ namespace Test.Models
 		{
 			this.ProposalInfo = proposalInfo;
 		}
+
+		public ListProposalInfoResponse()
+		{
+		}
 	}
 }
 
@@ -2102,6 +2258,10 @@ namespace Test.Models
 		public MakeProposalResponse(OptionalValue<NeuronId> proposalId)
 		{
 			this.ProposalId = proposalId;
+		}
+
+		public MakeProposalResponse()
+		{
 		}
 	}
 }
@@ -2131,6 +2291,10 @@ namespace Test.Models
 			this.Command = command;
 			this.NeuronIdOrSubaccount = neuronIdOrSubaccount;
 		}
+
+		public ManageNeuron()
+		{
+		}
 	}
 }
 
@@ -2150,6 +2314,10 @@ namespace Test.Models
 		public ManageNeuronResponse(OptionalValue<Command1> command)
 		{
 			this.Command = command;
+		}
+
+		public ManageNeuronResponse()
+		{
 		}
 	}
 }
@@ -2171,6 +2339,10 @@ namespace Test.Models
 		{
 			this.SourceNeuronId = sourceNeuronId;
 		}
+
+		public Merge()
+		{
+		}
 	}
 }
 
@@ -2189,6 +2361,10 @@ namespace Test.Models
 		public MergeMaturity(UInt32 percentageToMerge)
 		{
 			this.PercentageToMerge = percentageToMerge;
+		}
+
+		public MergeMaturity()
+		{
 		}
 	}
 }
@@ -2213,6 +2389,10 @@ namespace Test.Models
 			this.MergedMaturityE8s = mergedMaturityE8s;
 			this.NewStakeE8s = newStakeE8s;
 		}
+
+		public MergeMaturityResponse()
+		{
+		}
 	}
 }
 
@@ -2231,6 +2411,10 @@ namespace Test.Models
 		public Motion(String motionText)
 		{
 			this.MotionText = motionText;
+		}
+
+		public Motion()
+		{
 		}
 	}
 }
@@ -2278,6 +2462,10 @@ namespace Test.Models
 			this.NeuronSpawnDissolveDelaySeconds = neuronSpawnDissolveDelaySeconds;
 			this.MinimumIcpXdrRate = minimumIcpXdrRate;
 			this.MaximumNodeProviderRewardsE8s = maximumNodeProviderRewardsE8s;
+		}
+
+		public NetworkEconomics()
+		{
 		}
 	}
 }
@@ -2366,6 +2554,10 @@ namespace Test.Models
 			this.KnownNeuronData = knownNeuronData;
 		}
 
+		public Neuron()
+		{
+		}
+
 		public class NeuronR13V0
 		{
 			[CandidName("0")]
@@ -2378,6 +2570,10 @@ namespace Test.Models
 			{
 				this.F0 = f0;
 				this.F1 = f1;
+			}
+
+			public NeuronR13V0()
+			{
 			}
 		}
 	}
@@ -2398,6 +2594,10 @@ namespace Test.Models
 		public NeuronId(UInt64 id)
 		{
 			this.Id = id;
+		}
+
+		public NeuronId()
+		{
 		}
 	}
 }
@@ -2494,6 +2694,10 @@ namespace Test.Models
 			this.Command = command;
 			this.Timestamp = timestamp;
 		}
+
+		public NeuronInFlightCommand()
+		{
+		}
 	}
 }
 
@@ -2552,6 +2756,10 @@ namespace Test.Models
 			this.VotingPower = votingPower;
 			this.AgeSeconds = ageSeconds;
 		}
+
+		public NeuronInfo()
+		{
+		}
 	}
 }
 
@@ -2597,6 +2805,10 @@ namespace Test.Models
 			this.TransferTimestamp = transferTimestamp;
 			this.BlockHeight = blockHeight;
 		}
+
+		public NeuronStakeTransfer()
+		{
+		}
 	}
 }
 
@@ -2620,6 +2832,10 @@ namespace Test.Models
 		{
 			this.Id = id;
 			this.RewardAccount = rewardAccount;
+		}
+
+		public NodeProvider()
+		{
 		}
 	}
 }
@@ -2814,6 +3030,10 @@ namespace Test.Models
 			this.Action = action;
 			this.Summary = summary;
 		}
+
+		public Proposal()
+		{
+		}
 	}
 }
 
@@ -2885,6 +3105,10 @@ namespace Test.Models
 			this.ExecutedTimestampSeconds = executedTimestampSeconds;
 		}
 
+		public ProposalData()
+		{
+		}
+
 		public class ProposalDataR2V0
 		{
 			[CandidName("0")]
@@ -2897,6 +3121,10 @@ namespace Test.Models
 			{
 				this.F0 = f0;
 				this.F1 = f1;
+			}
+
+			public ProposalDataR2V0()
+			{
 			}
 		}
 	}
@@ -2982,6 +3210,10 @@ namespace Test.Models
 			this.ExecutedTimestampSeconds = executedTimestampSeconds;
 		}
 
+		public ProposalInfo()
+		{
+		}
+
 		public class ProposalInfoR4V0
 		{
 			[CandidName("0")]
@@ -2994,6 +3226,10 @@ namespace Test.Models
 			{
 				this.F0 = f0;
 				this.F1 = f1;
+			}
+
+			public ProposalInfoR4V0()
+			{
 			}
 		}
 	}
@@ -3021,6 +3257,10 @@ namespace Test.Models
 			this.Vote = vote;
 			this.Proposal = proposal;
 		}
+
+		public RegisterVote()
+		{
+		}
 	}
 }
 
@@ -3039,6 +3279,10 @@ namespace Test.Models
 		public RemoveHotKey(OptionalValue<Principal> hotKeyToRemove)
 		{
 			this.HotKeyToRemove = hotKeyToRemove;
+		}
+
+		public RemoveHotKey()
+		{
 		}
 	}
 }
@@ -3480,6 +3724,10 @@ namespace Test.Models
 			this.DistributedE8sEquivalent = distributedE8sEquivalent;
 			this.SettledProposals = settledProposals;
 		}
+
+		public RewardEvent()
+		{
+		}
 	}
 }
 
@@ -3578,6 +3826,10 @@ namespace Test.Models
 			this.RewardMode = rewardMode;
 			this.AmountE8s = amountE8s;
 		}
+
+		public RewardNodeProvider()
+		{
+		}
 	}
 }
 
@@ -3604,6 +3856,10 @@ namespace Test.Models
 			this.UseRegistryDerivedRewards = useRegistryDerivedRewards;
 			this.Rewards = rewards;
 		}
+
+		public RewardNodeProviders()
+		{
+		}
 	}
 }
 
@@ -3624,6 +3880,10 @@ namespace Test.Models
 		{
 			this.ToAccount = toAccount;
 		}
+
+		public RewardToAccount()
+		{
+		}
 	}
 }
 
@@ -3642,6 +3902,10 @@ namespace Test.Models
 		public RewardToNeuron(UInt64 dissolveDelaySeconds)
 		{
 			this.DissolveDelaySeconds = dissolveDelaySeconds;
+		}
+
+		public RewardToNeuron()
+		{
 		}
 	}
 }
@@ -3665,6 +3929,10 @@ namespace Test.Models
 			this.DefaultFollowees = defaultFollowees;
 		}
 
+		public SetDefaultFollowees()
+		{
+		}
+
 		public class SetDefaultFolloweesR0V0
 		{
 			[CandidName("0")]
@@ -3677,6 +3945,10 @@ namespace Test.Models
 			{
 				this.F0 = f0;
 				this.F1 = f1;
+			}
+
+			public SetDefaultFolloweesR0V0()
+			{
 			}
 		}
 	}
@@ -3697,6 +3969,10 @@ namespace Test.Models
 		public SetDissolveTimestamp(UInt64 dissolveTimestampSeconds)
 		{
 			this.DissolveTimestampSeconds = dissolveTimestampSeconds;
+		}
+
+		public SetDissolveTimestamp()
+		{
 		}
 	}
 }
@@ -3726,6 +4002,10 @@ namespace Test.Models
 			this.NewController = newController;
 			this.Nonce = nonce;
 		}
+
+		public Spawn()
+		{
+		}
 	}
 }
 
@@ -3746,6 +4026,10 @@ namespace Test.Models
 		{
 			this.CreatedNeuronId = createdNeuronId;
 		}
+
+		public SpawnResponse()
+		{
+		}
 	}
 }
 
@@ -3764,6 +4048,10 @@ namespace Test.Models
 		public Split(UInt64 amountE8s)
 		{
 			this.AmountE8s = amountE8s;
+		}
+
+		public Split()
+		{
 		}
 	}
 }
@@ -3796,6 +4084,10 @@ namespace Test.Models
 			this.Total = total;
 			this.TimestampSeconds = timestampSeconds;
 		}
+
+		public Tally()
+		{
+		}
 	}
 }
 
@@ -3816,6 +4108,10 @@ namespace Test.Models
 		{
 			this.RewardAccount = rewardAccount;
 		}
+
+		public UpdateNodeProvider()
+		{
+		}
 	}
 }
 
@@ -3834,6 +4130,10 @@ namespace Test.Models
 		public WaitForQuietState(UInt64 currentDeadlineTimestampSeconds)
 		{
 			this.CurrentDeadlineTimestampSeconds = currentDeadlineTimestampSeconds;
+		}
+
+		public WaitForQuietState()
+		{
 		}
 	}
 }
