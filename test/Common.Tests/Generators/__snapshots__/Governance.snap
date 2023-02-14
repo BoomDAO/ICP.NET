@@ -185,7 +185,7 @@ namespace Test.Models
 {
 	public class AccountIdentifier
 	{
-		[CandidNameAttribute("hash")]
+		[CandidName("hash")]
 		public List<Byte> Hash { get; set; }
 
 		public AccountIdentifier(List<Byte> hash)
@@ -203,14 +203,14 @@ using System;
 
 namespace Test.Models
 {
-	[VariantAttribute(typeof(ActionTag))]
+	[Variant(typeof(ActionTag))]
 	public class Action
 	{
-		[VariantTagPropertyAttribute()]
+		[VariantTagProperty()]
 		public ActionTag Tag { get; set; }
 
-		[VariantValuePropertyAttribute()]
-		private System.Object? Value { get; set; }
+		[VariantValueProperty()]
+		public System.Object? Value { get; set; }
 
 		public Action(ActionTag tag, Object? value)
 		{
@@ -343,35 +343,35 @@ namespace Test.Models
 
 	public enum ActionTag
 	{
-		[CandidNameAttribute("RegisterKnownNeuron")]
-		[VariantOptionTypeAttribute(typeof(KnownNeuron))]
+		[CandidName("RegisterKnownNeuron")]
+		[VariantOptionType(typeof(KnownNeuron))]
 		RegisterKnownNeuron,
-		[CandidNameAttribute("ManageNeuron")]
-		[VariantOptionTypeAttribute(typeof(ManageNeuron))]
+		[CandidName("ManageNeuron")]
+		[VariantOptionType(typeof(ManageNeuron))]
 		ManageNeuron,
-		[CandidNameAttribute("ExecuteNnsFunction")]
-		[VariantOptionTypeAttribute(typeof(ExecuteNnsFunction))]
+		[CandidName("ExecuteNnsFunction")]
+		[VariantOptionType(typeof(ExecuteNnsFunction))]
 		ExecuteNnsFunction,
-		[CandidNameAttribute("RewardNodeProvider")]
-		[VariantOptionTypeAttribute(typeof(RewardNodeProvider))]
+		[CandidName("RewardNodeProvider")]
+		[VariantOptionType(typeof(RewardNodeProvider))]
 		RewardNodeProvider,
-		[CandidNameAttribute("SetDefaultFollowees")]
-		[VariantOptionTypeAttribute(typeof(SetDefaultFollowees))]
+		[CandidName("SetDefaultFollowees")]
+		[VariantOptionType(typeof(SetDefaultFollowees))]
 		SetDefaultFollowees,
-		[CandidNameAttribute("RewardNodeProviders")]
-		[VariantOptionTypeAttribute(typeof(RewardNodeProviders))]
+		[CandidName("RewardNodeProviders")]
+		[VariantOptionType(typeof(RewardNodeProviders))]
 		RewardNodeProviders,
-		[CandidNameAttribute("ManageNetworkEconomics")]
-		[VariantOptionTypeAttribute(typeof(NetworkEconomics))]
+		[CandidName("ManageNetworkEconomics")]
+		[VariantOptionType(typeof(NetworkEconomics))]
 		ManageNetworkEconomics,
-		[CandidNameAttribute("ApproveGenesisKyc")]
-		[VariantOptionTypeAttribute(typeof(ApproveGenesisKyc))]
+		[CandidName("ApproveGenesisKyc")]
+		[VariantOptionType(typeof(ApproveGenesisKyc))]
 		ApproveGenesisKyc,
-		[CandidNameAttribute("AddOrRemoveNodeProvider")]
-		[VariantOptionTypeAttribute(typeof(AddOrRemoveNodeProvider))]
+		[CandidName("AddOrRemoveNodeProvider")]
+		[VariantOptionType(typeof(AddOrRemoveNodeProvider))]
 		AddOrRemoveNodeProvider,
-		[CandidNameAttribute("Motion")]
-		[VariantOptionTypeAttribute(typeof(Motion))]
+		[CandidName("Motion")]
+		[VariantOptionType(typeof(Motion))]
 		Motion
 	}
 }
@@ -385,7 +385,7 @@ namespace Test.Models
 {
 	public class AddHotKey
 	{
-		[CandidNameAttribute("new_hot_key")]
+		[CandidName("new_hot_key")]
 		public OptionalValue<Principal> NewHotKey { get; set; }
 
 		public AddHotKey(OptionalValue<Principal> newHotKey)
@@ -405,7 +405,7 @@ namespace Test.Models
 {
 	public class AddOrRemoveNodeProvider
 	{
-		[CandidNameAttribute("change")]
+		[CandidName("change")]
 		public OptionalValue<Change> Change { get; set; }
 
 		public AddOrRemoveNodeProvider(OptionalValue<Change> change)
@@ -424,7 +424,7 @@ namespace Test.Models
 {
 	public class Amount
 	{
-		[CandidNameAttribute("e8s")]
+		[CandidName("e8s")]
 		public UInt64 E8s { get; set; }
 
 		public Amount(UInt64 e8s)
@@ -444,7 +444,7 @@ namespace Test.Models
 {
 	public class ApproveGenesisKyc
 	{
-		[CandidNameAttribute("principals")]
+		[CandidName("principals")]
 		public List<Principal> Principals { get; set; }
 
 		public ApproveGenesisKyc(List<Principal> principals)
@@ -463,10 +463,10 @@ namespace Test.Models
 {
 	public class Ballot
 	{
-		[CandidNameAttribute("vote")]
+		[CandidName("vote")]
 		public Int32 Vote { get; set; }
 
-		[CandidNameAttribute("voting_power")]
+		[CandidName("voting_power")]
 		public UInt64 VotingPower { get; set; }
 
 		public Ballot(Int32 vote, UInt64 votingPower)
@@ -488,10 +488,10 @@ namespace Test.Models
 {
 	public class BallotInfo
 	{
-		[CandidNameAttribute("vote")]
+		[CandidName("vote")]
 		public Int32 Vote { get; set; }
 
-		[CandidNameAttribute("proposal_id")]
+		[CandidName("proposal_id")]
 		public OptionalValue<NeuronId> ProposalId { get; set; }
 
 		public BallotInfo(Int32 vote, OptionalValue<NeuronId> proposalId)
@@ -510,14 +510,14 @@ using System;
 
 namespace Test.Models
 {
-	[VariantAttribute(typeof(ByTag))]
+	[Variant(typeof(ByTag))]
 	public class By
 	{
-		[VariantTagPropertyAttribute()]
+		[VariantTagProperty()]
 		public ByTag Tag { get; set; }
 
-		[VariantValuePropertyAttribute()]
-		private System.Object? Value { get; set; }
+		[VariantValueProperty()]
+		public System.Object? Value { get; set; }
 
 		public By(ByTag tag, Object? value)
 		{
@@ -580,14 +580,14 @@ namespace Test.Models
 
 	public enum ByTag
 	{
-		[CandidNameAttribute("NeuronIdOrSubaccount")]
-		[VariantOptionTypeAttribute(typeof(By.ByO0))]
+		[CandidName("NeuronIdOrSubaccount")]
+		[VariantOptionType(typeof(By.ByO0))]
 		NeuronIdOrSubaccount,
-		[CandidNameAttribute("MemoAndController")]
-		[VariantOptionTypeAttribute(typeof(ClaimOrRefreshNeuronFromAccount))]
+		[CandidName("MemoAndController")]
+		[VariantOptionType(typeof(ClaimOrRefreshNeuronFromAccount))]
 		MemoAndController,
-		[CandidNameAttribute("Memo")]
-		[VariantOptionTypeAttribute(typeof(UInt64))]
+		[CandidName("Memo")]
+		[VariantOptionType(typeof(UInt64))]
 		Memo
 	}
 }
@@ -600,14 +600,14 @@ using System;
 
 namespace Test.Models
 {
-	[VariantAttribute(typeof(ChangeTag))]
+	[Variant(typeof(ChangeTag))]
 	public class Change
 	{
-		[VariantTagPropertyAttribute()]
+		[VariantTagProperty()]
 		public ChangeTag Tag { get; set; }
 
-		[VariantValuePropertyAttribute()]
-		private System.Object? Value { get; set; }
+		[VariantValueProperty()]
+		public System.Object? Value { get; set; }
 
 		public Change(ChangeTag tag, Object? value)
 		{
@@ -652,11 +652,11 @@ namespace Test.Models
 
 	public enum ChangeTag
 	{
-		[CandidNameAttribute("ToRemove")]
-		[VariantOptionTypeAttribute(typeof(NodeProvider))]
+		[CandidName("ToRemove")]
+		[VariantOptionType(typeof(NodeProvider))]
 		ToRemove,
-		[CandidNameAttribute("ToAdd")]
-		[VariantOptionTypeAttribute(typeof(NodeProvider))]
+		[CandidName("ToAdd")]
+		[VariantOptionType(typeof(NodeProvider))]
 		ToAdd
 	}
 }
@@ -671,7 +671,7 @@ namespace Test.Models
 {
 	public class ClaimOrRefresh
 	{
-		[CandidNameAttribute("by")]
+		[CandidName("by")]
 		public OptionalValue<By> By { get; set; }
 
 		public ClaimOrRefresh(OptionalValue<By> by)
@@ -691,10 +691,10 @@ namespace Test.Models
 {
 	public class ClaimOrRefreshNeuronFromAccount
 	{
-		[CandidNameAttribute("controller")]
+		[CandidName("controller")]
 		public OptionalValue<Principal> Controller { get; set; }
 
-		[CandidNameAttribute("memo")]
+		[CandidName("memo")]
 		public UInt64 Memo { get; set; }
 
 		public ClaimOrRefreshNeuronFromAccount(OptionalValue<Principal> controller, UInt64 memo)
@@ -715,7 +715,7 @@ namespace Test.Models
 {
 	public class ClaimOrRefreshNeuronFromAccountResponse
 	{
-		[CandidNameAttribute("result")]
+		[CandidName("result")]
 		public OptionalValue<Result1> Result { get; set; }
 
 		public ClaimOrRefreshNeuronFromAccountResponse(OptionalValue<Result1> result)
@@ -735,7 +735,7 @@ namespace Test.Models
 {
 	public class ClaimOrRefreshResponse
 	{
-		[CandidNameAttribute("refreshed_neuron_id")]
+		[CandidName("refreshed_neuron_id")]
 		public OptionalValue<NeuronId> RefreshedNeuronId { get; set; }
 
 		public ClaimOrRefreshResponse(OptionalValue<NeuronId> refreshedNeuronId)
@@ -753,14 +753,14 @@ using System;
 
 namespace Test.Models
 {
-	[VariantAttribute(typeof(CommandTag))]
+	[Variant(typeof(CommandTag))]
 	public class Command
 	{
-		[VariantTagPropertyAttribute()]
+		[VariantTagProperty()]
 		public CommandTag Tag { get; set; }
 
-		[VariantValuePropertyAttribute()]
-		private System.Object? Value { get; set; }
+		[VariantValueProperty()]
+		public System.Object? Value { get; set; }
 
 		public Command(CommandTag tag, Object? value)
 		{
@@ -904,38 +904,38 @@ namespace Test.Models
 
 	public enum CommandTag
 	{
-		[CandidNameAttribute("Spawn")]
-		[VariantOptionTypeAttribute(typeof(Spawn))]
+		[CandidName("Spawn")]
+		[VariantOptionType(typeof(Spawn))]
 		Spawn,
-		[CandidNameAttribute("Split")]
-		[VariantOptionTypeAttribute(typeof(Split))]
+		[CandidName("Split")]
+		[VariantOptionType(typeof(Split))]
 		Split,
-		[CandidNameAttribute("Follow")]
-		[VariantOptionTypeAttribute(typeof(Follow))]
+		[CandidName("Follow")]
+		[VariantOptionType(typeof(Follow))]
 		Follow,
-		[CandidNameAttribute("ClaimOrRefresh")]
-		[VariantOptionTypeAttribute(typeof(ClaimOrRefresh))]
+		[CandidName("ClaimOrRefresh")]
+		[VariantOptionType(typeof(ClaimOrRefresh))]
 		ClaimOrRefresh,
-		[CandidNameAttribute("Configure")]
-		[VariantOptionTypeAttribute(typeof(Configure))]
+		[CandidName("Configure")]
+		[VariantOptionType(typeof(Configure))]
 		Configure,
-		[CandidNameAttribute("RegisterVote")]
-		[VariantOptionTypeAttribute(typeof(RegisterVote))]
+		[CandidName("RegisterVote")]
+		[VariantOptionType(typeof(RegisterVote))]
 		RegisterVote,
-		[CandidNameAttribute("Merge")]
-		[VariantOptionTypeAttribute(typeof(Merge))]
+		[CandidName("Merge")]
+		[VariantOptionType(typeof(Merge))]
 		Merge,
-		[CandidNameAttribute("DisburseToNeuron")]
-		[VariantOptionTypeAttribute(typeof(DisburseToNeuron))]
+		[CandidName("DisburseToNeuron")]
+		[VariantOptionType(typeof(DisburseToNeuron))]
 		DisburseToNeuron,
-		[CandidNameAttribute("MakeProposal")]
-		[VariantOptionTypeAttribute(typeof(Proposal))]
+		[CandidName("MakeProposal")]
+		[VariantOptionType(typeof(Proposal))]
 		MakeProposal,
-		[CandidNameAttribute("MergeMaturity")]
-		[VariantOptionTypeAttribute(typeof(MergeMaturity))]
+		[CandidName("MergeMaturity")]
+		[VariantOptionType(typeof(MergeMaturity))]
 		MergeMaturity,
-		[CandidNameAttribute("Disburse")]
-		[VariantOptionTypeAttribute(typeof(Disburse))]
+		[CandidName("Disburse")]
+		[VariantOptionType(typeof(Disburse))]
 		Disburse
 	}
 }
@@ -948,14 +948,14 @@ using System;
 
 namespace Test.Models
 {
-	[VariantAttribute(typeof(Command1Tag))]
+	[Variant(typeof(Command1Tag))]
 	public class Command1
 	{
-		[VariantTagPropertyAttribute()]
+		[VariantTagProperty()]
 		public Command1Tag Tag { get; set; }
 
-		[VariantValuePropertyAttribute()]
-		private System.Object? Value { get; set; }
+		[VariantValueProperty()]
+		public System.Object? Value { get; set; }
 
 		public Command1(Command1Tag tag, Object? value)
 		{
@@ -1138,41 +1138,41 @@ namespace Test.Models
 
 	public enum Command1Tag
 	{
-		[CandidNameAttribute("Error")]
-		[VariantOptionTypeAttribute(typeof(GovernanceError))]
+		[CandidName("Error")]
+		[VariantOptionType(typeof(GovernanceError))]
 		Error,
-		[CandidNameAttribute("Spawn")]
-		[VariantOptionTypeAttribute(typeof(SpawnResponse))]
+		[CandidName("Spawn")]
+		[VariantOptionType(typeof(SpawnResponse))]
 		Spawn,
-		[CandidNameAttribute("Split")]
-		[VariantOptionTypeAttribute(typeof(SpawnResponse))]
+		[CandidName("Split")]
+		[VariantOptionType(typeof(SpawnResponse))]
 		Split,
-		[CandidNameAttribute("Follow")]
-		[VariantOptionTypeAttribute(typeof(Command1.Command1O3))]
+		[CandidName("Follow")]
+		[VariantOptionType(typeof(Command1.Command1O3))]
 		Follow,
-		[CandidNameAttribute("ClaimOrRefresh")]
-		[VariantOptionTypeAttribute(typeof(ClaimOrRefreshResponse))]
+		[CandidName("ClaimOrRefresh")]
+		[VariantOptionType(typeof(ClaimOrRefreshResponse))]
 		ClaimOrRefresh,
-		[CandidNameAttribute("Configure")]
-		[VariantOptionTypeAttribute(typeof(Command1.Command1O5))]
+		[CandidName("Configure")]
+		[VariantOptionType(typeof(Command1.Command1O5))]
 		Configure,
-		[CandidNameAttribute("RegisterVote")]
-		[VariantOptionTypeAttribute(typeof(Command1.Command1O6))]
+		[CandidName("RegisterVote")]
+		[VariantOptionType(typeof(Command1.Command1O6))]
 		RegisterVote,
-		[CandidNameAttribute("Merge")]
-		[VariantOptionTypeAttribute(typeof(Command1.Command1O7))]
+		[CandidName("Merge")]
+		[VariantOptionType(typeof(Command1.Command1O7))]
 		Merge,
-		[CandidNameAttribute("DisburseToNeuron")]
-		[VariantOptionTypeAttribute(typeof(SpawnResponse))]
+		[CandidName("DisburseToNeuron")]
+		[VariantOptionType(typeof(SpawnResponse))]
 		DisburseToNeuron,
-		[CandidNameAttribute("MakeProposal")]
-		[VariantOptionTypeAttribute(typeof(MakeProposalResponse))]
+		[CandidName("MakeProposal")]
+		[VariantOptionType(typeof(MakeProposalResponse))]
 		MakeProposal,
-		[CandidNameAttribute("MergeMaturity")]
-		[VariantOptionTypeAttribute(typeof(MergeMaturityResponse))]
+		[CandidName("MergeMaturity")]
+		[VariantOptionType(typeof(MergeMaturityResponse))]
 		MergeMaturity,
-		[CandidNameAttribute("Disburse")]
-		[VariantOptionTypeAttribute(typeof(DisburseResponse))]
+		[CandidName("Disburse")]
+		[VariantOptionType(typeof(DisburseResponse))]
 		Disburse
 	}
 }
@@ -1185,14 +1185,14 @@ using System;
 
 namespace Test.Models
 {
-	[VariantAttribute(typeof(Command2Tag))]
+	[Variant(typeof(Command2Tag))]
 	public class Command2
 	{
-		[VariantTagPropertyAttribute()]
+		[VariantTagProperty()]
 		public Command2Tag Tag { get; set; }
 
-		[VariantValuePropertyAttribute()]
-		private System.Object? Value { get; set; }
+		[VariantValueProperty()]
+		public System.Object? Value { get; set; }
 
 		public Command2(Command2Tag tag, Object? value)
 		{
@@ -1303,29 +1303,29 @@ namespace Test.Models
 
 	public enum Command2Tag
 	{
-		[CandidNameAttribute("Spawn")]
-		[VariantOptionTypeAttribute(typeof(Spawn))]
+		[CandidName("Spawn")]
+		[VariantOptionType(typeof(Spawn))]
 		Spawn,
-		[CandidNameAttribute("Split")]
-		[VariantOptionTypeAttribute(typeof(Split))]
+		[CandidName("Split")]
+		[VariantOptionType(typeof(Split))]
 		Split,
-		[CandidNameAttribute("Configure")]
-		[VariantOptionTypeAttribute(typeof(Configure))]
+		[CandidName("Configure")]
+		[VariantOptionType(typeof(Configure))]
 		Configure,
-		[CandidNameAttribute("Merge")]
-		[VariantOptionTypeAttribute(typeof(Merge))]
+		[CandidName("Merge")]
+		[VariantOptionType(typeof(Merge))]
 		Merge,
-		[CandidNameAttribute("DisburseToNeuron")]
-		[VariantOptionTypeAttribute(typeof(DisburseToNeuron))]
+		[CandidName("DisburseToNeuron")]
+		[VariantOptionType(typeof(DisburseToNeuron))]
 		DisburseToNeuron,
-		[CandidNameAttribute("ClaimOrRefreshNeuron")]
-		[VariantOptionTypeAttribute(typeof(ClaimOrRefresh))]
+		[CandidName("ClaimOrRefreshNeuron")]
+		[VariantOptionType(typeof(ClaimOrRefresh))]
 		ClaimOrRefreshNeuron,
-		[CandidNameAttribute("MergeMaturity")]
-		[VariantOptionTypeAttribute(typeof(MergeMaturity))]
+		[CandidName("MergeMaturity")]
+		[VariantOptionType(typeof(MergeMaturity))]
 		MergeMaturity,
-		[CandidNameAttribute("Disburse")]
-		[VariantOptionTypeAttribute(typeof(Disburse))]
+		[CandidName("Disburse")]
+		[VariantOptionType(typeof(Disburse))]
 		Disburse
 	}
 }
@@ -1340,7 +1340,7 @@ namespace Test.Models
 {
 	public class Configure
 	{
-		[CandidNameAttribute("operation")]
+		[CandidName("operation")]
 		public OptionalValue<Operation> Operation { get; set; }
 
 		public Configure(OptionalValue<Operation> operation)
@@ -1360,10 +1360,10 @@ namespace Test.Models
 {
 	public class Disburse
 	{
-		[CandidNameAttribute("to_account")]
+		[CandidName("to_account")]
 		public OptionalValue<AccountIdentifier> ToAccount { get; set; }
 
-		[CandidNameAttribute("amount")]
+		[CandidName("amount")]
 		public OptionalValue<Amount> Amount { get; set; }
 
 		public Disburse(OptionalValue<AccountIdentifier> toAccount, OptionalValue<Amount> amount)
@@ -1383,7 +1383,7 @@ namespace Test.Models
 {
 	public class DisburseResponse
 	{
-		[CandidNameAttribute("transfer_block_height")]
+		[CandidName("transfer_block_height")]
 		public UInt64 TransferBlockHeight { get; set; }
 
 		public DisburseResponse(UInt64 transferBlockHeight)
@@ -1403,19 +1403,19 @@ namespace Test.Models
 {
 	public class DisburseToNeuron
 	{
-		[CandidNameAttribute("dissolve_delay_seconds")]
+		[CandidName("dissolve_delay_seconds")]
 		public UInt64 DissolveDelaySeconds { get; set; }
 
-		[CandidNameAttribute("kyc_verified")]
+		[CandidName("kyc_verified")]
 		public Boolean KycVerified { get; set; }
 
-		[CandidNameAttribute("amount_e8s")]
+		[CandidName("amount_e8s")]
 		public UInt64 AmountE8s { get; set; }
 
-		[CandidNameAttribute("new_controller")]
+		[CandidName("new_controller")]
 		public OptionalValue<Principal> NewController { get; set; }
 
-		[CandidNameAttribute("nonce")]
+		[CandidName("nonce")]
 		public UInt64 Nonce { get; set; }
 
 		public DisburseToNeuron(UInt64 dissolveDelaySeconds, Boolean kycVerified, UInt64 amountE8s, OptionalValue<Principal> newController, UInt64 nonce)
@@ -1437,14 +1437,14 @@ using System;
 
 namespace Test.Models
 {
-	[VariantAttribute(typeof(DissolveStateTag))]
+	[Variant(typeof(DissolveStateTag))]
 	public class DissolveState
 	{
-		[VariantTagPropertyAttribute()]
+		[VariantTagProperty()]
 		public DissolveStateTag Tag { get; set; }
 
-		[VariantValuePropertyAttribute()]
-		private System.Object? Value { get; set; }
+		[VariantValueProperty()]
+		public System.Object? Value { get; set; }
 
 		public DissolveState(DissolveStateTag tag, Object? value)
 		{
@@ -1489,11 +1489,11 @@ namespace Test.Models
 
 	public enum DissolveStateTag
 	{
-		[CandidNameAttribute("DissolveDelaySeconds")]
-		[VariantOptionTypeAttribute(typeof(UInt64))]
+		[CandidName("DissolveDelaySeconds")]
+		[VariantOptionType(typeof(UInt64))]
 		DissolveDelaySeconds,
-		[CandidNameAttribute("WhenDissolvedTimestampSeconds")]
-		[VariantOptionTypeAttribute(typeof(UInt64))]
+		[CandidName("WhenDissolvedTimestampSeconds")]
+		[VariantOptionType(typeof(UInt64))]
 		WhenDissolvedTimestampSeconds
 	}
 }
@@ -1508,10 +1508,10 @@ namespace Test.Models
 {
 	public class ExecuteNnsFunction
 	{
-		[CandidNameAttribute("nns_function")]
+		[CandidName("nns_function")]
 		public Int32 NnsFunction { get; set; }
 
-		[CandidNameAttribute("payload")]
+		[CandidName("payload")]
 		public List<Byte> Payload { get; set; }
 
 		public ExecuteNnsFunction(Int32 nnsFunction, List<Byte> payload)
@@ -1533,10 +1533,10 @@ namespace Test.Models
 {
 	public class Follow
 	{
-		[CandidNameAttribute("topic")]
+		[CandidName("topic")]
 		public Int32 Topic { get; set; }
 
-		[CandidNameAttribute("followees")]
+		[CandidName("followees")]
 		public List<NeuronId> Followees { get; set; }
 
 		public Follow(Int32 topic, List<NeuronId> followees)
@@ -1557,7 +1557,7 @@ namespace Test.Models
 {
 	public class Followees
 	{
-		[CandidNameAttribute("followees")]
+		[CandidName("followees")]
 		public List<NeuronId> Followees_ { get; set; }
 
 		public Followees(List<NeuronId> followees)
@@ -1579,40 +1579,40 @@ namespace Test.Models
 {
 	public class Governance
 	{
-		[CandidNameAttribute("default_followees")]
+		[CandidName("default_followees")]
 		public List<Governance.GovernanceR0V0> DefaultFollowees { get; set; }
 
-		[CandidNameAttribute("wait_for_quiet_threshold_seconds")]
+		[CandidName("wait_for_quiet_threshold_seconds")]
 		public UInt64 WaitForQuietThresholdSeconds { get; set; }
 
-		[CandidNameAttribute("metrics")]
+		[CandidName("metrics")]
 		public OptionalValue<GovernanceCachedMetrics> Metrics { get; set; }
 
-		[CandidNameAttribute("node_providers")]
+		[CandidName("node_providers")]
 		public List<NodeProvider> NodeProviders { get; set; }
 
-		[CandidNameAttribute("economics")]
+		[CandidName("economics")]
 		public OptionalValue<NetworkEconomics> Economics { get; set; }
 
-		[CandidNameAttribute("latest_reward_event")]
+		[CandidName("latest_reward_event")]
 		public OptionalValue<RewardEvent> LatestRewardEvent { get; set; }
 
-		[CandidNameAttribute("to_claim_transfers")]
+		[CandidName("to_claim_transfers")]
 		public List<NeuronStakeTransfer> ToClaimTransfers { get; set; }
 
-		[CandidNameAttribute("short_voting_period_seconds")]
+		[CandidName("short_voting_period_seconds")]
 		public UInt64 ShortVotingPeriodSeconds { get; set; }
 
-		[CandidNameAttribute("proposals")]
+		[CandidName("proposals")]
 		public List<Governance.GovernanceR8V0> Proposals { get; set; }
 
-		[CandidNameAttribute("in_flight_commands")]
+		[CandidName("in_flight_commands")]
 		public List<Governance.GovernanceR9V0> InFlightCommands { get; set; }
 
-		[CandidNameAttribute("neurons")]
+		[CandidName("neurons")]
 		public List<Governance.GovernanceR10V0> Neurons { get; set; }
 
-		[CandidNameAttribute("genesis_timestamp_seconds")]
+		[CandidName("genesis_timestamp_seconds")]
 		public UInt64 GenesisTimestampSeconds { get; set; }
 
 		public Governance(List<Governance.GovernanceR0V0> defaultFollowees, UInt64 waitForQuietThresholdSeconds, OptionalValue<GovernanceCachedMetrics> metrics, List<NodeProvider> nodeProviders, OptionalValue<NetworkEconomics> economics, OptionalValue<RewardEvent> latestRewardEvent, List<NeuronStakeTransfer> toClaimTransfers, UInt64 shortVotingPeriodSeconds, List<Governance.GovernanceR8V0> proposals, List<Governance.GovernanceR9V0> inFlightCommands, List<Governance.GovernanceR10V0> neurons, UInt64 genesisTimestampSeconds)
@@ -1633,10 +1633,10 @@ namespace Test.Models
 
 		public class GovernanceR0V0
 		{
-			[CandidNameAttribute("0")]
+			[CandidName("0")]
 			public Int32 F0 { get; set; }
 
-			[CandidNameAttribute("1")]
+			[CandidName("1")]
 			public Followees F1 { get; set; }
 
 			public GovernanceR0V0(Int32 f0, Followees f1)
@@ -1648,10 +1648,10 @@ namespace Test.Models
 
 		public class GovernanceR8V0
 		{
-			[CandidNameAttribute("0")]
+			[CandidName("0")]
 			public UInt64 F0 { get; set; }
 
-			[CandidNameAttribute("1")]
+			[CandidName("1")]
 			public ProposalData F1 { get; set; }
 
 			public GovernanceR8V0(UInt64 f0, ProposalData f1)
@@ -1663,10 +1663,10 @@ namespace Test.Models
 
 		public class GovernanceR9V0
 		{
-			[CandidNameAttribute("0")]
+			[CandidName("0")]
 			public UInt64 F0 { get; set; }
 
-			[CandidNameAttribute("1")]
+			[CandidName("1")]
 			public NeuronInFlightCommand F1 { get; set; }
 
 			public GovernanceR9V0(UInt64 f0, NeuronInFlightCommand f1)
@@ -1678,10 +1678,10 @@ namespace Test.Models
 
 		public class GovernanceR10V0
 		{
-			[CandidNameAttribute("0")]
+			[CandidName("0")]
 			public UInt64 F0 { get; set; }
 
-			[CandidNameAttribute("1")]
+			[CandidName("1")]
 			public Neuron F1 { get; set; }
 
 			public GovernanceR10V0(UInt64 f0, Neuron f1)
@@ -1704,52 +1704,52 @@ namespace Test.Models
 {
 	public class GovernanceCachedMetrics
 	{
-		[CandidNameAttribute("not_dissolving_neurons_e8s_buckets")]
+		[CandidName("not_dissolving_neurons_e8s_buckets")]
 		public List<GovernanceCachedMetrics.GovernanceCachedMetricsR0V0> NotDissolvingNeuronsE8sBuckets { get; set; }
 
-		[CandidNameAttribute("garbage_collectable_neurons_count")]
+		[CandidName("garbage_collectable_neurons_count")]
 		public UInt64 GarbageCollectableNeuronsCount { get; set; }
 
-		[CandidNameAttribute("neurons_with_invalid_stake_count")]
+		[CandidName("neurons_with_invalid_stake_count")]
 		public UInt64 NeuronsWithInvalidStakeCount { get; set; }
 
-		[CandidNameAttribute("not_dissolving_neurons_count_buckets")]
+		[CandidName("not_dissolving_neurons_count_buckets")]
 		public List<GovernanceCachedMetrics.GovernanceCachedMetricsR3V0> NotDissolvingNeuronsCountBuckets { get; set; }
 
-		[CandidNameAttribute("total_supply_icp")]
+		[CandidName("total_supply_icp")]
 		public UInt64 TotalSupplyIcp { get; set; }
 
-		[CandidNameAttribute("neurons_with_less_than_6_months_dissolve_delay_count")]
+		[CandidName("neurons_with_less_than_6_months_dissolve_delay_count")]
 		public UInt64 NeuronsWithLessThan6MonthsDissolveDelayCount { get; set; }
 
-		[CandidNameAttribute("dissolved_neurons_count")]
+		[CandidName("dissolved_neurons_count")]
 		public UInt64 DissolvedNeuronsCount { get; set; }
 
-		[CandidNameAttribute("total_staked_e8s")]
+		[CandidName("total_staked_e8s")]
 		public UInt64 TotalStakedE8s { get; set; }
 
-		[CandidNameAttribute("not_dissolving_neurons_count")]
+		[CandidName("not_dissolving_neurons_count")]
 		public UInt64 NotDissolvingNeuronsCount { get; set; }
 
-		[CandidNameAttribute("dissolved_neurons_e8s")]
+		[CandidName("dissolved_neurons_e8s")]
 		public UInt64 DissolvedNeuronsE8s { get; set; }
 
-		[CandidNameAttribute("neurons_with_less_than_6_months_dissolve_delay_e8s")]
+		[CandidName("neurons_with_less_than_6_months_dissolve_delay_e8s")]
 		public UInt64 NeuronsWithLessThan6MonthsDissolveDelayE8s { get; set; }
 
-		[CandidNameAttribute("dissolving_neurons_count_buckets")]
+		[CandidName("dissolving_neurons_count_buckets")]
 		public List<GovernanceCachedMetrics.GovernanceCachedMetricsR11V0> DissolvingNeuronsCountBuckets { get; set; }
 
-		[CandidNameAttribute("dissolving_neurons_count")]
+		[CandidName("dissolving_neurons_count")]
 		public UInt64 DissolvingNeuronsCount { get; set; }
 
-		[CandidNameAttribute("dissolving_neurons_e8s_buckets")]
+		[CandidName("dissolving_neurons_e8s_buckets")]
 		public List<GovernanceCachedMetrics.GovernanceCachedMetricsR13V0> DissolvingNeuronsE8sBuckets { get; set; }
 
-		[CandidNameAttribute("community_fund_total_staked_e8s")]
+		[CandidName("community_fund_total_staked_e8s")]
 		public UInt64 CommunityFundTotalStakedE8s { get; set; }
 
-		[CandidNameAttribute("timestamp_seconds")]
+		[CandidName("timestamp_seconds")]
 		public UInt64 TimestampSeconds { get; set; }
 
 		public GovernanceCachedMetrics(List<GovernanceCachedMetrics.GovernanceCachedMetricsR0V0> notDissolvingNeuronsE8sBuckets, UInt64 garbageCollectableNeuronsCount, UInt64 neuronsWithInvalidStakeCount, List<GovernanceCachedMetrics.GovernanceCachedMetricsR3V0> notDissolvingNeuronsCountBuckets, UInt64 totalSupplyIcp, UInt64 neuronsWithLessThan6MonthsDissolveDelayCount, UInt64 dissolvedNeuronsCount, UInt64 totalStakedE8s, UInt64 notDissolvingNeuronsCount, UInt64 dissolvedNeuronsE8s, UInt64 neuronsWithLessThan6MonthsDissolveDelayE8s, List<GovernanceCachedMetrics.GovernanceCachedMetricsR11V0> dissolvingNeuronsCountBuckets, UInt64 dissolvingNeuronsCount, List<GovernanceCachedMetrics.GovernanceCachedMetricsR13V0> dissolvingNeuronsE8sBuckets, UInt64 communityFundTotalStakedE8s, UInt64 timestampSeconds)
@@ -1774,10 +1774,10 @@ namespace Test.Models
 
 		public class GovernanceCachedMetricsR0V0
 		{
-			[CandidNameAttribute("0")]
+			[CandidName("0")]
 			public UInt64 F0 { get; set; }
 
-			[CandidNameAttribute("1")]
+			[CandidName("1")]
 			public Double F1 { get; set; }
 
 			public GovernanceCachedMetricsR0V0(UInt64 f0, Double f1)
@@ -1789,10 +1789,10 @@ namespace Test.Models
 
 		public class GovernanceCachedMetricsR3V0
 		{
-			[CandidNameAttribute("0")]
+			[CandidName("0")]
 			public UInt64 F0 { get; set; }
 
-			[CandidNameAttribute("1")]
+			[CandidName("1")]
 			public UInt64 F1 { get; set; }
 
 			public GovernanceCachedMetricsR3V0(UInt64 f0, UInt64 f1)
@@ -1804,10 +1804,10 @@ namespace Test.Models
 
 		public class GovernanceCachedMetricsR11V0
 		{
-			[CandidNameAttribute("0")]
+			[CandidName("0")]
 			public UInt64 F0 { get; set; }
 
-			[CandidNameAttribute("1")]
+			[CandidName("1")]
 			public UInt64 F1 { get; set; }
 
 			public GovernanceCachedMetricsR11V0(UInt64 f0, UInt64 f1)
@@ -1819,10 +1819,10 @@ namespace Test.Models
 
 		public class GovernanceCachedMetricsR13V0
 		{
-			[CandidNameAttribute("0")]
+			[CandidName("0")]
 			public UInt64 F0 { get; set; }
 
-			[CandidNameAttribute("1")]
+			[CandidName("1")]
 			public Double F1 { get; set; }
 
 			public GovernanceCachedMetricsR13V0(UInt64 f0, Double f1)
@@ -1843,10 +1843,10 @@ namespace Test.Models
 {
 	public class GovernanceError
 	{
-		[CandidNameAttribute("error_message")]
+		[CandidName("error_message")]
 		public String ErrorMessage { get; set; }
 
-		[CandidNameAttribute("error_type")]
+		[CandidName("error_type")]
 		public Int32 ErrorType { get; set; }
 
 		public GovernanceError(String errorMessage, Int32 errorType)
@@ -1866,7 +1866,7 @@ namespace Test.Models
 {
 	public class IncreaseDissolveDelay
 	{
-		[CandidNameAttribute("additional_dissolve_delay_seconds")]
+		[CandidName("additional_dissolve_delay_seconds")]
 		public UInt32 AdditionalDissolveDelaySeconds { get; set; }
 
 		public IncreaseDissolveDelay(UInt32 additionalDissolveDelaySeconds)
@@ -1886,10 +1886,10 @@ namespace Test.Models
 {
 	public class KnownNeuron
 	{
-		[CandidNameAttribute("id")]
+		[CandidName("id")]
 		public OptionalValue<NeuronId> Id { get; set; }
 
-		[CandidNameAttribute("known_neuron_data")]
+		[CandidName("known_neuron_data")]
 		public OptionalValue<KnownNeuronData> KnownNeuronData { get; set; }
 
 		public KnownNeuron(OptionalValue<NeuronId> id, OptionalValue<KnownNeuronData> knownNeuronData)
@@ -1910,10 +1910,10 @@ namespace Test.Models
 {
 	public class KnownNeuronData
 	{
-		[CandidNameAttribute("name")]
+		[CandidName("name")]
 		public String Name { get; set; }
 
-		[CandidNameAttribute("description")]
+		[CandidName("description")]
 		public OptionalValue<String> Description { get; set; }
 
 		public KnownNeuronData(String name, OptionalValue<String> description)
@@ -1934,7 +1934,7 @@ namespace Test.Models
 {
 	public class ListKnownNeuronsResponse
 	{
-		[CandidNameAttribute("known_neurons")]
+		[CandidName("known_neurons")]
 		public List<KnownNeuron> KnownNeurons { get; set; }
 
 		public ListKnownNeuronsResponse(List<KnownNeuron> knownNeurons)
@@ -1954,10 +1954,10 @@ namespace Test.Models
 {
 	public class ListNeurons
 	{
-		[CandidNameAttribute("neuron_ids")]
+		[CandidName("neuron_ids")]
 		public List<UInt64> NeuronIds { get; set; }
 
-		[CandidNameAttribute("include_neurons_readable_by_caller")]
+		[CandidName("include_neurons_readable_by_caller")]
 		public Boolean IncludeNeuronsReadableByCaller { get; set; }
 
 		public ListNeurons(List<UInt64> neuronIds, Boolean includeNeuronsReadableByCaller)
@@ -1979,10 +1979,10 @@ namespace Test.Models
 {
 	public class ListNeuronsResponse
 	{
-		[CandidNameAttribute("neuron_infos")]
+		[CandidName("neuron_infos")]
 		public List<ListNeuronsResponse.ListNeuronsResponseR0V0> NeuronInfos { get; set; }
 
-		[CandidNameAttribute("full_neurons")]
+		[CandidName("full_neurons")]
 		public List<Neuron> FullNeurons { get; set; }
 
 		public ListNeuronsResponse(List<ListNeuronsResponse.ListNeuronsResponseR0V0> neuronInfos, List<Neuron> fullNeurons)
@@ -1993,10 +1993,10 @@ namespace Test.Models
 
 		public class ListNeuronsResponseR0V0
 		{
-			[CandidNameAttribute("0")]
+			[CandidName("0")]
 			public UInt64 F0 { get; set; }
 
-			[CandidNameAttribute("1")]
+			[CandidName("1")]
 			public NeuronInfo F1 { get; set; }
 
 			public ListNeuronsResponseR0V0(UInt64 f0, NeuronInfo f1)
@@ -2018,7 +2018,7 @@ namespace Test.Models
 {
 	public class ListNodeProvidersResponse
 	{
-		[CandidNameAttribute("node_providers")]
+		[CandidName("node_providers")]
 		public List<NodeProvider> NodeProviders { get; set; }
 
 		public ListNodeProvidersResponse(List<NodeProvider> nodeProviders)
@@ -2040,19 +2040,19 @@ namespace Test.Models
 {
 	public class ListProposalInfo
 	{
-		[CandidNameAttribute("include_reward_status")]
+		[CandidName("include_reward_status")]
 		public List<Int32> IncludeRewardStatus { get; set; }
 
-		[CandidNameAttribute("before_proposal")]
+		[CandidName("before_proposal")]
 		public OptionalValue<NeuronId> BeforeProposal { get; set; }
 
-		[CandidNameAttribute("limit")]
+		[CandidName("limit")]
 		public UInt32 Limit { get; set; }
 
-		[CandidNameAttribute("exclude_topic")]
+		[CandidName("exclude_topic")]
 		public List<Int32> ExcludeTopic { get; set; }
 
-		[CandidNameAttribute("include_status")]
+		[CandidName("include_status")]
 		public List<Int32> IncludeStatus { get; set; }
 
 		public ListProposalInfo(List<Int32> includeRewardStatus, OptionalValue<NeuronId> beforeProposal, UInt32 limit, List<Int32> excludeTopic, List<Int32> includeStatus)
@@ -2076,7 +2076,7 @@ namespace Test.Models
 {
 	public class ListProposalInfoResponse
 	{
-		[CandidNameAttribute("proposal_info")]
+		[CandidName("proposal_info")]
 		public List<ProposalInfo> ProposalInfo { get; set; }
 
 		public ListProposalInfoResponse(List<ProposalInfo> proposalInfo)
@@ -2096,7 +2096,7 @@ namespace Test.Models
 {
 	public class MakeProposalResponse
 	{
-		[CandidNameAttribute("proposal_id")]
+		[CandidName("proposal_id")]
 		public OptionalValue<NeuronId> ProposalId { get; set; }
 
 		public MakeProposalResponse(OptionalValue<NeuronId> proposalId)
@@ -2116,13 +2116,13 @@ namespace Test.Models
 {
 	public class ManageNeuron
 	{
-		[CandidNameAttribute("id")]
+		[CandidName("id")]
 		public OptionalValue<NeuronId> Id { get; set; }
 
-		[CandidNameAttribute("command")]
+		[CandidName("command")]
 		public OptionalValue<Command> Command { get; set; }
 
-		[CandidNameAttribute("neuron_id_or_subaccount")]
+		[CandidName("neuron_id_or_subaccount")]
 		public OptionalValue<NeuronIdOrSubaccount> NeuronIdOrSubaccount { get; set; }
 
 		public ManageNeuron(OptionalValue<NeuronId> id, OptionalValue<Command> command, OptionalValue<NeuronIdOrSubaccount> neuronIdOrSubaccount)
@@ -2144,7 +2144,7 @@ namespace Test.Models
 {
 	public class ManageNeuronResponse
 	{
-		[CandidNameAttribute("command")]
+		[CandidName("command")]
 		public OptionalValue<Command1> Command { get; set; }
 
 		public ManageNeuronResponse(OptionalValue<Command1> command)
@@ -2164,7 +2164,7 @@ namespace Test.Models
 {
 	public class Merge
 	{
-		[CandidNameAttribute("source_neuron_id")]
+		[CandidName("source_neuron_id")]
 		public OptionalValue<NeuronId> SourceNeuronId { get; set; }
 
 		public Merge(OptionalValue<NeuronId> sourceNeuronId)
@@ -2183,7 +2183,7 @@ namespace Test.Models
 {
 	public class MergeMaturity
 	{
-		[CandidNameAttribute("percentage_to_merge")]
+		[CandidName("percentage_to_merge")]
 		public UInt32 PercentageToMerge { get; set; }
 
 		public MergeMaturity(UInt32 percentageToMerge)
@@ -2202,10 +2202,10 @@ namespace Test.Models
 {
 	public class MergeMaturityResponse
 	{
-		[CandidNameAttribute("merged_maturity_e8s")]
+		[CandidName("merged_maturity_e8s")]
 		public UInt64 MergedMaturityE8s { get; set; }
 
-		[CandidNameAttribute("new_stake_e8s")]
+		[CandidName("new_stake_e8s")]
 		public UInt64 NewStakeE8s { get; set; }
 
 		public MergeMaturityResponse(UInt64 mergedMaturityE8s, UInt64 newStakeE8s)
@@ -2225,7 +2225,7 @@ namespace Test.Models
 {
 	public class Motion
 	{
-		[CandidNameAttribute("motion_text")]
+		[CandidName("motion_text")]
 		public String MotionText { get; set; }
 
 		public Motion(String motionText)
@@ -2244,28 +2244,28 @@ namespace Test.Models
 {
 	public class NetworkEconomics
 	{
-		[CandidNameAttribute("neuron_minimum_stake_e8s")]
+		[CandidName("neuron_minimum_stake_e8s")]
 		public UInt64 NeuronMinimumStakeE8s { get; set; }
 
-		[CandidNameAttribute("max_proposals_to_keep_per_topic")]
+		[CandidName("max_proposals_to_keep_per_topic")]
 		public UInt32 MaxProposalsToKeepPerTopic { get; set; }
 
-		[CandidNameAttribute("neuron_management_fee_per_proposal_e8s")]
+		[CandidName("neuron_management_fee_per_proposal_e8s")]
 		public UInt64 NeuronManagementFeePerProposalE8s { get; set; }
 
-		[CandidNameAttribute("reject_cost_e8s")]
+		[CandidName("reject_cost_e8s")]
 		public UInt64 RejectCostE8s { get; set; }
 
-		[CandidNameAttribute("transaction_fee_e8s")]
+		[CandidName("transaction_fee_e8s")]
 		public UInt64 TransactionFeeE8s { get; set; }
 
-		[CandidNameAttribute("neuron_spawn_dissolve_delay_seconds")]
+		[CandidName("neuron_spawn_dissolve_delay_seconds")]
 		public UInt64 NeuronSpawnDissolveDelaySeconds { get; set; }
 
-		[CandidNameAttribute("minimum_icp_xdr_rate")]
+		[CandidName("minimum_icp_xdr_rate")]
 		public UInt64 MinimumIcpXdrRate { get; set; }
 
-		[CandidNameAttribute("maximum_node_provider_rewards_e8s")]
+		[CandidName("maximum_node_provider_rewards_e8s")]
 		public UInt64 MaximumNodeProviderRewardsE8s { get; set; }
 
 		public NetworkEconomics(UInt64 neuronMinimumStakeE8s, UInt32 maxProposalsToKeepPerTopic, UInt64 neuronManagementFeePerProposalE8s, UInt64 rejectCostE8s, UInt64 transactionFeeE8s, UInt64 neuronSpawnDissolveDelaySeconds, UInt64 minimumIcpXdrRate, UInt64 maximumNodeProviderRewardsE8s)
@@ -2294,55 +2294,55 @@ namespace Test.Models
 {
 	public class Neuron
 	{
-		[CandidNameAttribute("id")]
+		[CandidName("id")]
 		public OptionalValue<NeuronId> Id { get; set; }
 
-		[CandidNameAttribute("controller")]
+		[CandidName("controller")]
 		public OptionalValue<Principal> Controller { get; set; }
 
-		[CandidNameAttribute("recent_ballots")]
+		[CandidName("recent_ballots")]
 		public List<BallotInfo> RecentBallots { get; set; }
 
-		[CandidNameAttribute("kyc_verified")]
+		[CandidName("kyc_verified")]
 		public Boolean KycVerified { get; set; }
 
-		[CandidNameAttribute("not_for_profit")]
+		[CandidName("not_for_profit")]
 		public Boolean NotForProfit { get; set; }
 
-		[CandidNameAttribute("maturity_e8s_equivalent")]
+		[CandidName("maturity_e8s_equivalent")]
 		public UInt64 MaturityE8sEquivalent { get; set; }
 
-		[CandidNameAttribute("cached_neuron_stake_e8s")]
+		[CandidName("cached_neuron_stake_e8s")]
 		public UInt64 CachedNeuronStakeE8s { get; set; }
 
-		[CandidNameAttribute("created_timestamp_seconds")]
+		[CandidName("created_timestamp_seconds")]
 		public UInt64 CreatedTimestampSeconds { get; set; }
 
-		[CandidNameAttribute("aging_since_timestamp_seconds")]
+		[CandidName("aging_since_timestamp_seconds")]
 		public UInt64 AgingSinceTimestampSeconds { get; set; }
 
-		[CandidNameAttribute("hot_keys")]
+		[CandidName("hot_keys")]
 		public List<Principal> HotKeys { get; set; }
 
-		[CandidNameAttribute("account")]
+		[CandidName("account")]
 		public List<Byte> Account { get; set; }
 
-		[CandidNameAttribute("joined_community_fund_timestamp_seconds")]
+		[CandidName("joined_community_fund_timestamp_seconds")]
 		public OptionalValue<UInt64> JoinedCommunityFundTimestampSeconds { get; set; }
 
-		[CandidNameAttribute("dissolve_state")]
+		[CandidName("dissolve_state")]
 		public OptionalValue<DissolveState> DissolveState { get; set; }
 
-		[CandidNameAttribute("followees")]
+		[CandidName("followees")]
 		public List<Neuron.NeuronR13V0> Followees { get; set; }
 
-		[CandidNameAttribute("neuron_fees_e8s")]
+		[CandidName("neuron_fees_e8s")]
 		public UInt64 NeuronFeesE8s { get; set; }
 
-		[CandidNameAttribute("transfer")]
+		[CandidName("transfer")]
 		public OptionalValue<NeuronStakeTransfer> Transfer { get; set; }
 
-		[CandidNameAttribute("known_neuron_data")]
+		[CandidName("known_neuron_data")]
 		public OptionalValue<KnownNeuronData> KnownNeuronData { get; set; }
 
 		public Neuron(OptionalValue<NeuronId> id, OptionalValue<Principal> controller, List<BallotInfo> recentBallots, Boolean kycVerified, Boolean notForProfit, UInt64 maturityE8sEquivalent, UInt64 cachedNeuronStakeE8s, UInt64 createdTimestampSeconds, UInt64 agingSinceTimestampSeconds, List<Principal> hotKeys, List<Byte> account, OptionalValue<UInt64> joinedCommunityFundTimestampSeconds, OptionalValue<DissolveState> dissolveState, List<Neuron.NeuronR13V0> followees, UInt64 neuronFeesE8s, OptionalValue<NeuronStakeTransfer> transfer, OptionalValue<KnownNeuronData> knownNeuronData)
@@ -2368,10 +2368,10 @@ namespace Test.Models
 
 		public class NeuronR13V0
 		{
-			[CandidNameAttribute("0")]
+			[CandidName("0")]
 			public Int32 F0 { get; set; }
 
-			[CandidNameAttribute("1")]
+			[CandidName("1")]
 			public Followees F1 { get; set; }
 
 			public NeuronR13V0(Int32 f0, Followees f1)
@@ -2392,7 +2392,7 @@ namespace Test.Models
 {
 	public class NeuronId
 	{
-		[CandidNameAttribute("id")]
+		[CandidName("id")]
 		public UInt64 Id { get; set; }
 
 		public NeuronId(UInt64 id)
@@ -2411,14 +2411,14 @@ using System.Collections.Generic;
 
 namespace Test.Models
 {
-	[VariantAttribute(typeof(NeuronIdOrSubaccountTag))]
+	[Variant(typeof(NeuronIdOrSubaccountTag))]
 	public class NeuronIdOrSubaccount
 	{
-		[VariantTagPropertyAttribute()]
+		[VariantTagProperty()]
 		public NeuronIdOrSubaccountTag Tag { get; set; }
 
-		[VariantValuePropertyAttribute()]
-		private System.Object? Value { get; set; }
+		[VariantValueProperty()]
+		public System.Object? Value { get; set; }
 
 		public NeuronIdOrSubaccount(NeuronIdOrSubaccountTag tag, Object? value)
 		{
@@ -2463,11 +2463,11 @@ namespace Test.Models
 
 	public enum NeuronIdOrSubaccountTag
 	{
-		[CandidNameAttribute("Subaccount")]
-		[VariantOptionTypeAttribute(typeof(List<Byte>))]
+		[CandidName("Subaccount")]
+		[VariantOptionType(typeof(List<Byte>))]
 		Subaccount,
-		[CandidNameAttribute("NeuronId")]
-		[VariantOptionTypeAttribute(typeof(NeuronId))]
+		[CandidName("NeuronId")]
+		[VariantOptionType(typeof(NeuronId))]
 		NeuronId
 	}
 }
@@ -2483,10 +2483,10 @@ namespace Test.Models
 {
 	public class NeuronInFlightCommand
 	{
-		[CandidNameAttribute("command")]
+		[CandidName("command")]
 		public OptionalValue<Command2> Command { get; set; }
 
-		[CandidNameAttribute("timestamp")]
+		[CandidName("timestamp")]
 		public UInt64 Timestamp { get; set; }
 
 		public NeuronInFlightCommand(OptionalValue<Command2> command, UInt64 timestamp)
@@ -2509,34 +2509,34 @@ namespace Test.Models
 {
 	public class NeuronInfo
 	{
-		[CandidNameAttribute("dissolve_delay_seconds")]
+		[CandidName("dissolve_delay_seconds")]
 		public UInt64 DissolveDelaySeconds { get; set; }
 
-		[CandidNameAttribute("recent_ballots")]
+		[CandidName("recent_ballots")]
 		public List<BallotInfo> RecentBallots { get; set; }
 
-		[CandidNameAttribute("created_timestamp_seconds")]
+		[CandidName("created_timestamp_seconds")]
 		public UInt64 CreatedTimestampSeconds { get; set; }
 
-		[CandidNameAttribute("state")]
+		[CandidName("state")]
 		public Int32 State { get; set; }
 
-		[CandidNameAttribute("stake_e8s")]
+		[CandidName("stake_e8s")]
 		public UInt64 StakeE8s { get; set; }
 
-		[CandidNameAttribute("joined_community_fund_timestamp_seconds")]
+		[CandidName("joined_community_fund_timestamp_seconds")]
 		public OptionalValue<UInt64> JoinedCommunityFundTimestampSeconds { get; set; }
 
-		[CandidNameAttribute("retrieved_at_timestamp_seconds")]
+		[CandidName("retrieved_at_timestamp_seconds")]
 		public UInt64 RetrievedAtTimestampSeconds { get; set; }
 
-		[CandidNameAttribute("known_neuron_data")]
+		[CandidName("known_neuron_data")]
 		public OptionalValue<KnownNeuronData> KnownNeuronData { get; set; }
 
-		[CandidNameAttribute("voting_power")]
+		[CandidName("voting_power")]
 		public UInt64 VotingPower { get; set; }
 
-		[CandidNameAttribute("age_seconds")]
+		[CandidName("age_seconds")]
 		public UInt64 AgeSeconds { get; set; }
 
 		public NeuronInfo(UInt64 dissolveDelaySeconds, List<BallotInfo> recentBallots, UInt64 createdTimestampSeconds, Int32 state, UInt64 stakeE8s, OptionalValue<UInt64> joinedCommunityFundTimestampSeconds, UInt64 retrievedAtTimestampSeconds, OptionalValue<KnownNeuronData> knownNeuronData, UInt64 votingPower, UInt64 ageSeconds)
@@ -2566,25 +2566,25 @@ namespace Test.Models
 {
 	public class NeuronStakeTransfer
 	{
-		[CandidNameAttribute("to_subaccount")]
+		[CandidName("to_subaccount")]
 		public List<Byte> ToSubaccount { get; set; }
 
-		[CandidNameAttribute("neuron_stake_e8s")]
+		[CandidName("neuron_stake_e8s")]
 		public UInt64 NeuronStakeE8s { get; set; }
 
-		[CandidNameAttribute("from")]
+		[CandidName("from")]
 		public OptionalValue<Principal> From { get; set; }
 
-		[CandidNameAttribute("memo")]
+		[CandidName("memo")]
 		public UInt64 Memo { get; set; }
 
-		[CandidNameAttribute("from_subaccount")]
+		[CandidName("from_subaccount")]
 		public List<Byte> FromSubaccount { get; set; }
 
-		[CandidNameAttribute("transfer_timestamp")]
+		[CandidName("transfer_timestamp")]
 		public UInt64 TransferTimestamp { get; set; }
 
-		[CandidNameAttribute("block_height")]
+		[CandidName("block_height")]
 		public UInt64 BlockHeight { get; set; }
 
 		public NeuronStakeTransfer(List<Byte> toSubaccount, UInt64 neuronStakeE8s, OptionalValue<Principal> from, UInt64 memo, List<Byte> fromSubaccount, UInt64 transferTimestamp, UInt64 blockHeight)
@@ -2610,10 +2610,10 @@ namespace Test.Models
 {
 	public class NodeProvider
 	{
-		[CandidNameAttribute("id")]
+		[CandidName("id")]
 		public OptionalValue<Principal> Id { get; set; }
 
-		[CandidNameAttribute("reward_account")]
+		[CandidName("reward_account")]
 		public OptionalValue<AccountIdentifier> RewardAccount { get; set; }
 
 		public NodeProvider(OptionalValue<Principal> id, OptionalValue<AccountIdentifier> rewardAccount)
@@ -2632,14 +2632,14 @@ using System;
 
 namespace Test.Models
 {
-	[VariantAttribute(typeof(OperationTag))]
+	[Variant(typeof(OperationTag))]
 	public class Operation
 	{
-		[VariantTagPropertyAttribute()]
+		[VariantTagProperty()]
 		public OperationTag Tag { get; set; }
 
-		[VariantValuePropertyAttribute()]
-		private System.Object? Value { get; set; }
+		[VariantValueProperty()]
+		public System.Object? Value { get; set; }
 
 		public Operation(OperationTag tag, Object? value)
 		{
@@ -2760,26 +2760,26 @@ namespace Test.Models
 
 	public enum OperationTag
 	{
-		[CandidNameAttribute("RemoveHotKey")]
-		[VariantOptionTypeAttribute(typeof(RemoveHotKey))]
+		[CandidName("RemoveHotKey")]
+		[VariantOptionType(typeof(RemoveHotKey))]
 		RemoveHotKey,
-		[CandidNameAttribute("AddHotKey")]
-		[VariantOptionTypeAttribute(typeof(AddHotKey))]
+		[CandidName("AddHotKey")]
+		[VariantOptionType(typeof(AddHotKey))]
 		AddHotKey,
-		[CandidNameAttribute("StopDissolving")]
-		[VariantOptionTypeAttribute(typeof(Operation.OperationO2))]
+		[CandidName("StopDissolving")]
+		[VariantOptionType(typeof(Operation.OperationO2))]
 		StopDissolving,
-		[CandidNameAttribute("StartDissolving")]
-		[VariantOptionTypeAttribute(typeof(Operation.OperationO3))]
+		[CandidName("StartDissolving")]
+		[VariantOptionType(typeof(Operation.OperationO3))]
 		StartDissolving,
-		[CandidNameAttribute("IncreaseDissolveDelay")]
-		[VariantOptionTypeAttribute(typeof(IncreaseDissolveDelay))]
+		[CandidName("IncreaseDissolveDelay")]
+		[VariantOptionType(typeof(IncreaseDissolveDelay))]
 		IncreaseDissolveDelay,
-		[CandidNameAttribute("JoinCommunityFund")]
-		[VariantOptionTypeAttribute(typeof(Operation.OperationO5))]
+		[CandidName("JoinCommunityFund")]
+		[VariantOptionType(typeof(Operation.OperationO5))]
 		JoinCommunityFund,
-		[CandidNameAttribute("SetDissolveTimestamp")]
-		[VariantOptionTypeAttribute(typeof(SetDissolveTimestamp))]
+		[CandidName("SetDissolveTimestamp")]
+		[VariantOptionType(typeof(SetDissolveTimestamp))]
 		SetDissolveTimestamp
 	}
 }
@@ -2795,16 +2795,16 @@ namespace Test.Models
 {
 	public class Proposal
 	{
-		[CandidNameAttribute("url")]
+		[CandidName("url")]
 		public String Url { get; set; }
 
-		[CandidNameAttribute("title")]
+		[CandidName("title")]
 		public OptionalValue<String> Title { get; set; }
 
-		[CandidNameAttribute("action")]
+		[CandidName("action")]
 		public OptionalValue<Action> Action { get; set; }
 
-		[CandidNameAttribute("summary")]
+		[CandidName("summary")]
 		public String Summary { get; set; }
 
 		public Proposal(String url, OptionalValue<String> title, OptionalValue<Action> action, String summary)
@@ -2829,43 +2829,43 @@ namespace Test.Models
 {
 	public class ProposalData
 	{
-		[CandidNameAttribute("id")]
+		[CandidName("id")]
 		public OptionalValue<NeuronId> Id { get; set; }
 
-		[CandidNameAttribute("failure_reason")]
+		[CandidName("failure_reason")]
 		public OptionalValue<GovernanceError> FailureReason { get; set; }
 
-		[CandidNameAttribute("ballots")]
+		[CandidName("ballots")]
 		public List<ProposalData.ProposalDataR2V0> Ballots { get; set; }
 
-		[CandidNameAttribute("proposal_timestamp_seconds")]
+		[CandidName("proposal_timestamp_seconds")]
 		public UInt64 ProposalTimestampSeconds { get; set; }
 
-		[CandidNameAttribute("reward_event_round")]
+		[CandidName("reward_event_round")]
 		public UInt64 RewardEventRound { get; set; }
 
-		[CandidNameAttribute("failed_timestamp_seconds")]
+		[CandidName("failed_timestamp_seconds")]
 		public UInt64 FailedTimestampSeconds { get; set; }
 
-		[CandidNameAttribute("reject_cost_e8s")]
+		[CandidName("reject_cost_e8s")]
 		public UInt64 RejectCostE8s { get; set; }
 
-		[CandidNameAttribute("latest_tally")]
+		[CandidName("latest_tally")]
 		public OptionalValue<Tally> LatestTally { get; set; }
 
-		[CandidNameAttribute("decided_timestamp_seconds")]
+		[CandidName("decided_timestamp_seconds")]
 		public UInt64 DecidedTimestampSeconds { get; set; }
 
-		[CandidNameAttribute("proposal")]
+		[CandidName("proposal")]
 		public OptionalValue<Proposal> Proposal { get; set; }
 
-		[CandidNameAttribute("proposer")]
+		[CandidName("proposer")]
 		public OptionalValue<NeuronId> Proposer { get; set; }
 
-		[CandidNameAttribute("wait_for_quiet_state")]
+		[CandidName("wait_for_quiet_state")]
 		public OptionalValue<WaitForQuietState> WaitForQuietState { get; set; }
 
-		[CandidNameAttribute("executed_timestamp_seconds")]
+		[CandidName("executed_timestamp_seconds")]
 		public UInt64 ExecutedTimestampSeconds { get; set; }
 
 		public ProposalData(OptionalValue<NeuronId> id, OptionalValue<GovernanceError> failureReason, List<ProposalData.ProposalDataR2V0> ballots, UInt64 proposalTimestampSeconds, UInt64 rewardEventRound, UInt64 failedTimestampSeconds, UInt64 rejectCostE8s, OptionalValue<Tally> latestTally, UInt64 decidedTimestampSeconds, OptionalValue<Proposal> proposal, OptionalValue<NeuronId> proposer, OptionalValue<WaitForQuietState> waitForQuietState, UInt64 executedTimestampSeconds)
@@ -2887,10 +2887,10 @@ namespace Test.Models
 
 		public class ProposalDataR2V0
 		{
-			[CandidNameAttribute("0")]
+			[CandidName("0")]
 			public UInt64 F0 { get; set; }
 
-			[CandidNameAttribute("1")]
+			[CandidName("1")]
 			public Ballot F1 { get; set; }
 
 			public ProposalDataR2V0(UInt64 f0, Ballot f1)
@@ -2914,52 +2914,52 @@ namespace Test.Models
 {
 	public class ProposalInfo
 	{
-		[CandidNameAttribute("id")]
+		[CandidName("id")]
 		public OptionalValue<NeuronId> Id { get; set; }
 
-		[CandidNameAttribute("status")]
+		[CandidName("status")]
 		public Int32 Status { get; set; }
 
-		[CandidNameAttribute("topic")]
+		[CandidName("topic")]
 		public Int32 Topic { get; set; }
 
-		[CandidNameAttribute("failure_reason")]
+		[CandidName("failure_reason")]
 		public OptionalValue<GovernanceError> FailureReason { get; set; }
 
-		[CandidNameAttribute("ballots")]
+		[CandidName("ballots")]
 		public List<ProposalInfo.ProposalInfoR4V0> Ballots { get; set; }
 
-		[CandidNameAttribute("proposal_timestamp_seconds")]
+		[CandidName("proposal_timestamp_seconds")]
 		public UInt64 ProposalTimestampSeconds { get; set; }
 
-		[CandidNameAttribute("reward_event_round")]
+		[CandidName("reward_event_round")]
 		public UInt64 RewardEventRound { get; set; }
 
-		[CandidNameAttribute("deadline_timestamp_seconds")]
+		[CandidName("deadline_timestamp_seconds")]
 		public OptionalValue<UInt64> DeadlineTimestampSeconds { get; set; }
 
-		[CandidNameAttribute("failed_timestamp_seconds")]
+		[CandidName("failed_timestamp_seconds")]
 		public UInt64 FailedTimestampSeconds { get; set; }
 
-		[CandidNameAttribute("reject_cost_e8s")]
+		[CandidName("reject_cost_e8s")]
 		public UInt64 RejectCostE8s { get; set; }
 
-		[CandidNameAttribute("latest_tally")]
+		[CandidName("latest_tally")]
 		public OptionalValue<Tally> LatestTally { get; set; }
 
-		[CandidNameAttribute("reward_status")]
+		[CandidName("reward_status")]
 		public Int32 RewardStatus { get; set; }
 
-		[CandidNameAttribute("decided_timestamp_seconds")]
+		[CandidName("decided_timestamp_seconds")]
 		public UInt64 DecidedTimestampSeconds { get; set; }
 
-		[CandidNameAttribute("proposal")]
+		[CandidName("proposal")]
 		public OptionalValue<Proposal> Proposal { get; set; }
 
-		[CandidNameAttribute("proposer")]
+		[CandidName("proposer")]
 		public OptionalValue<NeuronId> Proposer { get; set; }
 
-		[CandidNameAttribute("executed_timestamp_seconds")]
+		[CandidName("executed_timestamp_seconds")]
 		public UInt64 ExecutedTimestampSeconds { get; set; }
 
 		public ProposalInfo(OptionalValue<NeuronId> id, Int32 status, Int32 topic, OptionalValue<GovernanceError> failureReason, List<ProposalInfo.ProposalInfoR4V0> ballots, UInt64 proposalTimestampSeconds, UInt64 rewardEventRound, OptionalValue<UInt64> deadlineTimestampSeconds, UInt64 failedTimestampSeconds, UInt64 rejectCostE8s, OptionalValue<Tally> latestTally, Int32 rewardStatus, UInt64 decidedTimestampSeconds, OptionalValue<Proposal> proposal, OptionalValue<NeuronId> proposer, UInt64 executedTimestampSeconds)
@@ -2984,10 +2984,10 @@ namespace Test.Models
 
 		public class ProposalInfoR4V0
 		{
-			[CandidNameAttribute("0")]
+			[CandidName("0")]
 			public UInt64 F0 { get; set; }
 
-			[CandidNameAttribute("1")]
+			[CandidName("1")]
 			public Ballot F1 { get; set; }
 
 			public ProposalInfoR4V0(UInt64 f0, Ballot f1)
@@ -3010,10 +3010,10 @@ namespace Test.Models
 {
 	public class RegisterVote
 	{
-		[CandidNameAttribute("vote")]
+		[CandidName("vote")]
 		public Int32 Vote { get; set; }
 
-		[CandidNameAttribute("proposal")]
+		[CandidName("proposal")]
 		public OptionalValue<NeuronId> Proposal { get; set; }
 
 		public RegisterVote(Int32 vote, OptionalValue<NeuronId> proposal)
@@ -3033,7 +3033,7 @@ namespace Test.Models
 {
 	public class RemoveHotKey
 	{
-		[CandidNameAttribute("hot_key_to_remove")]
+		[CandidName("hot_key_to_remove")]
 		public OptionalValue<Principal> HotKeyToRemove { get; set; }
 
 		public RemoveHotKey(OptionalValue<Principal> hotKeyToRemove)
@@ -3051,14 +3051,14 @@ using System;
 
 namespace Test.Models
 {
-	[VariantAttribute(typeof(ResultTag))]
+	[Variant(typeof(ResultTag))]
 	public class Result
 	{
-		[VariantTagPropertyAttribute()]
+		[VariantTagProperty()]
 		public ResultTag Tag { get; set; }
 
-		[VariantValuePropertyAttribute()]
-		private System.Object? Value { get; set; }
+		[VariantValueProperty()]
+		public System.Object? Value { get; set; }
 
 		public Result(ResultTag tag, Object? value)
 		{
@@ -3097,10 +3097,10 @@ namespace Test.Models
 
 	public enum ResultTag
 	{
-		[CandidNameAttribute("Ok")]
+		[CandidName("Ok")]
 		Ok,
-		[CandidNameAttribute("Err")]
-		[VariantOptionTypeAttribute(typeof(GovernanceError))]
+		[CandidName("Err")]
+		[VariantOptionType(typeof(GovernanceError))]
 		Err
 	}
 }
@@ -3113,14 +3113,14 @@ using System;
 
 namespace Test.Models
 {
-	[VariantAttribute(typeof(Result1Tag))]
+	[Variant(typeof(Result1Tag))]
 	public class Result1
 	{
-		[VariantTagPropertyAttribute()]
+		[VariantTagProperty()]
 		public Result1Tag Tag { get; set; }
 
-		[VariantValuePropertyAttribute()]
-		private System.Object? Value { get; set; }
+		[VariantValueProperty()]
+		public System.Object? Value { get; set; }
 
 		public Result1(Result1Tag tag, Object? value)
 		{
@@ -3165,11 +3165,11 @@ namespace Test.Models
 
 	public enum Result1Tag
 	{
-		[CandidNameAttribute("Error")]
-		[VariantOptionTypeAttribute(typeof(GovernanceError))]
+		[CandidName("Error")]
+		[VariantOptionType(typeof(GovernanceError))]
 		Error,
-		[CandidNameAttribute("NeuronId")]
-		[VariantOptionTypeAttribute(typeof(NeuronId))]
+		[CandidName("NeuronId")]
+		[VariantOptionType(typeof(NeuronId))]
 		NeuronId
 	}
 }
@@ -3182,14 +3182,14 @@ using System;
 
 namespace Test.Models
 {
-	[VariantAttribute(typeof(Result2Tag))]
+	[Variant(typeof(Result2Tag))]
 	public class Result2
 	{
-		[VariantTagPropertyAttribute()]
+		[VariantTagProperty()]
 		public Result2Tag Tag { get; set; }
 
-		[VariantValuePropertyAttribute()]
-		private System.Object? Value { get; set; }
+		[VariantValueProperty()]
+		public System.Object? Value { get; set; }
 
 		public Result2(Result2Tag tag, Object? value)
 		{
@@ -3234,11 +3234,11 @@ namespace Test.Models
 
 	public enum Result2Tag
 	{
-		[CandidNameAttribute("Ok")]
-		[VariantOptionTypeAttribute(typeof(Neuron))]
+		[CandidName("Ok")]
+		[VariantOptionType(typeof(Neuron))]
 		Ok,
-		[CandidNameAttribute("Err")]
-		[VariantOptionTypeAttribute(typeof(GovernanceError))]
+		[CandidName("Err")]
+		[VariantOptionType(typeof(GovernanceError))]
 		Err
 	}
 }
@@ -3251,14 +3251,14 @@ using System;
 
 namespace Test.Models
 {
-	[VariantAttribute(typeof(Result3Tag))]
+	[Variant(typeof(Result3Tag))]
 	public class Result3
 	{
-		[VariantTagPropertyAttribute()]
+		[VariantTagProperty()]
 		public Result3Tag Tag { get; set; }
 
-		[VariantValuePropertyAttribute()]
-		private System.Object? Value { get; set; }
+		[VariantValueProperty()]
+		public System.Object? Value { get; set; }
 
 		public Result3(Result3Tag tag, Object? value)
 		{
@@ -3303,11 +3303,11 @@ namespace Test.Models
 
 	public enum Result3Tag
 	{
-		[CandidNameAttribute("Ok")]
-		[VariantOptionTypeAttribute(typeof(RewardNodeProviders))]
+		[CandidName("Ok")]
+		[VariantOptionType(typeof(RewardNodeProviders))]
 		Ok,
-		[CandidNameAttribute("Err")]
-		[VariantOptionTypeAttribute(typeof(GovernanceError))]
+		[CandidName("Err")]
+		[VariantOptionType(typeof(GovernanceError))]
 		Err
 	}
 }
@@ -3320,14 +3320,14 @@ using System;
 
 namespace Test.Models
 {
-	[VariantAttribute(typeof(Result4Tag))]
+	[Variant(typeof(Result4Tag))]
 	public class Result4
 	{
-		[VariantTagPropertyAttribute()]
+		[VariantTagProperty()]
 		public Result4Tag Tag { get; set; }
 
-		[VariantValuePropertyAttribute()]
-		private System.Object? Value { get; set; }
+		[VariantValueProperty()]
+		public System.Object? Value { get; set; }
 
 		public Result4(Result4Tag tag, Object? value)
 		{
@@ -3372,11 +3372,11 @@ namespace Test.Models
 
 	public enum Result4Tag
 	{
-		[CandidNameAttribute("Ok")]
-		[VariantOptionTypeAttribute(typeof(NeuronInfo))]
+		[CandidName("Ok")]
+		[VariantOptionType(typeof(NeuronInfo))]
 		Ok,
-		[CandidNameAttribute("Err")]
-		[VariantOptionTypeAttribute(typeof(GovernanceError))]
+		[CandidName("Err")]
+		[VariantOptionType(typeof(GovernanceError))]
 		Err
 	}
 }
@@ -3389,14 +3389,14 @@ using System;
 
 namespace Test.Models
 {
-	[VariantAttribute(typeof(Result5Tag))]
+	[Variant(typeof(Result5Tag))]
 	public class Result5
 	{
-		[VariantTagPropertyAttribute()]
+		[VariantTagProperty()]
 		public Result5Tag Tag { get; set; }
 
-		[VariantValuePropertyAttribute()]
-		private System.Object? Value { get; set; }
+		[VariantValueProperty()]
+		public System.Object? Value { get; set; }
 
 		public Result5(Result5Tag tag, Object? value)
 		{
@@ -3441,11 +3441,11 @@ namespace Test.Models
 
 	public enum Result5Tag
 	{
-		[CandidNameAttribute("Ok")]
-		[VariantOptionTypeAttribute(typeof(NodeProvider))]
+		[CandidName("Ok")]
+		[VariantOptionType(typeof(NodeProvider))]
 		Ok,
-		[CandidNameAttribute("Err")]
-		[VariantOptionTypeAttribute(typeof(GovernanceError))]
+		[CandidName("Err")]
+		[VariantOptionType(typeof(GovernanceError))]
 		Err
 	}
 }
@@ -3461,16 +3461,16 @@ namespace Test.Models
 {
 	public class RewardEvent
 	{
-		[CandidNameAttribute("day_after_genesis")]
+		[CandidName("day_after_genesis")]
 		public UInt64 DayAfterGenesis { get; set; }
 
-		[CandidNameAttribute("actual_timestamp_seconds")]
+		[CandidName("actual_timestamp_seconds")]
 		public UInt64 ActualTimestampSeconds { get; set; }
 
-		[CandidNameAttribute("distributed_e8s_equivalent")]
+		[CandidName("distributed_e8s_equivalent")]
 		public UInt64 DistributedE8sEquivalent { get; set; }
 
-		[CandidNameAttribute("settled_proposals")]
+		[CandidName("settled_proposals")]
 		public List<NeuronId> SettledProposals { get; set; }
 
 		public RewardEvent(UInt64 dayAfterGenesis, UInt64 actualTimestampSeconds, UInt64 distributedE8sEquivalent, List<NeuronId> settledProposals)
@@ -3491,14 +3491,14 @@ using System;
 
 namespace Test.Models
 {
-	[VariantAttribute(typeof(RewardModeTag))]
+	[Variant(typeof(RewardModeTag))]
 	public class RewardMode
 	{
-		[VariantTagPropertyAttribute()]
+		[VariantTagProperty()]
 		public RewardModeTag Tag { get; set; }
 
-		[VariantValuePropertyAttribute()]
-		private System.Object? Value { get; set; }
+		[VariantValueProperty()]
+		public System.Object? Value { get; set; }
 
 		public RewardMode(RewardModeTag tag, Object? value)
 		{
@@ -3543,11 +3543,11 @@ namespace Test.Models
 
 	public enum RewardModeTag
 	{
-		[CandidNameAttribute("RewardToNeuron")]
-		[VariantOptionTypeAttribute(typeof(RewardToNeuron))]
+		[CandidName("RewardToNeuron")]
+		[VariantOptionType(typeof(RewardToNeuron))]
 		RewardToNeuron,
-		[CandidNameAttribute("RewardToAccount")]
-		[VariantOptionTypeAttribute(typeof(RewardToAccount))]
+		[CandidName("RewardToAccount")]
+		[VariantOptionType(typeof(RewardToAccount))]
 		RewardToAccount
 	}
 }
@@ -3563,13 +3563,13 @@ namespace Test.Models
 {
 	public class RewardNodeProvider
 	{
-		[CandidNameAttribute("node_provider")]
+		[CandidName("node_provider")]
 		public OptionalValue<NodeProvider> NodeProvider { get; set; }
 
-		[CandidNameAttribute("reward_mode")]
+		[CandidName("reward_mode")]
 		public OptionalValue<RewardMode> RewardMode { get; set; }
 
-		[CandidNameAttribute("amount_e8s")]
+		[CandidName("amount_e8s")]
 		public UInt64 AmountE8s { get; set; }
 
 		public RewardNodeProvider(OptionalValue<NodeProvider> nodeProvider, OptionalValue<RewardMode> rewardMode, UInt64 amountE8s)
@@ -3593,10 +3593,10 @@ namespace Test.Models
 {
 	public class RewardNodeProviders
 	{
-		[CandidNameAttribute("use_registry_derived_rewards")]
+		[CandidName("use_registry_derived_rewards")]
 		public OptionalValue<Boolean> UseRegistryDerivedRewards { get; set; }
 
-		[CandidNameAttribute("rewards")]
+		[CandidName("rewards")]
 		public List<RewardNodeProvider> Rewards { get; set; }
 
 		public RewardNodeProviders(OptionalValue<Boolean> useRegistryDerivedRewards, List<RewardNodeProvider> rewards)
@@ -3617,7 +3617,7 @@ namespace Test.Models
 {
 	public class RewardToAccount
 	{
-		[CandidNameAttribute("to_account")]
+		[CandidName("to_account")]
 		public OptionalValue<AccountIdentifier> ToAccount { get; set; }
 
 		public RewardToAccount(OptionalValue<AccountIdentifier> toAccount)
@@ -3636,7 +3636,7 @@ namespace Test.Models
 {
 	public class RewardToNeuron
 	{
-		[CandidNameAttribute("dissolve_delay_seconds")]
+		[CandidName("dissolve_delay_seconds")]
 		public UInt64 DissolveDelaySeconds { get; set; }
 
 		public RewardToNeuron(UInt64 dissolveDelaySeconds)
@@ -3657,7 +3657,7 @@ namespace Test.Models
 {
 	public class SetDefaultFollowees
 	{
-		[CandidNameAttribute("default_followees")]
+		[CandidName("default_followees")]
 		public List<SetDefaultFollowees.SetDefaultFolloweesR0V0> DefaultFollowees { get; set; }
 
 		public SetDefaultFollowees(List<SetDefaultFollowees.SetDefaultFolloweesR0V0> defaultFollowees)
@@ -3667,10 +3667,10 @@ namespace Test.Models
 
 		public class SetDefaultFolloweesR0V0
 		{
-			[CandidNameAttribute("0")]
+			[CandidName("0")]
 			public Int32 F0 { get; set; }
 
-			[CandidNameAttribute("1")]
+			[CandidName("1")]
 			public Followees F1 { get; set; }
 
 			public SetDefaultFolloweesR0V0(Int32 f0, Followees f1)
@@ -3691,7 +3691,7 @@ namespace Test.Models
 {
 	public class SetDissolveTimestamp
 	{
-		[CandidNameAttribute("dissolve_timestamp_seconds")]
+		[CandidName("dissolve_timestamp_seconds")]
 		public UInt64 DissolveTimestampSeconds { get; set; }
 
 		public SetDissolveTimestamp(UInt64 dissolveTimestampSeconds)
@@ -3711,13 +3711,13 @@ namespace Test.Models
 {
 	public class Spawn
 	{
-		[CandidNameAttribute("percentage_to_spawn")]
+		[CandidName("percentage_to_spawn")]
 		public OptionalValue<UInt32> PercentageToSpawn { get; set; }
 
-		[CandidNameAttribute("new_controller")]
+		[CandidName("new_controller")]
 		public OptionalValue<Principal> NewController { get; set; }
 
-		[CandidNameAttribute("nonce")]
+		[CandidName("nonce")]
 		public OptionalValue<UInt64> Nonce { get; set; }
 
 		public Spawn(OptionalValue<UInt32> percentageToSpawn, OptionalValue<Principal> newController, OptionalValue<UInt64> nonce)
@@ -3739,7 +3739,7 @@ namespace Test.Models
 {
 	public class SpawnResponse
 	{
-		[CandidNameAttribute("created_neuron_id")]
+		[CandidName("created_neuron_id")]
 		public OptionalValue<NeuronId> CreatedNeuronId { get; set; }
 
 		public SpawnResponse(OptionalValue<NeuronId> createdNeuronId)
@@ -3758,7 +3758,7 @@ namespace Test.Models
 {
 	public class Split
 	{
-		[CandidNameAttribute("amount_e8s")]
+		[CandidName("amount_e8s")]
 		public UInt64 AmountE8s { get; set; }
 
 		public Split(UInt64 amountE8s)
@@ -3777,16 +3777,16 @@ namespace Test.Models
 {
 	public class Tally
 	{
-		[CandidNameAttribute("no")]
+		[CandidName("no")]
 		public UInt64 No { get; set; }
 
-		[CandidNameAttribute("yes")]
+		[CandidName("yes")]
 		public UInt64 Yes { get; set; }
 
-		[CandidNameAttribute("total")]
+		[CandidName("total")]
 		public UInt64 Total { get; set; }
 
-		[CandidNameAttribute("timestamp_seconds")]
+		[CandidName("timestamp_seconds")]
 		public UInt64 TimestampSeconds { get; set; }
 
 		public Tally(UInt64 no, UInt64 yes, UInt64 total, UInt64 timestampSeconds)
@@ -3809,7 +3809,7 @@ namespace Test.Models
 {
 	public class UpdateNodeProvider
 	{
-		[CandidNameAttribute("reward_account")]
+		[CandidName("reward_account")]
 		public OptionalValue<AccountIdentifier> RewardAccount { get; set; }
 
 		public UpdateNodeProvider(OptionalValue<AccountIdentifier> rewardAccount)
@@ -3828,7 +3828,7 @@ namespace Test.Models
 {
 	public class WaitForQuietState
 	{
-		[CandidNameAttribute("current_deadline_timestamp_seconds")]
+		[CandidName("current_deadline_timestamp_seconds")]
 		public UInt64 CurrentDeadlineTimestampSeconds { get; set; }
 
 		public WaitForQuietState(UInt64 currentDeadlineTimestampSeconds)

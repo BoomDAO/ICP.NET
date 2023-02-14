@@ -198,13 +198,6 @@ namespace EdjCase.ICP.ClientGenerator
 				.Select(o => this.GenerateVariantOptionAsMethod(enumTypeName, o.Name, o.Type!, optionValueParamName))
 			);
 
-			// TODO
-			//if (resolvedType.Name != null && customType)
-			//{
-			//	// Prefix with parent name if subtype
-			//	optionTypeName = optionTypeName.WithParentType(variantTypeName);
-			//}
-
 			// TODO auto change the property values of all class types if it matches the name
 			ValueName tagName = ValueName.Default(variantTypeName.GetName() == "Tag" ? "TagValue" : "Tag");
 			ValueName valueName = ValueName.Default(variantTypeName.GetName() == "Value" ? "Value_" : "Value");
@@ -228,7 +221,7 @@ namespace EdjCase.ICP.ClientGenerator
 				new ClassProperty(
 					valueName,
 					TypeName.FromType<object>(isNullable: true),
-					access: AccessType.Private, // TODO public?
+					access: AccessType.Public,
 					hasSetter: true,
 					AttributeInfo.FromType<VariantValuePropertyAttribute>()
 				)
@@ -651,8 +644,9 @@ namespace EdjCase.ICP.ClientGenerator
 				})
 				.Select(a => SyntaxFactory.AttributeArgument(a))
 				?? Array.Empty<AttributeArgumentSyntax>();
-			// TODO // Remove `Attribute` suffix?
+
 			string typeName = attribute.Type.GetNamespacedName();
+			typeName = typeName[..^"Attribute".Length]; // Remove suffix
 			return SyntaxFactory.AttributeList(
 				SyntaxFactory.SingletonSeparatedList(
 					SyntaxFactory.Attribute(SyntaxFactory.IdentifierName(typeName))
