@@ -116,7 +116,7 @@ namespace EdjCase.ICP.ClientGenerator
 			string clientName = StringUtil.ToPascalCase(serviceName) + "ApiClient";
 			TypeName clientTypeName = new(clientName, baseNamespace, prefix: null);
 			ServiceSourceCodeType serviceSourceType = ResolveService(service.Service);
-			CompilationUnitSyntax clientSource = RoslynSourceGenerator.GenerateClientSourceCode(clientTypeName, baseNamespace, serviceSourceType, typeResolver, aliasTypes);
+			CompilationUnitSyntax clientSource = RoslynSourceGenerator.GenerateClientSourceCode(clientTypeName, modelNamespace, serviceSourceType, typeResolver, aliasTypes);
 
 			// TODO? global using only supported in C# 10+
 			return new ClientSyntax(clientName, clientSource, typeFiles);

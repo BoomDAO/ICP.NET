@@ -1,25 +1,111 @@
 using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid.Models.Values;
 using System;
+using System.Collections.Generic;
 
 namespace EdjCase.ICP.ClientGenerator
 {
 	internal class ValueName : IEquatable<ValueName>
 	{
-		public string PascalCaseValue { get; }
-		public string CamelCaseValue { get; }
+		internal static readonly HashSet<string> ReservedWords = new()
+		{
+			"abstract",
+			"bool",
+			"continue",
+			"decimal",
+			"default",
+			"event",
+			"explicit",
+			"extern",
+			"char",
+			"checked",
+			"class",
+			"const",
+			"break",
+			"as",
+			"base",
+			"delegate",
+			"is",
+			"lock",
+			"long",
+			"num",
+			"byte",
+			"case",
+			"catch",
+			"false",
+			"finally",
+			"fixed",
+			"float",
+			"for",
+			"as",
+			"foreach",
+			"goto",
+			"if",
+			"implicit",
+			"in",
+			"int",
+			"interface",
+			"internal",
+			"do",
+			"double",
+			"else",
+			"namespace",
+			"new",
+			"null",
+			"object",
+			"operator",
+			"out",
+			"override",
+			"params",
+			"private",
+			"protected",
+			"public",
+			"readonly",
+			"sealed",
+			"short",
+			"sizeof",
+			"ref",
+			"return",
+			"sbyte",
+			"stackalloc",
+			"static",
+			"string",
+			"struct",
+			"void",
+			"volatile",
+			"while",
+			"true",
+			"try",
+			"switch",
+			"this",
+			"throw",
+			"unchecked",
+			"unsafe",
+			"ushort",
+			"using",
+			"using static",
+			"virtual",
+			"typeof",
+			"uint",
+			"ulong",
+			"out"
+
+		};
+
+		public string PropertyName { get; }
+		public string VariableName { get; }
 		public string CandidName { get; }
 
-		private ValueName(string propertyName, string variableName, string candidName)
+		public ValueName(string propertyName, string variableName, string candidName)
 		{
-			this.PascalCaseValue = propertyName;
-			this.CamelCaseValue = variableName;
+			this.PropertyName = propertyName;
+			this.VariableName = variableName;
 			this.CandidName = candidName;
 		}
 
 		public override string ToString()
 		{
-			return this.CandidName + "/" + this.PascalCaseValue;
+			return this.CandidName + "/" + this.PropertyName;
 		}
 
 		public override bool Equals(object? obj)
@@ -73,21 +159,7 @@ namespace EdjCase.ICP.ClientGenerator
 		private static bool IsKeyword(string value)
 		{
 			// TODO better way to check for reserved names
-			switch (value)
-			{
-				case "short":
-				case "int":
-				case "long":
-				case "ushort":
-				case "uint":
-				case "ulong":
-				case "string":
-				case "new":
-				case "bool":
-					return true;
-				default:
-					return false;
-			}
+			return ReservedWords.Contains(value);
 		}
 	}
 

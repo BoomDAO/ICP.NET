@@ -1,205 +1,218 @@
 ﻿using EdjCase.ICP.Agent.Agents;
+using EdjCase.ICP.Candid.Models;
+using Test.Models;
+using System.Collections.Generic;
+using System;
+using EdjCase.ICP.Agent.Responses;
 
-namespace Test
+namespace Test.Models
 {
 	public class GovernanceApiClient
 	{
-		public EdjCase.ICP.Agent.Agents.IAgent Agent { get; }
+		public IAgent Agent { get; }
 
-		public EdjCase.ICP.Candid.Models.Principal CanisterId { get; }
+		public Principal CanisterId { get; }
 
-		public GovernanceApiClient(EdjCase.ICP.Agent.Agents.IAgent agent, EdjCase.ICP.Candid.Models.Principal canisterId)
+		public GovernanceApiClient(IAgent agent, Principal canisterId)
 		{
 			this.Agent = agent;
 			this.CanisterId = canisterId;
 		}
 
-		public async System.Threading.Tasks.Task<Test.Models.Result> ClaimGtcNeurons(EdjCase.ICP.Candid.Models.Principal arg0, System.Collections.Generic.List<Test.Models.NeuronId> arg1)
+		public async System.Threading.Tasks.Task<Result> ClaimGtcNeurons(Principal arg0, List<NeuronId> arg1)
 		{
-			EdjCase.ICP.Candid.Models.CandidArg arg = EdjCase.ICP.Candid.Models.CandidArg.FromCandid(EdjCase.ICP.Candid.Models.CandidTypedValue.FromObject(arg0), EdjCase.ICP.Candid.Models.CandidTypedValue.FromObject(arg1));
-			EdjCase.ICP.Candid.Models.CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "claim_gtc_neurons", arg);
-			return reply.ToObjects<Test.Models.Result>();
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0), CandidTypedValue.FromObject(arg1));
+			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "claim_gtc_neurons", arg);
+			return reply.ToObjects<Result>();
 		}
 
-		public async System.Threading.Tasks.Task<Test.Models.ClaimOrRefreshNeuronFromAccountResponse> ClaimOrRefreshNeuronFromAccount(Test.Models.ClaimOrRefreshNeuronFromAccount arg0)
+		public async System.Threading.Tasks.Task<ClaimOrRefreshNeuronFromAccountResponse> ClaimOrRefreshNeuronFromAccount(ClaimOrRefreshNeuronFromAccount arg0)
 		{
-			EdjCase.ICP.Candid.Models.CandidArg arg = EdjCase.ICP.Candid.Models.CandidArg.FromCandid(EdjCase.ICP.Candid.Models.CandidTypedValue.FromObject(arg0));
-			EdjCase.ICP.Candid.Models.CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "claim_or_refresh_neuron_from_account", arg);
-			return reply.ToObjects<Test.Models.ClaimOrRefreshNeuronFromAccountResponse>();
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "claim_or_refresh_neuron_from_account", arg);
+			return reply.ToObjects<ClaimOrRefreshNeuronFromAccountResponse>();
 		}
 
-		public async System.Threading.Tasks.Task<System.String> GetBuildMetadata()
+		public async System.Threading.Tasks.Task<String> GetBuildMetadata()
 		{
-			EdjCase.ICP.Candid.Models.CandidArg arg = EdjCase.ICP.Candid.Models.CandidArg.FromCandid();
-			EdjCase.ICP.Agent.Responses.QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_build_metadata", arg);
-			EdjCase.ICP.Candid.Models.CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<System.String>();
+			CandidArg arg = CandidArg.FromCandid();
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_build_metadata", arg);
+			CandidArg reply = response.ThrowOrGetReply();
+			return reply.ToObjects<String>();
 		}
 
-		public async System.Threading.Tasks.Task<Test.Models.Result2> GetFullNeuron(System.UInt64 arg0)
+		public async System.Threading.Tasks.Task<Result2> GetFullNeuron(UInt64 arg0)
 		{
-			EdjCase.ICP.Candid.Models.CandidArg arg = EdjCase.ICP.Candid.Models.CandidArg.FromCandid(EdjCase.ICP.Candid.Models.CandidTypedValue.FromObject(arg0));
-			EdjCase.ICP.Agent.Responses.QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_full_neuron", arg);
-			EdjCase.ICP.Candid.Models.CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<Test.Models.Result2>();
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_full_neuron", arg);
+			CandidArg reply = response.ThrowOrGetReply();
+			return reply.ToObjects<Result2>();
 		}
 
-		public async System.Threading.Tasks.Task<Test.Models.Result2> GetFullNeuronByIdOrSubaccount(Test.Models.NeuronIdOrSubaccount arg0)
+		public async System.Threading.Tasks.Task<Result2> GetFullNeuronByIdOrSubaccount(NeuronIdOrSubaccount arg0)
 		{
-			EdjCase.ICP.Candid.Models.CandidArg arg = EdjCase.ICP.Candid.Models.CandidArg.FromCandid(EdjCase.ICP.Candid.Models.CandidTypedValue.FromObject(arg0));
-			EdjCase.ICP.Agent.Responses.QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_full_neuron_by_id_or_subaccount", arg);
-			EdjCase.ICP.Candid.Models.CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<Test.Models.Result2>();
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_full_neuron_by_id_or_subaccount", arg);
+			CandidArg reply = response.ThrowOrGetReply();
+			return reply.ToObjects<Result2>();
 		}
 
-		public async System.Threading.Tasks.Task<Test.Models.Result3> GetMonthlyNodeProviderRewards()
+		public async System.Threading.Tasks.Task<Result3> GetMonthlyNodeProviderRewards()
 		{
-			EdjCase.ICP.Candid.Models.CandidArg arg = EdjCase.ICP.Candid.Models.CandidArg.FromCandid();
-			EdjCase.ICP.Candid.Models.CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "get_monthly_node_provider_rewards", arg);
-			return reply.ToObjects<Test.Models.Result3>();
+			CandidArg arg = CandidArg.FromCandid();
+			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "get_monthly_node_provider_rewards", arg);
+			return reply.ToObjects<Result3>();
 		}
 
-		public async System.Threading.Tasks.Task<Test.Models.NetworkEconomics> GetNetworkEconomicsParameters()
+		public async System.Threading.Tasks.Task<NetworkEconomics> GetNetworkEconomicsParameters()
 		{
-			EdjCase.ICP.Candid.Models.CandidArg arg = EdjCase.ICP.Candid.Models.CandidArg.FromCandid();
-			EdjCase.ICP.Agent.Responses.QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_network_economics_parameters", arg);
-			EdjCase.ICP.Candid.Models.CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<Test.Models.NetworkEconomics>();
+			CandidArg arg = CandidArg.FromCandid();
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_network_economics_parameters", arg);
+			CandidArg reply = response.ThrowOrGetReply();
+			return reply.ToObjects<NetworkEconomics>();
 		}
 
-		public async System.Threading.Tasks.Task<System.Collections.Generic.List<System.UInt64>> GetNeuronIds()
+		public async System.Threading.Tasks.Task<List<UInt64>> GetNeuronIds()
 		{
-			EdjCase.ICP.Candid.Models.CandidArg arg = EdjCase.ICP.Candid.Models.CandidArg.FromCandid();
-			EdjCase.ICP.Agent.Responses.QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_neuron_ids", arg);
-			EdjCase.ICP.Candid.Models.CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<System.Collections.Generic.List<System.UInt64>>();
+			CandidArg arg = CandidArg.FromCandid();
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_neuron_ids", arg);
+			CandidArg reply = response.ThrowOrGetReply();
+			return reply.ToObjects<List<UInt64>>();
 		}
 
-		public async System.Threading.Tasks.Task<Test.Models.Result4> GetNeuronInfo(System.UInt64 arg0)
+		public async System.Threading.Tasks.Task<Result4> GetNeuronInfo(UInt64 arg0)
 		{
-			EdjCase.ICP.Candid.Models.CandidArg arg = EdjCase.ICP.Candid.Models.CandidArg.FromCandid(EdjCase.ICP.Candid.Models.CandidTypedValue.FromObject(arg0));
-			EdjCase.ICP.Agent.Responses.QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_neuron_info", arg);
-			EdjCase.ICP.Candid.Models.CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<Test.Models.Result4>();
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_neuron_info", arg);
+			CandidArg reply = response.ThrowOrGetReply();
+			return reply.ToObjects<Result4>();
 		}
 
-		public async System.Threading.Tasks.Task<Test.Models.Result4> GetNeuronInfoByIdOrSubaccount(Test.Models.NeuronIdOrSubaccount arg0)
+		public async System.Threading.Tasks.Task<Result4> GetNeuronInfoByIdOrSubaccount(NeuronIdOrSubaccount arg0)
 		{
-			EdjCase.ICP.Candid.Models.CandidArg arg = EdjCase.ICP.Candid.Models.CandidArg.FromCandid(EdjCase.ICP.Candid.Models.CandidTypedValue.FromObject(arg0));
-			EdjCase.ICP.Agent.Responses.QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_neuron_info_by_id_or_subaccount", arg);
-			EdjCase.ICP.Candid.Models.CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<Test.Models.Result4>();
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_neuron_info_by_id_or_subaccount", arg);
+			CandidArg reply = response.ThrowOrGetReply();
+			return reply.ToObjects<Result4>();
 		}
 
-		public async System.Threading.Tasks.Task<Test.Models.Result5> GetNodeProviderByCaller(EdjCase.ICP.Candid.Models.NullValue arg0)
+		public async System.Threading.Tasks.Task<Result5> GetNodeProviderByCaller(NullValue arg0)
 		{
-			EdjCase.ICP.Candid.Models.CandidArg arg = EdjCase.ICP.Candid.Models.CandidArg.FromCandid(EdjCase.ICP.Candid.Models.CandidTypedValue.FromObject(arg0));
-			EdjCase.ICP.Agent.Responses.QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_node_provider_by_caller", arg);
-			EdjCase.ICP.Candid.Models.CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<Test.Models.Result5>();
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_node_provider_by_caller", arg);
+			CandidArg reply = response.ThrowOrGetReply();
+			return reply.ToObjects<Result5>();
 		}
 
-		public async System.Threading.Tasks.Task<System.Collections.Generic.List<Test.Models.ProposalInfo>> GetPendingProposals()
+		public async System.Threading.Tasks.Task<List<ProposalInfo>> GetPendingProposals()
 		{
-			EdjCase.ICP.Candid.Models.CandidArg arg = EdjCase.ICP.Candid.Models.CandidArg.FromCandid();
-			EdjCase.ICP.Agent.Responses.QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_pending_proposals", arg);
-			EdjCase.ICP.Candid.Models.CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<System.Collections.Generic.List<Test.Models.ProposalInfo>>();
+			CandidArg arg = CandidArg.FromCandid();
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_pending_proposals", arg);
+			CandidArg reply = response.ThrowOrGetReply();
+			return reply.ToObjects<List<ProposalInfo>>();
 		}
 
-		public async System.Threading.Tasks.Task<EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.ProposalInfo>> GetProposalInfo(System.UInt64 arg0)
+		public async System.Threading.Tasks.Task<OptionalValue<ProposalInfo>> GetProposalInfo(UInt64 arg0)
 		{
-			EdjCase.ICP.Candid.Models.CandidArg arg = EdjCase.ICP.Candid.Models.CandidArg.FromCandid(EdjCase.ICP.Candid.Models.CandidTypedValue.FromObject(arg0));
-			EdjCase.ICP.Agent.Responses.QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_proposal_info", arg);
-			EdjCase.ICP.Candid.Models.CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.ProposalInfo>>();
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_proposal_info", arg);
+			CandidArg reply = response.ThrowOrGetReply();
+			return reply.ToObjects<OptionalValue<ProposalInfo>>();
 		}
 
-		public async System.Threading.Tasks.Task<Test.Models.ListKnownNeuronsResponse> ListKnownNeurons()
+		public async System.Threading.Tasks.Task<ListKnownNeuronsResponse> ListKnownNeurons()
 		{
-			EdjCase.ICP.Candid.Models.CandidArg arg = EdjCase.ICP.Candid.Models.CandidArg.FromCandid();
-			EdjCase.ICP.Agent.Responses.QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "list_known_neurons", arg);
-			EdjCase.ICP.Candid.Models.CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<Test.Models.ListKnownNeuronsResponse>();
+			CandidArg arg = CandidArg.FromCandid();
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "list_known_neurons", arg);
+			CandidArg reply = response.ThrowOrGetReply();
+			return reply.ToObjects<ListKnownNeuronsResponse>();
 		}
 
-		public async System.Threading.Tasks.Task<Test.Models.ListNeuronsResponse> ListNeurons(Test.Models.ListNeurons arg0)
+		public async System.Threading.Tasks.Task<ListNeuronsResponse> ListNeurons(ListNeurons arg0)
 		{
-			EdjCase.ICP.Candid.Models.CandidArg arg = EdjCase.ICP.Candid.Models.CandidArg.FromCandid(EdjCase.ICP.Candid.Models.CandidTypedValue.FromObject(arg0));
-			EdjCase.ICP.Agent.Responses.QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "list_neurons", arg);
-			EdjCase.ICP.Candid.Models.CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<Test.Models.ListNeuronsResponse>();
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "list_neurons", arg);
+			CandidArg reply = response.ThrowOrGetReply();
+			return reply.ToObjects<ListNeuronsResponse>();
 		}
 
-		public async System.Threading.Tasks.Task<Test.Models.ListNodeProvidersResponse> ListNodeProviders()
+		public async System.Threading.Tasks.Task<ListNodeProvidersResponse> ListNodeProviders()
 		{
-			EdjCase.ICP.Candid.Models.CandidArg arg = EdjCase.ICP.Candid.Models.CandidArg.FromCandid();
-			EdjCase.ICP.Agent.Responses.QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "list_node_providers", arg);
-			EdjCase.ICP.Candid.Models.CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<Test.Models.ListNodeProvidersResponse>();
+			CandidArg arg = CandidArg.FromCandid();
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "list_node_providers", arg);
+			CandidArg reply = response.ThrowOrGetReply();
+			return reply.ToObjects<ListNodeProvidersResponse>();
 		}
 
-		public async System.Threading.Tasks.Task<Test.Models.ListProposalInfoResponse> ListProposals(Test.Models.ListProposalInfo arg0)
+		public async System.Threading.Tasks.Task<ListProposalInfoResponse> ListProposals(ListProposalInfo arg0)
 		{
-			EdjCase.ICP.Candid.Models.CandidArg arg = EdjCase.ICP.Candid.Models.CandidArg.FromCandid(EdjCase.ICP.Candid.Models.CandidTypedValue.FromObject(arg0));
-			EdjCase.ICP.Agent.Responses.QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "list_proposals", arg);
-			EdjCase.ICP.Candid.Models.CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<Test.Models.ListProposalInfoResponse>();
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "list_proposals", arg);
+			CandidArg reply = response.ThrowOrGetReply();
+			return reply.ToObjects<ListProposalInfoResponse>();
 		}
 
-		public async System.Threading.Tasks.Task<Test.Models.ManageNeuronResponse> ManageNeuron(Test.Models.ManageNeuron arg0)
+		public async System.Threading.Tasks.Task<ManageNeuronResponse> ManageNeuron(ManageNeuron arg0)
 		{
-			EdjCase.ICP.Candid.Models.CandidArg arg = EdjCase.ICP.Candid.Models.CandidArg.FromCandid(EdjCase.ICP.Candid.Models.CandidTypedValue.FromObject(arg0));
-			EdjCase.ICP.Candid.Models.CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "manage_neuron", arg);
-			return reply.ToObjects<Test.Models.ManageNeuronResponse>();
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "manage_neuron", arg);
+			return reply.ToObjects<ManageNeuronResponse>();
 		}
 
-		public async System.Threading.Tasks.Task<Test.Models.Result> TransferGtcNeuron(Test.Models.NeuronId arg0, Test.Models.NeuronId arg1)
+		public async System.Threading.Tasks.Task<Result> TransferGtcNeuron(NeuronId arg0, NeuronId arg1)
 		{
-			EdjCase.ICP.Candid.Models.CandidArg arg = EdjCase.ICP.Candid.Models.CandidArg.FromCandid(EdjCase.ICP.Candid.Models.CandidTypedValue.FromObject(arg0), EdjCase.ICP.Candid.Models.CandidTypedValue.FromObject(arg1));
-			EdjCase.ICP.Candid.Models.CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "transfer_gtc_neuron", arg);
-			return reply.ToObjects<Test.Models.Result>();
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0), CandidTypedValue.FromObject(arg1));
+			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "transfer_gtc_neuron", arg);
+			return reply.ToObjects<Result>();
 		}
 
-		public async System.Threading.Tasks.Task<Test.Models.Result> UpdateNodeProvider(Test.Models.UpdateNodeProvider arg0)
+		public async System.Threading.Tasks.Task<Result> UpdateNodeProvider(UpdateNodeProvider arg0)
 		{
-			EdjCase.ICP.Candid.Models.CandidArg arg = EdjCase.ICP.Candid.Models.CandidArg.FromCandid(EdjCase.ICP.Candid.Models.CandidTypedValue.FromObject(arg0));
-			EdjCase.ICP.Candid.Models.CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "update_node_provider", arg);
-			return reply.ToObjects<Test.Models.Result>();
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "update_node_provider", arg);
+			return reply.ToObjects<Result>();
 		}
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'AccountIdentifier'
+
+using EdjCase.ICP.Candid.Mapping;
+using System;
+using System.Collections.Generic;
 
 namespace Test.Models
 {
 	public class AccountIdentifier
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("hash")]
-		public System.Collections.Generic.List<System.Byte> Hash { get; set; }
+		[CandidNameAttribute("hash")]
+		public List<Byte> Hash { get; set; }
 
-		public AccountIdentifier(System.Collections.Generic.List<System.Byte> hash)
+		public AccountIdentifier(List<Byte> hash)
 		{
 			this.Hash = hash;
 		}
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'Action'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test.Models;
+using System;
 
 namespace Test.Models
 {
-	[EdjCase.ICP.Candid.Mapping.VariantAttribute(typeof(Test.Models.ActionTag))]
+	[VariantAttribute(typeof(ActionTag))]
 	public class Action
 	{
-		[EdjCase.ICP.Candid.Mapping.VariantTagPropertyAttribute()]
-		public Test.Models.ActionTag Tag { get; set; }
+		[VariantTagPropertyAttribute()]
+		public ActionTag Tag { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.VariantValuePropertyAttribute()]
+		[VariantValuePropertyAttribute()]
 		private System.Object? Value { get; set; }
 
-		public Action(Test.Models.ActionTag tag, System.Object? value)
+		public Action(ActionTag tag, Object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -209,237 +222,254 @@ namespace Test.Models
 		{
 		}
 
-		public static Test.Models.Action RegisterKnownNeuron(Test.Models.KnownNeuron info)
+		public static Action RegisterKnownNeuron(KnownNeuron info)
 		{
-			return new Test.Models.Action(Test.Models.ActionTag.RegisterKnownNeuron, info);
+			return new Action(ActionTag.RegisterKnownNeuron, info);
 		}
 
-		public static Test.Models.Action ManageNeuron(Test.Models.ManageNeuron info)
+		public static Action ManageNeuron(ManageNeuron info)
 		{
-			return new Test.Models.Action(Test.Models.ActionTag.ManageNeuron, info);
+			return new Action(ActionTag.ManageNeuron, info);
 		}
 
-		public static Test.Models.Action ExecuteNnsFunction(Test.Models.ExecuteNnsFunction info)
+		public static Action ExecuteNnsFunction(ExecuteNnsFunction info)
 		{
-			return new Test.Models.Action(Test.Models.ActionTag.ExecuteNnsFunction, info);
+			return new Action(ActionTag.ExecuteNnsFunction, info);
 		}
 
-		public static Test.Models.Action RewardNodeProvider(Test.Models.RewardNodeProvider info)
+		public static Action RewardNodeProvider(RewardNodeProvider info)
 		{
-			return new Test.Models.Action(Test.Models.ActionTag.RewardNodeProvider, info);
+			return new Action(ActionTag.RewardNodeProvider, info);
 		}
 
-		public static Test.Models.Action SetDefaultFollowees(Test.Models.SetDefaultFollowees info)
+		public static Action SetDefaultFollowees(SetDefaultFollowees info)
 		{
-			return new Test.Models.Action(Test.Models.ActionTag.SetDefaultFollowees, info);
+			return new Action(ActionTag.SetDefaultFollowees, info);
 		}
 
-		public static Test.Models.Action RewardNodeProviders(Test.Models.RewardNodeProviders info)
+		public static Action RewardNodeProviders(RewardNodeProviders info)
 		{
-			return new Test.Models.Action(Test.Models.ActionTag.RewardNodeProviders, info);
+			return new Action(ActionTag.RewardNodeProviders, info);
 		}
 
-		public static Test.Models.Action ManageNetworkEconomics(Test.Models.NetworkEconomics info)
+		public static Action ManageNetworkEconomics(NetworkEconomics info)
 		{
-			return new Test.Models.Action(Test.Models.ActionTag.ManageNetworkEconomics, info);
+			return new Action(ActionTag.ManageNetworkEconomics, info);
 		}
 
-		public static Test.Models.Action ApproveGenesisKyc(Test.Models.ApproveGenesisKyc info)
+		public static Action ApproveGenesisKyc(ApproveGenesisKyc info)
 		{
-			return new Test.Models.Action(Test.Models.ActionTag.ApproveGenesisKyc, info);
+			return new Action(ActionTag.ApproveGenesisKyc, info);
 		}
 
-		public static Test.Models.Action AddOrRemoveNodeProvider(Test.Models.AddOrRemoveNodeProvider info)
+		public static Action AddOrRemoveNodeProvider(AddOrRemoveNodeProvider info)
 		{
-			return new Test.Models.Action(Test.Models.ActionTag.AddOrRemoveNodeProvider, info);
+			return new Action(ActionTag.AddOrRemoveNodeProvider, info);
 		}
 
-		public static Test.Models.Action Motion(Test.Models.Motion info)
+		public static Action Motion(Motion info)
 		{
-			return new Test.Models.Action(Test.Models.ActionTag.Motion, info);
+			return new Action(ActionTag.Motion, info);
 		}
 
-		public Test.Models.KnownNeuron AsRegisterKnownNeuron()
+		public KnownNeuron AsRegisterKnownNeuron()
 		{
-			this.ValidateTag(Test.Models.ActionTag.RegisterKnownNeuron);
-			return (Test.Models.KnownNeuron)this.Value!;
+			this.ValidateTag(ActionTag.RegisterKnownNeuron);
+			return (KnownNeuron)this.Value!;
 		}
 
-		public Test.Models.ManageNeuron AsManageNeuron()
+		public ManageNeuron AsManageNeuron()
 		{
-			this.ValidateTag(Test.Models.ActionTag.ManageNeuron);
-			return (Test.Models.ManageNeuron)this.Value!;
+			this.ValidateTag(ActionTag.ManageNeuron);
+			return (ManageNeuron)this.Value!;
 		}
 
-		public Test.Models.ExecuteNnsFunction AsExecuteNnsFunction()
+		public ExecuteNnsFunction AsExecuteNnsFunction()
 		{
-			this.ValidateTag(Test.Models.ActionTag.ExecuteNnsFunction);
-			return (Test.Models.ExecuteNnsFunction)this.Value!;
+			this.ValidateTag(ActionTag.ExecuteNnsFunction);
+			return (ExecuteNnsFunction)this.Value!;
 		}
 
-		public Test.Models.RewardNodeProvider AsRewardNodeProvider()
+		public RewardNodeProvider AsRewardNodeProvider()
 		{
-			this.ValidateTag(Test.Models.ActionTag.RewardNodeProvider);
-			return (Test.Models.RewardNodeProvider)this.Value!;
+			this.ValidateTag(ActionTag.RewardNodeProvider);
+			return (RewardNodeProvider)this.Value!;
 		}
 
-		public Test.Models.SetDefaultFollowees AsSetDefaultFollowees()
+		public SetDefaultFollowees AsSetDefaultFollowees()
 		{
-			this.ValidateTag(Test.Models.ActionTag.SetDefaultFollowees);
-			return (Test.Models.SetDefaultFollowees)this.Value!;
+			this.ValidateTag(ActionTag.SetDefaultFollowees);
+			return (SetDefaultFollowees)this.Value!;
 		}
 
-		public Test.Models.RewardNodeProviders AsRewardNodeProviders()
+		public RewardNodeProviders AsRewardNodeProviders()
 		{
-			this.ValidateTag(Test.Models.ActionTag.RewardNodeProviders);
-			return (Test.Models.RewardNodeProviders)this.Value!;
+			this.ValidateTag(ActionTag.RewardNodeProviders);
+			return (RewardNodeProviders)this.Value!;
 		}
 
-		public Test.Models.NetworkEconomics AsManageNetworkEconomics()
+		public NetworkEconomics AsManageNetworkEconomics()
 		{
-			this.ValidateTag(Test.Models.ActionTag.ManageNetworkEconomics);
-			return (Test.Models.NetworkEconomics)this.Value!;
+			this.ValidateTag(ActionTag.ManageNetworkEconomics);
+			return (NetworkEconomics)this.Value!;
 		}
 
-		public Test.Models.ApproveGenesisKyc AsApproveGenesisKyc()
+		public ApproveGenesisKyc AsApproveGenesisKyc()
 		{
-			this.ValidateTag(Test.Models.ActionTag.ApproveGenesisKyc);
-			return (Test.Models.ApproveGenesisKyc)this.Value!;
+			this.ValidateTag(ActionTag.ApproveGenesisKyc);
+			return (ApproveGenesisKyc)this.Value!;
 		}
 
-		public Test.Models.AddOrRemoveNodeProvider AsAddOrRemoveNodeProvider()
+		public AddOrRemoveNodeProvider AsAddOrRemoveNodeProvider()
 		{
-			this.ValidateTag(Test.Models.ActionTag.AddOrRemoveNodeProvider);
-			return (Test.Models.AddOrRemoveNodeProvider)this.Value!;
+			this.ValidateTag(ActionTag.AddOrRemoveNodeProvider);
+			return (AddOrRemoveNodeProvider)this.Value!;
 		}
 
-		public Test.Models.Motion AsMotion()
+		public Motion AsMotion()
 		{
-			this.ValidateTag(Test.Models.ActionTag.Motion);
-			return (Test.Models.Motion)this.Value!;
+			this.ValidateTag(ActionTag.Motion);
+			return (Motion)this.Value!;
 		}
 
-		private void ValidateTag(Test.Models.ActionTag tag)
+		private void ValidateTag(ActionTag tag)
 		{
 			if (!this.Tag.Equals(tag))
 			{
-				throw new System.InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
+				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
 			}
 		}
 	}
 
 	public enum ActionTag
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("RegisterKnownNeuron")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.KnownNeuron))]
+		[CandidNameAttribute("RegisterKnownNeuron")]
+		[VariantOptionTypeAttribute(typeof(KnownNeuron))]
 		RegisterKnownNeuron,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("ManageNeuron")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.ManageNeuron))]
+		[CandidNameAttribute("ManageNeuron")]
+		[VariantOptionTypeAttribute(typeof(ManageNeuron))]
 		ManageNeuron,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("ExecuteNnsFunction")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.ExecuteNnsFunction))]
+		[CandidNameAttribute("ExecuteNnsFunction")]
+		[VariantOptionTypeAttribute(typeof(ExecuteNnsFunction))]
 		ExecuteNnsFunction,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("RewardNodeProvider")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.RewardNodeProvider))]
+		[CandidNameAttribute("RewardNodeProvider")]
+		[VariantOptionTypeAttribute(typeof(RewardNodeProvider))]
 		RewardNodeProvider,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("SetDefaultFollowees")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.SetDefaultFollowees))]
+		[CandidNameAttribute("SetDefaultFollowees")]
+		[VariantOptionTypeAttribute(typeof(SetDefaultFollowees))]
 		SetDefaultFollowees,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("RewardNodeProviders")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.RewardNodeProviders))]
+		[CandidNameAttribute("RewardNodeProviders")]
+		[VariantOptionTypeAttribute(typeof(RewardNodeProviders))]
 		RewardNodeProviders,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("ManageNetworkEconomics")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.NetworkEconomics))]
+		[CandidNameAttribute("ManageNetworkEconomics")]
+		[VariantOptionTypeAttribute(typeof(NetworkEconomics))]
 		ManageNetworkEconomics,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("ApproveGenesisKyc")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.ApproveGenesisKyc))]
+		[CandidNameAttribute("ApproveGenesisKyc")]
+		[VariantOptionTypeAttribute(typeof(ApproveGenesisKyc))]
 		ApproveGenesisKyc,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("AddOrRemoveNodeProvider")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.AddOrRemoveNodeProvider))]
+		[CandidNameAttribute("AddOrRemoveNodeProvider")]
+		[VariantOptionTypeAttribute(typeof(AddOrRemoveNodeProvider))]
 		AddOrRemoveNodeProvider,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Motion")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.Motion))]
+		[CandidNameAttribute("Motion")]
+		[VariantOptionTypeAttribute(typeof(Motion))]
 		Motion
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'AddHotKey'
+
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid.Models;
 
 namespace Test.Models
 {
 	public class AddHotKey
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("new_hot_key")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<EdjCase.ICP.Candid.Models.Principal> NewHotKey { get; set; }
+		[CandidNameAttribute("new_hot_key")]
+		public OptionalValue<Principal> NewHotKey { get; set; }
 
-		public AddHotKey(EdjCase.ICP.Candid.Models.OptionalValue<EdjCase.ICP.Candid.Models.Principal> newHotKey)
+		public AddHotKey(OptionalValue<Principal> newHotKey)
 		{
 			this.NewHotKey = newHotKey;
 		}
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'AddOrRemoveNodeProvider'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test.Models;
+using EdjCase.ICP.Candid.Models;
 
 namespace Test.Models
 {
 	public class AddOrRemoveNodeProvider
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("change")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.Change> Change { get; set; }
+		[CandidNameAttribute("change")]
+		public OptionalValue<Change> Change { get; set; }
 
-		public AddOrRemoveNodeProvider(EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.Change> change)
+		public AddOrRemoveNodeProvider(OptionalValue<Change> change)
 		{
 			this.Change = change;
 		}
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'Amount'
+
+using EdjCase.ICP.Candid.Mapping;
+using System;
 
 namespace Test.Models
 {
 	public class Amount
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("e8s")]
-		public System.UInt64 E8s { get; set; }
+		[CandidNameAttribute("e8s")]
+		public UInt64 E8s { get; set; }
 
-		public Amount(System.UInt64 e8s)
+		public Amount(UInt64 e8s)
 		{
 			this.E8s = e8s;
 		}
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'ApproveGenesisKyc'
+
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid.Models;
+using System.Collections.Generic;
 
 namespace Test.Models
 {
 	public class ApproveGenesisKyc
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("principals")]
-		public System.Collections.Generic.List<EdjCase.ICP.Candid.Models.Principal> Principals { get; set; }
+		[CandidNameAttribute("principals")]
+		public List<Principal> Principals { get; set; }
 
-		public ApproveGenesisKyc(System.Collections.Generic.List<EdjCase.ICP.Candid.Models.Principal> principals)
+		public ApproveGenesisKyc(List<Principal> principals)
 		{
 			this.Principals = principals;
 		}
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'Ballot'
+
+using EdjCase.ICP.Candid.Mapping;
+using System;
 
 namespace Test.Models
 {
 	public class Ballot
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("vote")]
-		public System.Int32 Vote { get; set; }
+		[CandidNameAttribute("vote")]
+		public Int32 Vote { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("voting_power")]
-		public System.UInt64 VotingPower { get; set; }
+		[CandidNameAttribute("voting_power")]
+		public UInt64 VotingPower { get; set; }
 
-		public Ballot(System.Int32 vote, System.UInt64 votingPower)
+		public Ballot(Int32 vote, UInt64 votingPower)
 		{
 			this.Vote = vote;
 			this.VotingPower = votingPower;
@@ -447,19 +477,24 @@ namespace Test.Models
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'BallotInfo'
+
+using EdjCase.ICP.Candid.Mapping;
+using System;
+using Test.Models;
+using EdjCase.ICP.Candid.Models;
 
 namespace Test.Models
 {
 	public class BallotInfo
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("vote")]
-		public System.Int32 Vote { get; set; }
+		[CandidNameAttribute("vote")]
+		public Int32 Vote { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("proposal_id")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.NeuronId> ProposalId { get; set; }
+		[CandidNameAttribute("proposal_id")]
+		public OptionalValue<NeuronId> ProposalId { get; set; }
 
-		public BallotInfo(System.Int32 vote, EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.NeuronId> proposalId)
+		public BallotInfo(Int32 vote, OptionalValue<NeuronId> proposalId)
 		{
 			this.Vote = vote;
 			this.ProposalId = proposalId;
@@ -467,20 +502,24 @@ namespace Test.Models
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'By'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test.Models;
+using System;
 
 namespace Test.Models
 {
-	[EdjCase.ICP.Candid.Mapping.VariantAttribute(typeof(Test.Models.ByTag))]
+	[VariantAttribute(typeof(ByTag))]
 	public class By
 	{
-		[EdjCase.ICP.Candid.Mapping.VariantTagPropertyAttribute()]
-		public Test.Models.ByTag Tag { get; set; }
+		[VariantTagPropertyAttribute()]
+		public ByTag Tag { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.VariantValuePropertyAttribute()]
+		[VariantValuePropertyAttribute()]
 		private System.Object? Value { get; set; }
 
-		public By(Test.Models.ByTag tag, System.Object? value)
+		public By(ByTag tag, Object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -490,44 +529,44 @@ namespace Test.Models
 		{
 		}
 
-		public static Test.Models.By NeuronIdOrSubaccount(Test.Models.By.ByO0 info)
+		public static By NeuronIdOrSubaccount(By.ByO0 info)
 		{
-			return new Test.Models.By(Test.Models.ByTag.NeuronIdOrSubaccount, info);
+			return new By(ByTag.NeuronIdOrSubaccount, info);
 		}
 
-		public static Test.Models.By MemoAndController(Test.Models.ClaimOrRefreshNeuronFromAccount info)
+		public static By MemoAndController(ClaimOrRefreshNeuronFromAccount info)
 		{
-			return new Test.Models.By(Test.Models.ByTag.MemoAndController, info);
+			return new By(ByTag.MemoAndController, info);
 		}
 
-		public static Test.Models.By Memo(System.UInt64 info)
+		public static By Memo(UInt64 info)
 		{
-			return new Test.Models.By(Test.Models.ByTag.Memo, info);
+			return new By(ByTag.Memo, info);
 		}
 
-		public Test.Models.By.ByO0 AsNeuronIdOrSubaccount()
+		public By.ByO0 AsNeuronIdOrSubaccount()
 		{
-			this.ValidateTag(Test.Models.ByTag.NeuronIdOrSubaccount);
-			return (Test.Models.By.ByO0)this.Value!;
+			this.ValidateTag(ByTag.NeuronIdOrSubaccount);
+			return (By.ByO0)this.Value!;
 		}
 
-		public Test.Models.ClaimOrRefreshNeuronFromAccount AsMemoAndController()
+		public ClaimOrRefreshNeuronFromAccount AsMemoAndController()
 		{
-			this.ValidateTag(Test.Models.ByTag.MemoAndController);
-			return (Test.Models.ClaimOrRefreshNeuronFromAccount)this.Value!;
+			this.ValidateTag(ByTag.MemoAndController);
+			return (ClaimOrRefreshNeuronFromAccount)this.Value!;
 		}
 
-		public System.UInt64 AsMemo()
+		public UInt64 AsMemo()
 		{
-			this.ValidateTag(Test.Models.ByTag.Memo);
-			return (System.UInt64)this.Value!;
+			this.ValidateTag(ByTag.Memo);
+			return (UInt64)this.Value!;
 		}
 
-		private void ValidateTag(Test.Models.ByTag tag)
+		private void ValidateTag(ByTag tag)
 		{
 			if (!this.Tag.Equals(tag))
 			{
-				throw new System.InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
+				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
 			}
 		}
 
@@ -541,32 +580,36 @@ namespace Test.Models
 
 	public enum ByTag
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("NeuronIdOrSubaccount")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.By.ByO0))]
+		[CandidNameAttribute("NeuronIdOrSubaccount")]
+		[VariantOptionTypeAttribute(typeof(By.ByO0))]
 		NeuronIdOrSubaccount,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("MemoAndController")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.ClaimOrRefreshNeuronFromAccount))]
+		[CandidNameAttribute("MemoAndController")]
+		[VariantOptionTypeAttribute(typeof(ClaimOrRefreshNeuronFromAccount))]
 		MemoAndController,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Memo")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(System.UInt64))]
+		[CandidNameAttribute("Memo")]
+		[VariantOptionTypeAttribute(typeof(UInt64))]
 		Memo
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'Change'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test.Models;
+using System;
 
 namespace Test.Models
 {
-	[EdjCase.ICP.Candid.Mapping.VariantAttribute(typeof(Test.Models.ChangeTag))]
+	[VariantAttribute(typeof(ChangeTag))]
 	public class Change
 	{
-		[EdjCase.ICP.Candid.Mapping.VariantTagPropertyAttribute()]
-		public Test.Models.ChangeTag Tag { get; set; }
+		[VariantTagPropertyAttribute()]
+		public ChangeTag Tag { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.VariantValuePropertyAttribute()]
+		[VariantValuePropertyAttribute()]
 		private System.Object? Value { get; set; }
 
-		public Change(Test.Models.ChangeTag tag, System.Object? value)
+		public Change(ChangeTag tag, Object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -576,77 +619,85 @@ namespace Test.Models
 		{
 		}
 
-		public static Test.Models.Change ToRemove(Test.Models.NodeProvider info)
+		public static Change ToRemove(NodeProvider info)
 		{
-			return new Test.Models.Change(Test.Models.ChangeTag.ToRemove, info);
+			return new Change(ChangeTag.ToRemove, info);
 		}
 
-		public static Test.Models.Change ToAdd(Test.Models.NodeProvider info)
+		public static Change ToAdd(NodeProvider info)
 		{
-			return new Test.Models.Change(Test.Models.ChangeTag.ToAdd, info);
+			return new Change(ChangeTag.ToAdd, info);
 		}
 
-		public Test.Models.NodeProvider AsToRemove()
+		public NodeProvider AsToRemove()
 		{
-			this.ValidateTag(Test.Models.ChangeTag.ToRemove);
-			return (Test.Models.NodeProvider)this.Value!;
+			this.ValidateTag(ChangeTag.ToRemove);
+			return (NodeProvider)this.Value!;
 		}
 
-		public Test.Models.NodeProvider AsToAdd()
+		public NodeProvider AsToAdd()
 		{
-			this.ValidateTag(Test.Models.ChangeTag.ToAdd);
-			return (Test.Models.NodeProvider)this.Value!;
+			this.ValidateTag(ChangeTag.ToAdd);
+			return (NodeProvider)this.Value!;
 		}
 
-		private void ValidateTag(Test.Models.ChangeTag tag)
+		private void ValidateTag(ChangeTag tag)
 		{
 			if (!this.Tag.Equals(tag))
 			{
-				throw new System.InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
+				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
 			}
 		}
 	}
 
 	public enum ChangeTag
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("ToRemove")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.NodeProvider))]
+		[CandidNameAttribute("ToRemove")]
+		[VariantOptionTypeAttribute(typeof(NodeProvider))]
 		ToRemove,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("ToAdd")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.NodeProvider))]
+		[CandidNameAttribute("ToAdd")]
+		[VariantOptionTypeAttribute(typeof(NodeProvider))]
 		ToAdd
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'ClaimOrRefresh'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test.Models;
+using EdjCase.ICP.Candid.Models;
 
 namespace Test.Models
 {
 	public class ClaimOrRefresh
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("by")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.By> By { get; set; }
+		[CandidNameAttribute("by")]
+		public OptionalValue<By> By { get; set; }
 
-		public ClaimOrRefresh(EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.By> by)
+		public ClaimOrRefresh(OptionalValue<By> by)
 		{
 			this.By = by;
 		}
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'ClaimOrRefreshNeuronFromAccount'
+
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid.Models;
+using System;
 
 namespace Test.Models
 {
 	public class ClaimOrRefreshNeuronFromAccount
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("controller")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<EdjCase.ICP.Candid.Models.Principal> Controller { get; set; }
+		[CandidNameAttribute("controller")]
+		public OptionalValue<Principal> Controller { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("memo")]
-		public System.UInt64 Memo { get; set; }
+		[CandidNameAttribute("memo")]
+		public UInt64 Memo { get; set; }
 
-		public ClaimOrRefreshNeuronFromAccount(EdjCase.ICP.Candid.Models.OptionalValue<EdjCase.ICP.Candid.Models.Principal> controller, System.UInt64 memo)
+		public ClaimOrRefreshNeuronFromAccount(OptionalValue<Principal> controller, UInt64 memo)
 		{
 			this.Controller = controller;
 			this.Memo = memo;
@@ -654,52 +705,64 @@ namespace Test.Models
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'ClaimOrRefreshNeuronFromAccountResponse'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test.Models;
+using EdjCase.ICP.Candid.Models;
 
 namespace Test.Models
 {
 	public class ClaimOrRefreshNeuronFromAccountResponse
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("result")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.Result1> Result { get; set; }
+		[CandidNameAttribute("result")]
+		public OptionalValue<Result1> Result { get; set; }
 
-		public ClaimOrRefreshNeuronFromAccountResponse(EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.Result1> result)
+		public ClaimOrRefreshNeuronFromAccountResponse(OptionalValue<Result1> result)
 		{
 			this.Result = result;
 		}
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'ClaimOrRefreshResponse'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test.Models;
+using EdjCase.ICP.Candid.Models;
 
 namespace Test.Models
 {
 	public class ClaimOrRefreshResponse
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("refreshed_neuron_id")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.NeuronId> RefreshedNeuronId { get; set; }
+		[CandidNameAttribute("refreshed_neuron_id")]
+		public OptionalValue<NeuronId> RefreshedNeuronId { get; set; }
 
-		public ClaimOrRefreshResponse(EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.NeuronId> refreshedNeuronId)
+		public ClaimOrRefreshResponse(OptionalValue<NeuronId> refreshedNeuronId)
 		{
 			this.RefreshedNeuronId = refreshedNeuronId;
 		}
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'Command'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test.Models;
+using System;
 
 namespace Test.Models
 {
-	[EdjCase.ICP.Candid.Mapping.VariantAttribute(typeof(Test.Models.CommandTag))]
+	[VariantAttribute(typeof(CommandTag))]
 	public class Command
 	{
-		[EdjCase.ICP.Candid.Mapping.VariantTagPropertyAttribute()]
-		public Test.Models.CommandTag Tag { get; set; }
+		[VariantTagPropertyAttribute()]
+		public CommandTag Tag { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.VariantValuePropertyAttribute()]
+		[VariantValuePropertyAttribute()]
 		private System.Object? Value { get; set; }
 
-		public Command(Test.Models.CommandTag tag, System.Object? value)
+		public Command(CommandTag tag, Object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -709,188 +772,192 @@ namespace Test.Models
 		{
 		}
 
-		public static Test.Models.Command Spawn(Test.Models.Spawn info)
+		public static Command Spawn(Spawn info)
 		{
-			return new Test.Models.Command(Test.Models.CommandTag.Spawn, info);
+			return new Command(CommandTag.Spawn, info);
 		}
 
-		public static Test.Models.Command Split(Test.Models.Split info)
+		public static Command Split(Split info)
 		{
-			return new Test.Models.Command(Test.Models.CommandTag.Split, info);
+			return new Command(CommandTag.Split, info);
 		}
 
-		public static Test.Models.Command Follow(Test.Models.Follow info)
+		public static Command Follow(Follow info)
 		{
-			return new Test.Models.Command(Test.Models.CommandTag.Follow, info);
+			return new Command(CommandTag.Follow, info);
 		}
 
-		public static Test.Models.Command ClaimOrRefresh(Test.Models.ClaimOrRefresh info)
+		public static Command ClaimOrRefresh(ClaimOrRefresh info)
 		{
-			return new Test.Models.Command(Test.Models.CommandTag.ClaimOrRefresh, info);
+			return new Command(CommandTag.ClaimOrRefresh, info);
 		}
 
-		public static Test.Models.Command Configure(Test.Models.Configure info)
+		public static Command Configure(Configure info)
 		{
-			return new Test.Models.Command(Test.Models.CommandTag.Configure, info);
+			return new Command(CommandTag.Configure, info);
 		}
 
-		public static Test.Models.Command RegisterVote(Test.Models.RegisterVote info)
+		public static Command RegisterVote(RegisterVote info)
 		{
-			return new Test.Models.Command(Test.Models.CommandTag.RegisterVote, info);
+			return new Command(CommandTag.RegisterVote, info);
 		}
 
-		public static Test.Models.Command Merge(Test.Models.Merge info)
+		public static Command Merge(Merge info)
 		{
-			return new Test.Models.Command(Test.Models.CommandTag.Merge, info);
+			return new Command(CommandTag.Merge, info);
 		}
 
-		public static Test.Models.Command DisburseToNeuron(Test.Models.DisburseToNeuron info)
+		public static Command DisburseToNeuron(DisburseToNeuron info)
 		{
-			return new Test.Models.Command(Test.Models.CommandTag.DisburseToNeuron, info);
+			return new Command(CommandTag.DisburseToNeuron, info);
 		}
 
-		public static Test.Models.Command MakeProposal(Test.Models.Proposal info)
+		public static Command MakeProposal(Proposal info)
 		{
-			return new Test.Models.Command(Test.Models.CommandTag.MakeProposal, info);
+			return new Command(CommandTag.MakeProposal, info);
 		}
 
-		public static Test.Models.Command MergeMaturity(Test.Models.MergeMaturity info)
+		public static Command MergeMaturity(MergeMaturity info)
 		{
-			return new Test.Models.Command(Test.Models.CommandTag.MergeMaturity, info);
+			return new Command(CommandTag.MergeMaturity, info);
 		}
 
-		public static Test.Models.Command Disburse(Test.Models.Disburse info)
+		public static Command Disburse(Disburse info)
 		{
-			return new Test.Models.Command(Test.Models.CommandTag.Disburse, info);
+			return new Command(CommandTag.Disburse, info);
 		}
 
-		public Test.Models.Spawn AsSpawn()
+		public Spawn AsSpawn()
 		{
-			this.ValidateTag(Test.Models.CommandTag.Spawn);
-			return (Test.Models.Spawn)this.Value!;
+			this.ValidateTag(CommandTag.Spawn);
+			return (Spawn)this.Value!;
 		}
 
-		public Test.Models.Split AsSplit()
+		public Split AsSplit()
 		{
-			this.ValidateTag(Test.Models.CommandTag.Split);
-			return (Test.Models.Split)this.Value!;
+			this.ValidateTag(CommandTag.Split);
+			return (Split)this.Value!;
 		}
 
-		public Test.Models.Follow AsFollow()
+		public Follow AsFollow()
 		{
-			this.ValidateTag(Test.Models.CommandTag.Follow);
-			return (Test.Models.Follow)this.Value!;
+			this.ValidateTag(CommandTag.Follow);
+			return (Follow)this.Value!;
 		}
 
-		public Test.Models.ClaimOrRefresh AsClaimOrRefresh()
+		public ClaimOrRefresh AsClaimOrRefresh()
 		{
-			this.ValidateTag(Test.Models.CommandTag.ClaimOrRefresh);
-			return (Test.Models.ClaimOrRefresh)this.Value!;
+			this.ValidateTag(CommandTag.ClaimOrRefresh);
+			return (ClaimOrRefresh)this.Value!;
 		}
 
-		public Test.Models.Configure AsConfigure()
+		public Configure AsConfigure()
 		{
-			this.ValidateTag(Test.Models.CommandTag.Configure);
-			return (Test.Models.Configure)this.Value!;
+			this.ValidateTag(CommandTag.Configure);
+			return (Configure)this.Value!;
 		}
 
-		public Test.Models.RegisterVote AsRegisterVote()
+		public RegisterVote AsRegisterVote()
 		{
-			this.ValidateTag(Test.Models.CommandTag.RegisterVote);
-			return (Test.Models.RegisterVote)this.Value!;
+			this.ValidateTag(CommandTag.RegisterVote);
+			return (RegisterVote)this.Value!;
 		}
 
-		public Test.Models.Merge AsMerge()
+		public Merge AsMerge()
 		{
-			this.ValidateTag(Test.Models.CommandTag.Merge);
-			return (Test.Models.Merge)this.Value!;
+			this.ValidateTag(CommandTag.Merge);
+			return (Merge)this.Value!;
 		}
 
-		public Test.Models.DisburseToNeuron AsDisburseToNeuron()
+		public DisburseToNeuron AsDisburseToNeuron()
 		{
-			this.ValidateTag(Test.Models.CommandTag.DisburseToNeuron);
-			return (Test.Models.DisburseToNeuron)this.Value!;
+			this.ValidateTag(CommandTag.DisburseToNeuron);
+			return (DisburseToNeuron)this.Value!;
 		}
 
-		public Test.Models.Proposal AsMakeProposal()
+		public Proposal AsMakeProposal()
 		{
-			this.ValidateTag(Test.Models.CommandTag.MakeProposal);
-			return (Test.Models.Proposal)this.Value!;
+			this.ValidateTag(CommandTag.MakeProposal);
+			return (Proposal)this.Value!;
 		}
 
-		public Test.Models.MergeMaturity AsMergeMaturity()
+		public MergeMaturity AsMergeMaturity()
 		{
-			this.ValidateTag(Test.Models.CommandTag.MergeMaturity);
-			return (Test.Models.MergeMaturity)this.Value!;
+			this.ValidateTag(CommandTag.MergeMaturity);
+			return (MergeMaturity)this.Value!;
 		}
 
-		public Test.Models.Disburse AsDisburse()
+		public Disburse AsDisburse()
 		{
-			this.ValidateTag(Test.Models.CommandTag.Disburse);
-			return (Test.Models.Disburse)this.Value!;
+			this.ValidateTag(CommandTag.Disburse);
+			return (Disburse)this.Value!;
 		}
 
-		private void ValidateTag(Test.Models.CommandTag tag)
+		private void ValidateTag(CommandTag tag)
 		{
 			if (!this.Tag.Equals(tag))
 			{
-				throw new System.InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
+				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
 			}
 		}
 	}
 
 	public enum CommandTag
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Spawn")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.Spawn))]
+		[CandidNameAttribute("Spawn")]
+		[VariantOptionTypeAttribute(typeof(Spawn))]
 		Spawn,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Split")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.Split))]
+		[CandidNameAttribute("Split")]
+		[VariantOptionTypeAttribute(typeof(Split))]
 		Split,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Follow")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.Follow))]
+		[CandidNameAttribute("Follow")]
+		[VariantOptionTypeAttribute(typeof(Follow))]
 		Follow,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("ClaimOrRefresh")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.ClaimOrRefresh))]
+		[CandidNameAttribute("ClaimOrRefresh")]
+		[VariantOptionTypeAttribute(typeof(ClaimOrRefresh))]
 		ClaimOrRefresh,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Configure")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.Configure))]
+		[CandidNameAttribute("Configure")]
+		[VariantOptionTypeAttribute(typeof(Configure))]
 		Configure,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("RegisterVote")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.RegisterVote))]
+		[CandidNameAttribute("RegisterVote")]
+		[VariantOptionTypeAttribute(typeof(RegisterVote))]
 		RegisterVote,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Merge")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.Merge))]
+		[CandidNameAttribute("Merge")]
+		[VariantOptionTypeAttribute(typeof(Merge))]
 		Merge,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("DisburseToNeuron")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.DisburseToNeuron))]
+		[CandidNameAttribute("DisburseToNeuron")]
+		[VariantOptionTypeAttribute(typeof(DisburseToNeuron))]
 		DisburseToNeuron,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("MakeProposal")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.Proposal))]
+		[CandidNameAttribute("MakeProposal")]
+		[VariantOptionTypeAttribute(typeof(Proposal))]
 		MakeProposal,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("MergeMaturity")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.MergeMaturity))]
+		[CandidNameAttribute("MergeMaturity")]
+		[VariantOptionTypeAttribute(typeof(MergeMaturity))]
 		MergeMaturity,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Disburse")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.Disburse))]
+		[CandidNameAttribute("Disburse")]
+		[VariantOptionTypeAttribute(typeof(Disburse))]
 		Disburse
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'Command1'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test.Models;
+using System;
 
 namespace Test.Models
 {
-	[EdjCase.ICP.Candid.Mapping.VariantAttribute(typeof(Test.Models.Command1Tag))]
+	[VariantAttribute(typeof(Command1Tag))]
 	public class Command1
 	{
-		[EdjCase.ICP.Candid.Mapping.VariantTagPropertyAttribute()]
-		public Test.Models.Command1Tag Tag { get; set; }
+		[VariantTagPropertyAttribute()]
+		public Command1Tag Tag { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.VariantValuePropertyAttribute()]
+		[VariantValuePropertyAttribute()]
 		private System.Object? Value { get; set; }
 
-		public Command1(Test.Models.Command1Tag tag, System.Object? value)
+		public Command1(Command1Tag tag, Object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -900,143 +967,143 @@ namespace Test.Models
 		{
 		}
 
-		public static Test.Models.Command1 Error(Test.Models.GovernanceError info)
+		public static Command1 Error(GovernanceError info)
 		{
-			return new Test.Models.Command1(Test.Models.Command1Tag.Error, info);
+			return new Command1(Command1Tag.Error, info);
 		}
 
-		public static Test.Models.Command1 Spawn(Test.Models.SpawnResponse info)
+		public static Command1 Spawn(SpawnResponse info)
 		{
-			return new Test.Models.Command1(Test.Models.Command1Tag.Spawn, info);
+			return new Command1(Command1Tag.Spawn, info);
 		}
 
-		public static Test.Models.Command1 Split(Test.Models.SpawnResponse info)
+		public static Command1 Split(SpawnResponse info)
 		{
-			return new Test.Models.Command1(Test.Models.Command1Tag.Split, info);
+			return new Command1(Command1Tag.Split, info);
 		}
 
-		public static Test.Models.Command1 Follow(Test.Models.Command1.Command1O3 info)
+		public static Command1 Follow(Command1.Command1O3 info)
 		{
-			return new Test.Models.Command1(Test.Models.Command1Tag.Follow, info);
+			return new Command1(Command1Tag.Follow, info);
 		}
 
-		public static Test.Models.Command1 ClaimOrRefresh(Test.Models.ClaimOrRefreshResponse info)
+		public static Command1 ClaimOrRefresh(ClaimOrRefreshResponse info)
 		{
-			return new Test.Models.Command1(Test.Models.Command1Tag.ClaimOrRefresh, info);
+			return new Command1(Command1Tag.ClaimOrRefresh, info);
 		}
 
-		public static Test.Models.Command1 Configure(Test.Models.Command1.Command1O5 info)
+		public static Command1 Configure(Command1.Command1O5 info)
 		{
-			return new Test.Models.Command1(Test.Models.Command1Tag.Configure, info);
+			return new Command1(Command1Tag.Configure, info);
 		}
 
-		public static Test.Models.Command1 RegisterVote(Test.Models.Command1.Command1O6 info)
+		public static Command1 RegisterVote(Command1.Command1O6 info)
 		{
-			return new Test.Models.Command1(Test.Models.Command1Tag.RegisterVote, info);
+			return new Command1(Command1Tag.RegisterVote, info);
 		}
 
-		public static Test.Models.Command1 Merge(Test.Models.Command1.Command1O7 info)
+		public static Command1 Merge(Command1.Command1O7 info)
 		{
-			return new Test.Models.Command1(Test.Models.Command1Tag.Merge, info);
+			return new Command1(Command1Tag.Merge, info);
 		}
 
-		public static Test.Models.Command1 DisburseToNeuron(Test.Models.SpawnResponse info)
+		public static Command1 DisburseToNeuron(SpawnResponse info)
 		{
-			return new Test.Models.Command1(Test.Models.Command1Tag.DisburseToNeuron, info);
+			return new Command1(Command1Tag.DisburseToNeuron, info);
 		}
 
-		public static Test.Models.Command1 MakeProposal(Test.Models.MakeProposalResponse info)
+		public static Command1 MakeProposal(MakeProposalResponse info)
 		{
-			return new Test.Models.Command1(Test.Models.Command1Tag.MakeProposal, info);
+			return new Command1(Command1Tag.MakeProposal, info);
 		}
 
-		public static Test.Models.Command1 MergeMaturity(Test.Models.MergeMaturityResponse info)
+		public static Command1 MergeMaturity(MergeMaturityResponse info)
 		{
-			return new Test.Models.Command1(Test.Models.Command1Tag.MergeMaturity, info);
+			return new Command1(Command1Tag.MergeMaturity, info);
 		}
 
-		public static Test.Models.Command1 Disburse(Test.Models.DisburseResponse info)
+		public static Command1 Disburse(DisburseResponse info)
 		{
-			return new Test.Models.Command1(Test.Models.Command1Tag.Disburse, info);
+			return new Command1(Command1Tag.Disburse, info);
 		}
 
-		public Test.Models.GovernanceError AsError()
+		public GovernanceError AsError()
 		{
-			this.ValidateTag(Test.Models.Command1Tag.Error);
-			return (Test.Models.GovernanceError)this.Value!;
+			this.ValidateTag(Command1Tag.Error);
+			return (GovernanceError)this.Value!;
 		}
 
-		public Test.Models.SpawnResponse AsSpawn()
+		public SpawnResponse AsSpawn()
 		{
-			this.ValidateTag(Test.Models.Command1Tag.Spawn);
-			return (Test.Models.SpawnResponse)this.Value!;
+			this.ValidateTag(Command1Tag.Spawn);
+			return (SpawnResponse)this.Value!;
 		}
 
-		public Test.Models.SpawnResponse AsSplit()
+		public SpawnResponse AsSplit()
 		{
-			this.ValidateTag(Test.Models.Command1Tag.Split);
-			return (Test.Models.SpawnResponse)this.Value!;
+			this.ValidateTag(Command1Tag.Split);
+			return (SpawnResponse)this.Value!;
 		}
 
-		public Test.Models.Command1.Command1O3 AsFollow()
+		public Command1.Command1O3 AsFollow()
 		{
-			this.ValidateTag(Test.Models.Command1Tag.Follow);
-			return (Test.Models.Command1.Command1O3)this.Value!;
+			this.ValidateTag(Command1Tag.Follow);
+			return (Command1.Command1O3)this.Value!;
 		}
 
-		public Test.Models.ClaimOrRefreshResponse AsClaimOrRefresh()
+		public ClaimOrRefreshResponse AsClaimOrRefresh()
 		{
-			this.ValidateTag(Test.Models.Command1Tag.ClaimOrRefresh);
-			return (Test.Models.ClaimOrRefreshResponse)this.Value!;
+			this.ValidateTag(Command1Tag.ClaimOrRefresh);
+			return (ClaimOrRefreshResponse)this.Value!;
 		}
 
-		public Test.Models.Command1.Command1O5 AsConfigure()
+		public Command1.Command1O5 AsConfigure()
 		{
-			this.ValidateTag(Test.Models.Command1Tag.Configure);
-			return (Test.Models.Command1.Command1O5)this.Value!;
+			this.ValidateTag(Command1Tag.Configure);
+			return (Command1.Command1O5)this.Value!;
 		}
 
-		public Test.Models.Command1.Command1O6 AsRegisterVote()
+		public Command1.Command1O6 AsRegisterVote()
 		{
-			this.ValidateTag(Test.Models.Command1Tag.RegisterVote);
-			return (Test.Models.Command1.Command1O6)this.Value!;
+			this.ValidateTag(Command1Tag.RegisterVote);
+			return (Command1.Command1O6)this.Value!;
 		}
 
-		public Test.Models.Command1.Command1O7 AsMerge()
+		public Command1.Command1O7 AsMerge()
 		{
-			this.ValidateTag(Test.Models.Command1Tag.Merge);
-			return (Test.Models.Command1.Command1O7)this.Value!;
+			this.ValidateTag(Command1Tag.Merge);
+			return (Command1.Command1O7)this.Value!;
 		}
 
-		public Test.Models.SpawnResponse AsDisburseToNeuron()
+		public SpawnResponse AsDisburseToNeuron()
 		{
-			this.ValidateTag(Test.Models.Command1Tag.DisburseToNeuron);
-			return (Test.Models.SpawnResponse)this.Value!;
+			this.ValidateTag(Command1Tag.DisburseToNeuron);
+			return (SpawnResponse)this.Value!;
 		}
 
-		public Test.Models.MakeProposalResponse AsMakeProposal()
+		public MakeProposalResponse AsMakeProposal()
 		{
-			this.ValidateTag(Test.Models.Command1Tag.MakeProposal);
-			return (Test.Models.MakeProposalResponse)this.Value!;
+			this.ValidateTag(Command1Tag.MakeProposal);
+			return (MakeProposalResponse)this.Value!;
 		}
 
-		public Test.Models.MergeMaturityResponse AsMergeMaturity()
+		public MergeMaturityResponse AsMergeMaturity()
 		{
-			this.ValidateTag(Test.Models.Command1Tag.MergeMaturity);
-			return (Test.Models.MergeMaturityResponse)this.Value!;
+			this.ValidateTag(Command1Tag.MergeMaturity);
+			return (MergeMaturityResponse)this.Value!;
 		}
 
-		public Test.Models.DisburseResponse AsDisburse()
+		public DisburseResponse AsDisburse()
 		{
-			this.ValidateTag(Test.Models.Command1Tag.Disburse);
-			return (Test.Models.DisburseResponse)this.Value!;
+			this.ValidateTag(Command1Tag.Disburse);
+			return (DisburseResponse)this.Value!;
 		}
 
-		private void ValidateTag(Test.Models.Command1Tag tag)
+		private void ValidateTag(Command1Tag tag)
 		{
 			if (!this.Tag.Equals(tag))
 			{
-				throw new System.InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
+				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
 			}
 		}
 
@@ -1071,59 +1138,63 @@ namespace Test.Models
 
 	public enum Command1Tag
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Error")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.GovernanceError))]
+		[CandidNameAttribute("Error")]
+		[VariantOptionTypeAttribute(typeof(GovernanceError))]
 		Error,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Spawn")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.SpawnResponse))]
+		[CandidNameAttribute("Spawn")]
+		[VariantOptionTypeAttribute(typeof(SpawnResponse))]
 		Spawn,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Split")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.SpawnResponse))]
+		[CandidNameAttribute("Split")]
+		[VariantOptionTypeAttribute(typeof(SpawnResponse))]
 		Split,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Follow")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.Command1.Command1O3))]
+		[CandidNameAttribute("Follow")]
+		[VariantOptionTypeAttribute(typeof(Command1.Command1O3))]
 		Follow,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("ClaimOrRefresh")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.ClaimOrRefreshResponse))]
+		[CandidNameAttribute("ClaimOrRefresh")]
+		[VariantOptionTypeAttribute(typeof(ClaimOrRefreshResponse))]
 		ClaimOrRefresh,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Configure")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.Command1.Command1O5))]
+		[CandidNameAttribute("Configure")]
+		[VariantOptionTypeAttribute(typeof(Command1.Command1O5))]
 		Configure,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("RegisterVote")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.Command1.Command1O6))]
+		[CandidNameAttribute("RegisterVote")]
+		[VariantOptionTypeAttribute(typeof(Command1.Command1O6))]
 		RegisterVote,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Merge")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.Command1.Command1O7))]
+		[CandidNameAttribute("Merge")]
+		[VariantOptionTypeAttribute(typeof(Command1.Command1O7))]
 		Merge,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("DisburseToNeuron")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.SpawnResponse))]
+		[CandidNameAttribute("DisburseToNeuron")]
+		[VariantOptionTypeAttribute(typeof(SpawnResponse))]
 		DisburseToNeuron,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("MakeProposal")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.MakeProposalResponse))]
+		[CandidNameAttribute("MakeProposal")]
+		[VariantOptionTypeAttribute(typeof(MakeProposalResponse))]
 		MakeProposal,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("MergeMaturity")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.MergeMaturityResponse))]
+		[CandidNameAttribute("MergeMaturity")]
+		[VariantOptionTypeAttribute(typeof(MergeMaturityResponse))]
 		MergeMaturity,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Disburse")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.DisburseResponse))]
+		[CandidNameAttribute("Disburse")]
+		[VariantOptionTypeAttribute(typeof(DisburseResponse))]
 		Disburse
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'Command2'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test.Models;
+using System;
 
 namespace Test.Models
 {
-	[EdjCase.ICP.Candid.Mapping.VariantAttribute(typeof(Test.Models.Command2Tag))]
+	[VariantAttribute(typeof(Command2Tag))]
 	public class Command2
 	{
-		[EdjCase.ICP.Candid.Mapping.VariantTagPropertyAttribute()]
-		public Test.Models.Command2Tag Tag { get; set; }
+		[VariantTagPropertyAttribute()]
+		public Command2Tag Tag { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.VariantValuePropertyAttribute()]
+		[VariantValuePropertyAttribute()]
 		private System.Object? Value { get; set; }
 
-		public Command2(Test.Models.Command2Tag tag, System.Object? value)
+		public Command2(Command2Tag tag, Object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -1133,161 +1204,169 @@ namespace Test.Models
 		{
 		}
 
-		public static Test.Models.Command2 Spawn(Test.Models.Spawn info)
+		public static Command2 Spawn(Spawn info)
 		{
-			return new Test.Models.Command2(Test.Models.Command2Tag.Spawn, info);
+			return new Command2(Command2Tag.Spawn, info);
 		}
 
-		public static Test.Models.Command2 Split(Test.Models.Split info)
+		public static Command2 Split(Split info)
 		{
-			return new Test.Models.Command2(Test.Models.Command2Tag.Split, info);
+			return new Command2(Command2Tag.Split, info);
 		}
 
-		public static Test.Models.Command2 Configure(Test.Models.Configure info)
+		public static Command2 Configure(Configure info)
 		{
-			return new Test.Models.Command2(Test.Models.Command2Tag.Configure, info);
+			return new Command2(Command2Tag.Configure, info);
 		}
 
-		public static Test.Models.Command2 Merge(Test.Models.Merge info)
+		public static Command2 Merge(Merge info)
 		{
-			return new Test.Models.Command2(Test.Models.Command2Tag.Merge, info);
+			return new Command2(Command2Tag.Merge, info);
 		}
 
-		public static Test.Models.Command2 DisburseToNeuron(Test.Models.DisburseToNeuron info)
+		public static Command2 DisburseToNeuron(DisburseToNeuron info)
 		{
-			return new Test.Models.Command2(Test.Models.Command2Tag.DisburseToNeuron, info);
+			return new Command2(Command2Tag.DisburseToNeuron, info);
 		}
 
-		public static Test.Models.Command2 ClaimOrRefreshNeuron(Test.Models.ClaimOrRefresh info)
+		public static Command2 ClaimOrRefreshNeuron(ClaimOrRefresh info)
 		{
-			return new Test.Models.Command2(Test.Models.Command2Tag.ClaimOrRefreshNeuron, info);
+			return new Command2(Command2Tag.ClaimOrRefreshNeuron, info);
 		}
 
-		public static Test.Models.Command2 MergeMaturity(Test.Models.MergeMaturity info)
+		public static Command2 MergeMaturity(MergeMaturity info)
 		{
-			return new Test.Models.Command2(Test.Models.Command2Tag.MergeMaturity, info);
+			return new Command2(Command2Tag.MergeMaturity, info);
 		}
 
-		public static Test.Models.Command2 Disburse(Test.Models.Disburse info)
+		public static Command2 Disburse(Disburse info)
 		{
-			return new Test.Models.Command2(Test.Models.Command2Tag.Disburse, info);
+			return new Command2(Command2Tag.Disburse, info);
 		}
 
-		public Test.Models.Spawn AsSpawn()
+		public Spawn AsSpawn()
 		{
-			this.ValidateTag(Test.Models.Command2Tag.Spawn);
-			return (Test.Models.Spawn)this.Value!;
+			this.ValidateTag(Command2Tag.Spawn);
+			return (Spawn)this.Value!;
 		}
 
-		public Test.Models.Split AsSplit()
+		public Split AsSplit()
 		{
-			this.ValidateTag(Test.Models.Command2Tag.Split);
-			return (Test.Models.Split)this.Value!;
+			this.ValidateTag(Command2Tag.Split);
+			return (Split)this.Value!;
 		}
 
-		public Test.Models.Configure AsConfigure()
+		public Configure AsConfigure()
 		{
-			this.ValidateTag(Test.Models.Command2Tag.Configure);
-			return (Test.Models.Configure)this.Value!;
+			this.ValidateTag(Command2Tag.Configure);
+			return (Configure)this.Value!;
 		}
 
-		public Test.Models.Merge AsMerge()
+		public Merge AsMerge()
 		{
-			this.ValidateTag(Test.Models.Command2Tag.Merge);
-			return (Test.Models.Merge)this.Value!;
+			this.ValidateTag(Command2Tag.Merge);
+			return (Merge)this.Value!;
 		}
 
-		public Test.Models.DisburseToNeuron AsDisburseToNeuron()
+		public DisburseToNeuron AsDisburseToNeuron()
 		{
-			this.ValidateTag(Test.Models.Command2Tag.DisburseToNeuron);
-			return (Test.Models.DisburseToNeuron)this.Value!;
+			this.ValidateTag(Command2Tag.DisburseToNeuron);
+			return (DisburseToNeuron)this.Value!;
 		}
 
-		public Test.Models.ClaimOrRefresh AsClaimOrRefreshNeuron()
+		public ClaimOrRefresh AsClaimOrRefreshNeuron()
 		{
-			this.ValidateTag(Test.Models.Command2Tag.ClaimOrRefreshNeuron);
-			return (Test.Models.ClaimOrRefresh)this.Value!;
+			this.ValidateTag(Command2Tag.ClaimOrRefreshNeuron);
+			return (ClaimOrRefresh)this.Value!;
 		}
 
-		public Test.Models.MergeMaturity AsMergeMaturity()
+		public MergeMaturity AsMergeMaturity()
 		{
-			this.ValidateTag(Test.Models.Command2Tag.MergeMaturity);
-			return (Test.Models.MergeMaturity)this.Value!;
+			this.ValidateTag(Command2Tag.MergeMaturity);
+			return (MergeMaturity)this.Value!;
 		}
 
-		public Test.Models.Disburse AsDisburse()
+		public Disburse AsDisburse()
 		{
-			this.ValidateTag(Test.Models.Command2Tag.Disburse);
-			return (Test.Models.Disburse)this.Value!;
+			this.ValidateTag(Command2Tag.Disburse);
+			return (Disburse)this.Value!;
 		}
 
-		private void ValidateTag(Test.Models.Command2Tag tag)
+		private void ValidateTag(Command2Tag tag)
 		{
 			if (!this.Tag.Equals(tag))
 			{
-				throw new System.InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
+				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
 			}
 		}
 	}
 
 	public enum Command2Tag
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Spawn")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.Spawn))]
+		[CandidNameAttribute("Spawn")]
+		[VariantOptionTypeAttribute(typeof(Spawn))]
 		Spawn,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Split")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.Split))]
+		[CandidNameAttribute("Split")]
+		[VariantOptionTypeAttribute(typeof(Split))]
 		Split,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Configure")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.Configure))]
+		[CandidNameAttribute("Configure")]
+		[VariantOptionTypeAttribute(typeof(Configure))]
 		Configure,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Merge")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.Merge))]
+		[CandidNameAttribute("Merge")]
+		[VariantOptionTypeAttribute(typeof(Merge))]
 		Merge,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("DisburseToNeuron")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.DisburseToNeuron))]
+		[CandidNameAttribute("DisburseToNeuron")]
+		[VariantOptionTypeAttribute(typeof(DisburseToNeuron))]
 		DisburseToNeuron,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("ClaimOrRefreshNeuron")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.ClaimOrRefresh))]
+		[CandidNameAttribute("ClaimOrRefreshNeuron")]
+		[VariantOptionTypeAttribute(typeof(ClaimOrRefresh))]
 		ClaimOrRefreshNeuron,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("MergeMaturity")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.MergeMaturity))]
+		[CandidNameAttribute("MergeMaturity")]
+		[VariantOptionTypeAttribute(typeof(MergeMaturity))]
 		MergeMaturity,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Disburse")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.Disburse))]
+		[CandidNameAttribute("Disburse")]
+		[VariantOptionTypeAttribute(typeof(Disburse))]
 		Disburse
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'Configure'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test.Models;
+using EdjCase.ICP.Candid.Models;
 
 namespace Test.Models
 {
 	public class Configure
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("operation")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.Operation> Operation { get; set; }
+		[CandidNameAttribute("operation")]
+		public OptionalValue<Operation> Operation { get; set; }
 
-		public Configure(EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.Operation> operation)
+		public Configure(OptionalValue<Operation> operation)
 		{
 			this.Operation = operation;
 		}
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'Disburse'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test.Models;
+using EdjCase.ICP.Candid.Models;
 
 namespace Test.Models
 {
 	public class Disburse
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("to_account")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.AccountIdentifier> ToAccount { get; set; }
+		[CandidNameAttribute("to_account")]
+		public OptionalValue<AccountIdentifier> ToAccount { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("amount")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.Amount> Amount { get; set; }
+		[CandidNameAttribute("amount")]
+		public OptionalValue<Amount> Amount { get; set; }
 
-		public Disburse(EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.AccountIdentifier> toAccount, EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.Amount> amount)
+		public Disburse(OptionalValue<AccountIdentifier> toAccount, OptionalValue<Amount> amount)
 		{
 			this.ToAccount = toAccount;
 			this.Amount = amount;
@@ -1295,44 +1374,51 @@ namespace Test.Models
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'DisburseResponse'
+
+using EdjCase.ICP.Candid.Mapping;
+using System;
 
 namespace Test.Models
 {
 	public class DisburseResponse
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("transfer_block_height")]
-		public System.UInt64 TransferBlockHeight { get; set; }
+		[CandidNameAttribute("transfer_block_height")]
+		public UInt64 TransferBlockHeight { get; set; }
 
-		public DisburseResponse(System.UInt64 transferBlockHeight)
+		public DisburseResponse(UInt64 transferBlockHeight)
 		{
 			this.TransferBlockHeight = transferBlockHeight;
 		}
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'DisburseToNeuron'
+
+using EdjCase.ICP.Candid.Mapping;
+using System;
+using EdjCase.ICP.Candid.Models;
 
 namespace Test.Models
 {
 	public class DisburseToNeuron
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("dissolve_delay_seconds")]
-		public System.UInt64 DissolveDelaySeconds { get; set; }
+		[CandidNameAttribute("dissolve_delay_seconds")]
+		public UInt64 DissolveDelaySeconds { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("kyc_verified")]
-		public System.Boolean KycVerified { get; set; }
+		[CandidNameAttribute("kyc_verified")]
+		public Boolean KycVerified { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("amount_e8s")]
-		public System.UInt64 AmountE8s { get; set; }
+		[CandidNameAttribute("amount_e8s")]
+		public UInt64 AmountE8s { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("new_controller")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<EdjCase.ICP.Candid.Models.Principal> NewController { get; set; }
+		[CandidNameAttribute("new_controller")]
+		public OptionalValue<Principal> NewController { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("nonce")]
-		public System.UInt64 Nonce { get; set; }
+		[CandidNameAttribute("nonce")]
+		public UInt64 Nonce { get; set; }
 
-		public DisburseToNeuron(System.UInt64 dissolveDelaySeconds, System.Boolean kycVerified, System.UInt64 amountE8s, EdjCase.ICP.Candid.Models.OptionalValue<EdjCase.ICP.Candid.Models.Principal> newController, System.UInt64 nonce)
+		public DisburseToNeuron(UInt64 dissolveDelaySeconds, Boolean kycVerified, UInt64 amountE8s, OptionalValue<Principal> newController, UInt64 nonce)
 		{
 			this.DissolveDelaySeconds = dissolveDelaySeconds;
 			this.KycVerified = kycVerified;
@@ -1343,20 +1429,24 @@ namespace Test.Models
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'DissolveState'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test.Models;
+using System;
 
 namespace Test.Models
 {
-	[EdjCase.ICP.Candid.Mapping.VariantAttribute(typeof(Test.Models.DissolveStateTag))]
+	[VariantAttribute(typeof(DissolveStateTag))]
 	public class DissolveState
 	{
-		[EdjCase.ICP.Candid.Mapping.VariantTagPropertyAttribute()]
-		public Test.Models.DissolveStateTag Tag { get; set; }
+		[VariantTagPropertyAttribute()]
+		public DissolveStateTag Tag { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.VariantValuePropertyAttribute()]
+		[VariantValuePropertyAttribute()]
 		private System.Object? Value { get; set; }
 
-		public DissolveState(Test.Models.DissolveStateTag tag, System.Object? value)
+		public DissolveState(DissolveStateTag tag, Object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -1366,61 +1456,65 @@ namespace Test.Models
 		{
 		}
 
-		public static Test.Models.DissolveState DissolveDelaySeconds(System.UInt64 info)
+		public static DissolveState DissolveDelaySeconds(UInt64 info)
 		{
-			return new Test.Models.DissolveState(Test.Models.DissolveStateTag.DissolveDelaySeconds, info);
+			return new DissolveState(DissolveStateTag.DissolveDelaySeconds, info);
 		}
 
-		public static Test.Models.DissolveState WhenDissolvedTimestampSeconds(System.UInt64 info)
+		public static DissolveState WhenDissolvedTimestampSeconds(UInt64 info)
 		{
-			return new Test.Models.DissolveState(Test.Models.DissolveStateTag.WhenDissolvedTimestampSeconds, info);
+			return new DissolveState(DissolveStateTag.WhenDissolvedTimestampSeconds, info);
 		}
 
-		public System.UInt64 AsDissolveDelaySeconds()
+		public UInt64 AsDissolveDelaySeconds()
 		{
-			this.ValidateTag(Test.Models.DissolveStateTag.DissolveDelaySeconds);
-			return (System.UInt64)this.Value!;
+			this.ValidateTag(DissolveStateTag.DissolveDelaySeconds);
+			return (UInt64)this.Value!;
 		}
 
-		public System.UInt64 AsWhenDissolvedTimestampSeconds()
+		public UInt64 AsWhenDissolvedTimestampSeconds()
 		{
-			this.ValidateTag(Test.Models.DissolveStateTag.WhenDissolvedTimestampSeconds);
-			return (System.UInt64)this.Value!;
+			this.ValidateTag(DissolveStateTag.WhenDissolvedTimestampSeconds);
+			return (UInt64)this.Value!;
 		}
 
-		private void ValidateTag(Test.Models.DissolveStateTag tag)
+		private void ValidateTag(DissolveStateTag tag)
 		{
 			if (!this.Tag.Equals(tag))
 			{
-				throw new System.InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
+				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
 			}
 		}
 	}
 
 	public enum DissolveStateTag
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("DissolveDelaySeconds")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(System.UInt64))]
+		[CandidNameAttribute("DissolveDelaySeconds")]
+		[VariantOptionTypeAttribute(typeof(UInt64))]
 		DissolveDelaySeconds,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("WhenDissolvedTimestampSeconds")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(System.UInt64))]
+		[CandidNameAttribute("WhenDissolvedTimestampSeconds")]
+		[VariantOptionTypeAttribute(typeof(UInt64))]
 		WhenDissolvedTimestampSeconds
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'ExecuteNnsFunction'
+
+using EdjCase.ICP.Candid.Mapping;
+using System;
+using System.Collections.Generic;
 
 namespace Test.Models
 {
 	public class ExecuteNnsFunction
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("nns_function")]
-		public System.Int32 NnsFunction { get; set; }
+		[CandidNameAttribute("nns_function")]
+		public Int32 NnsFunction { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("payload")]
-		public System.Collections.Generic.List<System.Byte> Payload { get; set; }
+		[CandidNameAttribute("payload")]
+		public List<Byte> Payload { get; set; }
 
-		public ExecuteNnsFunction(System.Int32 nnsFunction, System.Collections.Generic.List<System.Byte> payload)
+		public ExecuteNnsFunction(Int32 nnsFunction, List<Byte> payload)
 		{
 			this.NnsFunction = nnsFunction;
 			this.Payload = payload;
@@ -1428,19 +1522,24 @@ namespace Test.Models
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'Follow'
+
+using EdjCase.ICP.Candid.Mapping;
+using System;
+using Test.Models;
+using System.Collections.Generic;
 
 namespace Test.Models
 {
 	public class Follow
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("topic")]
-		public System.Int32 Topic { get; set; }
+		[CandidNameAttribute("topic")]
+		public Int32 Topic { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("followees")]
-		public System.Collections.Generic.List<Test.Models.NeuronId> Followees { get; set; }
+		[CandidNameAttribute("followees")]
+		public List<NeuronId> Followees { get; set; }
 
-		public Follow(System.Int32 topic, System.Collections.Generic.List<Test.Models.NeuronId> followees)
+		public Follow(Int32 topic, List<NeuronId> followees)
 		{
 			this.Topic = topic;
 			this.Followees = followees;
@@ -1448,65 +1547,75 @@ namespace Test.Models
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'Followees'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test.Models;
+using System.Collections.Generic;
 
 namespace Test.Models
 {
 	public class Followees
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("followees")]
-		public System.Collections.Generic.List<Test.Models.NeuronId> Followees { get; set; }
+		[CandidNameAttribute("followees")]
+		public List<NeuronId> Followees_ { get; set; }
 
-		public Followees(System.Collections.Generic.List<Test.Models.NeuronId> followees)
+		public Followees(List<NeuronId> followees)
 		{
-			this.Followees = followees;
+			this.Followees_ = followees;
 		}
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'Governance'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test.Models;
+using System.Collections.Generic;
+using System;
+using EdjCase.ICP.Candid.Models;
 
 namespace Test.Models
 {
 	public class Governance
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("default_followees")]
-		public System.Collections.Generic.List<Test.Models.Governance.GovernanceR0V0> DefaultFollowees { get; set; }
+		[CandidNameAttribute("default_followees")]
+		public List<Governance.GovernanceR0V0> DefaultFollowees { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("wait_for_quiet_threshold_seconds")]
-		public System.UInt64 WaitForQuietThresholdSeconds { get; set; }
+		[CandidNameAttribute("wait_for_quiet_threshold_seconds")]
+		public UInt64 WaitForQuietThresholdSeconds { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("metrics")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.GovernanceCachedMetrics> Metrics { get; set; }
+		[CandidNameAttribute("metrics")]
+		public OptionalValue<GovernanceCachedMetrics> Metrics { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("node_providers")]
-		public System.Collections.Generic.List<Test.Models.NodeProvider> NodeProviders { get; set; }
+		[CandidNameAttribute("node_providers")]
+		public List<NodeProvider> NodeProviders { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("economics")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.NetworkEconomics> Economics { get; set; }
+		[CandidNameAttribute("economics")]
+		public OptionalValue<NetworkEconomics> Economics { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("latest_reward_event")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.RewardEvent> LatestRewardEvent { get; set; }
+		[CandidNameAttribute("latest_reward_event")]
+		public OptionalValue<RewardEvent> LatestRewardEvent { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("to_claim_transfers")]
-		public System.Collections.Generic.List<Test.Models.NeuronStakeTransfer> ToClaimTransfers { get; set; }
+		[CandidNameAttribute("to_claim_transfers")]
+		public List<NeuronStakeTransfer> ToClaimTransfers { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("short_voting_period_seconds")]
-		public System.UInt64 ShortVotingPeriodSeconds { get; set; }
+		[CandidNameAttribute("short_voting_period_seconds")]
+		public UInt64 ShortVotingPeriodSeconds { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("proposals")]
-		public System.Collections.Generic.List<Test.Models.Governance.GovernanceR8V0> Proposals { get; set; }
+		[CandidNameAttribute("proposals")]
+		public List<Governance.GovernanceR8V0> Proposals { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("in_flight_commands")]
-		public System.Collections.Generic.List<Test.Models.Governance.GovernanceR9V0> InFlightCommands { get; set; }
+		[CandidNameAttribute("in_flight_commands")]
+		public List<Governance.GovernanceR9V0> InFlightCommands { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("neurons")]
-		public System.Collections.Generic.List<Test.Models.Governance.GovernanceR10V0> Neurons { get; set; }
+		[CandidNameAttribute("neurons")]
+		public List<Governance.GovernanceR10V0> Neurons { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("genesis_timestamp_seconds")]
-		public System.UInt64 GenesisTimestampSeconds { get; set; }
+		[CandidNameAttribute("genesis_timestamp_seconds")]
+		public UInt64 GenesisTimestampSeconds { get; set; }
 
-		public Governance(System.Collections.Generic.List<Test.Models.Governance.GovernanceR0V0> defaultFollowees, System.UInt64 waitForQuietThresholdSeconds, EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.GovernanceCachedMetrics> metrics, System.Collections.Generic.List<Test.Models.NodeProvider> nodeProviders, EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.NetworkEconomics> economics, EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.RewardEvent> latestRewardEvent, System.Collections.Generic.List<Test.Models.NeuronStakeTransfer> toClaimTransfers, System.UInt64 shortVotingPeriodSeconds, System.Collections.Generic.List<Test.Models.Governance.GovernanceR8V0> proposals, System.Collections.Generic.List<Test.Models.Governance.GovernanceR9V0> inFlightCommands, System.Collections.Generic.List<Test.Models.Governance.GovernanceR10V0> neurons, System.UInt64 genesisTimestampSeconds)
+		public Governance(List<Governance.GovernanceR0V0> defaultFollowees, UInt64 waitForQuietThresholdSeconds, OptionalValue<GovernanceCachedMetrics> metrics, List<NodeProvider> nodeProviders, OptionalValue<NetworkEconomics> economics, OptionalValue<RewardEvent> latestRewardEvent, List<NeuronStakeTransfer> toClaimTransfers, UInt64 shortVotingPeriodSeconds, List<Governance.GovernanceR8V0> proposals, List<Governance.GovernanceR9V0> inFlightCommands, List<Governance.GovernanceR10V0> neurons, UInt64 genesisTimestampSeconds)
 		{
 			this.DefaultFollowees = defaultFollowees;
 			this.WaitForQuietThresholdSeconds = waitForQuietThresholdSeconds;
@@ -1524,13 +1633,13 @@ namespace Test.Models
 
 		public class GovernanceR0V0
 		{
-			[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("0")]
-			public System.Int32 F0 { get; set; }
+			[CandidNameAttribute("0")]
+			public Int32 F0 { get; set; }
 
-			[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("1")]
-			public Test.Models.Followees F1 { get; set; }
+			[CandidNameAttribute("1")]
+			public Followees F1 { get; set; }
 
-			public GovernanceR0V0(System.Int32 f0, Test.Models.Followees f1)
+			public GovernanceR0V0(Int32 f0, Followees f1)
 			{
 				this.F0 = f0;
 				this.F1 = f1;
@@ -1539,13 +1648,13 @@ namespace Test.Models
 
 		public class GovernanceR8V0
 		{
-			[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("0")]
-			public System.UInt64 F0 { get; set; }
+			[CandidNameAttribute("0")]
+			public UInt64 F0 { get; set; }
 
-			[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("1")]
-			public Test.Models.ProposalData F1 { get; set; }
+			[CandidNameAttribute("1")]
+			public ProposalData F1 { get; set; }
 
-			public GovernanceR8V0(System.UInt64 f0, Test.Models.ProposalData f1)
+			public GovernanceR8V0(UInt64 f0, ProposalData f1)
 			{
 				this.F0 = f0;
 				this.F1 = f1;
@@ -1554,13 +1663,13 @@ namespace Test.Models
 
 		public class GovernanceR9V0
 		{
-			[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("0")]
-			public System.UInt64 F0 { get; set; }
+			[CandidNameAttribute("0")]
+			public UInt64 F0 { get; set; }
 
-			[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("1")]
-			public Test.Models.NeuronInFlightCommand F1 { get; set; }
+			[CandidNameAttribute("1")]
+			public NeuronInFlightCommand F1 { get; set; }
 
-			public GovernanceR9V0(System.UInt64 f0, Test.Models.NeuronInFlightCommand f1)
+			public GovernanceR9V0(UInt64 f0, NeuronInFlightCommand f1)
 			{
 				this.F0 = f0;
 				this.F1 = f1;
@@ -1569,13 +1678,13 @@ namespace Test.Models
 
 		public class GovernanceR10V0
 		{
-			[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("0")]
-			public System.UInt64 F0 { get; set; }
+			[CandidNameAttribute("0")]
+			public UInt64 F0 { get; set; }
 
-			[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("1")]
-			public Test.Models.Neuron F1 { get; set; }
+			[CandidNameAttribute("1")]
+			public Neuron F1 { get; set; }
 
-			public GovernanceR10V0(System.UInt64 f0, Test.Models.Neuron f1)
+			public GovernanceR10V0(UInt64 f0, Neuron f1)
 			{
 				this.F0 = f0;
 				this.F1 = f1;
@@ -1584,61 +1693,66 @@ namespace Test.Models
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'GovernanceCachedMetrics'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test.Models;
+using System.Collections.Generic;
+using System;
 
 namespace Test.Models
 {
 	public class GovernanceCachedMetrics
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("not_dissolving_neurons_e8s_buckets")]
-		public System.Collections.Generic.List<Test.Models.GovernanceCachedMetrics.GovernanceCachedMetricsR0V0> NotDissolvingNeuronsE8sBuckets { get; set; }
+		[CandidNameAttribute("not_dissolving_neurons_e8s_buckets")]
+		public List<GovernanceCachedMetrics.GovernanceCachedMetricsR0V0> NotDissolvingNeuronsE8sBuckets { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("garbage_collectable_neurons_count")]
-		public System.UInt64 GarbageCollectableNeuronsCount { get; set; }
+		[CandidNameAttribute("garbage_collectable_neurons_count")]
+		public UInt64 GarbageCollectableNeuronsCount { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("neurons_with_invalid_stake_count")]
-		public System.UInt64 NeuronsWithInvalidStakeCount { get; set; }
+		[CandidNameAttribute("neurons_with_invalid_stake_count")]
+		public UInt64 NeuronsWithInvalidStakeCount { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("not_dissolving_neurons_count_buckets")]
-		public System.Collections.Generic.List<Test.Models.GovernanceCachedMetrics.GovernanceCachedMetricsR3V0> NotDissolvingNeuronsCountBuckets { get; set; }
+		[CandidNameAttribute("not_dissolving_neurons_count_buckets")]
+		public List<GovernanceCachedMetrics.GovernanceCachedMetricsR3V0> NotDissolvingNeuronsCountBuckets { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("total_supply_icp")]
-		public System.UInt64 TotalSupplyIcp { get; set; }
+		[CandidNameAttribute("total_supply_icp")]
+		public UInt64 TotalSupplyIcp { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("neurons_with_less_than_6_months_dissolve_delay_count")]
-		public System.UInt64 NeuronsWithLessThan6MonthsDissolveDelayCount { get; set; }
+		[CandidNameAttribute("neurons_with_less_than_6_months_dissolve_delay_count")]
+		public UInt64 NeuronsWithLessThan6MonthsDissolveDelayCount { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("dissolved_neurons_count")]
-		public System.UInt64 DissolvedNeuronsCount { get; set; }
+		[CandidNameAttribute("dissolved_neurons_count")]
+		public UInt64 DissolvedNeuronsCount { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("total_staked_e8s")]
-		public System.UInt64 TotalStakedE8s { get; set; }
+		[CandidNameAttribute("total_staked_e8s")]
+		public UInt64 TotalStakedE8s { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("not_dissolving_neurons_count")]
-		public System.UInt64 NotDissolvingNeuronsCount { get; set; }
+		[CandidNameAttribute("not_dissolving_neurons_count")]
+		public UInt64 NotDissolvingNeuronsCount { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("dissolved_neurons_e8s")]
-		public System.UInt64 DissolvedNeuronsE8s { get; set; }
+		[CandidNameAttribute("dissolved_neurons_e8s")]
+		public UInt64 DissolvedNeuronsE8s { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("neurons_with_less_than_6_months_dissolve_delay_e8s")]
-		public System.UInt64 NeuronsWithLessThan6MonthsDissolveDelayE8s { get; set; }
+		[CandidNameAttribute("neurons_with_less_than_6_months_dissolve_delay_e8s")]
+		public UInt64 NeuronsWithLessThan6MonthsDissolveDelayE8s { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("dissolving_neurons_count_buckets")]
-		public System.Collections.Generic.List<Test.Models.GovernanceCachedMetrics.GovernanceCachedMetricsR11V0> DissolvingNeuronsCountBuckets { get; set; }
+		[CandidNameAttribute("dissolving_neurons_count_buckets")]
+		public List<GovernanceCachedMetrics.GovernanceCachedMetricsR11V0> DissolvingNeuronsCountBuckets { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("dissolving_neurons_count")]
-		public System.UInt64 DissolvingNeuronsCount { get; set; }
+		[CandidNameAttribute("dissolving_neurons_count")]
+		public UInt64 DissolvingNeuronsCount { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("dissolving_neurons_e8s_buckets")]
-		public System.Collections.Generic.List<Test.Models.GovernanceCachedMetrics.GovernanceCachedMetricsR13V0> DissolvingNeuronsE8sBuckets { get; set; }
+		[CandidNameAttribute("dissolving_neurons_e8s_buckets")]
+		public List<GovernanceCachedMetrics.GovernanceCachedMetricsR13V0> DissolvingNeuronsE8sBuckets { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("community_fund_total_staked_e8s")]
-		public System.UInt64 CommunityFundTotalStakedE8s { get; set; }
+		[CandidNameAttribute("community_fund_total_staked_e8s")]
+		public UInt64 CommunityFundTotalStakedE8s { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("timestamp_seconds")]
-		public System.UInt64 TimestampSeconds { get; set; }
+		[CandidNameAttribute("timestamp_seconds")]
+		public UInt64 TimestampSeconds { get; set; }
 
-		public GovernanceCachedMetrics(System.Collections.Generic.List<Test.Models.GovernanceCachedMetrics.GovernanceCachedMetricsR0V0> notDissolvingNeuronsE8sBuckets, System.UInt64 garbageCollectableNeuronsCount, System.UInt64 neuronsWithInvalidStakeCount, System.Collections.Generic.List<Test.Models.GovernanceCachedMetrics.GovernanceCachedMetricsR3V0> notDissolvingNeuronsCountBuckets, System.UInt64 totalSupplyIcp, System.UInt64 neuronsWithLessThan6MonthsDissolveDelayCount, System.UInt64 dissolvedNeuronsCount, System.UInt64 totalStakedE8s, System.UInt64 notDissolvingNeuronsCount, System.UInt64 dissolvedNeuronsE8s, System.UInt64 neuronsWithLessThan6MonthsDissolveDelayE8s, System.Collections.Generic.List<Test.Models.GovernanceCachedMetrics.GovernanceCachedMetricsR11V0> dissolvingNeuronsCountBuckets, System.UInt64 dissolvingNeuronsCount, System.Collections.Generic.List<Test.Models.GovernanceCachedMetrics.GovernanceCachedMetricsR13V0> dissolvingNeuronsE8sBuckets, System.UInt64 communityFundTotalStakedE8s, System.UInt64 timestampSeconds)
+		public GovernanceCachedMetrics(List<GovernanceCachedMetrics.GovernanceCachedMetricsR0V0> notDissolvingNeuronsE8sBuckets, UInt64 garbageCollectableNeuronsCount, UInt64 neuronsWithInvalidStakeCount, List<GovernanceCachedMetrics.GovernanceCachedMetricsR3V0> notDissolvingNeuronsCountBuckets, UInt64 totalSupplyIcp, UInt64 neuronsWithLessThan6MonthsDissolveDelayCount, UInt64 dissolvedNeuronsCount, UInt64 totalStakedE8s, UInt64 notDissolvingNeuronsCount, UInt64 dissolvedNeuronsE8s, UInt64 neuronsWithLessThan6MonthsDissolveDelayE8s, List<GovernanceCachedMetrics.GovernanceCachedMetricsR11V0> dissolvingNeuronsCountBuckets, UInt64 dissolvingNeuronsCount, List<GovernanceCachedMetrics.GovernanceCachedMetricsR13V0> dissolvingNeuronsE8sBuckets, UInt64 communityFundTotalStakedE8s, UInt64 timestampSeconds)
 		{
 			this.NotDissolvingNeuronsE8sBuckets = notDissolvingNeuronsE8sBuckets;
 			this.GarbageCollectableNeuronsCount = garbageCollectableNeuronsCount;
@@ -1660,13 +1774,13 @@ namespace Test.Models
 
 		public class GovernanceCachedMetricsR0V0
 		{
-			[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("0")]
-			public System.UInt64 F0 { get; set; }
+			[CandidNameAttribute("0")]
+			public UInt64 F0 { get; set; }
 
-			[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("1")]
-			public System.Double F1 { get; set; }
+			[CandidNameAttribute("1")]
+			public Double F1 { get; set; }
 
-			public GovernanceCachedMetricsR0V0(System.UInt64 f0, System.Double f1)
+			public GovernanceCachedMetricsR0V0(UInt64 f0, Double f1)
 			{
 				this.F0 = f0;
 				this.F1 = f1;
@@ -1675,13 +1789,13 @@ namespace Test.Models
 
 		public class GovernanceCachedMetricsR3V0
 		{
-			[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("0")]
-			public System.UInt64 F0 { get; set; }
+			[CandidNameAttribute("0")]
+			public UInt64 F0 { get; set; }
 
-			[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("1")]
-			public System.UInt64 F1 { get; set; }
+			[CandidNameAttribute("1")]
+			public UInt64 F1 { get; set; }
 
-			public GovernanceCachedMetricsR3V0(System.UInt64 f0, System.UInt64 f1)
+			public GovernanceCachedMetricsR3V0(UInt64 f0, UInt64 f1)
 			{
 				this.F0 = f0;
 				this.F1 = f1;
@@ -1690,13 +1804,13 @@ namespace Test.Models
 
 		public class GovernanceCachedMetricsR11V0
 		{
-			[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("0")]
-			public System.UInt64 F0 { get; set; }
+			[CandidNameAttribute("0")]
+			public UInt64 F0 { get; set; }
 
-			[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("1")]
-			public System.UInt64 F1 { get; set; }
+			[CandidNameAttribute("1")]
+			public UInt64 F1 { get; set; }
 
-			public GovernanceCachedMetricsR11V0(System.UInt64 f0, System.UInt64 f1)
+			public GovernanceCachedMetricsR11V0(UInt64 f0, UInt64 f1)
 			{
 				this.F0 = f0;
 				this.F1 = f1;
@@ -1705,13 +1819,13 @@ namespace Test.Models
 
 		public class GovernanceCachedMetricsR13V0
 		{
-			[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("0")]
-			public System.UInt64 F0 { get; set; }
+			[CandidNameAttribute("0")]
+			public UInt64 F0 { get; set; }
 
-			[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("1")]
-			public System.Double F1 { get; set; }
+			[CandidNameAttribute("1")]
+			public Double F1 { get; set; }
 
-			public GovernanceCachedMetricsR13V0(System.UInt64 f0, System.Double f1)
+			public GovernanceCachedMetricsR13V0(UInt64 f0, Double f1)
 			{
 				this.F0 = f0;
 				this.F1 = f1;
@@ -1720,19 +1834,22 @@ namespace Test.Models
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'GovernanceError'
+
+using EdjCase.ICP.Candid.Mapping;
+using System;
 
 namespace Test.Models
 {
 	public class GovernanceError
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("error_message")]
-		public System.String ErrorMessage { get; set; }
+		[CandidNameAttribute("error_message")]
+		public String ErrorMessage { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("error_type")]
-		public System.Int32 ErrorType { get; set; }
+		[CandidNameAttribute("error_type")]
+		public Int32 ErrorType { get; set; }
 
-		public GovernanceError(System.String errorMessage, System.Int32 errorType)
+		public GovernanceError(String errorMessage, Int32 errorType)
 		{
 			this.ErrorMessage = errorMessage;
 			this.ErrorType = errorType;
@@ -1740,35 +1857,42 @@ namespace Test.Models
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'IncreaseDissolveDelay'
+
+using EdjCase.ICP.Candid.Mapping;
+using System;
 
 namespace Test.Models
 {
 	public class IncreaseDissolveDelay
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("additional_dissolve_delay_seconds")]
-		public System.UInt32 AdditionalDissolveDelaySeconds { get; set; }
+		[CandidNameAttribute("additional_dissolve_delay_seconds")]
+		public UInt32 AdditionalDissolveDelaySeconds { get; set; }
 
-		public IncreaseDissolveDelay(System.UInt32 additionalDissolveDelaySeconds)
+		public IncreaseDissolveDelay(UInt32 additionalDissolveDelaySeconds)
 		{
 			this.AdditionalDissolveDelaySeconds = additionalDissolveDelaySeconds;
 		}
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'KnownNeuron'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test.Models;
+using EdjCase.ICP.Candid.Models;
 
 namespace Test.Models
 {
 	public class KnownNeuron
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("id")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.NeuronId> Id { get; set; }
+		[CandidNameAttribute("id")]
+		public OptionalValue<NeuronId> Id { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("known_neuron_data")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.KnownNeuronData> KnownNeuronData { get; set; }
+		[CandidNameAttribute("known_neuron_data")]
+		public OptionalValue<KnownNeuronData> KnownNeuronData { get; set; }
 
-		public KnownNeuron(EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.NeuronId> id, EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.KnownNeuronData> knownNeuronData)
+		public KnownNeuron(OptionalValue<NeuronId> id, OptionalValue<KnownNeuronData> knownNeuronData)
 		{
 			this.Id = id;
 			this.KnownNeuronData = knownNeuronData;
@@ -1776,19 +1900,23 @@ namespace Test.Models
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'KnownNeuronData'
+
+using EdjCase.ICP.Candid.Mapping;
+using System;
+using EdjCase.ICP.Candid.Models;
 
 namespace Test.Models
 {
 	public class KnownNeuronData
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("name")]
-		public System.String Name { get; set; }
+		[CandidNameAttribute("name")]
+		public String Name { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("description")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<System.String> Description { get; set; }
+		[CandidNameAttribute("description")]
+		public OptionalValue<String> Description { get; set; }
 
-		public KnownNeuronData(System.String name, EdjCase.ICP.Candid.Models.OptionalValue<System.String> description)
+		public KnownNeuronData(String name, OptionalValue<String> description)
 		{
 			this.Name = name;
 			this.Description = description;
@@ -1796,35 +1924,43 @@ namespace Test.Models
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'ListKnownNeuronsResponse'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test.Models;
+using System.Collections.Generic;
 
 namespace Test.Models
 {
 	public class ListKnownNeuronsResponse
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("known_neurons")]
-		public System.Collections.Generic.List<Test.Models.KnownNeuron> KnownNeurons { get; set; }
+		[CandidNameAttribute("known_neurons")]
+		public List<KnownNeuron> KnownNeurons { get; set; }
 
-		public ListKnownNeuronsResponse(System.Collections.Generic.List<Test.Models.KnownNeuron> knownNeurons)
+		public ListKnownNeuronsResponse(List<KnownNeuron> knownNeurons)
 		{
 			this.KnownNeurons = knownNeurons;
 		}
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'ListNeurons'
+
+using EdjCase.ICP.Candid.Mapping;
+using System;
+using System.Collections.Generic;
 
 namespace Test.Models
 {
 	public class ListNeurons
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("neuron_ids")]
-		public System.Collections.Generic.List<System.UInt64> NeuronIds { get; set; }
+		[CandidNameAttribute("neuron_ids")]
+		public List<UInt64> NeuronIds { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("include_neurons_readable_by_caller")]
-		public System.Boolean IncludeNeuronsReadableByCaller { get; set; }
+		[CandidNameAttribute("include_neurons_readable_by_caller")]
+		public Boolean IncludeNeuronsReadableByCaller { get; set; }
 
-		public ListNeurons(System.Collections.Generic.List<System.UInt64> neuronIds, System.Boolean includeNeuronsReadableByCaller)
+		public ListNeurons(List<UInt64> neuronIds, Boolean includeNeuronsReadableByCaller)
 		{
 			this.NeuronIds = neuronIds;
 			this.IncludeNeuronsReadableByCaller = includeNeuronsReadableByCaller;
@@ -1832,19 +1968,24 @@ namespace Test.Models
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'ListNeuronsResponse'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test.Models;
+using System.Collections.Generic;
+using System;
 
 namespace Test.Models
 {
 	public class ListNeuronsResponse
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("neuron_infos")]
-		public System.Collections.Generic.List<Test.Models.ListNeuronsResponse.ListNeuronsResponseR0V0> NeuronInfos { get; set; }
+		[CandidNameAttribute("neuron_infos")]
+		public List<ListNeuronsResponse.ListNeuronsResponseR0V0> NeuronInfos { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("full_neurons")]
-		public System.Collections.Generic.List<Test.Models.Neuron> FullNeurons { get; set; }
+		[CandidNameAttribute("full_neurons")]
+		public List<Neuron> FullNeurons { get; set; }
 
-		public ListNeuronsResponse(System.Collections.Generic.List<Test.Models.ListNeuronsResponse.ListNeuronsResponseR0V0> neuronInfos, System.Collections.Generic.List<Test.Models.Neuron> fullNeurons)
+		public ListNeuronsResponse(List<ListNeuronsResponse.ListNeuronsResponseR0V0> neuronInfos, List<Neuron> fullNeurons)
 		{
 			this.NeuronInfos = neuronInfos;
 			this.FullNeurons = fullNeurons;
@@ -1852,13 +1993,13 @@ namespace Test.Models
 
 		public class ListNeuronsResponseR0V0
 		{
-			[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("0")]
-			public System.UInt64 F0 { get; set; }
+			[CandidNameAttribute("0")]
+			public UInt64 F0 { get; set; }
 
-			[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("1")]
-			public Test.Models.NeuronInfo F1 { get; set; }
+			[CandidNameAttribute("1")]
+			public NeuronInfo F1 { get; set; }
 
-			public ListNeuronsResponseR0V0(System.UInt64 f0, Test.Models.NeuronInfo f1)
+			public ListNeuronsResponseR0V0(UInt64 f0, NeuronInfo f1)
 			{
 				this.F0 = f0;
 				this.F1 = f1;
@@ -1867,44 +2008,54 @@ namespace Test.Models
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'ListNodeProvidersResponse'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test.Models;
+using System.Collections.Generic;
 
 namespace Test.Models
 {
 	public class ListNodeProvidersResponse
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("node_providers")]
-		public System.Collections.Generic.List<Test.Models.NodeProvider> NodeProviders { get; set; }
+		[CandidNameAttribute("node_providers")]
+		public List<NodeProvider> NodeProviders { get; set; }
 
-		public ListNodeProvidersResponse(System.Collections.Generic.List<Test.Models.NodeProvider> nodeProviders)
+		public ListNodeProvidersResponse(List<NodeProvider> nodeProviders)
 		{
 			this.NodeProviders = nodeProviders;
 		}
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'ListProposalInfo'
+
+using EdjCase.ICP.Candid.Mapping;
+using System;
+using System.Collections.Generic;
+using Test.Models;
+using EdjCase.ICP.Candid.Models;
 
 namespace Test.Models
 {
 	public class ListProposalInfo
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("include_reward_status")]
-		public System.Collections.Generic.List<System.Int32> IncludeRewardStatus { get; set; }
+		[CandidNameAttribute("include_reward_status")]
+		public List<Int32> IncludeRewardStatus { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("before_proposal")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.NeuronId> BeforeProposal { get; set; }
+		[CandidNameAttribute("before_proposal")]
+		public OptionalValue<NeuronId> BeforeProposal { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("limit")]
-		public System.UInt32 Limit { get; set; }
+		[CandidNameAttribute("limit")]
+		public UInt32 Limit { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("exclude_topic")]
-		public System.Collections.Generic.List<System.Int32> ExcludeTopic { get; set; }
+		[CandidNameAttribute("exclude_topic")]
+		public List<Int32> ExcludeTopic { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("include_status")]
-		public System.Collections.Generic.List<System.Int32> IncludeStatus { get; set; }
+		[CandidNameAttribute("include_status")]
+		public List<Int32> IncludeStatus { get; set; }
 
-		public ListProposalInfo(System.Collections.Generic.List<System.Int32> includeRewardStatus, EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.NeuronId> beforeProposal, System.UInt32 limit, System.Collections.Generic.List<System.Int32> excludeTopic, System.Collections.Generic.List<System.Int32> includeStatus)
+		public ListProposalInfo(List<Int32> includeRewardStatus, OptionalValue<NeuronId> beforeProposal, UInt32 limit, List<Int32> excludeTopic, List<Int32> includeStatus)
 		{
 			this.IncludeRewardStatus = includeRewardStatus;
 			this.BeforeProposal = beforeProposal;
@@ -1915,54 +2066,66 @@ namespace Test.Models
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'ListProposalInfoResponse'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test.Models;
+using System.Collections.Generic;
 
 namespace Test.Models
 {
 	public class ListProposalInfoResponse
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("proposal_info")]
-		public System.Collections.Generic.List<Test.Models.ProposalInfo> ProposalInfo { get; set; }
+		[CandidNameAttribute("proposal_info")]
+		public List<ProposalInfo> ProposalInfo { get; set; }
 
-		public ListProposalInfoResponse(System.Collections.Generic.List<Test.Models.ProposalInfo> proposalInfo)
+		public ListProposalInfoResponse(List<ProposalInfo> proposalInfo)
 		{
 			this.ProposalInfo = proposalInfo;
 		}
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'MakeProposalResponse'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test.Models;
+using EdjCase.ICP.Candid.Models;
 
 namespace Test.Models
 {
 	public class MakeProposalResponse
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("proposal_id")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.NeuronId> ProposalId { get; set; }
+		[CandidNameAttribute("proposal_id")]
+		public OptionalValue<NeuronId> ProposalId { get; set; }
 
-		public MakeProposalResponse(EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.NeuronId> proposalId)
+		public MakeProposalResponse(OptionalValue<NeuronId> proposalId)
 		{
 			this.ProposalId = proposalId;
 		}
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'ManageNeuron'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test.Models;
+using EdjCase.ICP.Candid.Models;
 
 namespace Test.Models
 {
 	public class ManageNeuron
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("id")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.NeuronId> Id { get; set; }
+		[CandidNameAttribute("id")]
+		public OptionalValue<NeuronId> Id { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("command")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.Command> Command { get; set; }
+		[CandidNameAttribute("command")]
+		public OptionalValue<Command> Command { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("neuron_id_or_subaccount")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.NeuronIdOrSubaccount> NeuronIdOrSubaccount { get; set; }
+		[CandidNameAttribute("neuron_id_or_subaccount")]
+		public OptionalValue<NeuronIdOrSubaccount> NeuronIdOrSubaccount { get; set; }
 
-		public ManageNeuron(EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.NeuronId> id, EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.Command> command, EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.NeuronIdOrSubaccount> neuronIdOrSubaccount)
+		public ManageNeuron(OptionalValue<NeuronId> id, OptionalValue<Command> command, OptionalValue<NeuronIdOrSubaccount> neuronIdOrSubaccount)
 		{
 			this.Id = id;
 			this.Command = command;
@@ -1971,67 +2134,81 @@ namespace Test.Models
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'ManageNeuronResponse'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test.Models;
+using EdjCase.ICP.Candid.Models;
 
 namespace Test.Models
 {
 	public class ManageNeuronResponse
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("command")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.Command1> Command { get; set; }
+		[CandidNameAttribute("command")]
+		public OptionalValue<Command1> Command { get; set; }
 
-		public ManageNeuronResponse(EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.Command1> command)
+		public ManageNeuronResponse(OptionalValue<Command1> command)
 		{
 			this.Command = command;
 		}
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'Merge'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test.Models;
+using EdjCase.ICP.Candid.Models;
 
 namespace Test.Models
 {
 	public class Merge
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("source_neuron_id")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.NeuronId> SourceNeuronId { get; set; }
+		[CandidNameAttribute("source_neuron_id")]
+		public OptionalValue<NeuronId> SourceNeuronId { get; set; }
 
-		public Merge(EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.NeuronId> sourceNeuronId)
+		public Merge(OptionalValue<NeuronId> sourceNeuronId)
 		{
 			this.SourceNeuronId = sourceNeuronId;
 		}
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'MergeMaturity'
+
+using EdjCase.ICP.Candid.Mapping;
+using System;
 
 namespace Test.Models
 {
 	public class MergeMaturity
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("percentage_to_merge")]
-		public System.UInt32 PercentageToMerge { get; set; }
+		[CandidNameAttribute("percentage_to_merge")]
+		public UInt32 PercentageToMerge { get; set; }
 
-		public MergeMaturity(System.UInt32 percentageToMerge)
+		public MergeMaturity(UInt32 percentageToMerge)
 		{
 			this.PercentageToMerge = percentageToMerge;
 		}
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'MergeMaturityResponse'
+
+using EdjCase.ICP.Candid.Mapping;
+using System;
 
 namespace Test.Models
 {
 	public class MergeMaturityResponse
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("merged_maturity_e8s")]
-		public System.UInt64 MergedMaturityE8s { get; set; }
+		[CandidNameAttribute("merged_maturity_e8s")]
+		public UInt64 MergedMaturityE8s { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("new_stake_e8s")]
-		public System.UInt64 NewStakeE8s { get; set; }
+		[CandidNameAttribute("new_stake_e8s")]
+		public UInt64 NewStakeE8s { get; set; }
 
-		public MergeMaturityResponse(System.UInt64 mergedMaturityE8s, System.UInt64 newStakeE8s)
+		public MergeMaturityResponse(UInt64 mergedMaturityE8s, UInt64 newStakeE8s)
 		{
 			this.MergedMaturityE8s = mergedMaturityE8s;
 			this.NewStakeE8s = newStakeE8s;
@@ -2039,53 +2216,59 @@ namespace Test.Models
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'Motion'
+
+using EdjCase.ICP.Candid.Mapping;
+using System;
 
 namespace Test.Models
 {
 	public class Motion
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("motion_text")]
-		public System.String MotionText { get; set; }
+		[CandidNameAttribute("motion_text")]
+		public String MotionText { get; set; }
 
-		public Motion(System.String motionText)
+		public Motion(String motionText)
 		{
 			this.MotionText = motionText;
 		}
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'NetworkEconomics'
+
+using EdjCase.ICP.Candid.Mapping;
+using System;
 
 namespace Test.Models
 {
 	public class NetworkEconomics
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("neuron_minimum_stake_e8s")]
-		public System.UInt64 NeuronMinimumStakeE8s { get; set; }
+		[CandidNameAttribute("neuron_minimum_stake_e8s")]
+		public UInt64 NeuronMinimumStakeE8s { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("max_proposals_to_keep_per_topic")]
-		public System.UInt32 MaxProposalsToKeepPerTopic { get; set; }
+		[CandidNameAttribute("max_proposals_to_keep_per_topic")]
+		public UInt32 MaxProposalsToKeepPerTopic { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("neuron_management_fee_per_proposal_e8s")]
-		public System.UInt64 NeuronManagementFeePerProposalE8s { get; set; }
+		[CandidNameAttribute("neuron_management_fee_per_proposal_e8s")]
+		public UInt64 NeuronManagementFeePerProposalE8s { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("reject_cost_e8s")]
-		public System.UInt64 RejectCostE8s { get; set; }
+		[CandidNameAttribute("reject_cost_e8s")]
+		public UInt64 RejectCostE8s { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("transaction_fee_e8s")]
-		public System.UInt64 TransactionFeeE8s { get; set; }
+		[CandidNameAttribute("transaction_fee_e8s")]
+		public UInt64 TransactionFeeE8s { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("neuron_spawn_dissolve_delay_seconds")]
-		public System.UInt64 NeuronSpawnDissolveDelaySeconds { get; set; }
+		[CandidNameAttribute("neuron_spawn_dissolve_delay_seconds")]
+		public UInt64 NeuronSpawnDissolveDelaySeconds { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("minimum_icp_xdr_rate")]
-		public System.UInt64 MinimumIcpXdrRate { get; set; }
+		[CandidNameAttribute("minimum_icp_xdr_rate")]
+		public UInt64 MinimumIcpXdrRate { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("maximum_node_provider_rewards_e8s")]
-		public System.UInt64 MaximumNodeProviderRewardsE8s { get; set; }
+		[CandidNameAttribute("maximum_node_provider_rewards_e8s")]
+		public UInt64 MaximumNodeProviderRewardsE8s { get; set; }
 
-		public NetworkEconomics(System.UInt64 neuronMinimumStakeE8s, System.UInt32 maxProposalsToKeepPerTopic, System.UInt64 neuronManagementFeePerProposalE8s, System.UInt64 rejectCostE8s, System.UInt64 transactionFeeE8s, System.UInt64 neuronSpawnDissolveDelaySeconds, System.UInt64 minimumIcpXdrRate, System.UInt64 maximumNodeProviderRewardsE8s)
+		public NetworkEconomics(UInt64 neuronMinimumStakeE8s, UInt32 maxProposalsToKeepPerTopic, UInt64 neuronManagementFeePerProposalE8s, UInt64 rejectCostE8s, UInt64 transactionFeeE8s, UInt64 neuronSpawnDissolveDelaySeconds, UInt64 minimumIcpXdrRate, UInt64 maximumNodeProviderRewardsE8s)
 		{
 			this.NeuronMinimumStakeE8s = neuronMinimumStakeE8s;
 			this.MaxProposalsToKeepPerTopic = maxProposalsToKeepPerTopic;
@@ -2099,64 +2282,70 @@ namespace Test.Models
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'Neuron'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test.Models;
+using EdjCase.ICP.Candid.Models;
+using System.Collections.Generic;
+using System;
 
 namespace Test.Models
 {
 	public class Neuron
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("id")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.NeuronId> Id { get; set; }
+		[CandidNameAttribute("id")]
+		public OptionalValue<NeuronId> Id { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("controller")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<EdjCase.ICP.Candid.Models.Principal> Controller { get; set; }
+		[CandidNameAttribute("controller")]
+		public OptionalValue<Principal> Controller { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("recent_ballots")]
-		public System.Collections.Generic.List<Test.Models.BallotInfo> RecentBallots { get; set; }
+		[CandidNameAttribute("recent_ballots")]
+		public List<BallotInfo> RecentBallots { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("kyc_verified")]
-		public System.Boolean KycVerified { get; set; }
+		[CandidNameAttribute("kyc_verified")]
+		public Boolean KycVerified { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("not_for_profit")]
-		public System.Boolean NotForProfit { get; set; }
+		[CandidNameAttribute("not_for_profit")]
+		public Boolean NotForProfit { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("maturity_e8s_equivalent")]
-		public System.UInt64 MaturityE8sEquivalent { get; set; }
+		[CandidNameAttribute("maturity_e8s_equivalent")]
+		public UInt64 MaturityE8sEquivalent { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("cached_neuron_stake_e8s")]
-		public System.UInt64 CachedNeuronStakeE8s { get; set; }
+		[CandidNameAttribute("cached_neuron_stake_e8s")]
+		public UInt64 CachedNeuronStakeE8s { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("created_timestamp_seconds")]
-		public System.UInt64 CreatedTimestampSeconds { get; set; }
+		[CandidNameAttribute("created_timestamp_seconds")]
+		public UInt64 CreatedTimestampSeconds { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("aging_since_timestamp_seconds")]
-		public System.UInt64 AgingSinceTimestampSeconds { get; set; }
+		[CandidNameAttribute("aging_since_timestamp_seconds")]
+		public UInt64 AgingSinceTimestampSeconds { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("hot_keys")]
-		public System.Collections.Generic.List<EdjCase.ICP.Candid.Models.Principal> HotKeys { get; set; }
+		[CandidNameAttribute("hot_keys")]
+		public List<Principal> HotKeys { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("account")]
-		public System.Collections.Generic.List<System.Byte> Account { get; set; }
+		[CandidNameAttribute("account")]
+		public List<Byte> Account { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("joined_community_fund_timestamp_seconds")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<System.UInt64> JoinedCommunityFundTimestampSeconds { get; set; }
+		[CandidNameAttribute("joined_community_fund_timestamp_seconds")]
+		public OptionalValue<UInt64> JoinedCommunityFundTimestampSeconds { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("dissolve_state")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.DissolveState> DissolveState { get; set; }
+		[CandidNameAttribute("dissolve_state")]
+		public OptionalValue<DissolveState> DissolveState { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("followees")]
-		public System.Collections.Generic.List<Test.Models.Neuron.NeuronR13V0> Followees { get; set; }
+		[CandidNameAttribute("followees")]
+		public List<Neuron.NeuronR13V0> Followees { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("neuron_fees_e8s")]
-		public System.UInt64 NeuronFeesE8s { get; set; }
+		[CandidNameAttribute("neuron_fees_e8s")]
+		public UInt64 NeuronFeesE8s { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("transfer")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.NeuronStakeTransfer> Transfer { get; set; }
+		[CandidNameAttribute("transfer")]
+		public OptionalValue<NeuronStakeTransfer> Transfer { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("known_neuron_data")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.KnownNeuronData> KnownNeuronData { get; set; }
+		[CandidNameAttribute("known_neuron_data")]
+		public OptionalValue<KnownNeuronData> KnownNeuronData { get; set; }
 
-		public Neuron(EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.NeuronId> id, EdjCase.ICP.Candid.Models.OptionalValue<EdjCase.ICP.Candid.Models.Principal> controller, System.Collections.Generic.List<Test.Models.BallotInfo> recentBallots, System.Boolean kycVerified, System.Boolean notForProfit, System.UInt64 maturityE8sEquivalent, System.UInt64 cachedNeuronStakeE8s, System.UInt64 createdTimestampSeconds, System.UInt64 agingSinceTimestampSeconds, System.Collections.Generic.List<EdjCase.ICP.Candid.Models.Principal> hotKeys, System.Collections.Generic.List<System.Byte> account, EdjCase.ICP.Candid.Models.OptionalValue<System.UInt64> joinedCommunityFundTimestampSeconds, EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.DissolveState> dissolveState, System.Collections.Generic.List<Test.Models.Neuron.NeuronR13V0> followees, System.UInt64 neuronFeesE8s, EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.NeuronStakeTransfer> transfer, EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.KnownNeuronData> knownNeuronData)
+		public Neuron(OptionalValue<NeuronId> id, OptionalValue<Principal> controller, List<BallotInfo> recentBallots, Boolean kycVerified, Boolean notForProfit, UInt64 maturityE8sEquivalent, UInt64 cachedNeuronStakeE8s, UInt64 createdTimestampSeconds, UInt64 agingSinceTimestampSeconds, List<Principal> hotKeys, List<Byte> account, OptionalValue<UInt64> joinedCommunityFundTimestampSeconds, OptionalValue<DissolveState> dissolveState, List<Neuron.NeuronR13V0> followees, UInt64 neuronFeesE8s, OptionalValue<NeuronStakeTransfer> transfer, OptionalValue<KnownNeuronData> knownNeuronData)
 		{
 			this.Id = id;
 			this.Controller = controller;
@@ -2179,13 +2368,13 @@ namespace Test.Models
 
 		public class NeuronR13V0
 		{
-			[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("0")]
-			public System.Int32 F0 { get; set; }
+			[CandidNameAttribute("0")]
+			public Int32 F0 { get; set; }
 
-			[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("1")]
-			public Test.Models.Followees F1 { get; set; }
+			[CandidNameAttribute("1")]
+			public Followees F1 { get; set; }
 
-			public NeuronR13V0(System.Int32 f0, Test.Models.Followees f1)
+			public NeuronR13V0(Int32 f0, Followees f1)
 			{
 				this.F0 = f0;
 				this.F1 = f1;
@@ -2194,36 +2383,44 @@ namespace Test.Models
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'NeuronId'
+
+using EdjCase.ICP.Candid.Mapping;
+using System;
 
 namespace Test.Models
 {
 	public class NeuronId
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("id")]
-		public System.UInt64 Id { get; set; }
+		[CandidNameAttribute("id")]
+		public UInt64 Id { get; set; }
 
-		public NeuronId(System.UInt64 id)
+		public NeuronId(UInt64 id)
 		{
 			this.Id = id;
 		}
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'NeuronIdOrSubaccount'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test.Models;
+using System;
+using System.Collections.Generic;
 
 namespace Test.Models
 {
-	[EdjCase.ICP.Candid.Mapping.VariantAttribute(typeof(Test.Models.NeuronIdOrSubaccountTag))]
+	[VariantAttribute(typeof(NeuronIdOrSubaccountTag))]
 	public class NeuronIdOrSubaccount
 	{
-		[EdjCase.ICP.Candid.Mapping.VariantTagPropertyAttribute()]
-		public Test.Models.NeuronIdOrSubaccountTag Tag { get; set; }
+		[VariantTagPropertyAttribute()]
+		public NeuronIdOrSubaccountTag Tag { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.VariantValuePropertyAttribute()]
+		[VariantValuePropertyAttribute()]
 		private System.Object? Value { get; set; }
 
-		public NeuronIdOrSubaccount(Test.Models.NeuronIdOrSubaccountTag tag, System.Object? value)
+		public NeuronIdOrSubaccount(NeuronIdOrSubaccountTag tag, Object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -2233,61 +2430,66 @@ namespace Test.Models
 		{
 		}
 
-		public static Test.Models.NeuronIdOrSubaccount Subaccount(System.Collections.Generic.List<System.Byte> info)
+		public static NeuronIdOrSubaccount Subaccount(List<Byte> info)
 		{
-			return new Test.Models.NeuronIdOrSubaccount(Test.Models.NeuronIdOrSubaccountTag.Subaccount, info);
+			return new NeuronIdOrSubaccount(NeuronIdOrSubaccountTag.Subaccount, info);
 		}
 
-		public static Test.Models.NeuronIdOrSubaccount NeuronId(Test.Models.NeuronId info)
+		public static NeuronIdOrSubaccount NeuronId(NeuronId info)
 		{
-			return new Test.Models.NeuronIdOrSubaccount(Test.Models.NeuronIdOrSubaccountTag.NeuronId, info);
+			return new NeuronIdOrSubaccount(NeuronIdOrSubaccountTag.NeuronId, info);
 		}
 
-		public System.Collections.Generic.List<System.Byte> AsSubaccount()
+		public List<Byte> AsSubaccount()
 		{
-			this.ValidateTag(Test.Models.NeuronIdOrSubaccountTag.Subaccount);
-			return (System.Collections.Generic.List<System.Byte>)this.Value!;
+			this.ValidateTag(NeuronIdOrSubaccountTag.Subaccount);
+			return (List<Byte>)this.Value!;
 		}
 
-		public Test.Models.NeuronId AsNeuronId()
+		public NeuronId AsNeuronId()
 		{
-			this.ValidateTag(Test.Models.NeuronIdOrSubaccountTag.NeuronId);
-			return (Test.Models.NeuronId)this.Value!;
+			this.ValidateTag(NeuronIdOrSubaccountTag.NeuronId);
+			return (NeuronId)this.Value!;
 		}
 
-		private void ValidateTag(Test.Models.NeuronIdOrSubaccountTag tag)
+		private void ValidateTag(NeuronIdOrSubaccountTag tag)
 		{
 			if (!this.Tag.Equals(tag))
 			{
-				throw new System.InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
+				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
 			}
 		}
 	}
 
 	public enum NeuronIdOrSubaccountTag
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Subaccount")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(System.Collections.Generic.List<System.Byte>))]
+		[CandidNameAttribute("Subaccount")]
+		[VariantOptionTypeAttribute(typeof(List<Byte>))]
 		Subaccount,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("NeuronId")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.NeuronId))]
+		[CandidNameAttribute("NeuronId")]
+		[VariantOptionTypeAttribute(typeof(NeuronId))]
 		NeuronId
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'NeuronInFlightCommand'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test.Models;
+using EdjCase.ICP.Candid.Models;
+using System;
 
 namespace Test.Models
 {
 	public class NeuronInFlightCommand
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("command")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.Command2> Command { get; set; }
+		[CandidNameAttribute("command")]
+		public OptionalValue<Command2> Command { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("timestamp")]
-		public System.UInt64 Timestamp { get; set; }
+		[CandidNameAttribute("timestamp")]
+		public UInt64 Timestamp { get; set; }
 
-		public NeuronInFlightCommand(EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.Command2> command, System.UInt64 timestamp)
+		public NeuronInFlightCommand(OptionalValue<Command2> command, UInt64 timestamp)
 		{
 			this.Command = command;
 			this.Timestamp = timestamp;
@@ -2295,43 +2497,49 @@ namespace Test.Models
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'NeuronInfo'
+
+using EdjCase.ICP.Candid.Mapping;
+using System;
+using Test.Models;
+using System.Collections.Generic;
+using EdjCase.ICP.Candid.Models;
 
 namespace Test.Models
 {
 	public class NeuronInfo
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("dissolve_delay_seconds")]
-		public System.UInt64 DissolveDelaySeconds { get; set; }
+		[CandidNameAttribute("dissolve_delay_seconds")]
+		public UInt64 DissolveDelaySeconds { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("recent_ballots")]
-		public System.Collections.Generic.List<Test.Models.BallotInfo> RecentBallots { get; set; }
+		[CandidNameAttribute("recent_ballots")]
+		public List<BallotInfo> RecentBallots { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("created_timestamp_seconds")]
-		public System.UInt64 CreatedTimestampSeconds { get; set; }
+		[CandidNameAttribute("created_timestamp_seconds")]
+		public UInt64 CreatedTimestampSeconds { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("state")]
-		public System.Int32 State { get; set; }
+		[CandidNameAttribute("state")]
+		public Int32 State { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("stake_e8s")]
-		public System.UInt64 StakeE8s { get; set; }
+		[CandidNameAttribute("stake_e8s")]
+		public UInt64 StakeE8s { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("joined_community_fund_timestamp_seconds")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<System.UInt64> JoinedCommunityFundTimestampSeconds { get; set; }
+		[CandidNameAttribute("joined_community_fund_timestamp_seconds")]
+		public OptionalValue<UInt64> JoinedCommunityFundTimestampSeconds { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("retrieved_at_timestamp_seconds")]
-		public System.UInt64 RetrievedAtTimestampSeconds { get; set; }
+		[CandidNameAttribute("retrieved_at_timestamp_seconds")]
+		public UInt64 RetrievedAtTimestampSeconds { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("known_neuron_data")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.KnownNeuronData> KnownNeuronData { get; set; }
+		[CandidNameAttribute("known_neuron_data")]
+		public OptionalValue<KnownNeuronData> KnownNeuronData { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("voting_power")]
-		public System.UInt64 VotingPower { get; set; }
+		[CandidNameAttribute("voting_power")]
+		public UInt64 VotingPower { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("age_seconds")]
-		public System.UInt64 AgeSeconds { get; set; }
+		[CandidNameAttribute("age_seconds")]
+		public UInt64 AgeSeconds { get; set; }
 
-		public NeuronInfo(System.UInt64 dissolveDelaySeconds, System.Collections.Generic.List<Test.Models.BallotInfo> recentBallots, System.UInt64 createdTimestampSeconds, System.Int32 state, System.UInt64 stakeE8s, EdjCase.ICP.Candid.Models.OptionalValue<System.UInt64> joinedCommunityFundTimestampSeconds, System.UInt64 retrievedAtTimestampSeconds, EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.KnownNeuronData> knownNeuronData, System.UInt64 votingPower, System.UInt64 ageSeconds)
+		public NeuronInfo(UInt64 dissolveDelaySeconds, List<BallotInfo> recentBallots, UInt64 createdTimestampSeconds, Int32 state, UInt64 stakeE8s, OptionalValue<UInt64> joinedCommunityFundTimestampSeconds, UInt64 retrievedAtTimestampSeconds, OptionalValue<KnownNeuronData> knownNeuronData, UInt64 votingPower, UInt64 ageSeconds)
 		{
 			this.DissolveDelaySeconds = dissolveDelaySeconds;
 			this.RecentBallots = recentBallots;
@@ -2347,34 +2555,39 @@ namespace Test.Models
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'NeuronStakeTransfer'
+
+using EdjCase.ICP.Candid.Mapping;
+using System;
+using System.Collections.Generic;
+using EdjCase.ICP.Candid.Models;
 
 namespace Test.Models
 {
 	public class NeuronStakeTransfer
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("to_subaccount")]
-		public System.Collections.Generic.List<System.Byte> ToSubaccount { get; set; }
+		[CandidNameAttribute("to_subaccount")]
+		public List<Byte> ToSubaccount { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("neuron_stake_e8s")]
-		public System.UInt64 NeuronStakeE8s { get; set; }
+		[CandidNameAttribute("neuron_stake_e8s")]
+		public UInt64 NeuronStakeE8s { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("from")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<EdjCase.ICP.Candid.Models.Principal> From { get; set; }
+		[CandidNameAttribute("from")]
+		public OptionalValue<Principal> From { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("memo")]
-		public System.UInt64 Memo { get; set; }
+		[CandidNameAttribute("memo")]
+		public UInt64 Memo { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("from_subaccount")]
-		public System.Collections.Generic.List<System.Byte> FromSubaccount { get; set; }
+		[CandidNameAttribute("from_subaccount")]
+		public List<Byte> FromSubaccount { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("transfer_timestamp")]
-		public System.UInt64 TransferTimestamp { get; set; }
+		[CandidNameAttribute("transfer_timestamp")]
+		public UInt64 TransferTimestamp { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("block_height")]
-		public System.UInt64 BlockHeight { get; set; }
+		[CandidNameAttribute("block_height")]
+		public UInt64 BlockHeight { get; set; }
 
-		public NeuronStakeTransfer(System.Collections.Generic.List<System.Byte> toSubaccount, System.UInt64 neuronStakeE8s, EdjCase.ICP.Candid.Models.OptionalValue<EdjCase.ICP.Candid.Models.Principal> from, System.UInt64 memo, System.Collections.Generic.List<System.Byte> fromSubaccount, System.UInt64 transferTimestamp, System.UInt64 blockHeight)
+		public NeuronStakeTransfer(List<Byte> toSubaccount, UInt64 neuronStakeE8s, OptionalValue<Principal> from, UInt64 memo, List<Byte> fromSubaccount, UInt64 transferTimestamp, UInt64 blockHeight)
 		{
 			this.ToSubaccount = toSubaccount;
 			this.NeuronStakeE8s = neuronStakeE8s;
@@ -2387,19 +2600,23 @@ namespace Test.Models
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'NodeProvider'
+
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid.Models;
+using Test.Models;
 
 namespace Test.Models
 {
 	public class NodeProvider
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("id")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<EdjCase.ICP.Candid.Models.Principal> Id { get; set; }
+		[CandidNameAttribute("id")]
+		public OptionalValue<Principal> Id { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("reward_account")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.AccountIdentifier> RewardAccount { get; set; }
+		[CandidNameAttribute("reward_account")]
+		public OptionalValue<AccountIdentifier> RewardAccount { get; set; }
 
-		public NodeProvider(EdjCase.ICP.Candid.Models.OptionalValue<EdjCase.ICP.Candid.Models.Principal> id, EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.AccountIdentifier> rewardAccount)
+		public NodeProvider(OptionalValue<Principal> id, OptionalValue<AccountIdentifier> rewardAccount)
 		{
 			this.Id = id;
 			this.RewardAccount = rewardAccount;
@@ -2407,20 +2624,24 @@ namespace Test.Models
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'Operation'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test.Models;
+using System;
 
 namespace Test.Models
 {
-	[EdjCase.ICP.Candid.Mapping.VariantAttribute(typeof(Test.Models.OperationTag))]
+	[VariantAttribute(typeof(OperationTag))]
 	public class Operation
 	{
-		[EdjCase.ICP.Candid.Mapping.VariantTagPropertyAttribute()]
-		public Test.Models.OperationTag Tag { get; set; }
+		[VariantTagPropertyAttribute()]
+		public OperationTag Tag { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.VariantValuePropertyAttribute()]
+		[VariantValuePropertyAttribute()]
 		private System.Object? Value { get; set; }
 
-		public Operation(Test.Models.OperationTag tag, System.Object? value)
+		public Operation(OperationTag tag, Object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -2430,88 +2651,88 @@ namespace Test.Models
 		{
 		}
 
-		public static Test.Models.Operation RemoveHotKey(Test.Models.RemoveHotKey info)
+		public static Operation RemoveHotKey(RemoveHotKey info)
 		{
-			return new Test.Models.Operation(Test.Models.OperationTag.RemoveHotKey, info);
+			return new Operation(OperationTag.RemoveHotKey, info);
 		}
 
-		public static Test.Models.Operation AddHotKey(Test.Models.AddHotKey info)
+		public static Operation AddHotKey(AddHotKey info)
 		{
-			return new Test.Models.Operation(Test.Models.OperationTag.AddHotKey, info);
+			return new Operation(OperationTag.AddHotKey, info);
 		}
 
-		public static Test.Models.Operation StopDissolving(Test.Models.Operation.OperationO2 info)
+		public static Operation StopDissolving(Operation.OperationO2 info)
 		{
-			return new Test.Models.Operation(Test.Models.OperationTag.StopDissolving, info);
+			return new Operation(OperationTag.StopDissolving, info);
 		}
 
-		public static Test.Models.Operation StartDissolving(Test.Models.Operation.OperationO3 info)
+		public static Operation StartDissolving(Operation.OperationO3 info)
 		{
-			return new Test.Models.Operation(Test.Models.OperationTag.StartDissolving, info);
+			return new Operation(OperationTag.StartDissolving, info);
 		}
 
-		public static Test.Models.Operation IncreaseDissolveDelay(Test.Models.IncreaseDissolveDelay info)
+		public static Operation IncreaseDissolveDelay(IncreaseDissolveDelay info)
 		{
-			return new Test.Models.Operation(Test.Models.OperationTag.IncreaseDissolveDelay, info);
+			return new Operation(OperationTag.IncreaseDissolveDelay, info);
 		}
 
-		public static Test.Models.Operation JoinCommunityFund(Test.Models.Operation.OperationO5 info)
+		public static Operation JoinCommunityFund(Operation.OperationO5 info)
 		{
-			return new Test.Models.Operation(Test.Models.OperationTag.JoinCommunityFund, info);
+			return new Operation(OperationTag.JoinCommunityFund, info);
 		}
 
-		public static Test.Models.Operation SetDissolveTimestamp(Test.Models.SetDissolveTimestamp info)
+		public static Operation SetDissolveTimestamp(SetDissolveTimestamp info)
 		{
-			return new Test.Models.Operation(Test.Models.OperationTag.SetDissolveTimestamp, info);
+			return new Operation(OperationTag.SetDissolveTimestamp, info);
 		}
 
-		public Test.Models.RemoveHotKey AsRemoveHotKey()
+		public RemoveHotKey AsRemoveHotKey()
 		{
-			this.ValidateTag(Test.Models.OperationTag.RemoveHotKey);
-			return (Test.Models.RemoveHotKey)this.Value!;
+			this.ValidateTag(OperationTag.RemoveHotKey);
+			return (RemoveHotKey)this.Value!;
 		}
 
-		public Test.Models.AddHotKey AsAddHotKey()
+		public AddHotKey AsAddHotKey()
 		{
-			this.ValidateTag(Test.Models.OperationTag.AddHotKey);
-			return (Test.Models.AddHotKey)this.Value!;
+			this.ValidateTag(OperationTag.AddHotKey);
+			return (AddHotKey)this.Value!;
 		}
 
-		public Test.Models.Operation.OperationO2 AsStopDissolving()
+		public Operation.OperationO2 AsStopDissolving()
 		{
-			this.ValidateTag(Test.Models.OperationTag.StopDissolving);
-			return (Test.Models.Operation.OperationO2)this.Value!;
+			this.ValidateTag(OperationTag.StopDissolving);
+			return (Operation.OperationO2)this.Value!;
 		}
 
-		public Test.Models.Operation.OperationO3 AsStartDissolving()
+		public Operation.OperationO3 AsStartDissolving()
 		{
-			this.ValidateTag(Test.Models.OperationTag.StartDissolving);
-			return (Test.Models.Operation.OperationO3)this.Value!;
+			this.ValidateTag(OperationTag.StartDissolving);
+			return (Operation.OperationO3)this.Value!;
 		}
 
-		public Test.Models.IncreaseDissolveDelay AsIncreaseDissolveDelay()
+		public IncreaseDissolveDelay AsIncreaseDissolveDelay()
 		{
-			this.ValidateTag(Test.Models.OperationTag.IncreaseDissolveDelay);
-			return (Test.Models.IncreaseDissolveDelay)this.Value!;
+			this.ValidateTag(OperationTag.IncreaseDissolveDelay);
+			return (IncreaseDissolveDelay)this.Value!;
 		}
 
-		public Test.Models.Operation.OperationO5 AsJoinCommunityFund()
+		public Operation.OperationO5 AsJoinCommunityFund()
 		{
-			this.ValidateTag(Test.Models.OperationTag.JoinCommunityFund);
-			return (Test.Models.Operation.OperationO5)this.Value!;
+			this.ValidateTag(OperationTag.JoinCommunityFund);
+			return (Operation.OperationO5)this.Value!;
 		}
 
-		public Test.Models.SetDissolveTimestamp AsSetDissolveTimestamp()
+		public SetDissolveTimestamp AsSetDissolveTimestamp()
 		{
-			this.ValidateTag(Test.Models.OperationTag.SetDissolveTimestamp);
-			return (Test.Models.SetDissolveTimestamp)this.Value!;
+			this.ValidateTag(OperationTag.SetDissolveTimestamp);
+			return (SetDissolveTimestamp)this.Value!;
 		}
 
-		private void ValidateTag(Test.Models.OperationTag tag)
+		private void ValidateTag(OperationTag tag)
 		{
 			if (!this.Tag.Equals(tag))
 			{
-				throw new System.InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
+				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
 			}
 		}
 
@@ -2539,49 +2760,54 @@ namespace Test.Models
 
 	public enum OperationTag
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("RemoveHotKey")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.RemoveHotKey))]
+		[CandidNameAttribute("RemoveHotKey")]
+		[VariantOptionTypeAttribute(typeof(RemoveHotKey))]
 		RemoveHotKey,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("AddHotKey")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.AddHotKey))]
+		[CandidNameAttribute("AddHotKey")]
+		[VariantOptionTypeAttribute(typeof(AddHotKey))]
 		AddHotKey,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("StopDissolving")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.Operation.OperationO2))]
+		[CandidNameAttribute("StopDissolving")]
+		[VariantOptionTypeAttribute(typeof(Operation.OperationO2))]
 		StopDissolving,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("StartDissolving")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.Operation.OperationO3))]
+		[CandidNameAttribute("StartDissolving")]
+		[VariantOptionTypeAttribute(typeof(Operation.OperationO3))]
 		StartDissolving,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("IncreaseDissolveDelay")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.IncreaseDissolveDelay))]
+		[CandidNameAttribute("IncreaseDissolveDelay")]
+		[VariantOptionTypeAttribute(typeof(IncreaseDissolveDelay))]
 		IncreaseDissolveDelay,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("JoinCommunityFund")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.Operation.OperationO5))]
+		[CandidNameAttribute("JoinCommunityFund")]
+		[VariantOptionTypeAttribute(typeof(Operation.OperationO5))]
 		JoinCommunityFund,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("SetDissolveTimestamp")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.SetDissolveTimestamp))]
+		[CandidNameAttribute("SetDissolveTimestamp")]
+		[VariantOptionTypeAttribute(typeof(SetDissolveTimestamp))]
 		SetDissolveTimestamp
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'Proposal'
+
+using EdjCase.ICP.Candid.Mapping;
+using System;
+using EdjCase.ICP.Candid.Models;
+using Test.Models;
 
 namespace Test.Models
 {
 	public class Proposal
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("url")]
-		public System.String Url { get; set; }
+		[CandidNameAttribute("url")]
+		public String Url { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("title")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<System.String> Title { get; set; }
+		[CandidNameAttribute("title")]
+		public OptionalValue<String> Title { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("action")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.Action> Action { get; set; }
+		[CandidNameAttribute("action")]
+		public OptionalValue<Action> Action { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("summary")]
-		public System.String Summary { get; set; }
+		[CandidNameAttribute("summary")]
+		public String Summary { get; set; }
 
-		public Proposal(System.String url, EdjCase.ICP.Candid.Models.OptionalValue<System.String> title, EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.Action> action, System.String summary)
+		public Proposal(String url, OptionalValue<String> title, OptionalValue<Action> action, String summary)
 		{
 			this.Url = url;
 			this.Title = title;
@@ -2591,52 +2817,58 @@ namespace Test.Models
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'ProposalData'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test.Models;
+using EdjCase.ICP.Candid.Models;
+using System.Collections.Generic;
+using System;
 
 namespace Test.Models
 {
 	public class ProposalData
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("id")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.NeuronId> Id { get; set; }
+		[CandidNameAttribute("id")]
+		public OptionalValue<NeuronId> Id { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("failure_reason")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.GovernanceError> FailureReason { get; set; }
+		[CandidNameAttribute("failure_reason")]
+		public OptionalValue<GovernanceError> FailureReason { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("ballots")]
-		public System.Collections.Generic.List<Test.Models.ProposalData.ProposalDataR2V0> Ballots { get; set; }
+		[CandidNameAttribute("ballots")]
+		public List<ProposalData.ProposalDataR2V0> Ballots { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("proposal_timestamp_seconds")]
-		public System.UInt64 ProposalTimestampSeconds { get; set; }
+		[CandidNameAttribute("proposal_timestamp_seconds")]
+		public UInt64 ProposalTimestampSeconds { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("reward_event_round")]
-		public System.UInt64 RewardEventRound { get; set; }
+		[CandidNameAttribute("reward_event_round")]
+		public UInt64 RewardEventRound { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("failed_timestamp_seconds")]
-		public System.UInt64 FailedTimestampSeconds { get; set; }
+		[CandidNameAttribute("failed_timestamp_seconds")]
+		public UInt64 FailedTimestampSeconds { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("reject_cost_e8s")]
-		public System.UInt64 RejectCostE8s { get; set; }
+		[CandidNameAttribute("reject_cost_e8s")]
+		public UInt64 RejectCostE8s { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("latest_tally")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.Tally> LatestTally { get; set; }
+		[CandidNameAttribute("latest_tally")]
+		public OptionalValue<Tally> LatestTally { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("decided_timestamp_seconds")]
-		public System.UInt64 DecidedTimestampSeconds { get; set; }
+		[CandidNameAttribute("decided_timestamp_seconds")]
+		public UInt64 DecidedTimestampSeconds { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("proposal")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.Proposal> Proposal { get; set; }
+		[CandidNameAttribute("proposal")]
+		public OptionalValue<Proposal> Proposal { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("proposer")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.NeuronId> Proposer { get; set; }
+		[CandidNameAttribute("proposer")]
+		public OptionalValue<NeuronId> Proposer { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("wait_for_quiet_state")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.WaitForQuietState> WaitForQuietState { get; set; }
+		[CandidNameAttribute("wait_for_quiet_state")]
+		public OptionalValue<WaitForQuietState> WaitForQuietState { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("executed_timestamp_seconds")]
-		public System.UInt64 ExecutedTimestampSeconds { get; set; }
+		[CandidNameAttribute("executed_timestamp_seconds")]
+		public UInt64 ExecutedTimestampSeconds { get; set; }
 
-		public ProposalData(EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.NeuronId> id, EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.GovernanceError> failureReason, System.Collections.Generic.List<Test.Models.ProposalData.ProposalDataR2V0> ballots, System.UInt64 proposalTimestampSeconds, System.UInt64 rewardEventRound, System.UInt64 failedTimestampSeconds, System.UInt64 rejectCostE8s, EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.Tally> latestTally, System.UInt64 decidedTimestampSeconds, EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.Proposal> proposal, EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.NeuronId> proposer, EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.WaitForQuietState> waitForQuietState, System.UInt64 executedTimestampSeconds)
+		public ProposalData(OptionalValue<NeuronId> id, OptionalValue<GovernanceError> failureReason, List<ProposalData.ProposalDataR2V0> ballots, UInt64 proposalTimestampSeconds, UInt64 rewardEventRound, UInt64 failedTimestampSeconds, UInt64 rejectCostE8s, OptionalValue<Tally> latestTally, UInt64 decidedTimestampSeconds, OptionalValue<Proposal> proposal, OptionalValue<NeuronId> proposer, OptionalValue<WaitForQuietState> waitForQuietState, UInt64 executedTimestampSeconds)
 		{
 			this.Id = id;
 			this.FailureReason = failureReason;
@@ -2655,13 +2887,13 @@ namespace Test.Models
 
 		public class ProposalDataR2V0
 		{
-			[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("0")]
-			public System.UInt64 F0 { get; set; }
+			[CandidNameAttribute("0")]
+			public UInt64 F0 { get; set; }
 
-			[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("1")]
-			public Test.Models.Ballot F1 { get; set; }
+			[CandidNameAttribute("1")]
+			public Ballot F1 { get; set; }
 
-			public ProposalDataR2V0(System.UInt64 f0, Test.Models.Ballot f1)
+			public ProposalDataR2V0(UInt64 f0, Ballot f1)
 			{
 				this.F0 = f0;
 				this.F1 = f1;
@@ -2670,61 +2902,67 @@ namespace Test.Models
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'ProposalInfo'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test.Models;
+using EdjCase.ICP.Candid.Models;
+using System;
+using System.Collections.Generic;
 
 namespace Test.Models
 {
 	public class ProposalInfo
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("id")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.NeuronId> Id { get; set; }
+		[CandidNameAttribute("id")]
+		public OptionalValue<NeuronId> Id { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("status")]
-		public System.Int32 Status { get; set; }
+		[CandidNameAttribute("status")]
+		public Int32 Status { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("topic")]
-		public System.Int32 Topic { get; set; }
+		[CandidNameAttribute("topic")]
+		public Int32 Topic { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("failure_reason")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.GovernanceError> FailureReason { get; set; }
+		[CandidNameAttribute("failure_reason")]
+		public OptionalValue<GovernanceError> FailureReason { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("ballots")]
-		public System.Collections.Generic.List<Test.Models.ProposalInfo.ProposalInfoR4V0> Ballots { get; set; }
+		[CandidNameAttribute("ballots")]
+		public List<ProposalInfo.ProposalInfoR4V0> Ballots { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("proposal_timestamp_seconds")]
-		public System.UInt64 ProposalTimestampSeconds { get; set; }
+		[CandidNameAttribute("proposal_timestamp_seconds")]
+		public UInt64 ProposalTimestampSeconds { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("reward_event_round")]
-		public System.UInt64 RewardEventRound { get; set; }
+		[CandidNameAttribute("reward_event_round")]
+		public UInt64 RewardEventRound { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("deadline_timestamp_seconds")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<System.UInt64> DeadlineTimestampSeconds { get; set; }
+		[CandidNameAttribute("deadline_timestamp_seconds")]
+		public OptionalValue<UInt64> DeadlineTimestampSeconds { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("failed_timestamp_seconds")]
-		public System.UInt64 FailedTimestampSeconds { get; set; }
+		[CandidNameAttribute("failed_timestamp_seconds")]
+		public UInt64 FailedTimestampSeconds { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("reject_cost_e8s")]
-		public System.UInt64 RejectCostE8s { get; set; }
+		[CandidNameAttribute("reject_cost_e8s")]
+		public UInt64 RejectCostE8s { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("latest_tally")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.Tally> LatestTally { get; set; }
+		[CandidNameAttribute("latest_tally")]
+		public OptionalValue<Tally> LatestTally { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("reward_status")]
-		public System.Int32 RewardStatus { get; set; }
+		[CandidNameAttribute("reward_status")]
+		public Int32 RewardStatus { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("decided_timestamp_seconds")]
-		public System.UInt64 DecidedTimestampSeconds { get; set; }
+		[CandidNameAttribute("decided_timestamp_seconds")]
+		public UInt64 DecidedTimestampSeconds { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("proposal")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.Proposal> Proposal { get; set; }
+		[CandidNameAttribute("proposal")]
+		public OptionalValue<Proposal> Proposal { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("proposer")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.NeuronId> Proposer { get; set; }
+		[CandidNameAttribute("proposer")]
+		public OptionalValue<NeuronId> Proposer { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("executed_timestamp_seconds")]
-		public System.UInt64 ExecutedTimestampSeconds { get; set; }
+		[CandidNameAttribute("executed_timestamp_seconds")]
+		public UInt64 ExecutedTimestampSeconds { get; set; }
 
-		public ProposalInfo(EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.NeuronId> id, System.Int32 status, System.Int32 topic, EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.GovernanceError> failureReason, System.Collections.Generic.List<Test.Models.ProposalInfo.ProposalInfoR4V0> ballots, System.UInt64 proposalTimestampSeconds, System.UInt64 rewardEventRound, EdjCase.ICP.Candid.Models.OptionalValue<System.UInt64> deadlineTimestampSeconds, System.UInt64 failedTimestampSeconds, System.UInt64 rejectCostE8s, EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.Tally> latestTally, System.Int32 rewardStatus, System.UInt64 decidedTimestampSeconds, EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.Proposal> proposal, EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.NeuronId> proposer, System.UInt64 executedTimestampSeconds)
+		public ProposalInfo(OptionalValue<NeuronId> id, Int32 status, Int32 topic, OptionalValue<GovernanceError> failureReason, List<ProposalInfo.ProposalInfoR4V0> ballots, UInt64 proposalTimestampSeconds, UInt64 rewardEventRound, OptionalValue<UInt64> deadlineTimestampSeconds, UInt64 failedTimestampSeconds, UInt64 rejectCostE8s, OptionalValue<Tally> latestTally, Int32 rewardStatus, UInt64 decidedTimestampSeconds, OptionalValue<Proposal> proposal, OptionalValue<NeuronId> proposer, UInt64 executedTimestampSeconds)
 		{
 			this.Id = id;
 			this.Status = status;
@@ -2746,13 +2984,13 @@ namespace Test.Models
 
 		public class ProposalInfoR4V0
 		{
-			[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("0")]
-			public System.UInt64 F0 { get; set; }
+			[CandidNameAttribute("0")]
+			public UInt64 F0 { get; set; }
 
-			[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("1")]
-			public Test.Models.Ballot F1 { get; set; }
+			[CandidNameAttribute("1")]
+			public Ballot F1 { get; set; }
 
-			public ProposalInfoR4V0(System.UInt64 f0, Test.Models.Ballot f1)
+			public ProposalInfoR4V0(UInt64 f0, Ballot f1)
 			{
 				this.F0 = f0;
 				this.F1 = f1;
@@ -2761,19 +2999,24 @@ namespace Test.Models
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'RegisterVote'
+
+using EdjCase.ICP.Candid.Mapping;
+using System;
+using Test.Models;
+using EdjCase.ICP.Candid.Models;
 
 namespace Test.Models
 {
 	public class RegisterVote
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("vote")]
-		public System.Int32 Vote { get; set; }
+		[CandidNameAttribute("vote")]
+		public Int32 Vote { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("proposal")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.NeuronId> Proposal { get; set; }
+		[CandidNameAttribute("proposal")]
+		public OptionalValue<NeuronId> Proposal { get; set; }
 
-		public RegisterVote(System.Int32 vote, EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.NeuronId> proposal)
+		public RegisterVote(Int32 vote, OptionalValue<NeuronId> proposal)
 		{
 			this.Vote = vote;
 			this.Proposal = proposal;
@@ -2781,36 +3024,43 @@ namespace Test.Models
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'RemoveHotKey'
+
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid.Models;
 
 namespace Test.Models
 {
 	public class RemoveHotKey
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("hot_key_to_remove")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<EdjCase.ICP.Candid.Models.Principal> HotKeyToRemove { get; set; }
+		[CandidNameAttribute("hot_key_to_remove")]
+		public OptionalValue<Principal> HotKeyToRemove { get; set; }
 
-		public RemoveHotKey(EdjCase.ICP.Candid.Models.OptionalValue<EdjCase.ICP.Candid.Models.Principal> hotKeyToRemove)
+		public RemoveHotKey(OptionalValue<Principal> hotKeyToRemove)
 		{
 			this.HotKeyToRemove = hotKeyToRemove;
 		}
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'Result'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test.Models;
+using System;
 
 namespace Test.Models
 {
-	[EdjCase.ICP.Candid.Mapping.VariantAttribute(typeof(Test.Models.ResultTag))]
+	[VariantAttribute(typeof(ResultTag))]
 	public class Result
 	{
-		[EdjCase.ICP.Candid.Mapping.VariantTagPropertyAttribute()]
-		public Test.Models.ResultTag Tag { get; set; }
+		[VariantTagPropertyAttribute()]
+		public ResultTag Tag { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.VariantValuePropertyAttribute()]
+		[VariantValuePropertyAttribute()]
 		private System.Object? Value { get; set; }
 
-		public Result(Test.Models.ResultTag tag, System.Object? value)
+		public Result(ResultTag tag, Object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -2820,55 +3070,59 @@ namespace Test.Models
 		{
 		}
 
-		public static Test.Models.Result Ok()
+		public static Result Ok()
 		{
-			return new Test.Models.Result(Test.Models.ResultTag.Ok, null);
+			return new Result(ResultTag.Ok, null);
 		}
 
-		public static Test.Models.Result Err(Test.Models.GovernanceError info)
+		public static Result Err(GovernanceError info)
 		{
-			return new Test.Models.Result(Test.Models.ResultTag.Err, info);
+			return new Result(ResultTag.Err, info);
 		}
 
-		public Test.Models.GovernanceError AsErr()
+		public GovernanceError AsErr()
 		{
-			this.ValidateTag(Test.Models.ResultTag.Err);
-			return (Test.Models.GovernanceError)this.Value!;
+			this.ValidateTag(ResultTag.Err);
+			return (GovernanceError)this.Value!;
 		}
 
-		private void ValidateTag(Test.Models.ResultTag tag)
+		private void ValidateTag(ResultTag tag)
 		{
 			if (!this.Tag.Equals(tag))
 			{
-				throw new System.InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
+				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
 			}
 		}
 	}
 
 	public enum ResultTag
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Ok")]
+		[CandidNameAttribute("Ok")]
 		Ok,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Err")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.GovernanceError))]
+		[CandidNameAttribute("Err")]
+		[VariantOptionTypeAttribute(typeof(GovernanceError))]
 		Err
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'Result1'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test.Models;
+using System;
 
 namespace Test.Models
 {
-	[EdjCase.ICP.Candid.Mapping.VariantAttribute(typeof(Test.Models.Result1Tag))]
+	[VariantAttribute(typeof(Result1Tag))]
 	public class Result1
 	{
-		[EdjCase.ICP.Candid.Mapping.VariantTagPropertyAttribute()]
-		public Test.Models.Result1Tag Tag { get; set; }
+		[VariantTagPropertyAttribute()]
+		public Result1Tag Tag { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.VariantValuePropertyAttribute()]
+		[VariantValuePropertyAttribute()]
 		private System.Object? Value { get; set; }
 
-		public Result1(Test.Models.Result1Tag tag, System.Object? value)
+		public Result1(Result1Tag tag, Object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -2878,62 +3132,66 @@ namespace Test.Models
 		{
 		}
 
-		public static Test.Models.Result1 Error(Test.Models.GovernanceError info)
+		public static Result1 Error(GovernanceError info)
 		{
-			return new Test.Models.Result1(Test.Models.Result1Tag.Error, info);
+			return new Result1(Result1Tag.Error, info);
 		}
 
-		public static Test.Models.Result1 NeuronId(Test.Models.NeuronId info)
+		public static Result1 NeuronId(NeuronId info)
 		{
-			return new Test.Models.Result1(Test.Models.Result1Tag.NeuronId, info);
+			return new Result1(Result1Tag.NeuronId, info);
 		}
 
-		public Test.Models.GovernanceError AsError()
+		public GovernanceError AsError()
 		{
-			this.ValidateTag(Test.Models.Result1Tag.Error);
-			return (Test.Models.GovernanceError)this.Value!;
+			this.ValidateTag(Result1Tag.Error);
+			return (GovernanceError)this.Value!;
 		}
 
-		public Test.Models.NeuronId AsNeuronId()
+		public NeuronId AsNeuronId()
 		{
-			this.ValidateTag(Test.Models.Result1Tag.NeuronId);
-			return (Test.Models.NeuronId)this.Value!;
+			this.ValidateTag(Result1Tag.NeuronId);
+			return (NeuronId)this.Value!;
 		}
 
-		private void ValidateTag(Test.Models.Result1Tag tag)
+		private void ValidateTag(Result1Tag tag)
 		{
 			if (!this.Tag.Equals(tag))
 			{
-				throw new System.InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
+				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
 			}
 		}
 	}
 
 	public enum Result1Tag
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Error")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.GovernanceError))]
+		[CandidNameAttribute("Error")]
+		[VariantOptionTypeAttribute(typeof(GovernanceError))]
 		Error,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("NeuronId")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.NeuronId))]
+		[CandidNameAttribute("NeuronId")]
+		[VariantOptionTypeAttribute(typeof(NeuronId))]
 		NeuronId
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'Result2'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test.Models;
+using System;
 
 namespace Test.Models
 {
-	[EdjCase.ICP.Candid.Mapping.VariantAttribute(typeof(Test.Models.Result2Tag))]
+	[VariantAttribute(typeof(Result2Tag))]
 	public class Result2
 	{
-		[EdjCase.ICP.Candid.Mapping.VariantTagPropertyAttribute()]
-		public Test.Models.Result2Tag Tag { get; set; }
+		[VariantTagPropertyAttribute()]
+		public Result2Tag Tag { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.VariantValuePropertyAttribute()]
+		[VariantValuePropertyAttribute()]
 		private System.Object? Value { get; set; }
 
-		public Result2(Test.Models.Result2Tag tag, System.Object? value)
+		public Result2(Result2Tag tag, Object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -2943,62 +3201,66 @@ namespace Test.Models
 		{
 		}
 
-		public static Test.Models.Result2 Ok(Test.Models.Neuron info)
+		public static Result2 Ok(Neuron info)
 		{
-			return new Test.Models.Result2(Test.Models.Result2Tag.Ok, info);
+			return new Result2(Result2Tag.Ok, info);
 		}
 
-		public static Test.Models.Result2 Err(Test.Models.GovernanceError info)
+		public static Result2 Err(GovernanceError info)
 		{
-			return new Test.Models.Result2(Test.Models.Result2Tag.Err, info);
+			return new Result2(Result2Tag.Err, info);
 		}
 
-		public Test.Models.Neuron AsOk()
+		public Neuron AsOk()
 		{
-			this.ValidateTag(Test.Models.Result2Tag.Ok);
-			return (Test.Models.Neuron)this.Value!;
+			this.ValidateTag(Result2Tag.Ok);
+			return (Neuron)this.Value!;
 		}
 
-		public Test.Models.GovernanceError AsErr()
+		public GovernanceError AsErr()
 		{
-			this.ValidateTag(Test.Models.Result2Tag.Err);
-			return (Test.Models.GovernanceError)this.Value!;
+			this.ValidateTag(Result2Tag.Err);
+			return (GovernanceError)this.Value!;
 		}
 
-		private void ValidateTag(Test.Models.Result2Tag tag)
+		private void ValidateTag(Result2Tag tag)
 		{
 			if (!this.Tag.Equals(tag))
 			{
-				throw new System.InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
+				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
 			}
 		}
 	}
 
 	public enum Result2Tag
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Ok")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.Neuron))]
+		[CandidNameAttribute("Ok")]
+		[VariantOptionTypeAttribute(typeof(Neuron))]
 		Ok,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Err")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.GovernanceError))]
+		[CandidNameAttribute("Err")]
+		[VariantOptionTypeAttribute(typeof(GovernanceError))]
 		Err
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'Result3'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test.Models;
+using System;
 
 namespace Test.Models
 {
-	[EdjCase.ICP.Candid.Mapping.VariantAttribute(typeof(Test.Models.Result3Tag))]
+	[VariantAttribute(typeof(Result3Tag))]
 	public class Result3
 	{
-		[EdjCase.ICP.Candid.Mapping.VariantTagPropertyAttribute()]
-		public Test.Models.Result3Tag Tag { get; set; }
+		[VariantTagPropertyAttribute()]
+		public Result3Tag Tag { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.VariantValuePropertyAttribute()]
+		[VariantValuePropertyAttribute()]
 		private System.Object? Value { get; set; }
 
-		public Result3(Test.Models.Result3Tag tag, System.Object? value)
+		public Result3(Result3Tag tag, Object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -3008,62 +3270,66 @@ namespace Test.Models
 		{
 		}
 
-		public static Test.Models.Result3 Ok(Test.Models.RewardNodeProviders info)
+		public static Result3 Ok(RewardNodeProviders info)
 		{
-			return new Test.Models.Result3(Test.Models.Result3Tag.Ok, info);
+			return new Result3(Result3Tag.Ok, info);
 		}
 
-		public static Test.Models.Result3 Err(Test.Models.GovernanceError info)
+		public static Result3 Err(GovernanceError info)
 		{
-			return new Test.Models.Result3(Test.Models.Result3Tag.Err, info);
+			return new Result3(Result3Tag.Err, info);
 		}
 
-		public Test.Models.RewardNodeProviders AsOk()
+		public RewardNodeProviders AsOk()
 		{
-			this.ValidateTag(Test.Models.Result3Tag.Ok);
-			return (Test.Models.RewardNodeProviders)this.Value!;
+			this.ValidateTag(Result3Tag.Ok);
+			return (RewardNodeProviders)this.Value!;
 		}
 
-		public Test.Models.GovernanceError AsErr()
+		public GovernanceError AsErr()
 		{
-			this.ValidateTag(Test.Models.Result3Tag.Err);
-			return (Test.Models.GovernanceError)this.Value!;
+			this.ValidateTag(Result3Tag.Err);
+			return (GovernanceError)this.Value!;
 		}
 
-		private void ValidateTag(Test.Models.Result3Tag tag)
+		private void ValidateTag(Result3Tag tag)
 		{
 			if (!this.Tag.Equals(tag))
 			{
-				throw new System.InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
+				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
 			}
 		}
 	}
 
 	public enum Result3Tag
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Ok")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.RewardNodeProviders))]
+		[CandidNameAttribute("Ok")]
+		[VariantOptionTypeAttribute(typeof(RewardNodeProviders))]
 		Ok,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Err")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.GovernanceError))]
+		[CandidNameAttribute("Err")]
+		[VariantOptionTypeAttribute(typeof(GovernanceError))]
 		Err
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'Result4'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test.Models;
+using System;
 
 namespace Test.Models
 {
-	[EdjCase.ICP.Candid.Mapping.VariantAttribute(typeof(Test.Models.Result4Tag))]
+	[VariantAttribute(typeof(Result4Tag))]
 	public class Result4
 	{
-		[EdjCase.ICP.Candid.Mapping.VariantTagPropertyAttribute()]
-		public Test.Models.Result4Tag Tag { get; set; }
+		[VariantTagPropertyAttribute()]
+		public Result4Tag Tag { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.VariantValuePropertyAttribute()]
+		[VariantValuePropertyAttribute()]
 		private System.Object? Value { get; set; }
 
-		public Result4(Test.Models.Result4Tag tag, System.Object? value)
+		public Result4(Result4Tag tag, Object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -3073,62 +3339,66 @@ namespace Test.Models
 		{
 		}
 
-		public static Test.Models.Result4 Ok(Test.Models.NeuronInfo info)
+		public static Result4 Ok(NeuronInfo info)
 		{
-			return new Test.Models.Result4(Test.Models.Result4Tag.Ok, info);
+			return new Result4(Result4Tag.Ok, info);
 		}
 
-		public static Test.Models.Result4 Err(Test.Models.GovernanceError info)
+		public static Result4 Err(GovernanceError info)
 		{
-			return new Test.Models.Result4(Test.Models.Result4Tag.Err, info);
+			return new Result4(Result4Tag.Err, info);
 		}
 
-		public Test.Models.NeuronInfo AsOk()
+		public NeuronInfo AsOk()
 		{
-			this.ValidateTag(Test.Models.Result4Tag.Ok);
-			return (Test.Models.NeuronInfo)this.Value!;
+			this.ValidateTag(Result4Tag.Ok);
+			return (NeuronInfo)this.Value!;
 		}
 
-		public Test.Models.GovernanceError AsErr()
+		public GovernanceError AsErr()
 		{
-			this.ValidateTag(Test.Models.Result4Tag.Err);
-			return (Test.Models.GovernanceError)this.Value!;
+			this.ValidateTag(Result4Tag.Err);
+			return (GovernanceError)this.Value!;
 		}
 
-		private void ValidateTag(Test.Models.Result4Tag tag)
+		private void ValidateTag(Result4Tag tag)
 		{
 			if (!this.Tag.Equals(tag))
 			{
-				throw new System.InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
+				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
 			}
 		}
 	}
 
 	public enum Result4Tag
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Ok")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.NeuronInfo))]
+		[CandidNameAttribute("Ok")]
+		[VariantOptionTypeAttribute(typeof(NeuronInfo))]
 		Ok,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Err")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.GovernanceError))]
+		[CandidNameAttribute("Err")]
+		[VariantOptionTypeAttribute(typeof(GovernanceError))]
 		Err
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'Result5'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test.Models;
+using System;
 
 namespace Test.Models
 {
-	[EdjCase.ICP.Candid.Mapping.VariantAttribute(typeof(Test.Models.Result5Tag))]
+	[VariantAttribute(typeof(Result5Tag))]
 	public class Result5
 	{
-		[EdjCase.ICP.Candid.Mapping.VariantTagPropertyAttribute()]
-		public Test.Models.Result5Tag Tag { get; set; }
+		[VariantTagPropertyAttribute()]
+		public Result5Tag Tag { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.VariantValuePropertyAttribute()]
+		[VariantValuePropertyAttribute()]
 		private System.Object? Value { get; set; }
 
-		public Result5(Test.Models.Result5Tag tag, System.Object? value)
+		public Result5(Result5Tag tag, Object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -3138,67 +3408,72 @@ namespace Test.Models
 		{
 		}
 
-		public static Test.Models.Result5 Ok(Test.Models.NodeProvider info)
+		public static Result5 Ok(NodeProvider info)
 		{
-			return new Test.Models.Result5(Test.Models.Result5Tag.Ok, info);
+			return new Result5(Result5Tag.Ok, info);
 		}
 
-		public static Test.Models.Result5 Err(Test.Models.GovernanceError info)
+		public static Result5 Err(GovernanceError info)
 		{
-			return new Test.Models.Result5(Test.Models.Result5Tag.Err, info);
+			return new Result5(Result5Tag.Err, info);
 		}
 
-		public Test.Models.NodeProvider AsOk()
+		public NodeProvider AsOk()
 		{
-			this.ValidateTag(Test.Models.Result5Tag.Ok);
-			return (Test.Models.NodeProvider)this.Value!;
+			this.ValidateTag(Result5Tag.Ok);
+			return (NodeProvider)this.Value!;
 		}
 
-		public Test.Models.GovernanceError AsErr()
+		public GovernanceError AsErr()
 		{
-			this.ValidateTag(Test.Models.Result5Tag.Err);
-			return (Test.Models.GovernanceError)this.Value!;
+			this.ValidateTag(Result5Tag.Err);
+			return (GovernanceError)this.Value!;
 		}
 
-		private void ValidateTag(Test.Models.Result5Tag tag)
+		private void ValidateTag(Result5Tag tag)
 		{
 			if (!this.Tag.Equals(tag))
 			{
-				throw new System.InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
+				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
 			}
 		}
 	}
 
 	public enum Result5Tag
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Ok")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.NodeProvider))]
+		[CandidNameAttribute("Ok")]
+		[VariantOptionTypeAttribute(typeof(NodeProvider))]
 		Ok,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Err")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.GovernanceError))]
+		[CandidNameAttribute("Err")]
+		[VariantOptionTypeAttribute(typeof(GovernanceError))]
 		Err
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'RewardEvent'
+
+using EdjCase.ICP.Candid.Mapping;
+using System;
+using Test.Models;
+using System.Collections.Generic;
 
 namespace Test.Models
 {
 	public class RewardEvent
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("day_after_genesis")]
-		public System.UInt64 DayAfterGenesis { get; set; }
+		[CandidNameAttribute("day_after_genesis")]
+		public UInt64 DayAfterGenesis { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("actual_timestamp_seconds")]
-		public System.UInt64 ActualTimestampSeconds { get; set; }
+		[CandidNameAttribute("actual_timestamp_seconds")]
+		public UInt64 ActualTimestampSeconds { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("distributed_e8s_equivalent")]
-		public System.UInt64 DistributedE8sEquivalent { get; set; }
+		[CandidNameAttribute("distributed_e8s_equivalent")]
+		public UInt64 DistributedE8sEquivalent { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("settled_proposals")]
-		public System.Collections.Generic.List<Test.Models.NeuronId> SettledProposals { get; set; }
+		[CandidNameAttribute("settled_proposals")]
+		public List<NeuronId> SettledProposals { get; set; }
 
-		public RewardEvent(System.UInt64 dayAfterGenesis, System.UInt64 actualTimestampSeconds, System.UInt64 distributedE8sEquivalent, System.Collections.Generic.List<Test.Models.NeuronId> settledProposals)
+		public RewardEvent(UInt64 dayAfterGenesis, UInt64 actualTimestampSeconds, UInt64 distributedE8sEquivalent, List<NeuronId> settledProposals)
 		{
 			this.DayAfterGenesis = dayAfterGenesis;
 			this.ActualTimestampSeconds = actualTimestampSeconds;
@@ -3208,20 +3483,24 @@ namespace Test.Models
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'RewardMode'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test.Models;
+using System;
 
 namespace Test.Models
 {
-	[EdjCase.ICP.Candid.Mapping.VariantAttribute(typeof(Test.Models.RewardModeTag))]
+	[VariantAttribute(typeof(RewardModeTag))]
 	public class RewardMode
 	{
-		[EdjCase.ICP.Candid.Mapping.VariantTagPropertyAttribute()]
-		public Test.Models.RewardModeTag Tag { get; set; }
+		[VariantTagPropertyAttribute()]
+		public RewardModeTag Tag { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.VariantValuePropertyAttribute()]
+		[VariantValuePropertyAttribute()]
 		private System.Object? Value { get; set; }
 
-		public RewardMode(Test.Models.RewardModeTag tag, System.Object? value)
+		public RewardMode(RewardModeTag tag, Object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -3231,64 +3510,69 @@ namespace Test.Models
 		{
 		}
 
-		public static Test.Models.RewardMode RewardToNeuron(Test.Models.RewardToNeuron info)
+		public static RewardMode RewardToNeuron(RewardToNeuron info)
 		{
-			return new Test.Models.RewardMode(Test.Models.RewardModeTag.RewardToNeuron, info);
+			return new RewardMode(RewardModeTag.RewardToNeuron, info);
 		}
 
-		public static Test.Models.RewardMode RewardToAccount(Test.Models.RewardToAccount info)
+		public static RewardMode RewardToAccount(RewardToAccount info)
 		{
-			return new Test.Models.RewardMode(Test.Models.RewardModeTag.RewardToAccount, info);
+			return new RewardMode(RewardModeTag.RewardToAccount, info);
 		}
 
-		public Test.Models.RewardToNeuron AsRewardToNeuron()
+		public RewardToNeuron AsRewardToNeuron()
 		{
-			this.ValidateTag(Test.Models.RewardModeTag.RewardToNeuron);
-			return (Test.Models.RewardToNeuron)this.Value!;
+			this.ValidateTag(RewardModeTag.RewardToNeuron);
+			return (RewardToNeuron)this.Value!;
 		}
 
-		public Test.Models.RewardToAccount AsRewardToAccount()
+		public RewardToAccount AsRewardToAccount()
 		{
-			this.ValidateTag(Test.Models.RewardModeTag.RewardToAccount);
-			return (Test.Models.RewardToAccount)this.Value!;
+			this.ValidateTag(RewardModeTag.RewardToAccount);
+			return (RewardToAccount)this.Value!;
 		}
 
-		private void ValidateTag(Test.Models.RewardModeTag tag)
+		private void ValidateTag(RewardModeTag tag)
 		{
 			if (!this.Tag.Equals(tag))
 			{
-				throw new System.InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
+				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
 			}
 		}
 	}
 
 	public enum RewardModeTag
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("RewardToNeuron")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.RewardToNeuron))]
+		[CandidNameAttribute("RewardToNeuron")]
+		[VariantOptionTypeAttribute(typeof(RewardToNeuron))]
 		RewardToNeuron,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("RewardToAccount")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Test.Models.RewardToAccount))]
+		[CandidNameAttribute("RewardToAccount")]
+		[VariantOptionTypeAttribute(typeof(RewardToAccount))]
 		RewardToAccount
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'RewardNodeProvider'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test.Models;
+using EdjCase.ICP.Candid.Models;
+using System;
 
 namespace Test.Models
 {
 	public class RewardNodeProvider
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("node_provider")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.NodeProvider> NodeProvider { get; set; }
+		[CandidNameAttribute("node_provider")]
+		public OptionalValue<NodeProvider> NodeProvider { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("reward_mode")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.RewardMode> RewardMode { get; set; }
+		[CandidNameAttribute("reward_mode")]
+		public OptionalValue<RewardMode> RewardMode { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("amount_e8s")]
-		public System.UInt64 AmountE8s { get; set; }
+		[CandidNameAttribute("amount_e8s")]
+		public UInt64 AmountE8s { get; set; }
 
-		public RewardNodeProvider(EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.NodeProvider> nodeProvider, EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.RewardMode> rewardMode, System.UInt64 amountE8s)
+		public RewardNodeProvider(OptionalValue<NodeProvider> nodeProvider, OptionalValue<RewardMode> rewardMode, UInt64 amountE8s)
 		{
 			this.NodeProvider = nodeProvider;
 			this.RewardMode = rewardMode;
@@ -3297,19 +3581,25 @@ namespace Test.Models
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'RewardNodeProviders'
+
+using EdjCase.ICP.Candid.Mapping;
+using System;
+using EdjCase.ICP.Candid.Models;
+using Test.Models;
+using System.Collections.Generic;
 
 namespace Test.Models
 {
 	public class RewardNodeProviders
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("use_registry_derived_rewards")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<System.Boolean> UseRegistryDerivedRewards { get; set; }
+		[CandidNameAttribute("use_registry_derived_rewards")]
+		public OptionalValue<Boolean> UseRegistryDerivedRewards { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("rewards")]
-		public System.Collections.Generic.List<Test.Models.RewardNodeProvider> Rewards { get; set; }
+		[CandidNameAttribute("rewards")]
+		public List<RewardNodeProvider> Rewards { get; set; }
 
-		public RewardNodeProviders(EdjCase.ICP.Candid.Models.OptionalValue<System.Boolean> useRegistryDerivedRewards, System.Collections.Generic.List<Test.Models.RewardNodeProvider> rewards)
+		public RewardNodeProviders(OptionalValue<Boolean> useRegistryDerivedRewards, List<RewardNodeProvider> rewards)
 		{
 			this.UseRegistryDerivedRewards = useRegistryDerivedRewards;
 			this.Rewards = rewards;
@@ -3317,61 +3607,73 @@ namespace Test.Models
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'RewardToAccount'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test.Models;
+using EdjCase.ICP.Candid.Models;
 
 namespace Test.Models
 {
 	public class RewardToAccount
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("to_account")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.AccountIdentifier> ToAccount { get; set; }
+		[CandidNameAttribute("to_account")]
+		public OptionalValue<AccountIdentifier> ToAccount { get; set; }
 
-		public RewardToAccount(EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.AccountIdentifier> toAccount)
+		public RewardToAccount(OptionalValue<AccountIdentifier> toAccount)
 		{
 			this.ToAccount = toAccount;
 		}
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'RewardToNeuron'
+
+using EdjCase.ICP.Candid.Mapping;
+using System;
 
 namespace Test.Models
 {
 	public class RewardToNeuron
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("dissolve_delay_seconds")]
-		public System.UInt64 DissolveDelaySeconds { get; set; }
+		[CandidNameAttribute("dissolve_delay_seconds")]
+		public UInt64 DissolveDelaySeconds { get; set; }
 
-		public RewardToNeuron(System.UInt64 dissolveDelaySeconds)
+		public RewardToNeuron(UInt64 dissolveDelaySeconds)
 		{
 			this.DissolveDelaySeconds = dissolveDelaySeconds;
 		}
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'SetDefaultFollowees'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test.Models;
+using System.Collections.Generic;
+using System;
 
 namespace Test.Models
 {
 	public class SetDefaultFollowees
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("default_followees")]
-		public System.Collections.Generic.List<Test.Models.SetDefaultFollowees.SetDefaultFolloweesR0V0> DefaultFollowees { get; set; }
+		[CandidNameAttribute("default_followees")]
+		public List<SetDefaultFollowees.SetDefaultFolloweesR0V0> DefaultFollowees { get; set; }
 
-		public SetDefaultFollowees(System.Collections.Generic.List<Test.Models.SetDefaultFollowees.SetDefaultFolloweesR0V0> defaultFollowees)
+		public SetDefaultFollowees(List<SetDefaultFollowees.SetDefaultFolloweesR0V0> defaultFollowees)
 		{
 			this.DefaultFollowees = defaultFollowees;
 		}
 
 		public class SetDefaultFolloweesR0V0
 		{
-			[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("0")]
-			public System.Int32 F0 { get; set; }
+			[CandidNameAttribute("0")]
+			public Int32 F0 { get; set; }
 
-			[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("1")]
-			public Test.Models.Followees F1 { get; set; }
+			[CandidNameAttribute("1")]
+			public Followees F1 { get; set; }
 
-			public SetDefaultFolloweesR0V0(System.Int32 f0, Test.Models.Followees f1)
+			public SetDefaultFolloweesR0V0(Int32 f0, Followees f1)
 			{
 				this.F0 = f0;
 				this.F1 = f1;
@@ -3380,38 +3682,45 @@ namespace Test.Models
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'SetDissolveTimestamp'
+
+using EdjCase.ICP.Candid.Mapping;
+using System;
 
 namespace Test.Models
 {
 	public class SetDissolveTimestamp
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("dissolve_timestamp_seconds")]
-		public System.UInt64 DissolveTimestampSeconds { get; set; }
+		[CandidNameAttribute("dissolve_timestamp_seconds")]
+		public UInt64 DissolveTimestampSeconds { get; set; }
 
-		public SetDissolveTimestamp(System.UInt64 dissolveTimestampSeconds)
+		public SetDissolveTimestamp(UInt64 dissolveTimestampSeconds)
 		{
 			this.DissolveTimestampSeconds = dissolveTimestampSeconds;
 		}
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'Spawn'
+
+using EdjCase.ICP.Candid.Mapping;
+using System;
+using EdjCase.ICP.Candid.Models;
 
 namespace Test.Models
 {
 	public class Spawn
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("percentage_to_spawn")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<System.UInt32> PercentageToSpawn { get; set; }
+		[CandidNameAttribute("percentage_to_spawn")]
+		public OptionalValue<UInt32> PercentageToSpawn { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("new_controller")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<EdjCase.ICP.Candid.Models.Principal> NewController { get; set; }
+		[CandidNameAttribute("new_controller")]
+		public OptionalValue<Principal> NewController { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("nonce")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<System.UInt64> Nonce { get; set; }
+		[CandidNameAttribute("nonce")]
+		public OptionalValue<UInt64> Nonce { get; set; }
 
-		public Spawn(EdjCase.ICP.Candid.Models.OptionalValue<System.UInt32> percentageToSpawn, EdjCase.ICP.Candid.Models.OptionalValue<EdjCase.ICP.Candid.Models.Principal> newController, EdjCase.ICP.Candid.Models.OptionalValue<System.UInt64> nonce)
+		public Spawn(OptionalValue<UInt32> percentageToSpawn, OptionalValue<Principal> newController, OptionalValue<UInt64> nonce)
 		{
 			this.PercentageToSpawn = percentageToSpawn;
 			this.NewController = newController;
@@ -3420,57 +3729,67 @@ namespace Test.Models
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'SpawnResponse'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test.Models;
+using EdjCase.ICP.Candid.Models;
 
 namespace Test.Models
 {
 	public class SpawnResponse
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("created_neuron_id")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.NeuronId> CreatedNeuronId { get; set; }
+		[CandidNameAttribute("created_neuron_id")]
+		public OptionalValue<NeuronId> CreatedNeuronId { get; set; }
 
-		public SpawnResponse(EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.NeuronId> createdNeuronId)
+		public SpawnResponse(OptionalValue<NeuronId> createdNeuronId)
 		{
 			this.CreatedNeuronId = createdNeuronId;
 		}
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'Split'
+
+using EdjCase.ICP.Candid.Mapping;
+using System;
 
 namespace Test.Models
 {
 	public class Split
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("amount_e8s")]
-		public System.UInt64 AmountE8s { get; set; }
+		[CandidNameAttribute("amount_e8s")]
+		public UInt64 AmountE8s { get; set; }
 
-		public Split(System.UInt64 amountE8s)
+		public Split(UInt64 amountE8s)
 		{
 			this.AmountE8s = amountE8s;
 		}
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'Tally'
+
+using EdjCase.ICP.Candid.Mapping;
+using System;
 
 namespace Test.Models
 {
 	public class Tally
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("no")]
-		public System.UInt64 No { get; set; }
+		[CandidNameAttribute("no")]
+		public UInt64 No { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("yes")]
-		public System.UInt64 Yes { get; set; }
+		[CandidNameAttribute("yes")]
+		public UInt64 Yes { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("total")]
-		public System.UInt64 Total { get; set; }
+		[CandidNameAttribute("total")]
+		public UInt64 Total { get; set; }
 
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("timestamp_seconds")]
-		public System.UInt64 TimestampSeconds { get; set; }
+		[CandidNameAttribute("timestamp_seconds")]
+		public UInt64 TimestampSeconds { get; set; }
 
-		public Tally(System.UInt64 no, System.UInt64 yes, System.UInt64 total, System.UInt64 timestampSeconds)
+		public Tally(UInt64 no, UInt64 yes, UInt64 total, UInt64 timestampSeconds)
 		{
 			this.No = no;
 			this.Yes = yes;
@@ -3480,32 +3799,39 @@ namespace Test.Models
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'UpdateNodeProvider'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test.Models;
+using EdjCase.ICP.Candid.Models;
 
 namespace Test.Models
 {
 	public class UpdateNodeProvider
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("reward_account")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.AccountIdentifier> RewardAccount { get; set; }
+		[CandidNameAttribute("reward_account")]
+		public OptionalValue<AccountIdentifier> RewardAccount { get; set; }
 
-		public UpdateNodeProvider(EdjCase.ICP.Candid.Models.OptionalValue<Test.Models.AccountIdentifier> rewardAccount)
+		public UpdateNodeProvider(OptionalValue<AccountIdentifier> rewardAccount)
 		{
 			this.RewardAccount = rewardAccount;
 		}
 	}
 }
 
-using EdjCase.ICP.Agent.Agents;
+Type File: 'WaitForQuietState'
+
+using EdjCase.ICP.Candid.Mapping;
+using System;
 
 namespace Test.Models
 {
 	public class WaitForQuietState
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("current_deadline_timestamp_seconds")]
-		public System.UInt64 CurrentDeadlineTimestampSeconds { get; set; }
+		[CandidNameAttribute("current_deadline_timestamp_seconds")]
+		public UInt64 CurrentDeadlineTimestampSeconds { get; set; }
 
-		public WaitForQuietState(System.UInt64 currentDeadlineTimestampSeconds)
+		public WaitForQuietState(UInt64 currentDeadlineTimestampSeconds)
 		{
 			this.CurrentDeadlineTimestampSeconds = currentDeadlineTimestampSeconds;
 		}

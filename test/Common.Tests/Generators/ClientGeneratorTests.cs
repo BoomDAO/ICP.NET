@@ -8,6 +8,11 @@ using Microsoft.CodeAnalysis.Formatting;
 using Microsoft.CodeAnalysis.Options;
 using Microsoft.CodeAnalysis;
 using System;
+using Microsoft.CodeAnalysis.CSharp;
+using System.Collections.Immutable;
+using System.Collections.Generic;
+using EdjCase.ICP.Candid.Models.Values;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace EdjCase.ICP.Candid.Tests.Generators
 {
@@ -30,15 +35,28 @@ namespace EdjCase.ICP.Candid.Tests.Generators
 
 			string clientCode = Formatter.Format(syntax.ClientFile, workspace, options).ToFullString();
 
-			foreach (var f in syntax.TypeFiles)
+			//List<SyntaxTree> trees = new()
+			//{
+			//	SyntaxFactory.SyntaxTree(syntax.ClientFile)
+			//};
+			foreach ((string typeName, CompilationUnitSyntax typeSyntax) in syntax.TypeFiles)
 			{
-				clientCode += "\n\n";
-				clientCode += Formatter.Format(f.Syntax, workspace, options).ToFullString();
+				clientCode += $"\n\nType File: '{typeName}'\n\n";
+				clientCode += Formatter.Format(typeSyntax, workspace, options).ToFullString();
+				//trees.Add(SyntaxFactory.SyntaxTree(f.Syntax));
 			}
 
 			Snapshot.Match(clientCode, serviceName);
 
+			//TODO
+			//CSharpCompilation compilation = CSharpCompilation
+			//	.Create(null)
+			//	.AddSyntaxTrees(trees)
+			//	.WithReferences(
 
+			//	);
+			//ImmutableArray<Diagnostic> diagnostics = compilation.GetDiagnostics();
+			//Assert.Empty(diagnostics);
 
 		}
 

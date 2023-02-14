@@ -5,6 +5,7 @@ using EdjCase.ICP.Candid.Mapping;
 using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid.Models.Values;
 using EdjCase.ICP.ClientGenerator;
+using EdjCase.ICP.ClientGenerator.SyntaxRewriters;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -31,7 +32,7 @@ namespace EdjCase.ICP.ClientGenerator
 	{
 		public static CompilationUnitSyntax GenerateClientSourceCode(
 			TypeName clientName,
-			string baseNamespace,
+			string modelNamespace,
 			ServiceSourceCodeType service,
 			RoslynTypeResolver typeResolver,
 			Dictionary<ValueName, TypeName> aliases
@@ -40,7 +41,7 @@ namespace EdjCase.ICP.ClientGenerator
 			// Generate client class
 			ClassDeclarationSyntax clientClass = typeResolver.GenerateClient(clientName, service);
 
-			return PostProcessSourceCode(baseNamespace, aliases, clientClass);
+			return PostProcessSourceCode(modelNamespace, aliases, clientClass);
 		}
 
 
@@ -81,20 +82,27 @@ namespace EdjCase.ICP.ClientGenerator
 			//SetUsings(ref compilationUnit);
 			BuildSourceWithShorthands(ref compilationUnit);
 
+			var namespaceRemover = new NamespacePrefixRemover(modelNamespace);
+			compilationUnit = (CompilationUnitSyntax)namespaceRemover.Visit(compilationUnit)!;
+
+
 			compilationUnit = compilationUnit
 				// Add alias using statements
 				.AddUsings(aliases
 						.Select(a => SyntaxFactory.UsingDirective(
-							alias: SyntaxFactory.NameEquals(a.Key.PascalCaseValue),
+							alias: SyntaxFactory.NameEquals(a.Key.PropertyName),
 							name: SyntaxFactory.IdentifierName(a.Value.GetNamespacedName())
 						))
 						.ToArray()
 				)
-				// TODO replace
-				.AddUsings(SyntaxFactory.UsingDirective(SyntaxFactory.IdentifierName("EdjCase.ICP.Agent.Agents")))
+				// Add namespaces used in files after cleanup
+				.AddUsings(
+					namespaceRemover.UniqueNamespaces
+					.Select(n => SyntaxFactory.UsingDirective(SyntaxFactory.IdentifierName(n)))
+					.ToArray()
+				)
 				// Format
 				.NormalizeWhitespace();
-
 
 			return compilationUnit;
 		}
@@ -182,30 +190,6 @@ namespace EdjCase.ICP.ClientGenerator
 					.Select(n => SyntaxFactory.UsingDirective(SyntaxFactory.IdentifierName(n)))
 					.ToArray()
 				);
-		}
-
-
-		private class NamespacePrefixRemover : CSharpSyntaxRewriter
-		{
-			public HashSet<string> UniqueNamespaces { get; }
-
-			public NamespacePrefixRemover()
-			{
-				this.UniqueNamespaces = new();
-			}
-
-			public override SyntaxNode? VisitQualifiedName(QualifiedNameSyntax node)
-			{
-				var identifier = node.Right as IdentifierNameSyntax;
-				if (identifier != null)
-				{
-					var namespaceName = node.Left.ToString();
-					this.UniqueNamespaces.Add(namespaceName);
-					return SyntaxFactory.ParseName(identifier.ToString().Replace(namespaceName + ".", ""));
-				}
-
-				return base.VisitQualifiedName(node);
-			}
 		}
 	}
 }

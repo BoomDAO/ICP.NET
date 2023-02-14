@@ -109,15 +109,7 @@ namespace EdjCase.ICP.ClientGenerator
 					: Path.Combine(outputDirectory, subDirectory);
 				Directory.CreateDirectory(directory);
 				string filePath = Path.Combine(directory, fileName + ".cs");
-				// TODO?
-				//CSharpCompilation compilation = CSharpCompilation
-				//	.Create(null)
-				//	.AddSyntaxTrees(tree);
-				//ImmutableArray<Diagnostic> diagnostics = compilation.GetDiagnostics();
-				//foreach(Diagnostic d in diagnostics)
-				//{
-				//	Console.WriteLine(d.ToString());
-				//}
+				
 				// Setup formatting options
 				AdhocWorkspace workspace = new();
 				OptionSet options = workspace.Options

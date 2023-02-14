@@ -37,7 +37,7 @@ namespace EdjCase.ICP.ClientGenerator
 			//    type X = blob;
 			//    type F = A<X>;
 
-			string typeNameStr = typeName.PascalCaseValue;
+			string typeNameStr = typeName.PropertyName;
 
 			if (this._resolvedTypes.TryGetValue(typeNameStr, out ResolvedType? existing))
 			{
@@ -98,7 +98,7 @@ namespace EdjCase.ICP.ClientGenerator
 
 						string? @namespace = isAlias ? null : this.ModelNamespace;
 						return new ResolvedType(new TypeName(
-							correctedRefId.PascalCaseValue,
+							correctedRefId.PropertyName,
 							@namespace,
 							prefix: null
 						));
@@ -292,7 +292,7 @@ namespace EdjCase.ICP.ClientGenerator
 							SyntaxFactory.MemberAccessExpression(
 								SyntaxKind.SimpleMemberAccessExpression,
 								SyntaxFactory.ThisExpression(),
-								SyntaxFactory.IdentifierName(tagName.PascalCaseValue)
+								SyntaxFactory.IdentifierName(tagName.PropertyName)
 							),
 							SyntaxFactory.IdentifierName(nameof(CandidTag.Equals))
 						)
@@ -301,7 +301,7 @@ namespace EdjCase.ICP.ClientGenerator
 						SyntaxFactory.ArgumentList(
 							SyntaxFactory.SingletonSeparatedList<ArgumentSyntax>(
 								SyntaxFactory.Argument(
-									SyntaxFactory.IdentifierName(tagName.CamelCaseValue)
+									SyntaxFactory.IdentifierName(tagName.VariableName)
 								)
 							)
 						)
@@ -337,7 +337,7 @@ namespace EdjCase.ICP.ClientGenerator
 															SyntaxFactory.MemberAccessExpression(
 																SyntaxKind.SimpleMemberAccessExpression,
 																SyntaxFactory.ThisExpression(),
-																SyntaxFactory.IdentifierName(tagName.PascalCaseValue)
+																SyntaxFactory.IdentifierName(tagName.PropertyName)
 															)
 														),
 														SyntaxFactory.InterpolatedStringText()
@@ -351,7 +351,7 @@ namespace EdjCase.ICP.ClientGenerator
 															)
 														),
 														SyntaxFactory.Interpolation(
-															SyntaxFactory.IdentifierName(tagName.CamelCaseValue)
+															SyntaxFactory.IdentifierName(tagName.VariableName)
 														),
 														SyntaxFactory.InterpolatedStringText()
 														.WithTextToken(
@@ -409,7 +409,7 @@ namespace EdjCase.ICP.ClientGenerator
 									SyntaxFactory.MemberAccessExpression(
 										SyntaxKind.SimpleMemberAccessExpression,
 										enumType.ToTypeSyntax(),
-										SyntaxFactory.IdentifierName(optionName.PascalCaseValue)
+										SyntaxFactory.IdentifierName(optionName.PropertyName)
 									)
 								)
 							)
@@ -437,7 +437,7 @@ namespace EdjCase.ICP.ClientGenerator
 				isStatic: false,
 				isAsync: false,
 				returnTypes: new List<TypedValueName> { new TypedValueName(optionType.Name, optionName) },
-				name: "As" + optionName.PascalCaseValue
+				name: "As" + optionName.PropertyName
 			);
 		}
 
@@ -453,7 +453,7 @@ namespace EdjCase.ICP.ClientGenerator
 						// If option type is not specified, then use `null`
 						? SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression)
 						// If option type is specified, then use param
-						: SyntaxFactory.IdentifierName(optionValueParamName.CamelCaseValue);
+						: SyntaxFactory.IdentifierName(optionValueParamName.VariableName);
 
 			var creationParameters = new List<TypedValueName>();
 			if (optionType != null)
@@ -475,7 +475,7 @@ namespace EdjCase.ICP.ClientGenerator
 											SyntaxFactory.MemberAccessExpression(
 												SyntaxKind.SimpleMemberAccessExpression,
 												SyntaxFactory.IdentifierName(enumTypeName.GetNamespacedName()),
-												SyntaxFactory.IdentifierName(optionTypeName.PascalCaseValue)
+												SyntaxFactory.IdentifierName(optionTypeName.PropertyName)
 											)
 										),
 										SyntaxFactory.Token(SyntaxKind.CommaToken),
@@ -490,7 +490,7 @@ namespace EdjCase.ICP.ClientGenerator
 				isStatic: true,
 				isAsync: false,
 				returnTypes: new List<TypedValueName> { new TypedValueName(variantTypeName, optionTypeName) },
-				name: optionTypeName.PascalCaseValue,
+				name: optionTypeName.PropertyName,
 				parameters: creationParameters?.ToArray() ?? Array.Empty<TypedValueName>()
 			);
 		}
@@ -507,17 +507,21 @@ namespace EdjCase.ICP.ClientGenerator
 			List<ClassProperty> properties = resolvedFields
 				.Select((f, i) =>
 				{
-					string propertyName = f.Tag.PascalCaseValue;
-					if (propertyName == recordTypeName.GetName())
+					ValueName propertyName = ValueName.Default(f.Tag.PropertyName);
+					if (propertyName.PropertyName == recordTypeName.GetName())
 					{
 						// Cant match the class name
-						propertyName += "_"; // TODO best way to escape it. @ does not work
+						propertyName = new ValueName(
+							propertyName: propertyName.PropertyName + "_", // TODO best way to escape it. @ does not work
+							variableName: propertyName.VariableName,
+							candidName: propertyName.CandidName
+						);
 					}
 
 					// [CandidName("{fieldCandidName}")]
 					// public {fieldType} {fieldName} {{ get; set; }}
 					return new ClassProperty(
-						name: ValueName.Default(propertyName),
+						name: propertyName,
 						type: f.Type.Name,
 						access: AccessType.Public,
 						hasSetter: true,
@@ -559,7 +563,7 @@ namespace EdjCase.ICP.ClientGenerator
 			PropertyDeclarationSyntax propertySyntax = SyntaxFactory
 				.PropertyDeclaration(
 					SyntaxFactory.IdentifierName(property.Type.GetNamespacedName()),
-					SyntaxFactory.Identifier(property.Name.PascalCaseValue)
+					SyntaxFactory.Identifier(property.Name.PropertyName)
 				)
 				.WithAccessorList(SyntaxFactory.AccessorList(
 					SyntaxFactory.List(accessors)
@@ -607,7 +611,7 @@ namespace EdjCase.ICP.ClientGenerator
 					}
 					return SyntaxFactory
 						// {optionName},
-						.EnumMemberDeclaration(SyntaxFactory.Identifier(v.Name.PascalCaseValue))
+						.EnumMemberDeclaration(SyntaxFactory.Identifier(v.Name.PropertyName))
 						// Add attributes
 						.WithAttributeLists(SyntaxFactory.List(attributeLists));
 				});
@@ -669,10 +673,10 @@ namespace EdjCase.ICP.ClientGenerator
 		)
 		{
 			List<(ValueName Name, ResolvedType Type)> resolvedArgTypes = info.ArgTypes
-				.Select(t => (t.Name, typeResolver.ResolveType(t.Type, t.Name.PascalCaseValue, parentType: clientName)))
+				.Select(t => (t.Name, typeResolver.ResolveType(t.Type, t.Name.PropertyName, parentType: clientName)))
 				.ToList();
 			List<(ValueName Name, ResolvedType Type)> resolvedReturnTypes = info.ReturnTypes
-				.Select(t => (t.Name, typeResolver.ResolveType(t.Type, t.Name.PascalCaseValue, parentType: clientName)))
+				.Select(t => (t.Name, typeResolver.ResolveType(t.Type, t.Name.PropertyName, parentType: clientName)))
 				.ToList();
 
 			List<TypedValueName> argTypes = resolvedArgTypes
@@ -704,7 +708,7 @@ namespace EdjCase.ICP.ClientGenerator
 				isStatic: false,
 				isAsync: true,
 				returnTypes: returnTypes,
-				name: name.PascalCaseValue,
+				name: name.PropertyName,
 				parameters: argTypes.ToArray()
 			);
 			return (method, subTypes);
@@ -747,7 +751,7 @@ namespace EdjCase.ICP.ClientGenerator
 						.WithArgumentList(
 							SyntaxFactory.ArgumentList(
 								SyntaxFactory.SingletonSeparatedList(
-									SyntaxFactory.Argument(SyntaxFactory.IdentifierName(t.Value.CamelCaseValue.ToSyntaxIdentifier()))
+									SyntaxFactory.Argument(SyntaxFactory.IdentifierName(t.Value.VariableName.ToSyntaxIdentifier()))
 								)
 							)
 						);
@@ -991,7 +995,7 @@ namespace EdjCase.ICP.ClientGenerator
 			IEnumerable<ExpressionStatementSyntax> propertyAssignments = properties
 				.Select(p =>
 				{
-					var value = SyntaxFactory.IdentifierName(p.Name.CamelCaseValue);
+					var value = SyntaxFactory.IdentifierName(p.Name.VariableName);
 					// TODO detect nullable
 					//if (p.IsNullable)
 					//{
@@ -1040,7 +1044,7 @@ namespace EdjCase.ICP.ClientGenerator
 							SyntaxFactory.MemberAccessExpression(
 								SyntaxKind.SimpleMemberAccessExpression,
 								SyntaxFactory.ThisExpression(),
-								SyntaxFactory.IdentifierName(p.Name.PascalCaseValue)
+								SyntaxFactory.IdentifierName(p.Name.PropertyName)
 							),
 							value
 						)
@@ -1059,7 +1063,7 @@ namespace EdjCase.ICP.ClientGenerator
 						SyntaxFactory.SeparatedList(
 							properties
 							.Where(p => p.Type != null)
-							.Select(p => SyntaxFactory.Parameter(SyntaxFactory.Identifier(p.Name.CamelCaseValue)).WithType(p.Type!.ToTypeSyntax()))
+							.Select(p => SyntaxFactory.Parameter(SyntaxFactory.Identifier(p.Name.VariableName)).WithType(p.Type!.ToTypeSyntax()))
 						)
 					)
 				)
@@ -1114,7 +1118,7 @@ namespace EdjCase.ICP.ClientGenerator
 					returnType = SyntaxFactory.TupleType(SyntaxFactory.SeparatedList(
 						returnTypes
 						.Where(t => t != null)
-						.Select(t => SyntaxFactory.TupleElement(t.Type.ToTypeSyntax(), t.Value.PascalCaseValue.ToSyntaxIdentifier()))
+						.Select(t => SyntaxFactory.TupleElement(t.Type.ToTypeSyntax(), t.Value.PropertyName.ToSyntaxIdentifier()))
 					));
 				}
 			}
@@ -1180,7 +1184,7 @@ namespace EdjCase.ICP.ClientGenerator
 				.Select(p =>
 				{
 					return SyntaxFactory
-						.Parameter(p.Value.CamelCaseValue.ToSyntaxIdentifier())
+						.Parameter(p.Value.VariableName.ToSyntaxIdentifier())
 						.WithType(p.Type.ToTypeSyntax());
 				});
 			return SyntaxFactory.MethodDeclaration(returnType, SyntaxFactory.Identifier(name))
