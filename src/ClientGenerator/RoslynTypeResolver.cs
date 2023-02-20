@@ -191,16 +191,17 @@ namespace EdjCase.ICP.ClientGenerator
 					))
 			);
 
+			// TODO auto change the property values of all class types if it matches the name
+			ValueName tagName = ValueName.Default(variantTypeName.GetName() == "Tag" ? "TagValue" : "Tag");
+			ValueName valueName = ValueName.Default(variantTypeName.GetName() == "Value" ? "Value_" : "Value");
+
 			// 'As{X}' methods (if has option type)
 			methods.AddRange(
 				resolvedOptions
 				.Where(r => r.Type != null)
-				.Select(o => this.GenerateVariantOptionAsMethod(enumTypeName, o.Name, o.Type!, optionValueParamName))
+				.Select(o => this.GenerateVariantOptionAsMethod(enumTypeName, o.Name, o.Type!, valueName))
 			);
 
-			// TODO auto change the property values of all class types if it matches the name
-			ValueName tagName = ValueName.Default(variantTypeName.GetName() == "Tag" ? "TagValue" : "Tag");
-			ValueName valueName = ValueName.Default(variantTypeName.GetName() == "Value" ? "Value_" : "Value");
 
 			bool anyOptionsWithType = resolvedOptions.Any(o => o.Type != null);
 			if (anyOptionsWithType)
@@ -382,10 +383,14 @@ namespace EdjCase.ICP.ClientGenerator
 			TypeName enumType,
 			ValueName optionName,
 			ResolvedType optionType,
-			ValueName optionValueParamName
+			ValueName valueName
 		)
 		{
-			// 
+			// public {VariantOptionType} As{OptionName}()
+			// {
+			//     this.ValidateTag({EnumType}.{Option});
+			//     return ({VariantOptionType})this.Value!;
+			// }
 			BlockSyntax body = SyntaxFactory.Block(
 				SyntaxFactory.ExpressionStatement(
 					SyntaxFactory.InvocationExpression(
@@ -417,13 +422,12 @@ namespace EdjCase.ICP.ClientGenerator
 							SyntaxFactory.MemberAccessExpression(
 								SyntaxKind.SimpleMemberAccessExpression,
 								SyntaxFactory.ThisExpression(),
-								SyntaxFactory.IdentifierName("Value")
+								SyntaxFactory.IdentifierName(valueName.PropertyName)
 							)
 						)
 					)
 				)
 			);
-			// public {VariantOptionType} As{OptionName}()
 			return GenerateMethod(
 				body: body,
 				access: AccessType.Public,
@@ -443,18 +447,21 @@ namespace EdjCase.ICP.ClientGenerator
 		)
 		{
 			ExpressionSyntax arg = optionType == null
-						// If option type is not specified, then use `null`
-						? SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression)
-						// If option type is specified, then use param
-						: SyntaxFactory.IdentifierName(optionValueParamName.VariableName);
+				// If option type is not specified, then use `null`
+				? SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression)
+				// If option type is specified, then use param
+				: SyntaxFactory.IdentifierName(optionValueParamName.VariableName);
 
 			var creationParameters = new List<TypedValueName>();
 			if (optionType != null)
 			{
 				creationParameters.Add(new TypedValueName(optionType.Name, optionValueParamName));
 			}
+			string methodName = optionTypeName.PropertyName == variantTypeName.GetName()
+				? optionTypeName.PropertyName + "_" // Escape colliding names
+				: optionTypeName.PropertyName;
 			return GenerateMethod(
-				// return new VariantType(VariantEnum.Option, value);
+				// return new {VariantType}({VariantEnum}.{Option}, value);
 				body: SyntaxFactory.Block(
 				SyntaxFactory.ReturnStatement(
 					SyntaxFactory.ObjectCreationExpression(
@@ -483,7 +490,7 @@ namespace EdjCase.ICP.ClientGenerator
 				isStatic: true,
 				isAsync: false,
 				returnTypes: new List<TypedValueName> { new TypedValueName(variantTypeName, optionTypeName) },
-				name: optionTypeName.PropertyName,
+				name: methodName,
 				parameters: creationParameters?.ToArray() ?? Array.Empty<TypedValueName>()
 			);
 		}
