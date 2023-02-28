@@ -43,7 +43,7 @@ namespace EdjCase.ICP.ClientGenerator
 			{
 				return existing;
 			}
-			ResolvedType res = this.ResolveTypeInner(type, typeNameStr, isDeclaration: true, parentType: null);
+			ResolvedType res = this.ResolveTypeInner(type, typeNameStr, parentType: null);
 			this._resolvedTypes[typeNameStr] = res;
 			return res;
 		}
@@ -54,13 +54,12 @@ namespace EdjCase.ICP.ClientGenerator
 			TypeName? parentType
 		)
 		{
-			return this.ResolveTypeInner(type, nameContext, isDeclaration: false, parentType);
+			return this.ResolveTypeInner(type, nameContext, parentType);
 		}
 
 		private ResolvedType ResolveTypeInner(
 			SourceCodeType type,
 			string nameContext,
-			bool isDeclaration,
 			TypeName? parentType
 		)
 		{

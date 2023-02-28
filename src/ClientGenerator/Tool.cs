@@ -68,14 +68,14 @@ namespace EdjCase.ICP.ClientGenerator
 				if (result.Tag == ParserResultType.NotParsed)
 				{
 					string? argString = Console.ReadLine();
-					args = argString?.Split(' ', StringSplitOptions.RemoveEmptyEntries) ?? new string[0];
+					args = argString?.Split(' ', StringSplitOptions.RemoveEmptyEntries) ?? Array.Empty<string>();
 				}
 				else
 				{
 					// Reset on success
 					Console.WriteLine("Generation Complete. Press Enter to run again");
 					Console.ReadLine();
-					args = new string[0];
+					args = Array.Empty<string>();
 				}
 			}
 #endif
@@ -83,8 +83,8 @@ namespace EdjCase.ICP.ClientGenerator
 
 		private static void WriteClient(ClientSyntax result, string outputDirectory)
 		{
-			Console.WriteLine($"Writing client file ./{result.Name}.cs...");
-			WriteFile(null, result.Name, result.ClientFile);
+			Console.WriteLine($"Writing client file ./Client.cs...");
+			WriteFile(null, "Client", result.ClientFile);
 
 
 			foreach ((string name, CompilationUnitSyntax sourceCode) in result.TypeFiles)

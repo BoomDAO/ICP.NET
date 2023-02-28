@@ -78,6 +78,9 @@ namespace EdjCase.ICP.ClientGenerator
 			CandidServiceDescription service
 		)
 		{
+			// Trim whitespace and replace spaces with underscores
+			serviceName = StringUtil.ToPascalCase(serviceName.Trim().Replace(' ', '_'));
+
 			// Mapping of A => Type
 			// where candid is: type A = Type;
 			Dictionary<ValueName, SourceCodeType> declaredTypes = service.DeclaredTypes
@@ -108,12 +111,11 @@ namespace EdjCase.ICP.ClientGenerator
 				CompilationUnitSyntax? sourceCode = RoslynSourceGenerator.GenerateTypeSourceCode(typeInfo, typeResolver.ModelNamespace, aliasTypes);
 				if (sourceCode != null)
 				{
-					typeFiles.Add((typeInfo.Name.GetName(), sourceCode));
+					typeFiles.Add((id.PropertyName, sourceCode));
 				}
 			}
 
-
-			string clientName = StringUtil.ToPascalCase(serviceName) + "ApiClient";
+			string clientName = serviceName + "ApiClient";
 			TypeName clientTypeName = new(clientName, baseNamespace, prefix: null);
 			ServiceSourceCodeType serviceSourceType = ResolveService(service.Service);
 			CompilationUnitSyntax clientSource = RoslynSourceGenerator.GenerateClientSourceCode(clientTypeName, modelNamespace, serviceSourceType, typeResolver, aliasTypes);
