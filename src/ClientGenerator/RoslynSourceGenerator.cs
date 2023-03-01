@@ -79,8 +79,6 @@ namespace EdjCase.ICP.ClientGenerator
 
 
 			// Moves all namespaces to usings from the Type declarations
-			//SetUsings(ref compilationUnit);
-			BuildSourceWithShorthands(ref compilationUnit);
 
 			var namespaceRemover = new NamespacePrefixRemover(modelNamespace);
 			compilationUnit = (CompilationUnitSyntax)namespaceRemover.Visit(compilationUnit)!;
@@ -107,24 +105,5 @@ namespace EdjCase.ICP.ClientGenerator
 			return compilationUnit;
 		}
 
-		private static void BuildSourceWithShorthands(ref CompilationUnitSyntax compilationUnit)
-		{
-			// TODO
-			//private static Dictionary<Type, string> systemTypeShorthands = new Dictionary<Type, string>
-			//{
-			//	{ typeof(string), "string" },
-			//	{ typeof(byte), "byte" },
-			//	{ typeof(ushort), "ushort" },
-			//	{ typeof(uint), "uint" },
-			//	{ typeof(ulong), "ulong" },
-			//	{ typeof(sbyte), "sbyte" },
-			//	{ typeof(short), "short" },
-			//	{ typeof(int), "int" },
-			//	{ typeof(long), "long" },
-			//	{ typeof(float), "float" },
-			//	{ typeof(double), "double" },
-			//	{ typeof(bool), "bool" }
-			//};
-		}
 	}
 }

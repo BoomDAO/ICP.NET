@@ -2,7 +2,6 @@
 using EdjCase.ICP.Candid.Models;
 using Test.Models;
 using System.Collections.Generic;
-using System;
 using EdjCase.ICP.Agent.Responses;
 
 namespace Test.Models
@@ -33,15 +32,15 @@ namespace Test.Models
 			return reply.ToObjects<ClaimOrRefreshNeuronFromAccountResponse>();
 		}
 
-		public async System.Threading.Tasks.Task<String> GetBuildMetadata()
+		public async System.Threading.Tasks.Task<string> GetBuildMetadata()
 		{
 			CandidArg arg = CandidArg.FromCandid();
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_build_metadata", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<String>();
+			return reply.ToObjects<string>();
 		}
 
-		public async System.Threading.Tasks.Task<Result2> GetFullNeuron(UInt64 arg0)
+		public async System.Threading.Tasks.Task<Result2> GetFullNeuron(ulong arg0)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_full_neuron", arg);
@@ -72,15 +71,15 @@ namespace Test.Models
 			return reply.ToObjects<NetworkEconomics>();
 		}
 
-		public async System.Threading.Tasks.Task<List<UInt64>> GetNeuronIds()
+		public async System.Threading.Tasks.Task<List<ulong>> GetNeuronIds()
 		{
 			CandidArg arg = CandidArg.FromCandid();
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_neuron_ids", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<List<UInt64>>();
+			return reply.ToObjects<List<ulong>>();
 		}
 
-		public async System.Threading.Tasks.Task<Result4> GetNeuronInfo(UInt64 arg0)
+		public async System.Threading.Tasks.Task<Result4> GetNeuronInfo(ulong arg0)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_neuron_info", arg);
@@ -112,7 +111,7 @@ namespace Test.Models
 			return reply.ToObjects<List<ProposalInfo>>();
 		}
 
-		public async System.Threading.Tasks.Task<OptionalValue<ProposalInfo>> GetProposalInfo(UInt64 arg0)
+		public async System.Threading.Tasks.Task<OptionalValue<ProposalInfo>> GetProposalInfo(ulong arg0)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_proposal_info", arg);
@@ -178,7 +177,6 @@ namespace Test.Models
 Type File: 'AccountIdentifier'
 
 using EdjCase.ICP.Candid.Mapping;
-using System;
 using System.Collections.Generic;
 
 namespace Test.Models
@@ -186,9 +184,9 @@ namespace Test.Models
 	public class AccountIdentifier
 	{
 		[CandidName("hash")]
-		public List<Byte> Hash { get; set; }
+		public List<byte> Hash { get; set; }
 
-		public AccountIdentifier(List<Byte> hash)
+		public AccountIdentifier(List<byte> hash)
 		{
 			this.Hash = hash;
 		}
@@ -216,7 +214,7 @@ namespace Test.Models
 		[VariantValueProperty()]
 		public System.Object? Value { get; set; }
 
-		public Action(ActionTag tag, Object? value)
+		public Action(ActionTag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -430,16 +428,15 @@ namespace Test.Models
 Type File: 'Amount'
 
 using EdjCase.ICP.Candid.Mapping;
-using System;
 
 namespace Test.Models
 {
 	public class Amount
 	{
 		[CandidName("e8s")]
-		public UInt64 E8s { get; set; }
+		public ulong E8s { get; set; }
 
-		public Amount(UInt64 e8s)
+		public Amount(ulong e8s)
 		{
 			this.E8s = e8s;
 		}
@@ -477,19 +474,18 @@ namespace Test.Models
 Type File: 'Ballot'
 
 using EdjCase.ICP.Candid.Mapping;
-using System;
 
 namespace Test.Models
 {
 	public class Ballot
 	{
 		[CandidName("vote")]
-		public Int32 Vote { get; set; }
+		public int Vote { get; set; }
 
 		[CandidName("voting_power")]
-		public UInt64 VotingPower { get; set; }
+		public ulong VotingPower { get; set; }
 
-		public Ballot(Int32 vote, UInt64 votingPower)
+		public Ballot(int vote, ulong votingPower)
 		{
 			this.Vote = vote;
 			this.VotingPower = votingPower;
@@ -504,7 +500,6 @@ namespace Test.Models
 Type File: 'BallotInfo'
 
 using EdjCase.ICP.Candid.Mapping;
-using System;
 using Test.Models;
 using EdjCase.ICP.Candid.Models;
 
@@ -513,12 +508,12 @@ namespace Test.Models
 	public class BallotInfo
 	{
 		[CandidName("vote")]
-		public Int32 Vote { get; set; }
+		public int Vote { get; set; }
 
 		[CandidName("proposal_id")]
 		public OptionalValue<NeuronId> ProposalId { get; set; }
 
-		public BallotInfo(Int32 vote, OptionalValue<NeuronId> proposalId)
+		public BallotInfo(int vote, OptionalValue<NeuronId> proposalId)
 		{
 			this.Vote = vote;
 			this.ProposalId = proposalId;
@@ -547,7 +542,7 @@ namespace Test.Models
 		[VariantValueProperty()]
 		public System.Object? Value { get; set; }
 
-		public By(ByTag tag, Object? value)
+		public By(ByTag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -567,7 +562,7 @@ namespace Test.Models
 			return new By(ByTag.MemoAndController, info);
 		}
 
-		public static By Memo(UInt64 info)
+		public static By Memo(ulong info)
 		{
 			return new By(ByTag.Memo, info);
 		}
@@ -584,10 +579,10 @@ namespace Test.Models
 			return (ClaimOrRefreshNeuronFromAccount)this.Value!;
 		}
 
-		public UInt64 AsMemo()
+		public ulong AsMemo()
 		{
 			this.ValidateTag(ByTag.Memo);
-			return (UInt64)this.Value!;
+			return (ulong)this.Value!;
 		}
 
 		private void ValidateTag(ByTag tag)
@@ -615,7 +610,7 @@ namespace Test.Models
 		[VariantOptionType(typeof(ClaimOrRefreshNeuronFromAccount))]
 		MemoAndController,
 		[CandidName("Memo")]
-		[VariantOptionType(typeof(UInt64))]
+		[VariantOptionType(typeof(ulong))]
 		Memo
 	}
 }
@@ -637,7 +632,7 @@ namespace Test.Models
 		[VariantValueProperty()]
 		public System.Object? Value { get; set; }
 
-		public Change(ChangeTag tag, Object? value)
+		public Change(ChangeTag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -717,7 +712,6 @@ Type File: 'ClaimOrRefreshNeuronFromAccount'
 
 using EdjCase.ICP.Candid.Mapping;
 using EdjCase.ICP.Candid.Models;
-using System;
 
 namespace Test.Models
 {
@@ -727,9 +721,9 @@ namespace Test.Models
 		public OptionalValue<Principal> Controller { get; set; }
 
 		[CandidName("memo")]
-		public UInt64 Memo { get; set; }
+		public ulong Memo { get; set; }
 
-		public ClaimOrRefreshNeuronFromAccount(OptionalValue<Principal> controller, UInt64 memo)
+		public ClaimOrRefreshNeuronFromAccount(OptionalValue<Principal> controller, ulong memo)
 		{
 			this.Controller = controller;
 			this.Memo = memo;
@@ -806,7 +800,7 @@ namespace Test.Models
 		[VariantValueProperty()]
 		public System.Object? Value { get; set; }
 
-		public Command(CommandTag tag, Object? value)
+		public Command(CommandTag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -1001,7 +995,7 @@ namespace Test.Models
 		[VariantValueProperty()]
 		public System.Object? Value { get; set; }
 
-		public Command1(Command1Tag tag, Object? value)
+		public Command1(Command1Tag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -1238,7 +1232,7 @@ namespace Test.Models
 		[VariantValueProperty()]
 		public System.Object? Value { get; set; }
 
-		public Command2(Command2Tag tag, Object? value)
+		public Command2(Command2Tag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -1429,16 +1423,15 @@ namespace Test.Models
 Type File: 'DisburseResponse'
 
 using EdjCase.ICP.Candid.Mapping;
-using System;
 
 namespace Test.Models
 {
 	public class DisburseResponse
 	{
 		[CandidName("transfer_block_height")]
-		public UInt64 TransferBlockHeight { get; set; }
+		public ulong TransferBlockHeight { get; set; }
 
-		public DisburseResponse(UInt64 transferBlockHeight)
+		public DisburseResponse(ulong transferBlockHeight)
 		{
 			this.TransferBlockHeight = transferBlockHeight;
 		}
@@ -1452,7 +1445,6 @@ namespace Test.Models
 Type File: 'DisburseToNeuron'
 
 using EdjCase.ICP.Candid.Mapping;
-using System;
 using EdjCase.ICP.Candid.Models;
 
 namespace Test.Models
@@ -1460,21 +1452,21 @@ namespace Test.Models
 	public class DisburseToNeuron
 	{
 		[CandidName("dissolve_delay_seconds")]
-		public UInt64 DissolveDelaySeconds { get; set; }
+		public ulong DissolveDelaySeconds { get; set; }
 
 		[CandidName("kyc_verified")]
-		public Boolean KycVerified { get; set; }
+		public bool KycVerified { get; set; }
 
 		[CandidName("amount_e8s")]
-		public UInt64 AmountE8s { get; set; }
+		public ulong AmountE8s { get; set; }
 
 		[CandidName("new_controller")]
 		public OptionalValue<Principal> NewController { get; set; }
 
 		[CandidName("nonce")]
-		public UInt64 Nonce { get; set; }
+		public ulong Nonce { get; set; }
 
-		public DisburseToNeuron(UInt64 dissolveDelaySeconds, Boolean kycVerified, UInt64 amountE8s, OptionalValue<Principal> newController, UInt64 nonce)
+		public DisburseToNeuron(ulong dissolveDelaySeconds, bool kycVerified, ulong amountE8s, OptionalValue<Principal> newController, ulong nonce)
 		{
 			this.DissolveDelaySeconds = dissolveDelaySeconds;
 			this.KycVerified = kycVerified;
@@ -1506,7 +1498,7 @@ namespace Test.Models
 		[VariantValueProperty()]
 		public System.Object? Value { get; set; }
 
-		public DissolveState(DissolveStateTag tag, Object? value)
+		public DissolveState(DissolveStateTag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -1516,26 +1508,26 @@ namespace Test.Models
 		{
 		}
 
-		public static DissolveState DissolveDelaySeconds(UInt64 info)
+		public static DissolveState DissolveDelaySeconds(ulong info)
 		{
 			return new DissolveState(DissolveStateTag.DissolveDelaySeconds, info);
 		}
 
-		public static DissolveState WhenDissolvedTimestampSeconds(UInt64 info)
+		public static DissolveState WhenDissolvedTimestampSeconds(ulong info)
 		{
 			return new DissolveState(DissolveStateTag.WhenDissolvedTimestampSeconds, info);
 		}
 
-		public UInt64 AsDissolveDelaySeconds()
+		public ulong AsDissolveDelaySeconds()
 		{
 			this.ValidateTag(DissolveStateTag.DissolveDelaySeconds);
-			return (UInt64)this.Value!;
+			return (ulong)this.Value!;
 		}
 
-		public UInt64 AsWhenDissolvedTimestampSeconds()
+		public ulong AsWhenDissolvedTimestampSeconds()
 		{
 			this.ValidateTag(DissolveStateTag.WhenDissolvedTimestampSeconds);
-			return (UInt64)this.Value!;
+			return (ulong)this.Value!;
 		}
 
 		private void ValidateTag(DissolveStateTag tag)
@@ -1550,10 +1542,10 @@ namespace Test.Models
 	public enum DissolveStateTag
 	{
 		[CandidName("DissolveDelaySeconds")]
-		[VariantOptionType(typeof(UInt64))]
+		[VariantOptionType(typeof(ulong))]
 		DissolveDelaySeconds,
 		[CandidName("WhenDissolvedTimestampSeconds")]
-		[VariantOptionType(typeof(UInt64))]
+		[VariantOptionType(typeof(ulong))]
 		WhenDissolvedTimestampSeconds
 	}
 }
@@ -1561,7 +1553,6 @@ namespace Test.Models
 Type File: 'ExecuteNnsFunction'
 
 using EdjCase.ICP.Candid.Mapping;
-using System;
 using System.Collections.Generic;
 
 namespace Test.Models
@@ -1569,12 +1560,12 @@ namespace Test.Models
 	public class ExecuteNnsFunction
 	{
 		[CandidName("nns_function")]
-		public Int32 NnsFunction { get; set; }
+		public int NnsFunction { get; set; }
 
 		[CandidName("payload")]
-		public List<Byte> Payload { get; set; }
+		public List<byte> Payload { get; set; }
 
-		public ExecuteNnsFunction(Int32 nnsFunction, List<Byte> payload)
+		public ExecuteNnsFunction(int nnsFunction, List<byte> payload)
 		{
 			this.NnsFunction = nnsFunction;
 			this.Payload = payload;
@@ -1589,7 +1580,6 @@ namespace Test.Models
 Type File: 'Follow'
 
 using EdjCase.ICP.Candid.Mapping;
-using System;
 using Test.Models;
 using System.Collections.Generic;
 
@@ -1598,12 +1588,12 @@ namespace Test.Models
 	public class Follow
 	{
 		[CandidName("topic")]
-		public Int32 Topic { get; set; }
+		public int Topic { get; set; }
 
 		[CandidName("followees")]
 		public List<NeuronId> Followees { get; set; }
 
-		public Follow(Int32 topic, List<NeuronId> followees)
+		public Follow(int topic, List<NeuronId> followees)
 		{
 			this.Topic = topic;
 			this.Followees = followees;
@@ -1644,7 +1634,6 @@ Type File: 'Governance'
 using EdjCase.ICP.Candid.Mapping;
 using Test.Models;
 using System.Collections.Generic;
-using System;
 using EdjCase.ICP.Candid.Models;
 
 namespace Test.Models
@@ -1655,7 +1644,7 @@ namespace Test.Models
 		public List<Governance.GovernanceR0V0> DefaultFollowees { get; set; }
 
 		[CandidName("wait_for_quiet_threshold_seconds")]
-		public UInt64 WaitForQuietThresholdSeconds { get; set; }
+		public ulong WaitForQuietThresholdSeconds { get; set; }
 
 		[CandidName("metrics")]
 		public OptionalValue<GovernanceCachedMetrics> Metrics { get; set; }
@@ -1673,7 +1662,7 @@ namespace Test.Models
 		public List<NeuronStakeTransfer> ToClaimTransfers { get; set; }
 
 		[CandidName("short_voting_period_seconds")]
-		public UInt64 ShortVotingPeriodSeconds { get; set; }
+		public ulong ShortVotingPeriodSeconds { get; set; }
 
 		[CandidName("proposals")]
 		public List<Governance.GovernanceR8V0> Proposals { get; set; }
@@ -1685,9 +1674,9 @@ namespace Test.Models
 		public List<Governance.GovernanceR10V0> Neurons { get; set; }
 
 		[CandidName("genesis_timestamp_seconds")]
-		public UInt64 GenesisTimestampSeconds { get; set; }
+		public ulong GenesisTimestampSeconds { get; set; }
 
-		public Governance(List<Governance.GovernanceR0V0> defaultFollowees, UInt64 waitForQuietThresholdSeconds, OptionalValue<GovernanceCachedMetrics> metrics, List<NodeProvider> nodeProviders, OptionalValue<NetworkEconomics> economics, OptionalValue<RewardEvent> latestRewardEvent, List<NeuronStakeTransfer> toClaimTransfers, UInt64 shortVotingPeriodSeconds, List<Governance.GovernanceR8V0> proposals, List<Governance.GovernanceR9V0> inFlightCommands, List<Governance.GovernanceR10V0> neurons, UInt64 genesisTimestampSeconds)
+		public Governance(List<Governance.GovernanceR0V0> defaultFollowees, ulong waitForQuietThresholdSeconds, OptionalValue<GovernanceCachedMetrics> metrics, List<NodeProvider> nodeProviders, OptionalValue<NetworkEconomics> economics, OptionalValue<RewardEvent> latestRewardEvent, List<NeuronStakeTransfer> toClaimTransfers, ulong shortVotingPeriodSeconds, List<Governance.GovernanceR8V0> proposals, List<Governance.GovernanceR9V0> inFlightCommands, List<Governance.GovernanceR10V0> neurons, ulong genesisTimestampSeconds)
 		{
 			this.DefaultFollowees = defaultFollowees;
 			this.WaitForQuietThresholdSeconds = waitForQuietThresholdSeconds;
@@ -1710,12 +1699,12 @@ namespace Test.Models
 		public class GovernanceR0V0
 		{
 			[CandidName("0")]
-			public Int32 F0 { get; set; }
+			public int F0 { get; set; }
 
 			[CandidName("1")]
 			public Followees F1 { get; set; }
 
-			public GovernanceR0V0(Int32 f0, Followees f1)
+			public GovernanceR0V0(int f0, Followees f1)
 			{
 				this.F0 = f0;
 				this.F1 = f1;
@@ -1729,12 +1718,12 @@ namespace Test.Models
 		public class GovernanceR8V0
 		{
 			[CandidName("0")]
-			public UInt64 F0 { get; set; }
+			public ulong F0 { get; set; }
 
 			[CandidName("1")]
 			public ProposalData F1 { get; set; }
 
-			public GovernanceR8V0(UInt64 f0, ProposalData f1)
+			public GovernanceR8V0(ulong f0, ProposalData f1)
 			{
 				this.F0 = f0;
 				this.F1 = f1;
@@ -1748,12 +1737,12 @@ namespace Test.Models
 		public class GovernanceR9V0
 		{
 			[CandidName("0")]
-			public UInt64 F0 { get; set; }
+			public ulong F0 { get; set; }
 
 			[CandidName("1")]
 			public NeuronInFlightCommand F1 { get; set; }
 
-			public GovernanceR9V0(UInt64 f0, NeuronInFlightCommand f1)
+			public GovernanceR9V0(ulong f0, NeuronInFlightCommand f1)
 			{
 				this.F0 = f0;
 				this.F1 = f1;
@@ -1767,12 +1756,12 @@ namespace Test.Models
 		public class GovernanceR10V0
 		{
 			[CandidName("0")]
-			public UInt64 F0 { get; set; }
+			public ulong F0 { get; set; }
 
 			[CandidName("1")]
 			public Neuron F1 { get; set; }
 
-			public GovernanceR10V0(UInt64 f0, Neuron f1)
+			public GovernanceR10V0(ulong f0, Neuron f1)
 			{
 				this.F0 = f0;
 				this.F1 = f1;
@@ -1790,7 +1779,6 @@ Type File: 'GovernanceCachedMetrics'
 using EdjCase.ICP.Candid.Mapping;
 using Test.Models;
 using System.Collections.Generic;
-using System;
 
 namespace Test.Models
 {
@@ -1800,51 +1788,51 @@ namespace Test.Models
 		public List<GovernanceCachedMetrics.GovernanceCachedMetricsR0V0> NotDissolvingNeuronsE8sBuckets { get; set; }
 
 		[CandidName("garbage_collectable_neurons_count")]
-		public UInt64 GarbageCollectableNeuronsCount { get; set; }
+		public ulong GarbageCollectableNeuronsCount { get; set; }
 
 		[CandidName("neurons_with_invalid_stake_count")]
-		public UInt64 NeuronsWithInvalidStakeCount { get; set; }
+		public ulong NeuronsWithInvalidStakeCount { get; set; }
 
 		[CandidName("not_dissolving_neurons_count_buckets")]
 		public List<GovernanceCachedMetrics.GovernanceCachedMetricsR3V0> NotDissolvingNeuronsCountBuckets { get; set; }
 
 		[CandidName("total_supply_icp")]
-		public UInt64 TotalSupplyIcp { get; set; }
+		public ulong TotalSupplyIcp { get; set; }
 
 		[CandidName("neurons_with_less_than_6_months_dissolve_delay_count")]
-		public UInt64 NeuronsWithLessThan6MonthsDissolveDelayCount { get; set; }
+		public ulong NeuronsWithLessThan6MonthsDissolveDelayCount { get; set; }
 
 		[CandidName("dissolved_neurons_count")]
-		public UInt64 DissolvedNeuronsCount { get; set; }
+		public ulong DissolvedNeuronsCount { get; set; }
 
 		[CandidName("total_staked_e8s")]
-		public UInt64 TotalStakedE8s { get; set; }
+		public ulong TotalStakedE8s { get; set; }
 
 		[CandidName("not_dissolving_neurons_count")]
-		public UInt64 NotDissolvingNeuronsCount { get; set; }
+		public ulong NotDissolvingNeuronsCount { get; set; }
 
 		[CandidName("dissolved_neurons_e8s")]
-		public UInt64 DissolvedNeuronsE8s { get; set; }
+		public ulong DissolvedNeuronsE8s { get; set; }
 
 		[CandidName("neurons_with_less_than_6_months_dissolve_delay_e8s")]
-		public UInt64 NeuronsWithLessThan6MonthsDissolveDelayE8s { get; set; }
+		public ulong NeuronsWithLessThan6MonthsDissolveDelayE8s { get; set; }
 
 		[CandidName("dissolving_neurons_count_buckets")]
 		public List<GovernanceCachedMetrics.GovernanceCachedMetricsR11V0> DissolvingNeuronsCountBuckets { get; set; }
 
 		[CandidName("dissolving_neurons_count")]
-		public UInt64 DissolvingNeuronsCount { get; set; }
+		public ulong DissolvingNeuronsCount { get; set; }
 
 		[CandidName("dissolving_neurons_e8s_buckets")]
 		public List<GovernanceCachedMetrics.GovernanceCachedMetricsR13V0> DissolvingNeuronsE8sBuckets { get; set; }
 
 		[CandidName("community_fund_total_staked_e8s")]
-		public UInt64 CommunityFundTotalStakedE8s { get; set; }
+		public ulong CommunityFundTotalStakedE8s { get; set; }
 
 		[CandidName("timestamp_seconds")]
-		public UInt64 TimestampSeconds { get; set; }
+		public ulong TimestampSeconds { get; set; }
 
-		public GovernanceCachedMetrics(List<GovernanceCachedMetrics.GovernanceCachedMetricsR0V0> notDissolvingNeuronsE8sBuckets, UInt64 garbageCollectableNeuronsCount, UInt64 neuronsWithInvalidStakeCount, List<GovernanceCachedMetrics.GovernanceCachedMetricsR3V0> notDissolvingNeuronsCountBuckets, UInt64 totalSupplyIcp, UInt64 neuronsWithLessThan6MonthsDissolveDelayCount, UInt64 dissolvedNeuronsCount, UInt64 totalStakedE8s, UInt64 notDissolvingNeuronsCount, UInt64 dissolvedNeuronsE8s, UInt64 neuronsWithLessThan6MonthsDissolveDelayE8s, List<GovernanceCachedMetrics.GovernanceCachedMetricsR11V0> dissolvingNeuronsCountBuckets, UInt64 dissolvingNeuronsCount, List<GovernanceCachedMetrics.GovernanceCachedMetricsR13V0> dissolvingNeuronsE8sBuckets, UInt64 communityFundTotalStakedE8s, UInt64 timestampSeconds)
+		public GovernanceCachedMetrics(List<GovernanceCachedMetrics.GovernanceCachedMetricsR0V0> notDissolvingNeuronsE8sBuckets, ulong garbageCollectableNeuronsCount, ulong neuronsWithInvalidStakeCount, List<GovernanceCachedMetrics.GovernanceCachedMetricsR3V0> notDissolvingNeuronsCountBuckets, ulong totalSupplyIcp, ulong neuronsWithLessThan6MonthsDissolveDelayCount, ulong dissolvedNeuronsCount, ulong totalStakedE8s, ulong notDissolvingNeuronsCount, ulong dissolvedNeuronsE8s, ulong neuronsWithLessThan6MonthsDissolveDelayE8s, List<GovernanceCachedMetrics.GovernanceCachedMetricsR11V0> dissolvingNeuronsCountBuckets, ulong dissolvingNeuronsCount, List<GovernanceCachedMetrics.GovernanceCachedMetricsR13V0> dissolvingNeuronsE8sBuckets, ulong communityFundTotalStakedE8s, ulong timestampSeconds)
 		{
 			this.NotDissolvingNeuronsE8sBuckets = notDissolvingNeuronsE8sBuckets;
 			this.GarbageCollectableNeuronsCount = garbageCollectableNeuronsCount;
@@ -1871,12 +1859,12 @@ namespace Test.Models
 		public class GovernanceCachedMetricsR0V0
 		{
 			[CandidName("0")]
-			public UInt64 F0 { get; set; }
+			public ulong F0 { get; set; }
 
 			[CandidName("1")]
-			public Double F1 { get; set; }
+			public double F1 { get; set; }
 
-			public GovernanceCachedMetricsR0V0(UInt64 f0, Double f1)
+			public GovernanceCachedMetricsR0V0(ulong f0, double f1)
 			{
 				this.F0 = f0;
 				this.F1 = f1;
@@ -1890,12 +1878,12 @@ namespace Test.Models
 		public class GovernanceCachedMetricsR3V0
 		{
 			[CandidName("0")]
-			public UInt64 F0 { get; set; }
+			public ulong F0 { get; set; }
 
 			[CandidName("1")]
-			public UInt64 F1 { get; set; }
+			public ulong F1 { get; set; }
 
-			public GovernanceCachedMetricsR3V0(UInt64 f0, UInt64 f1)
+			public GovernanceCachedMetricsR3V0(ulong f0, ulong f1)
 			{
 				this.F0 = f0;
 				this.F1 = f1;
@@ -1909,12 +1897,12 @@ namespace Test.Models
 		public class GovernanceCachedMetricsR11V0
 		{
 			[CandidName("0")]
-			public UInt64 F0 { get; set; }
+			public ulong F0 { get; set; }
 
 			[CandidName("1")]
-			public UInt64 F1 { get; set; }
+			public ulong F1 { get; set; }
 
-			public GovernanceCachedMetricsR11V0(UInt64 f0, UInt64 f1)
+			public GovernanceCachedMetricsR11V0(ulong f0, ulong f1)
 			{
 				this.F0 = f0;
 				this.F1 = f1;
@@ -1928,12 +1916,12 @@ namespace Test.Models
 		public class GovernanceCachedMetricsR13V0
 		{
 			[CandidName("0")]
-			public UInt64 F0 { get; set; }
+			public ulong F0 { get; set; }
 
 			[CandidName("1")]
-			public Double F1 { get; set; }
+			public double F1 { get; set; }
 
-			public GovernanceCachedMetricsR13V0(UInt64 f0, Double f1)
+			public GovernanceCachedMetricsR13V0(ulong f0, double f1)
 			{
 				this.F0 = f0;
 				this.F1 = f1;
@@ -1949,19 +1937,18 @@ namespace Test.Models
 Type File: 'GovernanceError'
 
 using EdjCase.ICP.Candid.Mapping;
-using System;
 
 namespace Test.Models
 {
 	public class GovernanceError
 	{
 		[CandidName("error_message")]
-		public String ErrorMessage { get; set; }
+		public string ErrorMessage { get; set; }
 
 		[CandidName("error_type")]
-		public Int32 ErrorType { get; set; }
+		public int ErrorType { get; set; }
 
-		public GovernanceError(String errorMessage, Int32 errorType)
+		public GovernanceError(string errorMessage, int errorType)
 		{
 			this.ErrorMessage = errorMessage;
 			this.ErrorType = errorType;
@@ -1976,16 +1963,15 @@ namespace Test.Models
 Type File: 'IncreaseDissolveDelay'
 
 using EdjCase.ICP.Candid.Mapping;
-using System;
 
 namespace Test.Models
 {
 	public class IncreaseDissolveDelay
 	{
 		[CandidName("additional_dissolve_delay_seconds")]
-		public UInt32 AdditionalDissolveDelaySeconds { get; set; }
+		public uint AdditionalDissolveDelaySeconds { get; set; }
 
-		public IncreaseDissolveDelay(UInt32 additionalDissolveDelaySeconds)
+		public IncreaseDissolveDelay(uint additionalDissolveDelaySeconds)
 		{
 			this.AdditionalDissolveDelaySeconds = additionalDissolveDelaySeconds;
 		}
@@ -2027,7 +2013,6 @@ namespace Test.Models
 Type File: 'KnownNeuronData'
 
 using EdjCase.ICP.Candid.Mapping;
-using System;
 using EdjCase.ICP.Candid.Models;
 
 namespace Test.Models
@@ -2035,12 +2020,12 @@ namespace Test.Models
 	public class KnownNeuronData
 	{
 		[CandidName("name")]
-		public String Name { get; set; }
+		public string Name { get; set; }
 
 		[CandidName("description")]
-		public OptionalValue<String> Description { get; set; }
+		public OptionalValue<string> Description { get; set; }
 
-		public KnownNeuronData(String name, OptionalValue<String> description)
+		public KnownNeuronData(string name, OptionalValue<string> description)
 		{
 			this.Name = name;
 			this.Description = description;
@@ -2079,7 +2064,6 @@ namespace Test.Models
 Type File: 'ListNeurons'
 
 using EdjCase.ICP.Candid.Mapping;
-using System;
 using System.Collections.Generic;
 
 namespace Test.Models
@@ -2087,12 +2071,12 @@ namespace Test.Models
 	public class ListNeurons
 	{
 		[CandidName("neuron_ids")]
-		public List<UInt64> NeuronIds { get; set; }
+		public List<ulong> NeuronIds { get; set; }
 
 		[CandidName("include_neurons_readable_by_caller")]
-		public Boolean IncludeNeuronsReadableByCaller { get; set; }
+		public bool IncludeNeuronsReadableByCaller { get; set; }
 
-		public ListNeurons(List<UInt64> neuronIds, Boolean includeNeuronsReadableByCaller)
+		public ListNeurons(List<ulong> neuronIds, bool includeNeuronsReadableByCaller)
 		{
 			this.NeuronIds = neuronIds;
 			this.IncludeNeuronsReadableByCaller = includeNeuronsReadableByCaller;
@@ -2109,7 +2093,6 @@ Type File: 'ListNeuronsResponse'
 using EdjCase.ICP.Candid.Mapping;
 using Test.Models;
 using System.Collections.Generic;
-using System;
 
 namespace Test.Models
 {
@@ -2134,12 +2117,12 @@ namespace Test.Models
 		public class ListNeuronsResponseR0V0
 		{
 			[CandidName("0")]
-			public UInt64 F0 { get; set; }
+			public ulong F0 { get; set; }
 
 			[CandidName("1")]
 			public NeuronInfo F1 { get; set; }
 
-			public ListNeuronsResponseR0V0(UInt64 f0, NeuronInfo f1)
+			public ListNeuronsResponseR0V0(ulong f0, NeuronInfo f1)
 			{
 				this.F0 = f0;
 				this.F1 = f1;
@@ -2179,7 +2162,6 @@ namespace Test.Models
 Type File: 'ListProposalInfo'
 
 using EdjCase.ICP.Candid.Mapping;
-using System;
 using System.Collections.Generic;
 using Test.Models;
 using EdjCase.ICP.Candid.Models;
@@ -2189,21 +2171,21 @@ namespace Test.Models
 	public class ListProposalInfo
 	{
 		[CandidName("include_reward_status")]
-		public List<Int32> IncludeRewardStatus { get; set; }
+		public List<int> IncludeRewardStatus { get; set; }
 
 		[CandidName("before_proposal")]
 		public OptionalValue<NeuronId> BeforeProposal { get; set; }
 
 		[CandidName("limit")]
-		public UInt32 Limit { get; set; }
+		public uint Limit { get; set; }
 
 		[CandidName("exclude_topic")]
-		public List<Int32> ExcludeTopic { get; set; }
+		public List<int> ExcludeTopic { get; set; }
 
 		[CandidName("include_status")]
-		public List<Int32> IncludeStatus { get; set; }
+		public List<int> IncludeStatus { get; set; }
 
-		public ListProposalInfo(List<Int32> includeRewardStatus, OptionalValue<NeuronId> beforeProposal, UInt32 limit, List<Int32> excludeTopic, List<Int32> includeStatus)
+		public ListProposalInfo(List<int> includeRewardStatus, OptionalValue<NeuronId> beforeProposal, uint limit, List<int> excludeTopic, List<int> includeStatus)
 		{
 			this.IncludeRewardStatus = includeRewardStatus;
 			this.BeforeProposal = beforeProposal;
@@ -2349,16 +2331,15 @@ namespace Test.Models
 Type File: 'MergeMaturity'
 
 using EdjCase.ICP.Candid.Mapping;
-using System;
 
 namespace Test.Models
 {
 	public class MergeMaturity
 	{
 		[CandidName("percentage_to_merge")]
-		public UInt32 PercentageToMerge { get; set; }
+		public uint PercentageToMerge { get; set; }
 
-		public MergeMaturity(UInt32 percentageToMerge)
+		public MergeMaturity(uint percentageToMerge)
 		{
 			this.PercentageToMerge = percentageToMerge;
 		}
@@ -2372,19 +2353,18 @@ namespace Test.Models
 Type File: 'MergeMaturityResponse'
 
 using EdjCase.ICP.Candid.Mapping;
-using System;
 
 namespace Test.Models
 {
 	public class MergeMaturityResponse
 	{
 		[CandidName("merged_maturity_e8s")]
-		public UInt64 MergedMaturityE8s { get; set; }
+		public ulong MergedMaturityE8s { get; set; }
 
 		[CandidName("new_stake_e8s")]
-		public UInt64 NewStakeE8s { get; set; }
+		public ulong NewStakeE8s { get; set; }
 
-		public MergeMaturityResponse(UInt64 mergedMaturityE8s, UInt64 newStakeE8s)
+		public MergeMaturityResponse(ulong mergedMaturityE8s, ulong newStakeE8s)
 		{
 			this.MergedMaturityE8s = mergedMaturityE8s;
 			this.NewStakeE8s = newStakeE8s;
@@ -2399,16 +2379,15 @@ namespace Test.Models
 Type File: 'Motion'
 
 using EdjCase.ICP.Candid.Mapping;
-using System;
 
 namespace Test.Models
 {
 	public class Motion
 	{
 		[CandidName("motion_text")]
-		public String MotionText { get; set; }
+		public string MotionText { get; set; }
 
-		public Motion(String motionText)
+		public Motion(string motionText)
 		{
 			this.MotionText = motionText;
 		}
@@ -2422,37 +2401,36 @@ namespace Test.Models
 Type File: 'NetworkEconomics'
 
 using EdjCase.ICP.Candid.Mapping;
-using System;
 
 namespace Test.Models
 {
 	public class NetworkEconomics
 	{
 		[CandidName("neuron_minimum_stake_e8s")]
-		public UInt64 NeuronMinimumStakeE8s { get; set; }
+		public ulong NeuronMinimumStakeE8s { get; set; }
 
 		[CandidName("max_proposals_to_keep_per_topic")]
-		public UInt32 MaxProposalsToKeepPerTopic { get; set; }
+		public uint MaxProposalsToKeepPerTopic { get; set; }
 
 		[CandidName("neuron_management_fee_per_proposal_e8s")]
-		public UInt64 NeuronManagementFeePerProposalE8s { get; set; }
+		public ulong NeuronManagementFeePerProposalE8s { get; set; }
 
 		[CandidName("reject_cost_e8s")]
-		public UInt64 RejectCostE8s { get; set; }
+		public ulong RejectCostE8s { get; set; }
 
 		[CandidName("transaction_fee_e8s")]
-		public UInt64 TransactionFeeE8s { get; set; }
+		public ulong TransactionFeeE8s { get; set; }
 
 		[CandidName("neuron_spawn_dissolve_delay_seconds")]
-		public UInt64 NeuronSpawnDissolveDelaySeconds { get; set; }
+		public ulong NeuronSpawnDissolveDelaySeconds { get; set; }
 
 		[CandidName("minimum_icp_xdr_rate")]
-		public UInt64 MinimumIcpXdrRate { get; set; }
+		public ulong MinimumIcpXdrRate { get; set; }
 
 		[CandidName("maximum_node_provider_rewards_e8s")]
-		public UInt64 MaximumNodeProviderRewardsE8s { get; set; }
+		public ulong MaximumNodeProviderRewardsE8s { get; set; }
 
-		public NetworkEconomics(UInt64 neuronMinimumStakeE8s, UInt32 maxProposalsToKeepPerTopic, UInt64 neuronManagementFeePerProposalE8s, UInt64 rejectCostE8s, UInt64 transactionFeeE8s, UInt64 neuronSpawnDissolveDelaySeconds, UInt64 minimumIcpXdrRate, UInt64 maximumNodeProviderRewardsE8s)
+		public NetworkEconomics(ulong neuronMinimumStakeE8s, uint maxProposalsToKeepPerTopic, ulong neuronManagementFeePerProposalE8s, ulong rejectCostE8s, ulong transactionFeeE8s, ulong neuronSpawnDissolveDelaySeconds, ulong minimumIcpXdrRate, ulong maximumNodeProviderRewardsE8s)
 		{
 			this.NeuronMinimumStakeE8s = neuronMinimumStakeE8s;
 			this.MaxProposalsToKeepPerTopic = maxProposalsToKeepPerTopic;
@@ -2476,7 +2454,6 @@ using EdjCase.ICP.Candid.Mapping;
 using Test.Models;
 using EdjCase.ICP.Candid.Models;
 using System.Collections.Generic;
-using System;
 
 namespace Test.Models
 {
@@ -2492,31 +2469,31 @@ namespace Test.Models
 		public List<BallotInfo> RecentBallots { get; set; }
 
 		[CandidName("kyc_verified")]
-		public Boolean KycVerified { get; set; }
+		public bool KycVerified { get; set; }
 
 		[CandidName("not_for_profit")]
-		public Boolean NotForProfit { get; set; }
+		public bool NotForProfit { get; set; }
 
 		[CandidName("maturity_e8s_equivalent")]
-		public UInt64 MaturityE8sEquivalent { get; set; }
+		public ulong MaturityE8sEquivalent { get; set; }
 
 		[CandidName("cached_neuron_stake_e8s")]
-		public UInt64 CachedNeuronStakeE8s { get; set; }
+		public ulong CachedNeuronStakeE8s { get; set; }
 
 		[CandidName("created_timestamp_seconds")]
-		public UInt64 CreatedTimestampSeconds { get; set; }
+		public ulong CreatedTimestampSeconds { get; set; }
 
 		[CandidName("aging_since_timestamp_seconds")]
-		public UInt64 AgingSinceTimestampSeconds { get; set; }
+		public ulong AgingSinceTimestampSeconds { get; set; }
 
 		[CandidName("hot_keys")]
 		public List<Principal> HotKeys { get; set; }
 
 		[CandidName("account")]
-		public List<Byte> Account { get; set; }
+		public List<byte> Account { get; set; }
 
 		[CandidName("joined_community_fund_timestamp_seconds")]
-		public OptionalValue<UInt64> JoinedCommunityFundTimestampSeconds { get; set; }
+		public OptionalValue<ulong> JoinedCommunityFundTimestampSeconds { get; set; }
 
 		[CandidName("dissolve_state")]
 		public OptionalValue<DissolveState> DissolveState { get; set; }
@@ -2525,7 +2502,7 @@ namespace Test.Models
 		public List<Neuron.NeuronR13V0> Followees { get; set; }
 
 		[CandidName("neuron_fees_e8s")]
-		public UInt64 NeuronFeesE8s { get; set; }
+		public ulong NeuronFeesE8s { get; set; }
 
 		[CandidName("transfer")]
 		public OptionalValue<NeuronStakeTransfer> Transfer { get; set; }
@@ -2533,7 +2510,7 @@ namespace Test.Models
 		[CandidName("known_neuron_data")]
 		public OptionalValue<KnownNeuronData> KnownNeuronData { get; set; }
 
-		public Neuron(OptionalValue<NeuronId> id, OptionalValue<Principal> controller, List<BallotInfo> recentBallots, Boolean kycVerified, Boolean notForProfit, UInt64 maturityE8sEquivalent, UInt64 cachedNeuronStakeE8s, UInt64 createdTimestampSeconds, UInt64 agingSinceTimestampSeconds, List<Principal> hotKeys, List<Byte> account, OptionalValue<UInt64> joinedCommunityFundTimestampSeconds, OptionalValue<DissolveState> dissolveState, List<Neuron.NeuronR13V0> followees, UInt64 neuronFeesE8s, OptionalValue<NeuronStakeTransfer> transfer, OptionalValue<KnownNeuronData> knownNeuronData)
+		public Neuron(OptionalValue<NeuronId> id, OptionalValue<Principal> controller, List<BallotInfo> recentBallots, bool kycVerified, bool notForProfit, ulong maturityE8sEquivalent, ulong cachedNeuronStakeE8s, ulong createdTimestampSeconds, ulong agingSinceTimestampSeconds, List<Principal> hotKeys, List<byte> account, OptionalValue<ulong> joinedCommunityFundTimestampSeconds, OptionalValue<DissolveState> dissolveState, List<Neuron.NeuronR13V0> followees, ulong neuronFeesE8s, OptionalValue<NeuronStakeTransfer> transfer, OptionalValue<KnownNeuronData> knownNeuronData)
 		{
 			this.Id = id;
 			this.Controller = controller;
@@ -2561,12 +2538,12 @@ namespace Test.Models
 		public class NeuronR13V0
 		{
 			[CandidName("0")]
-			public Int32 F0 { get; set; }
+			public int F0 { get; set; }
 
 			[CandidName("1")]
 			public Followees F1 { get; set; }
 
-			public NeuronR13V0(Int32 f0, Followees f1)
+			public NeuronR13V0(int f0, Followees f1)
 			{
 				this.F0 = f0;
 				this.F1 = f1;
@@ -2582,16 +2559,15 @@ namespace Test.Models
 Type File: 'NeuronId'
 
 using EdjCase.ICP.Candid.Mapping;
-using System;
 
 namespace Test.Models
 {
 	public class NeuronId
 	{
 		[CandidName("id")]
-		public UInt64 Id { get; set; }
+		public ulong Id { get; set; }
 
-		public NeuronId(UInt64 id)
+		public NeuronId(ulong id)
 		{
 			this.Id = id;
 		}
@@ -2606,8 +2582,8 @@ Type File: 'NeuronIdOrSubaccount'
 
 using EdjCase.ICP.Candid.Mapping;
 using Test.Models;
-using System;
 using System.Collections.Generic;
+using System;
 
 namespace Test.Models
 {
@@ -2620,7 +2596,7 @@ namespace Test.Models
 		[VariantValueProperty()]
 		public System.Object? Value { get; set; }
 
-		public NeuronIdOrSubaccount(NeuronIdOrSubaccountTag tag, Object? value)
+		public NeuronIdOrSubaccount(NeuronIdOrSubaccountTag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -2630,7 +2606,7 @@ namespace Test.Models
 		{
 		}
 
-		public static NeuronIdOrSubaccount Subaccount(List<Byte> info)
+		public static NeuronIdOrSubaccount Subaccount(List<byte> info)
 		{
 			return new NeuronIdOrSubaccount(NeuronIdOrSubaccountTag.Subaccount, info);
 		}
@@ -2640,10 +2616,10 @@ namespace Test.Models
 			return new NeuronIdOrSubaccount(NeuronIdOrSubaccountTag.NeuronId, info);
 		}
 
-		public List<Byte> AsSubaccount()
+		public List<byte> AsSubaccount()
 		{
 			this.ValidateTag(NeuronIdOrSubaccountTag.Subaccount);
-			return (List<Byte>)this.Value!;
+			return (List<byte>)this.Value!;
 		}
 
 		public NeuronId AsNeuronId()
@@ -2664,7 +2640,7 @@ namespace Test.Models
 	public enum NeuronIdOrSubaccountTag
 	{
 		[CandidName("Subaccount")]
-		[VariantOptionType(typeof(List<Byte>))]
+		[VariantOptionType(typeof(List<byte>))]
 		Subaccount,
 		[CandidName("NeuronId")]
 		[VariantOptionType(typeof(NeuronId))]
@@ -2677,7 +2653,6 @@ Type File: 'NeuronInFlightCommand'
 using EdjCase.ICP.Candid.Mapping;
 using Test.Models;
 using EdjCase.ICP.Candid.Models;
-using System;
 
 namespace Test.Models
 {
@@ -2687,9 +2662,9 @@ namespace Test.Models
 		public OptionalValue<Command2> Command { get; set; }
 
 		[CandidName("timestamp")]
-		public UInt64 Timestamp { get; set; }
+		public ulong Timestamp { get; set; }
 
-		public NeuronInFlightCommand(OptionalValue<Command2> command, UInt64 timestamp)
+		public NeuronInFlightCommand(OptionalValue<Command2> command, ulong timestamp)
 		{
 			this.Command = command;
 			this.Timestamp = timestamp;
@@ -2704,7 +2679,6 @@ namespace Test.Models
 Type File: 'NeuronInfo'
 
 using EdjCase.ICP.Candid.Mapping;
-using System;
 using Test.Models;
 using System.Collections.Generic;
 using EdjCase.ICP.Candid.Models;
@@ -2714,36 +2688,36 @@ namespace Test.Models
 	public class NeuronInfo
 	{
 		[CandidName("dissolve_delay_seconds")]
-		public UInt64 DissolveDelaySeconds { get; set; }
+		public ulong DissolveDelaySeconds { get; set; }
 
 		[CandidName("recent_ballots")]
 		public List<BallotInfo> RecentBallots { get; set; }
 
 		[CandidName("created_timestamp_seconds")]
-		public UInt64 CreatedTimestampSeconds { get; set; }
+		public ulong CreatedTimestampSeconds { get; set; }
 
 		[CandidName("state")]
-		public Int32 State { get; set; }
+		public int State { get; set; }
 
 		[CandidName("stake_e8s")]
-		public UInt64 StakeE8s { get; set; }
+		public ulong StakeE8s { get; set; }
 
 		[CandidName("joined_community_fund_timestamp_seconds")]
-		public OptionalValue<UInt64> JoinedCommunityFundTimestampSeconds { get; set; }
+		public OptionalValue<ulong> JoinedCommunityFundTimestampSeconds { get; set; }
 
 		[CandidName("retrieved_at_timestamp_seconds")]
-		public UInt64 RetrievedAtTimestampSeconds { get; set; }
+		public ulong RetrievedAtTimestampSeconds { get; set; }
 
 		[CandidName("known_neuron_data")]
 		public OptionalValue<KnownNeuronData> KnownNeuronData { get; set; }
 
 		[CandidName("voting_power")]
-		public UInt64 VotingPower { get; set; }
+		public ulong VotingPower { get; set; }
 
 		[CandidName("age_seconds")]
-		public UInt64 AgeSeconds { get; set; }
+		public ulong AgeSeconds { get; set; }
 
-		public NeuronInfo(UInt64 dissolveDelaySeconds, List<BallotInfo> recentBallots, UInt64 createdTimestampSeconds, Int32 state, UInt64 stakeE8s, OptionalValue<UInt64> joinedCommunityFundTimestampSeconds, UInt64 retrievedAtTimestampSeconds, OptionalValue<KnownNeuronData> knownNeuronData, UInt64 votingPower, UInt64 ageSeconds)
+		public NeuronInfo(ulong dissolveDelaySeconds, List<BallotInfo> recentBallots, ulong createdTimestampSeconds, int state, ulong stakeE8s, OptionalValue<ulong> joinedCommunityFundTimestampSeconds, ulong retrievedAtTimestampSeconds, OptionalValue<KnownNeuronData> knownNeuronData, ulong votingPower, ulong ageSeconds)
 		{
 			this.DissolveDelaySeconds = dissolveDelaySeconds;
 			this.RecentBallots = recentBallots;
@@ -2766,7 +2740,6 @@ namespace Test.Models
 Type File: 'NeuronStakeTransfer'
 
 using EdjCase.ICP.Candid.Mapping;
-using System;
 using System.Collections.Generic;
 using EdjCase.ICP.Candid.Models;
 
@@ -2775,27 +2748,27 @@ namespace Test.Models
 	public class NeuronStakeTransfer
 	{
 		[CandidName("to_subaccount")]
-		public List<Byte> ToSubaccount { get; set; }
+		public List<byte> ToSubaccount { get; set; }
 
 		[CandidName("neuron_stake_e8s")]
-		public UInt64 NeuronStakeE8s { get; set; }
+		public ulong NeuronStakeE8s { get; set; }
 
 		[CandidName("from")]
 		public OptionalValue<Principal> From { get; set; }
 
 		[CandidName("memo")]
-		public UInt64 Memo { get; set; }
+		public ulong Memo { get; set; }
 
 		[CandidName("from_subaccount")]
-		public List<Byte> FromSubaccount { get; set; }
+		public List<byte> FromSubaccount { get; set; }
 
 		[CandidName("transfer_timestamp")]
-		public UInt64 TransferTimestamp { get; set; }
+		public ulong TransferTimestamp { get; set; }
 
 		[CandidName("block_height")]
-		public UInt64 BlockHeight { get; set; }
+		public ulong BlockHeight { get; set; }
 
-		public NeuronStakeTransfer(List<Byte> toSubaccount, UInt64 neuronStakeE8s, OptionalValue<Principal> from, UInt64 memo, List<Byte> fromSubaccount, UInt64 transferTimestamp, UInt64 blockHeight)
+		public NeuronStakeTransfer(List<byte> toSubaccount, ulong neuronStakeE8s, OptionalValue<Principal> from, ulong memo, List<byte> fromSubaccount, ulong transferTimestamp, ulong blockHeight)
 		{
 			this.ToSubaccount = toSubaccount;
 			this.NeuronStakeE8s = neuronStakeE8s;
@@ -2857,7 +2830,7 @@ namespace Test.Models
 		[VariantValueProperty()]
 		public System.Object? Value { get; set; }
 
-		public Operation(OperationTag tag, Object? value)
+		public Operation(OperationTag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -3003,7 +2976,6 @@ namespace Test.Models
 Type File: 'Proposal'
 
 using EdjCase.ICP.Candid.Mapping;
-using System;
 using EdjCase.ICP.Candid.Models;
 using Test.Models;
 
@@ -3012,18 +2984,18 @@ namespace Test.Models
 	public class Proposal
 	{
 		[CandidName("url")]
-		public String Url { get; set; }
+		public string Url { get; set; }
 
 		[CandidName("title")]
-		public OptionalValue<String> Title { get; set; }
+		public OptionalValue<string> Title { get; set; }
 
 		[CandidName("action")]
 		public OptionalValue<Action> Action { get; set; }
 
 		[CandidName("summary")]
-		public String Summary { get; set; }
+		public string Summary { get; set; }
 
-		public Proposal(String url, OptionalValue<String> title, OptionalValue<Action> action, String summary)
+		public Proposal(string url, OptionalValue<string> title, OptionalValue<Action> action, string summary)
 		{
 			this.Url = url;
 			this.Title = title;
@@ -3043,7 +3015,6 @@ using EdjCase.ICP.Candid.Mapping;
 using Test.Models;
 using EdjCase.ICP.Candid.Models;
 using System.Collections.Generic;
-using System;
 
 namespace Test.Models
 {
@@ -3059,22 +3030,22 @@ namespace Test.Models
 		public List<ProposalData.ProposalDataR2V0> Ballots { get; set; }
 
 		[CandidName("proposal_timestamp_seconds")]
-		public UInt64 ProposalTimestampSeconds { get; set; }
+		public ulong ProposalTimestampSeconds { get; set; }
 
 		[CandidName("reward_event_round")]
-		public UInt64 RewardEventRound { get; set; }
+		public ulong RewardEventRound { get; set; }
 
 		[CandidName("failed_timestamp_seconds")]
-		public UInt64 FailedTimestampSeconds { get; set; }
+		public ulong FailedTimestampSeconds { get; set; }
 
 		[CandidName("reject_cost_e8s")]
-		public UInt64 RejectCostE8s { get; set; }
+		public ulong RejectCostE8s { get; set; }
 
 		[CandidName("latest_tally")]
 		public OptionalValue<Tally> LatestTally { get; set; }
 
 		[CandidName("decided_timestamp_seconds")]
-		public UInt64 DecidedTimestampSeconds { get; set; }
+		public ulong DecidedTimestampSeconds { get; set; }
 
 		[CandidName("proposal")]
 		public OptionalValue<Proposal> Proposal { get; set; }
@@ -3086,9 +3057,9 @@ namespace Test.Models
 		public OptionalValue<WaitForQuietState> WaitForQuietState { get; set; }
 
 		[CandidName("executed_timestamp_seconds")]
-		public UInt64 ExecutedTimestampSeconds { get; set; }
+		public ulong ExecutedTimestampSeconds { get; set; }
 
-		public ProposalData(OptionalValue<NeuronId> id, OptionalValue<GovernanceError> failureReason, List<ProposalData.ProposalDataR2V0> ballots, UInt64 proposalTimestampSeconds, UInt64 rewardEventRound, UInt64 failedTimestampSeconds, UInt64 rejectCostE8s, OptionalValue<Tally> latestTally, UInt64 decidedTimestampSeconds, OptionalValue<Proposal> proposal, OptionalValue<NeuronId> proposer, OptionalValue<WaitForQuietState> waitForQuietState, UInt64 executedTimestampSeconds)
+		public ProposalData(OptionalValue<NeuronId> id, OptionalValue<GovernanceError> failureReason, List<ProposalData.ProposalDataR2V0> ballots, ulong proposalTimestampSeconds, ulong rewardEventRound, ulong failedTimestampSeconds, ulong rejectCostE8s, OptionalValue<Tally> latestTally, ulong decidedTimestampSeconds, OptionalValue<Proposal> proposal, OptionalValue<NeuronId> proposer, OptionalValue<WaitForQuietState> waitForQuietState, ulong executedTimestampSeconds)
 		{
 			this.Id = id;
 			this.FailureReason = failureReason;
@@ -3112,12 +3083,12 @@ namespace Test.Models
 		public class ProposalDataR2V0
 		{
 			[CandidName("0")]
-			public UInt64 F0 { get; set; }
+			public ulong F0 { get; set; }
 
 			[CandidName("1")]
 			public Ballot F1 { get; set; }
 
-			public ProposalDataR2V0(UInt64 f0, Ballot f1)
+			public ProposalDataR2V0(ulong f0, Ballot f1)
 			{
 				this.F0 = f0;
 				this.F1 = f1;
@@ -3135,7 +3106,6 @@ Type File: 'ProposalInfo'
 using EdjCase.ICP.Candid.Mapping;
 using Test.Models;
 using EdjCase.ICP.Candid.Models;
-using System;
 using System.Collections.Generic;
 
 namespace Test.Models
@@ -3146,10 +3116,10 @@ namespace Test.Models
 		public OptionalValue<NeuronId> Id { get; set; }
 
 		[CandidName("status")]
-		public Int32 Status { get; set; }
+		public int Status { get; set; }
 
 		[CandidName("topic")]
-		public Int32 Topic { get; set; }
+		public int Topic { get; set; }
 
 		[CandidName("failure_reason")]
 		public OptionalValue<GovernanceError> FailureReason { get; set; }
@@ -3158,28 +3128,28 @@ namespace Test.Models
 		public List<ProposalInfo.ProposalInfoR4V0> Ballots { get; set; }
 
 		[CandidName("proposal_timestamp_seconds")]
-		public UInt64 ProposalTimestampSeconds { get; set; }
+		public ulong ProposalTimestampSeconds { get; set; }
 
 		[CandidName("reward_event_round")]
-		public UInt64 RewardEventRound { get; set; }
+		public ulong RewardEventRound { get; set; }
 
 		[CandidName("deadline_timestamp_seconds")]
-		public OptionalValue<UInt64> DeadlineTimestampSeconds { get; set; }
+		public OptionalValue<ulong> DeadlineTimestampSeconds { get; set; }
 
 		[CandidName("failed_timestamp_seconds")]
-		public UInt64 FailedTimestampSeconds { get; set; }
+		public ulong FailedTimestampSeconds { get; set; }
 
 		[CandidName("reject_cost_e8s")]
-		public UInt64 RejectCostE8s { get; set; }
+		public ulong RejectCostE8s { get; set; }
 
 		[CandidName("latest_tally")]
 		public OptionalValue<Tally> LatestTally { get; set; }
 
 		[CandidName("reward_status")]
-		public Int32 RewardStatus { get; set; }
+		public int RewardStatus { get; set; }
 
 		[CandidName("decided_timestamp_seconds")]
-		public UInt64 DecidedTimestampSeconds { get; set; }
+		public ulong DecidedTimestampSeconds { get; set; }
 
 		[CandidName("proposal")]
 		public OptionalValue<Proposal> Proposal { get; set; }
@@ -3188,9 +3158,9 @@ namespace Test.Models
 		public OptionalValue<NeuronId> Proposer { get; set; }
 
 		[CandidName("executed_timestamp_seconds")]
-		public UInt64 ExecutedTimestampSeconds { get; set; }
+		public ulong ExecutedTimestampSeconds { get; set; }
 
-		public ProposalInfo(OptionalValue<NeuronId> id, Int32 status, Int32 topic, OptionalValue<GovernanceError> failureReason, List<ProposalInfo.ProposalInfoR4V0> ballots, UInt64 proposalTimestampSeconds, UInt64 rewardEventRound, OptionalValue<UInt64> deadlineTimestampSeconds, UInt64 failedTimestampSeconds, UInt64 rejectCostE8s, OptionalValue<Tally> latestTally, Int32 rewardStatus, UInt64 decidedTimestampSeconds, OptionalValue<Proposal> proposal, OptionalValue<NeuronId> proposer, UInt64 executedTimestampSeconds)
+		public ProposalInfo(OptionalValue<NeuronId> id, int status, int topic, OptionalValue<GovernanceError> failureReason, List<ProposalInfo.ProposalInfoR4V0> ballots, ulong proposalTimestampSeconds, ulong rewardEventRound, OptionalValue<ulong> deadlineTimestampSeconds, ulong failedTimestampSeconds, ulong rejectCostE8s, OptionalValue<Tally> latestTally, int rewardStatus, ulong decidedTimestampSeconds, OptionalValue<Proposal> proposal, OptionalValue<NeuronId> proposer, ulong executedTimestampSeconds)
 		{
 			this.Id = id;
 			this.Status = status;
@@ -3217,12 +3187,12 @@ namespace Test.Models
 		public class ProposalInfoR4V0
 		{
 			[CandidName("0")]
-			public UInt64 F0 { get; set; }
+			public ulong F0 { get; set; }
 
 			[CandidName("1")]
 			public Ballot F1 { get; set; }
 
-			public ProposalInfoR4V0(UInt64 f0, Ballot f1)
+			public ProposalInfoR4V0(ulong f0, Ballot f1)
 			{
 				this.F0 = f0;
 				this.F1 = f1;
@@ -3238,7 +3208,6 @@ namespace Test.Models
 Type File: 'RegisterVote'
 
 using EdjCase.ICP.Candid.Mapping;
-using System;
 using Test.Models;
 using EdjCase.ICP.Candid.Models;
 
@@ -3247,12 +3216,12 @@ namespace Test.Models
 	public class RegisterVote
 	{
 		[CandidName("vote")]
-		public Int32 Vote { get; set; }
+		public int Vote { get; set; }
 
 		[CandidName("proposal")]
 		public OptionalValue<NeuronId> Proposal { get; set; }
 
-		public RegisterVote(Int32 vote, OptionalValue<NeuronId> proposal)
+		public RegisterVote(int vote, OptionalValue<NeuronId> proposal)
 		{
 			this.Vote = vote;
 			this.Proposal = proposal;
@@ -3304,7 +3273,7 @@ namespace Test.Models
 		[VariantValueProperty()]
 		public System.Object? Value { get; set; }
 
-		public Result(ResultTag tag, Object? value)
+		public Result(ResultTag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -3366,7 +3335,7 @@ namespace Test.Models
 		[VariantValueProperty()]
 		public System.Object? Value { get; set; }
 
-		public Result1(Result1Tag tag, Object? value)
+		public Result1(Result1Tag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -3435,7 +3404,7 @@ namespace Test.Models
 		[VariantValueProperty()]
 		public System.Object? Value { get; set; }
 
-		public Result2(Result2Tag tag, Object? value)
+		public Result2(Result2Tag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -3504,7 +3473,7 @@ namespace Test.Models
 		[VariantValueProperty()]
 		public System.Object? Value { get; set; }
 
-		public Result3(Result3Tag tag, Object? value)
+		public Result3(Result3Tag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -3573,7 +3542,7 @@ namespace Test.Models
 		[VariantValueProperty()]
 		public System.Object? Value { get; set; }
 
-		public Result4(Result4Tag tag, Object? value)
+		public Result4(Result4Tag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -3642,7 +3611,7 @@ namespace Test.Models
 		[VariantValueProperty()]
 		public System.Object? Value { get; set; }
 
-		public Result5(Result5Tag tag, Object? value)
+		public Result5(Result5Tag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -3697,7 +3666,6 @@ namespace Test.Models
 Type File: 'RewardEvent'
 
 using EdjCase.ICP.Candid.Mapping;
-using System;
 using Test.Models;
 using System.Collections.Generic;
 
@@ -3706,18 +3674,18 @@ namespace Test.Models
 	public class RewardEvent
 	{
 		[CandidName("day_after_genesis")]
-		public UInt64 DayAfterGenesis { get; set; }
+		public ulong DayAfterGenesis { get; set; }
 
 		[CandidName("actual_timestamp_seconds")]
-		public UInt64 ActualTimestampSeconds { get; set; }
+		public ulong ActualTimestampSeconds { get; set; }
 
 		[CandidName("distributed_e8s_equivalent")]
-		public UInt64 DistributedE8sEquivalent { get; set; }
+		public ulong DistributedE8sEquivalent { get; set; }
 
 		[CandidName("settled_proposals")]
 		public List<NeuronId> SettledProposals { get; set; }
 
-		public RewardEvent(UInt64 dayAfterGenesis, UInt64 actualTimestampSeconds, UInt64 distributedE8sEquivalent, List<NeuronId> settledProposals)
+		public RewardEvent(ulong dayAfterGenesis, ulong actualTimestampSeconds, ulong distributedE8sEquivalent, List<NeuronId> settledProposals)
 		{
 			this.DayAfterGenesis = dayAfterGenesis;
 			this.ActualTimestampSeconds = actualTimestampSeconds;
@@ -3748,7 +3716,7 @@ namespace Test.Models
 		[VariantValueProperty()]
 		public System.Object? Value { get; set; }
 
-		public RewardMode(RewardModeTag tag, Object? value)
+		public RewardMode(RewardModeTag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -3805,7 +3773,6 @@ Type File: 'RewardNodeProvider'
 using EdjCase.ICP.Candid.Mapping;
 using Test.Models;
 using EdjCase.ICP.Candid.Models;
-using System;
 
 namespace Test.Models
 {
@@ -3818,9 +3785,9 @@ namespace Test.Models
 		public OptionalValue<RewardMode> RewardMode { get; set; }
 
 		[CandidName("amount_e8s")]
-		public UInt64 AmountE8s { get; set; }
+		public ulong AmountE8s { get; set; }
 
-		public RewardNodeProvider(OptionalValue<NodeProvider> nodeProvider, OptionalValue<RewardMode> rewardMode, UInt64 amountE8s)
+		public RewardNodeProvider(OptionalValue<NodeProvider> nodeProvider, OptionalValue<RewardMode> rewardMode, ulong amountE8s)
 		{
 			this.NodeProvider = nodeProvider;
 			this.RewardMode = rewardMode;
@@ -3836,7 +3803,6 @@ namespace Test.Models
 Type File: 'RewardNodeProviders'
 
 using EdjCase.ICP.Candid.Mapping;
-using System;
 using EdjCase.ICP.Candid.Models;
 using Test.Models;
 using System.Collections.Generic;
@@ -3846,12 +3812,12 @@ namespace Test.Models
 	public class RewardNodeProviders
 	{
 		[CandidName("use_registry_derived_rewards")]
-		public OptionalValue<Boolean> UseRegistryDerivedRewards { get; set; }
+		public OptionalValue<bool> UseRegistryDerivedRewards { get; set; }
 
 		[CandidName("rewards")]
 		public List<RewardNodeProvider> Rewards { get; set; }
 
-		public RewardNodeProviders(OptionalValue<Boolean> useRegistryDerivedRewards, List<RewardNodeProvider> rewards)
+		public RewardNodeProviders(OptionalValue<bool> useRegistryDerivedRewards, List<RewardNodeProvider> rewards)
 		{
 			this.UseRegistryDerivedRewards = useRegistryDerivedRewards;
 			this.Rewards = rewards;
@@ -3890,16 +3856,15 @@ namespace Test.Models
 Type File: 'RewardToNeuron'
 
 using EdjCase.ICP.Candid.Mapping;
-using System;
 
 namespace Test.Models
 {
 	public class RewardToNeuron
 	{
 		[CandidName("dissolve_delay_seconds")]
-		public UInt64 DissolveDelaySeconds { get; set; }
+		public ulong DissolveDelaySeconds { get; set; }
 
-		public RewardToNeuron(UInt64 dissolveDelaySeconds)
+		public RewardToNeuron(ulong dissolveDelaySeconds)
 		{
 			this.DissolveDelaySeconds = dissolveDelaySeconds;
 		}
@@ -3915,7 +3880,6 @@ Type File: 'SetDefaultFollowees'
 using EdjCase.ICP.Candid.Mapping;
 using Test.Models;
 using System.Collections.Generic;
-using System;
 
 namespace Test.Models
 {
@@ -3936,12 +3900,12 @@ namespace Test.Models
 		public class SetDefaultFolloweesR0V0
 		{
 			[CandidName("0")]
-			public Int32 F0 { get; set; }
+			public int F0 { get; set; }
 
 			[CandidName("1")]
 			public Followees F1 { get; set; }
 
-			public SetDefaultFolloweesR0V0(Int32 f0, Followees f1)
+			public SetDefaultFolloweesR0V0(int f0, Followees f1)
 			{
 				this.F0 = f0;
 				this.F1 = f1;
@@ -3957,16 +3921,15 @@ namespace Test.Models
 Type File: 'SetDissolveTimestamp'
 
 using EdjCase.ICP.Candid.Mapping;
-using System;
 
 namespace Test.Models
 {
 	public class SetDissolveTimestamp
 	{
 		[CandidName("dissolve_timestamp_seconds")]
-		public UInt64 DissolveTimestampSeconds { get; set; }
+		public ulong DissolveTimestampSeconds { get; set; }
 
-		public SetDissolveTimestamp(UInt64 dissolveTimestampSeconds)
+		public SetDissolveTimestamp(ulong dissolveTimestampSeconds)
 		{
 			this.DissolveTimestampSeconds = dissolveTimestampSeconds;
 		}
@@ -3980,7 +3943,6 @@ namespace Test.Models
 Type File: 'Spawn'
 
 using EdjCase.ICP.Candid.Mapping;
-using System;
 using EdjCase.ICP.Candid.Models;
 
 namespace Test.Models
@@ -3988,15 +3950,15 @@ namespace Test.Models
 	public class Spawn
 	{
 		[CandidName("percentage_to_spawn")]
-		public OptionalValue<UInt32> PercentageToSpawn { get; set; }
+		public OptionalValue<uint> PercentageToSpawn { get; set; }
 
 		[CandidName("new_controller")]
 		public OptionalValue<Principal> NewController { get; set; }
 
 		[CandidName("nonce")]
-		public OptionalValue<UInt64> Nonce { get; set; }
+		public OptionalValue<ulong> Nonce { get; set; }
 
-		public Spawn(OptionalValue<UInt32> percentageToSpawn, OptionalValue<Principal> newController, OptionalValue<UInt64> nonce)
+		public Spawn(OptionalValue<uint> percentageToSpawn, OptionalValue<Principal> newController, OptionalValue<ulong> nonce)
 		{
 			this.PercentageToSpawn = percentageToSpawn;
 			this.NewController = newController;
@@ -4036,16 +3998,15 @@ namespace Test.Models
 Type File: 'Split'
 
 using EdjCase.ICP.Candid.Mapping;
-using System;
 
 namespace Test.Models
 {
 	public class Split
 	{
 		[CandidName("amount_e8s")]
-		public UInt64 AmountE8s { get; set; }
+		public ulong AmountE8s { get; set; }
 
-		public Split(UInt64 amountE8s)
+		public Split(ulong amountE8s)
 		{
 			this.AmountE8s = amountE8s;
 		}
@@ -4059,25 +4020,24 @@ namespace Test.Models
 Type File: 'Tally'
 
 using EdjCase.ICP.Candid.Mapping;
-using System;
 
 namespace Test.Models
 {
 	public class Tally
 	{
 		[CandidName("no")]
-		public UInt64 No { get; set; }
+		public ulong No { get; set; }
 
 		[CandidName("yes")]
-		public UInt64 Yes { get; set; }
+		public ulong Yes { get; set; }
 
 		[CandidName("total")]
-		public UInt64 Total { get; set; }
+		public ulong Total { get; set; }
 
 		[CandidName("timestamp_seconds")]
-		public UInt64 TimestampSeconds { get; set; }
+		public ulong TimestampSeconds { get; set; }
 
-		public Tally(UInt64 no, UInt64 yes, UInt64 total, UInt64 timestampSeconds)
+		public Tally(ulong no, ulong yes, ulong total, ulong timestampSeconds)
 		{
 			this.No = no;
 			this.Yes = yes;
@@ -4118,16 +4078,15 @@ namespace Test.Models
 Type File: 'WaitForQuietState'
 
 using EdjCase.ICP.Candid.Mapping;
-using System;
 
 namespace Test.Models
 {
 	public class WaitForQuietState
 	{
 		[CandidName("current_deadline_timestamp_seconds")]
-		public UInt64 CurrentDeadlineTimestampSeconds { get; set; }
+		public ulong CurrentDeadlineTimestampSeconds { get; set; }
 
-		public WaitForQuietState(UInt64 currentDeadlineTimestampSeconds)
+		public WaitForQuietState(ulong currentDeadlineTimestampSeconds)
 		{
 			this.CurrentDeadlineTimestampSeconds = currentDeadlineTimestampSeconds;
 		}

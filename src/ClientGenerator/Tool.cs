@@ -83,8 +83,8 @@ namespace EdjCase.ICP.ClientGenerator
 
 		private static void WriteClient(ClientSyntax result, string outputDirectory)
 		{
-			Console.WriteLine($"Writing client file ./Client.cs...");
-			WriteFile(null, "Client", result.ClientFile);
+			Console.WriteLine($"Writing client file ./{result.Name}.cs...");
+			WriteFile(null, result.Name, result.ClientFile);
 
 
 			foreach ((string name, CompilationUnitSyntax sourceCode) in result.TypeFiles)

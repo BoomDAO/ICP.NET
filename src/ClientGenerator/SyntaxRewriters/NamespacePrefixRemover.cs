@@ -78,6 +78,28 @@ namespace EdjCase.ICP.ClientGenerator.SyntaxRewriters
 					}
 				case QualifiedNameSyntax q:
 					{
+						string? builtInType = q.ToString() switch
+						{
+							"System.String" => "string",
+							"System.Byte" => "byte",
+							"System.UInt16" => "ushort",
+							"System.UInt32" => "uint",
+							"System.UInt64" => "ulong",
+							"System.Int16" => "short",
+							"System.Int32" => "int",
+							"System.Int64" => "long",
+							"System.Single" => "float",
+							"System.Double" => "double",
+							"System.Boolean" => "bool",
+							"System.Decimal" => "decimal",
+							"System.Char" => "char",
+							"System.Object" => "object",
+							_ => null,
+						};
+						if (builtInType != null)
+						{
+							return SyntaxFactory.IdentifierName(builtInType);
+						}
 						NameSyntax @namespace = q.Left;
 						NameSyntax type = this.StripNamespace(q.Right);
 
