@@ -345,34 +345,24 @@ namespace Test.Models
 
 	public enum ActionTag
 	{
-		[CandidName("RegisterKnownNeuron")]
 		[VariantOptionType(typeof(KnownNeuron))]
 		RegisterKnownNeuron,
-		[CandidName("ManageNeuron")]
 		[VariantOptionType(typeof(ManageNeuron))]
 		ManageNeuron,
-		[CandidName("ExecuteNnsFunction")]
 		[VariantOptionType(typeof(ExecuteNnsFunction))]
 		ExecuteNnsFunction,
-		[CandidName("RewardNodeProvider")]
 		[VariantOptionType(typeof(RewardNodeProvider))]
 		RewardNodeProvider,
-		[CandidName("SetDefaultFollowees")]
 		[VariantOptionType(typeof(SetDefaultFollowees))]
 		SetDefaultFollowees,
-		[CandidName("RewardNodeProviders")]
 		[VariantOptionType(typeof(RewardNodeProviders))]
 		RewardNodeProviders,
-		[CandidName("ManageNetworkEconomics")]
 		[VariantOptionType(typeof(NetworkEconomics))]
 		ManageNetworkEconomics,
-		[CandidName("ApproveGenesisKyc")]
 		[VariantOptionType(typeof(ApproveGenesisKyc))]
 		ApproveGenesisKyc,
-		[CandidName("AddOrRemoveNodeProvider")]
 		[VariantOptionType(typeof(AddOrRemoveNodeProvider))]
 		AddOrRemoveNodeProvider,
-		[CandidName("Motion")]
 		[VariantOptionType(typeof(Motion))]
 		Motion
 	}
@@ -603,13 +593,10 @@ namespace Test.Models
 
 	public enum ByTag
 	{
-		[CandidName("NeuronIdOrSubaccount")]
 		[VariantOptionType(typeof(By.ByO0))]
 		NeuronIdOrSubaccount,
-		[CandidName("MemoAndController")]
 		[VariantOptionType(typeof(ClaimOrRefreshNeuronFromAccount))]
 		MemoAndController,
-		[CandidName("Memo")]
 		[VariantOptionType(typeof(ulong))]
 		Memo
 	}
@@ -675,10 +662,8 @@ namespace Test.Models
 
 	public enum ChangeTag
 	{
-		[CandidName("ToRemove")]
 		[VariantOptionType(typeof(NodeProvider))]
 		ToRemove,
-		[CandidName("ToAdd")]
 		[VariantOptionType(typeof(NodeProvider))]
 		ToAdd
 	}
@@ -942,37 +927,26 @@ namespace Test.Models
 
 	public enum CommandTag
 	{
-		[CandidName("Spawn")]
 		[VariantOptionType(typeof(Spawn))]
 		Spawn,
-		[CandidName("Split")]
 		[VariantOptionType(typeof(Split))]
 		Split,
-		[CandidName("Follow")]
 		[VariantOptionType(typeof(Follow))]
 		Follow,
-		[CandidName("ClaimOrRefresh")]
 		[VariantOptionType(typeof(ClaimOrRefresh))]
 		ClaimOrRefresh,
-		[CandidName("Configure")]
 		[VariantOptionType(typeof(Configure))]
 		Configure,
-		[CandidName("RegisterVote")]
 		[VariantOptionType(typeof(RegisterVote))]
 		RegisterVote,
-		[CandidName("Merge")]
 		[VariantOptionType(typeof(Merge))]
 		Merge,
-		[CandidName("DisburseToNeuron")]
 		[VariantOptionType(typeof(DisburseToNeuron))]
 		DisburseToNeuron,
-		[CandidName("MakeProposal")]
 		[VariantOptionType(typeof(Proposal))]
 		MakeProposal,
-		[CandidName("MergeMaturity")]
 		[VariantOptionType(typeof(MergeMaturity))]
 		MergeMaturity,
-		[CandidName("Disburse")]
 		[VariantOptionType(typeof(Disburse))]
 		Disburse
 	}
@@ -1176,40 +1150,28 @@ namespace Test.Models
 
 	public enum Command1Tag
 	{
-		[CandidName("Error")]
 		[VariantOptionType(typeof(GovernanceError))]
 		Error,
-		[CandidName("Spawn")]
 		[VariantOptionType(typeof(SpawnResponse))]
 		Spawn,
-		[CandidName("Split")]
 		[VariantOptionType(typeof(SpawnResponse))]
 		Split,
-		[CandidName("Follow")]
 		[VariantOptionType(typeof(Command1.Command1O3))]
 		Follow,
-		[CandidName("ClaimOrRefresh")]
 		[VariantOptionType(typeof(ClaimOrRefreshResponse))]
 		ClaimOrRefresh,
-		[CandidName("Configure")]
 		[VariantOptionType(typeof(Command1.Command1O5))]
 		Configure,
-		[CandidName("RegisterVote")]
 		[VariantOptionType(typeof(Command1.Command1O6))]
 		RegisterVote,
-		[CandidName("Merge")]
 		[VariantOptionType(typeof(Command1.Command1O7))]
 		Merge,
-		[CandidName("DisburseToNeuron")]
 		[VariantOptionType(typeof(SpawnResponse))]
 		DisburseToNeuron,
-		[CandidName("MakeProposal")]
 		[VariantOptionType(typeof(MakeProposalResponse))]
 		MakeProposal,
-		[CandidName("MergeMaturity")]
 		[VariantOptionType(typeof(MergeMaturityResponse))]
 		MergeMaturity,
-		[CandidName("Disburse")]
 		[VariantOptionType(typeof(DisburseResponse))]
 		Disburse
 	}
@@ -1341,28 +1303,20 @@ namespace Test.Models
 
 	public enum Command2Tag
 	{
-		[CandidName("Spawn")]
 		[VariantOptionType(typeof(Spawn))]
 		Spawn,
-		[CandidName("Split")]
 		[VariantOptionType(typeof(Split))]
 		Split,
-		[CandidName("Configure")]
 		[VariantOptionType(typeof(Configure))]
 		Configure,
-		[CandidName("Merge")]
 		[VariantOptionType(typeof(Merge))]
 		Merge,
-		[CandidName("DisburseToNeuron")]
 		[VariantOptionType(typeof(DisburseToNeuron))]
 		DisburseToNeuron,
-		[CandidName("ClaimOrRefreshNeuron")]
 		[VariantOptionType(typeof(ClaimOrRefresh))]
 		ClaimOrRefreshNeuron,
-		[CandidName("MergeMaturity")]
 		[VariantOptionType(typeof(MergeMaturity))]
 		MergeMaturity,
-		[CandidName("Disburse")]
 		[VariantOptionType(typeof(Disburse))]
 		Disburse
 	}
@@ -1541,10 +1495,8 @@ namespace Test.Models
 
 	public enum DissolveStateTag
 	{
-		[CandidName("DissolveDelaySeconds")]
 		[VariantOptionType(typeof(ulong))]
 		DissolveDelaySeconds,
-		[CandidName("WhenDissolvedTimestampSeconds")]
 		[VariantOptionType(typeof(ulong))]
 		WhenDissolvedTimestampSeconds
 	}
@@ -2639,10 +2591,8 @@ namespace Test.Models
 
 	public enum NeuronIdOrSubaccountTag
 	{
-		[CandidName("Subaccount")]
 		[VariantOptionType(typeof(List<byte>))]
 		Subaccount,
-		[CandidName("NeuronId")]
 		[VariantOptionType(typeof(NeuronId))]
 		NeuronId
 	}
@@ -2949,25 +2899,18 @@ namespace Test.Models
 
 	public enum OperationTag
 	{
-		[CandidName("RemoveHotKey")]
 		[VariantOptionType(typeof(RemoveHotKey))]
 		RemoveHotKey,
-		[CandidName("AddHotKey")]
 		[VariantOptionType(typeof(AddHotKey))]
 		AddHotKey,
-		[CandidName("StopDissolving")]
 		[VariantOptionType(typeof(Operation.OperationO2))]
 		StopDissolving,
-		[CandidName("StartDissolving")]
 		[VariantOptionType(typeof(Operation.OperationO3))]
 		StartDissolving,
-		[CandidName("IncreaseDissolveDelay")]
 		[VariantOptionType(typeof(IncreaseDissolveDelay))]
 		IncreaseDissolveDelay,
-		[CandidName("JoinCommunityFund")]
 		[VariantOptionType(typeof(Operation.OperationO5))]
 		JoinCommunityFund,
-		[CandidName("SetDissolveTimestamp")]
 		[VariantOptionType(typeof(SetDissolveTimestamp))]
 		SetDissolveTimestamp
 	}
@@ -3310,9 +3253,7 @@ namespace Test.Models
 
 	public enum ResultTag
 	{
-		[CandidName("Ok")]
 		Ok,
-		[CandidName("Err")]
 		[VariantOptionType(typeof(GovernanceError))]
 		Err
 	}
@@ -3378,10 +3319,8 @@ namespace Test.Models
 
 	public enum Result1Tag
 	{
-		[CandidName("Error")]
 		[VariantOptionType(typeof(GovernanceError))]
 		Error,
-		[CandidName("NeuronId")]
 		[VariantOptionType(typeof(NeuronId))]
 		NeuronId
 	}
@@ -3447,10 +3386,8 @@ namespace Test.Models
 
 	public enum Result2Tag
 	{
-		[CandidName("Ok")]
 		[VariantOptionType(typeof(Neuron))]
 		Ok,
-		[CandidName("Err")]
 		[VariantOptionType(typeof(GovernanceError))]
 		Err
 	}
@@ -3516,10 +3453,8 @@ namespace Test.Models
 
 	public enum Result3Tag
 	{
-		[CandidName("Ok")]
 		[VariantOptionType(typeof(RewardNodeProviders))]
 		Ok,
-		[CandidName("Err")]
 		[VariantOptionType(typeof(GovernanceError))]
 		Err
 	}
@@ -3585,10 +3520,8 @@ namespace Test.Models
 
 	public enum Result4Tag
 	{
-		[CandidName("Ok")]
 		[VariantOptionType(typeof(NeuronInfo))]
 		Ok,
-		[CandidName("Err")]
 		[VariantOptionType(typeof(GovernanceError))]
 		Err
 	}
@@ -3654,10 +3587,8 @@ namespace Test.Models
 
 	public enum Result5Tag
 	{
-		[CandidName("Ok")]
 		[VariantOptionType(typeof(NodeProvider))]
 		Ok,
-		[CandidName("Err")]
 		[VariantOptionType(typeof(GovernanceError))]
 		Err
 	}
@@ -3759,10 +3690,8 @@ namespace Test.Models
 
 	public enum RewardModeTag
 	{
-		[CandidName("RewardToNeuron")]
 		[VariantOptionType(typeof(RewardToNeuron))]
 		RewardToNeuron,
-		[CandidName("RewardToAccount")]
 		[VariantOptionType(typeof(RewardToAccount))]
 		RewardToAccount
 	}

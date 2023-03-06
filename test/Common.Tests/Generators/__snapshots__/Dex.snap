@@ -186,10 +186,8 @@ namespace Test.Models
 
 	public enum WithdrawReceiptTag
 	{
-		[CandidName("Err")]
 		[VariantOptionType(typeof(WithdrawErr))]
 		Err,
-		[CandidName("Ok")]
 		[VariantOptionType(typeof(UnboundedUInt))]
 		Ok
 	}
@@ -199,46 +197,12 @@ Type File: 'WithdrawErr'
 
 using Token = EdjCase.ICP.Candid.Models.Principal;
 using OrderId = System.UInt32;
-using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
 
 namespace Test.Models
 {
-	[Variant(typeof(WithdrawErrTag))]
-	public class WithdrawErr
+	public enum WithdrawErr
 	{
-		[VariantTagProperty()]
-		public WithdrawErrTag Tag { get; set; }
-
-		[VariantValueProperty()]
-		public System.Object? Value { get; set; }
-
-		public WithdrawErr(WithdrawErrTag tag, object? value)
-		{
-			this.Tag = tag;
-			this.Value = value;
-		}
-
-		protected WithdrawErr()
-		{
-		}
-
-		public static WithdrawErr BalanceLow()
-		{
-			return new WithdrawErr(WithdrawErrTag.BalanceLow, null);
-		}
-
-		public static WithdrawErr TransferFailure()
-		{
-			return new WithdrawErr(WithdrawErrTag.TransferFailure, null);
-		}
-	}
-
-	public enum WithdrawErrTag
-	{
-		[CandidName("BalanceLow")]
 		BalanceLow,
-		[CandidName("TransferFailure")]
 		TransferFailure
 	}
 }
@@ -306,10 +270,8 @@ namespace Test.Models
 
 	public enum OrderPlacementReceiptTag
 	{
-		[CandidName("Err")]
 		[VariantOptionType(typeof(OrderPlacementErr))]
 		Err,
-		[CandidName("Ok")]
 		[VariantOptionType(typeof(OptionalValue<Order>))]
 		Ok
 	}
@@ -319,46 +281,12 @@ Type File: 'OrderPlacementErr'
 
 using Token = EdjCase.ICP.Candid.Models.Principal;
 using OrderId = System.UInt32;
-using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
 
 namespace Test.Models
 {
-	[Variant(typeof(OrderPlacementErrTag))]
-	public class OrderPlacementErr
+	public enum OrderPlacementErr
 	{
-		[VariantTagProperty()]
-		public OrderPlacementErrTag Tag { get; set; }
-
-		[VariantValueProperty()]
-		public System.Object? Value { get; set; }
-
-		public OrderPlacementErr(OrderPlacementErrTag tag, object? value)
-		{
-			this.Tag = tag;
-			this.Value = value;
-		}
-
-		protected OrderPlacementErr()
-		{
-		}
-
-		public static OrderPlacementErr InvalidOrder()
-		{
-			return new OrderPlacementErr(OrderPlacementErrTag.InvalidOrder, null);
-		}
-
-		public static OrderPlacementErr OrderBookFull()
-		{
-			return new OrderPlacementErr(OrderPlacementErrTag.OrderBookFull, null);
-		}
-	}
-
-	public enum OrderPlacementErrTag
-	{
-		[CandidName("InvalidOrder")]
 		InvalidOrder,
-		[CandidName("OrderBookFull")]
 		OrderBookFull
 	}
 }
@@ -471,10 +399,8 @@ namespace Test.Models
 
 	public enum DepositReceiptTag
 	{
-		[CandidName("Err")]
 		[VariantOptionType(typeof(DepositErr))]
 		Err,
-		[CandidName("Ok")]
 		[VariantOptionType(typeof(UnboundedUInt))]
 		Ok
 	}
@@ -484,46 +410,12 @@ Type File: 'DepositErr'
 
 using Token = EdjCase.ICP.Candid.Models.Principal;
 using OrderId = System.UInt32;
-using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
 
 namespace Test.Models
 {
-	[Variant(typeof(DepositErrTag))]
-	public class DepositErr
+	public enum DepositErr
 	{
-		[VariantTagProperty()]
-		public DepositErrTag Tag { get; set; }
-
-		[VariantValueProperty()]
-		public System.Object? Value { get; set; }
-
-		public DepositErr(DepositErrTag tag, object? value)
-		{
-			this.Tag = tag;
-			this.Value = value;
-		}
-
-		protected DepositErr()
-		{
-		}
-
-		public static DepositErr BalanceLow()
-		{
-			return new DepositErr(DepositErrTag.BalanceLow, null);
-		}
-
-		public static DepositErr TransferFailure()
-		{
-			return new DepositErr(DepositErrTag.TransferFailure, null);
-		}
-	}
-
-	public enum DepositErrTag
-	{
-		[CandidName("BalanceLow")]
 		BalanceLow,
-		[CandidName("TransferFailure")]
 		TransferFailure
 	}
 }
@@ -590,10 +482,8 @@ namespace Test.Models
 
 	public enum CancelOrderReceiptTag
 	{
-		[CandidName("Err")]
 		[VariantOptionType(typeof(CancelOrderErr))]
 		Err,
-		[CandidName("Ok")]
 		[VariantOptionType(typeof(OrderId))]
 		Ok
 	}
@@ -603,46 +493,12 @@ Type File: 'CancelOrderErr'
 
 using Token = EdjCase.ICP.Candid.Models.Principal;
 using OrderId = System.UInt32;
-using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
 
 namespace Test.Models
 {
-	[Variant(typeof(CancelOrderErrTag))]
-	public class CancelOrderErr
+	public enum CancelOrderErr
 	{
-		[VariantTagProperty()]
-		public CancelOrderErrTag Tag { get; set; }
-
-		[VariantValueProperty()]
-		public System.Object? Value { get; set; }
-
-		public CancelOrderErr(CancelOrderErrTag tag, object? value)
-		{
-			this.Tag = tag;
-			this.Value = value;
-		}
-
-		protected CancelOrderErr()
-		{
-		}
-
-		public static CancelOrderErr NotAllowed()
-		{
-			return new CancelOrderErr(CancelOrderErrTag.NotAllowed, null);
-		}
-
-		public static CancelOrderErr NotExistingOrder()
-		{
-			return new CancelOrderErr(CancelOrderErrTag.NotExistingOrder, null);
-		}
-	}
-
-	public enum CancelOrderErrTag
-	{
-		[CandidName("NotAllowed")]
 		NotAllowed,
-		[CandidName("NotExistingOrder")]
 		NotExistingOrder
 	}
 }
