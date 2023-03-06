@@ -1,284 +1,175 @@
-using System;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 using EdjCase.ICP.Agent.Agents;
-using EdjCase.ICP.Agent.Responses;
 using EdjCase.ICP.Candid.Models;
 using Sample.Shared.Governance.Models;
+using System.Collections.Generic;
+using EdjCase.ICP.Agent.Responses;
 
 namespace Sample.Shared.Governance
 {
 	public class GovernanceApiClient
 	{
 		public IAgent Agent { get; }
+
 		public Principal CanisterId { get; }
-		public GovernanceApiClient(EdjCase.ICP.Agent.Agents.IAgent agent, EdjCase.ICP.Candid.Models.Principal canisterId)
+
+		public GovernanceApiClient(IAgent agent, Principal canisterId)
 		{
-			this.Agent = agent ?? throw new ArgumentNullException(nameof(agent));
-			this.CanisterId = canisterId ?? throw new ArgumentNullException(nameof(canisterId));
+			this.Agent = agent;
+			this.CanisterId = canisterId;
 		}
-		public async Task<Result> ClaimGtcNeurons(EdjCase.ICP.Candid.Models.Principal arg0, System.Collections.Generic.List<NeuronId> arg1)
+
+		public async System.Threading.Tasks.Task<Result> ClaimGtcNeurons(Principal arg0, List<NeuronId> arg1)
 		{
-			string method = "claim_gtc_neurons";
-			CandidTypedValue p0 = CandidTypedValue.FromObject(arg0);
-			CandidTypedValue p1 = CandidTypedValue.FromObject(arg1);
-			var candidArgs = new List<CandidTypedValue>
-			{
-				p0,
-				p1,
-			};
-			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			CandidArg responseArg = await this.Agent.CallAndWaitAsync(this.CanisterId, method, arg, null, null);
-			Result r0 = responseArg.Values[0].ToObject<Result>();
-			return (r0);
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0), CandidTypedValue.FromObject(arg1));
+			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "claim_gtc_neurons", arg);
+			return reply.ToObjects<Result>();
 		}
-		public async Task<ClaimOrRefreshNeuronFromAccountResponse> ClaimOrRefreshNeuronFromAccount(ClaimOrRefreshNeuronFromAccount arg0)
+
+		public async System.Threading.Tasks.Task<ClaimOrRefreshNeuronFromAccountResponse> ClaimOrRefreshNeuronFromAccount(ClaimOrRefreshNeuronFromAccount arg0)
 		{
-			string method = "claim_or_refresh_neuron_from_account";
-			CandidTypedValue p0 = CandidTypedValue.FromObject(arg0);
-			var candidArgs = new List<CandidTypedValue>
-			{
-				p0,
-			};
-			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			CandidArg responseArg = await this.Agent.CallAndWaitAsync(this.CanisterId, method, arg, null, null);
-			ClaimOrRefreshNeuronFromAccountResponse r0 = responseArg.Values[0].ToObject<ClaimOrRefreshNeuronFromAccountResponse>();
-			return (r0);
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "claim_or_refresh_neuron_from_account", arg);
+			return reply.ToObjects<ClaimOrRefreshNeuronFromAccountResponse>();
 		}
-		public async Task<string> GetBuildMetadata()
+
+		public async System.Threading.Tasks.Task<string> GetBuildMetadata()
 		{
-			string method = "get_build_metadata";
-			var candidArgs = new List<CandidTypedValue>
-			{
-			};
-			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg);
+			CandidArg arg = CandidArg.FromCandid();
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_build_metadata", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			string r0 = reply.Values[0].ToObject<string>();
-			return (r0);
+			return reply.ToObjects<string>();
 		}
-		public async Task<Result2> GetFullNeuron(ulong arg0)
+
+		public async System.Threading.Tasks.Task<Result2> GetFullNeuron(ulong arg0)
 		{
-			string method = "get_full_neuron";
-			CandidTypedValue p0 = CandidTypedValue.FromObject(arg0);
-			var candidArgs = new List<CandidTypedValue>
-			{
-				p0,
-			};
-			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg);
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_full_neuron", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			Result2 r0 = reply.Values[0].ToObject<Result2>();
-			return (r0);
+			return reply.ToObjects<Result2>();
 		}
-		public async Task<Result2> GetFullNeuronByIdOrSubaccount(NeuronIdOrSubaccount arg0)
+
+		public async System.Threading.Tasks.Task<Result2> GetFullNeuronByIdOrSubaccount(NeuronIdOrSubaccount arg0)
 		{
-			string method = "get_full_neuron_by_id_or_subaccount";
-			CandidTypedValue p0 = CandidTypedValue.FromObject(arg0);
-			var candidArgs = new List<CandidTypedValue>
-			{
-				p0,
-			};
-			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg);
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_full_neuron_by_id_or_subaccount", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			Result2 r0 = reply.Values[0].ToObject<Result2>();
-			return (r0);
+			return reply.ToObjects<Result2>();
 		}
-		public async Task<Result3> GetMonthlyNodeProviderRewards()
+
+		public async System.Threading.Tasks.Task<Result3> GetMonthlyNodeProviderRewards()
 		{
-			string method = "get_monthly_node_provider_rewards";
-			var candidArgs = new List<CandidTypedValue>
-			{
-			};
-			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			CandidArg responseArg = await this.Agent.CallAndWaitAsync(this.CanisterId, method, arg, null, null);
-			Result3 r0 = responseArg.Values[0].ToObject<Result3>();
-			return (r0);
+			CandidArg arg = CandidArg.FromCandid();
+			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "get_monthly_node_provider_rewards", arg);
+			return reply.ToObjects<Result3>();
 		}
-		public async Task<NetworkEconomics> GetNetworkEconomicsParameters()
+
+		public async System.Threading.Tasks.Task<NetworkEconomics> GetNetworkEconomicsParameters()
 		{
-			string method = "get_network_economics_parameters";
-			var candidArgs = new List<CandidTypedValue>
-			{
-			};
-			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg);
+			CandidArg arg = CandidArg.FromCandid();
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_network_economics_parameters", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			NetworkEconomics r0 = reply.Values[0].ToObject<NetworkEconomics>();
-			return (r0);
+			return reply.ToObjects<NetworkEconomics>();
 		}
-		public async Task<System.Collections.Generic.List<ulong>> GetNeuronIds()
+
+		public async System.Threading.Tasks.Task<List<ulong>> GetNeuronIds()
 		{
-			string method = "get_neuron_ids";
-			var candidArgs = new List<CandidTypedValue>
-			{
-			};
-			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg);
+			CandidArg arg = CandidArg.FromCandid();
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_neuron_ids", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			System.Collections.Generic.List<ulong> r0 = reply.Values[0].ToObject<System.Collections.Generic.List<ulong>>();
-			return (r0);
+			return reply.ToObjects<List<ulong>>();
 		}
-		public async Task<Result4> GetNeuronInfo(ulong arg0)
+
+		public async System.Threading.Tasks.Task<Result4> GetNeuronInfo(ulong arg0)
 		{
-			string method = "get_neuron_info";
-			CandidTypedValue p0 = CandidTypedValue.FromObject(arg0);
-			var candidArgs = new List<CandidTypedValue>
-			{
-				p0,
-			};
-			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg);
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_neuron_info", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			Result4 r0 = reply.Values[0].ToObject<Result4>();
-			return (r0);
+			return reply.ToObjects<Result4>();
 		}
-		public async Task<Result4> GetNeuronInfoByIdOrSubaccount(NeuronIdOrSubaccount arg0)
+
+		public async System.Threading.Tasks.Task<Result4> GetNeuronInfoByIdOrSubaccount(NeuronIdOrSubaccount arg0)
 		{
-			string method = "get_neuron_info_by_id_or_subaccount";
-			CandidTypedValue p0 = CandidTypedValue.FromObject(arg0);
-			var candidArgs = new List<CandidTypedValue>
-			{
-				p0,
-			};
-			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg);
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_neuron_info_by_id_or_subaccount", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			Result4 r0 = reply.Values[0].ToObject<Result4>();
-			return (r0);
+			return reply.ToObjects<Result4>();
 		}
-		public async Task<Result5> GetNodeProviderByCaller()
+
+		public async System.Threading.Tasks.Task<Result5> GetNodeProviderByCaller(NullValue arg0)
 		{
-			string method = "get_node_provider_by_caller";
-			var candidArgs = new List<CandidTypedValue>
-			{
-			};
-			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg);
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_node_provider_by_caller", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			Result5 r0 = reply.Values[0].ToObject<Result5>();
-			return (r0);
+			return reply.ToObjects<Result5>();
 		}
-		public async Task<System.Collections.Generic.List<ProposalInfo>> GetPendingProposals()
+
+		public async System.Threading.Tasks.Task<List<ProposalInfo>> GetPendingProposals()
 		{
-			string method = "get_pending_proposals";
-			var candidArgs = new List<CandidTypedValue>
-			{
-			};
-			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg);
+			CandidArg arg = CandidArg.FromCandid();
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_pending_proposals", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			System.Collections.Generic.List<ProposalInfo> r0 = reply.Values[0].ToObject<System.Collections.Generic.List<ProposalInfo>>();
-			return (r0);
+			return reply.ToObjects<List<ProposalInfo>>();
 		}
-		public async Task<EdjCase.ICP.Candid.Models.OptionalValue<ProposalInfo>> GetProposalInfo(ulong arg0)
+
+		public async System.Threading.Tasks.Task<OptionalValue<ProposalInfo>> GetProposalInfo(ulong arg0)
 		{
-			string method = "get_proposal_info";
-			CandidTypedValue p0 = CandidTypedValue.FromObject(arg0);
-			var candidArgs = new List<CandidTypedValue>
-			{
-				p0,
-			};
-			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg);
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_proposal_info", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			EdjCase.ICP.Candid.Models.OptionalValue<ProposalInfo> r0 = reply.Values[0].ToObject<EdjCase.ICP.Candid.Models.OptionalValue<ProposalInfo>>();
-			return (r0);
+			return reply.ToObjects<OptionalValue<ProposalInfo>>();
 		}
-		public async Task<ListKnownNeuronsResponse> ListKnownNeurons()
+
+		public async System.Threading.Tasks.Task<ListKnownNeuronsResponse> ListKnownNeurons()
 		{
-			string method = "list_known_neurons";
-			var candidArgs = new List<CandidTypedValue>
-			{
-			};
-			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg);
+			CandidArg arg = CandidArg.FromCandid();
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "list_known_neurons", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			ListKnownNeuronsResponse r0 = reply.Values[0].ToObject<ListKnownNeuronsResponse>();
-			return (r0);
+			return reply.ToObjects<ListKnownNeuronsResponse>();
 		}
-		public async Task<ListNeuronsResponse> ListNeurons(ListNeurons arg0)
+
+		public async System.Threading.Tasks.Task<ListNeuronsResponse> ListNeurons(ListNeurons arg0)
 		{
-			string method = "list_neurons";
-			CandidTypedValue p0 = CandidTypedValue.FromObject(arg0);
-			var candidArgs = new List<CandidTypedValue>
-			{
-				p0,
-			};
-			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg);
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "list_neurons", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			ListNeuronsResponse r0 = reply.Values[0].ToObject<ListNeuronsResponse>();
-			return (r0);
+			return reply.ToObjects<ListNeuronsResponse>();
 		}
-		public async Task<ListNodeProvidersResponse> ListNodeProviders()
+
+		public async System.Threading.Tasks.Task<ListNodeProvidersResponse> ListNodeProviders()
 		{
-			string method = "list_node_providers";
-			var candidArgs = new List<CandidTypedValue>
-			{
-			};
-			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg);
+			CandidArg arg = CandidArg.FromCandid();
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "list_node_providers", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			ListNodeProvidersResponse r0 = reply.Values[0].ToObject<ListNodeProvidersResponse>();
-			return (r0);
+			return reply.ToObjects<ListNodeProvidersResponse>();
 		}
-		public async Task<ListProposalInfoResponse> ListProposals(ListProposalInfo arg0)
+
+		public async System.Threading.Tasks.Task<ListProposalInfoResponse> ListProposals(ListProposalInfo arg0)
 		{
-			string method = "list_proposals";
-			CandidTypedValue p0 = CandidTypedValue.FromObject(arg0);
-			var candidArgs = new List<CandidTypedValue>
-			{
-				p0,
-			};
-			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, method, arg);
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "list_proposals", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			ListProposalInfoResponse r0 = reply.Values[0].ToObject<ListProposalInfoResponse>();
-			return (r0);
+			return reply.ToObjects<ListProposalInfoResponse>();
 		}
-		public async Task<ManageNeuronResponse> ManageNeuron(ManageNeuron arg0)
+
+		public async System.Threading.Tasks.Task<ManageNeuronResponse> ManageNeuron(ManageNeuron arg0)
 		{
-			string method = "manage_neuron";
-			CandidTypedValue p0 = CandidTypedValue.FromObject(arg0);
-			var candidArgs = new List<CandidTypedValue>
-			{
-				p0,
-			};
-			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			CandidArg responseArg = await this.Agent.CallAndWaitAsync(this.CanisterId, method, arg, null, null);
-			ManageNeuronResponse r0 = responseArg.Values[0].ToObject<ManageNeuronResponse>();
-			return (r0);
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "manage_neuron", arg);
+			return reply.ToObjects<ManageNeuronResponse>();
 		}
-		public async Task<Result> TransferGtcNeuron(NeuronId arg0, NeuronId arg1)
+
+		public async System.Threading.Tasks.Task<Result> TransferGtcNeuron(NeuronId arg0, NeuronId arg1)
 		{
-			string method = "transfer_gtc_neuron";
-			CandidTypedValue p0 = CandidTypedValue.FromObject(arg0);
-			CandidTypedValue p1 = CandidTypedValue.FromObject(arg1);
-			var candidArgs = new List<CandidTypedValue>
-			{
-				p0,
-				p1,
-			};
-			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			CandidArg responseArg = await this.Agent.CallAndWaitAsync(this.CanisterId, method, arg, null, null);
-			Result r0 = responseArg.Values[0].ToObject<Result>();
-			return (r0);
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0), CandidTypedValue.FromObject(arg1));
+			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "transfer_gtc_neuron", arg);
+			return reply.ToObjects<Result>();
 		}
-		public async Task<Result> UpdateNodeProvider(UpdateNodeProvider arg0)
+
+		public async System.Threading.Tasks.Task<Result> UpdateNodeProvider(UpdateNodeProvider arg0)
 		{
-			string method = "update_node_provider";
-			CandidTypedValue p0 = CandidTypedValue.FromObject(arg0);
-			var candidArgs = new List<CandidTypedValue>
-			{
-				p0,
-			};
-			CandidArg arg = CandidArg.FromCandid(candidArgs);
-			CandidArg responseArg = await this.Agent.CallAndWaitAsync(this.CanisterId, method, arg, null, null);
-			Result r0 = responseArg.Values[0].ToObject<Result>();
-			return (r0);
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "update_node_provider", arg);
+			return reply.ToObjects<Result>();
 		}
 	}
 }
-

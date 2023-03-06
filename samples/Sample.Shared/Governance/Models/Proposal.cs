@@ -1,19 +1,33 @@
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid.Models;
+using Sample.Shared.Governance.Models;
+
 namespace Sample.Shared.Governance.Models
 {
 	public class Proposal
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("url")]
+		[CandidName("url")]
 		public string Url { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("title")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<string> Title { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("action")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<Action> Action { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("summary")]
+
+		[CandidName("title")]
+		public OptionalValue<string> Title { get; set; }
+
+		[CandidName("action")]
+		public OptionalValue<Action> Action { get; set; }
+
+		[CandidName("summary")]
 		public string Summary { get; set; }
-		
+
+		public Proposal(string url, OptionalValue<string> title, OptionalValue<Action> action, string summary)
+		{
+			this.Url = url;
+			this.Title = title;
+			this.Action = action;
+			this.Summary = summary;
+		}
+
+		public Proposal()
+		{
+		}
 	}
 }
-

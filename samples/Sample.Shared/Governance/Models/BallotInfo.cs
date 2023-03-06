@@ -1,13 +1,25 @@
+using EdjCase.ICP.Candid.Mapping;
+using Sample.Shared.Governance.Models;
+using EdjCase.ICP.Candid.Models;
+
 namespace Sample.Shared.Governance.Models
 {
 	public class BallotInfo
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("vote")]
+		[CandidName("vote")]
 		public int Vote { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("proposal_id")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<NeuronId> ProposalId { get; set; }
-		
+
+		[CandidName("proposal_id")]
+		public OptionalValue<NeuronId> ProposalId { get; set; }
+
+		public BallotInfo(int vote, OptionalValue<NeuronId> proposalId)
+		{
+			this.Vote = vote;
+			this.ProposalId = proposalId;
+		}
+
+		public BallotInfo()
+		{
+		}
 	}
 }
-

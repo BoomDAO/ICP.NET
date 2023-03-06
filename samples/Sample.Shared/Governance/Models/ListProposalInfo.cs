@@ -1,22 +1,38 @@
+using EdjCase.ICP.Candid.Mapping;
+using System.Collections.Generic;
+using Sample.Shared.Governance.Models;
+using EdjCase.ICP.Candid.Models;
+
 namespace Sample.Shared.Governance.Models
 {
 	public class ListProposalInfo
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("include_reward_status")]
-		public System.Collections.Generic.List<int> IncludeRewardStatus { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("before_proposal")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<NeuronId> BeforeProposal { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("limit")]
+		[CandidName("include_reward_status")]
+		public List<int> IncludeRewardStatus { get; set; }
+
+		[CandidName("before_proposal")]
+		public OptionalValue<NeuronId> BeforeProposal { get; set; }
+
+		[CandidName("limit")]
 		public uint Limit { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("exclude_topic")]
-		public System.Collections.Generic.List<int> ExcludeTopic { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("include_status")]
-		public System.Collections.Generic.List<int> IncludeStatus { get; set; }
-		
+
+		[CandidName("exclude_topic")]
+		public List<int> ExcludeTopic { get; set; }
+
+		[CandidName("include_status")]
+		public List<int> IncludeStatus { get; set; }
+
+		public ListProposalInfo(List<int> includeRewardStatus, OptionalValue<NeuronId> beforeProposal, uint limit, List<int> excludeTopic, List<int> includeStatus)
+		{
+			this.IncludeRewardStatus = includeRewardStatus;
+			this.BeforeProposal = beforeProposal;
+			this.Limit = limit;
+			this.ExcludeTopic = excludeTopic;
+			this.IncludeStatus = includeStatus;
+		}
+
+		public ListProposalInfo()
+		{
+		}
 	}
 }
-

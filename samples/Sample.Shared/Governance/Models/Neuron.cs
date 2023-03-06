@@ -1,67 +1,105 @@
+using EdjCase.ICP.Candid.Mapping;
+using Sample.Shared.Governance.Models;
+using EdjCase.ICP.Candid.Models;
+using System.Collections.Generic;
+
 namespace Sample.Shared.Governance.Models
 {
 	public class Neuron
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("id")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<NeuronId> Id { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("controller")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<EdjCase.ICP.Candid.Models.Principal> Controller { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("recent_ballots")]
-		public System.Collections.Generic.List<BallotInfo> RecentBallots { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("kyc_verified")]
+		[CandidName("id")]
+		public OptionalValue<NeuronId> Id { get; set; }
+
+		[CandidName("controller")]
+		public OptionalValue<Principal> Controller { get; set; }
+
+		[CandidName("recent_ballots")]
+		public List<BallotInfo> RecentBallots { get; set; }
+
+		[CandidName("kyc_verified")]
 		public bool KycVerified { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("not_for_profit")]
+
+		[CandidName("not_for_profit")]
 		public bool NotForProfit { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("maturity_e8s_equivalent")]
+
+		[CandidName("maturity_e8s_equivalent")]
 		public ulong MaturityE8sEquivalent { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("cached_neuron_stake_e8s")]
+
+		[CandidName("cached_neuron_stake_e8s")]
 		public ulong CachedNeuronStakeE8s { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("created_timestamp_seconds")]
+
+		[CandidName("created_timestamp_seconds")]
 		public ulong CreatedTimestampSeconds { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("aging_since_timestamp_seconds")]
+
+		[CandidName("aging_since_timestamp_seconds")]
 		public ulong AgingSinceTimestampSeconds { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("hot_keys")]
-		public System.Collections.Generic.List<EdjCase.ICP.Candid.Models.Principal> HotKeys { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("account")]
-		public System.Collections.Generic.List<byte> Account { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("joined_community_fund_timestamp_seconds")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<ulong> JoinedCommunityFundTimestampSeconds { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("dissolve_state")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<DissolveState> DissolveState { get; set; }
-		
-		public class R13V0
-		{
-			[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("0")]
-			public int F0 { get; set; }
-			
-			[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("1")]
-			public Followees F1 { get; set; }
-			
-		}
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("followees")]
-		public System.Collections.Generic.List<R13V0> Followees { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("neuron_fees_e8s")]
+
+		[CandidName("hot_keys")]
+		public List<Principal> HotKeys { get; set; }
+
+		[CandidName("account")]
+		public List<byte> Account { get; set; }
+
+		[CandidName("joined_community_fund_timestamp_seconds")]
+		public OptionalValue<ulong> JoinedCommunityFundTimestampSeconds { get; set; }
+
+		[CandidName("dissolve_state")]
+		public OptionalValue<DissolveState> DissolveState { get; set; }
+
+		[CandidName("followees")]
+		public List<Neuron.FolloweesItemRecord> Followees { get; set; }
+
+		[CandidName("neuron_fees_e8s")]
 		public ulong NeuronFeesE8s { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("transfer")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<NeuronStakeTransfer> Transfer { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("known_neuron_data")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<KnownNeuronData> KnownNeuronData { get; set; }
-		
+
+		[CandidName("transfer")]
+		public OptionalValue<NeuronStakeTransfer> Transfer { get; set; }
+
+		[CandidName("known_neuron_data")]
+		public OptionalValue<KnownNeuronData> KnownNeuronData { get; set; }
+
+		public Neuron(OptionalValue<NeuronId> id, OptionalValue<Principal> controller, List<BallotInfo> recentBallots, bool kycVerified, bool notForProfit, ulong maturityE8sEquivalent, ulong cachedNeuronStakeE8s, ulong createdTimestampSeconds, ulong agingSinceTimestampSeconds, List<Principal> hotKeys, List<byte> account, OptionalValue<ulong> joinedCommunityFundTimestampSeconds, OptionalValue<DissolveState> dissolveState, List<Neuron.FolloweesItemRecord> followees, ulong neuronFeesE8s, OptionalValue<NeuronStakeTransfer> transfer, OptionalValue<KnownNeuronData> knownNeuronData)
+		{
+			this.Id = id;
+			this.Controller = controller;
+			this.RecentBallots = recentBallots;
+			this.KycVerified = kycVerified;
+			this.NotForProfit = notForProfit;
+			this.MaturityE8sEquivalent = maturityE8sEquivalent;
+			this.CachedNeuronStakeE8s = cachedNeuronStakeE8s;
+			this.CreatedTimestampSeconds = createdTimestampSeconds;
+			this.AgingSinceTimestampSeconds = agingSinceTimestampSeconds;
+			this.HotKeys = hotKeys;
+			this.Account = account;
+			this.JoinedCommunityFundTimestampSeconds = joinedCommunityFundTimestampSeconds;
+			this.DissolveState = dissolveState;
+			this.Followees = followees;
+			this.NeuronFeesE8s = neuronFeesE8s;
+			this.Transfer = transfer;
+			this.KnownNeuronData = knownNeuronData;
+		}
+
+		public Neuron()
+		{
+		}
+
+		public class FolloweesItemRecord
+		{
+			[CandidName("0")]
+			public int F0 { get; set; }
+
+			[CandidName("1")]
+			public Followees F1 { get; set; }
+
+			public FolloweesItemRecord(int f0, Followees f1)
+			{
+				this.F0 = f0;
+				this.F1 = f1;
+			}
+
+			public FolloweesItemRecord()
+			{
+			}
+		}
 	}
 }
-

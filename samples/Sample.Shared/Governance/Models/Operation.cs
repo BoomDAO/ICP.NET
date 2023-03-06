@@ -1,110 +1,105 @@
+using EdjCase.ICP.Candid.Mapping;
+using Sample.Shared.Governance.Models;
 using System;
 
 namespace Sample.Shared.Governance.Models
 {
-	[EdjCase.ICP.Candid.Mapping.VariantAttribute(typeof(OperationTag))]
+	[Variant(typeof(OperationTag))]
 	public class Operation
 	{
-		[EdjCase.ICP.Candid.Mapping.VariantTagPropertyAttribute]
+		[VariantTagProperty()]
 		public OperationTag Tag { get; set; }
-		[EdjCase.ICP.Candid.Mapping.VariantValuePropertyAttribute]
-		public object? Value { get; set; }
-		private Operation(OperationTag tag, System.Object? value)
+
+		[VariantValueProperty()]
+		public System.Object? Value { get; set; }
+
+		public Operation(OperationTag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
 		}
-		
+
 		protected Operation()
 		{
 		}
-		
+
 		public static Operation RemoveHotKey(RemoveHotKey info)
 		{
 			return new Operation(OperationTag.RemoveHotKey, info);
 		}
-		
+
+		public static Operation AddHotKey(AddHotKey info)
+		{
+			return new Operation(OperationTag.AddHotKey, info);
+		}
+
+		public static Operation StopDissolving(Operation.StopDissolvingRecord info)
+		{
+			return new Operation(OperationTag.StopDissolving, info);
+		}
+
+		public static Operation StartDissolving(Operation.StartDissolvingRecord info)
+		{
+			return new Operation(OperationTag.StartDissolving, info);
+		}
+
+		public static Operation IncreaseDissolveDelay(IncreaseDissolveDelay info)
+		{
+			return new Operation(OperationTag.IncreaseDissolveDelay, info);
+		}
+
+		public static Operation JoinCommunityFund(Operation.JoinCommunityFundRecord info)
+		{
+			return new Operation(OperationTag.JoinCommunityFund, info);
+		}
+
+		public static Operation SetDissolveTimestamp(SetDissolveTimestamp info)
+		{
+			return new Operation(OperationTag.SetDissolveTimestamp, info);
+		}
+
 		public RemoveHotKey AsRemoveHotKey()
 		{
 			this.ValidateTag(OperationTag.RemoveHotKey);
 			return (RemoveHotKey)this.Value!;
 		}
-		
-		public static Operation AddHotKey(AddHotKey info)
-		{
-			return new Operation(OperationTag.AddHotKey, info);
-		}
-		
+
 		public AddHotKey AsAddHotKey()
 		{
 			this.ValidateTag(OperationTag.AddHotKey);
 			return (AddHotKey)this.Value!;
 		}
-		
-		public class O2
-		{
-		}
-		public static Operation StopDissolving(Operation.O2 info)
-		{
-			return new Operation(OperationTag.StopDissolving, info);
-		}
-		
-		public Operation.O2 AsStopDissolving()
+
+		public Operation.StopDissolvingRecord AsStopDissolving()
 		{
 			this.ValidateTag(OperationTag.StopDissolving);
-			return (Operation.O2)this.Value!;
+			return (Operation.StopDissolvingRecord)this.Value!;
 		}
-		
-		public class O3
-		{
-		}
-		public static Operation StartDissolving(Operation.O3 info)
-		{
-			return new Operation(OperationTag.StartDissolving, info);
-		}
-		
-		public Operation.O3 AsStartDissolving()
+
+		public Operation.StartDissolvingRecord AsStartDissolving()
 		{
 			this.ValidateTag(OperationTag.StartDissolving);
-			return (Operation.O3)this.Value!;
+			return (Operation.StartDissolvingRecord)this.Value!;
 		}
-		
-		public static Operation IncreaseDissolveDelay(IncreaseDissolveDelay info)
-		{
-			return new Operation(OperationTag.IncreaseDissolveDelay, info);
-		}
-		
+
 		public IncreaseDissolveDelay AsIncreaseDissolveDelay()
 		{
 			this.ValidateTag(OperationTag.IncreaseDissolveDelay);
 			return (IncreaseDissolveDelay)this.Value!;
 		}
-		
-		public class O5
-		{
-		}
-		public static Operation JoinCommunityFund(Operation.O5 info)
-		{
-			return new Operation(OperationTag.JoinCommunityFund, info);
-		}
-		
-		public Operation.O5 AsJoinCommunityFund()
+
+		public Operation.JoinCommunityFundRecord AsJoinCommunityFund()
 		{
 			this.ValidateTag(OperationTag.JoinCommunityFund);
-			return (Operation.O5)this.Value!;
+			return (Operation.JoinCommunityFundRecord)this.Value!;
 		}
-		
-		public static Operation SetDissolveTimestamp(SetDissolveTimestamp info)
-		{
-			return new Operation(OperationTag.SetDissolveTimestamp, info);
-		}
-		
+
 		public SetDissolveTimestamp AsSetDissolveTimestamp()
 		{
 			this.ValidateTag(OperationTag.SetDissolveTimestamp);
 			return (SetDissolveTimestamp)this.Value!;
 		}
-		
+
 		private void ValidateTag(OperationTag tag)
 		{
 			if (!this.Tag.Equals(tag))
@@ -112,30 +107,44 @@ namespace Sample.Shared.Governance.Models
 				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
 			}
 		}
+
+		public class StopDissolvingRecord
+		{
+			public StopDissolvingRecord()
+			{
+			}
+		}
+
+		public class StartDissolvingRecord
+		{
+			public StartDissolvingRecord()
+			{
+			}
+		}
+
+		public class JoinCommunityFundRecord
+		{
+			public JoinCommunityFundRecord()
+			{
+			}
+		}
 	}
+
 	public enum OperationTag
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("RemoveHotKey")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(RemoveHotKey))]
+		[VariantOptionType(typeof(RemoveHotKey))]
 		RemoveHotKey,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("AddHotKey")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(AddHotKey))]
+		[VariantOptionType(typeof(AddHotKey))]
 		AddHotKey,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("StopDissolving")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Operation.O2))]
+		[VariantOptionType(typeof(Operation.StopDissolvingRecord))]
 		StopDissolving,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("StartDissolving")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Operation.O3))]
+		[VariantOptionType(typeof(Operation.StartDissolvingRecord))]
 		StartDissolving,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("IncreaseDissolveDelay")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(IncreaseDissolveDelay))]
+		[VariantOptionType(typeof(IncreaseDissolveDelay))]
 		IncreaseDissolveDelay,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("JoinCommunityFund")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Operation.O5))]
+		[VariantOptionType(typeof(Operation.JoinCommunityFundRecord))]
 		JoinCommunityFund,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("SetDissolveTimestamp")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(SetDissolveTimestamp))]
-		SetDissolveTimestamp,
+		[VariantOptionType(typeof(SetDissolveTimestamp))]
+		SetDissolveTimestamp
 	}
 }
-

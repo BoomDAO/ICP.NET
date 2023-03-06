@@ -1,64 +1,101 @@
+using EdjCase.ICP.Candid.Mapping;
+using Sample.Shared.Governance.Models;
+using EdjCase.ICP.Candid.Models;
+using System.Collections.Generic;
+
 namespace Sample.Shared.Governance.Models
 {
 	public class ProposalInfo
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("id")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<NeuronId> Id { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("status")]
+		[CandidName("id")]
+		public OptionalValue<NeuronId> Id { get; set; }
+
+		[CandidName("status")]
 		public int Status { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("topic")]
+
+		[CandidName("topic")]
 		public int Topic { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("failure_reason")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<GovernanceError> FailureReason { get; set; }
-		
-		public class R4V0
-		{
-			[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("0")]
-			public ulong F0 { get; set; }
-			
-			[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("1")]
-			public Ballot F1 { get; set; }
-			
-		}
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("ballots")]
-		public System.Collections.Generic.List<R4V0> Ballots { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("proposal_timestamp_seconds")]
+
+		[CandidName("failure_reason")]
+		public OptionalValue<GovernanceError> FailureReason { get; set; }
+
+		[CandidName("ballots")]
+		public List<ProposalInfo.BallotsItemRecord> Ballots { get; set; }
+
+		[CandidName("proposal_timestamp_seconds")]
 		public ulong ProposalTimestampSeconds { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("reward_event_round")]
+
+		[CandidName("reward_event_round")]
 		public ulong RewardEventRound { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("deadline_timestamp_seconds")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<ulong> DeadlineTimestampSeconds { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("failed_timestamp_seconds")]
+
+		[CandidName("deadline_timestamp_seconds")]
+		public OptionalValue<ulong> DeadlineTimestampSeconds { get; set; }
+
+		[CandidName("failed_timestamp_seconds")]
 		public ulong FailedTimestampSeconds { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("reject_cost_e8s")]
+
+		[CandidName("reject_cost_e8s")]
 		public ulong RejectCostE8s { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("latest_tally")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<Tally> LatestTally { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("reward_status")]
+
+		[CandidName("latest_tally")]
+		public OptionalValue<Tally> LatestTally { get; set; }
+
+		[CandidName("reward_status")]
 		public int RewardStatus { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("decided_timestamp_seconds")]
+
+		[CandidName("decided_timestamp_seconds")]
 		public ulong DecidedTimestampSeconds { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("proposal")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<Proposal> Proposal { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("proposer")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<NeuronId> Proposer { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("executed_timestamp_seconds")]
+
+		[CandidName("proposal")]
+		public OptionalValue<Proposal> Proposal { get; set; }
+
+		[CandidName("proposer")]
+		public OptionalValue<NeuronId> Proposer { get; set; }
+
+		[CandidName("executed_timestamp_seconds")]
 		public ulong ExecutedTimestampSeconds { get; set; }
-		
+
+		public ProposalInfo(OptionalValue<NeuronId> id, int status, int topic, OptionalValue<GovernanceError> failureReason, List<ProposalInfo.BallotsItemRecord> ballots, ulong proposalTimestampSeconds, ulong rewardEventRound, OptionalValue<ulong> deadlineTimestampSeconds, ulong failedTimestampSeconds, ulong rejectCostE8s, OptionalValue<Tally> latestTally, int rewardStatus, ulong decidedTimestampSeconds, OptionalValue<Proposal> proposal, OptionalValue<NeuronId> proposer, ulong executedTimestampSeconds)
+		{
+			this.Id = id;
+			this.Status = status;
+			this.Topic = topic;
+			this.FailureReason = failureReason;
+			this.Ballots = ballots;
+			this.ProposalTimestampSeconds = proposalTimestampSeconds;
+			this.RewardEventRound = rewardEventRound;
+			this.DeadlineTimestampSeconds = deadlineTimestampSeconds;
+			this.FailedTimestampSeconds = failedTimestampSeconds;
+			this.RejectCostE8s = rejectCostE8s;
+			this.LatestTally = latestTally;
+			this.RewardStatus = rewardStatus;
+			this.DecidedTimestampSeconds = decidedTimestampSeconds;
+			this.Proposal = proposal;
+			this.Proposer = proposer;
+			this.ExecutedTimestampSeconds = executedTimestampSeconds;
+		}
+
+		public ProposalInfo()
+		{
+		}
+
+		public class BallotsItemRecord
+		{
+			[CandidName("0")]
+			public ulong F0 { get; set; }
+
+			[CandidName("1")]
+			public Ballot F1 { get; set; }
+
+			public BallotsItemRecord(ulong f0, Ballot f1)
+			{
+				this.F0 = f0;
+				this.F1 = f1;
+			}
+
+			public BallotsItemRecord()
+			{
+			}
+		}
 	}
 }
-

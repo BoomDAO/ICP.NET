@@ -1,46 +1,53 @@
+using Token = EdjCase.ICP.Candid.Models.Principal;
+using OrderId = System.UInt32;
+using EdjCase.ICP.Candid.Mapping;
+using Sample.Shared.Dex.Models;
+using EdjCase.ICP.Candid.Models;
 using System;
 
 namespace Sample.Shared.Dex.Models
 {
-	[EdjCase.ICP.Candid.Mapping.VariantAttribute(typeof(OrderPlacementReceiptTag))]
+	[Variant(typeof(OrderPlacementReceiptTag))]
 	public class OrderPlacementReceipt
 	{
-		[EdjCase.ICP.Candid.Mapping.VariantTagPropertyAttribute]
+		[VariantTagProperty()]
 		public OrderPlacementReceiptTag Tag { get; set; }
-		[EdjCase.ICP.Candid.Mapping.VariantValuePropertyAttribute]
-		public object? Value { get; set; }
-		private OrderPlacementReceipt(OrderPlacementReceiptTag tag, System.Object? value)
+
+		[VariantValueProperty()]
+		public System.Object? Value { get; set; }
+
+		public OrderPlacementReceipt(OrderPlacementReceiptTag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
 		}
-		
+
 		protected OrderPlacementReceipt()
 		{
 		}
-		
+
 		public static OrderPlacementReceipt Err(OrderPlacementErr info)
 		{
 			return new OrderPlacementReceipt(OrderPlacementReceiptTag.Err, info);
 		}
-		
+
+		public static OrderPlacementReceipt Ok(OptionalValue<Order> info)
+		{
+			return new OrderPlacementReceipt(OrderPlacementReceiptTag.Ok, info);
+		}
+
 		public OrderPlacementErr AsErr()
 		{
 			this.ValidateTag(OrderPlacementReceiptTag.Err);
 			return (OrderPlacementErr)this.Value!;
 		}
-		
-		public static OrderPlacementReceipt Ok(EdjCase.ICP.Candid.Models.OptionalValue<Order> info)
-		{
-			return new OrderPlacementReceipt(OrderPlacementReceiptTag.Ok, info);
-		}
-		
-		public EdjCase.ICP.Candid.Models.OptionalValue<Order> AsOk()
+
+		public OptionalValue<Order> AsOk()
 		{
 			this.ValidateTag(OrderPlacementReceiptTag.Ok);
-			return (EdjCase.ICP.Candid.Models.OptionalValue<Order>)this.Value!;
+			return (OptionalValue<Order>)this.Value!;
 		}
-		
+
 		private void ValidateTag(OrderPlacementReceiptTag tag)
 		{
 			if (!this.Tag.Equals(tag))
@@ -49,14 +56,12 @@ namespace Sample.Shared.Dex.Models
 			}
 		}
 	}
+
 	public enum OrderPlacementReceiptTag
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Err")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(OrderPlacementErr))]
+		[VariantOptionType(typeof(OrderPlacementErr))]
 		Err,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Ok")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(EdjCase.ICP.Candid.Models.OptionalValue<Order>))]
-		Ok,
+		[VariantOptionType(typeof(OptionalValue<Order>))]
+		Ok
 	}
 }
-

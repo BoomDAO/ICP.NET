@@ -1,91 +1,157 @@
+using EdjCase.ICP.Candid.Mapping;
+using Sample.Shared.Governance.Models;
+using System.Collections.Generic;
+
 namespace Sample.Shared.Governance.Models
 {
 	public class GovernanceCachedMetrics
 	{
-		public class R0V0
-		{
-			[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("0")]
-			public ulong F0 { get; set; }
-			
-			[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("1")]
-			public double F1 { get; set; }
-			
-		}
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("not_dissolving_neurons_e8s_buckets")]
-		public System.Collections.Generic.List<R0V0> NotDissolvingNeuronsE8sBuckets { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("garbage_collectable_neurons_count")]
+		[CandidName("not_dissolving_neurons_e8s_buckets")]
+		public List<GovernanceCachedMetrics.NotDissolvingNeuronsE8sBucketsItemRecord> NotDissolvingNeuronsE8sBuckets { get; set; }
+
+		[CandidName("garbage_collectable_neurons_count")]
 		public ulong GarbageCollectableNeuronsCount { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("neurons_with_invalid_stake_count")]
+
+		[CandidName("neurons_with_invalid_stake_count")]
 		public ulong NeuronsWithInvalidStakeCount { get; set; }
-		
-		public class R3V0
-		{
-			[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("0")]
-			public ulong F0 { get; set; }
-			
-			[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("1")]
-			public ulong F1 { get; set; }
-			
-		}
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("not_dissolving_neurons_count_buckets")]
-		public System.Collections.Generic.List<R3V0> NotDissolvingNeuronsCountBuckets { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("total_supply_icp")]
+
+		[CandidName("not_dissolving_neurons_count_buckets")]
+		public List<GovernanceCachedMetrics.NotDissolvingNeuronsCountBucketsItemRecord> NotDissolvingNeuronsCountBuckets { get; set; }
+
+		[CandidName("total_supply_icp")]
 		public ulong TotalSupplyIcp { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("neurons_with_less_than_6_months_dissolve_delay_count")]
+
+		[CandidName("neurons_with_less_than_6_months_dissolve_delay_count")]
 		public ulong NeuronsWithLessThan6MonthsDissolveDelayCount { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("dissolved_neurons_count")]
+
+		[CandidName("dissolved_neurons_count")]
 		public ulong DissolvedNeuronsCount { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("total_staked_e8s")]
+
+		[CandidName("total_staked_e8s")]
 		public ulong TotalStakedE8s { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("not_dissolving_neurons_count")]
+
+		[CandidName("not_dissolving_neurons_count")]
 		public ulong NotDissolvingNeuronsCount { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("dissolved_neurons_e8s")]
+
+		[CandidName("dissolved_neurons_e8s")]
 		public ulong DissolvedNeuronsE8s { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("neurons_with_less_than_6_months_dissolve_delay_e8s")]
+
+		[CandidName("neurons_with_less_than_6_months_dissolve_delay_e8s")]
 		public ulong NeuronsWithLessThan6MonthsDissolveDelayE8s { get; set; }
-		
-		public class R11V0
-		{
-			[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("0")]
-			public ulong F0 { get; set; }
-			
-			[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("1")]
-			public ulong F1 { get; set; }
-			
-		}
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("dissolving_neurons_count_buckets")]
-		public System.Collections.Generic.List<R11V0> DissolvingNeuronsCountBuckets { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("dissolving_neurons_count")]
+
+		[CandidName("dissolving_neurons_count_buckets")]
+		public List<GovernanceCachedMetrics.DissolvingNeuronsCountBucketsItemRecord> DissolvingNeuronsCountBuckets { get; set; }
+
+		[CandidName("dissolving_neurons_count")]
 		public ulong DissolvingNeuronsCount { get; set; }
-		
-		public class R13V0
-		{
-			[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("0")]
-			public ulong F0 { get; set; }
-			
-			[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("1")]
-			public double F1 { get; set; }
-			
-		}
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("dissolving_neurons_e8s_buckets")]
-		public System.Collections.Generic.List<R13V0> DissolvingNeuronsE8sBuckets { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("community_fund_total_staked_e8s")]
+
+		[CandidName("dissolving_neurons_e8s_buckets")]
+		public List<GovernanceCachedMetrics.DissolvingNeuronsE8sBucketsItemRecord> DissolvingNeuronsE8sBuckets { get; set; }
+
+		[CandidName("community_fund_total_staked_e8s")]
 		public ulong CommunityFundTotalStakedE8s { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("timestamp_seconds")]
+
+		[CandidName("timestamp_seconds")]
 		public ulong TimestampSeconds { get; set; }
-		
+
+		public GovernanceCachedMetrics(List<GovernanceCachedMetrics.NotDissolvingNeuronsE8sBucketsItemRecord> notDissolvingNeuronsE8sBuckets, ulong garbageCollectableNeuronsCount, ulong neuronsWithInvalidStakeCount, List<GovernanceCachedMetrics.NotDissolvingNeuronsCountBucketsItemRecord> notDissolvingNeuronsCountBuckets, ulong totalSupplyIcp, ulong neuronsWithLessThan6MonthsDissolveDelayCount, ulong dissolvedNeuronsCount, ulong totalStakedE8s, ulong notDissolvingNeuronsCount, ulong dissolvedNeuronsE8s, ulong neuronsWithLessThan6MonthsDissolveDelayE8s, List<GovernanceCachedMetrics.DissolvingNeuronsCountBucketsItemRecord> dissolvingNeuronsCountBuckets, ulong dissolvingNeuronsCount, List<GovernanceCachedMetrics.DissolvingNeuronsE8sBucketsItemRecord> dissolvingNeuronsE8sBuckets, ulong communityFundTotalStakedE8s, ulong timestampSeconds)
+		{
+			this.NotDissolvingNeuronsE8sBuckets = notDissolvingNeuronsE8sBuckets;
+			this.GarbageCollectableNeuronsCount = garbageCollectableNeuronsCount;
+			this.NeuronsWithInvalidStakeCount = neuronsWithInvalidStakeCount;
+			this.NotDissolvingNeuronsCountBuckets = notDissolvingNeuronsCountBuckets;
+			this.TotalSupplyIcp = totalSupplyIcp;
+			this.NeuronsWithLessThan6MonthsDissolveDelayCount = neuronsWithLessThan6MonthsDissolveDelayCount;
+			this.DissolvedNeuronsCount = dissolvedNeuronsCount;
+			this.TotalStakedE8s = totalStakedE8s;
+			this.NotDissolvingNeuronsCount = notDissolvingNeuronsCount;
+			this.DissolvedNeuronsE8s = dissolvedNeuronsE8s;
+			this.NeuronsWithLessThan6MonthsDissolveDelayE8s = neuronsWithLessThan6MonthsDissolveDelayE8s;
+			this.DissolvingNeuronsCountBuckets = dissolvingNeuronsCountBuckets;
+			this.DissolvingNeuronsCount = dissolvingNeuronsCount;
+			this.DissolvingNeuronsE8sBuckets = dissolvingNeuronsE8sBuckets;
+			this.CommunityFundTotalStakedE8s = communityFundTotalStakedE8s;
+			this.TimestampSeconds = timestampSeconds;
+		}
+
+		public GovernanceCachedMetrics()
+		{
+		}
+
+		public class NotDissolvingNeuronsE8sBucketsItemRecord
+		{
+			[CandidName("0")]
+			public ulong F0 { get; set; }
+
+			[CandidName("1")]
+			public double F1 { get; set; }
+
+			public NotDissolvingNeuronsE8sBucketsItemRecord(ulong f0, double f1)
+			{
+				this.F0 = f0;
+				this.F1 = f1;
+			}
+
+			public NotDissolvingNeuronsE8sBucketsItemRecord()
+			{
+			}
+		}
+
+		public class NotDissolvingNeuronsCountBucketsItemRecord
+		{
+			[CandidName("0")]
+			public ulong F0 { get; set; }
+
+			[CandidName("1")]
+			public ulong F1 { get; set; }
+
+			public NotDissolvingNeuronsCountBucketsItemRecord(ulong f0, ulong f1)
+			{
+				this.F0 = f0;
+				this.F1 = f1;
+			}
+
+			public NotDissolvingNeuronsCountBucketsItemRecord()
+			{
+			}
+		}
+
+		public class DissolvingNeuronsCountBucketsItemRecord
+		{
+			[CandidName("0")]
+			public ulong F0 { get; set; }
+
+			[CandidName("1")]
+			public ulong F1 { get; set; }
+
+			public DissolvingNeuronsCountBucketsItemRecord(ulong f0, ulong f1)
+			{
+				this.F0 = f0;
+				this.F1 = f1;
+			}
+
+			public DissolvingNeuronsCountBucketsItemRecord()
+			{
+			}
+		}
+
+		public class DissolvingNeuronsE8sBucketsItemRecord
+		{
+			[CandidName("0")]
+			public ulong F0 { get; set; }
+
+			[CandidName("1")]
+			public double F1 { get; set; }
+
+			public DissolvingNeuronsE8sBucketsItemRecord(ulong f0, double f1)
+			{
+				this.F0 = f0;
+				this.F1 = f1;
+			}
+
+			public DissolvingNeuronsE8sBucketsItemRecord()
+			{
+			}
+		}
 	}
 }
-

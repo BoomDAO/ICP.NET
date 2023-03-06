@@ -1,10 +1,21 @@
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid.Models;
+using System.Collections.Generic;
+
 namespace Sample.Shared.Governance.Models
 {
 	public class ApproveGenesisKyc
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("principals")]
-		public System.Collections.Generic.List<EdjCase.ICP.Candid.Models.Principal> Principals { get; set; }
-		
+		[CandidName("principals")]
+		public List<Principal> Principals { get; set; }
+
+		public ApproveGenesisKyc(List<Principal> principals)
+		{
+			this.Principals = principals;
+		}
+
+		public ApproveGenesisKyc()
+		{
+		}
 	}
 }
-

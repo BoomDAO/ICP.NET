@@ -1,60 +1,61 @@
+using EdjCase.ICP.Candid.Mapping;
+using Sample.Shared.Governance.Models;
 using System;
 
 namespace Sample.Shared.Governance.Models
 {
-	[EdjCase.ICP.Candid.Mapping.VariantAttribute(typeof(ByTag))]
+	[Variant(typeof(ByTag))]
 	public class By
 	{
-		[EdjCase.ICP.Candid.Mapping.VariantTagPropertyAttribute]
+		[VariantTagProperty()]
 		public ByTag Tag { get; set; }
-		[EdjCase.ICP.Candid.Mapping.VariantValuePropertyAttribute]
-		public object? Value { get; set; }
-		private By(ByTag tag, System.Object? value)
+
+		[VariantValueProperty()]
+		public System.Object? Value { get; set; }
+
+		public By(ByTag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
 		}
-		
+
 		protected By()
 		{
 		}
-		
-		public class O0
-		{
-		}
-		public static By NeuronIdOrSubaccount(By.O0 info)
+
+		public static By NeuronIdOrSubaccount(By.NeuronIdOrSubaccountRecord info)
 		{
 			return new By(ByTag.NeuronIdOrSubaccount, info);
 		}
-		
-		public By.O0 AsNeuronIdOrSubaccount()
-		{
-			this.ValidateTag(ByTag.NeuronIdOrSubaccount);
-			return (By.O0)this.Value!;
-		}
-		
+
 		public static By MemoAndController(ClaimOrRefreshNeuronFromAccount info)
 		{
 			return new By(ByTag.MemoAndController, info);
 		}
-		
+
+		public static By Memo(ulong info)
+		{
+			return new By(ByTag.Memo, info);
+		}
+
+		public By.NeuronIdOrSubaccountRecord AsNeuronIdOrSubaccount()
+		{
+			this.ValidateTag(ByTag.NeuronIdOrSubaccount);
+			return (By.NeuronIdOrSubaccountRecord)this.Value!;
+		}
+
 		public ClaimOrRefreshNeuronFromAccount AsMemoAndController()
 		{
 			this.ValidateTag(ByTag.MemoAndController);
 			return (ClaimOrRefreshNeuronFromAccount)this.Value!;
 		}
-		
-		public static By Memo(ulong info)
-		{
-			return new By(ByTag.Memo, info);
-		}
-		
+
 		public ulong AsMemo()
 		{
 			this.ValidateTag(ByTag.Memo);
 			return (ulong)this.Value!;
 		}
-		
+
 		private void ValidateTag(ByTag tag)
 		{
 			if (!this.Tag.Equals(tag))
@@ -62,18 +63,22 @@ namespace Sample.Shared.Governance.Models
 				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
 			}
 		}
+
+		public class NeuronIdOrSubaccountRecord
+		{
+			public NeuronIdOrSubaccountRecord()
+			{
+			}
+		}
 	}
+
 	public enum ByTag
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("NeuronIdOrSubaccount")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(By.O0))]
+		[VariantOptionType(typeof(By.NeuronIdOrSubaccountRecord))]
 		NeuronIdOrSubaccount,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("MemoAndController")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(ClaimOrRefreshNeuronFromAccount))]
+		[VariantOptionType(typeof(ClaimOrRefreshNeuronFromAccount))]
 		MemoAndController,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Memo")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(ulong))]
-		Memo,
+		[VariantOptionType(typeof(ulong))]
+		Memo
 	}
 }
-

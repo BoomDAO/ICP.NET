@@ -1,10 +1,21 @@
+using EdjCase.ICP.Candid.Mapping;
+using Sample.Shared.Governance.Models;
+using EdjCase.ICP.Candid.Models;
+
 namespace Sample.Shared.Governance.Models
 {
 	public class ManageNeuronResponse
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("command")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<Command1> Command { get; set; }
-		
+		[CandidName("command")]
+		public OptionalValue<Command1> Command { get; set; }
+
+		public ManageNeuronResponse(OptionalValue<Command1> command)
+		{
+			this.Command = command;
+		}
+
+		public ManageNeuronResponse()
+		{
+		}
 	}
 }
-

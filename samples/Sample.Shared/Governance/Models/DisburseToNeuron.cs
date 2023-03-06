@@ -1,22 +1,36 @@
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid.Models;
+
 namespace Sample.Shared.Governance.Models
 {
 	public class DisburseToNeuron
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("dissolve_delay_seconds")]
+		[CandidName("dissolve_delay_seconds")]
 		public ulong DissolveDelaySeconds { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("kyc_verified")]
+
+		[CandidName("kyc_verified")]
 		public bool KycVerified { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("amount_e8s")]
+
+		[CandidName("amount_e8s")]
 		public ulong AmountE8s { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("new_controller")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<EdjCase.ICP.Candid.Models.Principal> NewController { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("nonce")]
+
+		[CandidName("new_controller")]
+		public OptionalValue<Principal> NewController { get; set; }
+
+		[CandidName("nonce")]
 		public ulong Nonce { get; set; }
-		
+
+		public DisburseToNeuron(ulong dissolveDelaySeconds, bool kycVerified, ulong amountE8s, OptionalValue<Principal> newController, ulong nonce)
+		{
+			this.DissolveDelaySeconds = dissolveDelaySeconds;
+			this.KycVerified = kycVerified;
+			this.AmountE8s = amountE8s;
+			this.NewController = newController;
+			this.Nonce = nonce;
+		}
+
+		public DisburseToNeuron()
+		{
+		}
 	}
 }
-

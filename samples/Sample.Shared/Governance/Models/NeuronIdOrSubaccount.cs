@@ -1,46 +1,51 @@
+using EdjCase.ICP.Candid.Mapping;
+using Sample.Shared.Governance.Models;
+using System.Collections.Generic;
 using System;
 
 namespace Sample.Shared.Governance.Models
 {
-	[EdjCase.ICP.Candid.Mapping.VariantAttribute(typeof(NeuronIdOrSubaccountTag))]
+	[Variant(typeof(NeuronIdOrSubaccountTag))]
 	public class NeuronIdOrSubaccount
 	{
-		[EdjCase.ICP.Candid.Mapping.VariantTagPropertyAttribute]
+		[VariantTagProperty()]
 		public NeuronIdOrSubaccountTag Tag { get; set; }
-		[EdjCase.ICP.Candid.Mapping.VariantValuePropertyAttribute]
-		public object? Value { get; set; }
-		private NeuronIdOrSubaccount(NeuronIdOrSubaccountTag tag, System.Object? value)
+
+		[VariantValueProperty()]
+		public System.Object? Value { get; set; }
+
+		public NeuronIdOrSubaccount(NeuronIdOrSubaccountTag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
 		}
-		
+
 		protected NeuronIdOrSubaccount()
 		{
 		}
-		
-		public static NeuronIdOrSubaccount Subaccount(System.Collections.Generic.List<byte> info)
+
+		public static NeuronIdOrSubaccount Subaccount(List<byte> info)
 		{
 			return new NeuronIdOrSubaccount(NeuronIdOrSubaccountTag.Subaccount, info);
 		}
-		
-		public System.Collections.Generic.List<byte> AsSubaccount()
-		{
-			this.ValidateTag(NeuronIdOrSubaccountTag.Subaccount);
-			return (System.Collections.Generic.List<byte>)this.Value!;
-		}
-		
+
 		public static NeuronIdOrSubaccount NeuronId(NeuronId info)
 		{
 			return new NeuronIdOrSubaccount(NeuronIdOrSubaccountTag.NeuronId, info);
 		}
-		
+
+		public List<byte> AsSubaccount()
+		{
+			this.ValidateTag(NeuronIdOrSubaccountTag.Subaccount);
+			return (List<byte>)this.Value!;
+		}
+
 		public NeuronId AsNeuronId()
 		{
 			this.ValidateTag(NeuronIdOrSubaccountTag.NeuronId);
 			return (NeuronId)this.Value!;
 		}
-		
+
 		private void ValidateTag(NeuronIdOrSubaccountTag tag)
 		{
 			if (!this.Tag.Equals(tag))
@@ -49,14 +54,12 @@ namespace Sample.Shared.Governance.Models
 			}
 		}
 	}
+
 	public enum NeuronIdOrSubaccountTag
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Subaccount")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(System.Collections.Generic.List<byte>))]
+		[VariantOptionType(typeof(List<byte>))]
 		Subaccount,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("NeuronId")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(NeuronId))]
-		NeuronId,
+		[VariantOptionType(typeof(NeuronId))]
+		NeuronId
 	}
 }
-

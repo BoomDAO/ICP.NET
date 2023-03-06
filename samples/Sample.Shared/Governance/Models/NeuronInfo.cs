@@ -1,37 +1,58 @@
+using EdjCase.ICP.Candid.Mapping;
+using Sample.Shared.Governance.Models;
+using System.Collections.Generic;
+using EdjCase.ICP.Candid.Models;
+
 namespace Sample.Shared.Governance.Models
 {
 	public class NeuronInfo
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("dissolve_delay_seconds")]
+		[CandidName("dissolve_delay_seconds")]
 		public ulong DissolveDelaySeconds { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("recent_ballots")]
-		public System.Collections.Generic.List<BallotInfo> RecentBallots { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("created_timestamp_seconds")]
+
+		[CandidName("recent_ballots")]
+		public List<BallotInfo> RecentBallots { get; set; }
+
+		[CandidName("created_timestamp_seconds")]
 		public ulong CreatedTimestampSeconds { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("state")]
+
+		[CandidName("state")]
 		public int State { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("stake_e8s")]
+
+		[CandidName("stake_e8s")]
 		public ulong StakeE8s { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("joined_community_fund_timestamp_seconds")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<ulong> JoinedCommunityFundTimestampSeconds { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("retrieved_at_timestamp_seconds")]
+
+		[CandidName("joined_community_fund_timestamp_seconds")]
+		public OptionalValue<ulong> JoinedCommunityFundTimestampSeconds { get; set; }
+
+		[CandidName("retrieved_at_timestamp_seconds")]
 		public ulong RetrievedAtTimestampSeconds { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("known_neuron_data")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<KnownNeuronData> KnownNeuronData { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("voting_power")]
+
+		[CandidName("known_neuron_data")]
+		public OptionalValue<KnownNeuronData> KnownNeuronData { get; set; }
+
+		[CandidName("voting_power")]
 		public ulong VotingPower { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("age_seconds")]
+
+		[CandidName("age_seconds")]
 		public ulong AgeSeconds { get; set; }
-		
+
+		public NeuronInfo(ulong dissolveDelaySeconds, List<BallotInfo> recentBallots, ulong createdTimestampSeconds, int state, ulong stakeE8s, OptionalValue<ulong> joinedCommunityFundTimestampSeconds, ulong retrievedAtTimestampSeconds, OptionalValue<KnownNeuronData> knownNeuronData, ulong votingPower, ulong ageSeconds)
+		{
+			this.DissolveDelaySeconds = dissolveDelaySeconds;
+			this.RecentBallots = recentBallots;
+			this.CreatedTimestampSeconds = createdTimestampSeconds;
+			this.State = state;
+			this.StakeE8s = stakeE8s;
+			this.JoinedCommunityFundTimestampSeconds = joinedCommunityFundTimestampSeconds;
+			this.RetrievedAtTimestampSeconds = retrievedAtTimestampSeconds;
+			this.KnownNeuronData = knownNeuronData;
+			this.VotingPower = votingPower;
+			this.AgeSeconds = ageSeconds;
+		}
+
+		public NeuronInfo()
+		{
+		}
 	}
 }
-

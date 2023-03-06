@@ -1,46 +1,50 @@
+using EdjCase.ICP.Candid.Mapping;
+using Sample.Shared.Governance.Models;
 using System;
 
 namespace Sample.Shared.Governance.Models
 {
-	[EdjCase.ICP.Candid.Mapping.VariantAttribute(typeof(Result1Tag))]
+	[Variant(typeof(Result1Tag))]
 	public class Result1
 	{
-		[EdjCase.ICP.Candid.Mapping.VariantTagPropertyAttribute]
+		[VariantTagProperty()]
 		public Result1Tag Tag { get; set; }
-		[EdjCase.ICP.Candid.Mapping.VariantValuePropertyAttribute]
-		public object? Value { get; set; }
-		private Result1(Result1Tag tag, System.Object? value)
+
+		[VariantValueProperty()]
+		public System.Object? Value { get; set; }
+
+		public Result1(Result1Tag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
 		}
-		
+
 		protected Result1()
 		{
 		}
-		
+
 		public static Result1 Error(GovernanceError info)
 		{
 			return new Result1(Result1Tag.Error, info);
 		}
-		
+
+		public static Result1 NeuronId(NeuronId info)
+		{
+			return new Result1(Result1Tag.NeuronId, info);
+		}
+
 		public GovernanceError AsError()
 		{
 			this.ValidateTag(Result1Tag.Error);
 			return (GovernanceError)this.Value!;
 		}
-		
-		public static Result1 NeuronId(NeuronId info)
-		{
-			return new Result1(Result1Tag.NeuronId, info);
-		}
-		
+
 		public NeuronId AsNeuronId()
 		{
 			this.ValidateTag(Result1Tag.NeuronId);
 			return (NeuronId)this.Value!;
 		}
-		
+
 		private void ValidateTag(Result1Tag tag)
 		{
 			if (!this.Tag.Equals(tag))
@@ -49,14 +53,12 @@ namespace Sample.Shared.Governance.Models
 			}
 		}
 	}
+
 	public enum Result1Tag
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Error")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(GovernanceError))]
+		[VariantOptionType(typeof(GovernanceError))]
 		Error,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("NeuronId")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(NeuronId))]
-		NeuronId,
+		[VariantOptionType(typeof(NeuronId))]
+		NeuronId
 	}
 }
-

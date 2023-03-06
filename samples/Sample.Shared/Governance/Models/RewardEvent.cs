@@ -1,19 +1,33 @@
+using EdjCase.ICP.Candid.Mapping;
+using Sample.Shared.Governance.Models;
+using System.Collections.Generic;
+
 namespace Sample.Shared.Governance.Models
 {
 	public class RewardEvent
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("day_after_genesis")]
+		[CandidName("day_after_genesis")]
 		public ulong DayAfterGenesis { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("actual_timestamp_seconds")]
+
+		[CandidName("actual_timestamp_seconds")]
 		public ulong ActualTimestampSeconds { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("distributed_e8s_equivalent")]
+
+		[CandidName("distributed_e8s_equivalent")]
 		public ulong DistributedE8sEquivalent { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("settled_proposals")]
-		public System.Collections.Generic.List<NeuronId> SettledProposals { get; set; }
-		
+
+		[CandidName("settled_proposals")]
+		public List<NeuronId> SettledProposals { get; set; }
+
+		public RewardEvent(ulong dayAfterGenesis, ulong actualTimestampSeconds, ulong distributedE8sEquivalent, List<NeuronId> settledProposals)
+		{
+			this.DayAfterGenesis = dayAfterGenesis;
+			this.ActualTimestampSeconds = actualTimestampSeconds;
+			this.DistributedE8sEquivalent = distributedE8sEquivalent;
+			this.SettledProposals = settledProposals;
+		}
+
+		public RewardEvent()
+		{
+		}
 	}
 }
-

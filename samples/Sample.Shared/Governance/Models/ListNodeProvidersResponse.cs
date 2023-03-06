@@ -1,10 +1,21 @@
+using EdjCase.ICP.Candid.Mapping;
+using Sample.Shared.Governance.Models;
+using System.Collections.Generic;
+
 namespace Sample.Shared.Governance.Models
 {
 	public class ListNodeProvidersResponse
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("node_providers")]
-		public System.Collections.Generic.List<NodeProvider> NodeProviders { get; set; }
-		
+		[CandidName("node_providers")]
+		public List<NodeProvider> NodeProviders { get; set; }
+
+		public ListNodeProvidersResponse(List<NodeProvider> nodeProviders)
+		{
+			this.NodeProviders = nodeProviders;
+		}
+
+		public ListNodeProvidersResponse()
+		{
+		}
 	}
 }
-

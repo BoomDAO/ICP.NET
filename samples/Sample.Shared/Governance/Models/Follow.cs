@@ -1,13 +1,25 @@
+using EdjCase.ICP.Candid.Mapping;
+using Sample.Shared.Governance.Models;
+using System.Collections.Generic;
+
 namespace Sample.Shared.Governance.Models
 {
 	public class Follow
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("topic")]
+		[CandidName("topic")]
 		public int Topic { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("followees")]
-		public System.Collections.Generic.List<NeuronId> Followees { get; set; }
-		
+
+		[CandidName("followees")]
+		public List<NeuronId> Followees { get; set; }
+
+		public Follow(int topic, List<NeuronId> followees)
+		{
+			this.Topic = topic;
+			this.Followees = followees;
+		}
+
+		public Follow()
+		{
+		}
 	}
 }
-

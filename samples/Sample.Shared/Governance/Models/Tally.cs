@@ -1,19 +1,31 @@
+using EdjCase.ICP.Candid.Mapping;
+
 namespace Sample.Shared.Governance.Models
 {
 	public class Tally
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("no")]
+		[CandidName("no")]
 		public ulong No { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("yes")]
+
+		[CandidName("yes")]
 		public ulong Yes { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("total")]
+
+		[CandidName("total")]
 		public ulong Total { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("timestamp_seconds")]
+
+		[CandidName("timestamp_seconds")]
 		public ulong TimestampSeconds { get; set; }
-		
+
+		public Tally(ulong no, ulong yes, ulong total, ulong timestampSeconds)
+		{
+			this.No = no;
+			this.Yes = yes;
+			this.Total = total;
+			this.TimestampSeconds = timestampSeconds;
+		}
+
+		public Tally()
+		{
+		}
 	}
 }
-
