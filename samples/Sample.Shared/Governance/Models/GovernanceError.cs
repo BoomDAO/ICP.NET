@@ -1,13 +1,23 @@
+using EdjCase.ICP.Candid.Mapping;
+
 namespace Sample.Shared.Governance.Models
 {
 	public class GovernanceError
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("error_message")]
+		[CandidName("error_message")]
 		public string ErrorMessage { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("error_type")]
+
+		[CandidName("error_type")]
 		public int ErrorType { get; set; }
-		
+
+		public GovernanceError(string errorMessage, int errorType)
+		{
+			this.ErrorMessage = errorMessage;
+			this.ErrorType = errorType;
+		}
+
+		public GovernanceError()
+		{
+		}
 	}
 }
-

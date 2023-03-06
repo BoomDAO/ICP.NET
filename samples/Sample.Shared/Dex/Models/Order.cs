@@ -1,29 +1,42 @@
 using Token = EdjCase.ICP.Candid.Models.Principal;
 using OrderId = System.UInt32;
+using EdjCase.ICP.Candid.Mapping;
 using EdjCase.ICP.Candid.Models;
 
 namespace Sample.Shared.Dex.Models
 {
 	public class Order
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("from")]
+		[CandidName("from")]
 		public Token From { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("fromAmount")]
+
+		[CandidName("fromAmount")]
 		public UnboundedUInt FromAmount { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("id")]
+
+		[CandidName("id")]
 		public OrderId Id { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("owner")]
-		public EdjCase.ICP.Candid.Models.Principal Owner { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("to")]
+
+		[CandidName("owner")]
+		public Principal Owner { get; set; }
+
+		[CandidName("to")]
 		public Token To { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("toAmount")]
+
+		[CandidName("toAmount")]
 		public UnboundedUInt ToAmount { get; set; }
-		
+
+		public Order(Token from, UnboundedUInt fromAmount, OrderId id, Principal owner, Token to, UnboundedUInt toAmount)
+		{
+			this.From = from;
+			this.FromAmount = fromAmount;
+			this.Id = id;
+			this.Owner = owner;
+			this.To = to;
+			this.ToAmount = toAmount;
+		}
+
+		public Order()
+		{
+		}
 	}
 }
-

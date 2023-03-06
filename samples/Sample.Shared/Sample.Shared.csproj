@@ -5,6 +5,7 @@
     <ImplicitUsings>false</ImplicitUsings>
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
+    <OutputType>Library</OutputType>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -19,15 +20,5 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\..\src\Agent\EdjCase.ICP.Agent.csproj" />
 	  <ProjectReference Include="..\..\src\Candid\EdjCase.ICP.Candid.csproj" />
-	</ItemGroup>
-
-
-	<ItemGroup>
-	  <None Update="Dex.did">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </None>
-	  <None Update="Governance.did">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </None>
 	</ItemGroup>
 </Project>

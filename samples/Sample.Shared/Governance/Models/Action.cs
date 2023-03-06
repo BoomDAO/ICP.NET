@@ -1,134 +1,138 @@
+using EdjCase.ICP.Candid.Mapping;
+using Sample.Shared.Governance.Models;
 using System;
 
 namespace Sample.Shared.Governance.Models
 {
-	[EdjCase.ICP.Candid.Mapping.VariantAttribute(typeof(ActionTag))]
+	[Variant(typeof(ActionTag))]
 	public class Action
 	{
-		[EdjCase.ICP.Candid.Mapping.VariantTagPropertyAttribute]
+		[VariantTagProperty()]
 		public ActionTag Tag { get; set; }
-		[EdjCase.ICP.Candid.Mapping.VariantValuePropertyAttribute]
-		public object? Value { get; set; }
-		private Action(ActionTag tag, System.Object? value)
+
+		[VariantValueProperty()]
+		public System.Object? Value { get; set; }
+
+		public Action(ActionTag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
 		}
-		
+
 		protected Action()
 		{
 		}
-		
+
 		public static Action RegisterKnownNeuron(KnownNeuron info)
 		{
 			return new Action(ActionTag.RegisterKnownNeuron, info);
 		}
-		
+
+		public static Action ManageNeuron(ManageNeuron info)
+		{
+			return new Action(ActionTag.ManageNeuron, info);
+		}
+
+		public static Action ExecuteNnsFunction(ExecuteNnsFunction info)
+		{
+			return new Action(ActionTag.ExecuteNnsFunction, info);
+		}
+
+		public static Action RewardNodeProvider(RewardNodeProvider info)
+		{
+			return new Action(ActionTag.RewardNodeProvider, info);
+		}
+
+		public static Action SetDefaultFollowees(SetDefaultFollowees info)
+		{
+			return new Action(ActionTag.SetDefaultFollowees, info);
+		}
+
+		public static Action RewardNodeProviders(RewardNodeProviders info)
+		{
+			return new Action(ActionTag.RewardNodeProviders, info);
+		}
+
+		public static Action ManageNetworkEconomics(NetworkEconomics info)
+		{
+			return new Action(ActionTag.ManageNetworkEconomics, info);
+		}
+
+		public static Action ApproveGenesisKyc(ApproveGenesisKyc info)
+		{
+			return new Action(ActionTag.ApproveGenesisKyc, info);
+		}
+
+		public static Action AddOrRemoveNodeProvider(AddOrRemoveNodeProvider info)
+		{
+			return new Action(ActionTag.AddOrRemoveNodeProvider, info);
+		}
+
+		public static Action Motion(Motion info)
+		{
+			return new Action(ActionTag.Motion, info);
+		}
+
 		public KnownNeuron AsRegisterKnownNeuron()
 		{
 			this.ValidateTag(ActionTag.RegisterKnownNeuron);
 			return (KnownNeuron)this.Value!;
 		}
-		
-		public static Action ManageNeuron(ManageNeuron info)
-		{
-			return new Action(ActionTag.ManageNeuron, info);
-		}
-		
+
 		public ManageNeuron AsManageNeuron()
 		{
 			this.ValidateTag(ActionTag.ManageNeuron);
 			return (ManageNeuron)this.Value!;
 		}
-		
-		public static Action ExecuteNnsFunction(ExecuteNnsFunction info)
-		{
-			return new Action(ActionTag.ExecuteNnsFunction, info);
-		}
-		
+
 		public ExecuteNnsFunction AsExecuteNnsFunction()
 		{
 			this.ValidateTag(ActionTag.ExecuteNnsFunction);
 			return (ExecuteNnsFunction)this.Value!;
 		}
-		
-		public static Action RewardNodeProvider(RewardNodeProvider info)
-		{
-			return new Action(ActionTag.RewardNodeProvider, info);
-		}
-		
+
 		public RewardNodeProvider AsRewardNodeProvider()
 		{
 			this.ValidateTag(ActionTag.RewardNodeProvider);
 			return (RewardNodeProvider)this.Value!;
 		}
-		
-		public static Action SetDefaultFollowees(SetDefaultFollowees info)
-		{
-			return new Action(ActionTag.SetDefaultFollowees, info);
-		}
-		
+
 		public SetDefaultFollowees AsSetDefaultFollowees()
 		{
 			this.ValidateTag(ActionTag.SetDefaultFollowees);
 			return (SetDefaultFollowees)this.Value!;
 		}
-		
-		public static Action RewardNodeProviders(RewardNodeProviders info)
-		{
-			return new Action(ActionTag.RewardNodeProviders, info);
-		}
-		
+
 		public RewardNodeProviders AsRewardNodeProviders()
 		{
 			this.ValidateTag(ActionTag.RewardNodeProviders);
 			return (RewardNodeProviders)this.Value!;
 		}
-		
-		public static Action ManageNetworkEconomics(NetworkEconomics info)
-		{
-			return new Action(ActionTag.ManageNetworkEconomics, info);
-		}
-		
+
 		public NetworkEconomics AsManageNetworkEconomics()
 		{
 			this.ValidateTag(ActionTag.ManageNetworkEconomics);
 			return (NetworkEconomics)this.Value!;
 		}
-		
-		public static Action ApproveGenesisKyc(ApproveGenesisKyc info)
-		{
-			return new Action(ActionTag.ApproveGenesisKyc, info);
-		}
-		
+
 		public ApproveGenesisKyc AsApproveGenesisKyc()
 		{
 			this.ValidateTag(ActionTag.ApproveGenesisKyc);
 			return (ApproveGenesisKyc)this.Value!;
 		}
-		
-		public static Action AddOrRemoveNodeProvider(AddOrRemoveNodeProvider info)
-		{
-			return new Action(ActionTag.AddOrRemoveNodeProvider, info);
-		}
-		
+
 		public AddOrRemoveNodeProvider AsAddOrRemoveNodeProvider()
 		{
 			this.ValidateTag(ActionTag.AddOrRemoveNodeProvider);
 			return (AddOrRemoveNodeProvider)this.Value!;
 		}
-		
-		public static Action Motion(Motion info)
-		{
-			return new Action(ActionTag.Motion, info);
-		}
-		
+
 		public Motion AsMotion()
 		{
 			this.ValidateTag(ActionTag.Motion);
 			return (Motion)this.Value!;
 		}
-		
+
 		private void ValidateTag(ActionTag tag)
 		{
 			if (!this.Tag.Equals(tag))
@@ -137,38 +141,28 @@ namespace Sample.Shared.Governance.Models
 			}
 		}
 	}
+
 	public enum ActionTag
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("RegisterKnownNeuron")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(KnownNeuron))]
+		[VariantOptionType(typeof(KnownNeuron))]
 		RegisterKnownNeuron,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("ManageNeuron")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(ManageNeuron))]
+		[VariantOptionType(typeof(ManageNeuron))]
 		ManageNeuron,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("ExecuteNnsFunction")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(ExecuteNnsFunction))]
+		[VariantOptionType(typeof(ExecuteNnsFunction))]
 		ExecuteNnsFunction,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("RewardNodeProvider")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(RewardNodeProvider))]
+		[VariantOptionType(typeof(RewardNodeProvider))]
 		RewardNodeProvider,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("SetDefaultFollowees")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(SetDefaultFollowees))]
+		[VariantOptionType(typeof(SetDefaultFollowees))]
 		SetDefaultFollowees,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("RewardNodeProviders")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(RewardNodeProviders))]
+		[VariantOptionType(typeof(RewardNodeProviders))]
 		RewardNodeProviders,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("ManageNetworkEconomics")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(NetworkEconomics))]
+		[VariantOptionType(typeof(NetworkEconomics))]
 		ManageNetworkEconomics,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("ApproveGenesisKyc")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(ApproveGenesisKyc))]
+		[VariantOptionType(typeof(ApproveGenesisKyc))]
 		ApproveGenesisKyc,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("AddOrRemoveNodeProvider")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(AddOrRemoveNodeProvider))]
+		[VariantOptionType(typeof(AddOrRemoveNodeProvider))]
 		AddOrRemoveNodeProvider,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Motion")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(Motion))]
-		Motion,
+		[VariantOptionType(typeof(Motion))]
+		Motion
 	}
 }
-

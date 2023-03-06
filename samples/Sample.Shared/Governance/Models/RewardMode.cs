@@ -1,46 +1,50 @@
+using EdjCase.ICP.Candid.Mapping;
+using Sample.Shared.Governance.Models;
 using System;
 
 namespace Sample.Shared.Governance.Models
 {
-	[EdjCase.ICP.Candid.Mapping.VariantAttribute(typeof(RewardModeTag))]
+	[Variant(typeof(RewardModeTag))]
 	public class RewardMode
 	{
-		[EdjCase.ICP.Candid.Mapping.VariantTagPropertyAttribute]
+		[VariantTagProperty()]
 		public RewardModeTag Tag { get; set; }
-		[EdjCase.ICP.Candid.Mapping.VariantValuePropertyAttribute]
-		public object? Value { get; set; }
-		private RewardMode(RewardModeTag tag, System.Object? value)
+
+		[VariantValueProperty()]
+		public System.Object? Value { get; set; }
+
+		public RewardMode(RewardModeTag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
 		}
-		
+
 		protected RewardMode()
 		{
 		}
-		
+
 		public static RewardMode RewardToNeuron(RewardToNeuron info)
 		{
 			return new RewardMode(RewardModeTag.RewardToNeuron, info);
 		}
-		
+
+		public static RewardMode RewardToAccount(RewardToAccount info)
+		{
+			return new RewardMode(RewardModeTag.RewardToAccount, info);
+		}
+
 		public RewardToNeuron AsRewardToNeuron()
 		{
 			this.ValidateTag(RewardModeTag.RewardToNeuron);
 			return (RewardToNeuron)this.Value!;
 		}
-		
-		public static RewardMode RewardToAccount(RewardToAccount info)
-		{
-			return new RewardMode(RewardModeTag.RewardToAccount, info);
-		}
-		
+
 		public RewardToAccount AsRewardToAccount()
 		{
 			this.ValidateTag(RewardModeTag.RewardToAccount);
 			return (RewardToAccount)this.Value!;
 		}
-		
+
 		private void ValidateTag(RewardModeTag tag)
 		{
 			if (!this.Tag.Equals(tag))
@@ -49,14 +53,12 @@ namespace Sample.Shared.Governance.Models
 			}
 		}
 	}
+
 	public enum RewardModeTag
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("RewardToNeuron")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(RewardToNeuron))]
+		[VariantOptionType(typeof(RewardToNeuron))]
 		RewardToNeuron,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("RewardToAccount")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(RewardToAccount))]
-		RewardToAccount,
+		[VariantOptionType(typeof(RewardToAccount))]
+		RewardToAccount
 	}
 }
-

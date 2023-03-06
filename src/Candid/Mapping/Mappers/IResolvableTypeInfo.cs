@@ -257,6 +257,13 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 					}
 				);
 			}
+
+			// Enum variant
+			if(objType.IsEnum)
+			{
+				return BuildEnumVariant(objType);
+			}
+
 			// Generics
 			if (objType.IsGenericType)
 			{
@@ -367,6 +374,24 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 					null // TODO overrides?
 				);
 			});
+		}
+
+		private static IResolvableTypeInfo BuildEnumVariant(Type enumType)
+		{
+			Dictionary<CandidTag, Enum> options = enumType.GetEnumValues()
+				.OfType<Enum>()
+				.Select(e =>
+				{
+					string tagName = Enum.GetName(enumType, e);
+					MemberInfo field = enumType.GetMember(tagName).First();
+					var nameAttribute = field.GetCustomAttribute<CandidNameAttribute>();
+					string name = nameAttribute?.Name ?? tagName;
+					return (Name: CandidTag.FromName(name), Value: e);
+				})
+				.ToDictionary(e => e.Name, e => e.Value);
+			var candidType = new CandidVariantType(options.ToDictionary(o => o.Key, o => (CandidType)CandidType.Null()));
+			var mapper = new VariantEnumMapper(candidType, enumType, options);
+			return new ResolvedTypeInfo(enumType, mapper);
 		}
 
 		private static IResolvableTypeInfo BuildVariant(Type objType, VariantAttribute attribute)

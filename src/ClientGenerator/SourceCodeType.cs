@@ -12,17 +12,12 @@ namespace EdjCase.ICP.ClientGenerator
 	internal class CompiledTypeSourceCodeType : SourceCodeType
 	{
 		public Type Type { get; }
-		public List<SourceCodeType> GenericTypes { get; }
+		public SourceCodeType? GenericType { get; }
 
 		public CompiledTypeSourceCodeType(Type type, SourceCodeType? genericType = null)
 		{
 			this.Type = type ?? throw new ArgumentNullException(nameof(type));
-			this.GenericTypes = genericType == null ? new List<SourceCodeType>() : new List<SourceCodeType> { genericType };
-		}
-		public CompiledTypeSourceCodeType(Type type, List<SourceCodeType> genericTypes)
-		{
-			this.Type = type ?? throw new ArgumentNullException(nameof(type));
-			this.GenericTypes = genericTypes ?? new List<SourceCodeType>();
+			this.GenericType = genericType;
 		}
 	}
 

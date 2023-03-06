@@ -1,46 +1,50 @@
+using EdjCase.ICP.Candid.Mapping;
+using Sample.Shared.Governance.Models;
 using System;
 
 namespace Sample.Shared.Governance.Models
 {
-	[EdjCase.ICP.Candid.Mapping.VariantAttribute(typeof(DissolveStateTag))]
+	[Variant(typeof(DissolveStateTag))]
 	public class DissolveState
 	{
-		[EdjCase.ICP.Candid.Mapping.VariantTagPropertyAttribute]
+		[VariantTagProperty()]
 		public DissolveStateTag Tag { get; set; }
-		[EdjCase.ICP.Candid.Mapping.VariantValuePropertyAttribute]
-		public object? Value { get; set; }
-		private DissolveState(DissolveStateTag tag, System.Object? value)
+
+		[VariantValueProperty()]
+		public System.Object? Value { get; set; }
+
+		public DissolveState(DissolveStateTag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
 		}
-		
+
 		protected DissolveState()
 		{
 		}
-		
+
 		public static DissolveState DissolveDelaySeconds(ulong info)
 		{
 			return new DissolveState(DissolveStateTag.DissolveDelaySeconds, info);
 		}
-		
+
+		public static DissolveState WhenDissolvedTimestampSeconds(ulong info)
+		{
+			return new DissolveState(DissolveStateTag.WhenDissolvedTimestampSeconds, info);
+		}
+
 		public ulong AsDissolveDelaySeconds()
 		{
 			this.ValidateTag(DissolveStateTag.DissolveDelaySeconds);
 			return (ulong)this.Value!;
 		}
-		
-		public static DissolveState WhenDissolvedTimestampSeconds(ulong info)
-		{
-			return new DissolveState(DissolveStateTag.WhenDissolvedTimestampSeconds, info);
-		}
-		
+
 		public ulong AsWhenDissolvedTimestampSeconds()
 		{
 			this.ValidateTag(DissolveStateTag.WhenDissolvedTimestampSeconds);
 			return (ulong)this.Value!;
 		}
-		
+
 		private void ValidateTag(DissolveStateTag tag)
 		{
 			if (!this.Tag.Equals(tag))
@@ -49,14 +53,12 @@ namespace Sample.Shared.Governance.Models
 			}
 		}
 	}
+
 	public enum DissolveStateTag
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("DissolveDelaySeconds")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(ulong))]
+		[VariantOptionType(typeof(ulong))]
 		DissolveDelaySeconds,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("WhenDissolvedTimestampSeconds")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(ulong))]
-		WhenDissolvedTimestampSeconds,
+		[VariantOptionType(typeof(ulong))]
+		WhenDissolvedTimestampSeconds
 	}
 }
-

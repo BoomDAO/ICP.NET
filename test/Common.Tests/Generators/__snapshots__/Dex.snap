@@ -2,12 +2,12 @@
 using OrderId = System.UInt32;
 using EdjCase.ICP.Agent.Agents;
 using EdjCase.ICP.Candid.Models;
-using Test.Models;
+using Test;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using EdjCase.ICP.Agent.Responses;
 
-namespace Test.Models
+namespace Test
 {
 	public class DexApiClient
 	{
@@ -21,11 +21,11 @@ namespace Test.Models
 			this.CanisterId = canisterId;
 		}
 
-		public async System.Threading.Tasks.Task<CancelOrderReceipt> CancelOrder(OrderId arg0)
+		public async System.Threading.Tasks.Task<Models.CancelOrderReceipt> CancelOrder(OrderId arg0)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
 			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "cancelOrder", arg);
-			return reply.ToObjects<CancelOrderReceipt>();
+			return reply.ToObjects<Models.CancelOrderReceipt>();
 		}
 
 		public async Task Clear()
@@ -40,19 +40,19 @@ namespace Test.Models
 			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "credit", arg);
 		}
 
-		public async System.Threading.Tasks.Task<DepositReceipt> Deposit(Token arg0)
+		public async System.Threading.Tasks.Task<Models.DepositReceipt> Deposit(Token arg0)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
 			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "deposit", arg);
-			return reply.ToObjects<DepositReceipt>();
+			return reply.ToObjects<Models.DepositReceipt>();
 		}
 
-		public async System.Threading.Tasks.Task<List<Balance>> GetAllBalances()
+		public async System.Threading.Tasks.Task<List<Models.Balance>> GetAllBalances()
 		{
 			CandidArg arg = CandidArg.FromCandid();
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "getAllBalances", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<List<Balance>>();
+			return reply.ToObjects<List<Models.Balance>>();
 		}
 
 		public async System.Threading.Tasks.Task<UnboundedUInt> GetBalance(Token arg0)
@@ -63,12 +63,12 @@ namespace Test.Models
 			return reply.ToObjects<UnboundedUInt>();
 		}
 
-		public async System.Threading.Tasks.Task<List<Balance>> GetBalances()
+		public async System.Threading.Tasks.Task<List<Models.Balance>> GetBalances()
 		{
 			CandidArg arg = CandidArg.FromCandid();
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "getBalances", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<List<Balance>>();
+			return reply.ToObjects<List<Models.Balance>>();
 		}
 
 		public async System.Threading.Tasks.Task<List<byte>> GetDepositAddress()
@@ -78,18 +78,18 @@ namespace Test.Models
 			return reply.ToObjects<List<byte>>();
 		}
 
-		public async System.Threading.Tasks.Task<OptionalValue<Order>> GetOrder(OrderId arg0)
+		public async System.Threading.Tasks.Task<OptionalValue<Models.Order>> GetOrder(OrderId arg0)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
 			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "getOrder", arg);
-			return reply.ToObjects<OptionalValue<Order>>();
+			return reply.ToObjects<OptionalValue<Models.Order>>();
 		}
 
-		public async System.Threading.Tasks.Task<List<Order>> GetOrders()
+		public async System.Threading.Tasks.Task<List<Models.Order>> GetOrders()
 		{
 			CandidArg arg = CandidArg.FromCandid();
 			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "getOrders", arg);
-			return reply.ToObjects<List<Order>>();
+			return reply.ToObjects<List<Models.Order>>();
 		}
 
 		public async System.Threading.Tasks.Task<string> GetSymbol(Token arg0)
@@ -99,11 +99,11 @@ namespace Test.Models
 			return reply.ToObjects<string>();
 		}
 
-		public async System.Threading.Tasks.Task<OrderPlacementReceipt> PlaceOrder(Token arg0, UnboundedUInt arg1, Token arg2, UnboundedUInt arg3)
+		public async System.Threading.Tasks.Task<Models.OrderPlacementReceipt> PlaceOrder(Token arg0, UnboundedUInt arg1, Token arg2, UnboundedUInt arg3)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0), CandidTypedValue.FromObject(arg1), CandidTypedValue.FromObject(arg2), CandidTypedValue.FromObject(arg3));
 			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "placeOrder", arg);
-			return reply.ToObjects<OrderPlacementReceipt>();
+			return reply.ToObjects<Models.OrderPlacementReceipt>();
 		}
 
 		public async System.Threading.Tasks.Task<Principal> Whoami()
@@ -114,11 +114,11 @@ namespace Test.Models
 			return reply.ToObjects<Principal>();
 		}
 
-		public async System.Threading.Tasks.Task<WithdrawReceipt> Withdraw(Token arg0, UnboundedUInt arg1, Principal arg2)
+		public async System.Threading.Tasks.Task<Models.WithdrawReceipt> Withdraw(Token arg0, UnboundedUInt arg1, Principal arg2)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0), CandidTypedValue.FromObject(arg1), CandidTypedValue.FromObject(arg2));
 			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "withdraw", arg);
-			return reply.ToObjects<WithdrawReceipt>();
+			return reply.ToObjects<Models.WithdrawReceipt>();
 		}
 	}
 }
@@ -186,10 +186,8 @@ namespace Test.Models
 
 	public enum WithdrawReceiptTag
 	{
-		[CandidName("Err")]
 		[VariantOptionType(typeof(WithdrawErr))]
 		Err,
-		[CandidName("Ok")]
 		[VariantOptionType(typeof(UnboundedUInt))]
 		Ok
 	}
@@ -199,46 +197,12 @@ Type File: 'WithdrawErr'
 
 using Token = EdjCase.ICP.Candid.Models.Principal;
 using OrderId = System.UInt32;
-using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
 
 namespace Test.Models
 {
-	[Variant(typeof(WithdrawErrTag))]
-	public class WithdrawErr
+	public enum WithdrawErr
 	{
-		[VariantTagProperty()]
-		public WithdrawErrTag Tag { get; set; }
-
-		[VariantValueProperty()]
-		public System.Object? Value { get; set; }
-
-		public WithdrawErr(WithdrawErrTag tag, object? value)
-		{
-			this.Tag = tag;
-			this.Value = value;
-		}
-
-		protected WithdrawErr()
-		{
-		}
-
-		public static WithdrawErr BalanceLow()
-		{
-			return new WithdrawErr(WithdrawErrTag.BalanceLow, null);
-		}
-
-		public static WithdrawErr TransferFailure()
-		{
-			return new WithdrawErr(WithdrawErrTag.TransferFailure, null);
-		}
-	}
-
-	public enum WithdrawErrTag
-	{
-		[CandidName("BalanceLow")]
 		BalanceLow,
-		[CandidName("TransferFailure")]
 		TransferFailure
 	}
 }
@@ -306,10 +270,8 @@ namespace Test.Models
 
 	public enum OrderPlacementReceiptTag
 	{
-		[CandidName("Err")]
 		[VariantOptionType(typeof(OrderPlacementErr))]
 		Err,
-		[CandidName("Ok")]
 		[VariantOptionType(typeof(OptionalValue<Order>))]
 		Ok
 	}
@@ -319,46 +281,12 @@ Type File: 'OrderPlacementErr'
 
 using Token = EdjCase.ICP.Candid.Models.Principal;
 using OrderId = System.UInt32;
-using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
 
 namespace Test.Models
 {
-	[Variant(typeof(OrderPlacementErrTag))]
-	public class OrderPlacementErr
+	public enum OrderPlacementErr
 	{
-		[VariantTagProperty()]
-		public OrderPlacementErrTag Tag { get; set; }
-
-		[VariantValueProperty()]
-		public System.Object? Value { get; set; }
-
-		public OrderPlacementErr(OrderPlacementErrTag tag, object? value)
-		{
-			this.Tag = tag;
-			this.Value = value;
-		}
-
-		protected OrderPlacementErr()
-		{
-		}
-
-		public static OrderPlacementErr InvalidOrder()
-		{
-			return new OrderPlacementErr(OrderPlacementErrTag.InvalidOrder, null);
-		}
-
-		public static OrderPlacementErr OrderBookFull()
-		{
-			return new OrderPlacementErr(OrderPlacementErrTag.OrderBookFull, null);
-		}
-	}
-
-	public enum OrderPlacementErrTag
-	{
-		[CandidName("InvalidOrder")]
 		InvalidOrder,
-		[CandidName("OrderBookFull")]
 		OrderBookFull
 	}
 }
@@ -471,10 +399,8 @@ namespace Test.Models
 
 	public enum DepositReceiptTag
 	{
-		[CandidName("Err")]
 		[VariantOptionType(typeof(DepositErr))]
 		Err,
-		[CandidName("Ok")]
 		[VariantOptionType(typeof(UnboundedUInt))]
 		Ok
 	}
@@ -484,46 +410,12 @@ Type File: 'DepositErr'
 
 using Token = EdjCase.ICP.Candid.Models.Principal;
 using OrderId = System.UInt32;
-using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
 
 namespace Test.Models
 {
-	[Variant(typeof(DepositErrTag))]
-	public class DepositErr
+	public enum DepositErr
 	{
-		[VariantTagProperty()]
-		public DepositErrTag Tag { get; set; }
-
-		[VariantValueProperty()]
-		public System.Object? Value { get; set; }
-
-		public DepositErr(DepositErrTag tag, object? value)
-		{
-			this.Tag = tag;
-			this.Value = value;
-		}
-
-		protected DepositErr()
-		{
-		}
-
-		public static DepositErr BalanceLow()
-		{
-			return new DepositErr(DepositErrTag.BalanceLow, null);
-		}
-
-		public static DepositErr TransferFailure()
-		{
-			return new DepositErr(DepositErrTag.TransferFailure, null);
-		}
-	}
-
-	public enum DepositErrTag
-	{
-		[CandidName("BalanceLow")]
 		BalanceLow,
-		[CandidName("TransferFailure")]
 		TransferFailure
 	}
 }
@@ -590,10 +482,8 @@ namespace Test.Models
 
 	public enum CancelOrderReceiptTag
 	{
-		[CandidName("Err")]
 		[VariantOptionType(typeof(CancelOrderErr))]
 		Err,
-		[CandidName("Ok")]
 		[VariantOptionType(typeof(OrderId))]
 		Ok
 	}
@@ -603,46 +493,12 @@ Type File: 'CancelOrderErr'
 
 using Token = EdjCase.ICP.Candid.Models.Principal;
 using OrderId = System.UInt32;
-using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
 
 namespace Test.Models
 {
-	[Variant(typeof(CancelOrderErrTag))]
-	public class CancelOrderErr
+	public enum CancelOrderErr
 	{
-		[VariantTagProperty()]
-		public CancelOrderErrTag Tag { get; set; }
-
-		[VariantValueProperty()]
-		public System.Object? Value { get; set; }
-
-		public CancelOrderErr(CancelOrderErrTag tag, object? value)
-		{
-			this.Tag = tag;
-			this.Value = value;
-		}
-
-		protected CancelOrderErr()
-		{
-		}
-
-		public static CancelOrderErr NotAllowed()
-		{
-			return new CancelOrderErr(CancelOrderErrTag.NotAllowed, null);
-		}
-
-		public static CancelOrderErr NotExistingOrder()
-		{
-			return new CancelOrderErr(CancelOrderErrTag.NotExistingOrder, null);
-		}
-	}
-
-	public enum CancelOrderErrTag
-	{
-		[CandidName("NotAllowed")]
 		NotAllowed,
-		[CandidName("NotExistingOrder")]
 		NotExistingOrder
 	}
 }

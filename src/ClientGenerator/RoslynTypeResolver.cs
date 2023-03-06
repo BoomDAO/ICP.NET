@@ -67,9 +67,16 @@ namespace EdjCase.ICP.ClientGenerator
 			{
 				case CompiledTypeSourceCodeType c:
 					{
-						List<ResolvedType> genericTypes = c.GenericTypes
-							.Select((t, i) => this.ResolveType(t, nameContext + "V" + i, parentType))
-							.ToList();
+						ResolvedType? resolvedGenericType = null;
+						MemberDeclarationSyntax[]? innerTypes = null;
+						if (c.GenericType != null)
+						{
+							resolvedGenericType = this.ResolveType(c.GenericType, nameContext + "Item", parentType);
+							if(resolvedGenericType.GeneratedSyntax != null)
+							{
+								innerTypes = resolvedGenericType.GeneratedSyntax;
+							}
+						}
 
 						string typeName = c.Type.Name;
 						if (c.Type.IsGenericTypeDefinition)
@@ -81,13 +88,12 @@ namespace EdjCase.ICP.ClientGenerator
 							typeName,
 							c.Type.Namespace,
 							prefix: null,
-							genericTypes.Select(t => t.Name).ToArray()
+							resolvedGenericType == null ? Array.Empty<TypeName>() : new[]
+							{
+								resolvedGenericType.Name
+							}
 						);
 
-						MemberDeclarationSyntax[] innerTypes = genericTypes
-							.Where(r => r.GeneratedSyntax != null)
-							.SelectMany(t => t.GeneratedSyntax!)
-							.ToArray();
 						return new ResolvedType(cType, innerTypes);
 					}
 				case ReferenceSourceCodeType re:
@@ -105,12 +111,24 @@ namespace EdjCase.ICP.ClientGenerator
 					}
 				case VariantSourceCodeType v:
 					{
+						if (parentType != null)
+						{
+							nameContext += "Variant";
+						}
 						TypeName variantName = this.BuildType(nameContext, parentType);
-						(ClassDeclarationSyntax classSyntax, EnumDeclarationSyntax typeSyntax) = this.GenerateVariant(variantName, v, parentType);
-						return new ResolvedType(variantName, classSyntax, typeSyntax);
+						(ClassDeclarationSyntax? classSyntax, EnumDeclarationSyntax enumSyntax) = this.GenerateVariant(variantName, v, parentType);
+						if (classSyntax != null)
+						{
+							return new ResolvedType(variantName, classSyntax, enumSyntax);
+						}
+						return new ResolvedType(variantName, enumSyntax);
 					}
 				case RecordSourceCodeType r:
 					{
+						if(parentType != null)
+						{
+							nameContext += "Record";
+						}
 						TypeName recordName = this.BuildType(nameContext, parentType);
 						ClassDeclarationSyntax classSyntax = this.GenerateRecord(recordName, r);
 						return new ResolvedType(recordName, classSyntax);
@@ -155,61 +173,74 @@ namespace EdjCase.ICP.ClientGenerator
 		}
 
 
-		internal (ClassDeclarationSyntax Class, EnumDeclarationSyntax Type) GenerateVariant(
+		internal (ClassDeclarationSyntax? Class, EnumDeclarationSyntax Type) GenerateVariant(
 			TypeName variantTypeName,
 			VariantSourceCodeType variant,
 			TypeName? parentType
 		)
 		{
-			TypeName enumTypeName = this.BuildType(variantTypeName.GetName() + "Tag", parentType);
 
 			List<(ValueName Name, ResolvedType? Type)> resolvedOptions = variant.Options
-				.Select((o, i) => (o.Tag, o.Type == null ? null : this.ResolveType(o.Type, "O" + i, variantTypeName)))
+				.Select((o, i) => (o.Tag, o.Type == null ? null : this.ResolveType(o.Type, o.Tag.PropertyName, variantTypeName)))
 				.ToList();
+
 
 			List<(ValueName Name, TypeName? Type)> enumOptions = resolvedOptions
 				.Select(o => (o.Name, o.Type?.Name))
 				.ToList();
 
-			List<MethodDeclarationSyntax> methods = new();
-
-			ValueName optionValueParamName = ValueName.Default("info");
-
-			// Creation methods
-			// public static {VariantType} {OptionName}({VariantOptionType} value)
-			// or if there is no type:
-			// public static {VariantType} {OptionName}()
-			methods.AddRange(
-				resolvedOptions
-					.Select(o => this.GenerateVariantOptionCreationMethod(
-						variantTypeName,
-						enumTypeName,
-						o.Name,
-						o.Type,
-						optionValueParamName
-					))
-			);
-
-			// TODO auto change the property values of all class types if it matches the name
-			ValueName tagName = ValueName.Default(variantTypeName.GetName() == "Tag" ? "TagValue" : "Tag");
-			ValueName valueName = ValueName.Default(variantTypeName.GetName() == "Value" ? "Value_" : "Value");
-
-			// 'As{X}' methods (if has option type)
-			methods.AddRange(
-				resolvedOptions
-				.Where(r => r.Type != null)
-				.Select(o => this.GenerateVariantOptionAsMethod(enumTypeName, o.Name, o.Type!, valueName))
-			);
-
-
-			bool anyOptionsWithType = resolvedOptions.Any(o => o.Type != null);
-			if (anyOptionsWithType)
+			if (enumOptions.All(o => o.Type == null))
 			{
-				// If there are any types, then create the helper method 'ValidateType' that
-				// they all use
-				methods.Add(this.GenerateVariantValidateTypeMethod(enumTypeName, tagName));
+				// If there are no types, just create an enum value
+
+				TypeName enumTypeName = this.BuildType(variantTypeName.GetName(), parentType);
+				EnumDeclarationSyntax enumSyntax = GenerateEnum(enumTypeName, enumOptions);
+				return (null, enumSyntax);
 			}
-			List<ClassProperty> properties = new()
+			else
+			{
+				TypeName enumTypeName = this.BuildType(variantTypeName.GetName() + "Tag", parentType);
+
+
+				List<MethodDeclarationSyntax> methods = new();
+
+				ValueName optionValueParamName = ValueName.Default("info");
+
+				// Creation methods
+				// public static {VariantType} {OptionName}({VariantOptionType} value)
+				// or if there is no type:
+				// public static {VariantType} {OptionName}()
+				methods.AddRange(
+					resolvedOptions
+						.Select(o => this.GenerateVariantOptionCreationMethod(
+							variantTypeName,
+							enumTypeName,
+							o.Name,
+							o.Type,
+							optionValueParamName
+						))
+				);
+
+				// TODO auto change the property values of all class types if it matches the name
+				ValueName tagName = ValueName.Default(variantTypeName.GetName() == "Tag" ? "TagValue" : "Tag");
+				ValueName valueName = ValueName.Default(variantTypeName.GetName() == "Value" ? "Value_" : "Value");
+
+				// 'As{X}' methods (if has option type)
+				methods.AddRange(
+					resolvedOptions
+					.Where(r => r.Type != null)
+					.Select(o => this.GenerateVariantOptionAsMethod(enumTypeName, o.Name, o.Type!, valueName))
+				);
+
+
+				bool anyOptionsWithType = resolvedOptions.Any(o => o.Type != null);
+				if (anyOptionsWithType)
+				{
+					// If there are any types, then create the helper method 'ValidateType' that
+					// they all use
+					methods.Add(this.GenerateVariantValidateTypeMethod(enumTypeName, tagName));
+				}
+				List<ClassProperty> properties = new()
 			{
 				new ClassProperty(
 					tagName,
@@ -227,31 +258,32 @@ namespace EdjCase.ICP.ClientGenerator
 				)
 			};
 
-			List<AttributeListSyntax> attributes = new()
+				List<AttributeListSyntax> attributes = new()
 			{
 				// [Variant(typeof({enumType})]
 				GenerateAttribute(AttributeInfo.FromType<VariantAttribute>(enumTypeName))
 			};
 
-			ClassDeclarationSyntax classSyntax = GenerateClass(
-				name: variantTypeName,
-				properties: properties,
-				methods: methods,
-				attributes: attributes,
-				emptyConstructorAccess: AccessType.Protected,
-				subTypes: resolvedOptions
-					.SelectMany(o => o.Type?.GeneratedSyntax ?? Array.Empty<MemberDeclarationSyntax>())
-					.ToList()
-			);
-			EnumDeclarationSyntax enumSyntax = GenerateEnum(enumTypeName, enumOptions);
-			return (classSyntax, enumSyntax);
+				ClassDeclarationSyntax classSyntax = GenerateClass(
+					name: variantTypeName,
+					properties: properties,
+					methods: methods,
+					attributes: attributes,
+					emptyConstructorAccess: AccessType.Protected,
+					subTypes: resolvedOptions
+						.SelectMany(o => o.Type?.GeneratedSyntax ?? Array.Empty<MemberDeclarationSyntax>())
+						.ToList()
+				);
+				EnumDeclarationSyntax enumSyntax = GenerateEnum(enumTypeName, enumOptions);
+				return (classSyntax, enumSyntax);
+			}
 		}
 
 		private TypeName BuildType(string name, TypeName? parentType)
 		{
 			string @namespace;
 			string? prefix = null;
-			if(parentType == null)
+			if (parentType == null)
 			{
 				@namespace = this.ModelNamespace;
 			}
@@ -497,7 +529,7 @@ namespace EdjCase.ICP.ClientGenerator
 		internal ClassDeclarationSyntax GenerateRecord(TypeName recordTypeName, RecordSourceCodeType record)
 		{
 			List<(ValueName Tag, ResolvedType Type)> resolvedFields = record.Fields
-				.Select((f, i) => (f.Tag, this.ResolveType(f.Type, "R" + i, parentType: recordTypeName)))
+				.Select((f, i) => (f.Tag, this.ResolveType(f.Type, f.Tag.PropertyName, parentType: recordTypeName)))
 				.ToList();
 			List<MemberDeclarationSyntax> subItems = resolvedFields
 				.SelectMany(f => f.Type.GeneratedSyntax ?? Array.Empty<MemberDeclarationSyntax>())
@@ -506,7 +538,7 @@ namespace EdjCase.ICP.ClientGenerator
 			List<ClassProperty> properties = resolvedFields
 				.Select((f, i) =>
 				{
-					ValueName propertyName = ValueName.Default(f.Tag.PropertyName);
+					ValueName propertyName = f.Tag;
 					if (propertyName.PropertyName == recordTypeName.GetName())
 					{
 						// Cant match the class name
@@ -516,15 +548,25 @@ namespace EdjCase.ICP.ClientGenerator
 							candidName: propertyName.CandidName
 						);
 					}
+					AttributeInfo[]? attributes = null;
+					if (propertyName.CandidName != propertyName.PropertyName)
+					{
+						// [CandidName("{fieldCandidName}")]
+						// Only add attribute if the name is different
+						attributes = new[]
+						{
+							AttributeInfo.FromType<CandidNameAttribute>(propertyName.CandidName)
+						};
+					}
 
-					// [CandidName("{fieldCandidName}")]
+
 					// public {fieldType} {fieldName} {{ get; set; }}
 					return new ClassProperty(
 						name: propertyName,
 						type: f.Type.Name,
 						access: AccessType.Public,
 						hasSetter: true,
-						AttributeInfo.FromType<CandidNameAttribute>(f.Tag.CandidName)
+						attributes
 					);
 				})
 				.ToList();
@@ -593,18 +635,21 @@ namespace EdjCase.ICP.ClientGenerator
 			IEnumerable<SyntaxNode> enumOptions = values
 				.Select(v =>
 				{
-					List<AttributeListSyntax> attributeLists = new()
+					List<AttributeListSyntax> attributeList = new();
+
+					if (v.Name.CandidName != v.Name.PropertyName)
 					{
 						// [CandidName({candidName}]
-						GenerateAttribute(
+						// Only add if names differ
+						attributeList.Add(GenerateAttribute(
 							new AttributeInfo(TypeName.FromType<CandidNameAttribute>(), v.Name.CandidName)
-						)
-					};
+						));
+					}
 
 					if (v.Type != null)
 					{
 						// [VariantOptionType(typeof({type}))]
-						attributeLists.Add(GenerateAttribute(
+						attributeList.Add(GenerateAttribute(
 							new AttributeInfo(TypeName.FromType<VariantOptionTypeAttribute>(), v.Type)
 						));
 
@@ -613,7 +658,7 @@ namespace EdjCase.ICP.ClientGenerator
 						// {optionName},
 						.EnumMemberDeclaration(SyntaxFactory.Identifier(v.Name.PropertyName))
 						// Add attributes
-						.WithAttributeLists(SyntaxFactory.List(attributeLists));
+						.WithAttributeLists(SyntaxFactory.List(attributeList));
 				});
 
 			// Create comma seperators between the enum options

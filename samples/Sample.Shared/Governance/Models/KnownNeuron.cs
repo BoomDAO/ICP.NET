@@ -1,13 +1,25 @@
+using EdjCase.ICP.Candid.Mapping;
+using Sample.Shared.Governance.Models;
+using EdjCase.ICP.Candid.Models;
+
 namespace Sample.Shared.Governance.Models
 {
 	public class KnownNeuron
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("id")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<NeuronId> Id { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("known_neuron_data")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<KnownNeuronData> KnownNeuronData { get; set; }
-		
+		[CandidName("id")]
+		public OptionalValue<NeuronId> Id { get; set; }
+
+		[CandidName("known_neuron_data")]
+		public OptionalValue<KnownNeuronData> KnownNeuronData { get; set; }
+
+		public KnownNeuron(OptionalValue<NeuronId> id, OptionalValue<KnownNeuronData> knownNeuronData)
+		{
+			this.Id = id;
+			this.KnownNeuronData = knownNeuronData;
+		}
+
+		public KnownNeuron()
+		{
+		}
 	}
 }
-

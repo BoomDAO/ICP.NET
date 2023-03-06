@@ -1,10 +1,19 @@
+using EdjCase.ICP.Candid.Mapping;
+
 namespace Sample.Shared.Governance.Models
 {
 	public class DisburseResponse
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("transfer_block_height")]
+		[CandidName("transfer_block_height")]
 		public ulong TransferBlockHeight { get; set; }
-		
+
+		public DisburseResponse(ulong transferBlockHeight)
+		{
+			this.TransferBlockHeight = transferBlockHeight;
+		}
+
+		public DisburseResponse()
+		{
+		}
 	}
 }
-

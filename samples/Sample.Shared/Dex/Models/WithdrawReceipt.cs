@@ -1,47 +1,53 @@
-using System;
+using Token = EdjCase.ICP.Candid.Models.Principal;
+using OrderId = System.UInt32;
+using EdjCase.ICP.Candid.Mapping;
+using Sample.Shared.Dex.Models;
 using EdjCase.ICP.Candid.Models;
+using System;
 
 namespace Sample.Shared.Dex.Models
 {
-	[EdjCase.ICP.Candid.Mapping.VariantAttribute(typeof(WithdrawReceiptTag))]
+	[Variant(typeof(WithdrawReceiptTag))]
 	public class WithdrawReceipt
 	{
-		[EdjCase.ICP.Candid.Mapping.VariantTagPropertyAttribute]
+		[VariantTagProperty()]
 		public WithdrawReceiptTag Tag { get; set; }
-		[EdjCase.ICP.Candid.Mapping.VariantValuePropertyAttribute]
-		public object? Value { get; set; }
-		private WithdrawReceipt(WithdrawReceiptTag tag, System.Object? value)
+
+		[VariantValueProperty()]
+		public System.Object? Value { get; set; }
+
+		public WithdrawReceipt(WithdrawReceiptTag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
 		}
-		
+
 		protected WithdrawReceipt()
 		{
 		}
-		
+
 		public static WithdrawReceipt Err(WithdrawErr info)
 		{
 			return new WithdrawReceipt(WithdrawReceiptTag.Err, info);
 		}
-		
+
+		public static WithdrawReceipt Ok(UnboundedUInt info)
+		{
+			return new WithdrawReceipt(WithdrawReceiptTag.Ok, info);
+		}
+
 		public WithdrawErr AsErr()
 		{
 			this.ValidateTag(WithdrawReceiptTag.Err);
 			return (WithdrawErr)this.Value!;
 		}
-		
-		public static WithdrawReceipt Ok(UnboundedUInt info)
-		{
-			return new WithdrawReceipt(WithdrawReceiptTag.Ok, info);
-		}
-		
+
 		public UnboundedUInt AsOk()
 		{
 			this.ValidateTag(WithdrawReceiptTag.Ok);
 			return (UnboundedUInt)this.Value!;
 		}
-		
+
 		private void ValidateTag(WithdrawReceiptTag tag)
 		{
 			if (!this.Tag.Equals(tag))
@@ -50,14 +56,12 @@ namespace Sample.Shared.Dex.Models
 			}
 		}
 	}
+
 	public enum WithdrawReceiptTag
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Err")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(WithdrawErr))]
+		[VariantOptionType(typeof(WithdrawErr))]
 		Err,
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("Ok")]
-		[EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute(typeof(UnboundedUInt))]
-		Ok,
+		[VariantOptionType(typeof(UnboundedUInt))]
+		Ok
 	}
 }
-

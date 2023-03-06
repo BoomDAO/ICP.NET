@@ -1,13 +1,24 @@
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid.Models;
+
 namespace Sample.Shared.Governance.Models
 {
 	public class ClaimOrRefreshNeuronFromAccount
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("controller")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<EdjCase.ICP.Candid.Models.Principal> Controller { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("memo")]
+		[CandidName("controller")]
+		public OptionalValue<Principal> Controller { get; set; }
+
+		[CandidName("memo")]
 		public ulong Memo { get; set; }
-		
+
+		public ClaimOrRefreshNeuronFromAccount(OptionalValue<Principal> controller, ulong memo)
+		{
+			this.Controller = controller;
+			this.Memo = memo;
+		}
+
+		public ClaimOrRefreshNeuronFromAccount()
+		{
+		}
 	}
 }
-

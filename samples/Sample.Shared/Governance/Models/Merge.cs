@@ -1,10 +1,21 @@
+using EdjCase.ICP.Candid.Mapping;
+using Sample.Shared.Governance.Models;
+using EdjCase.ICP.Candid.Models;
+
 namespace Sample.Shared.Governance.Models
 {
 	public class Merge
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("source_neuron_id")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<NeuronId> SourceNeuronId { get; set; }
-		
+		[CandidName("source_neuron_id")]
+		public OptionalValue<NeuronId> SourceNeuronId { get; set; }
+
+		public Merge(OptionalValue<NeuronId> sourceNeuronId)
+		{
+			this.SourceNeuronId = sourceNeuronId;
+		}
+
+		public Merge()
+		{
+		}
 	}
 }
-

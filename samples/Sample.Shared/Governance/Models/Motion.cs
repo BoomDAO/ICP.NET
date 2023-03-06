@@ -1,10 +1,19 @@
+using EdjCase.ICP.Candid.Mapping;
+
 namespace Sample.Shared.Governance.Models
 {
 	public class Motion
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("motion_text")]
+		[CandidName("motion_text")]
 		public string MotionText { get; set; }
-		
+
+		public Motion(string motionText)
+		{
+			this.MotionText = motionText;
+		}
+
+		public Motion()
+		{
+		}
 	}
 }
-

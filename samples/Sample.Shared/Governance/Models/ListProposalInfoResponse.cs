@@ -1,10 +1,21 @@
+using EdjCase.ICP.Candid.Mapping;
+using Sample.Shared.Governance.Models;
+using System.Collections.Generic;
+
 namespace Sample.Shared.Governance.Models
 {
 	public class ListProposalInfoResponse
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("proposal_info")]
-		public System.Collections.Generic.List<ProposalInfo> ProposalInfo { get; set; }
-		
+		[CandidName("proposal_info")]
+		public List<ProposalInfo> ProposalInfo { get; set; }
+
+		public ListProposalInfoResponse(List<ProposalInfo> proposalInfo)
+		{
+			this.ProposalInfo = proposalInfo;
+		}
+
+		public ListProposalInfoResponse()
+		{
+		}
 	}
 }
-

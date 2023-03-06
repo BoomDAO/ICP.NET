@@ -1,22 +1,44 @@
+using EdjCase.ICP.Candid.Mapping;
+using Sample.Shared.Governance.Models;
+using System.Collections.Generic;
+
 namespace Sample.Shared.Governance.Models
 {
 	public class ListNeuronsResponse
 	{
-		public class R0V0
+		[CandidName("neuron_infos")]
+		public List<ListNeuronsResponse.NeuronInfosItemRecord> NeuronInfos { get; set; }
+
+		[CandidName("full_neurons")]
+		public List<Neuron> FullNeurons { get; set; }
+
+		public ListNeuronsResponse(List<ListNeuronsResponse.NeuronInfosItemRecord> neuronInfos, List<Neuron> fullNeurons)
 		{
-			[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("0")]
-			public ulong F0 { get; set; }
-			
-			[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("1")]
-			public NeuronInfo F1 { get; set; }
-			
+			this.NeuronInfos = neuronInfos;
+			this.FullNeurons = fullNeurons;
 		}
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("neuron_infos")]
-		public System.Collections.Generic.List<R0V0> NeuronInfos { get; set; }
-		
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("full_neurons")]
-		public System.Collections.Generic.List<Neuron> FullNeurons { get; set; }
-		
+
+		public ListNeuronsResponse()
+		{
+		}
+
+		public class NeuronInfosItemRecord
+		{
+			[CandidName("0")]
+			public ulong F0 { get; set; }
+
+			[CandidName("1")]
+			public NeuronInfo F1 { get; set; }
+
+			public NeuronInfosItemRecord(ulong f0, NeuronInfo f1)
+			{
+				this.F0 = f0;
+				this.F1 = f1;
+			}
+
+			public NeuronInfosItemRecord()
+			{
+			}
+		}
 	}
 }
-

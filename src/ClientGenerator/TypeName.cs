@@ -68,7 +68,6 @@ namespace EdjCase.ICP.ClientGenerator
 					builder.Append('.');
 				}
 			}
-			builder.Append(this.prefix);
 			builder.Append(this.name);
 			if (this.genericTypes.Any())
 			{

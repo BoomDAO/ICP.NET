@@ -1,10 +1,21 @@
+using EdjCase.ICP.Candid.Mapping;
+using Sample.Shared.Governance.Models;
+using EdjCase.ICP.Candid.Models;
+
 namespace Sample.Shared.Governance.Models
 {
 	public class Configure
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("operation")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<Operation> Operation { get; set; }
-		
+		[CandidName("operation")]
+		public OptionalValue<Operation> Operation { get; set; }
+
+		public Configure(OptionalValue<Operation> operation)
+		{
+			this.Operation = operation;
+		}
+
+		public Configure()
+		{
+		}
 	}
 }
-

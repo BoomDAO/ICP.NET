@@ -1,10 +1,20 @@
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid.Models;
+
 namespace Sample.Shared.Governance.Models
 {
 	public class RemoveHotKey
 	{
-		[EdjCase.ICP.Candid.Mapping.CandidNameAttribute("hot_key_to_remove")]
-		public EdjCase.ICP.Candid.Models.OptionalValue<EdjCase.ICP.Candid.Models.Principal> HotKeyToRemove { get; set; }
-		
+		[CandidName("hot_key_to_remove")]
+		public OptionalValue<Principal> HotKeyToRemove { get; set; }
+
+		public RemoveHotKey(OptionalValue<Principal> hotKeyToRemove)
+		{
+			this.HotKeyToRemove = hotKeyToRemove;
+		}
+
+		public RemoveHotKey()
+		{
+		}
 	}
 }
-
