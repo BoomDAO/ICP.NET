@@ -106,8 +106,12 @@ namespace EdjCase.ICP.ClientGenerator
 				case VariantSourceCodeType v:
 					{
 						TypeName variantName = this.BuildType(nameContext, parentType);
-						(ClassDeclarationSyntax classSyntax, EnumDeclarationSyntax typeSyntax) = this.GenerateVariant(variantName, v, parentType);
-						return new ResolvedType(variantName, classSyntax, typeSyntax);
+						(ClassDeclarationSyntax? classSyntax, EnumDeclarationSyntax enumSyntax) = this.GenerateVariant(variantName, v, parentType);
+						if(classSyntax != null)
+						{
+							return new ResolvedType(variantName, classSyntax, enumSyntax);
+					}
+						return new ResolvedType(variantName, enumSyntax);
 					}
 				case RecordSourceCodeType r:
 					{
@@ -155,7 +159,7 @@ namespace EdjCase.ICP.ClientGenerator
 		}
 
 
-		internal (ClassDeclarationSyntax Class, EnumDeclarationSyntax Type) GenerateVariant(
+		internal (ClassDeclarationSyntax? Class, EnumDeclarationSyntax Type) GenerateVariant(
 			TypeName variantTypeName,
 			VariantSourceCodeType variant,
 			TypeName? parentType
@@ -167,9 +171,23 @@ namespace EdjCase.ICP.ClientGenerator
 				.Select((o, i) => (o.Tag, o.Type == null ? null : this.ResolveType(o.Type, "O" + i, variantTypeName)))
 				.ToList();
 
+
 			List<(ValueName Name, TypeName? Type)> enumOptions = resolvedOptions
 				.Select(o => (o.Name, o.Type?.Name))
 				.ToList();
+
+			if (enumOptions.All(o => o.Type == null))
+			{
+				// If there are no types, just create an enum value
+
+				TypeName enumTypeName = this.BuildType(variantTypeName.GetName(), parentType);
+				EnumDeclarationSyntax enumSyntax = GenerateEnum(enumTypeName, enumOptions);
+				return (null, enumSyntax);
+			}
+			else
+			{
+				TypeName enumTypeName = this.BuildType(variantTypeName.GetName() + "Tag", parentType);
+
 
 			List<MethodDeclarationSyntax> methods = new();
 
@@ -245,6 +263,7 @@ namespace EdjCase.ICP.ClientGenerator
 			);
 			EnumDeclarationSyntax enumSyntax = GenerateEnum(enumTypeName, enumOptions);
 			return (classSyntax, enumSyntax);
+		}
 		}
 
 		private TypeName BuildType(string name, TypeName? parentType)
