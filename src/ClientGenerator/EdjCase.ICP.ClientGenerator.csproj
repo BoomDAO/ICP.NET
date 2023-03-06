@@ -21,6 +21,7 @@
 	  <GenerateDocumentationFile>True</GenerateDocumentationFile>
 	  <DocumentationFile>API.xml</DocumentationFile>
 	  <DocumentationMarkdown>$(MSBuildProjectDirectory)\API.md</DocumentationMarkdown>
+	  <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
   </PropertyGroup>
 
 	<ItemGroup>
