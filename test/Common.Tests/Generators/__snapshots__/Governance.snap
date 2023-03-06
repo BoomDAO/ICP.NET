@@ -542,7 +542,7 @@ namespace Test.Models
 		{
 		}
 
-		public static By NeuronIdOrSubaccount(By.ByO0 info)
+		public static By NeuronIdOrSubaccount(By.NeuronIdOrSubaccountRecord info)
 		{
 			return new By(ByTag.NeuronIdOrSubaccount, info);
 		}
@@ -557,10 +557,10 @@ namespace Test.Models
 			return new By(ByTag.Memo, info);
 		}
 
-		public By.ByO0 AsNeuronIdOrSubaccount()
+		public By.NeuronIdOrSubaccountRecord AsNeuronIdOrSubaccount()
 		{
 			this.ValidateTag(ByTag.NeuronIdOrSubaccount);
-			return (By.ByO0)this.Value!;
+			return (By.NeuronIdOrSubaccountRecord)this.Value!;
 		}
 
 		public ClaimOrRefreshNeuronFromAccount AsMemoAndController()
@@ -583,9 +583,9 @@ namespace Test.Models
 			}
 		}
 
-		public class ByO0
+		public class NeuronIdOrSubaccountRecord
 		{
-			public ByO0()
+			public NeuronIdOrSubaccountRecord()
 			{
 			}
 		}
@@ -593,7 +593,7 @@ namespace Test.Models
 
 	public enum ByTag
 	{
-		[VariantOptionType(typeof(By.ByO0))]
+		[VariantOptionType(typeof(By.NeuronIdOrSubaccountRecord))]
 		NeuronIdOrSubaccount,
 		[VariantOptionType(typeof(ClaimOrRefreshNeuronFromAccount))]
 		MemoAndController,
@@ -994,7 +994,7 @@ namespace Test.Models
 			return new Command1(Command1Tag.Split, info);
 		}
 
-		public static Command1 Follow(Command1.Command1O3 info)
+		public static Command1 Follow(Command1.FollowRecord info)
 		{
 			return new Command1(Command1Tag.Follow, info);
 		}
@@ -1004,17 +1004,17 @@ namespace Test.Models
 			return new Command1(Command1Tag.ClaimOrRefresh, info);
 		}
 
-		public static Command1 Configure(Command1.Command1O5 info)
+		public static Command1 Configure(Command1.ConfigureRecord info)
 		{
 			return new Command1(Command1Tag.Configure, info);
 		}
 
-		public static Command1 RegisterVote(Command1.Command1O6 info)
+		public static Command1 RegisterVote(Command1.RegisterVoteRecord info)
 		{
 			return new Command1(Command1Tag.RegisterVote, info);
 		}
 
-		public static Command1 Merge(Command1.Command1O7 info)
+		public static Command1 Merge(Command1.MergeRecord info)
 		{
 			return new Command1(Command1Tag.Merge, info);
 		}
@@ -1057,10 +1057,10 @@ namespace Test.Models
 			return (SpawnResponse)this.Value!;
 		}
 
-		public Command1.Command1O3 AsFollow()
+		public Command1.FollowRecord AsFollow()
 		{
 			this.ValidateTag(Command1Tag.Follow);
-			return (Command1.Command1O3)this.Value!;
+			return (Command1.FollowRecord)this.Value!;
 		}
 
 		public ClaimOrRefreshResponse AsClaimOrRefresh()
@@ -1069,22 +1069,22 @@ namespace Test.Models
 			return (ClaimOrRefreshResponse)this.Value!;
 		}
 
-		public Command1.Command1O5 AsConfigure()
+		public Command1.ConfigureRecord AsConfigure()
 		{
 			this.ValidateTag(Command1Tag.Configure);
-			return (Command1.Command1O5)this.Value!;
+			return (Command1.ConfigureRecord)this.Value!;
 		}
 
-		public Command1.Command1O6 AsRegisterVote()
+		public Command1.RegisterVoteRecord AsRegisterVote()
 		{
 			this.ValidateTag(Command1Tag.RegisterVote);
-			return (Command1.Command1O6)this.Value!;
+			return (Command1.RegisterVoteRecord)this.Value!;
 		}
 
-		public Command1.Command1O7 AsMerge()
+		public Command1.MergeRecord AsMerge()
 		{
 			this.ValidateTag(Command1Tag.Merge);
-			return (Command1.Command1O7)this.Value!;
+			return (Command1.MergeRecord)this.Value!;
 		}
 
 		public SpawnResponse AsDisburseToNeuron()
@@ -1119,30 +1119,30 @@ namespace Test.Models
 			}
 		}
 
-		public class Command1O3
+		public class FollowRecord
 		{
-			public Command1O3()
+			public FollowRecord()
 			{
 			}
 		}
 
-		public class Command1O5
+		public class ConfigureRecord
 		{
-			public Command1O5()
+			public ConfigureRecord()
 			{
 			}
 		}
 
-		public class Command1O6
+		public class RegisterVoteRecord
 		{
-			public Command1O6()
+			public RegisterVoteRecord()
 			{
 			}
 		}
 
-		public class Command1O7
+		public class MergeRecord
 		{
-			public Command1O7()
+			public MergeRecord()
 			{
 			}
 		}
@@ -1156,15 +1156,15 @@ namespace Test.Models
 		Spawn,
 		[VariantOptionType(typeof(SpawnResponse))]
 		Split,
-		[VariantOptionType(typeof(Command1.Command1O3))]
+		[VariantOptionType(typeof(Command1.FollowRecord))]
 		Follow,
 		[VariantOptionType(typeof(ClaimOrRefreshResponse))]
 		ClaimOrRefresh,
-		[VariantOptionType(typeof(Command1.Command1O5))]
+		[VariantOptionType(typeof(Command1.ConfigureRecord))]
 		Configure,
-		[VariantOptionType(typeof(Command1.Command1O6))]
+		[VariantOptionType(typeof(Command1.RegisterVoteRecord))]
 		RegisterVote,
-		[VariantOptionType(typeof(Command1.Command1O7))]
+		[VariantOptionType(typeof(Command1.MergeRecord))]
 		Merge,
 		[VariantOptionType(typeof(SpawnResponse))]
 		DisburseToNeuron,
@@ -1593,7 +1593,7 @@ namespace Test.Models
 	public class Governance
 	{
 		[CandidName("default_followees")]
-		public List<Governance.GovernanceR0V0> DefaultFollowees { get; set; }
+		public List<Governance.DefaultFolloweesItemRecord> DefaultFollowees { get; set; }
 
 		[CandidName("wait_for_quiet_threshold_seconds")]
 		public ulong WaitForQuietThresholdSeconds { get; set; }
@@ -1617,18 +1617,18 @@ namespace Test.Models
 		public ulong ShortVotingPeriodSeconds { get; set; }
 
 		[CandidName("proposals")]
-		public List<Governance.GovernanceR8V0> Proposals { get; set; }
+		public List<Governance.ProposalsItemRecord> Proposals { get; set; }
 
 		[CandidName("in_flight_commands")]
-		public List<Governance.GovernanceR9V0> InFlightCommands { get; set; }
+		public List<Governance.InFlightCommandsItemRecord> InFlightCommands { get; set; }
 
 		[CandidName("neurons")]
-		public List<Governance.GovernanceR10V0> Neurons { get; set; }
+		public List<Governance.NeuronsItemRecord> Neurons { get; set; }
 
 		[CandidName("genesis_timestamp_seconds")]
 		public ulong GenesisTimestampSeconds { get; set; }
 
-		public Governance(List<Governance.GovernanceR0V0> defaultFollowees, ulong waitForQuietThresholdSeconds, OptionalValue<GovernanceCachedMetrics> metrics, List<NodeProvider> nodeProviders, OptionalValue<NetworkEconomics> economics, OptionalValue<RewardEvent> latestRewardEvent, List<NeuronStakeTransfer> toClaimTransfers, ulong shortVotingPeriodSeconds, List<Governance.GovernanceR8V0> proposals, List<Governance.GovernanceR9V0> inFlightCommands, List<Governance.GovernanceR10V0> neurons, ulong genesisTimestampSeconds)
+		public Governance(List<Governance.DefaultFolloweesItemRecord> defaultFollowees, ulong waitForQuietThresholdSeconds, OptionalValue<GovernanceCachedMetrics> metrics, List<NodeProvider> nodeProviders, OptionalValue<NetworkEconomics> economics, OptionalValue<RewardEvent> latestRewardEvent, List<NeuronStakeTransfer> toClaimTransfers, ulong shortVotingPeriodSeconds, List<Governance.ProposalsItemRecord> proposals, List<Governance.InFlightCommandsItemRecord> inFlightCommands, List<Governance.NeuronsItemRecord> neurons, ulong genesisTimestampSeconds)
 		{
 			this.DefaultFollowees = defaultFollowees;
 			this.WaitForQuietThresholdSeconds = waitForQuietThresholdSeconds;
@@ -1648,7 +1648,7 @@ namespace Test.Models
 		{
 		}
 
-		public class GovernanceR0V0
+		public class DefaultFolloweesItemRecord
 		{
 			[CandidName("0")]
 			public int F0 { get; set; }
@@ -1656,18 +1656,18 @@ namespace Test.Models
 			[CandidName("1")]
 			public Followees F1 { get; set; }
 
-			public GovernanceR0V0(int f0, Followees f1)
+			public DefaultFolloweesItemRecord(int f0, Followees f1)
 			{
 				this.F0 = f0;
 				this.F1 = f1;
 			}
 
-			public GovernanceR0V0()
+			public DefaultFolloweesItemRecord()
 			{
 			}
 		}
 
-		public class GovernanceR8V0
+		public class ProposalsItemRecord
 		{
 			[CandidName("0")]
 			public ulong F0 { get; set; }
@@ -1675,18 +1675,18 @@ namespace Test.Models
 			[CandidName("1")]
 			public ProposalData F1 { get; set; }
 
-			public GovernanceR8V0(ulong f0, ProposalData f1)
+			public ProposalsItemRecord(ulong f0, ProposalData f1)
 			{
 				this.F0 = f0;
 				this.F1 = f1;
 			}
 
-			public GovernanceR8V0()
+			public ProposalsItemRecord()
 			{
 			}
 		}
 
-		public class GovernanceR9V0
+		public class InFlightCommandsItemRecord
 		{
 			[CandidName("0")]
 			public ulong F0 { get; set; }
@@ -1694,18 +1694,18 @@ namespace Test.Models
 			[CandidName("1")]
 			public NeuronInFlightCommand F1 { get; set; }
 
-			public GovernanceR9V0(ulong f0, NeuronInFlightCommand f1)
+			public InFlightCommandsItemRecord(ulong f0, NeuronInFlightCommand f1)
 			{
 				this.F0 = f0;
 				this.F1 = f1;
 			}
 
-			public GovernanceR9V0()
+			public InFlightCommandsItemRecord()
 			{
 			}
 		}
 
-		public class GovernanceR10V0
+		public class NeuronsItemRecord
 		{
 			[CandidName("0")]
 			public ulong F0 { get; set; }
@@ -1713,13 +1713,13 @@ namespace Test.Models
 			[CandidName("1")]
 			public Neuron F1 { get; set; }
 
-			public GovernanceR10V0(ulong f0, Neuron f1)
+			public NeuronsItemRecord(ulong f0, Neuron f1)
 			{
 				this.F0 = f0;
 				this.F1 = f1;
 			}
 
-			public GovernanceR10V0()
+			public NeuronsItemRecord()
 			{
 			}
 		}
@@ -1737,7 +1737,7 @@ namespace Test.Models
 	public class GovernanceCachedMetrics
 	{
 		[CandidName("not_dissolving_neurons_e8s_buckets")]
-		public List<GovernanceCachedMetrics.GovernanceCachedMetricsR0V0> NotDissolvingNeuronsE8sBuckets { get; set; }
+		public List<GovernanceCachedMetrics.NotDissolvingNeuronsE8sBucketsItemRecord> NotDissolvingNeuronsE8sBuckets { get; set; }
 
 		[CandidName("garbage_collectable_neurons_count")]
 		public ulong GarbageCollectableNeuronsCount { get; set; }
@@ -1746,7 +1746,7 @@ namespace Test.Models
 		public ulong NeuronsWithInvalidStakeCount { get; set; }
 
 		[CandidName("not_dissolving_neurons_count_buckets")]
-		public List<GovernanceCachedMetrics.GovernanceCachedMetricsR3V0> NotDissolvingNeuronsCountBuckets { get; set; }
+		public List<GovernanceCachedMetrics.NotDissolvingNeuronsCountBucketsItemRecord> NotDissolvingNeuronsCountBuckets { get; set; }
 
 		[CandidName("total_supply_icp")]
 		public ulong TotalSupplyIcp { get; set; }
@@ -1770,13 +1770,13 @@ namespace Test.Models
 		public ulong NeuronsWithLessThan6MonthsDissolveDelayE8s { get; set; }
 
 		[CandidName("dissolving_neurons_count_buckets")]
-		public List<GovernanceCachedMetrics.GovernanceCachedMetricsR11V0> DissolvingNeuronsCountBuckets { get; set; }
+		public List<GovernanceCachedMetrics.DissolvingNeuronsCountBucketsItemRecord> DissolvingNeuronsCountBuckets { get; set; }
 
 		[CandidName("dissolving_neurons_count")]
 		public ulong DissolvingNeuronsCount { get; set; }
 
 		[CandidName("dissolving_neurons_e8s_buckets")]
-		public List<GovernanceCachedMetrics.GovernanceCachedMetricsR13V0> DissolvingNeuronsE8sBuckets { get; set; }
+		public List<GovernanceCachedMetrics.DissolvingNeuronsE8sBucketsItemRecord> DissolvingNeuronsE8sBuckets { get; set; }
 
 		[CandidName("community_fund_total_staked_e8s")]
 		public ulong CommunityFundTotalStakedE8s { get; set; }
@@ -1784,7 +1784,7 @@ namespace Test.Models
 		[CandidName("timestamp_seconds")]
 		public ulong TimestampSeconds { get; set; }
 
-		public GovernanceCachedMetrics(List<GovernanceCachedMetrics.GovernanceCachedMetricsR0V0> notDissolvingNeuronsE8sBuckets, ulong garbageCollectableNeuronsCount, ulong neuronsWithInvalidStakeCount, List<GovernanceCachedMetrics.GovernanceCachedMetricsR3V0> notDissolvingNeuronsCountBuckets, ulong totalSupplyIcp, ulong neuronsWithLessThan6MonthsDissolveDelayCount, ulong dissolvedNeuronsCount, ulong totalStakedE8s, ulong notDissolvingNeuronsCount, ulong dissolvedNeuronsE8s, ulong neuronsWithLessThan6MonthsDissolveDelayE8s, List<GovernanceCachedMetrics.GovernanceCachedMetricsR11V0> dissolvingNeuronsCountBuckets, ulong dissolvingNeuronsCount, List<GovernanceCachedMetrics.GovernanceCachedMetricsR13V0> dissolvingNeuronsE8sBuckets, ulong communityFundTotalStakedE8s, ulong timestampSeconds)
+		public GovernanceCachedMetrics(List<GovernanceCachedMetrics.NotDissolvingNeuronsE8sBucketsItemRecord> notDissolvingNeuronsE8sBuckets, ulong garbageCollectableNeuronsCount, ulong neuronsWithInvalidStakeCount, List<GovernanceCachedMetrics.NotDissolvingNeuronsCountBucketsItemRecord> notDissolvingNeuronsCountBuckets, ulong totalSupplyIcp, ulong neuronsWithLessThan6MonthsDissolveDelayCount, ulong dissolvedNeuronsCount, ulong totalStakedE8s, ulong notDissolvingNeuronsCount, ulong dissolvedNeuronsE8s, ulong neuronsWithLessThan6MonthsDissolveDelayE8s, List<GovernanceCachedMetrics.DissolvingNeuronsCountBucketsItemRecord> dissolvingNeuronsCountBuckets, ulong dissolvingNeuronsCount, List<GovernanceCachedMetrics.DissolvingNeuronsE8sBucketsItemRecord> dissolvingNeuronsE8sBuckets, ulong communityFundTotalStakedE8s, ulong timestampSeconds)
 		{
 			this.NotDissolvingNeuronsE8sBuckets = notDissolvingNeuronsE8sBuckets;
 			this.GarbageCollectableNeuronsCount = garbageCollectableNeuronsCount;
@@ -1808,7 +1808,7 @@ namespace Test.Models
 		{
 		}
 
-		public class GovernanceCachedMetricsR0V0
+		public class NotDissolvingNeuronsE8sBucketsItemRecord
 		{
 			[CandidName("0")]
 			public ulong F0 { get; set; }
@@ -1816,18 +1816,18 @@ namespace Test.Models
 			[CandidName("1")]
 			public double F1 { get; set; }
 
-			public GovernanceCachedMetricsR0V0(ulong f0, double f1)
+			public NotDissolvingNeuronsE8sBucketsItemRecord(ulong f0, double f1)
 			{
 				this.F0 = f0;
 				this.F1 = f1;
 			}
 
-			public GovernanceCachedMetricsR0V0()
+			public NotDissolvingNeuronsE8sBucketsItemRecord()
 			{
 			}
 		}
 
-		public class GovernanceCachedMetricsR3V0
+		public class NotDissolvingNeuronsCountBucketsItemRecord
 		{
 			[CandidName("0")]
 			public ulong F0 { get; set; }
@@ -1835,18 +1835,18 @@ namespace Test.Models
 			[CandidName("1")]
 			public ulong F1 { get; set; }
 
-			public GovernanceCachedMetricsR3V0(ulong f0, ulong f1)
+			public NotDissolvingNeuronsCountBucketsItemRecord(ulong f0, ulong f1)
 			{
 				this.F0 = f0;
 				this.F1 = f1;
 			}
 
-			public GovernanceCachedMetricsR3V0()
+			public NotDissolvingNeuronsCountBucketsItemRecord()
 			{
 			}
 		}
 
-		public class GovernanceCachedMetricsR11V0
+		public class DissolvingNeuronsCountBucketsItemRecord
 		{
 			[CandidName("0")]
 			public ulong F0 { get; set; }
@@ -1854,18 +1854,18 @@ namespace Test.Models
 			[CandidName("1")]
 			public ulong F1 { get; set; }
 
-			public GovernanceCachedMetricsR11V0(ulong f0, ulong f1)
+			public DissolvingNeuronsCountBucketsItemRecord(ulong f0, ulong f1)
 			{
 				this.F0 = f0;
 				this.F1 = f1;
 			}
 
-			public GovernanceCachedMetricsR11V0()
+			public DissolvingNeuronsCountBucketsItemRecord()
 			{
 			}
 		}
 
-		public class GovernanceCachedMetricsR13V0
+		public class DissolvingNeuronsE8sBucketsItemRecord
 		{
 			[CandidName("0")]
 			public ulong F0 { get; set; }
@@ -1873,13 +1873,13 @@ namespace Test.Models
 			[CandidName("1")]
 			public double F1 { get; set; }
 
-			public GovernanceCachedMetricsR13V0(ulong f0, double f1)
+			public DissolvingNeuronsE8sBucketsItemRecord(ulong f0, double f1)
 			{
 				this.F0 = f0;
 				this.F1 = f1;
 			}
 
-			public GovernanceCachedMetricsR13V0()
+			public DissolvingNeuronsE8sBucketsItemRecord()
 			{
 			}
 		}
@@ -2051,12 +2051,12 @@ namespace Test.Models
 	public class ListNeuronsResponse
 	{
 		[CandidName("neuron_infos")]
-		public List<ListNeuronsResponse.ListNeuronsResponseR0V0> NeuronInfos { get; set; }
+		public List<ListNeuronsResponse.NeuronInfosItemRecord> NeuronInfos { get; set; }
 
 		[CandidName("full_neurons")]
 		public List<Neuron> FullNeurons { get; set; }
 
-		public ListNeuronsResponse(List<ListNeuronsResponse.ListNeuronsResponseR0V0> neuronInfos, List<Neuron> fullNeurons)
+		public ListNeuronsResponse(List<ListNeuronsResponse.NeuronInfosItemRecord> neuronInfos, List<Neuron> fullNeurons)
 		{
 			this.NeuronInfos = neuronInfos;
 			this.FullNeurons = fullNeurons;
@@ -2066,7 +2066,7 @@ namespace Test.Models
 		{
 		}
 
-		public class ListNeuronsResponseR0V0
+		public class NeuronInfosItemRecord
 		{
 			[CandidName("0")]
 			public ulong F0 { get; set; }
@@ -2074,13 +2074,13 @@ namespace Test.Models
 			[CandidName("1")]
 			public NeuronInfo F1 { get; set; }
 
-			public ListNeuronsResponseR0V0(ulong f0, NeuronInfo f1)
+			public NeuronInfosItemRecord(ulong f0, NeuronInfo f1)
 			{
 				this.F0 = f0;
 				this.F1 = f1;
 			}
 
-			public ListNeuronsResponseR0V0()
+			public NeuronInfosItemRecord()
 			{
 			}
 		}
@@ -2451,7 +2451,7 @@ namespace Test.Models
 		public OptionalValue<DissolveState> DissolveState { get; set; }
 
 		[CandidName("followees")]
-		public List<Neuron.NeuronR13V0> Followees { get; set; }
+		public List<Neuron.FolloweesItemRecord> Followees { get; set; }
 
 		[CandidName("neuron_fees_e8s")]
 		public ulong NeuronFeesE8s { get; set; }
@@ -2462,7 +2462,7 @@ namespace Test.Models
 		[CandidName("known_neuron_data")]
 		public OptionalValue<KnownNeuronData> KnownNeuronData { get; set; }
 
-		public Neuron(OptionalValue<NeuronId> id, OptionalValue<Principal> controller, List<BallotInfo> recentBallots, bool kycVerified, bool notForProfit, ulong maturityE8sEquivalent, ulong cachedNeuronStakeE8s, ulong createdTimestampSeconds, ulong agingSinceTimestampSeconds, List<Principal> hotKeys, List<byte> account, OptionalValue<ulong> joinedCommunityFundTimestampSeconds, OptionalValue<DissolveState> dissolveState, List<Neuron.NeuronR13V0> followees, ulong neuronFeesE8s, OptionalValue<NeuronStakeTransfer> transfer, OptionalValue<KnownNeuronData> knownNeuronData)
+		public Neuron(OptionalValue<NeuronId> id, OptionalValue<Principal> controller, List<BallotInfo> recentBallots, bool kycVerified, bool notForProfit, ulong maturityE8sEquivalent, ulong cachedNeuronStakeE8s, ulong createdTimestampSeconds, ulong agingSinceTimestampSeconds, List<Principal> hotKeys, List<byte> account, OptionalValue<ulong> joinedCommunityFundTimestampSeconds, OptionalValue<DissolveState> dissolveState, List<Neuron.FolloweesItemRecord> followees, ulong neuronFeesE8s, OptionalValue<NeuronStakeTransfer> transfer, OptionalValue<KnownNeuronData> knownNeuronData)
 		{
 			this.Id = id;
 			this.Controller = controller;
@@ -2487,7 +2487,7 @@ namespace Test.Models
 		{
 		}
 
-		public class NeuronR13V0
+		public class FolloweesItemRecord
 		{
 			[CandidName("0")]
 			public int F0 { get; set; }
@@ -2495,13 +2495,13 @@ namespace Test.Models
 			[CandidName("1")]
 			public Followees F1 { get; set; }
 
-			public NeuronR13V0(int f0, Followees f1)
+			public FolloweesItemRecord(int f0, Followees f1)
 			{
 				this.F0 = f0;
 				this.F1 = f1;
 			}
 
-			public NeuronR13V0()
+			public FolloweesItemRecord()
 			{
 			}
 		}
@@ -2800,12 +2800,12 @@ namespace Test.Models
 			return new Operation(OperationTag.AddHotKey, info);
 		}
 
-		public static Operation StopDissolving(Operation.OperationO2 info)
+		public static Operation StopDissolving(Operation.StopDissolvingRecord info)
 		{
 			return new Operation(OperationTag.StopDissolving, info);
 		}
 
-		public static Operation StartDissolving(Operation.OperationO3 info)
+		public static Operation StartDissolving(Operation.StartDissolvingRecord info)
 		{
 			return new Operation(OperationTag.StartDissolving, info);
 		}
@@ -2815,7 +2815,7 @@ namespace Test.Models
 			return new Operation(OperationTag.IncreaseDissolveDelay, info);
 		}
 
-		public static Operation JoinCommunityFund(Operation.OperationO5 info)
+		public static Operation JoinCommunityFund(Operation.JoinCommunityFundRecord info)
 		{
 			return new Operation(OperationTag.JoinCommunityFund, info);
 		}
@@ -2837,16 +2837,16 @@ namespace Test.Models
 			return (AddHotKey)this.Value!;
 		}
 
-		public Operation.OperationO2 AsStopDissolving()
+		public Operation.StopDissolvingRecord AsStopDissolving()
 		{
 			this.ValidateTag(OperationTag.StopDissolving);
-			return (Operation.OperationO2)this.Value!;
+			return (Operation.StopDissolvingRecord)this.Value!;
 		}
 
-		public Operation.OperationO3 AsStartDissolving()
+		public Operation.StartDissolvingRecord AsStartDissolving()
 		{
 			this.ValidateTag(OperationTag.StartDissolving);
-			return (Operation.OperationO3)this.Value!;
+			return (Operation.StartDissolvingRecord)this.Value!;
 		}
 
 		public IncreaseDissolveDelay AsIncreaseDissolveDelay()
@@ -2855,10 +2855,10 @@ namespace Test.Models
 			return (IncreaseDissolveDelay)this.Value!;
 		}
 
-		public Operation.OperationO5 AsJoinCommunityFund()
+		public Operation.JoinCommunityFundRecord AsJoinCommunityFund()
 		{
 			this.ValidateTag(OperationTag.JoinCommunityFund);
-			return (Operation.OperationO5)this.Value!;
+			return (Operation.JoinCommunityFundRecord)this.Value!;
 		}
 
 		public SetDissolveTimestamp AsSetDissolveTimestamp()
@@ -2875,23 +2875,23 @@ namespace Test.Models
 			}
 		}
 
-		public class OperationO2
+		public class StopDissolvingRecord
 		{
-			public OperationO2()
+			public StopDissolvingRecord()
 			{
 			}
 		}
 
-		public class OperationO3
+		public class StartDissolvingRecord
 		{
-			public OperationO3()
+			public StartDissolvingRecord()
 			{
 			}
 		}
 
-		public class OperationO5
+		public class JoinCommunityFundRecord
 		{
-			public OperationO5()
+			public JoinCommunityFundRecord()
 			{
 			}
 		}
@@ -2903,13 +2903,13 @@ namespace Test.Models
 		RemoveHotKey,
 		[VariantOptionType(typeof(AddHotKey))]
 		AddHotKey,
-		[VariantOptionType(typeof(Operation.OperationO2))]
+		[VariantOptionType(typeof(Operation.StopDissolvingRecord))]
 		StopDissolving,
-		[VariantOptionType(typeof(Operation.OperationO3))]
+		[VariantOptionType(typeof(Operation.StartDissolvingRecord))]
 		StartDissolving,
 		[VariantOptionType(typeof(IncreaseDissolveDelay))]
 		IncreaseDissolveDelay,
-		[VariantOptionType(typeof(Operation.OperationO5))]
+		[VariantOptionType(typeof(Operation.JoinCommunityFundRecord))]
 		JoinCommunityFund,
 		[VariantOptionType(typeof(SetDissolveTimestamp))]
 		SetDissolveTimestamp
@@ -2970,7 +2970,7 @@ namespace Test.Models
 		public OptionalValue<GovernanceError> FailureReason { get; set; }
 
 		[CandidName("ballots")]
-		public List<ProposalData.ProposalDataR2V0> Ballots { get; set; }
+		public List<ProposalData.BallotsItemRecord> Ballots { get; set; }
 
 		[CandidName("proposal_timestamp_seconds")]
 		public ulong ProposalTimestampSeconds { get; set; }
@@ -3002,7 +3002,7 @@ namespace Test.Models
 		[CandidName("executed_timestamp_seconds")]
 		public ulong ExecutedTimestampSeconds { get; set; }
 
-		public ProposalData(OptionalValue<NeuronId> id, OptionalValue<GovernanceError> failureReason, List<ProposalData.ProposalDataR2V0> ballots, ulong proposalTimestampSeconds, ulong rewardEventRound, ulong failedTimestampSeconds, ulong rejectCostE8s, OptionalValue<Tally> latestTally, ulong decidedTimestampSeconds, OptionalValue<Proposal> proposal, OptionalValue<NeuronId> proposer, OptionalValue<WaitForQuietState> waitForQuietState, ulong executedTimestampSeconds)
+		public ProposalData(OptionalValue<NeuronId> id, OptionalValue<GovernanceError> failureReason, List<ProposalData.BallotsItemRecord> ballots, ulong proposalTimestampSeconds, ulong rewardEventRound, ulong failedTimestampSeconds, ulong rejectCostE8s, OptionalValue<Tally> latestTally, ulong decidedTimestampSeconds, OptionalValue<Proposal> proposal, OptionalValue<NeuronId> proposer, OptionalValue<WaitForQuietState> waitForQuietState, ulong executedTimestampSeconds)
 		{
 			this.Id = id;
 			this.FailureReason = failureReason;
@@ -3023,7 +3023,7 @@ namespace Test.Models
 		{
 		}
 
-		public class ProposalDataR2V0
+		public class BallotsItemRecord
 		{
 			[CandidName("0")]
 			public ulong F0 { get; set; }
@@ -3031,13 +3031,13 @@ namespace Test.Models
 			[CandidName("1")]
 			public Ballot F1 { get; set; }
 
-			public ProposalDataR2V0(ulong f0, Ballot f1)
+			public BallotsItemRecord(ulong f0, Ballot f1)
 			{
 				this.F0 = f0;
 				this.F1 = f1;
 			}
 
-			public ProposalDataR2V0()
+			public BallotsItemRecord()
 			{
 			}
 		}
@@ -3068,7 +3068,7 @@ namespace Test.Models
 		public OptionalValue<GovernanceError> FailureReason { get; set; }
 
 		[CandidName("ballots")]
-		public List<ProposalInfo.ProposalInfoR4V0> Ballots { get; set; }
+		public List<ProposalInfo.BallotsItemRecord> Ballots { get; set; }
 
 		[CandidName("proposal_timestamp_seconds")]
 		public ulong ProposalTimestampSeconds { get; set; }
@@ -3103,7 +3103,7 @@ namespace Test.Models
 		[CandidName("executed_timestamp_seconds")]
 		public ulong ExecutedTimestampSeconds { get; set; }
 
-		public ProposalInfo(OptionalValue<NeuronId> id, int status, int topic, OptionalValue<GovernanceError> failureReason, List<ProposalInfo.ProposalInfoR4V0> ballots, ulong proposalTimestampSeconds, ulong rewardEventRound, OptionalValue<ulong> deadlineTimestampSeconds, ulong failedTimestampSeconds, ulong rejectCostE8s, OptionalValue<Tally> latestTally, int rewardStatus, ulong decidedTimestampSeconds, OptionalValue<Proposal> proposal, OptionalValue<NeuronId> proposer, ulong executedTimestampSeconds)
+		public ProposalInfo(OptionalValue<NeuronId> id, int status, int topic, OptionalValue<GovernanceError> failureReason, List<ProposalInfo.BallotsItemRecord> ballots, ulong proposalTimestampSeconds, ulong rewardEventRound, OptionalValue<ulong> deadlineTimestampSeconds, ulong failedTimestampSeconds, ulong rejectCostE8s, OptionalValue<Tally> latestTally, int rewardStatus, ulong decidedTimestampSeconds, OptionalValue<Proposal> proposal, OptionalValue<NeuronId> proposer, ulong executedTimestampSeconds)
 		{
 			this.Id = id;
 			this.Status = status;
@@ -3127,7 +3127,7 @@ namespace Test.Models
 		{
 		}
 
-		public class ProposalInfoR4V0
+		public class BallotsItemRecord
 		{
 			[CandidName("0")]
 			public ulong F0 { get; set; }
@@ -3135,13 +3135,13 @@ namespace Test.Models
 			[CandidName("1")]
 			public Ballot F1 { get; set; }
 
-			public ProposalInfoR4V0(ulong f0, Ballot f1)
+			public BallotsItemRecord(ulong f0, Ballot f1)
 			{
 				this.F0 = f0;
 				this.F1 = f1;
 			}
 
-			public ProposalInfoR4V0()
+			public BallotsItemRecord()
 			{
 			}
 		}
@@ -3815,9 +3815,9 @@ namespace Test.Models
 	public class SetDefaultFollowees
 	{
 		[CandidName("default_followees")]
-		public List<SetDefaultFollowees.SetDefaultFolloweesR0V0> DefaultFollowees { get; set; }
+		public List<SetDefaultFollowees.DefaultFolloweesItemRecord> DefaultFollowees { get; set; }
 
-		public SetDefaultFollowees(List<SetDefaultFollowees.SetDefaultFolloweesR0V0> defaultFollowees)
+		public SetDefaultFollowees(List<SetDefaultFollowees.DefaultFolloweesItemRecord> defaultFollowees)
 		{
 			this.DefaultFollowees = defaultFollowees;
 		}
@@ -3826,7 +3826,7 @@ namespace Test.Models
 		{
 		}
 
-		public class SetDefaultFolloweesR0V0
+		public class DefaultFolloweesItemRecord
 		{
 			[CandidName("0")]
 			public int F0 { get; set; }
@@ -3834,13 +3834,13 @@ namespace Test.Models
 			[CandidName("1")]
 			public Followees F1 { get; set; }
 
-			public SetDefaultFolloweesR0V0(int f0, Followees f1)
+			public DefaultFolloweesItemRecord(int f0, Followees f1)
 			{
 				this.F0 = f0;
 				this.F1 = f1;
 			}
 
-			public SetDefaultFolloweesR0V0()
+			public DefaultFolloweesItemRecord()
 			{
 			}
 		}
