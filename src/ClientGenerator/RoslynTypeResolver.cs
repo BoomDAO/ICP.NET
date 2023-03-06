@@ -67,9 +67,16 @@ namespace EdjCase.ICP.ClientGenerator
 			{
 				case CompiledTypeSourceCodeType c:
 					{
-						List<ResolvedType> genericTypes = c.GenericTypes
-							.Select((t, i) => this.ResolveType(t, nameContext + "V" + i, parentType))
-							.ToList();
+						ResolvedType? resolvedGenericType = null;
+						MemberDeclarationSyntax[]? innerTypes = null;
+						if (c.GenericType != null)
+						{
+							resolvedGenericType = this.ResolveType(c.GenericType, nameContext + "Item", parentType);
+							if(resolvedGenericType.GeneratedSyntax != null)
+							{
+								innerTypes = resolvedGenericType.GeneratedSyntax;
+							}
+						}
 
 						string typeName = c.Type.Name;
 						if (c.Type.IsGenericTypeDefinition)
@@ -81,13 +88,12 @@ namespace EdjCase.ICP.ClientGenerator
 							typeName,
 							c.Type.Namespace,
 							prefix: null,
-							genericTypes.Select(t => t.Name).ToArray()
+							resolvedGenericType == null ? Array.Empty<TypeName>() : new[]
+							{
+								resolvedGenericType.Name
+							}
 						);
 
-						MemberDeclarationSyntax[] innerTypes = genericTypes
-							.Where(r => r.GeneratedSyntax != null)
-							.SelectMany(t => t.GeneratedSyntax!)
-							.ToArray();
 						return new ResolvedType(cType, innerTypes);
 					}
 				case ReferenceSourceCodeType re:
@@ -105,6 +111,10 @@ namespace EdjCase.ICP.ClientGenerator
 					}
 				case VariantSourceCodeType v:
 					{
+						if (parentType != null)
+						{
+							nameContext += "Variant";
+						}
 						TypeName variantName = this.BuildType(nameContext, parentType);
 						(ClassDeclarationSyntax? classSyntax, EnumDeclarationSyntax enumSyntax) = this.GenerateVariant(variantName, v, parentType);
 						if (classSyntax != null)
@@ -115,6 +125,10 @@ namespace EdjCase.ICP.ClientGenerator
 					}
 				case RecordSourceCodeType r:
 					{
+						if(parentType != null)
+						{
+							nameContext += "Record";
+						}
 						TypeName recordName = this.BuildType(nameContext, parentType);
 						ClassDeclarationSyntax classSyntax = this.GenerateRecord(recordName, r);
 						return new ResolvedType(recordName, classSyntax);
@@ -167,7 +181,7 @@ namespace EdjCase.ICP.ClientGenerator
 		{
 
 			List<(ValueName Name, ResolvedType? Type)> resolvedOptions = variant.Options
-				.Select((o, i) => (o.Tag, o.Type == null ? null : this.ResolveType(o.Type, "O" + i, variantTypeName)))
+				.Select((o, i) => (o.Tag, o.Type == null ? null : this.ResolveType(o.Type, o.Tag.PropertyName, variantTypeName)))
 				.ToList();
 
 
@@ -515,7 +529,7 @@ namespace EdjCase.ICP.ClientGenerator
 		internal ClassDeclarationSyntax GenerateRecord(TypeName recordTypeName, RecordSourceCodeType record)
 		{
 			List<(ValueName Tag, ResolvedType Type)> resolvedFields = record.Fields
-				.Select((f, i) => (f.Tag, this.ResolveType(f.Type, "R" + i, parentType: recordTypeName)))
+				.Select((f, i) => (f.Tag, this.ResolveType(f.Type, f.Tag.PropertyName, parentType: recordTypeName)))
 				.ToList();
 			List<MemberDeclarationSyntax> subItems = resolvedFields
 				.SelectMany(f => f.Type.GeneratedSyntax ?? Array.Empty<MemberDeclarationSyntax>())
