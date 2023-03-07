@@ -43,6 +43,16 @@ namespace Sample.Shared.Governance.Models
 			return new Action(ActionTag.RewardNodeProvider, info);
 		}
 
+		public static Action OpenSnsTokenSwap(OpenSnsTokenSwap info)
+		{
+			return new Action(ActionTag.OpenSnsTokenSwap, info);
+		}
+
+		public static Action SetSnsTokenSwapOpenTimeWindow(SetSnsTokenSwapOpenTimeWindow info)
+		{
+			return new Action(ActionTag.SetSnsTokenSwapOpenTimeWindow, info);
+		}
+
 		public static Action SetDefaultFollowees(SetDefaultFollowees info)
 		{
 			return new Action(ActionTag.SetDefaultFollowees, info);
@@ -95,6 +105,18 @@ namespace Sample.Shared.Governance.Models
 		{
 			this.ValidateTag(ActionTag.RewardNodeProvider);
 			return (RewardNodeProvider)this.Value!;
+		}
+
+		public OpenSnsTokenSwap AsOpenSnsTokenSwap()
+		{
+			this.ValidateTag(ActionTag.OpenSnsTokenSwap);
+			return (OpenSnsTokenSwap)this.Value!;
+		}
+
+		public SetSnsTokenSwapOpenTimeWindow AsSetSnsTokenSwapOpenTimeWindow()
+		{
+			this.ValidateTag(ActionTag.SetSnsTokenSwapOpenTimeWindow);
+			return (SetSnsTokenSwapOpenTimeWindow)this.Value!;
 		}
 
 		public SetDefaultFollowees AsSetDefaultFollowees()
@@ -152,6 +174,10 @@ namespace Sample.Shared.Governance.Models
 		ExecuteNnsFunction,
 		[VariantOptionType(typeof(RewardNodeProvider))]
 		RewardNodeProvider,
+		[VariantOptionType(typeof(OpenSnsTokenSwap))]
+		OpenSnsTokenSwap,
+		[VariantOptionType(typeof(SetSnsTokenSwapOpenTimeWindow))]
+		SetSnsTokenSwapOpenTimeWindow,
 		[VariantOptionType(typeof(SetDefaultFollowees))]
 		SetDefaultFollowees,
 		[VariantOptionType(typeof(RewardNodeProviders))]

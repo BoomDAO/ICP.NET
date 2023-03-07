@@ -23,7 +23,7 @@ namespace Sample.Shared.Governance.Models
 		{
 		}
 
-		public static Result4 Ok(NeuronInfo info)
+		public static Result4 Ok(RewardNodeProviders info)
 		{
 			return new Result4(Result4Tag.Ok, info);
 		}
@@ -33,10 +33,10 @@ namespace Sample.Shared.Governance.Models
 			return new Result4(Result4Tag.Err, info);
 		}
 
-		public NeuronInfo AsOk()
+		public RewardNodeProviders AsOk()
 		{
 			this.ValidateTag(Result4Tag.Ok);
-			return (NeuronInfo)this.Value!;
+			return (RewardNodeProviders)this.Value!;
 		}
 
 		public GovernanceError AsErr()
@@ -56,7 +56,7 @@ namespace Sample.Shared.Governance.Models
 
 	public enum Result4Tag
 	{
-		[VariantOptionType(typeof(NeuronInfo))]
+		[VariantOptionType(typeof(RewardNodeProviders))]
 		Ok,
 		[VariantOptionType(typeof(GovernanceError))]
 		Err

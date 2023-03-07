@@ -73,6 +73,11 @@ namespace Sample.Shared.Governance.Models
 			return new Command1(Command1Tag.MakeProposal, info);
 		}
 
+		public static Command1 StakeMaturity(StakeMaturityResponse info)
+		{
+			return new Command1(Command1Tag.StakeMaturity, info);
+		}
+
 		public static Command1 MergeMaturity(MergeMaturityResponse info)
 		{
 			return new Command1(Command1Tag.MergeMaturity, info);
@@ -141,6 +146,12 @@ namespace Sample.Shared.Governance.Models
 		{
 			this.ValidateTag(Command1Tag.MakeProposal);
 			return (MakeProposalResponse)this.Value!;
+		}
+
+		public StakeMaturityResponse AsStakeMaturity()
+		{
+			this.ValidateTag(Command1Tag.StakeMaturity);
+			return (StakeMaturityResponse)this.Value!;
 		}
 
 		public MergeMaturityResponse AsMergeMaturity()
@@ -214,6 +225,8 @@ namespace Sample.Shared.Governance.Models
 		DisburseToNeuron,
 		[VariantOptionType(typeof(MakeProposalResponse))]
 		MakeProposal,
+		[VariantOptionType(typeof(StakeMaturityResponse))]
+		StakeMaturity,
 		[VariantOptionType(typeof(MergeMaturityResponse))]
 		MergeMaturity,
 		[VariantOptionType(typeof(DisburseResponse))]

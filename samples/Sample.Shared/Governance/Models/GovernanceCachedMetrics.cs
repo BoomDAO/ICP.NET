@@ -27,11 +27,17 @@ namespace Sample.Shared.Governance.Models
 		[CandidName("dissolved_neurons_count")]
 		public ulong DissolvedNeuronsCount { get; set; }
 
+		[CandidName("community_fund_total_maturity_e8s_equivalent")]
+		public ulong CommunityFundTotalMaturityE8sEquivalent { get; set; }
+
 		[CandidName("total_staked_e8s")]
 		public ulong TotalStakedE8s { get; set; }
 
 		[CandidName("not_dissolving_neurons_count")]
 		public ulong NotDissolvingNeuronsCount { get; set; }
+
+		[CandidName("total_locked_e8s")]
+		public ulong TotalLockedE8s { get; set; }
 
 		[CandidName("dissolved_neurons_e8s")]
 		public ulong DissolvedNeuronsE8s { get; set; }
@@ -54,7 +60,7 @@ namespace Sample.Shared.Governance.Models
 		[CandidName("timestamp_seconds")]
 		public ulong TimestampSeconds { get; set; }
 
-		public GovernanceCachedMetrics(List<GovernanceCachedMetrics.NotDissolvingNeuronsE8sBucketsItemRecord> notDissolvingNeuronsE8sBuckets, ulong garbageCollectableNeuronsCount, ulong neuronsWithInvalidStakeCount, List<GovernanceCachedMetrics.NotDissolvingNeuronsCountBucketsItemRecord> notDissolvingNeuronsCountBuckets, ulong totalSupplyIcp, ulong neuronsWithLessThan6MonthsDissolveDelayCount, ulong dissolvedNeuronsCount, ulong totalStakedE8s, ulong notDissolvingNeuronsCount, ulong dissolvedNeuronsE8s, ulong neuronsWithLessThan6MonthsDissolveDelayE8s, List<GovernanceCachedMetrics.DissolvingNeuronsCountBucketsItemRecord> dissolvingNeuronsCountBuckets, ulong dissolvingNeuronsCount, List<GovernanceCachedMetrics.DissolvingNeuronsE8sBucketsItemRecord> dissolvingNeuronsE8sBuckets, ulong communityFundTotalStakedE8s, ulong timestampSeconds)
+		public GovernanceCachedMetrics(List<GovernanceCachedMetrics.NotDissolvingNeuronsE8sBucketsItemRecord> notDissolvingNeuronsE8sBuckets, ulong garbageCollectableNeuronsCount, ulong neuronsWithInvalidStakeCount, List<GovernanceCachedMetrics.NotDissolvingNeuronsCountBucketsItemRecord> notDissolvingNeuronsCountBuckets, ulong totalSupplyIcp, ulong neuronsWithLessThan6MonthsDissolveDelayCount, ulong dissolvedNeuronsCount, ulong communityFundTotalMaturityE8sEquivalent, ulong totalStakedE8s, ulong notDissolvingNeuronsCount, ulong totalLockedE8s, ulong dissolvedNeuronsE8s, ulong neuronsWithLessThan6MonthsDissolveDelayE8s, List<GovernanceCachedMetrics.DissolvingNeuronsCountBucketsItemRecord> dissolvingNeuronsCountBuckets, ulong dissolvingNeuronsCount, List<GovernanceCachedMetrics.DissolvingNeuronsE8sBucketsItemRecord> dissolvingNeuronsE8sBuckets, ulong communityFundTotalStakedE8s, ulong timestampSeconds)
 		{
 			this.NotDissolvingNeuronsE8sBuckets = notDissolvingNeuronsE8sBuckets;
 			this.GarbageCollectableNeuronsCount = garbageCollectableNeuronsCount;
@@ -63,8 +69,10 @@ namespace Sample.Shared.Governance.Models
 			this.TotalSupplyIcp = totalSupplyIcp;
 			this.NeuronsWithLessThan6MonthsDissolveDelayCount = neuronsWithLessThan6MonthsDissolveDelayCount;
 			this.DissolvedNeuronsCount = dissolvedNeuronsCount;
+			this.CommunityFundTotalMaturityE8sEquivalent = communityFundTotalMaturityE8sEquivalent;
 			this.TotalStakedE8s = totalStakedE8s;
 			this.NotDissolvingNeuronsCount = notDissolvingNeuronsCount;
+			this.TotalLockedE8s = totalLockedE8s;
 			this.DissolvedNeuronsE8s = dissolvedNeuronsE8s;
 			this.NeuronsWithLessThan6MonthsDissolveDelayE8s = neuronsWithLessThan6MonthsDissolveDelayE8s;
 			this.DissolvingNeuronsCountBuckets = dissolvingNeuronsCountBuckets;

@@ -23,7 +23,7 @@ namespace Sample.Shared.Governance.Models
 		{
 		}
 
-		public static Command2 Spawn(Spawn info)
+		public static Command2 Spawn(NeuronId info)
 		{
 			return new Command2(Command2Tag.Spawn, info);
 		}
@@ -48,6 +48,11 @@ namespace Sample.Shared.Governance.Models
 			return new Command2(Command2Tag.DisburseToNeuron, info);
 		}
 
+		public static Command2 SyncCommand(Command2.SyncCommandRecord info)
+		{
+			return new Command2(Command2Tag.SyncCommand, info);
+		}
+
 		public static Command2 ClaimOrRefreshNeuron(ClaimOrRefresh info)
 		{
 			return new Command2(Command2Tag.ClaimOrRefreshNeuron, info);
@@ -63,10 +68,10 @@ namespace Sample.Shared.Governance.Models
 			return new Command2(Command2Tag.Disburse, info);
 		}
 
-		public Spawn AsSpawn()
+		public NeuronId AsSpawn()
 		{
 			this.ValidateTag(Command2Tag.Spawn);
-			return (Spawn)this.Value!;
+			return (NeuronId)this.Value!;
 		}
 
 		public Split AsSplit()
@@ -91,6 +96,12 @@ namespace Sample.Shared.Governance.Models
 		{
 			this.ValidateTag(Command2Tag.DisburseToNeuron);
 			return (DisburseToNeuron)this.Value!;
+		}
+
+		public Command2.SyncCommandRecord AsSyncCommand()
+		{
+			this.ValidateTag(Command2Tag.SyncCommand);
+			return (Command2.SyncCommandRecord)this.Value!;
 		}
 
 		public ClaimOrRefresh AsClaimOrRefreshNeuron()
@@ -118,11 +129,18 @@ namespace Sample.Shared.Governance.Models
 				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
 			}
 		}
+
+		public class SyncCommandRecord
+		{
+			public SyncCommandRecord()
+			{
+			}
+		}
 	}
 
 	public enum Command2Tag
 	{
-		[VariantOptionType(typeof(Spawn))]
+		[VariantOptionType(typeof(NeuronId))]
 		Spawn,
 		[VariantOptionType(typeof(Split))]
 		Split,
@@ -132,6 +150,8 @@ namespace Sample.Shared.Governance.Models
 		Merge,
 		[VariantOptionType(typeof(DisburseToNeuron))]
 		DisburseToNeuron,
+		[VariantOptionType(typeof(Command2.SyncCommandRecord))]
+		SyncCommand,
 		[VariantOptionType(typeof(ClaimOrRefresh))]
 		ClaimOrRefreshNeuron,
 		[VariantOptionType(typeof(MergeMaturity))]

@@ -1,0 +1,18 @@
+namespace = "Sample.Shared"
+output-directory = "C:/Git/ICP.NET/samples/Sample.Shared"
+#url = "https://localhost:8000"
+
+[[clients]]
+name = "Dex"
+type = "file"
+file-path = "../ServiceDefinitionFiles/Dex.did"
+
+[[clients]]
+name = "Governance"
+type = "canister"
+canister-id = "rrkah-fqaaa-aaaaa-aaaaq-cai"
+
+[[clients]]
+name = "AddressBook"
+type = "file"
+file-path = "../ServiceDefinitionFiles/AddressBook.did"

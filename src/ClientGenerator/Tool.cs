@@ -7,91 +7,186 @@ using Microsoft.CodeAnalysis;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using Tomlyn.Model;
+using Microsoft.CodeAnalysis.Elfie.Serialization;
+using System.Xml.Linq;
 
 namespace EdjCase.ICP.ClientGenerator
 {
 	internal class Tool
 	{
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-		public class Options
+		[Verb("init")]
+		public class InitOptions
 		{
-			[Option('f', "candid-file-path", Required = false, HelpText = "The file path to the .did file to generate from")]
-			public string? CandidFilePath { get; set; }
-
-			[Option('i', "canister-id", Required = false, HelpText = "The canister to generate the client for")]
-			public string? CanisterId { get; set; }
-
-			[Option('o', "output-directory", Required = true, HelpText = "Set the directory to generate the client files")]
-			public string OutputDirectory { get; set; }
-
-			[Option('n', "namespace", Required = true, HelpText = "Set the base namespace for the generated code")]
-			public string Namespace { get; set; }
-
-			[Option('c', "client-name", Required = false, HelpText = "Set the name of the client to generate. Otherwise will automatically be generated")]
-			public string? ClientName { get; set; }
-
-			[Option('u', "base-url", Required = false, HelpText = "Set the base url of http agent. Defaults to mainnet")]
-			public string? BaseUrl { get; set; }
+			[Value(0, Required = false)]
+			public string? Directory { get; set; }
 		}
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
 
-		public static async Task Main(string[] args)
+		[Verb("gen", isDefault: true)]
+		public class GenerateOptions
 		{
-#if DEBUG
-			while (true)
+			[Value(0, Required = false)]
+			public string? Directory { get; set; }
+		}
+		const string CONFIG_FILE_NAME = "candid-client.toml";
+
+		public static async Task<int> Main(string[] args)
+		{
+			return await Parser.Default.ParseArguments<InitOptions, GenerateOptions>(args)
+				.MapResult<InitOptions, GenerateOptions, Task<int>>(
+					Initialize,
+					Generate,
+					errs => Task.FromResult(1)
+				);
+		}
+
+		private static Task<int> Initialize(InitOptions options)
+		{
+			string filePath = Path.Combine(options.Directory ?? "", CONFIG_FILE_NAME);
+			if (File.Exists(filePath))
 			{
-#endif
-				ParserResult<Options> result = await Parser.Default.ParseArguments<Options>(args)
-					.WithParsedAsync<Options>(async o =>
+				Console.WriteLine("Configuration has already been intialized. Skipping...");
+				return Task.FromResult(1);
+			}
+
+
+			const string contents = @"# Base namespace for all generated files
+namespace = ""My.Namespace""
+
+# Will create a subfolder within this directory with all the files
+output-directory = ""./Clients""
+
+# Remove comment to override default boundry node url (like for local development)
+# Only useful for generating clients from a canister id
+#url = ""https://localhost:8000""
+
+[[clients]]
+# Defines name folder and api client class name
+name = ""MyClient""
+
+# Get definition from a *.did file
+type = ""file""
+
+# Path to the *.did file to use
+file-path = ""../MyService.did""
+
+# Or use the following to get definition from a canister
+# and remove type and file-path from above
+
+# Get the definition from a live canister on the IC
+#type = ""canister""
+
+# Canister to pull definition from
+#canister-id = ""rrkah-fqaaa-aaaaa-aaaaq-cai""
+				
+# Can specify multiple clients by creating another [[clients]]
+#[[clients]]
+#name = ""MyClient2"" 
+#type = ""file""
+#file-path = ""../MyService2.did""
+				";
+			Console.WriteLine("Generating config file...");
+			if (options.Directory != null && !Directory.Exists(options.Directory))
+			{
+				Directory.CreateDirectory(options.Directory);
+			}
+			File.WriteAllText(filePath, contents);
+
+			return Task.FromResult(0);
+		}
+
+		private async static Task<int> Generate(GenerateOptions options)
+		{
+			try
+			{
+				string filePath = Path.Combine(options.Directory ?? "", CONFIG_FILE_NAME);
+				if (!File.Exists(filePath))
+				{
+					throw new InvalidOperationException($"Configuration file '{CONFIG_FILE_NAME}' not found in the directory. Run `candid-client-generator init`.");
+				}
+				string configToml = File.ReadAllText(filePath);
+				TomlTable config = Tomlyn.Toml.ToModel(configToml);
+
+				string baseNamespace = GetRequiredString(config, "namespace");
+				string? baseUrl = GetOptionalString(config, "url");
+				Uri? boundryNodeUrl = baseUrl == null ? null : new Uri(baseUrl);
+				string outputDirectory = Path.GetRelativePath("./", GetOptionalString(config, "output-directory") ?? "./");
+
+				TomlTableArray clients = config["clients"].Cast<TomlTableArray>();
+
+				foreach (TomlTable client in clients)
+				{
+					string name = GetRequiredString(client, "name");
+					string type = GetRequiredString(client, "type");
+					string @namespace = baseNamespace + "." + name;
+					ClientSyntax source;
+					switch (type)
 					{
-						ClientSyntax source;
-						if (string.IsNullOrWhiteSpace(o.CanisterId))
-						{
-							string candidFilePath = o.CandidFilePath!;
-							Console.WriteLine($"Reading text from {candidFilePath}...");
+						case "file":
+							string candidFilePath = GetRequiredString(client, "file-path");
+							string dir = new FileInfo(filePath).Directory!.FullName;
+							candidFilePath = Path.GetRelativePath("./", Path.Combine(dir, candidFilePath));
+							Console.WriteLine($"Reading text from {candidFilePath}");
 							string fileText = File.ReadAllText(candidFilePath);
 							// Use file name for client name
-							string clientName = o.ClientName ?? Path.GetFileNameWithoutExtension(candidFilePath);
-							source = ClientCodeGenerator.GenerateClientFromFile(fileText, o.Namespace, clientName);
-						}
-						else
-						{
-							Principal canisterId = Principal.FromText(o.CanisterId);
-							Uri? baseUrl = string.IsNullOrWhiteSpace(o.BaseUrl) ? null : new Uri(o.BaseUrl);
-							source = await ClientCodeGenerator.GenerateClientFromCanisterAsync(canisterId, o.Namespace, o.ClientName, baseUrl);
-						}
-						WriteClient(source, o.OutputDirectory);
-					});
-
-#if DEBUG
-				if (result.Tag == ParserResultType.NotParsed)
-				{
-					string? argString = Console.ReadLine();
-					args = argString?.Split(' ', StringSplitOptions.RemoveEmptyEntries) ?? Array.Empty<string>();
+							source = ClientCodeGenerator.GenerateClientFromFile(fileText, @namespace, name);
+							break;
+						case "canister":
+							string canisterIdString = GetRequiredString(client, "canister-id");
+							Principal canisterId = Principal.FromText(canisterIdString);
+							Console.WriteLine($"Fetching definition from canister {canisterId}");
+							source = await ClientCodeGenerator.GenerateClientFromCanisterAsync(canisterId, @namespace, name, boundryNodeUrl);
+							break;
+						default:
+							throw new InvalidOperationException($"Invalid client type '{type}'");
+					}
+					WriteClient(source, Path.Combine(outputDirectory , name));
 				}
-				else
-				{
-					// Reset on success
-					Console.WriteLine("Generation Complete. Press Enter to run again");
-					Console.ReadLine();
-					args = Array.Empty<string>();
-				}
+				return 0;
 			}
-#endif
+			catch (InvalidOperationException ex)
+			{
+				Console.WriteLine(ex.Message);
+				return 1;
+			}
+		}
+
+		private static string GetRequiredString(TomlTable table, string key, string? prefix = null)
+		{
+			if (table.ContainsKey(key))
+			{
+				return table[key].Cast<string>();
+			}
+			if (prefix != null)
+			{
+				key = prefix + "." + key;
+			}
+			throw new InvalidOperationException($"Missing key '{key}'");
+		}
+
+		private static string? GetOptionalString(TomlTable table, string key)
+		{
+			if (table.ContainsKey(key))
+			{
+				return table[key].Cast<string>();
+			}
+			return null;
 		}
 
 		private static void WriteClient(ClientSyntax result, string outputDirectory)
 		{
-			Console.WriteLine($"Writing client file ./{result.Name}.cs...");
+			Console.WriteLine($"Writing client file to: {outputDirectory}\\{result.Name}.cs");
 			WriteFile(null, result.Name, result.ClientFile);
 
 
+			Console.WriteLine($"Writing data model files to directory: {outputDirectory}\\Models\\");
 			foreach ((string name, CompilationUnitSyntax sourceCode) in result.TypeFiles)
 			{
-				Console.WriteLine($"Writing data model file ./Models/{name}.cs...");
 				WriteFile("Models", name, sourceCode);
 			}
+			Console.WriteLine("Client successfully generated!");
+			Console.WriteLine();
 
 			void WriteFile(
 				string? subDirectory,
@@ -109,7 +204,7 @@ namespace EdjCase.ICP.ClientGenerator
 					: Path.Combine(outputDirectory, subDirectory);
 				Directory.CreateDirectory(directory);
 				string filePath = Path.Combine(directory, fileName + ".cs");
-				
+
 				// Setup formatting options
 				AdhocWorkspace workspace = new();
 				OptionSet options = workspace.Options

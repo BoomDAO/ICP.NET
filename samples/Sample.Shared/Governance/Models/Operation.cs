@@ -33,6 +33,11 @@ namespace Sample.Shared.Governance.Models
 			return new Operation(OperationTag.AddHotKey, info);
 		}
 
+		public static Operation ChangeAutoStakeMaturity(ChangeAutoStakeMaturity info)
+		{
+			return new Operation(OperationTag.ChangeAutoStakeMaturity, info);
+		}
+
 		public static Operation StopDissolving(Operation.StopDissolvingRecord info)
 		{
 			return new Operation(OperationTag.StopDissolving, info);
@@ -53,6 +58,11 @@ namespace Sample.Shared.Governance.Models
 			return new Operation(OperationTag.JoinCommunityFund, info);
 		}
 
+		public static Operation LeaveCommunityFund(Operation.LeaveCommunityFundRecord info)
+		{
+			return new Operation(OperationTag.LeaveCommunityFund, info);
+		}
+
 		public static Operation SetDissolveTimestamp(SetDissolveTimestamp info)
 		{
 			return new Operation(OperationTag.SetDissolveTimestamp, info);
@@ -68,6 +78,12 @@ namespace Sample.Shared.Governance.Models
 		{
 			this.ValidateTag(OperationTag.AddHotKey);
 			return (AddHotKey)this.Value!;
+		}
+
+		public ChangeAutoStakeMaturity AsChangeAutoStakeMaturity()
+		{
+			this.ValidateTag(OperationTag.ChangeAutoStakeMaturity);
+			return (ChangeAutoStakeMaturity)this.Value!;
 		}
 
 		public Operation.StopDissolvingRecord AsStopDissolving()
@@ -92,6 +108,12 @@ namespace Sample.Shared.Governance.Models
 		{
 			this.ValidateTag(OperationTag.JoinCommunityFund);
 			return (Operation.JoinCommunityFundRecord)this.Value!;
+		}
+
+		public Operation.LeaveCommunityFundRecord AsLeaveCommunityFund()
+		{
+			this.ValidateTag(OperationTag.LeaveCommunityFund);
+			return (Operation.LeaveCommunityFundRecord)this.Value!;
 		}
 
 		public SetDissolveTimestamp AsSetDissolveTimestamp()
@@ -128,6 +150,13 @@ namespace Sample.Shared.Governance.Models
 			{
 			}
 		}
+
+		public class LeaveCommunityFundRecord
+		{
+			public LeaveCommunityFundRecord()
+			{
+			}
+		}
 	}
 
 	public enum OperationTag
@@ -136,6 +165,8 @@ namespace Sample.Shared.Governance.Models
 		RemoveHotKey,
 		[VariantOptionType(typeof(AddHotKey))]
 		AddHotKey,
+		[VariantOptionType(typeof(ChangeAutoStakeMaturity))]
+		ChangeAutoStakeMaturity,
 		[VariantOptionType(typeof(Operation.StopDissolvingRecord))]
 		StopDissolving,
 		[VariantOptionType(typeof(Operation.StartDissolvingRecord))]
@@ -144,6 +175,8 @@ namespace Sample.Shared.Governance.Models
 		IncreaseDissolveDelay,
 		[VariantOptionType(typeof(Operation.JoinCommunityFundRecord))]
 		JoinCommunityFund,
+		[VariantOptionType(typeof(Operation.LeaveCommunityFundRecord))]
+		LeaveCommunityFund,
 		[VariantOptionType(typeof(SetDissolveTimestamp))]
 		SetDissolveTimestamp
 	}
