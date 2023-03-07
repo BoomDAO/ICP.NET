@@ -43,10 +43,7 @@ IAgent agent = new HttpAgent();
 // Create Candid arg to send in request
 ulong proposalId = 1234;
 CandidArg arg = CandidArg.FromCandid(
-	new CandidTypedValue( // Candid type with no conversion
-		value: CandidPrimitive.Nat64(proposalId),
-		type: new CandidPrimitiveType(PrimitiveType.Nat64)
-	)
+	CandidTypedValue.Nat64(proposalId) // Candid type with no conversion
 );
 
 // Make request to IC
@@ -194,7 +191,8 @@ public class MyRecord
 ### Other
 
 ```cs
-C# -> Candid
+(C# type) -> (Candid type)
+
 UnboundedUInt -> Nat
 byte -> Nat8
 ushort -> Nat16
@@ -210,30 +208,36 @@ float -> Float32
 double -> Float64
 bool -> Bool
 Principal -> Principal
-OptionalValue<T> -> Opt T
 List<T> -> Vec T
+T[] -> Vec T
 CandidFunc -> Func
+OptionalValue<T> -> Opt T
+EmptyValue -> Empty
+ReservedValue -> Reserved
+NullValue -> Null
 ```
 
-## Parse from Text
+---
+
+## Parse Candid from Text
 
 ```cs
 string text = "record { field_1:nat64; field_2: vec nat8 }";
 CandidRecordType type = CandidTextParser.Parse<CandidRecordType>(text);
 ```
 
-## Generate Text representation
+## Generate Candid Text representation
 
 ```cs
 var type = new CandidRecordType(new Dictionary<CandidTag, CandidType>
 {
     {
         CandidTag.FromName("field_1"),
-        new CandidPrimitiveType(PrimitiveType.Nat64)
+        CandidType.Nat64()
     },
     {
         CandidTag.FromName("field_2"),
-        new CandidVectorType(new CandidPrimitiveType(PrimitiveType.Nat8))
+        new CandidVectorType(CandidType.Nat8())
     }
 });
 string text = CandidTextGenerator.Generator(type, IndentType.Tab);
