@@ -37,6 +37,9 @@ namespace Sample.Shared.Governance.Models
 		[CandidName("reject_cost_e8s")]
 		public ulong RejectCostE8s { get; set; }
 
+		[CandidName("derived_proposal_information")]
+		public OptionalValue<DerivedProposalInformation> DerivedProposalInformation { get; set; }
+
 		[CandidName("latest_tally")]
 		public OptionalValue<Tally> LatestTally { get; set; }
 
@@ -55,7 +58,7 @@ namespace Sample.Shared.Governance.Models
 		[CandidName("executed_timestamp_seconds")]
 		public ulong ExecutedTimestampSeconds { get; set; }
 
-		public ProposalInfo(OptionalValue<NeuronId> id, int status, int topic, OptionalValue<GovernanceError> failureReason, List<ProposalInfo.BallotsItemRecord> ballots, ulong proposalTimestampSeconds, ulong rewardEventRound, OptionalValue<ulong> deadlineTimestampSeconds, ulong failedTimestampSeconds, ulong rejectCostE8s, OptionalValue<Tally> latestTally, int rewardStatus, ulong decidedTimestampSeconds, OptionalValue<Proposal> proposal, OptionalValue<NeuronId> proposer, ulong executedTimestampSeconds)
+		public ProposalInfo(OptionalValue<NeuronId> id, int status, int topic, OptionalValue<GovernanceError> failureReason, List<ProposalInfo.BallotsItemRecord> ballots, ulong proposalTimestampSeconds, ulong rewardEventRound, OptionalValue<ulong> deadlineTimestampSeconds, ulong failedTimestampSeconds, ulong rejectCostE8s, OptionalValue<DerivedProposalInformation> derivedProposalInformation, OptionalValue<Tally> latestTally, int rewardStatus, ulong decidedTimestampSeconds, OptionalValue<Proposal> proposal, OptionalValue<NeuronId> proposer, ulong executedTimestampSeconds)
 		{
 			this.Id = id;
 			this.Status = status;
@@ -67,6 +70,7 @@ namespace Sample.Shared.Governance.Models
 			this.DeadlineTimestampSeconds = deadlineTimestampSeconds;
 			this.FailedTimestampSeconds = failedTimestampSeconds;
 			this.RejectCostE8s = rejectCostE8s;
+			this.DerivedProposalInformation = derivedProposalInformation;
 			this.LatestTally = latestTally;
 			this.RewardStatus = rewardStatus;
 			this.DecidedTimestampSeconds = decidedTimestampSeconds;

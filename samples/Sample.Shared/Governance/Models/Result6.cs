@@ -4,48 +4,48 @@ using System;
 
 namespace Sample.Shared.Governance.Models
 {
-	[Variant(typeof(Result5Tag))]
-	public class Result5
+	[Variant(typeof(Result6Tag))]
+	public class Result6
 	{
 		[VariantTagProperty()]
-		public Result5Tag Tag { get; set; }
+		public Result6Tag Tag { get; set; }
 
 		[VariantValueProperty()]
 		public System.Object? Value { get; set; }
 
-		public Result5(Result5Tag tag, object? value)
+		public Result6(Result6Tag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
 		}
 
-		protected Result5()
+		protected Result6()
 		{
 		}
 
-		public static Result5 Ok(NeuronInfo info)
+		public static Result6 Ok(NodeProvider info)
 		{
-			return new Result5(Result5Tag.Ok, info);
+			return new Result6(Result6Tag.Ok, info);
 		}
 
-		public static Result5 Err(GovernanceError info)
+		public static Result6 Err(GovernanceError info)
 		{
-			return new Result5(Result5Tag.Err, info);
+			return new Result6(Result6Tag.Err, info);
 		}
 
-		public NeuronInfo AsOk()
+		public NodeProvider AsOk()
 		{
-			this.ValidateTag(Result5Tag.Ok);
-			return (NeuronInfo)this.Value!;
+			this.ValidateTag(Result6Tag.Ok);
+			return (NodeProvider)this.Value!;
 		}
 
 		public GovernanceError AsErr()
 		{
-			this.ValidateTag(Result5Tag.Err);
+			this.ValidateTag(Result6Tag.Err);
 			return (GovernanceError)this.Value!;
 		}
 
-		private void ValidateTag(Result5Tag tag)
+		private void ValidateTag(Result6Tag tag)
 		{
 			if (!this.Tag.Equals(tag))
 			{
@@ -54,9 +54,9 @@ namespace Sample.Shared.Governance.Models
 		}
 	}
 
-	public enum Result5Tag
+	public enum Result6Tag
 	{
-		[VariantOptionType(typeof(NeuronInfo))]
+		[VariantOptionType(typeof(NodeProvider))]
 		Ok,
 		[VariantOptionType(typeof(GovernanceError))]
 		Err

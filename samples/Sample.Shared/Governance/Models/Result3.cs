@@ -23,7 +23,7 @@ namespace Sample.Shared.Governance.Models
 		{
 		}
 
-		public static Result3 Ok(RewardNodeProviders info)
+		public static Result3 Ok(GovernanceCachedMetrics info)
 		{
 			return new Result3(Result3Tag.Ok, info);
 		}
@@ -33,10 +33,10 @@ namespace Sample.Shared.Governance.Models
 			return new Result3(Result3Tag.Err, info);
 		}
 
-		public RewardNodeProviders AsOk()
+		public GovernanceCachedMetrics AsOk()
 		{
 			this.ValidateTag(Result3Tag.Ok);
-			return (RewardNodeProviders)this.Value!;
+			return (GovernanceCachedMetrics)this.Value!;
 		}
 
 		public GovernanceError AsErr()
@@ -56,7 +56,7 @@ namespace Sample.Shared.Governance.Models
 
 	public enum Result3Tag
 	{
-		[VariantOptionType(typeof(RewardNodeProviders))]
+		[VariantOptionType(typeof(GovernanceCachedMetrics))]
 		Ok,
 		[VariantOptionType(typeof(GovernanceError))]
 		Err

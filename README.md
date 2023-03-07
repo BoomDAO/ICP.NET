@@ -56,7 +56,7 @@ QueryResponse response = await agent.QueryAsync(governanceCanisterId, method, ar
 
 CandidArg reply = response.ThrowOrGetReply();
 // Convert to custom class
-OptionalValue<ProposalInfo> info = reply.Arg.Values[0].ToOptionalObject<ProposalInfo>()
+OptionalValue<ProposalInfo> info = reply.Arg.ToObjects<OptionalValue<ProposalInfo>>();
 ```
 
 ## Usage (Self Defined Types)
@@ -81,7 +81,7 @@ QueryResponse response = await agent.QueryAsync(governanceCanisterId, method, ar
 
 CandidArg reply = response.ThrowOrGetReply();
 // Convert to custom class
-OptionalValue<ProposalInfo> info = reply.Arg.Values[0].ToOptionalObject<ProposalInfo>() // Conversion to custom or C# types
+OptionalValue<ProposalInfo> info = reply.Arg.ToObjects<OptionalValue<ProposalInfo>>(); // Conversion to custom or C# types
 ```
 
 ## Usage (w/ Client Generator)
@@ -121,7 +121,7 @@ string title = firstArg.AsRecord()["title"];
 ```cs
 // Deserialize
 CandidArg arg = CandidArg.FromBytes(rawCandidBytes);
-MyObj obj = arg.Values[0].ToObject<MyObj>();
+(MyObj1 obj, MyObj2 obj2) = arg.ToObjects<MyObj1, MyObj2>();
 ```
 
 ```cs
@@ -156,6 +156,18 @@ public enum MyVariantTag
 }
 ```
 
+Or if variant options have no type, just an Enum can be used
+
+```cs
+public enum MyVariant
+{
+    [CandidName("o1")]
+    Option1,
+    [CandidName("o2")]
+    Option2
+}
+```
+
 ### Record
 
 ```cs
@@ -165,6 +177,17 @@ public class MyRecord
     public string Title { get; set; }
     [CandidName("is_good_title")]
     public bool IsGoodTitle { get; set; }
+}
+```
+
+### NOTE: [CandidName(...)] is not needed if the property name is exactly the same as the candid name
+
+```cs
+// Equivalent to above
+public class MyRecord
+{
+    public string title { get; set; }
+    public bool is_good_title { get; set; }
 }
 ```
 
@@ -218,23 +241,6 @@ string text = CandidTextGenerator.Generator(type, IndentType.Tab);
 
 # Client Generator
 
-## Usage (Code)
-
-```cs
-    // Location of the `*.did` file to parse from
-    string candidFilePath = "location/to/service.did";
-
-    // Directory to create *.cs source code.
-    string outputDirectory = "location/to/output";
-
-    // Base namespace to give all *.cs files
-    string @namespace = "My.Namespace.IC"
-
-    // Optional, will use file name or type name if unspecified
-    string? clientName = "MyClient";
-    ClientFileGenerator.WriteClientFiles(candidFilePath, outputDirectory, @namespace, clientName);
-```
-
 ## Usage (dotnet tool)
 
 ### Install with dotnet tools
@@ -245,19 +251,42 @@ dotnet tool install -g EdjCase.ICP.ClientGenerator
 
 ### Run tool
 
-```
-candid-client-generator -f "location/to/service.did" -o "location/to/output" -n "My.Namespace.IC" -c "MyClient"
-```
-
-### Installing local tool for development
-
-Build with the version of `src/ClientGenerator/EdjCase.ICP.ClientGenerator.csproj` set to some pre-release version (anything not available in NuGet repositories).
-
-e.g.:
+(First run only) Initialize config file and update generated file
 
 ```
-(cd src/ClientGenerator/ ; dotnet pack --configuration Debug -property:Version=99.99.99-pre)
-dotnet tool install EdjCase.ICP.ClientGenerator --local --add-source ./src/ClientGenerator/nupkg --version 99.99.99-pre --ignore-failed-sources
+candid-client-generator init ./
+```
+
+Creates `candid-client.toml` file to update in specified directory
+
+Example:
+
+```
+namespace = "My.Namespace" # Base namespace used for generated files
+output-directory = "./Clients" # Directory to put clients. Each client will get its own sub folder based on its name
+
+[[clients]]
+name = "Dex" # Used for the name of the folder and client class
+type = "file" # Create client based on service definition file
+file-path = "./ServiceDefinitionFiles/Dex.did" # Service definition file path
+
+# Can specify multiple clients by defining another
+[[clients]]
+name = "Governance"
+type = "canister" # Create client based on canister
+canister-id = "rrkah-fqaaa-aaaaa-aaaaq-cai" # Canister to create client for
+```
+
+### Generate clients
+
+```
+candid-client-generator ./
+```
+
+or
+
+```
+candid-client-generator gen ./
 ```
 
 # Internet Identity
@@ -274,7 +303,7 @@ string hostname = "nns.ic0.app"; // Hostname to login to
 LoginResult result = await Authenticator
     .WithHttpAgent() // Use http agent to communicate to the Internet Identity canister
     .LoginAsync(anchor, hostname);
-    
+
 DelegationIdentity identity = result.GetIdentityOrThrow(); // Gets the generated identity or throws if login failed
 
 var agent = new HttpAgent(identity); // Use in agent to make authenticated requests

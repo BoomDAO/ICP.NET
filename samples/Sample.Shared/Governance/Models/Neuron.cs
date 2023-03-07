@@ -10,6 +10,9 @@ namespace Sample.Shared.Governance.Models
 		[CandidName("id")]
 		public OptionalValue<NeuronId> Id { get; set; }
 
+		[CandidName("staked_maturity_e8s_equivalent")]
+		public OptionalValue<ulong> StakedMaturityE8sEquivalent { get; set; }
+
 		[CandidName("controller")]
 		public OptionalValue<Principal> Controller { get; set; }
 
@@ -30,6 +33,9 @@ namespace Sample.Shared.Governance.Models
 
 		[CandidName("created_timestamp_seconds")]
 		public ulong CreatedTimestampSeconds { get; set; }
+
+		[CandidName("auto_stake_maturity")]
+		public OptionalValue<bool> AutoStakeMaturity { get; set; }
 
 		[CandidName("aging_since_timestamp_seconds")]
 		public ulong AgingSinceTimestampSeconds { get; set; }
@@ -58,9 +64,13 @@ namespace Sample.Shared.Governance.Models
 		[CandidName("known_neuron_data")]
 		public OptionalValue<KnownNeuronData> KnownNeuronData { get; set; }
 
-		public Neuron(OptionalValue<NeuronId> id, OptionalValue<Principal> controller, List<BallotInfo> recentBallots, bool kycVerified, bool notForProfit, ulong maturityE8sEquivalent, ulong cachedNeuronStakeE8s, ulong createdTimestampSeconds, ulong agingSinceTimestampSeconds, List<Principal> hotKeys, List<byte> account, OptionalValue<ulong> joinedCommunityFundTimestampSeconds, OptionalValue<DissolveState> dissolveState, List<Neuron.FolloweesItemRecord> followees, ulong neuronFeesE8s, OptionalValue<NeuronStakeTransfer> transfer, OptionalValue<KnownNeuronData> knownNeuronData)
+		[CandidName("spawn_at_timestamp_seconds")]
+		public OptionalValue<ulong> SpawnAtTimestampSeconds { get; set; }
+
+		public Neuron(OptionalValue<NeuronId> id, OptionalValue<ulong> stakedMaturityE8sEquivalent, OptionalValue<Principal> controller, List<BallotInfo> recentBallots, bool kycVerified, bool notForProfit, ulong maturityE8sEquivalent, ulong cachedNeuronStakeE8s, ulong createdTimestampSeconds, OptionalValue<bool> autoStakeMaturity, ulong agingSinceTimestampSeconds, List<Principal> hotKeys, List<byte> account, OptionalValue<ulong> joinedCommunityFundTimestampSeconds, OptionalValue<DissolveState> dissolveState, List<Neuron.FolloweesItemRecord> followees, ulong neuronFeesE8s, OptionalValue<NeuronStakeTransfer> transfer, OptionalValue<KnownNeuronData> knownNeuronData, OptionalValue<ulong> spawnAtTimestampSeconds)
 		{
 			this.Id = id;
+			this.StakedMaturityE8sEquivalent = stakedMaturityE8sEquivalent;
 			this.Controller = controller;
 			this.RecentBallots = recentBallots;
 			this.KycVerified = kycVerified;
@@ -68,6 +78,7 @@ namespace Sample.Shared.Governance.Models
 			this.MaturityE8sEquivalent = maturityE8sEquivalent;
 			this.CachedNeuronStakeE8s = cachedNeuronStakeE8s;
 			this.CreatedTimestampSeconds = createdTimestampSeconds;
+			this.AutoStakeMaturity = autoStakeMaturity;
 			this.AgingSinceTimestampSeconds = agingSinceTimestampSeconds;
 			this.HotKeys = hotKeys;
 			this.Account = account;
@@ -77,6 +88,7 @@ namespace Sample.Shared.Governance.Models
 			this.NeuronFeesE8s = neuronFeesE8s;
 			this.Transfer = transfer;
 			this.KnownNeuronData = knownNeuronData;
+			this.SpawnAtTimestampSeconds = spawnAtTimestampSeconds;
 		}
 
 		public Neuron()
