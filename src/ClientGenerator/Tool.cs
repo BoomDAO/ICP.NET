@@ -51,42 +51,41 @@ namespace EdjCase.ICP.ClientGenerator
 			}
 
 
-			const string contents = """
-				# Base namespace for all generated files
-				namespace = "My.Namespace"
+			const string contents = @"# Base namespace for all generated files
+namespace = ""My.Namespace""
 
-				# Will create a subfolder within this directory with all the files
-				output-directory = "./Clients"
+# Will create a subfolder within this directory with all the files
+output-directory = ""./Clients""
 
-				# Remove comment to override default boundry node url (like for local development)
-				# Only useful for generating clients from a canister id
-				#url = "https://localhost:8000"
+# Remove comment to override default boundry node url (like for local development)
+# Only useful for generating clients from a canister id
+#url = ""https://localhost:8000""
 
-				[[clients]]
-				# Defines name folder and api client class name
-				name = "MyClient"
+[[clients]]
+# Defines name folder and api client class name
+name = ""MyClient""
 
-				# Get definition from a *.did file
-				type = "file"
+# Get definition from a *.did file
+type = ""file""
 
-				# Path to the *.did file to use
-				file-path = "../MyService.did"
+# Path to the *.did file to use
+file-path = ""../MyService.did""
 
-				# Or use the following to get definition from a canister
-				# and remove type and file-path from above
+# Or use the following to get definition from a canister
+# and remove type and file-path from above
 
-				# Get the definition from a live canister on the IC
-				#type = "canister"
+# Get the definition from a live canister on the IC
+#type = ""canister""
 
-				# Canister to pull definition from
-				#canister-id = "rrkah-fqaaa-aaaaa-aaaaq-cai"
+# Canister to pull definition from
+#canister-id = ""rrkah-fqaaa-aaaaa-aaaaq-cai""
 				
-				# Can specify multiple clients by creating another [[clients]]
-				#[[clients]]
-				#name = "MyClient2" 
-				#type = "file"
-				#file-path = "../MyService2.did"
-				""";
+# Can specify multiple clients by creating another [[clients]]
+#[[clients]]
+#name = ""MyClient2"" 
+#type = ""file""
+#file-path = ""../MyService2.did""
+				";
 			Console.WriteLine("Generating config file...");
 			if (options.Directory != null && !Directory.Exists(options.Directory))
 			{
