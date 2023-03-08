@@ -79,6 +79,9 @@ file-path = ""../MyService.did""
 
 # Canister to pull definition from
 #canister-id = ""rrkah-fqaaa-aaaaa-aaaaq-cai""
+
+# Override base output directory, but this specifies the subfolder
+#output-directory = ""./Clients/MyS""
 				
 # Can specify multiple clients by creating another [[clients]]
 #[[clients]]
@@ -120,6 +123,7 @@ file-path = ""../MyService.did""
 					string name = GetRequired<string>(client, "name");
 					string type = GetRequired<string>(client, "type");
 					string @namespace = baseNamespace + "." + name;
+					string? clientOutputDirectory = GetOptional<string>(client, "output-directory");
 					ClientGenerationOptions clientOptions = new(name, @namespace);
 					ClientSyntax source;
 					switch (type)
@@ -142,7 +146,7 @@ file-path = ""../MyService.did""
 						default:
 							throw new InvalidOperationException($"Invalid client type '{type}'");
 					}
-					WriteClient(source, Path.Combine(outputDirectory , name));
+					WriteClient(source, Path.Combine(clientOutputDirectory ?? outputDirectory, name));
 				}
 				return 0;
 			}

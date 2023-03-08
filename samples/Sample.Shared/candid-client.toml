@@ -16,3 +16,4 @@ canister-id = "rrkah-fqaaa-aaaaa-aaaaq-cai"
 name = "AddressBook"
 type = "file"
 file-path = "../ServiceDefinitionFiles/AddressBook.did"
+output-directory = "C:/Git/ICP.NET/samples/Sample.Shared/Address" # override
