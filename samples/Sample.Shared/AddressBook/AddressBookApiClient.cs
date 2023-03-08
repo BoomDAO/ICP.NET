@@ -1,5 +1,6 @@
 using EdjCase.ICP.Agent.Agents;
 using EdjCase.ICP.Candid.Models;
+using EdjCase.ICP.Candid;
 using System.Threading.Tasks;
 using Sample.Shared.AddressBook;
 using EdjCase.ICP.Agent.Responses;
@@ -12,10 +13,13 @@ namespace Sample.Shared.AddressBook
 
 		public Principal CanisterId { get; }
 
-		public AddressBookApiClient(IAgent agent, Principal canisterId)
+		public EdjCase.ICP.Candid.CandidConverter? Converter { get; }
+
+		public AddressBookApiClient(IAgent agent, Principal canisterId, CandidConverter? converter = null)
 		{
 			this.Agent = agent;
 			this.CanisterId = canisterId;
+			this.Converter = converter;
 		}
 
 		public async Task SetAddress(string name, Models.Address addr)
@@ -29,7 +33,7 @@ namespace Sample.Shared.AddressBook
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(name));
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_address", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<OptionalValue<Models.Address>>();
+			return reply.ToObjects<OptionalValue<Models.Address>>(this.Converter);
 		}
 	}
 }

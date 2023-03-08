@@ -14,7 +14,7 @@ namespace Sample.Shared.Governance.Models
 		[VariantValueProperty()]
 		public System.Object? Value { get; set; }
 
-		public NeuronIdOrSubaccount(NeuronIdOrSubaccountTag tag, object? value)
+		public NeuronIdOrSubaccount(NeuronIdOrSubaccountTag tag, object? value = null)
 		{
 			this.Tag = tag;
 			this.Value = value;
