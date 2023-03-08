@@ -8,48 +8,63 @@ using System.Reflection;
 namespace EdjCase.ICP.Candid.Mapping.Mappers
 {
 
-	internal class RecordMapper : IObjectMapper
+	internal class RecordMapper : ICandidValueMapper
 	{
 		public CandidType CandidType { get; }
 		public Type Type { get; }
-		public Dictionary<CandidTag, (PropertyInfo Property, IObjectMapper? OverrideMapper)> Properties { get; }
+		public Dictionary<CandidTag, PropertyMetaData> Properties { get; }
 
-		public RecordMapper(CandidRecordType candidType, Type type, Dictionary<CandidTag, (PropertyInfo Property, IObjectMapper? OverrideMapper)> properties)
+		public RecordMapper(CandidRecordType candidType, Type type, Dictionary<CandidTag, PropertyMetaData> properties)
 		{
 			this.CandidType = candidType ?? throw new ArgumentNullException(nameof(candidType));
 			this.Type = type ?? throw new ArgumentNullException(nameof(type));
 			this.Properties = properties;
 		}
 
-		public object Map(CandidValue value, CandidConverterOptions options)
+		public object Map(CandidValue value, CandidConverter converter)
 		{
 			CandidRecord record = value.AsRecord();
 			object obj = Activator.CreateInstance(this.Type);
-			foreach ((CandidTag tag, (PropertyInfo property, IObjectMapper? overrideMapper)) in this.Properties)
+			foreach ((CandidTag tag, PropertyMetaData property) in this.Properties)
 			{
 				CandidValue fieldCandidValue = record.Fields[tag];
-				IObjectMapper mapper = overrideMapper ?? options.ResolveMapper(property.PropertyType);
-				object? fieldValue = mapper.Map(fieldCandidValue, options);
-				property.SetValue(obj, fieldValue);
+				object? fieldValue;
+				if (property.CustomMapper != null)
+				{
+					fieldValue = property.CustomMapper.Map(fieldCandidValue, converter);
+				}
+				else
+				{
+					fieldValue = converter.ToObject(property.PropertyInfo.PropertyType, fieldCandidValue);
+				}
+				property.PropertyInfo.SetValue(obj, fieldValue);
 			}
 			return obj;
 		}
 
-		public CandidTypedValue Map(object obj, CandidConverterOptions options)
+		public CandidValue Map(object value, CandidConverter converter)
 		{
 			Dictionary<CandidTag, CandidValue> fields = new();
-			foreach ((CandidTag tag, (PropertyInfo property, IObjectMapper? overrideMapper)) in this.Properties)
+			foreach ((CandidTag tag, PropertyMetaData property) in this.Properties)
 			{
-				object propValue = property.GetValue(obj);
-				IObjectMapper mapper = overrideMapper ?? options.ResolveMapper(property.PropertyType);
-				CandidTypedValue v = mapper.Map(propValue, options);
-				fields.Add(tag, v.Value);
+				object propValue = property.PropertyInfo.GetValue(value);
+				CandidValue v;
+				if (property.CustomMapper != null)
+				{
+					v = property.CustomMapper.Map(propValue, converter);
+				}
+				else
+				{
+					v = converter.FromObject(propValue);
+				}
+				fields.Add(tag, v);
 			}
-			var r = new CandidRecord(fields);
-			return new CandidTypedValue(
-				r,
-				this.CandidType
-			);
+			return new CandidRecord(fields);
+		}
+
+		public CandidType? GetMappedCandidType(Type type)
+		{
+			return this.CandidType;
 		}
 	}
 }

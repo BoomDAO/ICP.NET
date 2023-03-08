@@ -1,3 +1,4 @@
+using EdjCase.ICP.Candid.Mapping.Mappers;
 using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid.Models.Types;
 using EdjCase.ICP.Candid.Models.Values;
@@ -8,32 +9,37 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace EdjCase.ICP.Candid.Mapping.Mappers
+namespace EdjCase.ICP.Candid.Mapping
 {
-	internal delegate IObjectMapper ResolveMapper(Dictionary<Type, CandidType> resolvedMappings);
+	internal delegate (ICandidValueMapper, CandidType) ResolveMapper(Dictionary<Type, CandidType> resolvedMappings);
 
 	internal interface IResolvableTypeInfo
 	{
 		Type ObjType { get; }
 		List<Type> Dependencies { get; }
-		IObjectMapper Resolve(Dictionary<Type, CandidType> resolvedDependencies);
+		(ICandidValueMapper, CandidType) Resolve(Dictionary<Type, CandidType> resolvedDependencies);
 	}
 
 	internal class ResolvedTypeInfo : IResolvableTypeInfo
 	{
 		public Type ObjType { get; }
+		public CandidType CandidType { get; }
 		public List<Type> Dependencies { get; }
-		public IObjectMapper Mapper { get; }
-		public ResolvedTypeInfo(Type objType, IObjectMapper mapper)
+		public ICandidValueMapper Mapper { get; }
+		public ResolvedTypeInfo(
+			Type objType,
+			CandidType candidType,
+			ICandidValueMapper mapper)
 		{
 			this.ObjType = objType;
+			this.CandidType = candidType;
 			this.Mapper = mapper;
 			this.Dependencies = new List<Type>();
 		}
 
-		public IObjectMapper Resolve(Dictionary<Type, CandidType> resolvedDependencies)
+		public (ICandidValueMapper, CandidType) Resolve(Dictionary<Type, CandidType> resolvedDependencies)
 		{
-			return this.Mapper;
+			return (this.Mapper, this.CandidType);
 		}
 	}
 
@@ -50,7 +56,7 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 			this.Resolver = resolver;
 		}
 
-		public IObjectMapper Resolve(Dictionary<Type, CandidType> resolvedDependencies)
+		public (ICandidValueMapper, CandidType) Resolve(Dictionary<Type, CandidType> resolvedDependencies)
 		{
 			return this.Resolver(resolvedDependencies);
 		}
@@ -59,14 +65,14 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 
 	internal static class DefaultMapperFactory
 	{
-		public static IObjectMapper Build(Type objType)
+		public static ICandidValueMapper Build(Type objType)
 		{
 			Dictionary<Type, CandidType> resolvedDependencies = new();
 
 			return ResolveDependencies(objType, resolvedDependencies);
 		}
 
-		private static IObjectMapper ResolveDependencies(Type objType, Dictionary<Type, CandidType> resolvedDependencies)
+		private static ICandidValueMapper ResolveDependencies(Type objType, Dictionary<Type, CandidType> resolvedDependencies)
 		{
 			IResolvableTypeInfo info = BuildTypeInfo(objType);
 
@@ -86,8 +92,8 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 				}
 			}
 
-			IObjectMapper objectMapper = info.Resolve(resolvedDependencies);
-			resolvedDependencies[objType] = objectMapper.CandidType;
+			(ICandidValueMapper objectMapper, CandidType type) = info.Resolve(resolvedDependencies);
+			resolvedDependencies[objType] = type;
 			return objectMapper;
 		}
 
@@ -320,26 +326,23 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 		private static IResolvableTypeInfo BuildStruct<T>(CandidType candidType, T value, Func<CandidValue> valueGetter)
 			where T : struct
 		{
-			return new ResolvedTypeInfo(typeof(T), new EmptyStructMapper<T>(candidType, value, valueGetter));
+			var mapper = new EmptyStructMapper<T>(candidType, value, valueGetter);
+			return new ResolvedTypeInfo(typeof(T), candidType, mapper);
 		}
 
 		private static IResolvableTypeInfo BuildPrimitive(
 			Type objType,
 			CandidType type,
-			Func<object, CandidConverterOptions, CandidValue> toCandid,
-			Func<CandidValue, CandidConverterOptions, object> fromCandid)
+			Func<object, CandidConverter, CandidValue> toCandid,
+			Func<CandidValue, CandidConverter, object> fromCandid)
 		{
 			var mapper = new PrimitiveMapper(
 				type,
 				objType,
-				(o, options) =>
-				{
-					CandidValue value = toCandid(o, options);
-					return new CandidTypedValue(value, type);
-				},
+				toCandid,
 				fromCandid
 			);
-			return new ResolvedTypeInfo(objType, mapper);
+			return new ResolvedTypeInfo(objType, type, mapper);
 		}
 
 		private static IResolvableTypeInfo BuildOpt(Type objType)
@@ -350,29 +353,29 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 			return new ComplexTypeInfo(objType, dependencies, (resolvedDependencies) =>
 			{
 				CandidType innerCandidType = resolvedDependencies[innerType];
-				return new OptMapper(innerCandidType, innerType, overrideInnerMapper: null); // TODO overrides?
+				return (new OptMapper(innerCandidType, innerType), new CandidOptionalType(innerCandidType));
 			});
 		}
 
 		private static IResolvableTypeInfo BuildVector(
 			Type objType,
 			Type innerType,
-			Func<object, CandidConverterOptions, IEnumerable<object>> toEnumerableFunc,
-			Func<IEnumerable<object>, CandidConverterOptions, object> fromEnumerableFunc)
+			Func<object, CandidConverter, IEnumerable<object>> toEnumerableFunc,
+			Func<IEnumerable<object>, CandidConverter, object> fromEnumerableFunc)
 		{
 			return new ComplexTypeInfo(objType, new List<Type> { innerType }, (resolvedMappings) =>
 			{
 				CandidType innerCandidType = resolvedMappings[innerType];
 				var type = new CandidVectorType(innerCandidType);
 
-				return new VectorMapper(
+				var mapper = new VectorMapper(
 					type,
 					objType,
 					innerType,
 					toEnumerableFunc,
-					fromEnumerableFunc,
-					null // TODO overrides?
+					fromEnumerableFunc
 				);
+				return (mapper, type);
 			});
 		}
 
@@ -391,7 +394,7 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 				.ToDictionary(e => e.Name, e => e.Value);
 			var candidType = new CandidVariantType(options.ToDictionary(o => o.Key, o => (CandidType)CandidType.Null()));
 			var mapper = new VariantEnumMapper(candidType, enumType, options);
-			return new ResolvedTypeInfo(enumType, mapper);
+			return new ResolvedTypeInfo(enumType, candidType, mapper);
 		}
 
 		private static IResolvableTypeInfo BuildVariant(Type objType, VariantAttribute attribute)
@@ -408,19 +411,13 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 					Type? optionType = typeAttribute?.OptionType;
 					var nameAttribute = field.GetCustomAttribute<CandidNameAttribute>();
 					string name = nameAttribute?.Name ?? tagName;
-					VariantMapper.ValueInfo? valueInfo = null;
-					if (optionType != null)
-					{
-						IObjectMapper? overrideMapper = null;// TODO overrides?
-						valueInfo = new VariantMapper.ValueInfo(optionType, overrideMapper);
-					}
-					return (CandidTag.FromName(name), new VariantMapper.Option(tagEnum, valueInfo));
+					return (CandidTag.FromName(name), new VariantMapper.Option(tagEnum, optionType));
 				})
 				.ToDictionary(k => k.Item1, k => k.Item2);
 
 			List<Type> dependencies = options.Values
-				.Where(v => v.ValueInfo != null)
-				.Select(v => v.ValueInfo!.Type)
+				.Where(v => v.Type != null)
+				.Select(v => v.Type!)
 				.Distinct()
 				.ToList();
 
@@ -451,16 +448,17 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 						o => o.Key,
 						o =>
 						{
-							if (o.Value.ValueInfo == null)
+							if (o.Value.Type == null)
 							{
 								return new CandidPrimitiveType(PrimitiveType.Null);
 							}
-							return o.Value.ValueInfo.OverrideMapper?.CandidType ?? resolvedDependencies[o.Value.ValueInfo.Type];
+							return resolvedDependencies[o.Value.Type];
 						}
 					);
 				var type = new CandidVariantType(optionCandidTypes);
 
-				return new VariantMapper(type, objType, typeProperty, valueProperty, options);
+				var mapper = new VariantMapper(type, objType, typeProperty, valueProperty, options);
+				return (mapper, type);
 			});
 		}
 
@@ -469,7 +467,7 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 			List<PropertyInfo> properties = objType
 				.GetProperties(BindingFlags.Instance | BindingFlags.Public)
 				.ToList();
-			var propertyMetaDataMap = new Dictionary<CandidTag, (PropertyInfo Property, IObjectMapper? OverrideMapper)>();
+			var propertyMetaDataMap = new Dictionary<CandidTag, PropertyMetaData>();
 			foreach (PropertyInfo property in properties)
 			{
 				CandidIgnoreAttribute? ignoreAttribute = property.GetCustomAttribute<CandidIgnoreAttribute>();
@@ -491,11 +489,12 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 				CandidTag tag = CandidTag.FromName(propertyName);
 				CustomMapperAttribute? customMapperAttribute = property.GetCustomAttribute<CustomMapperAttribute>();
 
-				propertyMetaDataMap.Add(tag, (property, customMapperAttribute?.Mapper));
+				PropertyMetaData propertyMetaData = new(property, customMapperAttribute?.Mapper);
+				propertyMetaDataMap.Add(tag, propertyMetaData);
 			}
 			List<Type> dependencies = propertyMetaDataMap
-				.Where(p => p.Value.OverrideMapper == null) // Only resolve the ones that need to
-				.Select(p => p.Value.Property.PropertyType)
+				.Where(p => p.Value.CustomMapper == null) // Only resolve the ones that need to
+				.Select(p => p.Value.PropertyInfo.PropertyType)
 				.ToList();
 			return new ComplexTypeInfo(objType, dependencies, (resolvedMappings) =>
 			{
@@ -504,20 +503,29 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 						p => p.Key,
 						p =>
 						{
-							if (p.Value.OverrideMapper != null)
+							if (p.Value.CustomMapper != null)
 							{
-								return p.Value.OverrideMapper!.CandidType;
+								CandidType? type = p.Value.CustomMapper!.GetMappedCandidType(p.Value.PropertyInfo.PropertyType);
+								if (type == null)
+								{
+									throw new InvalidOperationException($"Property '{p.Value.PropertyInfo.Name}' given incompatible candid value mapper");
+								}
+								return type;
 							}
-							return resolvedMappings[p.Value.Property.PropertyType];
+							return resolvedMappings[p.Value.PropertyInfo.PropertyType];
 						}
 					);
 				CandidRecordType type = new CandidRecordType(fieldTypes);
 
-				return new RecordMapper(type, objType, propertyMetaDataMap);
+				return (new RecordMapper(type, objType, propertyMetaDataMap), type);
 			});
 		}
 
-
 	}
+	internal record PropertyMetaData(
+		PropertyInfo PropertyInfo,
+		ICandidValueMapper? CustomMapper
+	);
+
 
 }

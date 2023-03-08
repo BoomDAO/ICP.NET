@@ -108,35 +108,36 @@ file-path = ""../MyService.did""
 				string configToml = File.ReadAllText(filePath);
 				TomlTable config = Tomlyn.Toml.ToModel(configToml);
 
-				string baseNamespace = GetRequiredString(config, "namespace");
-				string? baseUrl = GetOptionalString(config, "url");
+				string baseNamespace = GetRequired<string>(config, "namespace");
+				string? baseUrl = GetOptional<string>(config, "url");
 				Uri? boundryNodeUrl = baseUrl == null ? null : new Uri(baseUrl);
-				string outputDirectory = Path.GetRelativePath("./", GetOptionalString(config, "output-directory") ?? "./");
+				string outputDirectory = Path.GetRelativePath("./", GetOptional<string>(config, "output-directory") ?? "./");
 
 				TomlTableArray clients = config["clients"].Cast<TomlTableArray>();
 
 				foreach (TomlTable client in clients)
 				{
-					string name = GetRequiredString(client, "name");
-					string type = GetRequiredString(client, "type");
+					string name = GetRequired<string>(client, "name");
+					string type = GetRequired<string>(client, "type");
 					string @namespace = baseNamespace + "." + name;
+					ClientGenerationOptions clientOptions = new(name, @namespace);
 					ClientSyntax source;
 					switch (type)
 					{
 						case "file":
-							string candidFilePath = GetRequiredString(client, "file-path");
+							string candidFilePath = GetRequired<string>(client, "file-path");
 							string dir = new FileInfo(filePath).Directory!.FullName;
 							candidFilePath = Path.GetRelativePath("./", Path.Combine(dir, candidFilePath));
 							Console.WriteLine($"Reading text from {candidFilePath}");
 							string fileText = File.ReadAllText(candidFilePath);
 							// Use file name for client name
-							source = ClientCodeGenerator.GenerateClientFromFile(fileText, @namespace, name);
+							source = ClientCodeGenerator.GenerateClientFromFile(fileText, clientOptions);
 							break;
 						case "canister":
-							string canisterIdString = GetRequiredString(client, "canister-id");
+							string canisterIdString = GetRequired<string>(client, "canister-id");
 							Principal canisterId = Principal.FromText(canisterIdString);
 							Console.WriteLine($"Fetching definition from canister {canisterId}");
-							source = await ClientCodeGenerator.GenerateClientFromCanisterAsync(canisterId, @namespace, name, boundryNodeUrl);
+							source = await ClientCodeGenerator.GenerateClientFromCanisterAsync(canisterId, clientOptions, boundryNodeUrl);
 							break;
 						default:
 							throw new InvalidOperationException($"Invalid client type '{type}'");
@@ -152,11 +153,11 @@ file-path = ""../MyService.did""
 			}
 		}
 
-		private static string GetRequiredString(TomlTable table, string key, string? prefix = null)
+		private static T GetRequired<T>(TomlTable table, string key, string? prefix = null)
 		{
 			if (table.ContainsKey(key))
 			{
-				return table[key].Cast<string>();
+				return table[key].Cast<T>();
 			}
 			if (prefix != null)
 			{
@@ -165,13 +166,13 @@ file-path = ""../MyService.did""
 			throw new InvalidOperationException($"Missing key '{key}'");
 		}
 
-		private static string? GetOptionalString(TomlTable table, string key)
+		private static T? GetOptional<T>(TomlTable table, string key)
 		{
 			if (table.ContainsKey(key))
 			{
-				return table[key].Cast<string>();
+				return table[key].Cast<T>();
 			}
-			return null;
+			return default;
 		}
 
 		private static void WriteClient(ClientSyntax result, string outputDirectory)

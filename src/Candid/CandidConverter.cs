@@ -1,6 +1,7 @@
 using EdjCase.ICP.Candid.Mapping;
 using EdjCase.ICP.Candid.Mapping.Mappers;
 using EdjCase.ICP.Candid.Models;
+using EdjCase.ICP.Candid.Models.Types;
 using EdjCase.ICP.Candid.Models.Values;
 using System;
 using System.Collections.Concurrent;
@@ -18,33 +19,65 @@ namespace EdjCase.ICP.Candid
 		/// </summary>
 		public static CandidConverter Default { get; } = new CandidConverter();
 
-		/// <summary>
-		/// The options for the converter
-		/// </summary>
-		public CandidConverterOptions Options { get; }
+		private readonly CandidConverterOptions _options;
+
+		private readonly ConcurrentDictionary<Type, ICandidValueMapper> _typeToMapperCache;
+
+
 
 		/// <param name="options">Optional. The options for the converter. If not set, will use defaults</param>
 		public CandidConverter(CandidConverterOptions? options = null)
 		{
-			this.Options = options ?? CandidConverterOptions.Default();
+			this._options = options ?? CandidConverterOptions.Default();
+			this._typeToMapperCache = new ConcurrentDictionary<Type, ICandidValueMapper>();
+		}
+		/// <param name="configureOptions">Configure function for the converter options. Creates default options</param>
+
+		public CandidConverter(Action<CandidConverterOptions> configureOptions) : this()
+		{
+			configureOptions(this._options);
 		}
 
 		/// <summary>
-		/// Converts a C# object into a typed candid value
+		/// Converts a C# object into a candid value
 		/// </summary>
 		/// <param name="obj">The object to convert</param>
-		/// <returns></returns>
-		public CandidTypedValue FromObject(object obj)
+		/// <returns>Candid value mapped from the object</returns>
+		public CandidValue FromObject(object obj)
 		{
 			if (ReferenceEquals(obj, null))
 			{
 				throw new ArgumentNullException(nameof(obj));
 			}
-			IObjectMapper mapper = this.Options.ResolveMapper(obj.GetType());
+			ICandidValueMapper mapper = this.ResolveMapper(obj.GetType());
 
-			CandidTypedValue value = mapper!.Map(obj, this.Options);
+			return mapper!.Map(obj, this);
+		}
 
-			return value;
+		/// <summary>
+		/// Converts a C# object into a typed candid value
+		/// </summary>
+		/// <typeparam name="T">Type of the object</typeparam>
+		/// <param name="obj">The object to convert</param>
+		/// <returns>Candid typed value mapped from the object</returns>
+		public CandidTypedValue FromTypedObject<T>(T obj)
+			where T : notnull
+		{
+			CandidValue value = this.FromObjectInternal(obj, out ICandidValueMapper mapper);
+			CandidType type = mapper.GetMappedCandidType(obj.GetType()) ?? throw new InvalidOperationException("Type does not map"); ;
+			return new CandidTypedValue(value, type);
+		}
+
+
+		private CandidValue FromObjectInternal(object obj, out ICandidValueMapper mapper)
+		{
+			if (ReferenceEquals(obj, null))
+			{
+				throw new ArgumentNullException(nameof(obj));
+			}
+			mapper = this.ResolveMapper(obj.GetType());
+
+			return mapper!.Map(obj, this);
 		}
 
 		/// <summary>
@@ -78,8 +111,8 @@ namespace EdjCase.ICP.Candid
 		/// <returns>A C# object of the value</returns>
 		public object ToObject(Type objType, CandidValue value)
 		{
-			IObjectMapper mapper = this.Options.ResolveMapper(objType);
-			return mapper!.Map(value, this.Options);
+			ICandidValueMapper mapper = this.ResolveMapper(objType);
+			return mapper!.Map(value, this);
 		}
 
 		/// <summary>
@@ -98,65 +131,41 @@ namespace EdjCase.ICP.Candid
 			return OptionalValue<object>.WithValue(v);
 		}
 
-	}
 
-	/// <summary>
-	/// Options for configuring how candid is convertered
-	/// </summary>
-	public class CandidConverterOptions
-	{
-		private Func<Type, IObjectMapper?>? CustomMappingResolver { get; }
 
-		private readonly ConcurrentDictionary<Type, IObjectMapper> _typeToMapperCache;
-
-		private CandidConverterOptions(Func<Type, IObjectMapper?>? customMappingResolver = null)
-		{
-			this._typeToMapperCache = new ConcurrentDictionary<Type, IObjectMapper>();
-			this.CustomMappingResolver = customMappingResolver;
-		}
-
-		/// <summary>
-		/// Resolves a mapper from the specified type
-		/// </summary>
-		/// <param name="type">The C# type to convert to and from</param>
-		/// <returns>A mapper for conversion</returns>
-		public IObjectMapper ResolveMapper(Type type)
+		private ICandidValueMapper ResolveMapper(Type type)
 		{
 			return this._typeToMapperCache.GetOrAdd(type, this.ResolveUncached);
 		}
 
-		/// <summary>
-		/// Creates the default options with its own mapper resolver
-		/// </summary>
-		/// <returns>Default converter options</returns>
-		public static CandidConverterOptions Default()
-		{
-			return new CandidConverterOptions();
-		}
-
-		/// <summary>
-		/// Creates options with a mapper resolver function, falls back to default if no mappers are found
-		/// </summary>
-		/// <param name="resolver">A function to resolve a mapper from a type</param>
-		/// <returns>Converter options with resolver</returns>
-		public static CandidConverterOptions FromResolver(Func<Type, IObjectMapper?> resolver)
-		{
-			return new CandidConverterOptions(resolver);
-		}
-
-		private IObjectMapper ResolveUncached(Type type)
+		private ICandidValueMapper ResolveUncached(Type type)
 		{
 			CustomMapperAttribute? mapperAttr = type.GetCustomAttribute<CustomMapperAttribute>();
 			if (mapperAttr != null)
 			{
 				return mapperAttr.Mapper;
 			}
-			IObjectMapper? mapper = this.CustomMappingResolver?.Invoke(type);
+			ICandidValueMapper? mapper = null;
+			if (this._options.CustomMappers != null)
+			{
+				foreach (ICandidValueMapper customMapper in this._options.CustomMappers)
+				{
+					CandidType? mappedType = customMapper.GetMappedCandidType(type);
+					if (mappedType != null)
+					{
+						mapper = customMapper;
+						break;
+					}
+				}
+			}
 
 			return mapper == null
 				// Create a dynamic mapper if no custom one
 				? DefaultMapperFactory.Build(type)
 				: mapper;
 		}
+
 	}
+
+	
 }

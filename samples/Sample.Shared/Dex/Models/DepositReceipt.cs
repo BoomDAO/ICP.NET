@@ -16,7 +16,7 @@ namespace Sample.Shared.Dex.Models
 		[VariantValueProperty()]
 		public System.Object? Value { get; set; }
 
-		public DepositReceipt(DepositReceiptTag tag, object? value)
+		public DepositReceipt(DepositReceiptTag tag, object? value = null)
 		{
 			this.Tag = tag;
 			this.Value = value;

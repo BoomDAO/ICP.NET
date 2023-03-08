@@ -26,14 +26,15 @@ namespace EdjCase.ICP.Candid.Tests.Generators
 			string fileText = GetFileText(serviceName + ".did");
 			string baseNamespace = "Test";
 			CandidServiceDescription serviceFile = CandidServiceDescription.Parse(fileText);
-			ClientSyntax syntax = ClientCodeGenerator.GenerateClient(serviceName, baseNamespace, serviceFile);
+			ClientGenerationOptions options = new(serviceName, baseNamespace);
+			ClientSyntax syntax = ClientCodeGenerator.GenerateClient(serviceFile, options);
 
 			AdhocWorkspace workspace = new();
-			OptionSet options = workspace.Options
+			OptionSet optionsSet = workspace.Options
 				.WithChangedOption(FormattingOptions.UseTabs, LanguageNames.CSharp, value: true)
 				.WithChangedOption(FormattingOptions.NewLine, LanguageNames.CSharp, value: Environment.NewLine);
 
-			string clientCode = Formatter.Format(syntax.ClientFile, workspace, options).ToFullString();
+			string clientCode = Formatter.Format(syntax.ClientFile, workspace, optionsSet).ToFullString();
 
 			//List<SyntaxTree> trees = new()
 			//{
@@ -42,7 +43,7 @@ namespace EdjCase.ICP.Candid.Tests.Generators
 			foreach ((string typeName, CompilationUnitSyntax typeSyntax) in syntax.TypeFiles)
 			{
 				clientCode += $"\n\nType File: '{typeName}'\n\n";
-				clientCode += Formatter.Format(typeSyntax, workspace, options).ToFullString();
+				clientCode += Formatter.Format(typeSyntax, workspace, optionsSet).ToFullString();
 				//trees.Add(SyntaxFactory.SyntaxTree(f.Syntax));
 			}
 

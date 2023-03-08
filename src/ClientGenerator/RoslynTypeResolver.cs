@@ -11,6 +11,7 @@ using EdjCase.ICP.Candid.Mapping;
 using EdjCase.ICP.Candid.Models.Values;
 using EdjCase.ICP.Agent.Responses;
 using System.Threading.Tasks;
+using EdjCase.ICP.Candid;
 
 namespace EdjCase.ICP.ClientGenerator
 {
@@ -72,7 +73,7 @@ namespace EdjCase.ICP.ClientGenerator
 						if (c.GenericType != null)
 						{
 							resolvedGenericType = this.ResolveType(c.GenericType, nameContext + "Item", parentType);
-							if(resolvedGenericType.GeneratedSyntax != null)
+							if (resolvedGenericType.GeneratedSyntax != null)
 							{
 								innerTypes = resolvedGenericType.GeneratedSyntax;
 							}
@@ -125,7 +126,7 @@ namespace EdjCase.ICP.ClientGenerator
 					}
 				case RecordSourceCodeType r:
 					{
-						if(parentType != null)
+						if (parentType != null)
 						{
 							nameContext += "Record";
 						}
@@ -141,11 +142,7 @@ namespace EdjCase.ICP.ClientGenerator
 
 		public ClassDeclarationSyntax GenerateClient(TypeName clientName, ServiceSourceCodeType service)
 		{
-			List<(MethodDeclarationSyntax Method, List<MemberDeclarationSyntax> SubTypes)> methods = service.Methods
-				.Select(method => GenerateFuncMethod(method.Name, method.FuncInfo, clientName, this))
-				.ToList();
-
-
+			ValueName candidConverterProperty = ValueName.Default("Converter");
 			List<ClassProperty> properties = new()
 			{
 				// public IAgent Agent { get; }
@@ -162,8 +159,21 @@ namespace EdjCase.ICP.ClientGenerator
 					type: TypeName.FromType<Principal>(),
 					access: AccessType.Public,
 					hasSetter: false
+				),
+				
+				// public CandidConverter? Converter { get; }
+				new ClassProperty(
+					name: candidConverterProperty,
+					type: TypeName.FromType<CandidConverter>(isNullable: true),
+					access: AccessType.Public,
+					hasSetter: false
 				)
 			};
+
+			List<(MethodDeclarationSyntax Method, List<MemberDeclarationSyntax> SubTypes)> methods = service.Methods
+				.Select(method => GenerateFuncMethod(method.Name, method.FuncInfo, clientName, this, candidConverterProperty))
+				.ToList();
+
 			return GenerateClass(
 				clientName,
 				properties,
@@ -715,7 +725,8 @@ namespace EdjCase.ICP.ClientGenerator
 			ValueName name,
 			ServiceSourceCodeType.Func info,
 			TypeName clientName,
-			RoslynTypeResolver typeResolver
+			RoslynTypeResolver typeResolver,
+			ValueName candidConverterProperty
 		)
 		{
 			List<(ValueName Name, ResolvedType Type)> resolvedArgTypes = info.ArgTypes
@@ -737,7 +748,8 @@ namespace EdjCase.ICP.ClientGenerator
 				argTypes,
 				returnTypes,
 				isQuery: info.IsQuery,
-				typeResolver: typeResolver
+				typeResolver: typeResolver,
+				candidConverterProperty
 			);
 			List<MemberDeclarationSyntax> subTypes = resolvedArgTypes
 				.Where(t => t.Type.GeneratedSyntax != null)
@@ -765,7 +777,8 @@ namespace EdjCase.ICP.ClientGenerator
 			List<TypedValueName> argTypes,
 			List<TypedValueName> returnTypes,
 			bool isQuery,
-			RoslynTypeResolver typeResolver
+			RoslynTypeResolver typeResolver,
+			ValueName candidConverterProperty
 		)
 		{
 			// Build arguments for conversion to CandidArg
@@ -854,15 +867,22 @@ namespace EdjCase.ICP.ClientGenerator
 			}
 			else
 			{
-				// `CandidArg reply = this.Agent.CallAndWaitAsync(this.CanisterId, {methodName}, arg)`
+				// `CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, {methodName}, arg)`
 				StatementSyntax invokeCallAndWait = GenerateCallAndWait(methodName.CandidName, argName, variableName);
 				statements.Add(invokeCallAndWait);
 
 			}
 			if (returnTypes.Any())
 			{
+				ArgumentSyntax converterArg = SyntaxFactory.Argument(
+					SyntaxFactory.MemberAccessExpression(
+						SyntaxKind.SimpleMemberAccessExpression,
+						SyntaxFactory.ThisExpression(),
+						SyntaxFactory.IdentifierName(candidConverterProperty.PropertyName)
+					)
+				);
 				statements.Add(
-					// `return reply.ToObjects<{T1}, {T2}, ...>();`
+					// `return reply.ToObjects<{T1}, {T2}, ...>(candidConverter);`
 					SyntaxFactory.ReturnStatement(
 						SyntaxFactory.InvocationExpression(
 							SyntaxFactory.MemberAccessExpression(
@@ -879,6 +899,11 @@ namespace EdjCase.ICP.ClientGenerator
 										)
 									)
 								)
+							)
+						)
+						.WithArgumentList(
+							SyntaxFactory.ArgumentList(
+								SyntaxFactory.SingletonSeparatedList(converterArg)
 							)
 						)
 					)
@@ -1042,48 +1067,6 @@ namespace EdjCase.ICP.ClientGenerator
 				.Select(p =>
 				{
 					var value = SyntaxFactory.IdentifierName(p.Name.VariableName);
-					// TODO detect nullable
-					//if (p.IsNullable)
-					//{
-					//	// this.Value = value ?? throw new ArguemntNullException(nameof(value))
-					//	value = SyntaxFactory.BinaryExpression(
-					//			SyntaxKind.CoalesceExpression,
-					//			value,
-					//			SyntaxFactory.ThrowExpression(
-					//				SyntaxFactory.ObjectCreationExpression(
-					//					SyntaxFactory.IdentifierName(typeof(ArgumentNullException).FullName!)
-					//				)
-					//				.WithArgumentList(
-					//					SyntaxFactory.ArgumentList(
-					//						SyntaxFactory.SingletonSeparatedList(
-					//							SyntaxFactory.Argument(
-					//								SyntaxFactory.InvocationExpression(
-					//									SyntaxFactory.IdentifierName(
-					//										SyntaxFactory.Identifier(
-					//											SyntaxFactory.TriviaList(),
-					//											SyntaxKind.NameOfKeyword,
-					//											"nameof",
-					//											"nameof",
-					//											SyntaxFactory.TriviaList()
-					//										)
-					//									)
-					//								)
-					//								.WithArgumentList(
-					//									SyntaxFactory.ArgumentList(
-					//										SyntaxFactory.SingletonSeparatedList<ArgumentSyntax>(
-					//											SyntaxFactory.Argument(
-					//												SyntaxFactory.IdentifierName(p.Name.CamelCaseValue)
-					//											)
-					//										)
-					//									)
-					//								)
-					//							)
-					//						)
-					//					)
-					//				)
-					//			)
-					//		)
-					//}
 					return SyntaxFactory.ExpressionStatement(
 						SyntaxFactory.AssignmentExpression(
 							SyntaxKind.SimpleAssignmentExpression,
@@ -1109,7 +1092,24 @@ namespace EdjCase.ICP.ClientGenerator
 						SyntaxFactory.SeparatedList(
 							properties
 							.Where(p => p.Type != null)
-							.Select(p => SyntaxFactory.Parameter(SyntaxFactory.Identifier(p.Name.VariableName)).WithType(p.Type!.ToTypeSyntax()))
+							.Select(p =>
+							{
+								var param = SyntaxFactory.Parameter(
+									SyntaxFactory.Identifier(p.Name.VariableName)
+								)
+								.WithType(p.Type!.ToTypeSyntax());
+								if (p.Type?.GetName().EndsWith("?") == true)
+								{
+									// TODO better null detection
+									param = param
+										.WithDefault(SyntaxFactory.EqualsValueClause(
+											SyntaxFactory.LiteralExpression(
+												SyntaxKind.NullLiteralExpression)
+											)
+										);
+								}
+								return param;
+							})
 						)
 					)
 				)

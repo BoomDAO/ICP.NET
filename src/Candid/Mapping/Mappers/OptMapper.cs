@@ -6,61 +6,73 @@ using System.Reflection;
 
 namespace EdjCase.ICP.Candid.Mapping.Mappers
 {
-	internal class OptMapper : IObjectMapper
+	internal class OptMapper : ICandidValueMapper
 	{
 		public CandidType CandidType { get; }
 		public Type Type { get; }
 		public CandidType InnerCandidType { get; }
 		public Type InnerType { get; }
-		public IObjectMapper? OverrideInnerMapper { get; }
 
 		private PropertyInfo hasValueProp;
 		private MethodInfo valueGetFunc;
 
-		public OptMapper(CandidType innerCandidType, Type innerType, IObjectMapper? overrideInnerMapper)
+		public OptMapper(
+			CandidType innerCandidType,
+			Type innerType
+		)
 		{
 			this.InnerCandidType = innerCandidType ?? throw new ArgumentNullException(nameof(innerCandidType));
 			this.InnerType = innerType ?? throw new ArgumentNullException(nameof(innerType));
 			this.Type = typeof(OptionalValue<>).MakeGenericType(innerType);
 			this.CandidType = new CandidOptionalType(this.InnerCandidType);
-			this.OverrideInnerMapper = overrideInnerMapper;
 			this.hasValueProp = this.Type.GetProperty(nameof(OptionalValue<object>.HasValue));
 			this.valueGetFunc = this.Type.GetMethod(nameof(OptionalValue<object>.GetValueOrThrow));
 		}
 
-		public object Map(CandidValue value, CandidConverterOptions options)
+		public object Map(CandidValue value, CandidConverter converter)
 		{
 			CandidOptional opt = value.AsOptional();
 
-			object? innerValue;
-			bool hasValue;
 			if (!opt.Value.IsNull())
 			{
-				innerValue = (this.OverrideInnerMapper ?? options.ResolveMapper(this.InnerType)).Map(opt.Value, options);
-				hasValue = true;
+				object innerValue = converter.ToObject(this.InnerType, opt.Value);
+
+				return Activator.CreateInstance(
+					this.Type,
+					BindingFlags.Public | BindingFlags.Instance,
+					null,
+					new object?[] { innerValue },
+					null
+				);
 			}
 			else
 			{
-				innerValue = null;
-				hasValue = false;
+				// Empty constructor
+				return Activator.CreateInstance(
+					this.Type,
+					BindingFlags.Public | BindingFlags.Instance,
+					null,
+					new object?[] { },
+					null
+				);
 			}
-			return Activator.CreateInstance(this.Type, BindingFlags.NonPublic | BindingFlags.Instance, null, new object?[] { hasValue, innerValue }, null);
 		}
 
-		public CandidTypedValue Map(object obj, CandidConverterOptions options)
+		public CandidValue Map(object obj, CandidConverter converter)
 		{
 			bool hasValue = (bool)this.hasValueProp.GetValue(obj);
-			CandidValue? v;
 			if (!hasValue)
 			{
-				v = null;
+				return CandidOptional.Null();
 			}
-			else
-			{
-				object innerValue = this.valueGetFunc.Invoke(obj, new object[0]);
-				v = (this.OverrideInnerMapper ?? options.ResolveMapper(this.InnerType)).Map(innerValue, options).Value;
-			}
-			return new CandidTypedValue(new CandidOptional(v), this.CandidType);
+			object innerValue = this.valueGetFunc.Invoke(obj, new object[0]);
+			CandidValue innerTypedValue = converter.FromObject(innerValue);
+			return new CandidOptional(innerTypedValue);
+		}
+
+		public CandidType? GetMappedCandidType(Type type)
+		{
+			return this.CandidType;
 		}
 	}
 }

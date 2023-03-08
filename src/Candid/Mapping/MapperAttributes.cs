@@ -30,10 +30,10 @@ namespace EdjCase.ICP.Candid.Mapping
 		/// <summary>
 		/// The object mapper to use for the decorated item
 		/// </summary>
-		public IObjectMapper Mapper { get; }
+		public ICandidValueMapper Mapper { get; }
 
 		/// <param name="mapper">The object mapper to use for the decorated item</param>
-		public CustomMapperAttribute(IObjectMapper mapper)
+		public CustomMapperAttribute(ICandidValueMapper mapper)
 		{
 			this.Mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
 		}

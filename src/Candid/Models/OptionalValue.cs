@@ -12,14 +12,30 @@ namespace EdjCase.ICP.Candid.Models
 		/// <summary>
 		/// Is true if there is a value, false if null
 		/// </summary>
-		public bool HasValue { get; }
+		public bool HasValue { get; private set; }
 
-		private T? value { get; }
+		/// <summary>
+		/// The value, will be set if `HasValue`, otherwise will be default value
+		/// </summary>
+		public T? ValueOrDefault { get; private set; }
 
-		private OptionalValue(bool hasValue, T? value)
+		/// <summary>
+		/// Constructor to create an optional value with no value
+		/// </summary>
+		public OptionalValue()
 		{
-			this.HasValue = hasValue;
-			this.value = value;
+			this.HasValue = false;
+			this.ValueOrDefault = default;
+		}
+
+		/// <summary>
+		/// Constructor to create an optional value with a value
+		/// </summary>
+		/// <param name="value"></param>
+		public OptionalValue(T value)
+		{
+			this.HasValue = true;
+			this.ValueOrDefault = value;
 		}
 
 		/// <summary>
@@ -33,7 +49,7 @@ namespace EdjCase.ICP.Candid.Models
 			{
 				throw new InvalidOperationException("OptionalValue is not set, cannot get value");
 			}
-			return this.value!;
+			return this.ValueOrDefault!;
 		}
 
 		/// <summary>
@@ -46,7 +62,35 @@ namespace EdjCase.ICP.Candid.Models
 			{
 				return default;
 			}
-			return this.value!;
+			return this.ValueOrDefault!;
+		}
+
+		/// <summary>
+		/// Gets the type of the optional value, even if there is no value
+		/// </summary>
+		/// <returns>The type of the value</returns>
+		public Type GetValueType()
+		{
+			return typeof(T);
+		}
+
+		/// <summary>
+		/// Sets the value and sets `HasValue` to true
+		/// </summary>
+		/// <param name="value">The value to set</param>
+		public void SetValue(T value)
+		{
+			this.HasValue = true;
+			this.ValueOrDefault = value;
+		}
+
+		/// <summary>
+		/// Removes the current value and sets `HasValue` to false
+		/// </summary>
+		public void UnsetValue()
+		{
+			this.HasValue = false;
+			this.ValueOrDefault = default;
 		}
 
 		/// <summary>
@@ -59,7 +103,7 @@ namespace EdjCase.ICP.Candid.Models
 		{
 			if (this.HasValue)
 			{
-				value = this.value!;
+				value = this.ValueOrDefault!;
 				return true;
 			}
 			else
@@ -78,9 +122,9 @@ namespace EdjCase.ICP.Candid.Models
 		{
 			if (!this.HasValue)
 			{
-				return new OptionalValue<T2>(false, default);
+				return new OptionalValue<T2>();
 			}
-			return new OptionalValue<T2>(true, (T2)(object)this.value!);
+			return new OptionalValue<T2>((T2)(object)this.ValueOrDefault!);
 		}
 
 		/// <inheritdoc />
@@ -145,7 +189,7 @@ namespace EdjCase.ICP.Candid.Models
 		/// <returns>An empty optional value</returns>
 		public static OptionalValue<T> NoValue()
 		{
-			return new OptionalValue<T>(false, default);
+			return new OptionalValue<T>();
 		}
 
 		/// <summary>
@@ -154,7 +198,7 @@ namespace EdjCase.ICP.Candid.Models
 		/// <returns>An optional value with a value</returns>
 		public static OptionalValue<T> WithValue(T value)
 		{
-			return new OptionalValue<T>(true, value);
+			return new OptionalValue<T>(value);
 		}
 	}
 }

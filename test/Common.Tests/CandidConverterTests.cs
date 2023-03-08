@@ -177,8 +177,9 @@ namespace EdjCase.ICP.Candid.Tests
 
 
 		private void Test<T>(T raw, CandidTypedValue candid, Func<T, T, bool> areEqual)
+			where T : notnull
 		{
-			CandidTypedValue actual = CandidConverter.Default.FromObject(raw!);
+			CandidTypedValue actual = CandidConverter.Default.FromTypedObject(raw!);
 			Assert.Equal(candid, actual);
 
 

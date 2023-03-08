@@ -8,8 +8,7 @@ using System.Linq;
 
 namespace EdjCase.ICP.Candid.Mapping.Mappers
 {
-
-	internal class VariantMapper : IObjectMapper
+	internal class VariantMapper : ICandidValueMapper
 	{
 		public CandidType CandidType { get; }
 		public Type Type { get; }
@@ -33,17 +32,16 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 			this.EnumMapping = options.ToDictionary(k => k.Value.EnumValue, k => k.Key);
 		}
 
-		public object Map(CandidValue value, CandidConverterOptions options)
+		public object Map(CandidValue value, CandidConverter converter)
 		{
 			CandidVariant variant = value.AsVariant();
 			object obj = Activator.CreateInstance(this.Type, nonPublic: true);
 			Option optionInfo = this.Options[variant.Tag];
-			IObjectMapper? optionMapper = optionInfo.ValueInfo?.OverrideMapper ?? (optionInfo.ValueInfo == null ? null : options.ResolveMapper(optionInfo.ValueInfo.Type));
 
 			object? variantValue;
-			if (optionMapper != null)
+			if (optionInfo.Type != null)
 			{
-				variantValue = optionMapper.Map(variant.Value, options);
+				variantValue = converter.ToObject(optionInfo.Type, variant.Value);
 			}
 			else
 			{
@@ -54,48 +52,39 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 			return obj;
 		}
 
-		public CandidTypedValue Map(object obj, CandidConverterOptions options)
+		public CandidValue Map(object obj, CandidConverter converter)
 		{
 			Enum enumValue = (Enum)this.TypeProperty.GetValue(obj);
 			CandidTag innerTag = this.EnumMapping[enumValue];
 			object? innerObj = this.ValueProperty.GetValue(obj);
 			Option optionInfo = this.Options[innerTag];
 
-			IObjectMapper? optionMapper = optionInfo.ValueInfo?.OverrideMapper ?? (optionInfo.ValueInfo == null ? null : options.ResolveMapper(optionInfo.ValueInfo.Type));
 			CandidValue innerValue;
-			if (optionMapper != null)
+			if (optionInfo.Type != null)
 			{
-				CandidTypedValue t = optionMapper.Map(innerObj!, options);
-				innerValue = t.Value;
+				innerValue = converter.FromObject(innerObj!);
 			}
 			else
 			{
 				innerValue = CandidValue.Null();
 			}
-			return new CandidTypedValue(new CandidVariant(innerTag, innerValue), this.CandidType);
+			return new CandidVariant(innerTag, innerValue);
+		}
+
+		public CandidType? GetMappedCandidType(Type type)
+		{
+			return this.CandidType;
 		}
 
 		public class Option
 		{
 			public Enum EnumValue { get; }
-			public ValueInfo? ValueInfo { get; }
+			public Type? Type { get; }
 
-			public Option(Enum enumValue, ValueInfo? valueInfo)
+			public Option(Enum enumValue, Type? type)
 			{
 				this.EnumValue = enumValue ?? throw new ArgumentNullException(nameof(enumValue));
-				this.ValueInfo = valueInfo;
-			}
-		}
-
-		public class ValueInfo
-		{
-			public Type Type { get; }
-			public IObjectMapper? OverrideMapper { get; }
-
-			public ValueInfo(Type type, IObjectMapper? overrideMapper)
-			{
-				this.Type = type ?? throw new ArgumentNullException(nameof(type));
-				this.OverrideMapper = overrideMapper;
+				this.Type = type;
 			}
 		}
 	}

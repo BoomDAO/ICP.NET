@@ -9,7 +9,7 @@ using System.Linq;
 namespace EdjCase.ICP.Candid.Mapping.Mappers
 {
 
-	internal class VariantEnumMapper : IObjectMapper
+	internal class VariantEnumMapper : ICandidValueMapper
 	{
 		public CandidType CandidType { get; }
 		public Type Type { get; }
@@ -27,18 +27,23 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 			this.EnumToTag = options.ToDictionary(o => o.Value, o => o.Key);
 		}
 
-		public object Map(CandidValue value, CandidConverterOptions options)
+		public object Map(CandidValue value, CandidConverter converter)
 		{
 			CandidVariant variant = value.AsVariant();
 			return this.TagToEnum[variant.Tag];
 		}
 
-		public CandidTypedValue Map(object obj, CandidConverterOptions options)
+		public CandidValue Map(object value, CandidConverter converter)
 		{
-			Enum enumValue = (Enum)obj;
+			Enum enumValue = (Enum)value;
 			CandidTag tag = this.EnumToTag[enumValue];
 
-			return new CandidTypedValue(new CandidVariant(tag, null), this.CandidType);
+			return new CandidVariant(tag, null); // Variant enums never have a value
+		}
+
+		public CandidType? GetMappedCandidType(Type type)
+		{
+			return this.CandidType;
 		}
 
 		public class Option
@@ -56,9 +61,9 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 		public class ValueInfo
 		{
 			public Type Type { get; }
-			public IObjectMapper? OverrideMapper { get; }
+			public ICandidValueMapper? OverrideMapper { get; }
 
-			public ValueInfo(Type type, IObjectMapper? overrideMapper)
+			public ValueInfo(Type type, ICandidValueMapper? overrideMapper)
 			{
 				this.Type = type ?? throw new ArgumentNullException(nameof(type));
 				this.OverrideMapper = overrideMapper;
