@@ -66,7 +66,7 @@ public class Program
 		CandidConverter candidConverter = new CandidConverter(options =>
 		{
 		});
-		var client = new GovernanceApiClient(agent, canisterId);
+		var client = new GovernanceApiClient(agent, canisterId, candidConverter);
 		var a = await client.GetProposalInfo(110174);
 
 	}
