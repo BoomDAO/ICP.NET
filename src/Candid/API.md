@@ -37,16 +37,13 @@
 - [CandidConverter](#T-EdjCase-ICP-Candid-CandidConverter 'EdjCase.ICP.Candid.CandidConverter')
   - [#ctor(options)](#M-EdjCase-ICP-Candid-CandidConverter-#ctor-EdjCase-ICP-Candid-CandidConverterOptions- 'EdjCase.ICP.Candid.CandidConverter.#ctor(EdjCase.ICP.Candid.CandidConverterOptions)')
   - [Default](#P-EdjCase-ICP-Candid-CandidConverter-Default 'EdjCase.ICP.Candid.CandidConverter.Default')
-  - [Options](#P-EdjCase-ICP-Candid-CandidConverter-Options 'EdjCase.ICP.Candid.CandidConverter.Options')
   - [FromObject(obj)](#M-EdjCase-ICP-Candid-CandidConverter-FromObject-System-Object- 'EdjCase.ICP.Candid.CandidConverter.FromObject(System.Object)')
+  - [FromTypedObject\`\`1(obj)](#M-EdjCase-ICP-Candid-CandidConverter-FromTypedObject``1-``0- 'EdjCase.ICP.Candid.CandidConverter.FromTypedObject``1(``0)')
   - [ToObject(objType,value)](#M-EdjCase-ICP-Candid-CandidConverter-ToObject-System-Type,EdjCase-ICP-Candid-Models-Values-CandidValue- 'EdjCase.ICP.Candid.CandidConverter.ToObject(System.Type,EdjCase.ICP.Candid.Models.Values.CandidValue)')
   - [ToObject\`\`1(value)](#M-EdjCase-ICP-Candid-CandidConverter-ToObject``1-EdjCase-ICP-Candid-Models-Values-CandidValue- 'EdjCase.ICP.Candid.CandidConverter.ToObject``1(EdjCase.ICP.Candid.Models.Values.CandidValue)')
   - [ToOptionalObject(objType,value)](#M-EdjCase-ICP-Candid-CandidConverter-ToOptionalObject-System-Type,EdjCase-ICP-Candid-Models-Values-CandidOptional- 'EdjCase.ICP.Candid.CandidConverter.ToOptionalObject(System.Type,EdjCase.ICP.Candid.Models.Values.CandidOptional)')
   - [ToOptionalObject\`\`1(value)](#M-EdjCase-ICP-Candid-CandidConverter-ToOptionalObject``1-EdjCase-ICP-Candid-Models-Values-CandidOptional- 'EdjCase.ICP.Candid.CandidConverter.ToOptionalObject``1(EdjCase.ICP.Candid.Models.Values.CandidOptional)')
 - [CandidConverterOptions](#T-EdjCase-ICP-Candid-CandidConverterOptions 'EdjCase.ICP.Candid.CandidConverterOptions')
-  - [Default()](#M-EdjCase-ICP-Candid-CandidConverterOptions-Default 'EdjCase.ICP.Candid.CandidConverterOptions.Default')
-  - [FromResolver(resolver)](#M-EdjCase-ICP-Candid-CandidConverterOptions-FromResolver-System-Func{System-Type,EdjCase-ICP-Candid-Mapping-IObjectMapper}- 'EdjCase.ICP.Candid.CandidConverterOptions.FromResolver(System.Func{System.Type,EdjCase.ICP.Candid.Mapping.IObjectMapper})')
-  - [ResolveMapper(type)](#M-EdjCase-ICP-Candid-CandidConverterOptions-ResolveMapper-System-Type- 'EdjCase.ICP.Candid.CandidConverterOptions.ResolveMapper(System.Type)')
 - [CandidDecodingException](#T-EdjCase-ICP-Candid-Exceptions-CandidDecodingException 'EdjCase.ICP.Candid.Exceptions.CandidDecodingException')
   - [#ctor(byteEndIndex,message)](#M-EdjCase-ICP-Candid-Exceptions-CandidDecodingException-#ctor-System-Int32,System-String- 'EdjCase.ICP.Candid.Exceptions.CandidDecodingException.#ctor(System.Int32,System.String)')
   - [ByteEndIndex](#P-EdjCase-ICP-Candid-Exceptions-CandidDecodingException-ByteEndIndex 'EdjCase.ICP.Candid.Exceptions.CandidDecodingException.ByteEndIndex')
@@ -294,7 +291,7 @@
   - [Equals()](#M-EdjCase-ICP-Candid-Models-CandidTypedValue-Equals-System-Object- 'EdjCase.ICP.Candid.Models.CandidTypedValue.Equals(System.Object)')
   - [Float32(value)](#M-EdjCase-ICP-Candid-Models-CandidTypedValue-Float32-System-Single- 'EdjCase.ICP.Candid.Models.CandidTypedValue.Float32(System.Single)')
   - [Float64(value)](#M-EdjCase-ICP-Candid-Models-CandidTypedValue-Float64-System-Double- 'EdjCase.ICP.Candid.Models.CandidTypedValue.Float64(System.Double)')
-  - [FromObject(value,converter)](#M-EdjCase-ICP-Candid-Models-CandidTypedValue-FromObject-System-Object,EdjCase-ICP-Candid-CandidConverter- 'EdjCase.ICP.Candid.Models.CandidTypedValue.FromObject(System.Object,EdjCase.ICP.Candid.CandidConverter)')
+  - [FromObject\`\`1(value,converter)](#M-EdjCase-ICP-Candid-Models-CandidTypedValue-FromObject``1-``0,EdjCase-ICP-Candid-CandidConverter- 'EdjCase.ICP.Candid.Models.CandidTypedValue.FromObject``1(``0,EdjCase.ICP.Candid.CandidConverter)')
   - [FromValueAndType(value,type)](#M-EdjCase-ICP-Candid-Models-CandidTypedValue-FromValueAndType-EdjCase-ICP-Candid-Models-Values-CandidValue,EdjCase-ICP-Candid-Models-Types-CandidType- 'EdjCase.ICP.Candid.Models.CandidTypedValue.FromValueAndType(EdjCase.ICP.Candid.Models.Values.CandidValue,EdjCase.ICP.Candid.Models.Types.CandidType)')
   - [GetHashCode()](#M-EdjCase-ICP-Candid-Models-CandidTypedValue-GetHashCode 'EdjCase.ICP.Candid.Models.CandidTypedValue.GetHashCode')
   - [Int(value)](#M-EdjCase-ICP-Candid-Models-CandidTypedValue-Int-EdjCase-ICP-Candid-Models-UnboundedInt- 'EdjCase.ICP.Candid.Models.CandidTypedValue.Int(EdjCase.ICP.Candid.Models.UnboundedInt)')
@@ -372,6 +369,12 @@
   - [ToString()](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-ToString 'EdjCase.ICP.Candid.Models.Values.CandidValue.ToString')
   - [op_Equality()](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-op_Equality-EdjCase-ICP-Candid-Models-Values-CandidValue,EdjCase-ICP-Candid-Models-Values-CandidValue- 'EdjCase.ICP.Candid.Models.Values.CandidValue.op_Equality(EdjCase.ICP.Candid.Models.Values.CandidValue,EdjCase.ICP.Candid.Models.Values.CandidValue)')
   - [op_Inequality()](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-op_Inequality-EdjCase-ICP-Candid-Models-Values-CandidValue,EdjCase-ICP-Candid-Models-Values-CandidValue- 'EdjCase.ICP.Candid.Models.Values.CandidValue.op_Inequality(EdjCase.ICP.Candid.Models.Values.CandidValue,EdjCase.ICP.Candid.Models.Values.CandidValue)')
+- [CandidValueMapper\`1](#T-EdjCase-ICP-Candid-Mapping-CandidValueMapper`1 'EdjCase.ICP.Candid.Mapping.CandidValueMapper`1')
+  - [GetMappedCandidType()](#M-EdjCase-ICP-Candid-Mapping-CandidValueMapper`1-GetMappedCandidType-System-Type- 'EdjCase.ICP.Candid.Mapping.CandidValueMapper`1.GetMappedCandidType(System.Type)')
+  - [Map()](#M-EdjCase-ICP-Candid-Mapping-CandidValueMapper`1-Map-EdjCase-ICP-Candid-Models-Values-CandidValue,EdjCase-ICP-Candid-CandidConverter- 'EdjCase.ICP.Candid.Mapping.CandidValueMapper`1.Map(EdjCase.ICP.Candid.Models.Values.CandidValue,EdjCase.ICP.Candid.CandidConverter)')
+  - [Map()](#M-EdjCase-ICP-Candid-Mapping-CandidValueMapper`1-Map-System-Object,EdjCase-ICP-Candid-CandidConverter- 'EdjCase.ICP.Candid.Mapping.CandidValueMapper`1.Map(System.Object,EdjCase.ICP.Candid.CandidConverter)')
+  - [MapGeneric(value,converter)](#M-EdjCase-ICP-Candid-Mapping-CandidValueMapper`1-MapGeneric-EdjCase-ICP-Candid-Models-Values-CandidValue,EdjCase-ICP-Candid-CandidConverter- 'EdjCase.ICP.Candid.Mapping.CandidValueMapper`1.MapGeneric(EdjCase.ICP.Candid.Models.Values.CandidValue,EdjCase.ICP.Candid.CandidConverter)')
+  - [MapGeneric(value,converter)](#M-EdjCase-ICP-Candid-Mapping-CandidValueMapper`1-MapGeneric-`0,EdjCase-ICP-Candid-CandidConverter- 'EdjCase.ICP.Candid.Mapping.CandidValueMapper`1.MapGeneric(`0,EdjCase.ICP.Candid.CandidConverter)')
 - [CandidValueType](#T-EdjCase-ICP-Candid-Models-Values-CandidValueType 'EdjCase.ICP.Candid.Models.Values.CandidValueType')
   - [Func](#F-EdjCase-ICP-Candid-Models-Values-CandidValueType-Func 'EdjCase.ICP.Candid.Models.Values.CandidValueType.Func')
   - [Optional](#F-EdjCase-ICP-Candid-Models-Values-CandidValueType-Optional 'EdjCase.ICP.Candid.Models.Values.CandidValueType.Optional')
@@ -414,7 +417,7 @@
   - [CompoundTypeIndexMap](#F-EdjCase-ICP-Candid-Models-CompoundTypeTable-CompoundTypeIndexMap 'EdjCase.ICP.Candid.Models.CompoundTypeTable.CompoundTypeIndexMap')
   - [TryAdd(typeDef)](#M-EdjCase-ICP-Candid-Models-CompoundTypeTable-TryAdd-EdjCase-ICP-Candid-Models-Types-CandidCompoundType- 'EdjCase.ICP.Candid.Models.CompoundTypeTable.TryAdd(EdjCase.ICP.Candid.Models.Types.CandidCompoundType)')
 - [CustomMapperAttribute](#T-EdjCase-ICP-Candid-Mapping-CustomMapperAttribute 'EdjCase.ICP.Candid.Mapping.CustomMapperAttribute')
-  - [#ctor(mapper)](#M-EdjCase-ICP-Candid-Mapping-CustomMapperAttribute-#ctor-EdjCase-ICP-Candid-Mapping-IObjectMapper- 'EdjCase.ICP.Candid.Mapping.CustomMapperAttribute.#ctor(EdjCase.ICP.Candid.Mapping.IObjectMapper)')
+  - [#ctor(mapper)](#M-EdjCase-ICP-Candid-Mapping-CustomMapperAttribute-#ctor-EdjCase-ICP-Candid-Mapping-ICandidValueMapper- 'EdjCase.ICP.Candid.Mapping.CustomMapperAttribute.#ctor(EdjCase.ICP.Candid.Mapping.ICandidValueMapper)')
   - [Mapper](#P-EdjCase-ICP-Candid-Mapping-CustomMapperAttribute-Mapper 'EdjCase.ICP.Candid.Mapping.CustomMapperAttribute.Mapper')
 - [EmptyValue](#T-EdjCase-ICP-Candid-Models-EmptyValue 'EdjCase.ICP.Candid.Models.EmptyValue')
 - [EncodedValue](#T-EdjCase-ICP-Candid-Models-HashTree-EncodedValue 'EdjCase.ICP.Candid.Models.HashTree.EncodedValue')
@@ -473,15 +476,14 @@
   - [ToString()](#M-EdjCase-ICP-Candid-Models-ICTimestamp-ToString 'EdjCase.ICP.Candid.Models.ICTimestamp.ToString')
   - [op_GreaterThanOrEqual()](#M-EdjCase-ICP-Candid-Models-ICTimestamp-op_GreaterThanOrEqual-EdjCase-ICP-Candid-Models-ICTimestamp,EdjCase-ICP-Candid-Models-ICTimestamp- 'EdjCase.ICP.Candid.Models.ICTimestamp.op_GreaterThanOrEqual(EdjCase.ICP.Candid.Models.ICTimestamp,EdjCase.ICP.Candid.Models.ICTimestamp)')
   - [op_LessThanOrEqual()](#M-EdjCase-ICP-Candid-Models-ICTimestamp-op_LessThanOrEqual-EdjCase-ICP-Candid-Models-ICTimestamp,EdjCase-ICP-Candid-Models-ICTimestamp- 'EdjCase.ICP.Candid.Models.ICTimestamp.op_LessThanOrEqual(EdjCase.ICP.Candid.Models.ICTimestamp,EdjCase.ICP.Candid.Models.ICTimestamp)')
+- [ICandidValueMapper](#T-EdjCase-ICP-Candid-Mapping-ICandidValueMapper 'EdjCase.ICP.Candid.Mapping.ICandidValueMapper')
+  - [GetMappedCandidType(type)](#M-EdjCase-ICP-Candid-Mapping-ICandidValueMapper-GetMappedCandidType-System-Type- 'EdjCase.ICP.Candid.Mapping.ICandidValueMapper.GetMappedCandidType(System.Type)')
+  - [Map(value,converter)](#M-EdjCase-ICP-Candid-Mapping-ICandidValueMapper-Map-EdjCase-ICP-Candid-Models-Values-CandidValue,EdjCase-ICP-Candid-CandidConverter- 'EdjCase.ICP.Candid.Mapping.ICandidValueMapper.Map(EdjCase.ICP.Candid.Models.Values.CandidValue,EdjCase.ICP.Candid.CandidConverter)')
+  - [Map(value,converter)](#M-EdjCase-ICP-Candid-Mapping-ICandidValueMapper-Map-System-Object,EdjCase-ICP-Candid-CandidConverter- 'EdjCase.ICP.Candid.Mapping.ICandidValueMapper.Map(System.Object,EdjCase.ICP.Candid.CandidConverter)')
 - [IHashFunction](#T-EdjCase-ICP-Candid-Crypto-IHashFunction 'EdjCase.ICP.Candid.Crypto.IHashFunction')
   - [ComputeHash(value)](#M-EdjCase-ICP-Candid-Crypto-IHashFunction-ComputeHash-System-Byte[]- 'EdjCase.ICP.Candid.Crypto.IHashFunction.ComputeHash(System.Byte[])')
 - [IHashable](#T-EdjCase-ICP-Candid-Models-IHashable 'EdjCase.ICP.Candid.Models.IHashable')
   - [ComputeHash(hashFunction)](#M-EdjCase-ICP-Candid-Models-IHashable-ComputeHash-EdjCase-ICP-Candid-Crypto-IHashFunction- 'EdjCase.ICP.Candid.Models.IHashable.ComputeHash(EdjCase.ICP.Candid.Crypto.IHashFunction)')
-- [IObjectMapper](#T-EdjCase-ICP-Candid-Mapping-IObjectMapper 'EdjCase.ICP.Candid.Mapping.IObjectMapper')
-  - [CandidType](#P-EdjCase-ICP-Candid-Mapping-IObjectMapper-CandidType 'EdjCase.ICP.Candid.Mapping.IObjectMapper.CandidType')
-  - [Type](#P-EdjCase-ICP-Candid-Mapping-IObjectMapper-Type 'EdjCase.ICP.Candid.Mapping.IObjectMapper.Type')
-  - [Map(value,options)](#M-EdjCase-ICP-Candid-Mapping-IObjectMapper-Map-EdjCase-ICP-Candid-Models-Values-CandidValue,EdjCase-ICP-Candid-CandidConverterOptions- 'EdjCase.ICP.Candid.Mapping.IObjectMapper.Map(EdjCase.ICP.Candid.Models.Values.CandidValue,EdjCase.ICP.Candid.CandidConverterOptions)')
-  - [Map(value,options)](#M-EdjCase-ICP-Candid-Mapping-IObjectMapper-Map-System-Object,EdjCase-ICP-Candid-CandidConverterOptions- 'EdjCase.ICP.Candid.Mapping.IObjectMapper.Map(System.Object,EdjCase.ICP.Candid.CandidConverterOptions)')
 - [IRepresentationIndependentHashItem](#T-EdjCase-ICP-Candid-Models-IRepresentationIndependentHashItem 'EdjCase.ICP.Candid.Models.IRepresentationIndependentHashItem')
   - [BuildHashableItem()](#M-EdjCase-ICP-Candid-Models-IRepresentationIndependentHashItem-BuildHashableItem 'EdjCase.ICP.Candid.Models.IRepresentationIndependentHashItem.BuildHashableItem')
 - [InvalidCandidException](#T-EdjCase-ICP-Candid-Exceptions-InvalidCandidException 'EdjCase.ICP.Candid.Exceptions.InvalidCandidException')
@@ -1208,15 +1210,25 @@ A class that converts to and from C# and Candid types
 
 A candid converter with the default settings
 
-<a name='P-EdjCase-ICP-Candid-CandidConverter-Options'></a>
-### Options `property`
+<a name='M-EdjCase-ICP-Candid-CandidConverter-FromObject-System-Object-'></a>
+### FromObject(obj) `method`
 
 ##### Summary
 
-The options for the converter
+Converts a C# object into a candid value
 
-<a name='M-EdjCase-ICP-Candid-CandidConverter-FromObject-System-Object-'></a>
-### FromObject(obj) `method`
+##### Returns
+
+Candid value mapped from the object
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| obj | [System.Object](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Object 'System.Object') | The object to convert |
+
+<a name='M-EdjCase-ICP-Candid-CandidConverter-FromTypedObject``1-``0-'></a>
+### FromTypedObject\`\`1(obj) `method`
 
 ##### Summary
 
@@ -1224,13 +1236,19 @@ Converts a C# object into a typed candid value
 
 ##### Returns
 
-
+Candid typed value mapped from the object
 
 ##### Parameters
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| obj | [System.Object](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Object 'System.Object') | The object to convert |
+| obj | [\`\`0](#T-``0 '``0') | The object to convert |
+
+##### Generic Types
+
+| Name | Description |
+| ---- | ----------- |
+| T | Type of the object |
 
 <a name='M-EdjCase-ICP-Candid-CandidConverter-ToObject-System-Type,EdjCase-ICP-Candid-Models-Values-CandidValue-'></a>
 ### ToObject(objType,value) `method`
@@ -1324,55 +1342,6 @@ EdjCase.ICP.Candid
 ##### Summary
 
 Options for configuring how candid is convertered
-
-<a name='M-EdjCase-ICP-Candid-CandidConverterOptions-Default'></a>
-### Default() `method`
-
-##### Summary
-
-Creates the default options with its own mapper resolver
-
-##### Returns
-
-Default converter options
-
-##### Parameters
-
-This method has no parameters.
-
-<a name='M-EdjCase-ICP-Candid-CandidConverterOptions-FromResolver-System-Func{System-Type,EdjCase-ICP-Candid-Mapping-IObjectMapper}-'></a>
-### FromResolver(resolver) `method`
-
-##### Summary
-
-Creates options with a mapper resolver function, falls back to default if no mappers are found
-
-##### Returns
-
-Converter options with resolver
-
-##### Parameters
-
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| resolver | [System.Func{System.Type,EdjCase.ICP.Candid.Mapping.IObjectMapper}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Func 'System.Func{System.Type,EdjCase.ICP.Candid.Mapping.IObjectMapper}') | A function to resolve a mapper from a type |
-
-<a name='M-EdjCase-ICP-Candid-CandidConverterOptions-ResolveMapper-System-Type-'></a>
-### ResolveMapper(type) `method`
-
-##### Summary
-
-Resolves a mapper from the specified type
-
-##### Returns
-
-A mapper for conversion
-
-##### Parameters
-
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| type | [System.Type](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Type 'System.Type') | The C# type to convert to and from |
 
 <a name='T-EdjCase-ICP-Candid-Exceptions-CandidDecodingException'></a>
 ## CandidDecodingException `type`
@@ -4093,8 +4062,8 @@ A candid typed value of the specified value
 | ---- | ---- | ----------- |
 | value | [System.Double](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Double 'System.Double') | The value to use for the float64 |
 
-<a name='M-EdjCase-ICP-Candid-Models-CandidTypedValue-FromObject-System-Object,EdjCase-ICP-Candid-CandidConverter-'></a>
-### FromObject(value,converter) `method`
+<a name='M-EdjCase-ICP-Candid-Models-CandidTypedValue-FromObject``1-``0,EdjCase-ICP-Candid-CandidConverter-'></a>
+### FromObject\`\`1(value,converter) `method`
 
 ##### Summary
 
@@ -4109,7 +4078,7 @@ A candid typed value based on the specified value
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| value | [System.Object](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Object 'System.Object') | An object that can be converted into a candid type/value |
+| value | [\`\`0](#T-``0 '``0') | An object that can be converted into a candid type/value |
 | converter | [EdjCase.ICP.Candid.CandidConverter](#T-EdjCase-ICP-Candid-CandidConverter 'EdjCase.ICP.Candid.CandidConverter') | Optional. Converter to use for the conversion, otherwise will use default converter |
 
 <a name='M-EdjCase-ICP-Candid-Models-CandidTypedValue-FromValueAndType-EdjCase-ICP-Candid-Models-Values-CandidValue,EdjCase-ICP-Candid-Models-Types-CandidType-'></a>
@@ -5488,6 +5457,86 @@ This method has no parameters.
 
 This method has no parameters.
 
+<a name='T-EdjCase-ICP-Candid-Mapping-CandidValueMapper`1'></a>
+## CandidValueMapper\`1 `type`
+
+##### Namespace
+
+EdjCase.ICP.Candid.Mapping
+
+##### Summary
+
+An abstract mapper to map a C# type to and from a candid type
+
+<a name='M-EdjCase-ICP-Candid-Mapping-CandidValueMapper`1-GetMappedCandidType-System-Type-'></a>
+### GetMappedCandidType() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Mapping-CandidValueMapper`1-Map-EdjCase-ICP-Candid-Models-Values-CandidValue,EdjCase-ICP-Candid-CandidConverter-'></a>
+### Map() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Mapping-CandidValueMapper`1-Map-System-Object,EdjCase-ICP-Candid-CandidConverter-'></a>
+### Map() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Mapping-CandidValueMapper`1-MapGeneric-EdjCase-ICP-Candid-Models-Values-CandidValue,EdjCase-ICP-Candid-CandidConverter-'></a>
+### MapGeneric(value,converter) `method`
+
+##### Summary
+
+Maps a candid value to a C# value.
+
+##### Returns
+
+C# value converted from the candid value
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| value | [EdjCase.ICP.Candid.Models.Values.CandidValue](#T-EdjCase-ICP-Candid-Models-Values-CandidValue 'EdjCase.ICP.Candid.Models.Values.CandidValue') | Candid value to map to a C# value |
+| converter | [EdjCase.ICP.Candid.CandidConverter](#T-EdjCase-ICP-Candid-CandidConverter 'EdjCase.ICP.Candid.CandidConverter') | The converter to use for inner types |
+
+<a name='M-EdjCase-ICP-Candid-Mapping-CandidValueMapper`1-MapGeneric-`0,EdjCase-ICP-Candid-CandidConverter-'></a>
+### MapGeneric(value,converter) `method`
+
+##### Summary
+
+Maps a C# value to a candid value and type.
+
+##### Returns
+
+Candid value and type converted from the C# value
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| value | [\`0](#T-`0 '`0') | C# value to map to a candid value |
+| converter | [EdjCase.ICP.Candid.CandidConverter](#T-EdjCase-ICP-Candid-CandidConverter 'EdjCase.ICP.Candid.CandidConverter') | The converter to use for inner types |
+
 <a name='T-EdjCase-ICP-Candid-Models-Values-CandidValueType'></a>
 ## CandidValueType `type`
 
@@ -5879,14 +5928,14 @@ EdjCase.ICP.Candid.Mapping
 
 An attribute that specifies a custom mapper for the class, struct, property or field
 
-<a name='M-EdjCase-ICP-Candid-Mapping-CustomMapperAttribute-#ctor-EdjCase-ICP-Candid-Mapping-IObjectMapper-'></a>
+<a name='M-EdjCase-ICP-Candid-Mapping-CustomMapperAttribute-#ctor-EdjCase-ICP-Candid-Mapping-ICandidValueMapper-'></a>
 ### #ctor(mapper) `constructor`
 
 ##### Parameters
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| mapper | [EdjCase.ICP.Candid.Mapping.IObjectMapper](#T-EdjCase-ICP-Candid-Mapping-IObjectMapper 'EdjCase.ICP.Candid.Mapping.IObjectMapper') | The object mapper to use for the decorated item |
+| mapper | [EdjCase.ICP.Candid.Mapping.ICandidValueMapper](#T-EdjCase-ICP-Candid-Mapping-ICandidValueMapper 'EdjCase.ICP.Candid.Mapping.ICandidValueMapper') | The object mapper to use for the decorated item |
 
 <a name='P-EdjCase-ICP-Candid-Mapping-CustomMapperAttribute-Mapper'></a>
 ### Mapper `property`
@@ -6605,6 +6654,74 @@ This method has no parameters.
 
 This method has no parameters.
 
+<a name='T-EdjCase-ICP-Candid-Mapping-ICandidValueMapper'></a>
+## ICandidValueMapper `type`
+
+##### Namespace
+
+EdjCase.ICP.Candid.Mapping
+
+##### Summary
+
+A mapper interface to map a C# type to and from a candid type
+
+<a name='M-EdjCase-ICP-Candid-Mapping-ICandidValueMapper-GetMappedCandidType-System-Type-'></a>
+### GetMappedCandidType(type) `method`
+
+##### Summary
+
+Indicates if the mapper can map a certain type
+
+##### Returns
+
+True if it can map, otherwise false
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| type | [System.Type](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Type 'System.Type') | The type to check against |
+
+<a name='M-EdjCase-ICP-Candid-Mapping-ICandidValueMapper-Map-EdjCase-ICP-Candid-Models-Values-CandidValue,EdjCase-ICP-Candid-CandidConverter-'></a>
+### Map(value,converter) `method`
+
+##### Summary
+
+Maps a candid value to a C# value.
+Input value will match the \`CandidType\` type property.
+Returned value should match the \`Type\` type property.
+
+##### Returns
+
+C# value converted from the candid value
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| value | [EdjCase.ICP.Candid.Models.Values.CandidValue](#T-EdjCase-ICP-Candid-Models-Values-CandidValue 'EdjCase.ICP.Candid.Models.Values.CandidValue') | Candid value to map to a C# value |
+| converter | [EdjCase.ICP.Candid.CandidConverter](#T-EdjCase-ICP-Candid-CandidConverter 'EdjCase.ICP.Candid.CandidConverter') | The converter to use for inner types |
+
+<a name='M-EdjCase-ICP-Candid-Mapping-ICandidValueMapper-Map-System-Object,EdjCase-ICP-Candid-CandidConverter-'></a>
+### Map(value,converter) `method`
+
+##### Summary
+
+Maps a C# value to a candid value and type.
+Input value will match the \`Type\` type property.
+Returned value should match the \`CandidType\` type property.
+
+##### Returns
+
+Candid value and type converted from the C# value
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| value | [System.Object](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Object 'System.Object') | C# value to map to a candid value |
+| converter | [EdjCase.ICP.Candid.CandidConverter](#T-EdjCase-ICP-Candid-CandidConverter 'EdjCase.ICP.Candid.CandidConverter') | The converter to use for inner types |
+
 <a name='T-EdjCase-ICP-Candid-Crypto-IHashFunction'></a>
 ## IHashFunction `type`
 
@@ -6660,71 +6777,6 @@ A byte array of the hash value
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | hashFunction | [EdjCase.ICP.Candid.Crypto.IHashFunction](#T-EdjCase-ICP-Candid-Crypto-IHashFunction 'EdjCase.ICP.Candid.Crypto.IHashFunction') | A hash function algorithm to use to hash the object |
-
-<a name='T-EdjCase-ICP-Candid-Mapping-IObjectMapper'></a>
-## IObjectMapper `type`
-
-##### Namespace
-
-EdjCase.ICP.Candid.Mapping
-
-##### Summary
-
-A custom mapper interface to map a C# type to and from a candid type
-
-<a name='P-EdjCase-ICP-Candid-Mapping-IObjectMapper-CandidType'></a>
-### CandidType `property`
-
-##### Summary
-
-Candid type to convert to/from
-
-<a name='P-EdjCase-ICP-Candid-Mapping-IObjectMapper-Type'></a>
-### Type `property`
-
-##### Summary
-
-C# type to convert to/from
-
-<a name='M-EdjCase-ICP-Candid-Mapping-IObjectMapper-Map-EdjCase-ICP-Candid-Models-Values-CandidValue,EdjCase-ICP-Candid-CandidConverterOptions-'></a>
-### Map(value,options) `method`
-
-##### Summary
-
-Maps a candid value to a C# value.
-Input value will match the \`CandidType\` type property.
-Returned value should match the \`Type\` type property.
-
-##### Returns
-
-C# value converted from the candid value
-
-##### Parameters
-
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| value | [EdjCase.ICP.Candid.Models.Values.CandidValue](#T-EdjCase-ICP-Candid-Models-Values-CandidValue 'EdjCase.ICP.Candid.Models.Values.CandidValue') | Candid value to map to a C# value |
-| options | [EdjCase.ICP.Candid.CandidConverterOptions](#T-EdjCase-ICP-Candid-CandidConverterOptions 'EdjCase.ICP.Candid.CandidConverterOptions') | Options that are being used for the mappings |
-
-<a name='M-EdjCase-ICP-Candid-Mapping-IObjectMapper-Map-System-Object,EdjCase-ICP-Candid-CandidConverterOptions-'></a>
-### Map(value,options) `method`
-
-##### Summary
-
-Maps a C# value to a candid value and type.
-Input value will match the \`Type\` type property.
-Returned value should match the \`CandidType\` type property.
-
-##### Returns
-
-Candid value and type converted from the C# value
-
-##### Parameters
-
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| value | [System.Object](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Object 'System.Object') | C# value to map to a candid value |
-| options | [EdjCase.ICP.Candid.CandidConverterOptions](#T-EdjCase-ICP-Candid-CandidConverterOptions 'EdjCase.ICP.Candid.CandidConverterOptions') | Options that are being used for the mappings |
 
 <a name='T-EdjCase-ICP-Candid-Models-IRepresentationIndependentHashItem'></a>
 ## IRepresentationIndependentHashItem `type`

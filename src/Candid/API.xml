@@ -14,20 +14,23 @@
             A candid converter with the default settings
             </summary>
         </member>
-        <member name="P:EdjCase.ICP.Candid.CandidConverter.Options">
-            <summary>
-            The options for the converter
-            </summary>
-        </member>
         <member name="M:EdjCase.ICP.Candid.CandidConverter.#ctor(EdjCase.ICP.Candid.CandidConverterOptions)">
             <param name="options">Optional. The options for the converter. If not set, will use defaults</param>
         </member>
         <member name="M:EdjCase.ICP.Candid.CandidConverter.FromObject(System.Object)">
             <summary>
-            Converts a C# object into a typed candid value
+            Converts a C# object into a candid value
             </summary>
             <param name="obj">The object to convert</param>
-            <returns></returns>
+            <returns>Candid value mapped from the object</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.CandidConverter.FromTypedObject``1(``0)">
+            <summary>
+            Converts a C# object into a typed candid value
+            </summary>
+            <typeparam name="T">Type of the object</typeparam>
+            <param name="obj">The object to convert</param>
+            <returns>Candid typed value mapped from the object</returns>
         </member>
         <member name="M:EdjCase.ICP.Candid.CandidConverter.ToObject``1(EdjCase.ICP.Candid.Models.Values.CandidValue)">
             <summary>
@@ -65,26 +68,6 @@
             <summary>
             Options for configuring how candid is convertered
             </summary>
-        </member>
-        <member name="M:EdjCase.ICP.Candid.CandidConverterOptions.ResolveMapper(System.Type)">
-            <summary>
-            Resolves a mapper from the specified type
-            </summary>
-            <param name="type">The C# type to convert to and from</param>
-            <returns>A mapper for conversion</returns>
-        </member>
-        <member name="M:EdjCase.ICP.Candid.CandidConverterOptions.Default">
-            <summary>
-            Creates the default options with its own mapper resolver
-            </summary>
-            <returns>Default converter options</returns>
-        </member>
-        <member name="M:EdjCase.ICP.Candid.CandidConverterOptions.FromResolver(System.Func{System.Type,EdjCase.ICP.Candid.Mapping.IObjectMapper})">
-            <summary>
-            Creates options with a mapper resolver function, falls back to default if no mappers are found
-            </summary>
-            <param name="resolver">A function to resolve a mapper from a type</param>
-            <returns>Converter options with resolver</returns>
         </member>
         <member name="T:EdjCase.ICP.Candid.CandidTypeCode">
             <summary>
@@ -346,39 +329,66 @@
         <member name="P:EdjCase.ICP.Candid.Exceptions.InvalidCandidException.Message">
             <inheritdoc/>
         </member>
-        <member name="T:EdjCase.ICP.Candid.Mapping.IObjectMapper">
+        <member name="T:EdjCase.ICP.Candid.Mapping.CandidValueMapper`1">
             <summary>
-            A custom mapper interface to map a C# type to and from a candid type
+            An abstract mapper to map a C# type to and from a candid type
             </summary>
         </member>
-        <member name="P:EdjCase.ICP.Candid.Mapping.IObjectMapper.CandidType">
+        <member name="M:EdjCase.ICP.Candid.Mapping.CandidValueMapper`1.MapGeneric(EdjCase.ICP.Candid.Models.Values.CandidValue,EdjCase.ICP.Candid.CandidConverter)">
             <summary>
-            Candid type to convert to/from
+            Maps a candid value to a C# value.
+            </summary>
+            <param name="value">Candid value to map to a C# value</param>
+            <param name="converter">The converter to use for inner types</param>
+            <returns>C# value converted from the candid value</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Mapping.CandidValueMapper`1.MapGeneric(`0,EdjCase.ICP.Candid.CandidConverter)">
+            <summary>
+            Maps a C# value to a candid value and type.
+            </summary>
+            <param name="value">C# value to map to a candid value</param>
+            <param name="converter">The converter to use for inner types</param>
+            <returns>Candid value and type converted from the C# value</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Mapping.CandidValueMapper`1.GetMappedCandidType(System.Type)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Mapping.CandidValueMapper`1.Map(EdjCase.ICP.Candid.Models.Values.CandidValue,EdjCase.ICP.Candid.CandidConverter)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Mapping.CandidValueMapper`1.Map(System.Object,EdjCase.ICP.Candid.CandidConverter)">
+            <inheritdoc />
+        </member>
+        <member name="T:EdjCase.ICP.Candid.Mapping.ICandidValueMapper">
+            <summary>
+            A mapper interface to map a C# type to and from a candid type
             </summary>
         </member>
-        <member name="P:EdjCase.ICP.Candid.Mapping.IObjectMapper.Type">
+        <member name="M:EdjCase.ICP.Candid.Mapping.ICandidValueMapper.GetMappedCandidType(System.Type)">
             <summary>
-            C# type to convert to/from
+            Indicates if the mapper can map a certain type
             </summary>
+            <param name="type">The type to check against</param>
+            <returns>True if it can map, otherwise false</returns>
         </member>
-        <member name="M:EdjCase.ICP.Candid.Mapping.IObjectMapper.Map(EdjCase.ICP.Candid.Models.Values.CandidValue,EdjCase.ICP.Candid.CandidConverterOptions)">
+        <member name="M:EdjCase.ICP.Candid.Mapping.ICandidValueMapper.Map(EdjCase.ICP.Candid.Models.Values.CandidValue,EdjCase.ICP.Candid.CandidConverter)">
             <summary>
             Maps a candid value to a C# value.
             Input value will match the `CandidType` type property.
             Returned value should match the `Type` type property.
             </summary>
             <param name="value">Candid value to map to a C# value</param>
-            <param name="options">Options that are being used for the mappings</param>
+            <param name="converter">The converter to use for inner types</param>
             <returns>C# value converted from the candid value</returns>
         </member>
-        <member name="M:EdjCase.ICP.Candid.Mapping.IObjectMapper.Map(System.Object,EdjCase.ICP.Candid.CandidConverterOptions)">
+        <member name="M:EdjCase.ICP.Candid.Mapping.ICandidValueMapper.Map(System.Object,EdjCase.ICP.Candid.CandidConverter)">
             <summary>
             Maps a C# value to a candid value and type.
             Input value will match the `Type` type property.
             Returned value should match the `CandidType` type property.
             </summary>
             <param name="value">C# value to map to a candid value</param>
-            <param name="options">Options that are being used for the mappings</param>
+            <param name="converter">The converter to use for inner types</param>
             <returns>Candid value and type converted from the C# value</returns>
         </member>
         <member name="T:EdjCase.ICP.Candid.Mapping.CandidNameAttribute">
@@ -405,7 +415,7 @@
             The object mapper to use for the decorated item
             </summary>
         </member>
-        <member name="M:EdjCase.ICP.Candid.Mapping.CustomMapperAttribute.#ctor(EdjCase.ICP.Candid.Mapping.IObjectMapper)">
+        <member name="M:EdjCase.ICP.Candid.Mapping.CustomMapperAttribute.#ctor(EdjCase.ICP.Candid.Mapping.ICandidValueMapper)">
             <param name="mapper">The object mapper to use for the decorated item</param>
         </member>
         <member name="T:EdjCase.ICP.Candid.Mapping.CandidIgnoreAttribute">
@@ -900,7 +910,7 @@
             <param name="type">The candid type. Must match the specified value</param>
             <returns>A candid typed value of the specified type and value</returns>
         </member>
-        <member name="M:EdjCase.ICP.Candid.Models.CandidTypedValue.FromObject(System.Object,EdjCase.ICP.Candid.CandidConverter)">
+        <member name="M:EdjCase.ICP.Candid.Models.CandidTypedValue.FromObject``1(``0,EdjCase.ICP.Candid.CandidConverter)">
             <summary>
             Converts the object into a typed value. If a converter is not specified, the default
             converter will be used

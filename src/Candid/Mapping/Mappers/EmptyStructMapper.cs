@@ -5,13 +5,11 @@ using System;
 
 namespace EdjCase.ICP.Candid.Mapping.Mappers
 {
-	internal class EmptyStructMapper<T> : IObjectMapper
+	internal class EmptyStructMapper<T> : CandidValueMapper<T>
 		where T : struct
 	{
-		public CandidType CandidType { get; }
-		public Type Type { get; }
 
-		public T Value { get; }
+		public T EmptyValue { get; }
 
 		public Func<CandidValue> CandidValueGetter { get; }
 
@@ -19,24 +17,21 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 			CandidType candidType,
 			T value,
 			Func<CandidValue> candidValueGetter
-		)
+		) : base(candidType)
 		{
-			this.CandidType = candidType ?? throw new ArgumentNullException(nameof(candidType));
-			this.Type = typeof(T);
-			this.Value = value;
+			this.EmptyValue = value;
 			this.CandidValueGetter = candidValueGetter;
 		}
 
-		public object Map(CandidValue value, CandidConverterOptions options)
+		public override T MapGeneric(CandidValue value, CandidConverter converter)
 		{
-			return this.Value;
+			return this.EmptyValue;
 		}
 
-		public CandidTypedValue Map(object obj, CandidConverterOptions options)
+		public override CandidValue MapGeneric(T obj, CandidConverter converter)
 		{
 			// TODO implement clone vs this?
-			CandidValue value = this.CandidValueGetter();
-			return CandidTypedValue.FromValueAndType(value, this.CandidType);
+			return this.CandidValueGetter();
 		}
 	}
 }

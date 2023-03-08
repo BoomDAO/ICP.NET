@@ -228,9 +228,11 @@ namespace EdjCase.ICP.Candid.Models
 		/// <param name="value">An object that can be converted into a candid type/value</param>
 		/// <param name="converter">Optional. Converter to use for the conversion, otherwise will use default converter</param>
 		/// <returns>A candid typed value based on the specified value</returns>
-		public static CandidTypedValue FromObject(object value, CandidConverter? converter = null)
+		public static CandidTypedValue FromObject<T>(T value, CandidConverter? converter = null)
+			where T : notnull
 		{
-			return (converter ?? CandidConverter.Default).FromObject(value);
+			converter ??= CandidConverter.Default;
+			return converter.FromTypedObject(value);
 		}
 
 		/// <inheritdoc />

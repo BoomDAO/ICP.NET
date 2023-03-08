@@ -5,19 +5,19 @@ using System;
 
 namespace EdjCase.ICP.Candid.Mapping.Mappers
 {
-	internal class PrimitiveMapper : IObjectMapper
+	internal class PrimitiveMapper : ICandidValueMapper
 	{
 		public CandidType CandidType { get; }
 		public Type Type { get; }
 
-		public Func<object, CandidConverterOptions, CandidTypedValue> ToCandid { get; }
-		public Func<CandidValue, CandidConverterOptions, object> FromCandid { get; }
+		public Func<object, CandidConverter, CandidValue> ToCandid { get; }
+		public Func<CandidValue, CandidConverter, object> FromCandid { get; }
 
 		public PrimitiveMapper(
 			CandidType candidType,
 			Type type,
-			Func<object, CandidConverterOptions, CandidTypedValue> toCandid,
-			Func<CandidValue, CandidConverterOptions, object> fromCandid)
+			Func<object, CandidConverter, CandidValue> toCandid,
+			Func<CandidValue, CandidConverter, object> fromCandid)
 		{
 			this.CandidType = candidType ?? throw new ArgumentNullException(nameof(candidType));
 			this.Type = type ?? throw new ArgumentNullException(nameof(type));
@@ -25,14 +25,19 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 			this.FromCandid = fromCandid ?? throw new ArgumentNullException(nameof(fromCandid));
 		}
 
-		public object Map(CandidValue value, CandidConverterOptions options)
+		public object Map(CandidValue value, CandidConverter converter)
 		{
-			return this.FromCandid(value, options);
+			return this.FromCandid(value, converter);
 		}
 
-		public CandidTypedValue Map(object obj, CandidConverterOptions options)
+		public CandidValue Map(object value, CandidConverter converter)
 		{
-			return this.ToCandid(obj, options);
+			return this.ToCandid(value, converter);
+		}
+
+		public CandidType? GetMappedCandidType(Type type)
+		{
+			return this.CandidType;
 		}
 	}
 }
