@@ -33,25 +33,29 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 		{
 			CandidOptional opt = value.AsOptional();
 
-			object? innerValue;
-			bool hasValue;
 			if (!opt.Value.IsNull())
 			{
-				innerValue = converter.ToObject(this.InnerType, opt.Value);
-				hasValue = true;
+				object innerValue = converter.ToObject(this.InnerType, opt.Value);
+
+				return Activator.CreateInstance(
+					this.Type,
+					BindingFlags.Public | BindingFlags.Instance,
+					null,
+					new object?[] { innerValue },
+					null
+				);
 			}
 			else
 			{
-				innerValue = null;
-				hasValue = false;
+				// Empty constructor
+				return Activator.CreateInstance(
+					this.Type,
+					BindingFlags.Public | BindingFlags.Instance,
+					null,
+					new object?[] { },
+					null
+				);
 			}
-			return Activator.CreateInstance(
-				this.Type,
-				BindingFlags.NonPublic | BindingFlags.Instance,
-				null,
-				new object?[] { hasValue, innerValue },
-				null
-			);
 		}
 
 		public CandidValue Map(object obj, CandidConverter converter)

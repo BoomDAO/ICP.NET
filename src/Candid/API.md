@@ -500,16 +500,22 @@
   - [EncodeUnsigned(value,destination)](#M-EdjCase-ICP-Candid-Encodings-LEB128-EncodeUnsigned-EdjCase-ICP-Candid-Models-UnboundedUInt,System-Buffers-IBufferWriter{System-Byte}- 'EdjCase.ICP.Candid.Encodings.LEB128.EncodeUnsigned(EdjCase.ICP.Candid.Models.UnboundedUInt,System.Buffers.IBufferWriter{System.Byte})')
 - [NullValue](#T-EdjCase-ICP-Candid-Models-NullValue 'EdjCase.ICP.Candid.Models.NullValue')
 - [OptionalValue\`1](#T-EdjCase-ICP-Candid-Models-OptionalValue`1 'EdjCase.ICP.Candid.Models.OptionalValue`1')
+  - [#ctor()](#M-EdjCase-ICP-Candid-Models-OptionalValue`1-#ctor 'EdjCase.ICP.Candid.Models.OptionalValue`1.#ctor')
+  - [#ctor(value)](#M-EdjCase-ICP-Candid-Models-OptionalValue`1-#ctor-`0- 'EdjCase.ICP.Candid.Models.OptionalValue`1.#ctor(`0)')
   - [HasValue](#P-EdjCase-ICP-Candid-Models-OptionalValue`1-HasValue 'EdjCase.ICP.Candid.Models.OptionalValue`1.HasValue')
+  - [ValueOrDefault](#P-EdjCase-ICP-Candid-Models-OptionalValue`1-ValueOrDefault 'EdjCase.ICP.Candid.Models.OptionalValue`1.ValueOrDefault')
   - [Cast\`\`1()](#M-EdjCase-ICP-Candid-Models-OptionalValue`1-Cast``1 'EdjCase.ICP.Candid.Models.OptionalValue`1.Cast``1')
   - [Equals()](#M-EdjCase-ICP-Candid-Models-OptionalValue`1-Equals-System-Object- 'EdjCase.ICP.Candid.Models.OptionalValue`1.Equals(System.Object)')
   - [Equals()](#M-EdjCase-ICP-Candid-Models-OptionalValue`1-Equals-EdjCase-ICP-Candid-Models-OptionalValue{`0}- 'EdjCase.ICP.Candid.Models.OptionalValue`1.Equals(EdjCase.ICP.Candid.Models.OptionalValue{`0})')
   - [GetHashCode()](#M-EdjCase-ICP-Candid-Models-OptionalValue`1-GetHashCode 'EdjCase.ICP.Candid.Models.OptionalValue`1.GetHashCode')
   - [GetValueOrDefault()](#M-EdjCase-ICP-Candid-Models-OptionalValue`1-GetValueOrDefault 'EdjCase.ICP.Candid.Models.OptionalValue`1.GetValueOrDefault')
   - [GetValueOrThrow()](#M-EdjCase-ICP-Candid-Models-OptionalValue`1-GetValueOrThrow 'EdjCase.ICP.Candid.Models.OptionalValue`1.GetValueOrThrow')
+  - [GetValueType()](#M-EdjCase-ICP-Candid-Models-OptionalValue`1-GetValueType 'EdjCase.ICP.Candid.Models.OptionalValue`1.GetValueType')
   - [NoValue()](#M-EdjCase-ICP-Candid-Models-OptionalValue`1-NoValue 'EdjCase.ICP.Candid.Models.OptionalValue`1.NoValue')
+  - [SetValue(value)](#M-EdjCase-ICP-Candid-Models-OptionalValue`1-SetValue-`0- 'EdjCase.ICP.Candid.Models.OptionalValue`1.SetValue(`0)')
   - [ToString()](#M-EdjCase-ICP-Candid-Models-OptionalValue`1-ToString 'EdjCase.ICP.Candid.Models.OptionalValue`1.ToString')
   - [TryGetValue(value)](#M-EdjCase-ICP-Candid-Models-OptionalValue`1-TryGetValue-`0@- 'EdjCase.ICP.Candid.Models.OptionalValue`1.TryGetValue(`0@)')
+  - [UnsetValue()](#M-EdjCase-ICP-Candid-Models-OptionalValue`1-UnsetValue 'EdjCase.ICP.Candid.Models.OptionalValue`1.UnsetValue')
   - [WithValue()](#M-EdjCase-ICP-Candid-Models-OptionalValue`1-WithValue-`0- 'EdjCase.ICP.Candid.Models.OptionalValue`1.WithValue(`0)')
   - [op_Equality()](#M-EdjCase-ICP-Candid-Models-OptionalValue`1-op_Equality-EdjCase-ICP-Candid-Models-OptionalValue{`0},EdjCase-ICP-Candid-Models-OptionalValue{`0}- 'EdjCase.ICP.Candid.Models.OptionalValue`1.op_Equality(EdjCase.ICP.Candid.Models.OptionalValue{`0},EdjCase.ICP.Candid.Models.OptionalValue{`0})')
   - [op_Inequality()](#M-EdjCase-ICP-Candid-Models-OptionalValue`1-op_Inequality-EdjCase-ICP-Candid-Models-OptionalValue{`0},EdjCase-ICP-Candid-Models-OptionalValue{`0}- 'EdjCase.ICP.Candid.Models.OptionalValue`1.op_Inequality(EdjCase.ICP.Candid.Models.OptionalValue{`0},EdjCase.ICP.Candid.Models.OptionalValue{`0})')
@@ -7006,12 +7012,43 @@ ambiguity in certain scenarios
 | ---- | ----------- |
 | T | The inner type of the opt |
 
+<a name='M-EdjCase-ICP-Candid-Models-OptionalValue`1-#ctor'></a>
+### #ctor() `constructor`
+
+##### Summary
+
+Constructor to create an optional value with no value
+
+##### Parameters
+
+This constructor has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-OptionalValue`1-#ctor-`0-'></a>
+### #ctor(value) `constructor`
+
+##### Summary
+
+Constructor to create an optional value with a value
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| value | [\`0](#T-`0 '`0') |  |
+
 <a name='P-EdjCase-ICP-Candid-Models-OptionalValue`1-HasValue'></a>
 ### HasValue `property`
 
 ##### Summary
 
 Is true if there is a value, false if null
+
+<a name='P-EdjCase-ICP-Candid-Models-OptionalValue`1-ValueOrDefault'></a>
+### ValueOrDefault `property`
+
+##### Summary
+
+The value, will be set if \`HasValue\`, otherwise will be default value
 
 <a name='M-EdjCase-ICP-Candid-Models-OptionalValue`1-Cast``1'></a>
 ### Cast\`\`1() `method`
@@ -7103,6 +7140,21 @@ This method has no parameters.
 | ---- | ----------- |
 | [System.InvalidOperationException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.InvalidOperationException 'System.InvalidOperationException') | Throws if there is no value |
 
+<a name='M-EdjCase-ICP-Candid-Models-OptionalValue`1-GetValueType'></a>
+### GetValueType() `method`
+
+##### Summary
+
+Gets the type of the optional value, even if there is no value
+
+##### Returns
+
+The type of the value
+
+##### Parameters
+
+This method has no parameters.
+
 <a name='M-EdjCase-ICP-Candid-Models-OptionalValue`1-NoValue'></a>
 ### NoValue() `method`
 
@@ -7117,6 +7169,19 @@ An empty optional value
 ##### Parameters
 
 This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-OptionalValue`1-SetValue-`0-'></a>
+### SetValue(value) `method`
+
+##### Summary
+
+Sets the value and sets \`HasValue\` to true
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| value | [\`0](#T-`0 '`0') | The value to set |
 
 <a name='M-EdjCase-ICP-Candid-Models-OptionalValue`1-ToString'></a>
 ### ToString() `method`
@@ -7146,6 +7211,17 @@ True if there is a value, otherwise false
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | value | [\`0@](#T-`0@ '`0@') | The value, if exists |
+
+<a name='M-EdjCase-ICP-Candid-Models-OptionalValue`1-UnsetValue'></a>
+### UnsetValue() `method`
+
+##### Summary
+
+Removes the current value and sets \`HasValue\` to false
+
+##### Parameters
+
+This method has no parameters.
 
 <a name='M-EdjCase-ICP-Candid-Models-OptionalValue`1-WithValue-`0-'></a>
 ### WithValue() `method`

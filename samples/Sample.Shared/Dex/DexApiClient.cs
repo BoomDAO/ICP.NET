@@ -6,7 +6,6 @@ using Sample.Shared.Dex;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using EdjCase.ICP.Agent.Responses;
-using EdjCase.ICP.Candid;
 
 namespace Sample.Shared.Dex
 {
@@ -16,20 +15,17 @@ namespace Sample.Shared.Dex
 
 		public Principal CanisterId { get; }
 
-		public CandidConverter? CandidConverter { get; }
-
-		public DexApiClient(IAgent agent, Principal canisterId, CandidConverter? converter = null)
+		public DexApiClient(IAgent agent, Principal canisterId)
 		{
 			this.Agent = agent;
 			this.CanisterId = canisterId;
-			this.CandidConverter = converter;
 		}
 
 		public async System.Threading.Tasks.Task<Models.CancelOrderReceipt> CancelOrder(OrderId arg0)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
 			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "cancelOrder", arg);
-			return reply.ToObjects<Models.CancelOrderReceipt>(this.CandidConverter);
+			return reply.ToObjects<Models.CancelOrderReceipt>();
 		}
 
 		public async Task Clear()

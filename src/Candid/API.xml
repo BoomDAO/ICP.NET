@@ -1411,6 +1411,22 @@
             Is true if there is a value, false if null
             </summary>
         </member>
+        <member name="P:EdjCase.ICP.Candid.Models.OptionalValue`1.ValueOrDefault">
+            <summary>
+            The value, will be set if `HasValue`, otherwise will be default value
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.OptionalValue`1.#ctor">
+            <summary>
+            Constructor to create an optional value with no value
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.OptionalValue`1.#ctor(`0)">
+            <summary>
+            Constructor to create an optional value with a value
+            </summary>
+            <param name="value"></param>
+        </member>
         <member name="M:EdjCase.ICP.Candid.Models.OptionalValue`1.GetValueOrThrow">
             <summary>
             Gets the value if exists, otherwise throws an exception
@@ -1423,6 +1439,23 @@
             Gets the value if exists, otherwise the default value
             </summary>
             <returns>The value if exists, otherwise the default value</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.OptionalValue`1.GetValueType">
+            <summary>
+            Gets the type of the optional value, even if there is no value
+            </summary>
+            <returns>The type of the value</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.OptionalValue`1.SetValue(`0)">
+            <summary>
+            Sets the value and sets `HasValue` to true
+            </summary>
+            <param name="value">The value to set</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.OptionalValue`1.UnsetValue">
+            <summary>
+            Removes the current value and sets `HasValue` to false
+            </summary>
         </member>
         <member name="M:EdjCase.ICP.Candid.Models.OptionalValue`1.TryGetValue(`0@)">
             <summary>
