@@ -31,6 +31,12 @@ namespace EdjCase.ICP.Candid
 			this._options = options ?? CandidConverterOptions.Default();
 			this._typeToMapperCache = new ConcurrentDictionary<Type, ICandidValueMapper>();
 		}
+		/// <param name="configureOptions">Configure function for the converter options. Creates default options</param>
+
+		public CandidConverter(Action<CandidConverterOptions> configureOptions) : this()
+		{
+			configureOptions(this._options);
+		}
 
 		/// <summary>
 		/// Converts a C# object into a candid value

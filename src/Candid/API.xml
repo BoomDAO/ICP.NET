@@ -17,6 +17,9 @@
         <member name="M:EdjCase.ICP.Candid.CandidConverter.#ctor(EdjCase.ICP.Candid.CandidConverterOptions)">
             <param name="options">Optional. The options for the converter. If not set, will use defaults</param>
         </member>
+        <member name="M:EdjCase.ICP.Candid.CandidConverter.#ctor(System.Action{EdjCase.ICP.Candid.CandidConverterOptions})">
+            <param name="configureOptions">Configure function for the converter options. Creates default options</param>
+        </member>
         <member name="M:EdjCase.ICP.Candid.CandidConverter.FromObject(System.Object)">
             <summary>
             Converts a C# object into a candid value

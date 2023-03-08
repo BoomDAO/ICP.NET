@@ -36,6 +36,7 @@
   - [RecursiveId](#P-EdjCase-ICP-Candid-Models-Types-CandidCompoundType-RecursiveId 'EdjCase.ICP.Candid.Models.Types.CandidCompoundType.RecursiveId')
 - [CandidConverter](#T-EdjCase-ICP-Candid-CandidConverter 'EdjCase.ICP.Candid.CandidConverter')
   - [#ctor(options)](#M-EdjCase-ICP-Candid-CandidConverter-#ctor-EdjCase-ICP-Candid-CandidConverterOptions- 'EdjCase.ICP.Candid.CandidConverter.#ctor(EdjCase.ICP.Candid.CandidConverterOptions)')
+  - [#ctor(configureOptions)](#M-EdjCase-ICP-Candid-CandidConverter-#ctor-System-Action{EdjCase-ICP-Candid-CandidConverterOptions}- 'EdjCase.ICP.Candid.CandidConverter.#ctor(System.Action{EdjCase.ICP.Candid.CandidConverterOptions})')
   - [Default](#P-EdjCase-ICP-Candid-CandidConverter-Default 'EdjCase.ICP.Candid.CandidConverter.Default')
   - [FromObject(obj)](#M-EdjCase-ICP-Candid-CandidConverter-FromObject-System-Object- 'EdjCase.ICP.Candid.CandidConverter.FromObject(System.Object)')
   - [FromTypedObject\`\`1(obj)](#M-EdjCase-ICP-Candid-CandidConverter-FromTypedObject``1-``0- 'EdjCase.ICP.Candid.CandidConverter.FromTypedObject``1(``0)')
@@ -1202,6 +1203,15 @@ A class that converts to and from C# and Candid types
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | options | [EdjCase.ICP.Candid.CandidConverterOptions](#T-EdjCase-ICP-Candid-CandidConverterOptions 'EdjCase.ICP.Candid.CandidConverterOptions') | Optional. The options for the converter. If not set, will use defaults |
+
+<a name='M-EdjCase-ICP-Candid-CandidConverter-#ctor-System-Action{EdjCase-ICP-Candid-CandidConverterOptions}-'></a>
+### #ctor(configureOptions) `constructor`
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| configureOptions | [System.Action{EdjCase.ICP.Candid.CandidConverterOptions}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Action 'System.Action{EdjCase.ICP.Candid.CandidConverterOptions}') | Configure function for the converter options. Creates default options |
 
 <a name='P-EdjCase-ICP-Candid-CandidConverter-Default'></a>
 ### Default `property`

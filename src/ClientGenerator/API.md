@@ -4,9 +4,13 @@
 ## Contents
 
 - [ClientCodeGenerator](#T-EdjCase-ICP-ClientGenerator-ClientCodeGenerator 'EdjCase.ICP.ClientGenerator.ClientCodeGenerator')
-  - [GenerateClient(serviceName,baseNamespace,service)](#M-EdjCase-ICP-ClientGenerator-ClientCodeGenerator-GenerateClient-System-String,System-String,EdjCase-ICP-Candid-Models-CandidServiceDescription- 'EdjCase.ICP.ClientGenerator.ClientCodeGenerator.GenerateClient(System.String,System.String,EdjCase.ICP.Candid.Models.CandidServiceDescription)')
-  - [GenerateClientFromCanisterAsync(canisterId,baseNamespace,clientName,httpBoundryNodeUrl)](#M-EdjCase-ICP-ClientGenerator-ClientCodeGenerator-GenerateClientFromCanisterAsync-EdjCase-ICP-Candid-Models-Principal,System-String,System-String,System-Uri- 'EdjCase.ICP.ClientGenerator.ClientCodeGenerator.GenerateClientFromCanisterAsync(EdjCase.ICP.Candid.Models.Principal,System.String,System.String,System.Uri)')
-  - [GenerateClientFromFile(fileText,baseNamespace,clientName)](#M-EdjCase-ICP-ClientGenerator-ClientCodeGenerator-GenerateClientFromFile-System-String,System-String,System-String- 'EdjCase.ICP.ClientGenerator.ClientCodeGenerator.GenerateClientFromFile(System.String,System.String,System.String)')
+  - [GenerateClient(service,options)](#M-EdjCase-ICP-ClientGenerator-ClientCodeGenerator-GenerateClient-EdjCase-ICP-Candid-Models-CandidServiceDescription,EdjCase-ICP-ClientGenerator-ClientGenerationOptions- 'EdjCase.ICP.ClientGenerator.ClientCodeGenerator.GenerateClient(EdjCase.ICP.Candid.Models.CandidServiceDescription,EdjCase.ICP.ClientGenerator.ClientGenerationOptions)')
+  - [GenerateClientFromCanisterAsync(canisterId,options,httpBoundryNodeUrl)](#M-EdjCase-ICP-ClientGenerator-ClientCodeGenerator-GenerateClientFromCanisterAsync-EdjCase-ICP-Candid-Models-Principal,EdjCase-ICP-ClientGenerator-ClientGenerationOptions,System-Uri- 'EdjCase.ICP.ClientGenerator.ClientCodeGenerator.GenerateClientFromCanisterAsync(EdjCase.ICP.Candid.Models.Principal,EdjCase.ICP.ClientGenerator.ClientGenerationOptions,System.Uri)')
+  - [GenerateClientFromFile(fileText,options)](#M-EdjCase-ICP-ClientGenerator-ClientCodeGenerator-GenerateClientFromFile-System-String,EdjCase-ICP-ClientGenerator-ClientGenerationOptions- 'EdjCase.ICP.ClientGenerator.ClientCodeGenerator.GenerateClientFromFile(System.String,EdjCase.ICP.ClientGenerator.ClientGenerationOptions)')
+- [ClientGenerationOptions](#T-EdjCase-ICP-ClientGenerator-ClientGenerationOptions 'EdjCase.ICP.ClientGenerator.ClientGenerationOptions')
+  - [#ctor(name,namespace)](#M-EdjCase-ICP-ClientGenerator-ClientGenerationOptions-#ctor-System-String,System-String- 'EdjCase.ICP.ClientGenerator.ClientGenerationOptions.#ctor(System.String,System.String)')
+  - [Name](#P-EdjCase-ICP-ClientGenerator-ClientGenerationOptions-Name 'EdjCase.ICP.ClientGenerator.ClientGenerationOptions.Name')
+  - [Namespace](#P-EdjCase-ICP-ClientGenerator-ClientGenerationOptions-Namespace 'EdjCase.ICP.ClientGenerator.ClientGenerationOptions.Namespace')
 - [ClientSyntax](#T-EdjCase-ICP-ClientGenerator-ClientSyntax 'EdjCase.ICP.ClientGenerator.ClientSyntax')
   - [#ctor(name,clientFile,typeFiles)](#M-EdjCase-ICP-ClientGenerator-ClientSyntax-#ctor-System-String,Microsoft-CodeAnalysis-CSharp-Syntax-CompilationUnitSyntax,System-Collections-Generic-List{System-ValueTuple{System-String,Microsoft-CodeAnalysis-CSharp-Syntax-CompilationUnitSyntax}}- 'EdjCase.ICP.ClientGenerator.ClientSyntax.#ctor(System.String,Microsoft.CodeAnalysis.CSharp.Syntax.CompilationUnitSyntax,System.Collections.Generic.List{System.ValueTuple{System.String,Microsoft.CodeAnalysis.CSharp.Syntax.CompilationUnitSyntax}})')
   - [ClientFile](#P-EdjCase-ICP-ClientGenerator-ClientSyntax-ClientFile 'EdjCase.ICP.ClientGenerator.ClientSyntax.ClientFile')
@@ -25,8 +29,8 @@ EdjCase.ICP.ClientGenerator
 Generator to create client source code based of candid definitions from \`.did\` files
 or from a canister id
 
-<a name='M-EdjCase-ICP-ClientGenerator-ClientCodeGenerator-GenerateClient-System-String,System-String,EdjCase-ICP-Candid-Models-CandidServiceDescription-'></a>
-### GenerateClient(serviceName,baseNamespace,service) `method`
+<a name='M-EdjCase-ICP-ClientGenerator-ClientCodeGenerator-GenerateClient-EdjCase-ICP-Candid-Models-CandidServiceDescription,EdjCase-ICP-ClientGenerator-ClientGenerationOptions-'></a>
+### GenerateClient(service,options) `method`
 
 ##### Summary
 
@@ -36,12 +40,11 @@ Generates client source code for a canister based on a \`.did\` file definition
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| serviceName | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | Optional. The name of the client class and file to use. Defaults to 'Service' |
-| baseNamespace | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The base namespace to use in the generated files |
 | service | [EdjCase.ICP.Candid.Models.CandidServiceDescription](#T-EdjCase-ICP-Candid-Models-CandidServiceDescription 'EdjCase.ICP.Candid.Models.CandidServiceDescription') | The service definition to generate the client from |
+| options | [EdjCase.ICP.ClientGenerator.ClientGenerationOptions](#T-EdjCase-ICP-ClientGenerator-ClientGenerationOptions 'EdjCase.ICP.ClientGenerator.ClientGenerationOptions') | The options for client generation |
 
-<a name='M-EdjCase-ICP-ClientGenerator-ClientCodeGenerator-GenerateClientFromCanisterAsync-EdjCase-ICP-Candid-Models-Principal,System-String,System-String,System-Uri-'></a>
-### GenerateClientFromCanisterAsync(canisterId,baseNamespace,clientName,httpBoundryNodeUrl) `method`
+<a name='M-EdjCase-ICP-ClientGenerator-ClientCodeGenerator-GenerateClientFromCanisterAsync-EdjCase-ICP-Candid-Models-Principal,EdjCase-ICP-ClientGenerator-ClientGenerationOptions,System-Uri-'></a>
+### GenerateClientFromCanisterAsync(canisterId,options,httpBoundryNodeUrl) `method`
 
 ##### Summary
 
@@ -53,12 +56,11 @@ the canister has the \`candid:service\` meta data available in its public state
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | canisterId | [EdjCase.ICP.Candid.Models.Principal](#T-EdjCase-ICP-Candid-Models-Principal 'EdjCase.ICP.Candid.Models.Principal') | The canister to get the definition from |
-| baseNamespace | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The base namespace to use in the generated files |
-| clientName | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | Optional. The name of the client class and file to use. Defaults to 'Service' |
+| options | [EdjCase.ICP.ClientGenerator.ClientGenerationOptions](#T-EdjCase-ICP-ClientGenerator-ClientGenerationOptions 'EdjCase.ICP.ClientGenerator.ClientGenerationOptions') | The options for client generation |
 | httpBoundryNodeUrl | [System.Uri](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Uri 'System.Uri') | Optional. The http boundry node url to use, otherwise uses the default |
 
-<a name='M-EdjCase-ICP-ClientGenerator-ClientCodeGenerator-GenerateClientFromFile-System-String,System-String,System-String-'></a>
-### GenerateClientFromFile(fileText,baseNamespace,clientName) `method`
+<a name='M-EdjCase-ICP-ClientGenerator-ClientCodeGenerator-GenerateClientFromFile-System-String,EdjCase-ICP-ClientGenerator-ClientGenerationOptions-'></a>
+### GenerateClientFromFile(fileText,options) `method`
 
 ##### Summary
 
@@ -69,8 +71,42 @@ Generates client source code for a canister based on a \`.did\` file definition
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | fileText | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The text content of the \`.did\` definition file |
-| baseNamespace | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The base namespace to use in the generated files |
-| clientName | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | Optional. The name of the client class and file to use. Defaults to 'Service' |
+| options | [EdjCase.ICP.ClientGenerator.ClientGenerationOptions](#T-EdjCase-ICP-ClientGenerator-ClientGenerationOptions 'EdjCase.ICP.ClientGenerator.ClientGenerationOptions') | The options for client generation |
+
+<a name='T-EdjCase-ICP-ClientGenerator-ClientGenerationOptions'></a>
+## ClientGenerationOptions `type`
+
+##### Namespace
+
+EdjCase.ICP.ClientGenerator
+
+##### Summary
+
+Options for generating a client
+
+<a name='M-EdjCase-ICP-ClientGenerator-ClientGenerationOptions-#ctor-System-String,System-String-'></a>
+### #ctor(name,namespace) `constructor`
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| name | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The name of the client class and file to use |
+| namespace | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The base namespace to use in the generated files |
+
+<a name='P-EdjCase-ICP-ClientGenerator-ClientGenerationOptions-Name'></a>
+### Name `property`
+
+##### Summary
+
+The name of the client class and file to use
+
+<a name='P-EdjCase-ICP-ClientGenerator-ClientGenerationOptions-Namespace'></a>
+### Namespace `property`
+
+##### Summary
+
+The base namespace to use in the generated files
 
 <a name='T-EdjCase-ICP-ClientGenerator-ClientSyntax'></a>
 ## ClientSyntax `type`

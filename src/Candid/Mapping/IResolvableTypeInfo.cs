@@ -467,7 +467,7 @@ namespace EdjCase.ICP.Candid.Mapping
 			List<PropertyInfo> properties = objType
 				.GetProperties(BindingFlags.Instance | BindingFlags.Public)
 				.ToList();
-			var propertyMetaDataMap = new Dictionary<CandidTag, (PropertyInfo Property, ICandidValueMapper? OverrideMapper)>();
+			var propertyMetaDataMap = new Dictionary<CandidTag, PropertyMetaData>();
 			foreach (PropertyInfo property in properties)
 			{
 				CandidIgnoreAttribute? ignoreAttribute = property.GetCustomAttribute<CandidIgnoreAttribute>();
@@ -489,11 +489,12 @@ namespace EdjCase.ICP.Candid.Mapping
 				CandidTag tag = CandidTag.FromName(propertyName);
 				CustomMapperAttribute? customMapperAttribute = property.GetCustomAttribute<CustomMapperAttribute>();
 
-				propertyMetaDataMap.Add(tag, (property, customMapperAttribute?.Mapper));
+				PropertyMetaData propertyMetaData = new(property, customMapperAttribute?.Mapper);
+				propertyMetaDataMap.Add(tag, propertyMetaData);
 			}
 			List<Type> dependencies = propertyMetaDataMap
-				.Where(p => p.Value.OverrideMapper == null) // Only resolve the ones that need to
-				.Select(p => p.Value.Property.PropertyType)
+				.Where(p => p.Value.CustomMapper == null) // Only resolve the ones that need to
+				.Select(p => p.Value.PropertyInfo.PropertyType)
 				.ToList();
 			return new ComplexTypeInfo(objType, dependencies, (resolvedMappings) =>
 			{
@@ -502,16 +503,16 @@ namespace EdjCase.ICP.Candid.Mapping
 						p => p.Key,
 						p =>
 						{
-							if (p.Value.OverrideMapper != null)
+							if (p.Value.CustomMapper != null)
 							{
-								CandidType? type = p.Value.OverrideMapper!.GetMappedCandidType(p.Value.Property.PropertyType);
+								CandidType? type = p.Value.CustomMapper!.GetMappedCandidType(p.Value.PropertyInfo.PropertyType);
 								if (type == null)
 								{
-									throw new InvalidOperationException($"Property '{p.Value.Property.Name}' given incompatible candid value mapper");
+									throw new InvalidOperationException($"Property '{p.Value.PropertyInfo.Name}' given incompatible candid value mapper");
 								}
 								return type;
 							}
-							return resolvedMappings[p.Value.Property.PropertyType];
+							return resolvedMappings[p.Value.PropertyInfo.PropertyType];
 						}
 					);
 				CandidRecordType type = new CandidRecordType(fieldTypes);
@@ -520,7 +521,11 @@ namespace EdjCase.ICP.Candid.Mapping
 			});
 		}
 
-
 	}
+	internal record PropertyMetaData(
+		PropertyInfo PropertyInfo,
+		ICandidValueMapper? CustomMapper
+	);
+
 
 }

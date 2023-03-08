@@ -13,6 +13,9 @@ using EdjCase.ICP.Candid.Models.Types;
 using EdjCase.ICP.Candid.Models.Values;
 using Sample.Shared.Governance.Models;
 using EdjCase.ICP.Candid;
+using System.Collections.Generic;
+using EdjCase.ICP.Candid.Mapping;
+using System.Reflection;
 
 public class Program
 {
@@ -60,14 +63,11 @@ public class Program
 		Console.WriteLine("Login success!");
 		var agent = new HttpAgent(identity);
 		Principal canisterId = Principal.FromText("rrkah-fqaaa-aaaaa-aaaaq-cai");
-		CandidConverter candidConverter = new CandidConverter(new CandidConverterOptions
+		CandidConverter candidConverter = new CandidConverter(options =>
 		{
-
 		});
 		var client = new GovernanceApiClient(agent, canisterId);
-		var a = await client.GetProposalInfo(1999);
+		var a = await client.GetProposalInfo(110174);
 
 	}
 }
-
-

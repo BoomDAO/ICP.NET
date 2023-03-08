@@ -12,7 +12,18 @@ namespace EdjCase.ICP.Candid
 	/// </summary>
 	public class CandidConverterOptions
 	{
-		public List<ICandidValueMapper>? CustomMappers { get; set; } 
+		public List<ICandidValueMapper> CustomMappers { get; set; } = new List<ICandidValueMapper>();
+
+		public void AddCustomMapper(ICandidValueMapper mapper)
+		{
+			this.CustomMappers.Add(mapper);
+		}
+
+		public void AddCustomMapper<T>()
+			where T : ICandidValueMapper, new()
+		{
+			this.AddCustomMapper(new T());
+		}
 
 		public static CandidConverterOptions Default() => new CandidConverterOptions();
 	}

@@ -12,9 +12,9 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 	{
 		public CandidType CandidType { get; }
 		public Type Type { get; }
-		public Dictionary<CandidTag, (PropertyInfo Property, ICandidValueMapper? OverrideMapper)> Properties { get; }
+		public Dictionary<CandidTag, PropertyMetaData> Properties { get; }
 
-		public RecordMapper(CandidRecordType candidType, Type type, Dictionary<CandidTag, (PropertyInfo Property, ICandidValueMapper? OverrideMapper)> properties)
+		public RecordMapper(CandidRecordType candidType, Type type, Dictionary<CandidTag, PropertyMetaData> properties)
 		{
 			this.CandidType = candidType ?? throw new ArgumentNullException(nameof(candidType));
 			this.Type = type ?? throw new ArgumentNullException(nameof(type));
@@ -25,19 +25,19 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 		{
 			CandidRecord record = value.AsRecord();
 			object obj = Activator.CreateInstance(this.Type);
-			foreach ((CandidTag tag, (PropertyInfo property, ICandidValueMapper? overrideMapper)) in this.Properties)
+			foreach ((CandidTag tag, PropertyMetaData property) in this.Properties)
 			{
 				CandidValue fieldCandidValue = record.Fields[tag];
 				object? fieldValue;
-				if (overrideMapper != null)
+				if (property.CustomMapper != null)
 				{
-					fieldValue = overrideMapper.Map(fieldCandidValue, converter);
+					fieldValue = property.CustomMapper.Map(fieldCandidValue, converter);
 				}
 				else
 				{
-					fieldValue = converter.ToObject(property.PropertyType, fieldCandidValue);
+					fieldValue = converter.ToObject(property.PropertyInfo.PropertyType, fieldCandidValue);
 				}
-				property.SetValue(obj, fieldValue);
+				property.PropertyInfo.SetValue(obj, fieldValue);
 			}
 			return obj;
 		}
@@ -45,13 +45,13 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 		public CandidValue Map(object value, CandidConverter converter)
 		{
 			Dictionary<CandidTag, CandidValue> fields = new();
-			foreach ((CandidTag tag, (PropertyInfo property, ICandidValueMapper? overrideMapper)) in this.Properties)
+			foreach ((CandidTag tag, PropertyMetaData property) in this.Properties)
 			{
-				object propValue = property.GetValue(value);
+				object propValue = property.PropertyInfo.GetValue(value);
 				CandidValue v;
-				if (overrideMapper != null)
+				if (property.CustomMapper != null)
 				{
-					v = overrideMapper.Map(propValue, converter);
+					v = property.CustomMapper.Map(propValue, converter);
 				}
 				else
 				{
