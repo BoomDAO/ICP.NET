@@ -1,8 +1,6 @@
 using EdjCase.ICP.Agent.Identities;
-using EdjCase.ICP.Agent.Requests;
 using EdjCase.ICP.Agent.Responses;
 using EdjCase.ICP.Candid.Models;
-using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;

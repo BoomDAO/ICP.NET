@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using EdjCase.ICP.Agent.Models;
-using System.Threading.Tasks;
 
 namespace EdjCase.ICP.Agent.Identities
 {

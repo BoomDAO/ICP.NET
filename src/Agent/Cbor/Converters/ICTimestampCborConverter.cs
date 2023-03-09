@@ -1,11 +1,9 @@
-using Agent.Cbor;
 using Dahomey.Cbor;
 using Dahomey.Cbor.Serialization;
 using Dahomey.Cbor.Serialization.Converters;
 using EdjCase.ICP.Candid.Models;
 using System;
 using System.Numerics;
-using EdjCase.ICP.Candid.Utilities;
 
 namespace EdjCase.ICP.Agent.Cbor.Converters
 {

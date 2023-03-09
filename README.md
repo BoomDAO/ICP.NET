@@ -315,6 +315,44 @@ DelegationIdentity identity = result.GetIdentityOrThrow(); // Gets the generated
 var agent = new HttpAgent(identity); // Use in agent to make authenticated requests
 ```
 
+# Using the ICRC1 PreGenerated Client
+
+## Usage
+
+Instantiate an ICRC1Client by passing the HttpAgent instance and the canister ID of the ICRC1 canister as parameters:
+
+```cs
+IAgent agent = new HttpAgent(identity);
+Principal canisterId = Principal.FromText("<canister_id>");
+ICRC1Client client = new ICRC1Client(agent, canisterId);
+```
+
+Use the methods of the ICRC1Client to communicate with the ICRC1 canister:
+
+```cs
+// Get the name of the token
+string name = await client.Name();
+
+// Get the balance of a specific account
+Account account = new Account
+{
+    Id = Principal.FromText("<account_id>")
+};
+UnboundedUInt balance = await client.BalanceOf(account);
+
+// Transfer tokens from one account to another
+TransferArgs transferArgs = new TransferArgs
+{
+    To = new Account
+    {
+        Id = Principal.FromText("<to_account_id>")
+    },
+    Amount = 1,
+    Memo = "<memo>"
+};
+TransferResult transferResult = await client.Transfer(transferArgs);
+```
+
 # Links
 
 - [IC Http Interface Spec](https://smartcontracts.org/docs/current/references/ic-interface-spec)

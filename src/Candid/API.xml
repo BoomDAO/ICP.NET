@@ -72,6 +72,25 @@
             Options for configuring how candid is convertered
             </summary>
         </member>
+        <member name="P:EdjCase.ICP.Candid.CandidConverterOptions.CustomMappers">
+            <summary>
+            List of custom mappers to use instead of the default mappers provided.
+            Order does matter, FIFO
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.CandidConverterOptions.AddCustomMapper(EdjCase.ICP.Candid.Mapping.ICandidValueMapper)">
+            <summary>
+            Helper method to add a custom mapper
+            </summary>
+            <param name="mapper">Candid mapper to add</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.CandidConverterOptions.AddCustomMapper``1">
+            <summary>
+            Helper method to add a custom mapper by type. Requires the type to 
+            be `ICandidValueMapper` and it has an empty constrcutor
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
         <member name="T:EdjCase.ICP.Candid.CandidTypeCode">
             <summary>
             Specifies all the possible candid types and their corresponding codes
@@ -336,6 +355,17 @@
             <summary>
             An abstract mapper to map a C# type to and from a candid type
             </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Mapping.CandidValueMapper`1.CandidType">
+            <summary>
+            The candid type that the value will map to
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Mapping.CandidValueMapper`1.#ctor(EdjCase.ICP.Candid.Models.Types.CandidType)">
+            <summary>
+            Default constructor, requires a candid type that it maps to
+            </summary>
+            <param name="candidType">The candid type that the value will map to</param>
         </member>
         <member name="M:EdjCase.ICP.Candid.Mapping.CandidValueMapper`1.MapGeneric(EdjCase.ICP.Candid.Models.Values.CandidValue,EdjCase.ICP.Candid.CandidConverter)">
             <summary>

@@ -1,5 +1,4 @@
 using Dahomey.Cbor.Attributes;
-using Dahomey.Cbor.ObjectModel;
 
 namespace EdjCase.ICP.Agent.Responses
 {

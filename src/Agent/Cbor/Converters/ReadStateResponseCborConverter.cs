@@ -1,6 +1,5 @@
 using Dahomey.Cbor.Serialization;
 using Dahomey.Cbor.Serialization.Converters;
-using EdjCase.ICP.Agent.Cbor;
 using EdjCase.ICP.Agent.Models;
 using EdjCase.ICP.Agent.Responses;
 using EdjCase.ICP.Candid.Models;

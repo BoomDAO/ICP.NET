@@ -1,22 +1,36 @@
-using Timestamp = System.UInt64;
-using Duration = System.UInt64;
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid.Models;
+using System;
 using Subaccount = System.Collections.Generic.List<byte>;
-using EdjCase.ICP.Agent.Agents;
 
 namespace EdjCase.ICP.Agent.Standards.ICRC1.Models
 {
+	/// <summary>
+	/// This class represents an ICRC1 account
+	/// </summary>
 	public class Account
 	{
-		[Candid.Mapping.CandidName("owner")]
-		public Candid.Models.Principal Owner { get; set; }
+		/// <summary>
+		/// The owner of the account, represented as a Principal object
+		/// </summary>
+		[CandidName("owner")]
+		public Principal Owner { get; set; }
 
-		[Candid.Mapping.CandidName("subaccount")]
-		public Candid.Models.OptionalValue<Subaccount> Subaccount { get; set; }
+		/// <summary>
+		/// The subaccount of the account, represented as an OptionalValue object
+		/// </summary>
+		[CandidName("subaccount")]
+		public OptionalValue<Subaccount> Subaccount { get; set; }
 
-		public Account(Candid.Models.Principal owner, Candid.Models.OptionalValue<Subaccount> subaccount)
+		/// <summary>
+		/// Primary constructor for the Account class
+		/// </summary>
+		/// <param name="owner">The owner of the account, represented as a Principal object</param>
+		/// <param name="subaccount">The subaccount of the account, represented as an OptionalValue object</param>
+		public Account(Principal owner, OptionalValue<Subaccount> subaccount)
 		{
-			this.Owner = owner;
-			this.Subaccount = subaccount;
+			this.Owner = owner ?? throw new ArgumentNullException(nameof(owner));
+			this.Subaccount = subaccount ?? throw new ArgumentNullException(nameof(subaccount));
 		}
 	}
 }

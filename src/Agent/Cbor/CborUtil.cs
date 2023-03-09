@@ -1,10 +1,7 @@
 using Dahomey.Cbor;
 using Dahomey.Cbor.Serialization;
 using Dahomey.Cbor.Serialization.Converters;
-using EdjCase.ICP.Candid.Models;
-using System;
 using System.Collections.Generic;
-using static EdjCase.ICP.Candid.Mapping.Mappers.VariantMapper;
 
 namespace EdjCase.ICP.Agent.Cbor
 {

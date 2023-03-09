@@ -1,9 +1,7 @@
 using Chaos.NaCl;
 using EdjCase.ICP.Agent.Models;
-using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
-using System.Threading.Tasks;
 
 namespace EdjCase.ICP.Agent.Identities
 {

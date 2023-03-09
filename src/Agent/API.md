@@ -3,6 +3,16 @@
 
 ## Contents
 
+- [Account](#T-EdjCase-ICP-Agent-Standards-ICRC1-Models-Account 'EdjCase.ICP.Agent.Standards.ICRC1.Models.Account')
+  - [#ctor(owner,subaccount)](#M-EdjCase-ICP-Agent-Standards-ICRC1-Models-Account-#ctor-EdjCase-ICP-Candid-Models-Principal,EdjCase-ICP-Candid-Models-OptionalValue{System-Collections-Generic-List{System-Byte}}- 'EdjCase.ICP.Agent.Standards.ICRC1.Models.Account.#ctor(EdjCase.ICP.Candid.Models.Principal,EdjCase.ICP.Candid.Models.OptionalValue{System.Collections.Generic.List{System.Byte}})')
+  - [Owner](#P-EdjCase-ICP-Agent-Standards-ICRC1-Models-Account-Owner 'EdjCase.ICP.Agent.Standards.ICRC1.Models.Account.Owner')
+  - [Subaccount](#P-EdjCase-ICP-Agent-Standards-ICRC1-Models-Account-Subaccount 'EdjCase.ICP.Agent.Standards.ICRC1.Models.Account.Subaccount')
+- [BadBurnError](#T-EdjCase-ICP-Agent-Standards-ICRC1-Models-BadBurnError 'EdjCase.ICP.Agent.Standards.ICRC1.Models.BadBurnError')
+  - [#ctor(minBurnAmount)](#M-EdjCase-ICP-Agent-Standards-ICRC1-Models-BadBurnError-#ctor-EdjCase-ICP-Candid-Models-UnboundedUInt- 'EdjCase.ICP.Agent.Standards.ICRC1.Models.BadBurnError.#ctor(EdjCase.ICP.Candid.Models.UnboundedUInt)')
+  - [MinBurnAmount](#P-EdjCase-ICP-Agent-Standards-ICRC1-Models-BadBurnError-MinBurnAmount 'EdjCase.ICP.Agent.Standards.ICRC1.Models.BadBurnError.MinBurnAmount')
+- [BadFeeError](#T-EdjCase-ICP-Agent-Standards-ICRC1-Models-BadFeeError 'EdjCase.ICP.Agent.Standards.ICRC1.Models.BadFeeError')
+  - [#ctor(expectedFee)](#M-EdjCase-ICP-Agent-Standards-ICRC1-Models-BadFeeError-#ctor-EdjCase-ICP-Candid-Models-UnboundedUInt- 'EdjCase.ICP.Agent.Standards.ICRC1.Models.BadFeeError.#ctor(EdjCase.ICP.Candid.Models.UnboundedUInt)')
+  - [ExpectedFee](#P-EdjCase-ICP-Agent-Standards-ICRC1-Models-BadFeeError-ExpectedFee 'EdjCase.ICP.Agent.Standards.ICRC1.Models.BadFeeError.ExpectedFee')
 - [CallRejectedException](#T-EdjCase-ICP-Agent-CallRejectedException 'EdjCase.ICP.Agent.CallRejectedException')
   - [#ctor(rejectCode,rejectMessage,errorCode)](#M-EdjCase-ICP-Agent-CallRejectedException-#ctor-EdjCase-ICP-Agent-Responses-RejectCode,System-String,System-String- 'EdjCase.ICP.Agent.CallRejectedException.#ctor(EdjCase.ICP.Agent.Responses.RejectCode,System.String,System.String)')
   - [ErrorCode](#P-EdjCase-ICP-Agent-CallRejectedException-ErrorCode 'EdjCase.ICP.Agent.CallRejectedException.ErrorCode')
@@ -29,6 +39,9 @@
   - [SubnetId](#P-EdjCase-ICP-Agent-Models-CertificateDelegation-SubnetId 'EdjCase.ICP.Agent.Models.CertificateDelegation.SubnetId')
   - [GetPublicKey()](#M-EdjCase-ICP-Agent-Models-CertificateDelegation-GetPublicKey 'EdjCase.ICP.Agent.Models.CertificateDelegation.GetPublicKey')
   - [IsValid(publicKey)](#M-EdjCase-ICP-Agent-Models-CertificateDelegation-IsValid-System-Byte[]@- 'EdjCase.ICP.Agent.Models.CertificateDelegation.IsValid(System.Byte[]@)')
+- [CreatedInFutureError](#T-EdjCase-ICP-Agent-Standards-ICRC1-Models-CreatedInFutureError 'EdjCase.ICP.Agent.Standards.ICRC1.Models.CreatedInFutureError')
+  - [#ctor(ledgerTime)](#M-EdjCase-ICP-Agent-Standards-ICRC1-Models-CreatedInFutureError-#ctor-System-UInt64- 'EdjCase.ICP.Agent.Standards.ICRC1.Models.CreatedInFutureError.#ctor(System.UInt64)')
+  - [LedgerTime](#P-EdjCase-ICP-Agent-Standards-ICRC1-Models-CreatedInFutureError-LedgerTime 'EdjCase.ICP.Agent.Standards.ICRC1.Models.CreatedInFutureError.LedgerTime')
 - [DefaultHttpClient](#T-EdjCase-ICP-Agent-Agents-Http-DefaultHttpClient 'EdjCase.ICP.Agent.Agents.Http.DefaultHttpClient')
   - [#ctor(client)](#M-EdjCase-ICP-Agent-Agents-Http-DefaultHttpClient-#ctor-System-Net-Http-HttpClient- 'EdjCase.ICP.Agent.Agents.Http.DefaultHttpClient.#ctor(System.Net.Http.HttpClient)')
   - [SendAsync()](#M-EdjCase-ICP-Agent-Agents-Http-DefaultHttpClient-SendAsync-System-Net-Http-HttpRequestMessage- 'EdjCase.ICP.Agent.Agents.Http.DefaultHttpClient.SendAsync(System.Net.Http.HttpRequestMessage)')
@@ -68,6 +81,9 @@
   - [FromDer(value)](#M-EdjCase-ICP-Agent-DerEncodedPublicKey-FromDer-System-Byte[]- 'EdjCase.ICP.Agent.DerEncodedPublicKey.FromDer(System.Byte[])')
   - [FromEd25519(value)](#M-EdjCase-ICP-Agent-DerEncodedPublicKey-FromEd25519-System-Byte[]- 'EdjCase.ICP.Agent.DerEncodedPublicKey.FromEd25519(System.Byte[])')
   - [ToPrincipal()](#M-EdjCase-ICP-Agent-DerEncodedPublicKey-ToPrincipal 'EdjCase.ICP.Agent.DerEncodedPublicKey.ToPrincipal')
+- [DuplicateError](#T-EdjCase-ICP-Agent-Standards-ICRC1-Models-DuplicateError 'EdjCase.ICP.Agent.Standards.ICRC1.Models.DuplicateError')
+  - [#ctor(duplicateOf)](#M-EdjCase-ICP-Agent-Standards-ICRC1-Models-DuplicateError-#ctor-EdjCase-ICP-Candid-Models-UnboundedUInt- 'EdjCase.ICP.Agent.Standards.ICRC1.Models.DuplicateError.#ctor(EdjCase.ICP.Candid.Models.UnboundedUInt)')
+  - [DuplicateOf](#P-EdjCase-ICP-Agent-Standards-ICRC1-Models-DuplicateError-DuplicateOf 'EdjCase.ICP.Agent.Standards.ICRC1.Models.DuplicateError.DuplicateOf')
 - [Ed25519Identity](#T-EdjCase-ICP-Agent-Identities-Ed25519Identity 'EdjCase.ICP.Agent.Identities.Ed25519Identity')
   - [#ctor(publicKey,privateKey)](#M-EdjCase-ICP-Agent-Identities-Ed25519Identity-#ctor-EdjCase-ICP-Agent-DerEncodedPublicKey,System-Byte[]- 'EdjCase.ICP.Agent.Identities.Ed25519Identity.#ctor(EdjCase.ICP.Agent.DerEncodedPublicKey,System.Byte[])')
   - [PrivateKey](#P-EdjCase-ICP-Agent-Identities-Ed25519Identity-PrivateKey 'EdjCase.ICP.Agent.Identities.Ed25519Identity.PrivateKey')
@@ -76,6 +92,10 @@
   - [GetPublicKey()](#M-EdjCase-ICP-Agent-Identities-Ed25519Identity-GetPublicKey 'EdjCase.ICP.Agent.Identities.Ed25519Identity.GetPublicKey')
   - [GetSenderDelegations()](#M-EdjCase-ICP-Agent-Identities-Ed25519Identity-GetSenderDelegations 'EdjCase.ICP.Agent.Identities.Ed25519Identity.GetSenderDelegations')
   - [Sign()](#M-EdjCase-ICP-Agent-Identities-Ed25519Identity-Sign-System-Byte[]- 'EdjCase.ICP.Agent.Identities.Ed25519Identity.Sign(System.Byte[])')
+- [GenericError](#T-EdjCase-ICP-Agent-Standards-ICRC1-Models-GenericError 'EdjCase.ICP.Agent.Standards.ICRC1.Models.GenericError')
+  - [#ctor(errorCode,message)](#M-EdjCase-ICP-Agent-Standards-ICRC1-Models-GenericError-#ctor-EdjCase-ICP-Candid-Models-UnboundedUInt,System-String- 'EdjCase.ICP.Agent.Standards.ICRC1.Models.GenericError.#ctor(EdjCase.ICP.Candid.Models.UnboundedUInt,System.String)')
+  - [ErrorCode](#P-EdjCase-ICP-Agent-Standards-ICRC1-Models-GenericError-ErrorCode 'EdjCase.ICP.Agent.Standards.ICRC1.Models.GenericError.ErrorCode')
+  - [Message](#P-EdjCase-ICP-Agent-Standards-ICRC1-Models-GenericError-Message 'EdjCase.ICP.Agent.Standards.ICRC1.Models.GenericError.Message')
 - [HttpAgent](#T-EdjCase-ICP-Agent-Agents-HttpAgent 'EdjCase.ICP.Agent.Agents.HttpAgent')
   - [#ctor(identity,httpClient)](#M-EdjCase-ICP-Agent-Agents-HttpAgent-#ctor-EdjCase-ICP-Agent-Agents-Http-IHttpClient,EdjCase-ICP-Agent-Identities-IIdentity- 'EdjCase.ICP.Agent.Agents.HttpAgent.#ctor(EdjCase.ICP.Agent.Agents.Http.IHttpClient,EdjCase.ICP.Agent.Identities.IIdentity)')
   - [#ctor(identity,httpBoundryNodeUrl)](#M-EdjCase-ICP-Agent-Agents-HttpAgent-#ctor-EdjCase-ICP-Agent-Identities-IIdentity,System-Uri- 'EdjCase.ICP.Agent.Agents.HttpAgent.#ctor(EdjCase.ICP.Agent.Identities.IIdentity,System.Uri)')
@@ -96,6 +116,20 @@
   - [ReadStateAsync(canisterId,paths)](#M-EdjCase-ICP-Agent-Agents-IAgent-ReadStateAsync-EdjCase-ICP-Candid-Models-Principal,System-Collections-Generic-List{EdjCase-ICP-Candid-Models-StatePath}- 'EdjCase.ICP.Agent.Agents.IAgent.ReadStateAsync(EdjCase.ICP.Candid.Models.Principal,System.Collections.Generic.List{EdjCase.ICP.Candid.Models.StatePath})')
 - [IAgentExtensions](#T-EdjCase-ICP-Agent-Agents-IAgentExtensions 'EdjCase.ICP.Agent.Agents.IAgentExtensions')
   - [CallAndWaitAsync(agent,canisterId,method,arg,effectiveCanisterId,cancellationToken)](#M-EdjCase-ICP-Agent-Agents-IAgentExtensions-CallAndWaitAsync-EdjCase-ICP-Agent-Agents-IAgent,EdjCase-ICP-Candid-Models-Principal,System-String,EdjCase-ICP-Candid-Models-CandidArg,EdjCase-ICP-Candid-Models-Principal,System-Nullable{System-Threading-CancellationToken}- 'EdjCase.ICP.Agent.Agents.IAgentExtensions.CallAndWaitAsync(EdjCase.ICP.Agent.Agents.IAgent,EdjCase.ICP.Candid.Models.Principal,System.String,EdjCase.ICP.Candid.Models.CandidArg,EdjCase.ICP.Candid.Models.Principal,System.Nullable{System.Threading.CancellationToken})')
+- [ICRC1Client](#T-EdjCase-ICP-Agent-Standards-ICRC1-ICRC1Client 'EdjCase.ICP.Agent.Standards.ICRC1.ICRC1Client')
+  - [#ctor(agent,canisterId)](#M-EdjCase-ICP-Agent-Standards-ICRC1-ICRC1Client-#ctor-EdjCase-ICP-Agent-Agents-IAgent,EdjCase-ICP-Candid-Models-Principal- 'EdjCase.ICP.Agent.Standards.ICRC1.ICRC1Client.#ctor(EdjCase.ICP.Agent.Agents.IAgent,EdjCase.ICP.Candid.Models.Principal)')
+  - [Agent](#P-EdjCase-ICP-Agent-Standards-ICRC1-ICRC1Client-Agent 'EdjCase.ICP.Agent.Standards.ICRC1.ICRC1Client.Agent')
+  - [CanisterId](#P-EdjCase-ICP-Agent-Standards-ICRC1-ICRC1Client-CanisterId 'EdjCase.ICP.Agent.Standards.ICRC1.ICRC1Client.CanisterId')
+  - [BalanceOf(account)](#M-EdjCase-ICP-Agent-Standards-ICRC1-ICRC1Client-BalanceOf-EdjCase-ICP-Agent-Standards-ICRC1-Models-Account- 'EdjCase.ICP.Agent.Standards.ICRC1.ICRC1Client.BalanceOf(EdjCase.ICP.Agent.Standards.ICRC1.Models.Account)')
+  - [Decimals()](#M-EdjCase-ICP-Agent-Standards-ICRC1-ICRC1Client-Decimals 'EdjCase.ICP.Agent.Standards.ICRC1.ICRC1Client.Decimals')
+  - [Fee()](#M-EdjCase-ICP-Agent-Standards-ICRC1-ICRC1Client-Fee 'EdjCase.ICP.Agent.Standards.ICRC1.ICRC1Client.Fee')
+  - [MetaData()](#M-EdjCase-ICP-Agent-Standards-ICRC1-ICRC1Client-MetaData 'EdjCase.ICP.Agent.Standards.ICRC1.ICRC1Client.MetaData')
+  - [MintingAccount()](#M-EdjCase-ICP-Agent-Standards-ICRC1-ICRC1Client-MintingAccount 'EdjCase.ICP.Agent.Standards.ICRC1.ICRC1Client.MintingAccount')
+  - [Name()](#M-EdjCase-ICP-Agent-Standards-ICRC1-ICRC1Client-Name 'EdjCase.ICP.Agent.Standards.ICRC1.ICRC1Client.Name')
+  - [SupportedStandards()](#M-EdjCase-ICP-Agent-Standards-ICRC1-ICRC1Client-SupportedStandards 'EdjCase.ICP.Agent.Standards.ICRC1.ICRC1Client.SupportedStandards')
+  - [Symbol()](#M-EdjCase-ICP-Agent-Standards-ICRC1-ICRC1Client-Symbol 'EdjCase.ICP.Agent.Standards.ICRC1.ICRC1Client.Symbol')
+  - [TotalSupply()](#M-EdjCase-ICP-Agent-Standards-ICRC1-ICRC1Client-TotalSupply 'EdjCase.ICP.Agent.Standards.ICRC1.ICRC1Client.TotalSupply')
+  - [Transfer(args)](#M-EdjCase-ICP-Agent-Standards-ICRC1-ICRC1Client-Transfer-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferArgs- 'EdjCase.ICP.Agent.Standards.ICRC1.ICRC1Client.Transfer(EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferArgs)')
 - [IHttpClient](#T-EdjCase-ICP-Agent-Agents-Http-IHttpClient 'EdjCase.ICP.Agent.Agents.Http.IHttpClient')
   - [SendAsync(message)](#M-EdjCase-ICP-Agent-Agents-Http-IHttpClient-SendAsync-System-Net-Http-HttpRequestMessage- 'EdjCase.ICP.Agent.Agents.Http.IHttpClient.SendAsync(System.Net.Http.HttpRequestMessage)')
 - [IIdentity](#T-EdjCase-ICP-Agent-Identities-IIdentity 'EdjCase.ICP.Agent.Identities.IIdentity')
@@ -104,10 +138,34 @@
   - [Sign(data)](#M-EdjCase-ICP-Agent-Identities-IIdentity-Sign-System-Byte[]- 'EdjCase.ICP.Agent.Identities.IIdentity.Sign(System.Byte[])')
 - [IIdentityExtensions](#T-EdjCase-ICP-Agent-Identities-IIdentityExtensions 'EdjCase.ICP.Agent.Identities.IIdentityExtensions')
   - [SignContent(identity,content)](#M-EdjCase-ICP-Agent-Identities-IIdentityExtensions-SignContent-EdjCase-ICP-Agent-Identities-IIdentity,System-Collections-Generic-Dictionary{System-String,EdjCase-ICP-Candid-Models-IHashable}- 'EdjCase.ICP.Agent.Identities.IIdentityExtensions.SignContent(EdjCase.ICP.Agent.Identities.IIdentity,System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.Candid.Models.IHashable})')
+- [InsufficientFundsError](#T-EdjCase-ICP-Agent-Standards-ICRC1-Models-InsufficientFundsError 'EdjCase.ICP.Agent.Standards.ICRC1.Models.InsufficientFundsError')
+  - [#ctor(balance)](#M-EdjCase-ICP-Agent-Standards-ICRC1-Models-InsufficientFundsError-#ctor-EdjCase-ICP-Candid-Models-UnboundedUInt- 'EdjCase.ICP.Agent.Standards.ICRC1.Models.InsufficientFundsError.#ctor(EdjCase.ICP.Candid.Models.UnboundedUInt)')
+  - [Balance](#P-EdjCase-ICP-Agent-Standards-ICRC1-Models-InsufficientFundsError-Balance 'EdjCase.ICP.Agent.Standards.ICRC1.Models.InsufficientFundsError.Balance')
 - [InvalidCertificateException](#T-EdjCase-ICP-Agent-InvalidCertificateException 'EdjCase.ICP.Agent.InvalidCertificateException')
   - [#ctor(message)](#M-EdjCase-ICP-Agent-InvalidCertificateException-#ctor-System-String- 'EdjCase.ICP.Agent.InvalidCertificateException.#ctor(System.String)')
 - [InvalidPublicKey](#T-EdjCase-ICP-Agent-InvalidPublicKey 'EdjCase.ICP.Agent.InvalidPublicKey')
   - [#ctor()](#M-EdjCase-ICP-Agent-InvalidPublicKey-#ctor 'EdjCase.ICP.Agent.InvalidPublicKey.#ctor')
+- [MetaData](#T-EdjCase-ICP-Agent-Standards-ICRC1-Models-MetaData 'EdjCase.ICP.Agent.Standards.ICRC1.Models.MetaData')
+  - [#ctor(key,value)](#M-EdjCase-ICP-Agent-Standards-ICRC1-Models-MetaData-#ctor-System-String,EdjCase-ICP-Agent-Standards-ICRC1-Models-MetaDataValue- 'EdjCase.ICP.Agent.Standards.ICRC1.Models.MetaData.#ctor(System.String,EdjCase.ICP.Agent.Standards.ICRC1.Models.MetaDataValue)')
+  - [Key](#P-EdjCase-ICP-Agent-Standards-ICRC1-Models-MetaData-Key 'EdjCase.ICP.Agent.Standards.ICRC1.Models.MetaData.Key')
+  - [Value](#P-EdjCase-ICP-Agent-Standards-ICRC1-Models-MetaData-Value 'EdjCase.ICP.Agent.Standards.ICRC1.Models.MetaData.Value')
+- [MetaDataValue](#T-EdjCase-ICP-Agent-Standards-ICRC1-Models-MetaDataValue 'EdjCase.ICP.Agent.Standards.ICRC1.Models.MetaDataValue')
+  - [#ctor()](#M-EdjCase-ICP-Agent-Standards-ICRC1-Models-MetaDataValue-#ctor 'EdjCase.ICP.Agent.Standards.ICRC1.Models.MetaDataValue.#ctor')
+  - [Tag](#P-EdjCase-ICP-Agent-Standards-ICRC1-Models-MetaDataValue-Tag 'EdjCase.ICP.Agent.Standards.ICRC1.Models.MetaDataValue.Tag')
+  - [Value](#P-EdjCase-ICP-Agent-Standards-ICRC1-Models-MetaDataValue-Value 'EdjCase.ICP.Agent.Standards.ICRC1.Models.MetaDataValue.Value')
+  - [AsBlob()](#M-EdjCase-ICP-Agent-Standards-ICRC1-Models-MetaDataValue-AsBlob 'EdjCase.ICP.Agent.Standards.ICRC1.Models.MetaDataValue.AsBlob')
+  - [AsInt()](#M-EdjCase-ICP-Agent-Standards-ICRC1-Models-MetaDataValue-AsInt 'EdjCase.ICP.Agent.Standards.ICRC1.Models.MetaDataValue.AsInt')
+  - [AsNat()](#M-EdjCase-ICP-Agent-Standards-ICRC1-Models-MetaDataValue-AsNat 'EdjCase.ICP.Agent.Standards.ICRC1.Models.MetaDataValue.AsNat')
+  - [AsText()](#M-EdjCase-ICP-Agent-Standards-ICRC1-Models-MetaDataValue-AsText 'EdjCase.ICP.Agent.Standards.ICRC1.Models.MetaDataValue.AsText')
+  - [Blob(value)](#M-EdjCase-ICP-Agent-Standards-ICRC1-Models-MetaDataValue-Blob-System-Byte[]- 'EdjCase.ICP.Agent.Standards.ICRC1.Models.MetaDataValue.Blob(System.Byte[])')
+  - [Int(value)](#M-EdjCase-ICP-Agent-Standards-ICRC1-Models-MetaDataValue-Int-EdjCase-ICP-Candid-Models-UnboundedInt- 'EdjCase.ICP.Agent.Standards.ICRC1.Models.MetaDataValue.Int(EdjCase.ICP.Candid.Models.UnboundedInt)')
+  - [Nat(value)](#M-EdjCase-ICP-Agent-Standards-ICRC1-Models-MetaDataValue-Nat-EdjCase-ICP-Candid-Models-UnboundedUInt- 'EdjCase.ICP.Agent.Standards.ICRC1.Models.MetaDataValue.Nat(EdjCase.ICP.Candid.Models.UnboundedUInt)')
+  - [Text(value)](#M-EdjCase-ICP-Agent-Standards-ICRC1-Models-MetaDataValue-Text-System-String- 'EdjCase.ICP.Agent.Standards.ICRC1.Models.MetaDataValue.Text(System.String)')
+- [MetaDataValueTag](#T-EdjCase-ICP-Agent-Standards-ICRC1-Models-MetaDataValueTag 'EdjCase.ICP.Agent.Standards.ICRC1.Models.MetaDataValueTag')
+  - [Blob](#F-EdjCase-ICP-Agent-Standards-ICRC1-Models-MetaDataValueTag-Blob 'EdjCase.ICP.Agent.Standards.ICRC1.Models.MetaDataValueTag.Blob')
+  - [Int](#F-EdjCase-ICP-Agent-Standards-ICRC1-Models-MetaDataValueTag-Int 'EdjCase.ICP.Agent.Standards.ICRC1.Models.MetaDataValueTag.Int')
+  - [Nat](#F-EdjCase-ICP-Agent-Standards-ICRC1-Models-MetaDataValueTag-Nat 'EdjCase.ICP.Agent.Standards.ICRC1.Models.MetaDataValueTag.Nat')
+  - [Text](#F-EdjCase-ICP-Agent-Standards-ICRC1-Models-MetaDataValueTag-Text 'EdjCase.ICP.Agent.Standards.ICRC1.Models.MetaDataValueTag.Text')
 - [QueryRejectInfo](#T-EdjCase-ICP-Agent-Responses-QueryRejectInfo 'EdjCase.ICP.Agent.Responses.QueryRejectInfo')
   - [Code](#P-EdjCase-ICP-Agent-Responses-QueryRejectInfo-Code 'EdjCase.ICP.Agent.Responses.QueryRejectInfo.Code')
   - [ErrorCode](#P-EdjCase-ICP-Agent-Responses-QueryRejectInfo-ErrorCode 'EdjCase.ICP.Agent.Responses.QueryRejectInfo.ErrorCode')
@@ -183,6 +241,159 @@
   - [Received](#F-EdjCase-ICP-Agent-Responses-RequestStatus-StatusType-Received 'EdjCase.ICP.Agent.Responses.RequestStatus.StatusType.Received')
   - [Rejected](#F-EdjCase-ICP-Agent-Responses-RequestStatus-StatusType-Rejected 'EdjCase.ICP.Agent.Responses.RequestStatus.StatusType.Rejected')
   - [Replied](#F-EdjCase-ICP-Agent-Responses-RequestStatus-StatusType-Replied 'EdjCase.ICP.Agent.Responses.RequestStatus.StatusType.Replied')
+- [SupportedStandard](#T-EdjCase-ICP-Agent-Standards-ICRC1-Models-SupportedStandard 'EdjCase.ICP.Agent.Standards.ICRC1.Models.SupportedStandard')
+  - [#ctor(name,url)](#M-EdjCase-ICP-Agent-Standards-ICRC1-Models-SupportedStandard-#ctor-System-String,System-String- 'EdjCase.ICP.Agent.Standards.ICRC1.Models.SupportedStandard.#ctor(System.String,System.String)')
+  - [Name](#P-EdjCase-ICP-Agent-Standards-ICRC1-Models-SupportedStandard-Name 'EdjCase.ICP.Agent.Standards.ICRC1.Models.SupportedStandard.Name')
+  - [Url](#P-EdjCase-ICP-Agent-Standards-ICRC1-Models-SupportedStandard-Url 'EdjCase.ICP.Agent.Standards.ICRC1.Models.SupportedStandard.Url')
+- [TransferArgs](#T-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferArgs 'EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferArgs')
+  - [#ctor(fromSubaccount,to,amount,fee,memo,createdAtTime)](#M-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferArgs-#ctor-EdjCase-ICP-Candid-Models-OptionalValue{System-Collections-Generic-List{System-Byte}},EdjCase-ICP-Agent-Standards-ICRC1-Models-Account,EdjCase-ICP-Candid-Models-UnboundedUInt,EdjCase-ICP-Candid-Models-OptionalValue{EdjCase-ICP-Candid-Models-UnboundedUInt},EdjCase-ICP-Candid-Models-OptionalValue{System-Collections-Generic-List{System-Byte}},EdjCase-ICP-Candid-Models-OptionalValue{System-UInt64}- 'EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferArgs.#ctor(EdjCase.ICP.Candid.Models.OptionalValue{System.Collections.Generic.List{System.Byte}},EdjCase.ICP.Agent.Standards.ICRC1.Models.Account,EdjCase.ICP.Candid.Models.UnboundedUInt,EdjCase.ICP.Candid.Models.OptionalValue{EdjCase.ICP.Candid.Models.UnboundedUInt},EdjCase.ICP.Candid.Models.OptionalValue{System.Collections.Generic.List{System.Byte}},EdjCase.ICP.Candid.Models.OptionalValue{System.UInt64})')
+  - [Amount](#P-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferArgs-Amount 'EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferArgs.Amount')
+  - [CreatedAtTime](#P-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferArgs-CreatedAtTime 'EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferArgs.CreatedAtTime')
+  - [Fee](#P-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferArgs-Fee 'EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferArgs.Fee')
+  - [FromSubaccount](#P-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferArgs-FromSubaccount 'EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferArgs.FromSubaccount')
+  - [Memo](#P-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferArgs-Memo 'EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferArgs.Memo')
+  - [To](#P-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferArgs-To 'EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferArgs.To')
+- [TransferError](#T-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferError 'EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferError')
+  - [#ctor()](#M-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferError-#ctor 'EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferError.#ctor')
+  - [Tag](#P-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferError-Tag 'EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferError.Tag')
+  - [Value](#P-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferError-Value 'EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferError.Value')
+  - [AsBadBurn()](#M-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferError-AsBadBurn 'EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferError.AsBadBurn')
+  - [AsBadFee()](#M-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferError-AsBadFee 'EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferError.AsBadFee')
+  - [AsCreatedInFuture()](#M-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferError-AsCreatedInFuture 'EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferError.AsCreatedInFuture')
+  - [AsDuplicate()](#M-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferError-AsDuplicate 'EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferError.AsDuplicate')
+  - [AsGenericError()](#M-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferError-AsGenericError 'EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferError.AsGenericError')
+  - [AsInsufficientFunds()](#M-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferError-AsInsufficientFunds 'EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferError.AsInsufficientFunds')
+  - [BadBurn(info)](#M-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferError-BadBurn-EdjCase-ICP-Agent-Standards-ICRC1-Models-BadBurnError- 'EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferError.BadBurn(EdjCase.ICP.Agent.Standards.ICRC1.Models.BadBurnError)')
+  - [BadFee(info)](#M-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferError-BadFee-EdjCase-ICP-Agent-Standards-ICRC1-Models-BadFeeError- 'EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferError.BadFee(EdjCase.ICP.Agent.Standards.ICRC1.Models.BadFeeError)')
+  - [CreatedInFuture(info)](#M-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferError-CreatedInFuture-EdjCase-ICP-Agent-Standards-ICRC1-Models-CreatedInFutureError- 'EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferError.CreatedInFuture(EdjCase.ICP.Agent.Standards.ICRC1.Models.CreatedInFutureError)')
+  - [Duplicate(info)](#M-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferError-Duplicate-EdjCase-ICP-Agent-Standards-ICRC1-Models-DuplicateError- 'EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferError.Duplicate(EdjCase.ICP.Agent.Standards.ICRC1.Models.DuplicateError)')
+  - [GenericError(info)](#M-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferError-GenericError-EdjCase-ICP-Agent-Standards-ICRC1-Models-GenericError- 'EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferError.GenericError(EdjCase.ICP.Agent.Standards.ICRC1.Models.GenericError)')
+  - [InsufficientFunds(info)](#M-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferError-InsufficientFunds-EdjCase-ICP-Agent-Standards-ICRC1-Models-InsufficientFundsError- 'EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferError.InsufficientFunds(EdjCase.ICP.Agent.Standards.ICRC1.Models.InsufficientFundsError)')
+  - [TemporarilyUnavailable()](#M-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferError-TemporarilyUnavailable 'EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferError.TemporarilyUnavailable')
+  - [TooOld()](#M-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferError-TooOld 'EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferError.TooOld')
+  - [ValidateTag(tag)](#M-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferError-ValidateTag-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferErrorTag- 'EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferError.ValidateTag(EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferErrorTag)')
+- [TransferErrorTag](#T-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferErrorTag 'EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferErrorTag')
+  - [BadBurn](#F-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferErrorTag-BadBurn 'EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferErrorTag.BadBurn')
+  - [BadFee](#F-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferErrorTag-BadFee 'EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferErrorTag.BadFee')
+  - [CreatedInFuture](#F-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferErrorTag-CreatedInFuture 'EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferErrorTag.CreatedInFuture')
+  - [Duplicate](#F-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferErrorTag-Duplicate 'EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferErrorTag.Duplicate')
+  - [GenericError](#F-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferErrorTag-GenericError 'EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferErrorTag.GenericError')
+  - [InsufficientFunds](#F-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferErrorTag-InsufficientFunds 'EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferErrorTag.InsufficientFunds')
+  - [TemporarilyUnavailable](#F-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferErrorTag-TemporarilyUnavailable 'EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferErrorTag.TemporarilyUnavailable')
+  - [TooOld](#F-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferErrorTag-TooOld 'EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferErrorTag.TooOld')
+- [TransferResult](#T-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferResult 'EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferResult')
+  - [#ctor()](#M-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferResult-#ctor 'EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferResult.#ctor')
+  - [Tag](#P-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferResult-Tag 'EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferResult.Tag')
+  - [Value](#P-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferResult-Value 'EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferResult.Value')
+  - [AsErr()](#M-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferResult-AsErr 'EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferResult.AsErr')
+  - [AsOk()](#M-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferResult-AsOk 'EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferResult.AsOk')
+  - [Err(info)](#M-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferResult-Err-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferError- 'EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferResult.Err(EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferError)')
+  - [Ok(info)](#M-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferResult-Ok-EdjCase-ICP-Candid-Models-UnboundedUInt- 'EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferResult.Ok(EdjCase.ICP.Candid.Models.UnboundedUInt)')
+  - [ValidateTag(tag)](#M-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferResult-ValidateTag-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferResultTag- 'EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferResult.ValidateTag(EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferResultTag)')
+- [TransferResultTag](#T-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferResultTag 'EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferResultTag')
+  - [Err](#F-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferResultTag-Err 'EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferResultTag.Err')
+  - [Ok](#F-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferResultTag-Ok 'EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferResultTag.Ok')
+
+<a name='T-EdjCase-ICP-Agent-Standards-ICRC1-Models-Account'></a>
+## Account `type`
+
+##### Namespace
+
+EdjCase.ICP.Agent.Standards.ICRC1.Models
+
+##### Summary
+
+This class represents an ICRC1 account
+
+<a name='M-EdjCase-ICP-Agent-Standards-ICRC1-Models-Account-#ctor-EdjCase-ICP-Candid-Models-Principal,EdjCase-ICP-Candid-Models-OptionalValue{System-Collections-Generic-List{System-Byte}}-'></a>
+### #ctor(owner,subaccount) `constructor`
+
+##### Summary
+
+Primary constructor for the Account class
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| owner | [EdjCase.ICP.Candid.Models.Principal](#T-EdjCase-ICP-Candid-Models-Principal 'EdjCase.ICP.Candid.Models.Principal') | The owner of the account, represented as a Principal object |
+| subaccount | [EdjCase.ICP.Candid.Models.OptionalValue{System.Collections.Generic.List{System.Byte}}](#T-EdjCase-ICP-Candid-Models-OptionalValue{System-Collections-Generic-List{System-Byte}} 'EdjCase.ICP.Candid.Models.OptionalValue{System.Collections.Generic.List{System.Byte}}') | The subaccount of the account, represented as an OptionalValue object |
+
+<a name='P-EdjCase-ICP-Agent-Standards-ICRC1-Models-Account-Owner'></a>
+### Owner `property`
+
+##### Summary
+
+The owner of the account, represented as a Principal object
+
+<a name='P-EdjCase-ICP-Agent-Standards-ICRC1-Models-Account-Subaccount'></a>
+### Subaccount `property`
+
+##### Summary
+
+The subaccount of the account, represented as an OptionalValue object
+
+<a name='T-EdjCase-ICP-Agent-Standards-ICRC1-Models-BadBurnError'></a>
+## BadBurnError `type`
+
+##### Namespace
+
+EdjCase.ICP.Agent.Standards.ICRC1.Models
+
+##### Summary
+
+This class represents an error that occurs when a burn amount is incorrect
+
+<a name='M-EdjCase-ICP-Agent-Standards-ICRC1-Models-BadBurnError-#ctor-EdjCase-ICP-Candid-Models-UnboundedUInt-'></a>
+### #ctor(minBurnAmount) `constructor`
+
+##### Summary
+
+Primary constructor for the BadBurnError class
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| minBurnAmount | [EdjCase.ICP.Candid.Models.UnboundedUInt](#T-EdjCase-ICP-Candid-Models-UnboundedUInt 'EdjCase.ICP.Candid.Models.UnboundedUInt') | The minimum burn amount for the transaction, represented as an UnboundedUInt object |
+
+<a name='P-EdjCase-ICP-Agent-Standards-ICRC1-Models-BadBurnError-MinBurnAmount'></a>
+### MinBurnAmount `property`
+
+##### Summary
+
+The minimum burn amount for the transaction, represented as an UnboundedUInt object
+
+<a name='T-EdjCase-ICP-Agent-Standards-ICRC1-Models-BadFeeError'></a>
+## BadFeeError `type`
+
+##### Namespace
+
+EdjCase.ICP.Agent.Standards.ICRC1.Models
+
+##### Summary
+
+This class represents an error that occurs when a fee is incorrect
+
+<a name='M-EdjCase-ICP-Agent-Standards-ICRC1-Models-BadFeeError-#ctor-EdjCase-ICP-Candid-Models-UnboundedUInt-'></a>
+### #ctor(expectedFee) `constructor`
+
+##### Summary
+
+Primary constructor for the BadFeeError class
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| expectedFee | [EdjCase.ICP.Candid.Models.UnboundedUInt](#T-EdjCase-ICP-Candid-Models-UnboundedUInt 'EdjCase.ICP.Candid.Models.UnboundedUInt') | The expected fee for the transaction, represented as an UnboundedUInt object |
+
+<a name='P-EdjCase-ICP-Agent-Standards-ICRC1-Models-BadFeeError-ExpectedFee'></a>
+### ExpectedFee `property`
+
+##### Summary
+
+The expected fee for the transaction, represented as an UnboundedUInt object
 
 <a name='T-EdjCase-ICP-Agent-CallRejectedException'></a>
 ## CallRejectedException `type`
@@ -452,6 +663,37 @@ True if the certificate signature is valid, otherwise false
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | publicKey | [System.Byte[]@](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Byte[]@ 'System.Byte[]@') | The public key of the delegation |
+
+<a name='T-EdjCase-ICP-Agent-Standards-ICRC1-Models-CreatedInFutureError'></a>
+## CreatedInFutureError `type`
+
+##### Namespace
+
+EdjCase.ICP.Agent.Standards.ICRC1.Models
+
+##### Summary
+
+This class represents an error that occurs when a transaction is created in the future
+
+<a name='M-EdjCase-ICP-Agent-Standards-ICRC1-Models-CreatedInFutureError-#ctor-System-UInt64-'></a>
+### #ctor(ledgerTime) `constructor`
+
+##### Summary
+
+Primary constructor for the CreatedInFutureError class
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| ledgerTime | [System.UInt64](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.UInt64 'System.UInt64') | The ledger time, represented as a Timestamp object |
+
+<a name='P-EdjCase-ICP-Agent-Standards-ICRC1-Models-CreatedInFutureError-LedgerTime'></a>
+### LedgerTime `property`
+
+##### Summary
+
+The ledger time, represented as a Timestamp object
 
 <a name='T-EdjCase-ICP-Agent-Agents-Http-DefaultHttpClient'></a>
 ## DefaultHttpClient `type`
@@ -971,6 +1213,37 @@ Converts the key to a self authenticating principal value
 
 This method has no parameters.
 
+<a name='T-EdjCase-ICP-Agent-Standards-ICRC1-Models-DuplicateError'></a>
+## DuplicateError `type`
+
+##### Namespace
+
+EdjCase.ICP.Agent.Standards.ICRC1.Models
+
+##### Summary
+
+This class represents an error that occurs when a transaction is a duplicate
+
+<a name='M-EdjCase-ICP-Agent-Standards-ICRC1-Models-DuplicateError-#ctor-EdjCase-ICP-Candid-Models-UnboundedUInt-'></a>
+### #ctor(duplicateOf) `constructor`
+
+##### Summary
+
+Primary constructor for the DuplicateError class
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| duplicateOf | [EdjCase.ICP.Candid.Models.UnboundedUInt](#T-EdjCase-ICP-Candid-Models-UnboundedUInt 'EdjCase.ICP.Candid.Models.UnboundedUInt') | The ID of the transaction that this transaction is a duplicate of, represented as an UnboundedUInt object |
+
+<a name='P-EdjCase-ICP-Agent-Standards-ICRC1-Models-DuplicateError-DuplicateOf'></a>
+### DuplicateOf `property`
+
+##### Summary
+
+The ID of the transaction that this transaction is a duplicate
+
 <a name='T-EdjCase-ICP-Agent-Identities-Ed25519Identity'></a>
 ## Ed25519Identity `type`
 
@@ -1053,6 +1326,45 @@ This method has no parameters.
 ##### Parameters
 
 This method has no parameters.
+
+<a name='T-EdjCase-ICP-Agent-Standards-ICRC1-Models-GenericError'></a>
+## GenericError `type`
+
+##### Namespace
+
+EdjCase.ICP.Agent.Standards.ICRC1.Models
+
+##### Summary
+
+This class represents a generic error that can occur during a transaction
+
+<a name='M-EdjCase-ICP-Agent-Standards-ICRC1-Models-GenericError-#ctor-EdjCase-ICP-Candid-Models-UnboundedUInt,System-String-'></a>
+### #ctor(errorCode,message) `constructor`
+
+##### Summary
+
+Primary constructor for the GenericError class
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| errorCode | [EdjCase.ICP.Candid.Models.UnboundedUInt](#T-EdjCase-ICP-Candid-Models-UnboundedUInt 'EdjCase.ICP.Candid.Models.UnboundedUInt') | The error code, represented as an UnboundedUInt object |
+| message | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The error message, represented as a string |
+
+<a name='P-EdjCase-ICP-Agent-Standards-ICRC1-Models-GenericError-ErrorCode'></a>
+### ErrorCode `property`
+
+##### Summary
+
+The error code, represented as an UnboundedUInt object
+
+<a name='P-EdjCase-ICP-Agent-Standards-ICRC1-Models-GenericError-Message'></a>
+### Message `property`
+
+##### Summary
+
+The error message, represented as a string
 
 <a name='T-EdjCase-ICP-Agent-Agents-HttpAgent'></a>
 ## HttpAgent `type`
@@ -1322,6 +1634,199 @@ The id of the request that can be used to look up its status with \`GetRequestSt
 | effectiveCanisterId | [EdjCase.ICP.Candid.Models.Principal](#T-EdjCase-ICP-Candid-Models-Principal 'EdjCase.ICP.Candid.Models.Principal') | Optional. Specifies the relevant canister id if calling the root canister |
 | cancellationToken | [System.Nullable{System.Threading.CancellationToken}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Nullable 'System.Nullable{System.Threading.CancellationToken}') | Optional. If specified, will be used to prematurely end the waiting |
 
+<a name='T-EdjCase-ICP-Agent-Standards-ICRC1-ICRC1Client'></a>
+## ICRC1Client `type`
+
+##### Namespace
+
+EdjCase.ICP.Agent.Standards.ICRC1
+
+##### Summary
+
+A pre-generated client for the ICRC1 standard
+
+<a name='M-EdjCase-ICP-Agent-Standards-ICRC1-ICRC1Client-#ctor-EdjCase-ICP-Agent-Agents-IAgent,EdjCase-ICP-Candid-Models-Principal-'></a>
+### #ctor(agent,canisterId) `constructor`
+
+##### Summary
+
+Primary constructor
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| agent | [EdjCase.ICP.Agent.Agents.IAgent](#T-EdjCase-ICP-Agent-Agents-IAgent 'EdjCase.ICP.Agent.Agents.IAgent') | Agent to use to make requests to the IC |
+| canisterId | [EdjCase.ICP.Candid.Models.Principal](#T-EdjCase-ICP-Candid-Models-Principal 'EdjCase.ICP.Candid.Models.Principal') | The id of the canister to make requests to |
+
+<a name='P-EdjCase-ICP-Agent-Standards-ICRC1-ICRC1Client-Agent'></a>
+### Agent `property`
+
+##### Summary
+
+Agent to use to make requests to the IC
+
+<a name='P-EdjCase-ICP-Agent-Standards-ICRC1-ICRC1Client-CanisterId'></a>
+### CanisterId `property`
+
+##### Summary
+
+The id of the canister to make requests to
+
+<a name='M-EdjCase-ICP-Agent-Standards-ICRC1-ICRC1Client-BalanceOf-EdjCase-ICP-Agent-Standards-ICRC1-Models-Account-'></a>
+### BalanceOf(account) `method`
+
+##### Summary
+
+Returns the balance of the account given as an argument.
+
+##### Returns
+
+The balance of the account given as an argument.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| account | [EdjCase.ICP.Agent.Standards.ICRC1.Models.Account](#T-EdjCase-ICP-Agent-Standards-ICRC1-Models-Account 'EdjCase.ICP.Agent.Standards.ICRC1.Models.Account') | Account to check balance for |
+
+<a name='M-EdjCase-ICP-Agent-Standards-ICRC1-ICRC1Client-Decimals'></a>
+### Decimals() `method`
+
+##### Summary
+
+Returns the number of decimals the token uses (e.g., 8 means to divide the token amount by 100000000 to get its user representation).
+
+##### Returns
+
+The number of decimals the token uses (e.g., 8 means to divide the token amount by 100000000 to get its user representation).
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Agent-Standards-ICRC1-ICRC1Client-Fee'></a>
+### Fee() `method`
+
+##### Summary
+
+Returns the default transfer fee.
+
+##### Returns
+
+The default transfer fee.
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Agent-Standards-ICRC1-ICRC1Client-MetaData'></a>
+### MetaData() `method`
+
+##### Summary
+
+Returns the list of metadata entries for this ledger. See the "Metadata" section below.
+
+##### Returns
+
+
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Agent-Standards-ICRC1-ICRC1Client-MintingAccount'></a>
+### MintingAccount() `method`
+
+##### Summary
+
+Returns the minting account if this ledger supports minting and burning tokens.
+
+##### Returns
+
+The minting account if this ledger supports minting and burning tokens.
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Agent-Standards-ICRC1-ICRC1Client-Name'></a>
+### Name() `method`
+
+##### Summary
+
+Returns the name of the token (e.g., MyToken).
+
+##### Returns
+
+The name of the token (e.g., MyToken).
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Agent-Standards-ICRC1-ICRC1Client-SupportedStandards'></a>
+### SupportedStandards() `method`
+
+##### Summary
+
+Returns the list of standards this ledger implements
+
+##### Returns
+
+The list of standards this ledger implements
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Agent-Standards-ICRC1-ICRC1Client-Symbol'></a>
+### Symbol() `method`
+
+##### Summary
+
+Returns the symbol of the token (e.g., ICP).
+
+##### Returns
+
+The symbol of the token (e.g., ICP).
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Agent-Standards-ICRC1-ICRC1Client-TotalSupply'></a>
+### TotalSupply() `method`
+
+##### Summary
+
+Returns the total number of tokens on all accounts except for the minting account.
+
+##### Returns
+
+The total number of tokens on all accounts except for the minting account.
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Agent-Standards-ICRC1-ICRC1Client-Transfer-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferArgs-'></a>
+### Transfer(args) `method`
+
+##### Summary
+
+Transfers amount of tokens from account record { of = caller; subaccount = from_subaccount } to the to account. The caller pays fee tokens for the transfer.
+
+##### Returns
+
+The result information from the transfer
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| args | [EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferArgs](#T-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferArgs 'EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferArgs') | Arguments for the transfer |
+
 <a name='T-EdjCase-ICP-Agent-Agents-Http-IHttpClient'></a>
 ## IHttpClient `type`
 
@@ -1439,6 +1944,37 @@ The content with signature(s) from the identity
 | identity | [EdjCase.ICP.Agent.Identities.IIdentity](#T-EdjCase-ICP-Agent-Identities-IIdentity 'EdjCase.ICP.Agent.Identities.IIdentity') | The identity to sign the content with |
 | content | [System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.Candid.Models.IHashable}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.Dictionary 'System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.Candid.Models.IHashable}') | The data that needs to be signed |
 
+<a name='T-EdjCase-ICP-Agent-Standards-ICRC1-Models-InsufficientFundsError'></a>
+## InsufficientFundsError `type`
+
+##### Namespace
+
+EdjCase.ICP.Agent.Standards.ICRC1.Models
+
+##### Summary
+
+This class represents an error that occurs when there are insufficient funds for a transaction
+
+<a name='M-EdjCase-ICP-Agent-Standards-ICRC1-Models-InsufficientFundsError-#ctor-EdjCase-ICP-Candid-Models-UnboundedUInt-'></a>
+### #ctor(balance) `constructor`
+
+##### Summary
+
+Primary constructor for the InsufficientFundsError class
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| balance | [EdjCase.ICP.Candid.Models.UnboundedUInt](#T-EdjCase-ICP-Candid-Models-UnboundedUInt 'EdjCase.ICP.Candid.Models.UnboundedUInt') | The balance of the account, represented as an UnboundedUInt object |
+
+<a name='P-EdjCase-ICP-Agent-Standards-ICRC1-Models-InsufficientFundsError-Balance'></a>
+### Balance `property`
+
+##### Summary
+
+The balance of the account, represented as an UnboundedUInt object
+
 <a name='T-EdjCase-ICP-Agent-InvalidCertificateException'></a>
 ## InvalidCertificateException `type`
 
@@ -1480,6 +2016,248 @@ Exception to indicate that the specified BLS public key is invalid
 ##### Parameters
 
 This constructor has no parameters.
+
+<a name='T-EdjCase-ICP-Agent-Standards-ICRC1-Models-MetaData'></a>
+## MetaData `type`
+
+##### Namespace
+
+EdjCase.ICP.Agent.Standards.ICRC1.Models
+
+##### Summary
+
+A model representing metadata from an icrc1 token
+
+<a name='M-EdjCase-ICP-Agent-Standards-ICRC1-Models-MetaData-#ctor-System-String,EdjCase-ICP-Agent-Standards-ICRC1-Models-MetaDataValue-'></a>
+### #ctor(key,value) `constructor`
+
+##### Summary
+
+Primary constructor
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| key | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The key or name of the metadata value |
+| value | [EdjCase.ICP.Agent.Standards.ICRC1.Models.MetaDataValue](#T-EdjCase-ICP-Agent-Standards-ICRC1-Models-MetaDataValue 'EdjCase.ICP.Agent.Standards.ICRC1.Models.MetaDataValue') | The associated value for the metadata key |
+
+<a name='P-EdjCase-ICP-Agent-Standards-ICRC1-Models-MetaData-Key'></a>
+### Key `property`
+
+##### Summary
+
+The key or name of the metadata value
+
+<a name='P-EdjCase-ICP-Agent-Standards-ICRC1-Models-MetaData-Value'></a>
+### Value `property`
+
+##### Summary
+
+The associated value for the metadata key
+
+<a name='T-EdjCase-ICP-Agent-Standards-ICRC1-Models-MetaDataValue'></a>
+## MetaDataValue `type`
+
+##### Namespace
+
+EdjCase.ICP.Agent.Standards.ICRC1.Models
+
+##### Summary
+
+A model representing the metadata value from an icrc1 token
+
+<a name='M-EdjCase-ICP-Agent-Standards-ICRC1-Models-MetaDataValue-#ctor'></a>
+### #ctor() `constructor`
+
+##### Summary
+
+Constructor for reflection
+
+##### Parameters
+
+This constructor has no parameters.
+
+<a name='P-EdjCase-ICP-Agent-Standards-ICRC1-Models-MetaDataValue-Tag'></a>
+### Tag `property`
+
+##### Summary
+
+The metadata variant option tag/type
+
+<a name='P-EdjCase-ICP-Agent-Standards-ICRC1-Models-MetaDataValue-Value'></a>
+### Value `property`
+
+##### Summary
+
+The metadata variant option raw value
+
+<a name='M-EdjCase-ICP-Agent-Standards-ICRC1-Models-MetaDataValue-AsBlob'></a>
+### AsBlob() `method`
+
+##### Summary
+
+Gets the Blob value from the metadata. If the variant is not a Blob, will throw an error
+
+##### Returns
+
+The Blob value of the metadata
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Agent-Standards-ICRC1-Models-MetaDataValue-AsInt'></a>
+### AsInt() `method`
+
+##### Summary
+
+Gets the Int value from the metadata. If the variant is not a Int, will throw an error
+
+##### Returns
+
+The Int value of the metadata
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Agent-Standards-ICRC1-Models-MetaDataValue-AsNat'></a>
+### AsNat() `method`
+
+##### Summary
+
+Gets the Nat value from the metadata. If the variant is not a Nat, will throw an error
+
+##### Returns
+
+The Nat value of the metadata
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Agent-Standards-ICRC1-Models-MetaDataValue-AsText'></a>
+### AsText() `method`
+
+##### Summary
+
+Gets the Text value from the metadata. If the variant is not a Text, will throw an error
+
+##### Returns
+
+The Text value of the metadata
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Agent-Standards-ICRC1-Models-MetaDataValue-Blob-System-Byte[]-'></a>
+### Blob(value) `method`
+
+##### Summary
+
+Constructs a metadata value with a Blob
+
+##### Returns
+
+A metadata value with a Blob
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| value | [System.Byte[]](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Byte[] 'System.Byte[]') | The Blob value to use |
+
+<a name='M-EdjCase-ICP-Agent-Standards-ICRC1-Models-MetaDataValue-Int-EdjCase-ICP-Candid-Models-UnboundedInt-'></a>
+### Int(value) `method`
+
+##### Summary
+
+Constructs a metadata value with a Int
+
+##### Returns
+
+A metadata value with a Int
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| value | [EdjCase.ICP.Candid.Models.UnboundedInt](#T-EdjCase-ICP-Candid-Models-UnboundedInt 'EdjCase.ICP.Candid.Models.UnboundedInt') | The Int value to use |
+
+<a name='M-EdjCase-ICP-Agent-Standards-ICRC1-Models-MetaDataValue-Nat-EdjCase-ICP-Candid-Models-UnboundedUInt-'></a>
+### Nat(value) `method`
+
+##### Summary
+
+Constructs a metadata value with a Nat
+
+##### Returns
+
+A metadata value with a Nat
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| value | [EdjCase.ICP.Candid.Models.UnboundedUInt](#T-EdjCase-ICP-Candid-Models-UnboundedUInt 'EdjCase.ICP.Candid.Models.UnboundedUInt') | The Nat value to use |
+
+<a name='M-EdjCase-ICP-Agent-Standards-ICRC1-Models-MetaDataValue-Text-System-String-'></a>
+### Text(value) `method`
+
+##### Summary
+
+Constructs a metadata value with a Text
+
+##### Returns
+
+A metadata value with a Text
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| value | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The Text value to use |
+
+<a name='T-EdjCase-ICP-Agent-Standards-ICRC1-Models-MetaDataValueTag'></a>
+## MetaDataValueTag `type`
+
+##### Namespace
+
+EdjCase.ICP.Agent.Standards.ICRC1.Models
+
+##### Summary
+
+An enum representing the meta data value types
+
+<a name='F-EdjCase-ICP-Agent-Standards-ICRC1-Models-MetaDataValueTag-Blob'></a>
+### Blob `constants`
+
+##### Summary
+
+Blob value
+
+<a name='F-EdjCase-ICP-Agent-Standards-ICRC1-Models-MetaDataValueTag-Int'></a>
+### Int `constants`
+
+##### Summary
+
+Int value
+
+<a name='F-EdjCase-ICP-Agent-Standards-ICRC1-Models-MetaDataValueTag-Nat'></a>
+### Nat `constants`
+
+##### Summary
+
+Nat value
+
+<a name='F-EdjCase-ICP-Agent-Standards-ICRC1-Models-MetaDataValueTag-Text'></a>
+### Text `constants`
+
+##### Summary
+
+Text value
 
 <a name='T-EdjCase-ICP-Agent-Responses-QueryRejectInfo'></a>
 ## QueryRejectInfo `type`
@@ -2232,3 +3010,557 @@ The request has been processed and has reject data
 ##### Summary
 
 The request has been processed and it has reply data
+
+<a name='T-EdjCase-ICP-Agent-Standards-ICRC1-Models-SupportedStandard'></a>
+## SupportedStandard `type`
+
+##### Namespace
+
+EdjCase.ICP.Agent.Standards.ICRC1.Models
+
+##### Summary
+
+This class represents a supported standard with a name and URL
+
+<a name='M-EdjCase-ICP-Agent-Standards-ICRC1-Models-SupportedStandard-#ctor-System-String,System-String-'></a>
+### #ctor(name,url) `constructor`
+
+##### Summary
+
+Primary constructor
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| name | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The name of the supported standard |
+| url | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The URL of the supported standard |
+
+<a name='P-EdjCase-ICP-Agent-Standards-ICRC1-Models-SupportedStandard-Name'></a>
+### Name `property`
+
+##### Summary
+
+The name of the supported standard
+
+<a name='P-EdjCase-ICP-Agent-Standards-ICRC1-Models-SupportedStandard-Url'></a>
+### Url `property`
+
+##### Summary
+
+The URL of the supported standard
+
+<a name='T-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferArgs'></a>
+## TransferArgs `type`
+
+##### Namespace
+
+EdjCase.ICP.Agent.Standards.ICRC1.Models
+
+##### Summary
+
+This class represents the arguments for transferring an ICRC1 token
+
+<a name='M-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferArgs-#ctor-EdjCase-ICP-Candid-Models-OptionalValue{System-Collections-Generic-List{System-Byte}},EdjCase-ICP-Agent-Standards-ICRC1-Models-Account,EdjCase-ICP-Candid-Models-UnboundedUInt,EdjCase-ICP-Candid-Models-OptionalValue{EdjCase-ICP-Candid-Models-UnboundedUInt},EdjCase-ICP-Candid-Models-OptionalValue{System-Collections-Generic-List{System-Byte}},EdjCase-ICP-Candid-Models-OptionalValue{System-UInt64}-'></a>
+### #ctor(fromSubaccount,to,amount,fee,memo,createdAtTime) `constructor`
+
+##### Summary
+
+Primary constructor for the TransferArgs class
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| fromSubaccount | [EdjCase.ICP.Candid.Models.OptionalValue{System.Collections.Generic.List{System.Byte}}](#T-EdjCase-ICP-Candid-Models-OptionalValue{System-Collections-Generic-List{System-Byte}} 'EdjCase.ICP.Candid.Models.OptionalValue{System.Collections.Generic.List{System.Byte}}') | The subaccount from which the transfer is made, represented as an OptionalValue object |
+| to | [EdjCase.ICP.Agent.Standards.ICRC1.Models.Account](#T-EdjCase-ICP-Agent-Standards-ICRC1-Models-Account 'EdjCase.ICP.Agent.Standards.ICRC1.Models.Account') | The account to which the transfer is made, represented as an Account object |
+| amount | [EdjCase.ICP.Candid.Models.UnboundedUInt](#T-EdjCase-ICP-Candid-Models-UnboundedUInt 'EdjCase.ICP.Candid.Models.UnboundedUInt') | The amount of the token being transferred, represented as an UnboundedUInt object |
+| fee | [EdjCase.ICP.Candid.Models.OptionalValue{EdjCase.ICP.Candid.Models.UnboundedUInt}](#T-EdjCase-ICP-Candid-Models-OptionalValue{EdjCase-ICP-Candid-Models-UnboundedUInt} 'EdjCase.ICP.Candid.Models.OptionalValue{EdjCase.ICP.Candid.Models.UnboundedUInt}') | The fee for the transfer, represented as an OptionalValue object |
+| memo | [EdjCase.ICP.Candid.Models.OptionalValue{System.Collections.Generic.List{System.Byte}}](#T-EdjCase-ICP-Candid-Models-OptionalValue{System-Collections-Generic-List{System-Byte}} 'EdjCase.ICP.Candid.Models.OptionalValue{System.Collections.Generic.List{System.Byte}}') | The memo for the transfer, represented as an OptionalValue object |
+| createdAtTime | [EdjCase.ICP.Candid.Models.OptionalValue{System.UInt64}](#T-EdjCase-ICP-Candid-Models-OptionalValue{System-UInt64} 'EdjCase.ICP.Candid.Models.OptionalValue{System.UInt64}') | The time at which the transfer is created, represented as an OptionalValue object |
+
+<a name='P-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferArgs-Amount'></a>
+### Amount `property`
+
+##### Summary
+
+The amount of the token being transferred, represented as an UnboundedUInt object
+
+<a name='P-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferArgs-CreatedAtTime'></a>
+### CreatedAtTime `property`
+
+##### Summary
+
+The time at which the transfer is created, represented as an OptionalValue object
+
+<a name='P-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferArgs-Fee'></a>
+### Fee `property`
+
+##### Summary
+
+The fee for the transfer, represented as an OptionalValue object
+
+<a name='P-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferArgs-FromSubaccount'></a>
+### FromSubaccount `property`
+
+##### Summary
+
+The subaccount from which the transfer is made, represented as an OptionalValue object
+
+<a name='P-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferArgs-Memo'></a>
+### Memo `property`
+
+##### Summary
+
+The memo for the transfer, represented as an OptionalValue object
+
+<a name='P-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferArgs-To'></a>
+### To `property`
+
+##### Summary
+
+The account to which the transfer is made, represented as an Account object
+
+<a name='T-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferError'></a>
+## TransferError `type`
+
+##### Namespace
+
+EdjCase.ICP.Agent.Standards.ICRC1.Models
+
+##### Summary
+
+This class represents an error that can occur during a transfer
+
+<a name='M-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferError-#ctor'></a>
+### #ctor() `constructor`
+
+##### Summary
+
+Constructor for reflection
+
+##### Parameters
+
+This constructor has no parameters.
+
+<a name='P-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferError-Tag'></a>
+### Tag `property`
+
+##### Summary
+
+The tag that indicates the type of transfer error
+
+<a name='P-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferError-Value'></a>
+### Value `property`
+
+##### Summary
+
+The value that contains the error information, represented as an object
+
+<a name='M-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferError-AsBadBurn'></a>
+### AsBadBurn() `method`
+
+##### Summary
+
+Gets the value of this TransferError object as a BadBurnError object
+
+##### Returns
+
+The BadBurnError object representing the error information
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferError-AsBadFee'></a>
+### AsBadFee() `method`
+
+##### Summary
+
+Gets the value of this TransferError object as a BadFeeError object
+
+##### Returns
+
+The BadFeeError object representing the error information
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferError-AsCreatedInFuture'></a>
+### AsCreatedInFuture() `method`
+
+##### Summary
+
+Gets the value of this TransferError object as a CreatedInFutureError object
+
+##### Returns
+
+The CreatedInFutureError object representing the error information
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferError-AsDuplicate'></a>
+### AsDuplicate() `method`
+
+##### Summary
+
+Gets the value of this TransferError object as a DuplicateError object
+
+##### Returns
+
+The DuplicateError object representing the error information
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferError-AsGenericError'></a>
+### AsGenericError() `method`
+
+##### Summary
+
+Gets the value of this TransferError object as a GenericError object
+
+##### Returns
+
+The GenericError object representing the error information
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferError-AsInsufficientFunds'></a>
+### AsInsufficientFunds() `method`
+
+##### Summary
+
+Gets the value of this TransferError object as an InsufficientFundsError object
+
+##### Returns
+
+The InsufficientFundsError object representing the error information
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferError-BadBurn-EdjCase-ICP-Agent-Standards-ICRC1-Models-BadBurnError-'></a>
+### BadBurn(info) `method`
+
+##### Summary
+
+Creates a new instance of TransferError with a BadBurnError object as the value
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| info | [EdjCase.ICP.Agent.Standards.ICRC1.Models.BadBurnError](#T-EdjCase-ICP-Agent-Standards-ICRC1-Models-BadBurnError 'EdjCase.ICP.Agent.Standards.ICRC1.Models.BadBurnError') | The BadBurnError object containing the error information |
+
+<a name='M-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferError-BadFee-EdjCase-ICP-Agent-Standards-ICRC1-Models-BadFeeError-'></a>
+### BadFee(info) `method`
+
+##### Summary
+
+Creates a new instance of TransferError with a BadFeeError object as the value
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| info | [EdjCase.ICP.Agent.Standards.ICRC1.Models.BadFeeError](#T-EdjCase-ICP-Agent-Standards-ICRC1-Models-BadFeeError 'EdjCase.ICP.Agent.Standards.ICRC1.Models.BadFeeError') | The BadFeeError object containing the error information |
+
+<a name='M-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferError-CreatedInFuture-EdjCase-ICP-Agent-Standards-ICRC1-Models-CreatedInFutureError-'></a>
+### CreatedInFuture(info) `method`
+
+##### Summary
+
+Creates a new instance of TransferError with a CreatedInFutureError object as the value
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| info | [EdjCase.ICP.Agent.Standards.ICRC1.Models.CreatedInFutureError](#T-EdjCase-ICP-Agent-Standards-ICRC1-Models-CreatedInFutureError 'EdjCase.ICP.Agent.Standards.ICRC1.Models.CreatedInFutureError') | The CreatedInFutureError object containing the error information |
+
+<a name='M-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferError-Duplicate-EdjCase-ICP-Agent-Standards-ICRC1-Models-DuplicateError-'></a>
+### Duplicate(info) `method`
+
+##### Summary
+
+Creates a new instance of TransferError with a DuplicateError object as the value
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| info | [EdjCase.ICP.Agent.Standards.ICRC1.Models.DuplicateError](#T-EdjCase-ICP-Agent-Standards-ICRC1-Models-DuplicateError 'EdjCase.ICP.Agent.Standards.ICRC1.Models.DuplicateError') | The DuplicateError object containing the error information |
+
+<a name='M-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferError-GenericError-EdjCase-ICP-Agent-Standards-ICRC1-Models-GenericError-'></a>
+### GenericError(info) `method`
+
+##### Summary
+
+Creates a new instance of TransferError with a GenericError object as the value
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| info | [EdjCase.ICP.Agent.Standards.ICRC1.Models.GenericError](#T-EdjCase-ICP-Agent-Standards-ICRC1-Models-GenericError 'EdjCase.ICP.Agent.Standards.ICRC1.Models.GenericError') | The GenericError object containing the error information |
+
+<a name='M-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferError-InsufficientFunds-EdjCase-ICP-Agent-Standards-ICRC1-Models-InsufficientFundsError-'></a>
+### InsufficientFunds(info) `method`
+
+##### Summary
+
+Creates a new instance of TransferError with an InsufficientFundsError object as the value
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| info | [EdjCase.ICP.Agent.Standards.ICRC1.Models.InsufficientFundsError](#T-EdjCase-ICP-Agent-Standards-ICRC1-Models-InsufficientFundsError 'EdjCase.ICP.Agent.Standards.ICRC1.Models.InsufficientFundsError') | The InsufficientFundsError object containing the error information |
+
+<a name='M-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferError-TemporarilyUnavailable'></a>
+### TemporarilyUnavailable() `method`
+
+##### Summary
+
+Creates a new instance of TransferError with a TemporarilyUnavailable tag and null value
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferError-TooOld'></a>
+### TooOld() `method`
+
+##### Summary
+
+Creates a new instance of TransferError with a TooOld tag and null value
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferError-ValidateTag-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferErrorTag-'></a>
+### ValidateTag(tag) `method`
+
+##### Summary
+
+Throws an exception if the current tag of this TransferError object does not match the given tag
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| tag | [EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferErrorTag](#T-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferErrorTag 'EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferErrorTag') | The expected tag |
+
+<a name='T-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferErrorTag'></a>
+## TransferErrorTag `type`
+
+##### Namespace
+
+EdjCase.ICP.Agent.Standards.ICRC1.Models
+
+##### Summary
+
+This enum represents the possible types of errors that can occur during a transfer
+
+<a name='F-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferErrorTag-BadBurn'></a>
+### BadBurn `constants`
+
+##### Summary
+
+Indicates an error due to an incorrect burn amount
+
+<a name='F-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferErrorTag-BadFee'></a>
+### BadFee `constants`
+
+##### Summary
+
+Indicates an error due to an incorrect fee
+
+<a name='F-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferErrorTag-CreatedInFuture'></a>
+### CreatedInFuture `constants`
+
+##### Summary
+
+Indicates an error due to a transaction being created in the future
+
+<a name='F-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferErrorTag-Duplicate'></a>
+### Duplicate `constants`
+
+##### Summary
+
+Indicates an error due to a transaction being a duplicate
+
+<a name='F-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferErrorTag-GenericError'></a>
+### GenericError `constants`
+
+##### Summary
+
+Indicates a generic error that can occur during a transfer
+
+<a name='F-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferErrorTag-InsufficientFunds'></a>
+### InsufficientFunds `constants`
+
+##### Summary
+
+Indicates an error due to insufficient funds for the transaction
+
+<a name='F-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferErrorTag-TemporarilyUnavailable'></a>
+### TemporarilyUnavailable `constants`
+
+##### Summary
+
+Indicates that the service is temporarily unavailable
+
+<a name='F-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferErrorTag-TooOld'></a>
+### TooOld `constants`
+
+##### Summary
+
+Indicates an error due to a transaction being too old
+
+<a name='T-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferResult'></a>
+## TransferResult `type`
+
+##### Namespace
+
+EdjCase.ICP.Agent.Standards.ICRC1.Models
+
+##### Summary
+
+Represents the result of a transfer operation, which can either be Ok with a value or Err with an error object
+
+<a name='M-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferResult-#ctor'></a>
+### #ctor() `constructor`
+
+##### Summary
+
+Private default constructor used for reflection
+
+##### Parameters
+
+This constructor has no parameters.
+
+<a name='P-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferResult-Tag'></a>
+### Tag `property`
+
+##### Summary
+
+The tag indicating whether the transfer operation was successful or resulted in an error
+
+<a name='P-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferResult-Value'></a>
+### Value `property`
+
+##### Summary
+
+The value of this TransferResult object, which can be either an UnboundedUInt or a TransferError object
+
+<a name='M-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferResult-AsErr'></a>
+### AsErr() `method`
+
+##### Summary
+
+Gets the value of this TransferResult object as a TransferError object
+
+##### Returns
+
+The TransferError object associated with this TransferResult object
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferResult-AsOk'></a>
+### AsOk() `method`
+
+##### Summary
+
+Gets the value of this TransferResult object as an UnboundedUInt
+
+##### Returns
+
+The UnboundedUInt value associated with this TransferResult object
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferResult-Err-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferError-'></a>
+### Err(info) `method`
+
+##### Summary
+
+Creates a new instance of TransferResult with the Err tag and the given TransferError object as the value
+
+##### Returns
+
+A new instance of TransferResult with the Err tag and the given value
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| info | [EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferError](#T-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferError 'EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferError') | The TransferError object containing the error information |
+
+<a name='M-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferResult-Ok-EdjCase-ICP-Candid-Models-UnboundedUInt-'></a>
+### Ok(info) `method`
+
+##### Summary
+
+Creates a new instance of TransferResult with the Ok tag and the given UnboundedUInt value
+
+##### Returns
+
+A new instance of TransferResult with the Ok tag and the given value
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| info | [EdjCase.ICP.Candid.Models.UnboundedUInt](#T-EdjCase-ICP-Candid-Models-UnboundedUInt 'EdjCase.ICP.Candid.Models.UnboundedUInt') | The value associated with this Ok TransferResult object |
+
+<a name='M-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferResult-ValidateTag-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferResultTag-'></a>
+### ValidateTag(tag) `method`
+
+##### Summary
+
+Throws an exception if the current tag of this TransferResult object does not match the given tag
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| tag | [EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferResultTag](#T-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferResultTag 'EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferResultTag') | The expected tag |
+
+<a name='T-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferResultTag'></a>
+## TransferResultTag `type`
+
+##### Namespace
+
+EdjCase.ICP.Agent.Standards.ICRC1.Models
+
+##### Summary
+
+An enumeration of possible tags for a TransferResult object, which can either be Ok with an UnboundedUInt value or Err with a TransferError object
+
+<a name='F-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferResultTag-Err'></a>
+### Err `constants`
+
+##### Summary
+
+Indicates a failed transfer operation with the associated TransferError object containing information about the error
+
+<a name='F-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferResultTag-Ok'></a>
+### Ok `constants`
+
+##### Summary
+
+Indicates a successful transfer operation with the associated UnboundedUInt value
