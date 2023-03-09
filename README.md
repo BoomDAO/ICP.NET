@@ -5,6 +5,7 @@ Collection of Internet Computer Protocol (ICP) libraries for .NET/Blazor
 - Agent
 
   - Library to communicate to and from the Internet Computer
+  - PreGenerated ICRC1 Client
   - Nuget: [`EdjCase.ICP.Agent`](https://www.nuget.org/packages/EdjCase.ICP.Agent)
 
 - Candid
@@ -95,6 +96,42 @@ var client = new GovernanceApiClient(agent, Principal.FromText("rrkah-fqaaa-aaaa
 
 // Make request
 OptionalValue<ProposalInfo> info = await client.GetProposalInfoAsync(62143);
+```
+
+## Using the ICRC1 PreGenerated Client
+
+Instantiate an ICRC1Client by passing the HttpAgent instance and the canister ID of the ICRC1 canister as parameters:
+
+```cs
+IAgent agent = new HttpAgent(identity);
+Principal canisterId = Principal.FromText("<canister_id>");
+ICRC1Client client = new ICRC1Client(agent, canisterId);
+```
+
+Use the methods of the ICRC1Client to communicate with the ICRC1 canister:
+
+```cs
+// Get the name of the token
+string name = await client.Name();
+
+// Get the balance of a specific account
+Account account = new Account
+{
+    Id = Principal.FromText("<account_id>")
+};
+UnboundedUInt balance = await client.BalanceOf(account);
+
+// Transfer tokens from one account to another
+TransferArgs transferArgs = new TransferArgs
+{
+    To = new Account
+    {
+        Id = Principal.FromText("<to_account_id>")
+    },
+    Amount = 1,
+    Memo = "<memo>"
+};
+TransferResult transferResult = await client.Transfer(transferArgs);
 ```
 
 # Candid
@@ -313,44 +350,6 @@ LoginResult result = await Authenticator
 DelegationIdentity identity = result.GetIdentityOrThrow(); // Gets the generated identity or throws if login failed
 
 var agent = new HttpAgent(identity); // Use in agent to make authenticated requests
-```
-
-# Using the ICRC1 PreGenerated Client
-
-## Usage
-
-Instantiate an ICRC1Client by passing the HttpAgent instance and the canister ID of the ICRC1 canister as parameters:
-
-```cs
-IAgent agent = new HttpAgent(identity);
-Principal canisterId = Principal.FromText("<canister_id>");
-ICRC1Client client = new ICRC1Client(agent, canisterId);
-```
-
-Use the methods of the ICRC1Client to communicate with the ICRC1 canister:
-
-```cs
-// Get the name of the token
-string name = await client.Name();
-
-// Get the balance of a specific account
-Account account = new Account
-{
-    Id = Principal.FromText("<account_id>")
-};
-UnboundedUInt balance = await client.BalanceOf(account);
-
-// Transfer tokens from one account to another
-TransferArgs transferArgs = new TransferArgs
-{
-    To = new Account
-    {
-        Id = Principal.FromText("<to_account_id>")
-    },
-    Amount = 1,
-    Memo = "<memo>"
-};
-TransferResult transferResult = await client.Transfer(transferArgs);
 ```
 
 # Links
