@@ -17,7 +17,7 @@ namespace EdjCase.ICP.Agent.Standards.ICRC1.Models
 		public string Name { get; set; }
 
 		/// <summary>
-		/// The URL of the supported standard
+		/// The Url of the supported standard
 		/// </summary>
 		[CandidName("url")]
 		public string Url { get; set; }
