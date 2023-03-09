@@ -3048,7 +3048,7 @@ The name of the supported standard
 
 ##### Summary
 
-The URL of the supported standard
+The Url of the supported standard
 
 <a name='T-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferArgs'></a>
 ## TransferArgs `type`
