@@ -57,9 +57,12 @@ namespace = ""My.Namespace""
 # Will create a subfolder within this directory with all the files
 output-directory = ""./Clients""
 
-# Remove comment to override default boundry node url (like for local development)
+# Will override default boundry node url (like for local development)
 # Only useful for generating clients from a canister id
 #url = ""https://localhost:8000""
+
+# Will make generated files in a flat structure with no folders, for all clients
+#no-folders = true
 
 [[clients]]
 # Defines name folder and api client class name
@@ -82,6 +85,9 @@ file-path = ""../MyService.did""
 
 # Override base output directory, but this specifies the subfolder
 #output-directory = ""./Clients/MyS""
+
+# Will make generated files in a flat structure with no folders, for this client
+#no-folders = true
 				
 # Can specify multiple clients by creating another [[clients]]
 #[[clients]]
@@ -112,9 +118,10 @@ file-path = ""../MyService.did""
 				TomlTable config = Tomlyn.Toml.ToModel(configToml);
 
 				string baseNamespace = GetRequired<string>(config, "namespace");
-				string? baseUrl = GetOptional<string>(config, "url");
+				string? baseUrl = GetOptional<string?>(config, "url");
+				bool? noFolders = GetOptional<bool?>(config, "no-folders");
 				Uri? boundryNodeUrl = baseUrl == null ? null : new Uri(baseUrl);
-				string outputDirectory = Path.GetRelativePath("./", GetOptional<string>(config, "output-directory") ?? "./");
+				string outputDirectory = Path.GetRelativePath("./", GetOptional<string?>(config, "output-directory") ?? "./");
 
 				TomlTableArray clients = config["clients"].Cast<TomlTableArray>();
 
@@ -123,8 +130,10 @@ file-path = ""../MyService.did""
 					string name = GetRequired<string>(client, "name");
 					string type = GetRequired<string>(client, "type");
 					string @namespace = baseNamespace + "." + name;
-					string? clientOutputDirectory = GetOptional<string>(client, "output-directory");
-					ClientGenerationOptions clientOptions = new(name, @namespace);
+					string? clientOutputDirectory = GetOptional<string?>(client, "output-directory");
+					string? clientNamespace = GetOptional<string?>(client, "namespace");
+					bool clientNoFolders = GetOptional<bool?>(client, "no-folders") ?? noFolders ?? false;
+					ClientGenerationOptions clientOptions = new(name, clientNamespace ?? @namespace, clientNoFolders);
 					ClientSyntax source;
 					switch (type)
 					{
@@ -146,7 +155,7 @@ file-path = ""../MyService.did""
 						default:
 							throw new InvalidOperationException($"Invalid client type '{type}'");
 					}
-					WriteClient(source, Path.Combine(clientOutputDirectory ?? outputDirectory, name));
+					WriteClient(source, clientOutputDirectory ?? Path.Combine(outputDirectory, name), clientNoFolders);
 				}
 				return 0;
 			}
@@ -179,7 +188,7 @@ file-path = ""../MyService.did""
 			return default;
 		}
 
-		private static void WriteClient(ClientSyntax result, string outputDirectory)
+		private static void WriteClient(ClientSyntax result, string outputDirectory, bool noFolders)
 		{
 			Console.WriteLine($"Writing client file to: {outputDirectory}\\{result.Name}.cs");
 			WriteFile(null, result.Name, result.ClientFile);
@@ -188,7 +197,7 @@ file-path = ""../MyService.did""
 			Console.WriteLine($"Writing data model files to directory: {outputDirectory}\\Models\\");
 			foreach ((string name, CompilationUnitSyntax sourceCode) in result.TypeFiles)
 			{
-				WriteFile("Models", name, sourceCode);
+				WriteFile(noFolders ? null : "Models", name, sourceCode);
 			}
 			Console.WriteLine("Client successfully generated!");
 			Console.WriteLine();

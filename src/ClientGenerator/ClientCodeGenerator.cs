@@ -82,7 +82,9 @@ namespace EdjCase.ICP.ClientGenerator
 					t => ResolveSourceCodeType(t.Value)
 				);
 
-			string modelNamespace = options.Namespace + ".Models";
+			string modelNamespace = options.NoFolders
+				? options.Namespace 
+				: options.Namespace + ".Models";
 			HashSet<ValueName> aliases = declaredTypes
 				.Where(t => t.Value is CompiledTypeSourceCodeType || t.Value is ReferenceSourceCodeType)
 				.Select(t => t.Key)

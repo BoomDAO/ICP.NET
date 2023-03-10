@@ -20,22 +20,5 @@ namespace EdjCase.ICP.Candid.Tests
 			Assert.Equal(expectedHashHex, actualHashHex);
 		}
 
-		// TODO
-		//[Theory]
-		//[InlineData("0")]
-		//[InlineData("000")]
-		//[InlineData("010203040506070809101112131415161718192021222324252627282930")]
-		//public void ComputeHash_Error_Length(string hexData)
-		//{
-		//
-		//}
-
-		// TODO
-		//[Theory]
-		//[InlineData("0g")]
-		//public void ComputeHash_Error_InvalidCharacters(string hexData)
-		//{
-		//
-		//}
 	}
 }

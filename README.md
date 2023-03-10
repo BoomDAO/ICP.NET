@@ -305,12 +305,14 @@ Example:
 ```
 namespace = "My.Namespace" # Base namespace used for generated files
 output-directory = "./Clients" # Directory to put clients. Each client will get its own sub folder based on its name. If not specified, will use current directory
+no-folders = false # If true, will put all the files in a single directory
 
 [[clients]]
 name = "Dex" # Used for the name of the folder and client class
 type = "file" # Create client based on service definition file
 file-path = "./ServiceDefinitionFiles/Dex.did" # Service definition file path
 output-directory = "./Clients/D" # Override base output directory, but this specifies the subfolder
+no-folders = false # If true, will put all the files in a single directory
 
 
 # Can specify multiple clients by defining another
