@@ -41,11 +41,12 @@ namespace EdjCase.ICP.InternetIdentity
 				{
 					try
 					{
+						string? deviceName;
 						using (var devlist = new FidoDeviceInfoList(64))
 						{
-							return devlist.Select(d => d.ProductString).ToArray();
+							// todo what about multiple devices
+							deviceName = devlist.Select(d => d.Path).FirstOrDefault();
 						}
-						string deviceName = GetFidoDeviceNameForSign();
 						device.Open(deviceName);
 
 						string clientDataJson = string.Format(clientDataTemplate, UrlBase64.Encode(challenge));
@@ -69,7 +70,7 @@ namespace EdjCase.ICP.InternetIdentity
 
 						DeviceInfo? chosenDevice = devices
 							.FirstOrDefault(d => assert[0].Id.SequenceEqual(d.CredentialId));
-						if(chosenDevice == null)
+						if (chosenDevice == null)
 						{
 							return null;
 						}
@@ -84,20 +85,6 @@ namespace EdjCase.ICP.InternetIdentity
 					}
 				}
 			}
-		}
-
-		private static string defaultDevice = "windows://hello";
-
-		private static string GetFidoDeviceNameForSign()
-		{
-			// TODO: on Windows platforms, we must use windows hello (even if we're using an external, i.e. non-platform authenticator).
-			// on other platforms, we actually have to pick a device (so give the user some choice, or assume theres only one device?)
-			return defaultDevice;
-		}
-
-		private static void SetFidoDevice(string device)
-		{
-			defaultDevice = device;
 		}
 
 
