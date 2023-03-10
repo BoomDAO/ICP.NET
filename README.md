@@ -5,6 +5,7 @@ Collection of Internet Computer Protocol (ICP) libraries for .NET/Blazor
 - Agent
 
   - Library to communicate to and from the Internet Computer
+  - PreGenerated ICRC1 Client
   - Nuget: [`EdjCase.ICP.Agent`](https://www.nuget.org/packages/EdjCase.ICP.Agent)
 
 - Candid
@@ -95,6 +96,42 @@ var client = new GovernanceApiClient(agent, Principal.FromText("rrkah-fqaaa-aaaa
 
 // Make request
 OptionalValue<ProposalInfo> info = await client.GetProposalInfoAsync(62143);
+```
+
+## Using the ICRC1 PreGenerated Client
+
+Instantiate an ICRC1Client by passing the HttpAgent instance and the canister ID of the ICRC1 canister as parameters:
+
+```cs
+IAgent agent = new HttpAgent(identity);
+Principal canisterId = Principal.FromText("<canister_id>");
+ICRC1Client client = new ICRC1Client(agent, canisterId);
+```
+
+Use the methods of the ICRC1Client to communicate with the ICRC1 canister:
+
+```cs
+// Get the name of the token
+string name = await client.Name();
+
+// Get the balance of a specific account
+Account account = new Account
+{
+    Id = Principal.FromText("<account_id>")
+};
+UnboundedUInt balance = await client.BalanceOf(account);
+
+// Transfer tokens from one account to another
+TransferArgs transferArgs = new TransferArgs
+{
+    To = new Account
+    {
+        Id = Principal.FromText("<to_account_id>")
+    },
+    Amount = 1,
+    Memo = "<memo>"
+};
+TransferResult transferResult = await client.Transfer(transferArgs);
 ```
 
 # Candid
@@ -268,12 +305,14 @@ Example:
 ```
 namespace = "My.Namespace" # Base namespace used for generated files
 output-directory = "./Clients" # Directory to put clients. Each client will get its own sub folder based on its name. If not specified, will use current directory
+no-folders = false # If true, will put all the files in a single directory
 
 [[clients]]
 name = "Dex" # Used for the name of the folder and client class
 type = "file" # Create client based on service definition file
 file-path = "./ServiceDefinitionFiles/Dex.did" # Service definition file path
 output-directory = "./Clients/D" # Override base output directory, but this specifies the subfolder
+no-folders = false # If true, will put all the files in a single directory
 
 
 # Can specify multiple clients by defining another

@@ -17,3 +17,4 @@ name = "AddressBook"
 type = "file"
 file-path = "../ServiceDefinitionFiles/AddressBook.did"
 output-directory = "C:/Git/ICP.NET/samples/Sample.Shared/Address" # override
+no-folders = true

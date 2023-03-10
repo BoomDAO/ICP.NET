@@ -4,10 +4,6 @@ using EdjCase.ICP.Candid.Crypto;
 using EdjCase.ICP.Candid.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EdjCase.ICP.Agent.Models
 {

@@ -2,8 +2,6 @@ using EdjCase.ICP.Candid.Models;
 using System;
 using System.Collections.Generic;
 using System.Formats.Asn1;
-using System.Linq;
-using System.Runtime.CompilerServices;
 
 namespace EdjCase.ICP.Agent
 {

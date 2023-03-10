@@ -48,9 +48,15 @@
             The base namespace to use in the generated files
             </summary>
         </member>
-        <member name="M:EdjCase.ICP.ClientGenerator.ClientGenerationOptions.#ctor(System.String,System.String)">
+        <member name="P:EdjCase.ICP.ClientGenerator.ClientGenerationOptions.NoFolders">
+            <summary>
+            If true, there will be no folders, all files will be in the same directory
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.ClientGenerator.ClientGenerationOptions.#ctor(System.String,System.String,System.Boolean)">
             <param name="name">The name of the client class and file to use</param>
             <param name="namespace">The base namespace to use in the generated files</param>
+            <param name="noFolders">If true, there will be no folders, all files will be in the same directory</param>
         </member>
         <member name="T:EdjCase.ICP.ClientGenerator.ClientSyntax">
             <summary>

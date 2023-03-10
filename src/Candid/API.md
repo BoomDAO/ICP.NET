@@ -45,6 +45,9 @@
   - [ToOptionalObject(objType,value)](#M-EdjCase-ICP-Candid-CandidConverter-ToOptionalObject-System-Type,EdjCase-ICP-Candid-Models-Values-CandidOptional- 'EdjCase.ICP.Candid.CandidConverter.ToOptionalObject(System.Type,EdjCase.ICP.Candid.Models.Values.CandidOptional)')
   - [ToOptionalObject\`\`1(value)](#M-EdjCase-ICP-Candid-CandidConverter-ToOptionalObject``1-EdjCase-ICP-Candid-Models-Values-CandidOptional- 'EdjCase.ICP.Candid.CandidConverter.ToOptionalObject``1(EdjCase.ICP.Candid.Models.Values.CandidOptional)')
 - [CandidConverterOptions](#T-EdjCase-ICP-Candid-CandidConverterOptions 'EdjCase.ICP.Candid.CandidConverterOptions')
+  - [CustomMappers](#P-EdjCase-ICP-Candid-CandidConverterOptions-CustomMappers 'EdjCase.ICP.Candid.CandidConverterOptions.CustomMappers')
+  - [AddCustomMapper(mapper)](#M-EdjCase-ICP-Candid-CandidConverterOptions-AddCustomMapper-EdjCase-ICP-Candid-Mapping-ICandidValueMapper- 'EdjCase.ICP.Candid.CandidConverterOptions.AddCustomMapper(EdjCase.ICP.Candid.Mapping.ICandidValueMapper)')
+  - [AddCustomMapper\`\`1()](#M-EdjCase-ICP-Candid-CandidConverterOptions-AddCustomMapper``1 'EdjCase.ICP.Candid.CandidConverterOptions.AddCustomMapper``1')
 - [CandidDecodingException](#T-EdjCase-ICP-Candid-Exceptions-CandidDecodingException 'EdjCase.ICP.Candid.Exceptions.CandidDecodingException')
   - [#ctor(byteEndIndex,message)](#M-EdjCase-ICP-Candid-Exceptions-CandidDecodingException-#ctor-System-Int32,System-String- 'EdjCase.ICP.Candid.Exceptions.CandidDecodingException.#ctor(System.Int32,System.String)')
   - [ByteEndIndex](#P-EdjCase-ICP-Candid-Exceptions-CandidDecodingException-ByteEndIndex 'EdjCase.ICP.Candid.Exceptions.CandidDecodingException.ByteEndIndex')
@@ -371,6 +374,8 @@
   - [op_Equality()](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-op_Equality-EdjCase-ICP-Candid-Models-Values-CandidValue,EdjCase-ICP-Candid-Models-Values-CandidValue- 'EdjCase.ICP.Candid.Models.Values.CandidValue.op_Equality(EdjCase.ICP.Candid.Models.Values.CandidValue,EdjCase.ICP.Candid.Models.Values.CandidValue)')
   - [op_Inequality()](#M-EdjCase-ICP-Candid-Models-Values-CandidValue-op_Inequality-EdjCase-ICP-Candid-Models-Values-CandidValue,EdjCase-ICP-Candid-Models-Values-CandidValue- 'EdjCase.ICP.Candid.Models.Values.CandidValue.op_Inequality(EdjCase.ICP.Candid.Models.Values.CandidValue,EdjCase.ICP.Candid.Models.Values.CandidValue)')
 - [CandidValueMapper\`1](#T-EdjCase-ICP-Candid-Mapping-CandidValueMapper`1 'EdjCase.ICP.Candid.Mapping.CandidValueMapper`1')
+  - [#ctor(candidType)](#M-EdjCase-ICP-Candid-Mapping-CandidValueMapper`1-#ctor-EdjCase-ICP-Candid-Models-Types-CandidType- 'EdjCase.ICP.Candid.Mapping.CandidValueMapper`1.#ctor(EdjCase.ICP.Candid.Models.Types.CandidType)')
+  - [CandidType](#P-EdjCase-ICP-Candid-Mapping-CandidValueMapper`1-CandidType 'EdjCase.ICP.Candid.Mapping.CandidValueMapper`1.CandidType')
   - [GetMappedCandidType()](#M-EdjCase-ICP-Candid-Mapping-CandidValueMapper`1-GetMappedCandidType-System-Type- 'EdjCase.ICP.Candid.Mapping.CandidValueMapper`1.GetMappedCandidType(System.Type)')
   - [Map()](#M-EdjCase-ICP-Candid-Mapping-CandidValueMapper`1-Map-EdjCase-ICP-Candid-Models-Values-CandidValue,EdjCase-ICP-Candid-CandidConverter- 'EdjCase.ICP.Candid.Mapping.CandidValueMapper`1.Map(EdjCase.ICP.Candid.Models.Values.CandidValue,EdjCase.ICP.Candid.CandidConverter)')
   - [Map()](#M-EdjCase-ICP-Candid-Mapping-CandidValueMapper`1-Map-System-Object,EdjCase-ICP-Candid-CandidConverter- 'EdjCase.ICP.Candid.Mapping.CandidValueMapper`1.Map(System.Object,EdjCase.ICP.Candid.CandidConverter)')
@@ -1358,6 +1363,45 @@ EdjCase.ICP.Candid
 ##### Summary
 
 Options for configuring how candid is convertered
+
+<a name='P-EdjCase-ICP-Candid-CandidConverterOptions-CustomMappers'></a>
+### CustomMappers `property`
+
+##### Summary
+
+List of custom mappers to use instead of the default mappers provided.
+Order does matter, FIFO
+
+<a name='M-EdjCase-ICP-Candid-CandidConverterOptions-AddCustomMapper-EdjCase-ICP-Candid-Mapping-ICandidValueMapper-'></a>
+### AddCustomMapper(mapper) `method`
+
+##### Summary
+
+Helper method to add a custom mapper
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| mapper | [EdjCase.ICP.Candid.Mapping.ICandidValueMapper](#T-EdjCase-ICP-Candid-Mapping-ICandidValueMapper 'EdjCase.ICP.Candid.Mapping.ICandidValueMapper') | Candid mapper to add |
+
+<a name='M-EdjCase-ICP-Candid-CandidConverterOptions-AddCustomMapper``1'></a>
+### AddCustomMapper\`\`1() `method`
+
+##### Summary
+
+Helper method to add a custom mapper by type. Requires the type to 
+be \`ICandidValueMapper\` and it has an empty constrcutor
+
+##### Parameters
+
+This method has no parameters.
+
+##### Generic Types
+
+| Name | Description |
+| ---- | ----------- |
+| T |  |
 
 <a name='T-EdjCase-ICP-Candid-Exceptions-CandidDecodingException'></a>
 ## CandidDecodingException `type`
@@ -5483,6 +5527,26 @@ EdjCase.ICP.Candid.Mapping
 ##### Summary
 
 An abstract mapper to map a C# type to and from a candid type
+
+<a name='M-EdjCase-ICP-Candid-Mapping-CandidValueMapper`1-#ctor-EdjCase-ICP-Candid-Models-Types-CandidType-'></a>
+### #ctor(candidType) `constructor`
+
+##### Summary
+
+Default constructor, requires a candid type that it maps to
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| candidType | [EdjCase.ICP.Candid.Models.Types.CandidType](#T-EdjCase-ICP-Candid-Models-Types-CandidType 'EdjCase.ICP.Candid.Models.Types.CandidType') | The candid type that the value will map to |
+
+<a name='P-EdjCase-ICP-Candid-Mapping-CandidValueMapper`1-CandidType'></a>
+### CandidType `property`
+
+##### Summary
+
+The candid type that the value will map to
 
 <a name='M-EdjCase-ICP-Candid-Mapping-CandidValueMapper`1-GetMappedCandidType-System-Type-'></a>
 ### GetMappedCandidType() `method`

@@ -1007,5 +1007,620 @@
             Internet Computer, agents must have an independent trustworthy source for this data,
             and must not be tempted to fetch it from this insecure location</param>
         </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.ICRC1.ICRC1Client">
+            <summary>
+            A pre-generated client for the ICRC1 standard
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.ICRC1.ICRC1Client.Agent">
+            <summary>
+            Agent to use to make requests to the IC
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.ICRC1.ICRC1Client.CanisterId">
+            <summary>
+            The id of the canister to make requests to
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.ICRC1.ICRC1Client.#ctor(EdjCase.ICP.Agent.Agents.IAgent,EdjCase.ICP.Candid.Models.Principal)">
+            <summary>
+            Primary constructor
+            </summary>
+            <param name="agent">Agent to use to make requests to the IC</param>
+            <param name="canisterId">The id of the canister to make requests to</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.ICRC1.ICRC1Client.MetaData">
+            <summary>
+            Returns the list of metadata entries for this ledger. See the "Metadata" section below.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.ICRC1.ICRC1Client.Name">
+            <summary>
+            Returns the name of the token (e.g., MyToken).
+            </summary>
+            <returns>The name of the token (e.g., MyToken).</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.ICRC1.ICRC1Client.Symbol">
+            <summary>
+            Returns the symbol of the token (e.g., ICP).
+            </summary>
+            <returns>The symbol of the token (e.g., ICP).</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.ICRC1.ICRC1Client.Decimals">
+            <summary>
+            Returns the number of decimals the token uses (e.g., 8 means to divide the token amount by 100000000 to get its user representation).
+            </summary>
+            <returns>The number of decimals the token uses (e.g., 8 means to divide the token amount by 100000000 to get its user representation).</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.ICRC1.ICRC1Client.Fee">
+            <summary>
+            Returns the default transfer fee.
+            </summary>
+            <returns>The default transfer fee.</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.ICRC1.ICRC1Client.TotalSupply">
+            <summary>
+            Returns the total number of tokens on all accounts except for the minting account.
+            </summary>
+            <returns>The total number of tokens on all accounts except for the minting account.</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.ICRC1.ICRC1Client.MintingAccount">
+            <summary>
+            Returns the minting account if this ledger supports minting and burning tokens.
+            </summary>
+            <returns>The minting account if this ledger supports minting and burning tokens.</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.ICRC1.ICRC1Client.BalanceOf(EdjCase.ICP.Agent.Standards.ICRC1.Models.Account)">
+            <summary>
+            Returns the balance of the account given as an argument.
+            </summary>
+            <param name="account">Account to check balance for</param>
+            <returns>The balance of the account given as an argument.</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.ICRC1.ICRC1Client.Transfer(EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferArgs)">
+            <summary>
+            Transfers amount of tokens from account record { of = caller; subaccount = from_subaccount } to the to account. The caller pays fee tokens for the transfer.
+            </summary>
+            <param name="args">Arguments for the transfer</param>
+            <returns>The result information from the transfer</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.ICRC1.ICRC1Client.SupportedStandards">
+            <summary>
+            Returns the list of standards this ledger implements
+            </summary>
+            <returns>The list of standards this ledger implements</returns>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.ICRC1.Models.Account">
+            <summary>
+            This class represents an ICRC1 account
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.ICRC1.Models.Account.Owner">
+            <summary>
+            The owner of the account, represented as a Principal object
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.ICRC1.Models.Account.Subaccount">
+            <summary>
+            The subaccount of the account, represented as an OptionalValue object
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.ICRC1.Models.Account.#ctor(EdjCase.ICP.Candid.Models.Principal,EdjCase.ICP.Candid.Models.OptionalValue{System.Collections.Generic.List{System.Byte}})">
+            <summary>
+            Primary constructor for the Account class
+            </summary>
+            <param name="owner">The owner of the account, represented as a Principal object</param>
+            <param name="subaccount">The subaccount of the account, represented as an OptionalValue object</param>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.ICRC1.Models.MetaData">
+            <summary>
+            A model representing metadata from an icrc1 token
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.ICRC1.Models.MetaData.Key">
+            <summary>
+            The key or name of the metadata value
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.ICRC1.Models.MetaData.Value">
+            <summary>
+            The associated value for the metadata key
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.ICRC1.Models.MetaData.#ctor(System.String,EdjCase.ICP.Agent.Standards.ICRC1.Models.MetaDataValue)">
+            <summary>
+            Primary constructor
+            </summary>
+            <param name="key">The key or name of the metadata value</param>
+            <param name="value">The associated value for the metadata key</param>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.ICRC1.Models.MetaDataValue">
+            <summary>
+            A model representing the metadata value from an icrc1 token
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.ICRC1.Models.MetaDataValue.Tag">
+            <summary>
+            The metadata variant option tag/type
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.ICRC1.Models.MetaDataValue.Value">
+            <summary>
+            The metadata variant option raw value
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.ICRC1.Models.MetaDataValue.#ctor">
+            <summary>
+            Constructor for reflection
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.ICRC1.Models.MetaDataValue.Nat(EdjCase.ICP.Candid.Models.UnboundedUInt)">
+            <summary>
+            Constructs a metadata value with a Nat
+            </summary>
+            <param name="value">The Nat value to use</param>
+            <returns>A metadata value with a Nat</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.ICRC1.Models.MetaDataValue.AsNat">
+            <summary>
+            Gets the Nat value from the metadata. If the variant is not a Nat, will throw an error
+            </summary>
+            <returns>The Nat value of the metadata</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.ICRC1.Models.MetaDataValue.Int(EdjCase.ICP.Candid.Models.UnboundedInt)">
+            <summary>
+            Constructs a metadata value with a Int
+            </summary>
+            <param name="value">The Int value to use</param>
+            <returns>A metadata value with a Int</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.ICRC1.Models.MetaDataValue.AsInt">
+            <summary>
+            Gets the Int value from the metadata. If the variant is not a Int, will throw an error
+            </summary>
+            <returns>The Int value of the metadata</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.ICRC1.Models.MetaDataValue.Text(System.String)">
+            <summary>
+            Constructs a metadata value with a Text
+            </summary>
+            <param name="value">The Text value to use</param>
+            <returns>A metadata value with a Text</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.ICRC1.Models.MetaDataValue.AsText">
+            <summary>
+            Gets the Text value from the metadata. If the variant is not a Text, will throw an error
+            </summary>
+            <returns>The Text value of the metadata</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.ICRC1.Models.MetaDataValue.Blob(System.Byte[])">
+            <summary>
+            Constructs a metadata value with a Blob
+            </summary>
+            <param name="value">The Blob value to use</param>
+            <returns>A metadata value with a Blob</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.ICRC1.Models.MetaDataValue.AsBlob">
+            <summary>
+            Gets the Blob value from the metadata. If the variant is not a Blob, will throw an error
+            </summary>
+            <returns>The Blob value of the metadata</returns>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.ICRC1.Models.MetaDataValueTag">
+            <summary>
+            An enum representing the meta data value types
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Agent.Standards.ICRC1.Models.MetaDataValueTag.Nat">
+            <summary>
+            Nat value
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Agent.Standards.ICRC1.Models.MetaDataValueTag.Int">
+            <summary>
+            Int value
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Agent.Standards.ICRC1.Models.MetaDataValueTag.Text">
+            <summary>
+            Text value
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Agent.Standards.ICRC1.Models.MetaDataValueTag.Blob">
+            <summary>
+            Blob value
+            </summary>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.ICRC1.Models.SupportedStandard">
+            <summary>
+            This class represents a supported standard with a name and URL
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.ICRC1.Models.SupportedStandard.Name">
+            <summary>
+            The name of the supported standard
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.ICRC1.Models.SupportedStandard.Url">
+            <summary>
+            The Url of the supported standard
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.ICRC1.Models.SupportedStandard.#ctor(System.String,System.String)">
+            <summary>
+            Primary constructor
+            </summary>
+            <param name="name">The name of the supported standard</param>
+            <param name="url">The URL of the supported standard</param>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferArgs">
+            <summary>
+            This class represents the arguments for transferring an ICRC1 token
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferArgs.FromSubaccount">
+            <summary>
+            The subaccount from which the transfer is made, represented as an OptionalValue object
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferArgs.To">
+            <summary>
+            The account to which the transfer is made, represented as an Account object
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferArgs.Amount">
+            <summary>
+            The amount of the token being transferred, represented as an UnboundedUInt object
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferArgs.Fee">
+            <summary>
+            The fee for the transfer, represented as an OptionalValue object
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferArgs.Memo">
+            <summary>
+            The memo for the transfer, represented as an OptionalValue object
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferArgs.CreatedAtTime">
+            <summary>
+            The time at which the transfer is created, represented as an OptionalValue object
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferArgs.#ctor(EdjCase.ICP.Candid.Models.OptionalValue{System.Collections.Generic.List{System.Byte}},EdjCase.ICP.Agent.Standards.ICRC1.Models.Account,EdjCase.ICP.Candid.Models.UnboundedUInt,EdjCase.ICP.Candid.Models.OptionalValue{EdjCase.ICP.Candid.Models.UnboundedUInt},EdjCase.ICP.Candid.Models.OptionalValue{System.Collections.Generic.List{System.Byte}},EdjCase.ICP.Candid.Models.OptionalValue{System.UInt64})">
+            <summary>
+            Primary constructor for the TransferArgs class
+            </summary>
+            <param name="fromSubaccount">The subaccount from which the transfer is made, represented as an OptionalValue object</param>
+            <param name="to">The account to which the transfer is made, represented as an Account object</param>
+            <param name="amount">The amount of the token being transferred, represented as an UnboundedUInt object</param>
+            <param name="fee">The fee for the transfer, represented as an OptionalValue object</param>
+            <param name="memo">The memo for the transfer, represented as an OptionalValue object</param>
+            <param name="createdAtTime">The time at which the transfer is created, represented as an OptionalValue object</param>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferError">
+            <summary>
+            This class represents an error that can occur during a transfer
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferError.Tag">
+            <summary>
+            The tag that indicates the type of transfer error
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferError.Value">
+            <summary>
+            The value that contains the error information, represented as an object
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferError.#ctor">
+            <summary>
+            Constructor for reflection
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferError.BadFee(EdjCase.ICP.Agent.Standards.ICRC1.Models.BadFeeError)">
+            <summary>
+            Creates a new instance of TransferError with a BadFeeError object as the value
+            </summary>
+            <param name="info">The BadFeeError object containing the error information</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferError.BadBurn(EdjCase.ICP.Agent.Standards.ICRC1.Models.BadBurnError)">
+            <summary>
+            Creates a new instance of TransferError with a BadBurnError object as the value
+            </summary>
+            <param name="info">The BadBurnError object containing the error information</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferError.InsufficientFunds(EdjCase.ICP.Agent.Standards.ICRC1.Models.InsufficientFundsError)">
+            <summary>
+            Creates a new instance of TransferError with an InsufficientFundsError object as the value
+            </summary>
+            <param name="info">The InsufficientFundsError object containing the error information</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferError.TooOld">
+            <summary>
+            Creates a new instance of TransferError with a TooOld tag and null value
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferError.CreatedInFuture(EdjCase.ICP.Agent.Standards.ICRC1.Models.CreatedInFutureError)">
+            <summary>
+            Creates a new instance of TransferError with a CreatedInFutureError object as the value
+            </summary>
+            <param name="info">The CreatedInFutureError object containing the error information</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferError.Duplicate(EdjCase.ICP.Agent.Standards.ICRC1.Models.DuplicateError)">
+            <summary>
+            Creates a new instance of TransferError with a DuplicateError object as the value
+            </summary>
+            <param name="info">The DuplicateError object containing the error information</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferError.TemporarilyUnavailable">
+            <summary>
+            Creates a new instance of TransferError with a TemporarilyUnavailable tag and null value
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferError.GenericError(EdjCase.ICP.Agent.Standards.ICRC1.Models.GenericError)">
+            <summary>
+            Creates a new instance of TransferError with a GenericError object as the value
+            </summary>
+            <param name="info">The GenericError object containing the error information</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferError.AsBadFee">
+            <summary>
+            Gets the value of this TransferError object as a BadFeeError object
+            </summary>
+            <returns>The BadFeeError object representing the error information</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferError.AsBadBurn">
+            <summary>
+            Gets the value of this TransferError object as a BadBurnError object
+            </summary>
+            <returns>The BadBurnError object representing the error information</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferError.AsInsufficientFunds">
+            <summary>
+            Gets the value of this TransferError object as an InsufficientFundsError object
+            </summary>
+            <returns>The InsufficientFundsError object representing the error information</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferError.AsCreatedInFuture">
+            <summary>
+            Gets the value of this TransferError object as a CreatedInFutureError object
+            </summary>
+            <returns>The CreatedInFutureError object representing the error information</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferError.AsDuplicate">
+            <summary>
+            Gets the value of this TransferError object as a DuplicateError object
+            </summary>
+            <returns>The DuplicateError object representing the error information</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferError.AsGenericError">
+            <summary>
+            Gets the value of this TransferError object as a GenericError object
+            </summary>
+            <returns>The GenericError object representing the error information</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferError.ValidateTag(EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferErrorTag)">
+            <summary>
+            Throws an exception if the current tag of this TransferError object does not match the given tag
+            </summary>
+            <param name="tag">The expected tag</param>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.ICRC1.Models.BadFeeError">
+            <summary>
+            This class represents an error that occurs when a fee is incorrect
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.ICRC1.Models.BadFeeError.ExpectedFee">
+            <summary>
+            The expected fee for the transaction, represented as an UnboundedUInt object
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.ICRC1.Models.BadFeeError.#ctor(EdjCase.ICP.Candid.Models.UnboundedUInt)">
+            <summary>
+            Primary constructor for the BadFeeError class
+            </summary>
+            <param name="expectedFee">The expected fee for the transaction, represented as an UnboundedUInt object</param>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.ICRC1.Models.BadBurnError">
+            <summary>
+            This class represents an error that occurs when a burn amount is incorrect
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.ICRC1.Models.BadBurnError.MinBurnAmount">
+            <summary>
+            The minimum burn amount for the transaction, represented as an UnboundedUInt object
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.ICRC1.Models.BadBurnError.#ctor(EdjCase.ICP.Candid.Models.UnboundedUInt)">
+            <summary>
+            Primary constructor for the BadBurnError class
+            </summary>
+            <param name="minBurnAmount">The minimum burn amount for the transaction, represented as an UnboundedUInt object</param>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.ICRC1.Models.InsufficientFundsError">
+            <summary>
+            This class represents an error that occurs when there are insufficient funds for a transaction
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.ICRC1.Models.InsufficientFundsError.Balance">
+            <summary>
+            The balance of the account, represented as an UnboundedUInt object
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.ICRC1.Models.InsufficientFundsError.#ctor(EdjCase.ICP.Candid.Models.UnboundedUInt)">
+            <summary>
+            Primary constructor for the InsufficientFundsError class
+            </summary>
+            <param name="balance">The balance of the account, represented as an UnboundedUInt object</param>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.ICRC1.Models.CreatedInFutureError">
+            <summary>
+            This class represents an error that occurs when a transaction is created in the future
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.ICRC1.Models.CreatedInFutureError.LedgerTime">
+            <summary>
+            The ledger time, represented as a Timestamp object
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.ICRC1.Models.CreatedInFutureError.#ctor(System.UInt64)">
+            <summary>
+            Primary constructor for the CreatedInFutureError class
+            </summary>
+            <param name="ledgerTime">The ledger time, represented as a Timestamp object</param>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.ICRC1.Models.DuplicateError">
+            <summary>
+            This class represents an error that occurs when a transaction is a duplicate
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.ICRC1.Models.DuplicateError.DuplicateOf">
+            <summary>
+            The ID of the transaction that this transaction is a duplicate
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.ICRC1.Models.DuplicateError.#ctor(EdjCase.ICP.Candid.Models.UnboundedUInt)">
+            <summary>
+            Primary constructor for the DuplicateError class
+            </summary>
+            <param name="duplicateOf">The ID of the transaction that this transaction is a duplicate of, represented as an UnboundedUInt object</param>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.ICRC1.Models.GenericError">
+            <summary>
+            This class represents a generic error that can occur during a transaction
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.ICRC1.Models.GenericError.ErrorCode">
+            <summary>
+            The error code, represented as an UnboundedUInt object
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.ICRC1.Models.GenericError.Message">
+            <summary>
+            The error message, represented as a string
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.ICRC1.Models.GenericError.#ctor(EdjCase.ICP.Candid.Models.UnboundedUInt,System.String)">
+            <summary>
+            Primary constructor for the GenericError class
+            </summary>
+            <param name="errorCode">The error code, represented as an UnboundedUInt object</param>
+            <param name="message">The error message, represented as a string</param>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferErrorTag">
+            <summary>
+            This enum represents the possible types of errors that can occur during a transfer
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferErrorTag.BadFee">
+            <summary>
+            Indicates an error due to an incorrect fee
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferErrorTag.BadBurn">
+            <summary>
+            Indicates an error due to an incorrect burn amount
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferErrorTag.InsufficientFunds">
+            <summary>
+            Indicates an error due to insufficient funds for the transaction
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferErrorTag.TooOld">
+            <summary>
+            Indicates an error due to a transaction being too old
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferErrorTag.CreatedInFuture">
+            <summary>
+            Indicates an error due to a transaction being created in the future
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferErrorTag.Duplicate">
+            <summary>
+            Indicates an error due to a transaction being a duplicate
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferErrorTag.TemporarilyUnavailable">
+            <summary>
+            Indicates that the service is temporarily unavailable
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferErrorTag.GenericError">
+            <summary>
+            Indicates a generic error that can occur during a transfer
+            </summary>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferResult">
+            <summary>
+            Represents the result of a transfer operation, which can either be Ok with a value or Err with an error object
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferResult.Tag">
+            <summary>
+            The tag indicating whether the transfer operation was successful or resulted in an error
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferResult.Value">
+            <summary>
+            The value of this TransferResult object, which can be either an UnboundedUInt or a TransferError object
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferResult.#ctor">
+            <summary>
+            Private default constructor used for reflection
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferResult.Ok(EdjCase.ICP.Candid.Models.UnboundedUInt)">
+            <summary>
+            Creates a new instance of TransferResult with the Ok tag and the given UnboundedUInt value
+            </summary>
+            <param name="info">The value associated with this Ok TransferResult object</param>
+            <returns>A new instance of TransferResult with the Ok tag and the given value</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferResult.Err(EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferError)">
+            <summary>
+            Creates a new instance of TransferResult with the Err tag and the given TransferError object as the value
+            </summary>
+            <param name="info">The TransferError object containing the error information</param>
+            <returns>A new instance of TransferResult with the Err tag and the given value</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferResult.AsOk">
+            <summary>
+            Gets the value of this TransferResult object as an UnboundedUInt
+            </summary>
+            <returns>The UnboundedUInt value associated with this TransferResult object</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferResult.AsErr">
+            <summary>
+            Gets the value of this TransferResult object as a TransferError object
+            </summary>
+            <returns>The TransferError object associated with this TransferResult object</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferResult.ValidateTag(EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferResultTag)">
+            <summary>
+            Throws an exception if the current tag of this TransferResult object does not match the given tag
+            </summary>
+            <param name="tag">The expected tag</param>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferResultTag">
+            <summary>
+            An enumeration of possible tags for a TransferResult object, which can either be Ok with an UnboundedUInt value or Err with a TransferError object
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferResultTag.Ok">
+            <summary>
+            Indicates a successful transfer operation with the associated UnboundedUInt value
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferResultTag.Err">
+            <summary>
+            Indicates a failed transfer operation with the associated TransferError object containing information about the error
+            </summary>
+        </member>
     </members>
 </doc>

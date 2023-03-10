@@ -1,7 +1,7 @@
 using EdjCase.ICP.Candid.Mapping;
 using EdjCase.ICP.Candid.Models;
 
-namespace Sample.Shared.AddressBook.Models
+namespace Sample.Shared.AddressBook
 {
 	public class Address
 	{

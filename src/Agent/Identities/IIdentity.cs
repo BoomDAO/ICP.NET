@@ -1,12 +1,9 @@
 using EdjCase.ICP.Agent.Models;
 using EdjCase.ICP.Candid.Crypto;
 using EdjCase.ICP.Candid.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace EdjCase.ICP.Agent.Identities
 {

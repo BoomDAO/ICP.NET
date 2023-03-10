@@ -1,9 +1,6 @@
 using EdjCase.ICP.Agent.Identities;
 using EdjCase.ICP.Candid.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace EdjCase.ICP.Agent.Models
 {

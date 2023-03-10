@@ -28,7 +28,7 @@ namespace EdjCase.ICP.Candid
 		/// <param name="options">Optional. The options for the converter. If not set, will use defaults</param>
 		public CandidConverter(CandidConverterOptions? options = null)
 		{
-			this._options = options ?? CandidConverterOptions.Default();
+			this._options = options ?? new CandidConverterOptions();
 			this._typeToMapperCache = new ConcurrentDictionary<Type, ICandidValueMapper>();
 		}
 		/// <param name="configureOptions">Configure function for the converter options. Creates default options</param>

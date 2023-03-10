@@ -26,7 +26,7 @@ namespace EdjCase.ICP.Candid.Tests.Generators
 			string fileText = GetFileText(serviceName + ".did");
 			string baseNamespace = "Test";
 			CandidServiceDescription serviceFile = CandidServiceDescription.Parse(fileText);
-			ClientGenerationOptions options = new(serviceName, baseNamespace);
+			ClientGenerationOptions options = new(serviceName, baseNamespace, false);
 			ClientSyntax syntax = ClientCodeGenerator.GenerateClient(serviceFile, options);
 
 			AdhocWorkspace workspace = new();

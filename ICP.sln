@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.CLI", "samples\Sampl
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{F71B8320-C279-4A79-A8D4-4039DB39D522}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Candid.Tests", "test\Common.Tests\Candid.Tests.csproj", "{7F367130-1A9C-4E87-AA50-620767F10EF7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Candid.Tests", "test\Candid.Tests\Candid.Tests.csproj", "{7F367130-1A9C-4E87-AA50-620767F10EF7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.BlazorWebAssembly.Server", "samples\Sample.BlazorWebAssembly\Server\Sample.BlazorWebAssembly.Server.csproj", "{BF698A87-5C8D-4C60-B704-9F1045156639}"
 EndProject

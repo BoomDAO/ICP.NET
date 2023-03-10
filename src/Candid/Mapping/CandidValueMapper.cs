@@ -10,8 +10,15 @@ namespace EdjCase.ICP.Candid.Mapping
 	/// </summary>
 	public abstract class CandidValueMapper<T> : ICandidValueMapper
 	{
+		/// <summary>
+		/// The candid type that the value will map to
+		/// </summary>
 		public CandidType CandidType { get; }
 
+		/// <summary>
+		/// Default constructor, requires a candid type that it maps to
+		/// </summary>
+		/// <param name="candidType">The candid type that the value will map to</param>
 		protected CandidValueMapper(CandidType candidType)
 		{
 			this.CandidType = candidType;
