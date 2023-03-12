@@ -26,6 +26,12 @@ jobs:
       - name: Push Candid
         run: dotnet nuget push EdjCase.ICP.Candid.${{ github.event.release.tag_name }}.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
 
+      - name: Pack Crypto
+        run: dotnet pack src/EdjCase.Cryptography.BLS/EdjCase.Cryptography.BLS.csproj --configuration Release /p:Version=${{ github.event.release.tag_name }} --output . --include-symbols --include-source
+
+      - name: Push Crypto
+        run: dotnet nuget push EdjCase.Cryptography.BLS.${{ github.event.release.tag_name }}.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+
       - name: Pack Agent
         run: dotnet pack src/Agent/EdjCase.ICP.Agent.csproj --configuration Release /p:Version=${{ github.event.release.tag_name }} --output . --include-symbols --include-source
 
