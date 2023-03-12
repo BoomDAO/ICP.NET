@@ -16,6 +16,13 @@
 		<PackageId>EdjCase.Cryptography.BLS</PackageId>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>
+	
+	<ItemGroup>
+		<None Include="README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
 
 	<ItemGroup>
 		<None Include=".\lib\bls384_256.dll" Pack="true" PackagePath="runtimes\win-x64\native">
