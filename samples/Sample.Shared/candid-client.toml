@@ -1,6 +1,7 @@
 namespace = "Sample.Shared"
 output-directory = "C:/Git/ICP.NET/samples/Sample.Shared"
 #url = "https://localhost:8000"
+feature-nullable = true
 
 [[clients]]
 name = "Dex"

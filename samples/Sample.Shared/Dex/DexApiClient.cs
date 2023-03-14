@@ -18,7 +18,7 @@ namespace Sample.Shared.Dex
 
 		public EdjCase.ICP.Candid.CandidConverter? Converter { get; }
 
-		public DexApiClient(IAgent agent, Principal canisterId, CandidConverter? converter = null)
+		public DexApiClient(IAgent agent, Principal canisterId, CandidConverter? converter = default)
 		{
 			this.Agent = agent;
 			this.CanisterId = canisterId;

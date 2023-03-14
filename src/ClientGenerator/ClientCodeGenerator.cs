@@ -90,7 +90,7 @@ namespace EdjCase.ICP.ClientGenerator
 				.Select(t => t.Key)
 				.ToHashSet();
 
-			var typeResolver = new RoslynTypeResolver(modelNamespace, aliases);
+			var typeResolver = new RoslynTypeResolver(modelNamespace, aliases, options.FeatureNullable);
 			Dictionary<ValueName, ResolvedType> resolvedTypes = declaredTypes
 				.ToDictionary(
 					t => t.Key,

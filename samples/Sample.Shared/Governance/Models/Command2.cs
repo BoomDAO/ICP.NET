@@ -13,7 +13,7 @@ namespace Sample.Shared.Governance.Models
 		[VariantValueProperty()]
 		public System.Object? Value { get; set; }
 
-		public Command2(Command2Tag tag, object? value = null)
+		public Command2(Command2Tag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;

@@ -15,7 +15,7 @@ namespace Sample.Shared.AddressBook
 
 		public EdjCase.ICP.Candid.CandidConverter? Converter { get; }
 
-		public AddressBookApiClient(IAgent agent, Principal canisterId, CandidConverter? converter = null)
+		public AddressBookApiClient(IAgent agent, Principal canisterId, CandidConverter? converter = default)
 		{
 			this.Agent = agent;
 			this.CanisterId = canisterId;

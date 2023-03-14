@@ -21,10 +21,16 @@ namespace EdjCase.ICP.ClientGenerator
 
 		public string ModelNamespace { get; }
 		public HashSet<ValueName> Aliases { get; }
-		public RoslynTypeResolver(string modelNamespace, HashSet<ValueName> aliases)
+		public bool FeatureNullable { get; }
+
+		public RoslynTypeResolver(
+			string modelNamespace,
+			HashSet<ValueName> aliases,
+			bool featureNullable)
 		{
 			this.ModelNamespace = modelNamespace;
 			this.Aliases = aliases;
+			this.FeatureNullable = featureNullable;
 		}
 
 		public ResolvedType ResolveTypeDeclaration(
@@ -160,11 +166,14 @@ namespace EdjCase.ICP.ClientGenerator
 					access: AccessType.Public,
 					hasSetter: false
 				),
-				
+			};
+
+			List<ClassProperty> optionalProperties = new()
+			{				
 				// public CandidConverter? Converter { get; }
 				new ClassProperty(
 					name: candidConverterProperty,
-					type: TypeName.FromType<CandidConverter>(isNullable: true),
+					type: TypeName.FromType<CandidConverter>(isNullable: this.FeatureNullable),
 					access: AccessType.Public,
 					hasSetter: false
 				)
@@ -177,6 +186,7 @@ namespace EdjCase.ICP.ClientGenerator
 			return GenerateClass(
 				clientName,
 				properties,
+				optionalProperties: optionalProperties,
 				methods: methods.Select(m => m.Method).ToList(),
 				subTypes: methods.SelectMany(m => m.SubTypes).ToList()
 			);
@@ -261,7 +271,7 @@ namespace EdjCase.ICP.ClientGenerator
 				),
 				new ClassProperty(
 					valueName,
-					TypeName.FromType<object>(isNullable: true),
+					TypeName.FromType<object>(isNullable: this.FeatureNullable),
 					access: AccessType.Public,
 					hasSetter: true,
 					AttributeInfo.FromType<VariantValuePropertyAttribute>()
@@ -277,6 +287,7 @@ namespace EdjCase.ICP.ClientGenerator
 				ClassDeclarationSyntax classSyntax = GenerateClass(
 					name: variantTypeName,
 					properties: properties,
+					optionalProperties: null,
 					methods: methods,
 					attributes: attributes,
 					emptyConstructorAccess: AccessType.Protected,
@@ -584,6 +595,7 @@ namespace EdjCase.ICP.ClientGenerator
 			return GenerateClass(
 				name: recordTypeName,
 				properties: properties,
+				optionalProperties: null,
 				subTypes: subItems,
 				emptyConstructorAccess: AccessType.Public
 			);
@@ -1059,11 +1071,13 @@ namespace EdjCase.ICP.ClientGenerator
 		private static ConstructorDeclarationSyntax GenerateConstructor(
 			TypeName name,
 			AccessType access,
-			List<ClassProperty> properties
+			List<ClassProperty> properties,
+			List<ClassProperty>? optionalProperties = null
 		)
 		{
-
+			optionalProperties ??= new List<ClassProperty>();
 			IEnumerable<ExpressionStatementSyntax> propertyAssignments = properties
+				.Concat(optionalProperties)
 				.Select(p =>
 				{
 					var value = SyntaxFactory.IdentifierName(p.Name.VariableName);
@@ -1094,22 +1108,26 @@ namespace EdjCase.ICP.ClientGenerator
 							.Where(p => p.Type != null)
 							.Select(p =>
 							{
-								var param = SyntaxFactory.Parameter(
+								return SyntaxFactory.Parameter(
 									SyntaxFactory.Identifier(p.Name.VariableName)
 								)
 								.WithType(p.Type!.ToTypeSyntax());
-								if (p.Type?.GetName().EndsWith("?") == true)
-								{
-									// TODO better null detection
-									param = param
-										.WithDefault(SyntaxFactory.EqualsValueClause(
-											SyntaxFactory.LiteralExpression(
-												SyntaxKind.NullLiteralExpression)
-											)
-										);
-								}
-								return param;
 							})
+							.Concat(optionalProperties
+								.Where(p => p.Type != null)
+								.Select(p =>
+								{
+									return SyntaxFactory.Parameter(
+										SyntaxFactory.Identifier(p.Name.VariableName)
+									)
+									.WithType(p.Type!.ToTypeSyntax())
+									// Add `= default` to the end
+									.WithDefault(SyntaxFactory.EqualsValueClause(
+										SyntaxFactory.LiteralExpression(
+											SyntaxKind.DefaultLiteralExpression)
+										)
+									);
+								}))
 						)
 					)
 				)
@@ -1242,6 +1260,7 @@ namespace EdjCase.ICP.ClientGenerator
 		private static ClassDeclarationSyntax GenerateClass(
 			TypeName name,
 			List<ClassProperty> properties,
+			List<ClassProperty>? optionalProperties = null,
 			List<MethodDeclarationSyntax>? methods = null,
 			List<TypeName>? implementTypes = null,
 			List<AttributeListSyntax>? attributes = null,
@@ -1255,12 +1274,13 @@ namespace EdjCase.ICP.ClientGenerator
 			}
 			List<ConstructorDeclarationSyntax> constructors = new();
 			IEnumerable<PropertyDeclarationSyntax> properySyntaxList = properties
+				.Concat(optionalProperties ?? new List<ClassProperty>())
 				.Select(GenerateProperty)
 				.Where(p => p != null)!;
 			if (properties.Any())
 			{
 				// Only create constructor if there are properties
-				constructors.Add(GenerateConstructor(name, AccessType.Public, properties));
+				constructors.Add(GenerateConstructor(name, AccessType.Public, properties, optionalProperties));
 			}
 			if (emptyConstructorAccess != null)
 			{
@@ -1327,6 +1347,7 @@ namespace EdjCase.ICP.ClientGenerator
 			public AccessType Access { get; }
 			public ValueName Name { get; }
 			public TypeName? Type { get; }
+			public bool IsNullable { get; }
 			public bool HasSetter { get; }
 			public AttributeInfo[]? Attributes { get; }
 

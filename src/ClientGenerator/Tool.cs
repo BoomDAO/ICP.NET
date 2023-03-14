@@ -122,6 +122,7 @@ file-path = ""../MyService.did""
 				bool? noFolders = GetOptional<bool?>(config, "no-folders");
 				Uri? boundryNodeUrl = baseUrl == null ? null : new Uri(baseUrl);
 				string outputDirectory = Path.GetRelativePath("./", GetOptional<string?>(config, "output-directory") ?? "./");
+				bool featureNullable = GetOptional<bool?>(config, "feature-nullable") ?? true;
 
 				TomlTableArray clients = config["clients"].Cast<TomlTableArray>();
 
@@ -133,7 +134,7 @@ file-path = ""../MyService.did""
 					string? clientOutputDirectory = GetOptional<string?>(client, "output-directory");
 					string? clientNamespace = GetOptional<string?>(client, "namespace");
 					bool clientNoFolders = GetOptional<bool?>(client, "no-folders") ?? noFolders ?? false;
-					ClientGenerationOptions clientOptions = new(name, clientNamespace ?? @namespace, clientNoFolders);
+					ClientGenerationOptions clientOptions = new(name, clientNamespace ?? @namespace, clientNoFolders, featureNullable);
 					ClientSyntax source;
 					switch (type)
 					{

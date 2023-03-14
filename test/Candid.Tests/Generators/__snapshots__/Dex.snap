@@ -18,7 +18,7 @@ namespace Test
 
 		public EdjCase.ICP.Candid.CandidConverter? Converter { get; }
 
-		public DexApiClient(IAgent agent, Principal canisterId, CandidConverter? converter = null)
+		public DexApiClient(IAgent agent, Principal canisterId, CandidConverter? converter = default)
 		{
 			this.Agent = agent;
 			this.CanisterId = canisterId;
@@ -147,7 +147,7 @@ namespace Test.Models
 		[VariantValueProperty()]
 		public System.Object? Value { get; set; }
 
-		public WithdrawReceipt(WithdrawReceiptTag tag, object? value = null)
+		public WithdrawReceipt(WithdrawReceiptTag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -231,7 +231,7 @@ namespace Test.Models
 		[VariantValueProperty()]
 		public System.Object? Value { get; set; }
 
-		public OrderPlacementReceipt(OrderPlacementReceiptTag tag, object? value = null)
+		public OrderPlacementReceipt(OrderPlacementReceiptTag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -360,7 +360,7 @@ namespace Test.Models
 		[VariantValueProperty()]
 		public System.Object? Value { get; set; }
 
-		public DepositReceipt(DepositReceiptTag tag, object? value = null)
+		public DepositReceipt(DepositReceiptTag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -443,7 +443,7 @@ namespace Test.Models
 		[VariantValueProperty()]
 		public System.Object? Value { get; set; }
 
-		public CancelOrderReceipt(CancelOrderReceiptTag tag, object? value = null)
+		public CancelOrderReceipt(CancelOrderReceiptTag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
