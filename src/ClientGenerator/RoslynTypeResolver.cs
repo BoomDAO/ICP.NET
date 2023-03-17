@@ -759,6 +759,7 @@ namespace EdjCase.ICP.ClientGenerator
 				methodName: name,
 				argTypes,
 				returnTypes,
+				isOneway: info.IsOneway,
 				isQuery: info.IsQuery,
 				typeResolver: typeResolver,
 				candidConverterProperty
@@ -788,6 +789,7 @@ namespace EdjCase.ICP.ClientGenerator
 			ValueName methodName,
 			List<TypedValueName> argTypes,
 			List<TypedValueName> returnTypes,
+			bool isOneway,
 			bool isQuery,
 			RoslynTypeResolver typeResolver,
 			ValueName candidConverterProperty
@@ -865,6 +867,16 @@ namespace EdjCase.ICP.ClientGenerator
 			};
 
 			const string variableName = "reply";
+			if (isOneway)
+			{
+				// Fire and forget
+				// No return args
+				// Query and Oneway are exclusive annotations in the IC
+				// `await this.Agent.CallAsync(this.CanisterId, {methodName}, arg)`
+				StatementSyntax invokeCall = GenerateCall(methodName.CandidName, argName);
+				statements.Add(invokeCall);
+				return SyntaxFactory.Block(statements);
+			}
 			if (isQuery)
 			{
 				const string responseName = "response";
@@ -1065,6 +1077,49 @@ namespace EdjCase.ICP.ClientGenerator
 						)
 					)
 				)
+			);
+		}
+		private static StatementSyntax GenerateCall(string methodName, string argName)
+		{
+			InvocationExpressionSyntax apiCall = SyntaxFactory.InvocationExpression(
+					SyntaxFactory.MemberAccessExpression(
+						SyntaxKind.SimpleMemberAccessExpression,
+						SyntaxFactory.MemberAccessExpression(
+							SyntaxKind.SimpleMemberAccessExpression,
+							SyntaxFactory.ThisExpression(),
+							SyntaxFactory.IdentifierName("Agent")
+						),
+						SyntaxFactory.IdentifierName("CallAsync")
+					)
+				)
+				.WithArgumentList(
+					SyntaxFactory.ArgumentList(
+						SyntaxFactory.SeparatedList<ArgumentSyntax>(
+							new SyntaxNodeOrToken[] {
+								SyntaxFactory.Argument(
+									SyntaxFactory.MemberAccessExpression(
+										SyntaxKind.SimpleMemberAccessExpression,
+										SyntaxFactory.ThisExpression(),
+										SyntaxFactory.IdentifierName("CanisterId")
+									)
+								),
+								SyntaxFactory.Token(SyntaxKind.CommaToken),
+								SyntaxFactory.Argument(
+									SyntaxFactory.LiteralExpression(
+										SyntaxKind.StringLiteralExpression,
+										SyntaxFactory.Literal(methodName)
+									)
+								),
+								SyntaxFactory.Token(SyntaxKind.CommaToken),
+								SyntaxFactory.Argument(
+									SyntaxFactory.IdentifierName(argName)
+								)
+							}
+						)
+					)
+				);
+			return SyntaxFactory.ExpressionStatement(
+				SyntaxFactory.AwaitExpression(apiCall)
 			);
 		}
 

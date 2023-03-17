@@ -215,9 +215,9 @@ namespace EdjCase.ICP.ClientGenerator
 			List<(ValueName Name, SourceCodeType Type)> returnTypes = value.ReturnTypes
 				.Select(ResolveXType)
 				.ToList();
-			bool isFireAndForget = value.Modes.Contains(FuncMode.Oneway);
+			bool isOneway = value.Modes.Contains(FuncMode.Oneway);
 			bool isQuery = value.Modes.Contains(FuncMode.Query);
-			return new ServiceSourceCodeType.Func(argTypes, returnTypes, isFireAndForget, isQuery);
+			return new ServiceSourceCodeType.Func(argTypes, returnTypes, isOneway, isQuery);
 
 
 			(ValueName Name, SourceCodeType Type) ResolveXType((CandidId? Name, CandidType Type) a, int i)
