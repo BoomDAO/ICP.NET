@@ -64,19 +64,19 @@ namespace EdjCase.ICP.ClientGenerator
 		{
 			public List<(ValueName Name, SourceCodeType Type)> ArgTypes { get; internal set; }
 			public List<(ValueName Name, SourceCodeType Type)> ReturnTypes { get; internal set; }
-			public bool IsFireAndForget { get; set; }
+			public bool IsOneway { get; set; }
 			public bool IsQuery { get; set; }
 
 			public Func(
 				List<(ValueName Name, SourceCodeType Type)> argTypes,
 				List<(ValueName Name, SourceCodeType Type)> returnTypes,
-				bool isFireAndForget,
+				bool isOneway,
 				bool isQuery
 			)
 			{
 				this.ArgTypes = argTypes ?? throw new ArgumentNullException(nameof(argTypes));
 				this.ReturnTypes = returnTypes ?? throw new ArgumentNullException(nameof(returnTypes));
-				this.IsFireAndForget = isFireAndForget;
+				this.IsOneway = isOneway;
 				this.IsQuery = isQuery;
 			}
 		}
