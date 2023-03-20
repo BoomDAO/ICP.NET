@@ -22,13 +22,13 @@ namespace Sample.Shared.AddressBook
 			this.Converter = converter;
 		}
 
-		public async Task SetAddress(string name, Address addr)
+		public async Task set_address(string name, Address addr)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(name), CandidTypedValue.FromObject(addr));
 			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "set_address", arg);
 		}
 
-		public async System.Threading.Tasks.Task<OptionalValue<Address>> GetAddress(string name)
+		public async System.Threading.Tasks.Task<OptionalValue<Address>> get_address(string name)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(name));
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_address", arg);

@@ -78,8 +78,8 @@ namespace EdjCase.ICP.ClientGenerator
 			Dictionary<ValueName, SourceCodeType> declaredTypes = service.DeclaredTypes
 				.Where(t => t.Value is not CandidServiceType) // avoid duplication service of type
 				.ToDictionary(
-					t => ValueName.Default(t.Key.ToString()),
-					t => ResolveSourceCodeType(t.Value)
+					t => ValueName.Default(t.Key.ToString(), false),
+					t => ResolveSourceCodeType(t.Value, options.KeepCandidCase)
 				);
 
 			string modelNamespace = options.NoFolders
@@ -90,7 +90,7 @@ namespace EdjCase.ICP.ClientGenerator
 				.Select(t => t.Key)
 				.ToHashSet();
 
-			var typeResolver = new RoslynTypeResolver(modelNamespace, aliases, options.FeatureNullable);
+			var typeResolver = new RoslynTypeResolver(modelNamespace, aliases, options.FeatureNullable, options.KeepCandidCase);
 			Dictionary<ValueName, ResolvedType> resolvedTypes = declaredTypes
 				.ToDictionary(
 					t => t.Key,
@@ -111,14 +111,14 @@ namespace EdjCase.ICP.ClientGenerator
 
 			string clientName = options.Name + "ApiClient";
 			TypeName clientTypeName = new(clientName, options.Namespace, prefix: null);
-			ServiceSourceCodeType serviceSourceType = ResolveService(service.Service);
+			ServiceSourceCodeType serviceSourceType = ResolveService(service.Service, options.KeepCandidCase);
 			CompilationUnitSyntax clientSource = RoslynSourceGenerator.GenerateClientSourceCode(clientTypeName, options.Namespace, serviceSourceType, typeResolver, aliasTypes);
 
 			// TODO? global using only supported in C# 10+
 			return new ClientSyntax(clientName, clientSource, typeFiles);
 		}
 
-		private static SourceCodeType ResolveSourceCodeType(CandidType type)
+		private static SourceCodeType ResolveSourceCodeType(CandidType type, bool keepCandidCase)
 		{
 
 			switch (type)
@@ -158,12 +158,12 @@ namespace EdjCase.ICP.ClientGenerator
 					}
 				case CandidVectorType v:
 					{
-						SourceCodeType innerType = ResolveSourceCodeType(v.InnerType);
+						SourceCodeType innerType = ResolveSourceCodeType(v.InnerType, keepCandidCase);
 						return new CompiledTypeSourceCodeType(typeof(List<>), innerType);
 					}
 				case CandidOptionalType o:
 					{
-						SourceCodeType innerType = ResolveSourceCodeType(o.Value);
+						SourceCodeType innerType = ResolveSourceCodeType(o.Value, keepCandidCase);
 
 						return new CompiledTypeSourceCodeType(typeof(OptionalValue<>), innerType);
 					}
@@ -173,8 +173,8 @@ namespace EdjCase.ICP.ClientGenerator
 							.Select(f =>
 							{
 								CandidType fCandidType = f.Value;
-								SourceCodeType fType = ResolveSourceCodeType(fCandidType);
-								return (ValueName.Default(f.Key), fType);
+								SourceCodeType fType = ResolveSourceCodeType(fCandidType, keepCandidCase);
+								return (ValueName.Default(f.Key, keepCandidCase), fType);
 								})
 							.Where(f => f.Item2 != null)
 							.ToList()!;
@@ -188,8 +188,8 @@ namespace EdjCase.ICP.ClientGenerator
 								// If type is null, then just be a typeless variant
 								SourceCodeType? sourceCodeType = f.Value == CandidType.Null()
 									? null
-									: ResolveSourceCodeType(f.Value);
-								return (ValueName.Default(f.Key), sourceCodeType);
+									: ResolveSourceCodeType(f.Value, keepCandidCase);
+								return (ValueName.Default(f.Key, keepCandidCase), sourceCodeType);
 							})
 							.ToList();
 						return new VariantSourceCodeType(fields);
@@ -199,15 +199,15 @@ namespace EdjCase.ICP.ClientGenerator
 			}
 		}
 
-		internal static ServiceSourceCodeType ResolveService(CandidServiceType s)
+		internal static ServiceSourceCodeType ResolveService(CandidServiceType s, bool keepCandidCase)
 		{
 			List<(ValueName Name, ServiceSourceCodeType.Func FuncInfo)> methods = s.Methods
-				.Select(m => (ValueName.Default(m.Key.ToString()), ResolveFunc(m.Value)))
+				.Select(m => (ValueName.Default(m.Key.ToString(), keepCandidCase), ResolveFunc(m.Value, keepCandidCase)))
 				.ToList();
 			return new ServiceSourceCodeType(methods);
 		}
 
-		private static ServiceSourceCodeType.Func ResolveFunc(CandidFuncType value)
+		private static ServiceSourceCodeType.Func ResolveFunc(CandidFuncType value, bool keepCandidCase)
 		{
 			List<(ValueName Name, SourceCodeType Type)> argTypes = value.ArgTypes
 				.Select(ResolveXType)
@@ -222,8 +222,8 @@ namespace EdjCase.ICP.ClientGenerator
 
 			(ValueName Name, SourceCodeType Type) ResolveXType((CandidId? Name, CandidType Type) a, int i)
 			{
-				ValueName name = ValueName.Default(a.Name?.ToString() ?? "arg" + i);
-				SourceCodeType type = ResolveSourceCodeType(a.Type);
+				ValueName name = ValueName.Default(a.Name?.ToString() ?? "arg" + i, keepCandidCase);
+				SourceCodeType type = ResolveSourceCodeType(a.Type, keepCandidCase);
 				return (name, type);
 			}
 		}

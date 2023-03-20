@@ -344,6 +344,7 @@ candid-client-generator gen ./
 - `no-folders` - (Bool) OPTIONAL. If true, no sub-folders will be generated for the clients or the models within the clients. All generated files will be in a flat structure. Defaults to false
 - `url` - (Text) OPTIONAL. Sets the boundry node url to use for making calls to canisters on the IC. Can be set to a local developer instance/localhost. Defaults to 'https://ic0.app/'. This setting is only useful for clients of generation type `canister`
 - `feature-nullable` - (Bool) Optional. Sets whether to use the C# nullable feature when generating the client (like `object?`). Defaults to true
+- `keep-candid-case` - (Bool) Optional. If true, the names of properties and methods will keep the raw candid name. Otherwise they will be converted to something prettier. Defaults to false
 
 #### Client Level:
 
@@ -355,6 +356,9 @@ candid-client-generator gen ./
     - `cansiter-id` - (Text) REQUIRED. The principal id of the canister to generate a client for
 - `output-directory` - (Text) OPTIONAL. Directory to put all generated client files. Overrides the top level `output-directory`. NOTE: this does not create a sub-folder based on the client name like the top level `output-directory` does
 - `no-folders` - (Bool) OPTIONAL. If true, no sub-folders will be generated for the client. All generated files will be in a flat structure. Defaults to false. Overrides the top level `no-folders`
+- `feature-nullable` - (Bool) Optional. Sets whether to use the C# nullable feature when generating the client (like `object?`). Defaults to true. Overrides the top level `feature-nullable`
+- `keep-candid-case` - (Bool) Optional. If true, the names of properties and methods will keep the raw candid name. Otherwise they will be converted to something prettier. Defaults to false. Overrides the top level `keep-candid-case`
+
 
 # Internet Identity
 

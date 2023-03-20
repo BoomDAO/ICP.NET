@@ -1,28 +1,23 @@
-using EdjCase.ICP.Candid.Mapping;
 using EdjCase.ICP.Candid.Models;
 
 namespace Sample.Shared.AddressBook
 {
 	public class Address
 	{
-		[CandidName("street")]
-		public string Street { get; set; }
+		public string street { get; set; }
 
-		[CandidName("city")]
-		public string City { get; set; }
+		public string city { get; set; }
 
-		[CandidName("zip_code")]
-		public UnboundedUInt ZipCode { get; set; }
+		public UnboundedUInt zip_code { get; set; }
 
-		[CandidName("country")]
-		public string Country { get; set; }
+		public string country { get; set; }
 
 		public Address(string street, string city, UnboundedUInt zipCode, string country)
 		{
-			this.Street = street;
-			this.City = city;
-			this.ZipCode = zipCode;
-			this.Country = country;
+			this.street = street;
+			this.city = city;
+			this.zip_code = zipCode;
+			this.country = country;
 		}
 
 		public Address()

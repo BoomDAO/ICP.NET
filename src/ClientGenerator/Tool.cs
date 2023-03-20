@@ -122,7 +122,8 @@ file-path = ""../MyService.did""
 				bool? noFolders = GetOptional<bool?>(config, "no-folders");
 				Uri? boundryNodeUrl = baseUrl == null ? null : new Uri(baseUrl);
 				string outputDirectory = Path.GetRelativePath("./", GetOptional<string?>(config, "output-directory") ?? "./");
-				bool featureNullable = GetOptional<bool?>(config, "feature-nullable") ?? true;
+				bool? featureNullable = GetOptional<bool?>(config, "feature-nullable");
+				bool? keepCandidCase = GetOptional<bool?>(config, "keep-candid-case");
 
 				TomlTableArray clients = config["clients"].Cast<TomlTableArray>();
 
@@ -131,10 +132,12 @@ file-path = ""../MyService.did""
 					string name = GetRequired<string>(client, "name");
 					string type = GetRequired<string>(client, "type");
 					string @namespace = baseNamespace + "." + name;
-					string? clientOutputDirectory = GetOptional<string?>(client, "output-directory");
-					string? clientNamespace = GetOptional<string?>(client, "namespace");
+					string clientOutputDirectory = GetOptional<string?>(client, "output-directory") ?? Path.Combine(outputDirectory, name);
+					string clientNamespace = GetOptional<string?>(client, "namespace") ?? @namespace;
 					bool clientNoFolders = GetOptional<bool?>(client, "no-folders") ?? noFolders ?? false;
-					ClientGenerationOptions clientOptions = new(name, clientNamespace ?? @namespace, clientNoFolders, featureNullable);
+					bool clientFeatureNullable = GetOptional<bool?>(client, "feature-nullable") ?? featureNullable ?? true;
+					bool clientKeepCandidCase = GetOptional<bool?>(client, "keep-candid-case") ?? keepCandidCase ?? false;
+					ClientGenerationOptions clientOptions = new(name, clientNamespace, clientNoFolders, clientFeatureNullable, clientKeepCandidCase);
 					ClientSyntax source;
 					switch (type)
 					{
@@ -156,7 +159,7 @@ file-path = ""../MyService.did""
 						default:
 							throw new InvalidOperationException($"Invalid client type '{type}'");
 					}
-					WriteClient(source, clientOutputDirectory ?? Path.Combine(outputDirectory, name), clientNoFolders);
+					WriteClient(source, clientOutputDirectory, clientNoFolders);
 				}
 				return 0;
 			}

@@ -123,11 +123,11 @@ namespace EdjCase.ICP.ClientGenerator
 			return this.CandidName.GetHashCode();
 		}
 
-		public static ValueName Default(CandidTag value)
+		public static ValueName Default(CandidTag value, bool keepCandidCase)
 		{
-			return Default(value.Name ?? value.Id.ToString());
+			return Default(value.Name ?? value.Id.ToString(), keepCandidCase);
 		}
-		public static ValueName Default(string value)
+		public static ValueName Default(string value, bool keepCandidCase)
 		{
 			bool isQuoted = value.StartsWith("\"") && value.EndsWith("\"");
 			if (isQuoted)
@@ -140,7 +140,9 @@ namespace EdjCase.ICP.ClientGenerator
 				// If Its a number, prefix it
 				value = "F" + value;
 			}
-			string propertyName = StringUtil.ToPascalCase(value);
+			string propertyName = !keepCandidCase
+				? StringUtil.ToPascalCase(value)
+				: value;
 			string variableName = StringUtil.ToCamelCase(value);
 			if (IsKeyword(propertyName))
 			{
