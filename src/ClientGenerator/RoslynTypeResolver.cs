@@ -22,15 +22,18 @@ namespace EdjCase.ICP.ClientGenerator
 		public string ModelNamespace { get; }
 		public HashSet<ValueName> Aliases { get; }
 		public bool FeatureNullable { get; }
+		public bool KeepCandidCase { get; }
 
 		public RoslynTypeResolver(
 			string modelNamespace,
 			HashSet<ValueName> aliases,
-			bool featureNullable)
+			bool featureNullable,
+			bool keepCandidCase)
 		{
 			this.ModelNamespace = modelNamespace;
 			this.Aliases = aliases;
 			this.FeatureNullable = featureNullable;
+			this.KeepCandidCase = keepCandidCase;
 		}
 
 		public ResolvedType ResolveTypeDeclaration(
@@ -105,7 +108,7 @@ namespace EdjCase.ICP.ClientGenerator
 					}
 				case ReferenceSourceCodeType re:
 					{
-						ValueName correctedRefId = ValueName.Default(re.Id.Value);
+						ValueName correctedRefId = ValueName.Default(re.Id.Value, false);
 						bool isAlias = this.Aliases.Contains(correctedRefId);
 
 						string? @namespace = isAlias ? null : this.ModelNamespace;
@@ -148,12 +151,12 @@ namespace EdjCase.ICP.ClientGenerator
 
 		public ClassDeclarationSyntax GenerateClient(TypeName clientName, ServiceSourceCodeType service)
 		{
-			ValueName candidConverterProperty = ValueName.Default("Converter");
+			ValueName candidConverterProperty = ValueName.Default("Converter", this.KeepCandidCase);
 			List<ClassProperty> properties = new()
 			{
 				// public IAgent Agent { get; }
 				new ClassProperty(
-					name: ValueName.Default("Agent"),
+					name: ValueName.Default("Agent", this.KeepCandidCase),
 					type: TypeName.FromType<IAgent>(),
 					access: AccessType.Public,
 					hasSetter: false
@@ -161,7 +164,7 @@ namespace EdjCase.ICP.ClientGenerator
 				
 				// public Principal CanisterId { get; }
 				new ClassProperty(
-					name: ValueName.Default("CanisterId"),
+					name: ValueName.Default("CanisterId", this.KeepCandidCase),
 					type: TypeName.FromType<Principal>(),
 					access: AccessType.Public,
 					hasSetter: false
@@ -224,7 +227,7 @@ namespace EdjCase.ICP.ClientGenerator
 
 				List<MethodDeclarationSyntax> methods = new();
 
-				ValueName optionValueParamName = ValueName.Default("info");
+				ValueName optionValueParamName = ValueName.Default("info", this.KeepCandidCase);
 
 				// Creation methods
 				// public static {VariantType} {OptionName}({VariantOptionType} value)
@@ -242,8 +245,8 @@ namespace EdjCase.ICP.ClientGenerator
 				);
 
 				// TODO auto change the property values of all class types if it matches the name
-				ValueName tagName = ValueName.Default(variantTypeName.GetName() == "Tag" ? "TagValue" : "Tag");
-				ValueName valueName = ValueName.Default(variantTypeName.GetName() == "Value" ? "Value_" : "Value");
+				ValueName tagName = ValueName.Default(variantTypeName.GetName() == "Tag" ? "TagValue" : "Tag", this.KeepCandidCase);
+				ValueName valueName = ValueName.Default(variantTypeName.GetName() == "Value" ? "Value_" : "Value", this.KeepCandidCase);
 
 				// 'As{X}' methods (if has option type)
 				methods.AddRange(
@@ -427,7 +430,7 @@ namespace EdjCase.ICP.ClientGenerator
 				isAsync: false,
 				returnTypes: null,
 				name: "ValidateTag",
-				new TypedValueName(enumTypeName, ValueName.Default("tag"))
+				new TypedValueName(enumTypeName, ValueName.Default("tag", this.KeepCandidCase))
 			);
 		}
 

@@ -8,8 +8,9 @@
   - [GenerateClientFromCanisterAsync(canisterId,options,httpBoundryNodeUrl)](#M-EdjCase-ICP-ClientGenerator-ClientCodeGenerator-GenerateClientFromCanisterAsync-EdjCase-ICP-Candid-Models-Principal,EdjCase-ICP-ClientGenerator-ClientGenerationOptions,System-Uri- 'EdjCase.ICP.ClientGenerator.ClientCodeGenerator.GenerateClientFromCanisterAsync(EdjCase.ICP.Candid.Models.Principal,EdjCase.ICP.ClientGenerator.ClientGenerationOptions,System.Uri)')
   - [GenerateClientFromFile(fileText,options)](#M-EdjCase-ICP-ClientGenerator-ClientCodeGenerator-GenerateClientFromFile-System-String,EdjCase-ICP-ClientGenerator-ClientGenerationOptions- 'EdjCase.ICP.ClientGenerator.ClientCodeGenerator.GenerateClientFromFile(System.String,EdjCase.ICP.ClientGenerator.ClientGenerationOptions)')
 - [ClientGenerationOptions](#T-EdjCase-ICP-ClientGenerator-ClientGenerationOptions 'EdjCase.ICP.ClientGenerator.ClientGenerationOptions')
-  - [#ctor(name,namespace,noFolders,featureNullable)](#M-EdjCase-ICP-ClientGenerator-ClientGenerationOptions-#ctor-System-String,System-String,System-Boolean,System-Boolean- 'EdjCase.ICP.ClientGenerator.ClientGenerationOptions.#ctor(System.String,System.String,System.Boolean,System.Boolean)')
+  - [#ctor(name,namespace,noFolders,featureNullable,keepCandidCase)](#M-EdjCase-ICP-ClientGenerator-ClientGenerationOptions-#ctor-System-String,System-String,System-Boolean,System-Boolean,System-Boolean- 'EdjCase.ICP.ClientGenerator.ClientGenerationOptions.#ctor(System.String,System.String,System.Boolean,System.Boolean,System.Boolean)')
   - [FeatureNullable](#P-EdjCase-ICP-ClientGenerator-ClientGenerationOptions-FeatureNullable 'EdjCase.ICP.ClientGenerator.ClientGenerationOptions.FeatureNullable')
+  - [KeepCandidCase](#P-EdjCase-ICP-ClientGenerator-ClientGenerationOptions-KeepCandidCase 'EdjCase.ICP.ClientGenerator.ClientGenerationOptions.KeepCandidCase')
   - [Name](#P-EdjCase-ICP-ClientGenerator-ClientGenerationOptions-Name 'EdjCase.ICP.ClientGenerator.ClientGenerationOptions.Name')
   - [Namespace](#P-EdjCase-ICP-ClientGenerator-ClientGenerationOptions-Namespace 'EdjCase.ICP.ClientGenerator.ClientGenerationOptions.Namespace')
   - [NoFolders](#P-EdjCase-ICP-ClientGenerator-ClientGenerationOptions-NoFolders 'EdjCase.ICP.ClientGenerator.ClientGenerationOptions.NoFolders')
@@ -86,8 +87,8 @@ EdjCase.ICP.ClientGenerator
 
 Options for generating a client
 
-<a name='M-EdjCase-ICP-ClientGenerator-ClientGenerationOptions-#ctor-System-String,System-String,System-Boolean,System-Boolean-'></a>
-### #ctor(name,namespace,noFolders,featureNullable) `constructor`
+<a name='M-EdjCase-ICP-ClientGenerator-ClientGenerationOptions-#ctor-System-String,System-String,System-Boolean,System-Boolean,System-Boolean-'></a>
+### #ctor(name,namespace,noFolders,featureNullable,keepCandidCase) `constructor`
 
 ##### Parameters
 
@@ -97,6 +98,7 @@ Options for generating a client
 | namespace | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The base namespace to use in the generated files |
 | noFolders | [System.Boolean](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Boolean 'System.Boolean') | If true, there will be no folders, all files will be in the same directory |
 | featureNullable | [System.Boolean](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Boolean 'System.Boolean') | If true, the nullable C# feature will be used |
+| keepCandidCase | [System.Boolean](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Boolean 'System.Boolean') | If true, the names of properties and methods will keep the raw candid name. Otherwise they will be converted to something prettier |
 
 <a name='P-EdjCase-ICP-ClientGenerator-ClientGenerationOptions-FeatureNullable'></a>
 ### FeatureNullable `property`
@@ -104,6 +106,14 @@ Options for generating a client
 ##### Summary
 
 If true, the nullable C# feature will be used
+
+<a name='P-EdjCase-ICP-ClientGenerator-ClientGenerationOptions-KeepCandidCase'></a>
+### KeepCandidCase `property`
+
+##### Summary
+
+If true, the names of properties and methods will keep the raw candid name.
+Otherwise they will be converted to something prettier
 
 <a name='P-EdjCase-ICP-ClientGenerator-ClientGenerationOptions-Name'></a>
 ### Name `property`
