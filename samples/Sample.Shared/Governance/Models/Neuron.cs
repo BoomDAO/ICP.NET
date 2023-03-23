@@ -97,10 +97,10 @@ namespace Sample.Shared.Governance.Models
 
 		public class FolloweesItemRecord
 		{
-			[CandidName("0")]
+			[CandidTag(0U)]
 			public int F0 { get; set; }
 
-			[CandidName("1")]
+			[CandidTag(1U)]
 			public Followees F1 { get; set; }
 
 			public FolloweesItemRecord(int f0, Followees f1)

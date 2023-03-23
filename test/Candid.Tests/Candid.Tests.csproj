@@ -45,8 +45,4 @@
 		<ProjectReference Include="..\..\src\InternetIdentity\EdjCase.ICP.InternetIdentity.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Generators\__snapshots__\" />
-	</ItemGroup>
-
 </Project>

@@ -12,6 +12,7 @@ using EdjCase.ICP.Candid.Models.Values;
 using EdjCase.ICP.Agent.Responses;
 using System.Threading.Tasks;
 using EdjCase.ICP.Candid;
+using System.Xml.Linq;
 
 namespace EdjCase.ICP.ClientGenerator
 {
@@ -183,7 +184,7 @@ namespace EdjCase.ICP.ClientGenerator
 			};
 
 			List<(MethodDeclarationSyntax Method, List<MemberDeclarationSyntax> SubTypes)> methods = service.Methods
-				.Select(method => GenerateFuncMethod(method.Name, method.FuncInfo, clientName, this, candidConverterProperty))
+				.Select(method => GenerateFuncMethod(method.CsharpName, method.CandidName, method.FuncInfo, clientName, this, candidConverterProperty))
 				.ToList();
 
 			return GenerateClass(
@@ -569,17 +570,27 @@ namespace EdjCase.ICP.ClientGenerator
 						propertyName = new ValueName(
 							propertyName: propertyName.PropertyName + "_", // TODO best way to escape it. @ does not work
 							variableName: propertyName.VariableName,
-							candidName: propertyName.CandidName
+							candidTag: propertyName.CandidTag
 						);
 					}
 					AttributeInfo[]? attributes = null;
-					if (propertyName.CandidName != propertyName.PropertyName)
+					if (propertyName.CandidTag.Name == null)
+					{
+						// [CandidTag({candidTag})]
+						// Indicate there is no associated name, just an id
+						// Usually with tuples like 'record { text; nat; }'
+						attributes = new[]
+						{
+							AttributeInfo.FromType<CandidTagAttribute>(propertyName.CandidTag)
+						};
+					}
+					else if (propertyName.CandidTag != propertyName.PropertyName)
 					{
 						// [CandidName("{fieldCandidName}")]
 						// Only add attribute if the name is different
 						attributes = new[]
 						{
-							AttributeInfo.FromType<CandidNameAttribute>(propertyName.CandidName)
+							AttributeInfo.FromType<CandidNameAttribute>(propertyName.CandidTag.Name!)
 						};
 					}
 
@@ -662,12 +673,21 @@ namespace EdjCase.ICP.ClientGenerator
 				{
 					List<AttributeListSyntax> attributeList = new();
 
-					if (v.Name.CandidName != v.Name.PropertyName)
+					if (v.Name.CandidTag.Name == null)
+					{
+						// [CandidTagId({candidTagId})]
+						// Indicate there is no associated name, just an id
+						// Usually with tuples like 'record { text; nat; }'
+						attributeList.Add(GenerateAttribute(
+							new AttributeInfo(TypeName.FromType<CandidTagAttribute>(), v.Name.CandidTag.Id)
+						));
+					}
+					else if (v.Name.CandidTag.Name != v.Name.PropertyName)
 					{
 						// [CandidName({candidName}]
 						// Only add if names differ
 						attributeList.Add(GenerateAttribute(
-							new AttributeInfo(TypeName.FromType<CandidNameAttribute>(), v.Name.CandidName)
+							new AttributeInfo(TypeName.FromType<CandidNameAttribute>(), v.Name.CandidTag.Name!)
 						));
 					}
 
@@ -715,6 +735,19 @@ namespace EdjCase.ICP.ClientGenerator
 							SyntaxKind.StringLiteralExpression,
 							SyntaxFactory.Literal(s)
 						),
+						uint i => SyntaxFactory.LiteralExpression(
+							SyntaxKind.NumericLiteralExpression,
+							SyntaxFactory.Literal(i)
+						),
+						CandidTag t => t.Name != null
+							? SyntaxFactory.LiteralExpression(
+								SyntaxKind.StringLiteralExpression,
+								SyntaxFactory.Literal(t.Name)
+							)
+							: SyntaxFactory.LiteralExpression(
+								SyntaxKind.NumericLiteralExpression,
+								SyntaxFactory.Literal(t.Id)
+							),
 						TypeName type => SyntaxFactory.TypeOfExpression(type.ToTypeSyntax()),
 						_ => throw new NotImplementedException()
 					};
@@ -737,7 +770,8 @@ namespace EdjCase.ICP.ClientGenerator
 		}
 
 		private static (MethodDeclarationSyntax Method, List<MemberDeclarationSyntax> SubTypes) GenerateFuncMethod(
-			ValueName name,
+			string csharpName,
+			string candidName,
 			ServiceSourceCodeType.Func info,
 			TypeName clientName,
 			RoslynTypeResolver typeResolver,
@@ -759,7 +793,7 @@ namespace EdjCase.ICP.ClientGenerator
 				.ToList();
 
 			BlockSyntax body = GenerateFuncMethodBody(
-				methodName: name,
+				candidName : candidName,
 				argTypes,
 				returnTypes,
 				isOneway: info.IsOneway,
@@ -782,14 +816,14 @@ namespace EdjCase.ICP.ClientGenerator
 				isStatic: false,
 				isAsync: true,
 				returnTypes: returnTypes,
-				name: name.PropertyName,
+				name: csharpName,
 				parameters: argTypes.ToArray()
 			);
 			return (method, subTypes);
 		}
 
 		private static BlockSyntax GenerateFuncMethodBody(
-			ValueName methodName,
+			string candidName,
 			List<TypedValueName> argTypes,
 			List<TypedValueName> returnTypes,
 			bool isOneway,
@@ -876,7 +910,7 @@ namespace EdjCase.ICP.ClientGenerator
 				// No return args
 				// Query and Oneway are exclusive annotations in the IC
 				// `await this.Agent.CallAsync(this.CanisterId, {methodName}, arg)`
-				StatementSyntax invokeCall = GenerateCall(methodName.CandidName, argName);
+				StatementSyntax invokeCall = GenerateCall(candidName, argName);
 				statements.Add(invokeCall);
 				return SyntaxFactory.Block(statements);
 			}
@@ -884,7 +918,7 @@ namespace EdjCase.ICP.ClientGenerator
 			{
 				const string responseName = "response";
 				// `QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, {methodName}, arg);`
-				StatementSyntax invokeQueryCall = GenerateQueryCall(methodName.CandidName, argName, responseName);
+				StatementSyntax invokeQueryCall = GenerateQueryCall(candidName, argName, responseName);
 				statements.Add(invokeQueryCall);
 
 				// `CandidArg reply = response.ThrowOrGetReply();`
@@ -895,7 +929,7 @@ namespace EdjCase.ICP.ClientGenerator
 			else
 			{
 				// `CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, {methodName}, arg)`
-				StatementSyntax invokeCallAndWait = GenerateCallAndWait(methodName.CandidName, argName, variableName);
+				StatementSyntax invokeCallAndWait = GenerateCallAndWait(candidName, argName, variableName);
 				statements.Add(invokeCallAndWait);
 
 			}

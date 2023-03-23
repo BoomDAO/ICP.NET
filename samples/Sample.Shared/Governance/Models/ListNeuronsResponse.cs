@@ -24,10 +24,10 @@ namespace Sample.Shared.Governance.Models
 
 		public class NeuronInfosItemRecord
 		{
-			[CandidName("0")]
+			[CandidTag(0U)]
 			public ulong F0 { get; set; }
 
-			[CandidName("1")]
+			[CandidTag(1U)]
 			public NeuronInfo F1 { get; set; }
 
 			public NeuronInfosItemRecord(ulong f0, NeuronInfo f1)

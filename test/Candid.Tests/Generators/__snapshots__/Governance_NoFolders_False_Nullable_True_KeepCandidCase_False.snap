@@ -1654,10 +1654,10 @@ namespace Test.Models
 
 		public class DefaultFolloweesItemRecord
 		{
-			[CandidName("0")]
+			[CandidTag(0U)]
 			public int F0 { get; set; }
 
-			[CandidName("1")]
+			[CandidTag(1U)]
 			public Followees F1 { get; set; }
 
 			public DefaultFolloweesItemRecord(int f0, Followees f1)
@@ -1673,10 +1673,10 @@ namespace Test.Models
 
 		public class ProposalsItemRecord
 		{
-			[CandidName("0")]
+			[CandidTag(0U)]
 			public ulong F0 { get; set; }
 
-			[CandidName("1")]
+			[CandidTag(1U)]
 			public ProposalData F1 { get; set; }
 
 			public ProposalsItemRecord(ulong f0, ProposalData f1)
@@ -1692,10 +1692,10 @@ namespace Test.Models
 
 		public class InFlightCommandsItemRecord
 		{
-			[CandidName("0")]
+			[CandidTag(0U)]
 			public ulong F0 { get; set; }
 
-			[CandidName("1")]
+			[CandidTag(1U)]
 			public NeuronInFlightCommand F1 { get; set; }
 
 			public InFlightCommandsItemRecord(ulong f0, NeuronInFlightCommand f1)
@@ -1711,10 +1711,10 @@ namespace Test.Models
 
 		public class NeuronsItemRecord
 		{
-			[CandidName("0")]
+			[CandidTag(0U)]
 			public ulong F0 { get; set; }
 
-			[CandidName("1")]
+			[CandidTag(1U)]
 			public Neuron F1 { get; set; }
 
 			public NeuronsItemRecord(ulong f0, Neuron f1)
@@ -1814,10 +1814,10 @@ namespace Test.Models
 
 		public class NotDissolvingNeuronsE8sBucketsItemRecord
 		{
-			[CandidName("0")]
+			[CandidTag(0U)]
 			public ulong F0 { get; set; }
 
-			[CandidName("1")]
+			[CandidTag(1U)]
 			public double F1 { get; set; }
 
 			public NotDissolvingNeuronsE8sBucketsItemRecord(ulong f0, double f1)
@@ -1833,10 +1833,10 @@ namespace Test.Models
 
 		public class NotDissolvingNeuronsCountBucketsItemRecord
 		{
-			[CandidName("0")]
+			[CandidTag(0U)]
 			public ulong F0 { get; set; }
 
-			[CandidName("1")]
+			[CandidTag(1U)]
 			public ulong F1 { get; set; }
 
 			public NotDissolvingNeuronsCountBucketsItemRecord(ulong f0, ulong f1)
@@ -1852,10 +1852,10 @@ namespace Test.Models
 
 		public class DissolvingNeuronsCountBucketsItemRecord
 		{
-			[CandidName("0")]
+			[CandidTag(0U)]
 			public ulong F0 { get; set; }
 
-			[CandidName("1")]
+			[CandidTag(1U)]
 			public ulong F1 { get; set; }
 
 			public DissolvingNeuronsCountBucketsItemRecord(ulong f0, ulong f1)
@@ -1871,10 +1871,10 @@ namespace Test.Models
 
 		public class DissolvingNeuronsE8sBucketsItemRecord
 		{
-			[CandidName("0")]
+			[CandidTag(0U)]
 			public ulong F0 { get; set; }
 
-			[CandidName("1")]
+			[CandidTag(1U)]
 			public double F1 { get; set; }
 
 			public DissolvingNeuronsE8sBucketsItemRecord(ulong f0, double f1)
@@ -2072,10 +2072,10 @@ namespace Test.Models
 
 		public class NeuronInfosItemRecord
 		{
-			[CandidName("0")]
+			[CandidTag(0U)]
 			public ulong F0 { get; set; }
 
-			[CandidName("1")]
+			[CandidTag(1U)]
 			public NeuronInfo F1 { get; set; }
 
 			public NeuronInfosItemRecord(ulong f0, NeuronInfo f1)
@@ -2493,10 +2493,10 @@ namespace Test.Models
 
 		public class FolloweesItemRecord
 		{
-			[CandidName("0")]
+			[CandidTag(0U)]
 			public int F0 { get; set; }
 
-			[CandidName("1")]
+			[CandidTag(1U)]
 			public Followees F1 { get; set; }
 
 			public FolloweesItemRecord(int f0, Followees f1)
@@ -3029,10 +3029,10 @@ namespace Test.Models
 
 		public class BallotsItemRecord
 		{
-			[CandidName("0")]
+			[CandidTag(0U)]
 			public ulong F0 { get; set; }
 
-			[CandidName("1")]
+			[CandidTag(1U)]
 			public Ballot F1 { get; set; }
 
 			public BallotsItemRecord(ulong f0, Ballot f1)
@@ -3133,10 +3133,10 @@ namespace Test.Models
 
 		public class BallotsItemRecord
 		{
-			[CandidName("0")]
+			[CandidTag(0U)]
 			public ulong F0 { get; set; }
 
-			[CandidName("1")]
+			[CandidTag(1U)]
 			public Ballot F1 { get; set; }
 
 			public BallotsItemRecord(ulong f0, Ballot f1)
@@ -3832,10 +3832,10 @@ namespace Test.Models
 
 		public class DefaultFolloweesItemRecord
 		{
-			[CandidName("0")]
+			[CandidTag(0U)]
 			public int F0 { get; set; }
 
-			[CandidName("1")]
+			[CandidTag(1U)]
 			public Followees F1 { get; set; }
 
 			public DefaultFolloweesItemRecord(int f0, Followees f1)

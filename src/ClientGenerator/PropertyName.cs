@@ -94,18 +94,18 @@ namespace EdjCase.ICP.ClientGenerator
 
 		public string PropertyName { get; }
 		public string VariableName { get; }
-		public string CandidName { get; }
+		public CandidTag CandidTag { get; }
 
-		public ValueName(string propertyName, string variableName, string candidName)
+		public ValueName(string propertyName, string variableName, CandidTag candidTag)
 		{
 			this.PropertyName = propertyName;
 			this.VariableName = variableName;
-			this.CandidName = candidName;
+			this.CandidTag = candidTag;
 		}
 
 		public override string ToString()
 		{
-			return this.CandidName + "/" + this.PropertyName;
+			return this.CandidTag + "/" + this.PropertyName;
 		}
 
 		public override bool Equals(object? obj)
@@ -115,35 +115,39 @@ namespace EdjCase.ICP.ClientGenerator
 
 		public bool Equals(ValueName? other)
 		{
-			return this.CandidName == other?.CandidName;
+			return this.CandidTag == other?.CandidTag;
 		}
 
 		public override int GetHashCode()
 		{
-			return this.CandidName.GetHashCode();
+			return this.CandidTag.GetHashCode();
 		}
 
-		public static ValueName Default(CandidTag value, bool keepCandidCase)
+		public static ValueName Default(CandidTag tag, bool keepCandidCase)
 		{
-			return Default(value.Name ?? value.Id.ToString(), keepCandidCase);
-		}
-		public static ValueName Default(string value, bool keepCandidCase)
-		{
-			bool isQuoted = value.StartsWith("\"") && value.EndsWith("\"");
-			if (isQuoted)
+			string stringValue;
+			if (tag.Name != null)
 			{
-				value = value.Trim('"');
+				stringValue = tag.Name;
+				bool isQuoted = stringValue.StartsWith("\"") && stringValue.EndsWith("\"");
+				if (isQuoted)
+				{
+					stringValue = stringValue.Trim('"');
+				}
 			}
-			string candidName = value;
-			if (char.IsNumber(value[0]))
+			else
+			{
+				stringValue = tag.Id.ToString();
+			}
+			if (char.IsNumber(stringValue[0]))
 			{
 				// If Its a number, prefix it
-				value = "F" + value;
+				stringValue = "F" + stringValue;
 			}
 			string propertyName = !keepCandidCase
-				? StringUtil.ToPascalCase(value)
-				: value;
-			string variableName = StringUtil.ToCamelCase(value);
+				? StringUtil.ToPascalCase(stringValue)
+				: stringValue;
+			string variableName = StringUtil.ToCamelCase(stringValue);
 			if (IsKeyword(propertyName))
 			{
 				// Add @ before reserved words
@@ -155,7 +159,7 @@ namespace EdjCase.ICP.ClientGenerator
 				variableName = "@" + variableName;
 			}
 
-			return new ValueName(propertyName, variableName, candidName);
+			return new ValueName(propertyName, variableName, tag);
 		}
 
 		private static bool IsKeyword(string value)

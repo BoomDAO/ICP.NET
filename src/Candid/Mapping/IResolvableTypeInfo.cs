@@ -387,11 +387,11 @@ namespace EdjCase.ICP.Candid.Mapping
 				{
 					string tagName = Enum.GetName(enumType, e);
 					MemberInfo field = enumType.GetMember(tagName).First();
-					var nameAttribute = field.GetCustomAttribute<CandidNameAttribute>();
-					string name = nameAttribute?.Name ?? tagName;
-					return (Name: CandidTag.FromName(name), Value: e);
+					var tagAttribute = field.GetCustomAttribute<CandidTagAttribute>();
+					CandidTag tag = tagAttribute?.Tag ?? CandidTag.FromName(tagName);
+					return (Tag: tag, Value: e);
 				})
-				.ToDictionary(e => e.Name, e => e.Value);
+				.ToDictionary(e => e.Tag, e => e.Value);
 			var candidType = new CandidVariantType(options.ToDictionary(o => o.Key, o => (CandidType)CandidType.Null()));
 			var mapper = new VariantEnumMapper(candidType, enumType, options);
 			return new ResolvedTypeInfo(enumType, candidType, mapper);
@@ -409,9 +409,9 @@ namespace EdjCase.ICP.Candid.Mapping
 					MemberInfo field = attribute.TagType.GetMember(tagName).First();
 					var typeAttribute = field.GetCustomAttribute<VariantOptionTypeAttribute>();
 					Type? optionType = typeAttribute?.OptionType;
-					var nameAttribute = field.GetCustomAttribute<CandidNameAttribute>();
-					string name = nameAttribute?.Name ?? tagName;
-					return (CandidTag.FromName(name), new VariantMapper.Option(tagEnum, optionType));
+					var tagAttribute = field.GetCustomAttribute<CandidTagAttribute>();
+					CandidTag tag = tagAttribute?.Tag ?? CandidTag.FromName(tagName);
+					return (tag, new VariantMapper.Option(tagEnum, optionType));
 				})
 				.ToDictionary(k => k.Item1, k => k.Item2);
 
@@ -476,17 +476,16 @@ namespace EdjCase.ICP.Candid.Mapping
 					// Ignore property
 					continue;
 				}
-				CandidNameAttribute? propertyAttribute = property.GetCustomAttribute<CandidNameAttribute>();
-				string propertyName;
+				CandidTagAttribute? propertyAttribute = property.GetCustomAttribute<CandidTagAttribute>();
+				CandidTag tag;
 				if (propertyAttribute != null)
 				{
-					propertyName = propertyAttribute.Name;
+					tag = propertyAttribute.Tag;
 				}
 				else
 				{
-					propertyName = property.Name;
+					tag = CandidTag.FromName(property.Name);
 				}
-				CandidTag tag = CandidTag.FromName(propertyName);
 				CustomMapperAttribute? customMapperAttribute = property.GetCustomAttribute<CustomMapperAttribute>();
 
 				PropertyMetaData propertyMetaData = new(property, customMapperAttribute?.Mapper);

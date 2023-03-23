@@ -12,16 +12,20 @@ namespace Sample.Shared.Governance.Models
 		[CandidName("actual_timestamp_seconds")]
 		public ulong ActualTimestampSeconds { get; set; }
 
+		[CandidName("total_available_e8s_equivalent")]
+		public ulong TotalAvailableE8sEquivalent { get; set; }
+
 		[CandidName("distributed_e8s_equivalent")]
 		public ulong DistributedE8sEquivalent { get; set; }
 
 		[CandidName("settled_proposals")]
 		public List<NeuronId> SettledProposals { get; set; }
 
-		public RewardEvent(ulong dayAfterGenesis, ulong actualTimestampSeconds, ulong distributedE8sEquivalent, List<NeuronId> settledProposals)
+		public RewardEvent(ulong dayAfterGenesis, ulong actualTimestampSeconds, ulong totalAvailableE8sEquivalent, ulong distributedE8sEquivalent, List<NeuronId> settledProposals)
 		{
 			this.DayAfterGenesis = dayAfterGenesis;
 			this.ActualTimestampSeconds = actualTimestampSeconds;
+			this.TotalAvailableE8sEquivalent = totalAvailableE8sEquivalent;
 			this.DistributedE8sEquivalent = distributedE8sEquivalent;
 			this.SettledProposals = settledProposals;
 		}
