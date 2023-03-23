@@ -87,7 +87,6 @@
   - [Type](#P-EdjCase-ICP-Candid-Models-Types-CandidKnownType-Type 'EdjCase.ICP.Candid.Models.Types.CandidKnownType.Type')
 - [CandidNameAttribute](#T-EdjCase-ICP-Candid-Mapping-CandidNameAttribute 'EdjCase.ICP.Candid.Mapping.CandidNameAttribute')
   - [#ctor(name)](#M-EdjCase-ICP-Candid-Mapping-CandidNameAttribute-#ctor-System-String- 'EdjCase.ICP.Candid.Mapping.CandidNameAttribute.#ctor(System.String)')
-  - [Name](#P-EdjCase-ICP-Candid-Mapping-CandidNameAttribute-Name 'EdjCase.ICP.Candid.Mapping.CandidNameAttribute.Name')
 - [CandidOptional](#T-EdjCase-ICP-Candid-Models-Values-CandidOptional 'EdjCase.ICP.Candid.Models.Values.CandidOptional')
   - [#ctor(value)](#M-EdjCase-ICP-Candid-Models-Values-CandidOptional-#ctor-EdjCase-ICP-Candid-Models-Values-CandidValue- 'EdjCase.ICP.Candid.Models.Values.CandidOptional.#ctor(EdjCase.ICP.Candid.Models.Values.CandidValue)')
   - [Type](#P-EdjCase-ICP-Candid-Models-Values-CandidOptional-Type 'EdjCase.ICP.Candid.Models.Values.CandidOptional.Type')
@@ -205,6 +204,11 @@
   - [op_Implicit(id)](#M-EdjCase-ICP-Candid-Models-CandidTag-op_Implicit-System-UInt32-~EdjCase-ICP-Candid-Models-CandidTag 'EdjCase.ICP.Candid.Models.CandidTag.op_Implicit(System.UInt32)~EdjCase.ICP.Candid.Models.CandidTag')
   - [op_Implicit(tag)](#M-EdjCase-ICP-Candid-Models-CandidTag-op_Implicit-EdjCase-ICP-Candid-Models-CandidTag-~System-UInt32 'EdjCase.ICP.Candid.Models.CandidTag.op_Implicit(EdjCase.ICP.Candid.Models.CandidTag)~System.UInt32')
   - [op_Inequality()](#M-EdjCase-ICP-Candid-Models-CandidTag-op_Inequality-EdjCase-ICP-Candid-Models-CandidTag,EdjCase-ICP-Candid-Models-CandidTag- 'EdjCase.ICP.Candid.Models.CandidTag.op_Inequality(EdjCase.ICP.Candid.Models.CandidTag,EdjCase.ICP.Candid.Models.CandidTag)')
+- [CandidTagAttribute](#T-EdjCase-ICP-Candid-Mapping-CandidTagAttribute 'EdjCase.ICP.Candid.Mapping.CandidTagAttribute')
+  - [#ctor(tag)](#M-EdjCase-ICP-Candid-Mapping-CandidTagAttribute-#ctor-EdjCase-ICP-Candid-Models-CandidTag- 'EdjCase.ICP.Candid.Mapping.CandidTagAttribute.#ctor(EdjCase.ICP.Candid.Models.CandidTag)')
+  - [#ctor(id)](#M-EdjCase-ICP-Candid-Mapping-CandidTagAttribute-#ctor-System-UInt32- 'EdjCase.ICP.Candid.Mapping.CandidTagAttribute.#ctor(System.UInt32)')
+  - [#ctor(name)](#M-EdjCase-ICP-Candid-Mapping-CandidTagAttribute-#ctor-System-String- 'EdjCase.ICP.Candid.Mapping.CandidTagAttribute.#ctor(System.String)')
+  - [Tag](#P-EdjCase-ICP-Candid-Mapping-CandidTagAttribute-Tag 'EdjCase.ICP.Candid.Mapping.CandidTagAttribute.Tag')
 - [CandidTextParseException](#T-EdjCase-ICP-Candid-Exceptions-CandidTextParseException 'EdjCase.ICP.Candid.Exceptions.CandidTextParseException')
   - [Message](#P-EdjCase-ICP-Candid-Exceptions-CandidTextParseException-Message 'EdjCase.ICP.Candid.Exceptions.CandidTextParseException.Message')
 - [CandidType](#T-EdjCase-ICP-Candid-Models-Types-CandidType 'EdjCase.ICP.Candid.Models.Types.CandidType')
@@ -1820,13 +1824,6 @@ the serializers will use the property names
 | ---- | ---- | ----------- |
 | name | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The name to use for serialization of candid values |
 
-<a name='P-EdjCase-ICP-Candid-Mapping-CandidNameAttribute-Name'></a>
-### Name `property`
-
-##### Summary
-
-The name to use for serialization of candid values
-
 <a name='T-EdjCase-ICP-Candid-Models-Values-CandidOptional'></a>
 ## CandidOptional `type`
 
@@ -3136,6 +3133,52 @@ Converts a candid tag value to a uint by using the id of the tag
 ##### Parameters
 
 This method has no parameters.
+
+<a name='T-EdjCase-ICP-Candid-Mapping-CandidTagAttribute'></a>
+## CandidTagAttribute `type`
+
+##### Namespace
+
+EdjCase.ICP.Candid.Mapping
+
+##### Summary
+
+An attribute to specify a candid tag to use for serialization. If unspecified 
+the serializers will use the property names
+
+<a name='M-EdjCase-ICP-Candid-Mapping-CandidTagAttribute-#ctor-EdjCase-ICP-Candid-Models-CandidTag-'></a>
+### #ctor(tag) `constructor`
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| tag | [EdjCase.ICP.Candid.Models.CandidTag](#T-EdjCase-ICP-Candid-Models-CandidTag 'EdjCase.ICP.Candid.Models.CandidTag') | The tag to use for serialization of candid values |
+
+<a name='M-EdjCase-ICP-Candid-Mapping-CandidTagAttribute-#ctor-System-UInt32-'></a>
+### #ctor(id) `constructor`
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| id | [System.UInt32](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.UInt32 'System.UInt32') | The tag id (name hash) to use for serialization of candid values |
+
+<a name='M-EdjCase-ICP-Candid-Mapping-CandidTagAttribute-#ctor-System-String-'></a>
+### #ctor(name) `constructor`
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| name | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The tag name to use for serialization of candid values |
+
+<a name='P-EdjCase-ICP-Candid-Mapping-CandidTagAttribute-Tag'></a>
+### Tag `property`
+
+##### Summary
+
+The tag to use for serialization of candid values
 
 <a name='T-EdjCase-ICP-Candid-Exceptions-CandidTextParseException'></a>
 ## CandidTextParseException `type`

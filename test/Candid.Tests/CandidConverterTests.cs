@@ -172,6 +172,51 @@ namespace EdjCase.ICP.Candid.Tests
 		}
 
 
+		[Fact]
+		public void Tuple_From_Class()
+		{
+			var tuple = new Arg0ItemRecord("f0Value", "f1Value");
+
+			CandidRecord value = new CandidRecord(new Dictionary<CandidTag, CandidValue>
+			{
+				[0] = CandidValue.Text("f0Value"),
+				[1] = CandidValue.Text("f1Value")
+			});
+			CandidType type = new CandidRecordType(new Dictionary<CandidTag, CandidType>
+			{
+				[0] = CandidType.Text(),
+				[1] = CandidType.Text()
+			});
+			CandidTypedValue expected = CandidTypedValue.FromValueAndType(value, type);
+			this.Test(
+				tuple,
+				expected,
+				(x, y) =>
+				{
+					return x.F0 == y.F0 && x.F1 == y.F1;
+				}
+			);
+		}
+
+		public class Arg0ItemRecord
+		{
+			[CandidTag(0U)] public string F0 { get; set; }
+
+			[CandidTag(1U)] public string F1 { get; set; }
+
+			public Arg0ItemRecord(string f0, string f1)
+			{
+				this.F0 = f0;
+				this.F1 = f1;
+			}
+
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+			public Arg0ItemRecord()
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+			{
+			}
+		}
+
 
 
 

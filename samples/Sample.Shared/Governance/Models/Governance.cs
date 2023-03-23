@@ -81,10 +81,10 @@ namespace Sample.Shared.Governance.Models
 
 		public class DefaultFolloweesItemRecord
 		{
-			[CandidName("0")]
+			[CandidTag(0U)]
 			public int F0 { get; set; }
 
-			[CandidName("1")]
+			[CandidTag(1U)]
 			public Followees F1 { get; set; }
 
 			public DefaultFolloweesItemRecord(int f0, Followees f1)
@@ -100,10 +100,10 @@ namespace Sample.Shared.Governance.Models
 
 		public class ProposalsItemRecord
 		{
-			[CandidName("0")]
+			[CandidTag(0U)]
 			public ulong F0 { get; set; }
 
-			[CandidName("1")]
+			[CandidTag(1U)]
 			public ProposalData F1 { get; set; }
 
 			public ProposalsItemRecord(ulong f0, ProposalData f1)
@@ -119,10 +119,10 @@ namespace Sample.Shared.Governance.Models
 
 		public class InFlightCommandsItemRecord
 		{
-			[CandidName("0")]
+			[CandidTag(0U)]
 			public ulong F0 { get; set; }
 
-			[CandidName("1")]
+			[CandidTag(1U)]
 			public NeuronInFlightCommand F1 { get; set; }
 
 			public InFlightCommandsItemRecord(ulong f0, NeuronInFlightCommand f1)
@@ -138,10 +138,10 @@ namespace Sample.Shared.Governance.Models
 
 		public class NeuronsItemRecord
 		{
-			[CandidName("0")]
+			[CandidTag(0U)]
 			public ulong F0 { get; set; }
 
-			[CandidName("1")]
+			[CandidTag(1U)]
 			public Neuron F1 { get; set; }
 
 			public NeuronsItemRecord(ulong f0, Neuron f1)

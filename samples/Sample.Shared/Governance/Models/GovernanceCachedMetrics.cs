@@ -88,10 +88,10 @@ namespace Sample.Shared.Governance.Models
 
 		public class NotDissolvingNeuronsE8sBucketsItemRecord
 		{
-			[CandidName("0")]
+			[CandidTag(0U)]
 			public ulong F0 { get; set; }
 
-			[CandidName("1")]
+			[CandidTag(1U)]
 			public double F1 { get; set; }
 
 			public NotDissolvingNeuronsE8sBucketsItemRecord(ulong f0, double f1)
@@ -107,10 +107,10 @@ namespace Sample.Shared.Governance.Models
 
 		public class NotDissolvingNeuronsCountBucketsItemRecord
 		{
-			[CandidName("0")]
+			[CandidTag(0U)]
 			public ulong F0 { get; set; }
 
-			[CandidName("1")]
+			[CandidTag(1U)]
 			public ulong F1 { get; set; }
 
 			public NotDissolvingNeuronsCountBucketsItemRecord(ulong f0, ulong f1)
@@ -126,10 +126,10 @@ namespace Sample.Shared.Governance.Models
 
 		public class DissolvingNeuronsCountBucketsItemRecord
 		{
-			[CandidName("0")]
+			[CandidTag(0U)]
 			public ulong F0 { get; set; }
 
-			[CandidName("1")]
+			[CandidTag(1U)]
 			public ulong F1 { get; set; }
 
 			public DissolvingNeuronsCountBucketsItemRecord(ulong f0, ulong f1)
@@ -145,10 +145,10 @@ namespace Sample.Shared.Governance.Models
 
 		public class DissolvingNeuronsE8sBucketsItemRecord
 		{
-			[CandidName("0")]
+			[CandidTag(0U)]
 			public ulong F0 { get; set; }
 
-			[CandidName("1")]
+			[CandidTag(1U)]
 			public double F1 { get; set; }
 
 			public DissolvingNeuronsE8sBucketsItemRecord(ulong f0, double f1)

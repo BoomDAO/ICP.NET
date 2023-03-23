@@ -54,8 +54,8 @@ namespace EdjCase.ICP.ClientGenerator
 
 	internal class ServiceSourceCodeType : SourceCodeType
 	{
-		public List<(ValueName Name, Func FuncInfo)> Methods { get; set; }
-		public ServiceSourceCodeType(List<(ValueName Name, Func FuncInfo)> methods)
+		public List<(string CsharpName, string CandidName, Func FuncInfo)> Methods { get; set; }
+		public ServiceSourceCodeType(List<(string CsharpName, string CandidName, Func FuncInfo)> methods)
 		{
 			this.Methods = methods ?? throw new ArgumentNullException(nameof(methods));
 		}
