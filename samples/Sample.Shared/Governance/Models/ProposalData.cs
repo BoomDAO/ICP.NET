@@ -85,10 +85,10 @@ namespace Sample.Shared.Governance.Models
 
 		public class BallotsItemRecord
 		{
-			[CandidName("0")]
+			[CandidTag(0U)]
 			public ulong F0 { get; set; }
 
-			[CandidName("1")]
+			[CandidTag(1U)]
 			public Ballot F1 { get; set; }
 
 			public BallotsItemRecord(ulong f0, Ballot f1)

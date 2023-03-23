@@ -430,13 +430,28 @@
             the serializers will use the property names
             </summary>
         </member>
-        <member name="P:EdjCase.ICP.Candid.Mapping.CandidNameAttribute.Name">
-            <summary>
-            The name to use for serialization of candid values
-            </summary>
-        </member>
         <member name="M:EdjCase.ICP.Candid.Mapping.CandidNameAttribute.#ctor(System.String)">
             <param name="name">The name to use for serialization of candid values</param>
+        </member>
+        <member name="T:EdjCase.ICP.Candid.Mapping.CandidTagAttribute">
+            <summary>
+            An attribute to specify a candid tag to use for serialization. If unspecified 
+            the serializers will use the property names
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Candid.Mapping.CandidTagAttribute.Tag">
+            <summary>
+            The tag to use for serialization of candid values
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Mapping.CandidTagAttribute.#ctor(EdjCase.ICP.Candid.Models.CandidTag)">
+            <param name="tag">The tag to use for serialization of candid values</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Mapping.CandidTagAttribute.#ctor(System.UInt32)">
+            <param name="id">The tag id (name hash) to use for serialization of candid values</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Mapping.CandidTagAttribute.#ctor(System.String)">
+            <param name="name">The tag name to use for serialization of candid values</param>
         </member>
         <member name="T:EdjCase.ICP.Candid.Mapping.CustomMapperAttribute">
             <summary>

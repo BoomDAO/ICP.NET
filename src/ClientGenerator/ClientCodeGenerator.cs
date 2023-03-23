@@ -83,7 +83,7 @@ namespace EdjCase.ICP.ClientGenerator
 				);
 
 			string modelNamespace = options.NoFolders
-				? options.Namespace 
+				? options.Namespace
 				: options.Namespace + ".Models";
 			HashSet<ValueName> aliases = declaredTypes
 				.Where(t => t.Value is CompiledTypeSourceCodeType || t.Value is ReferenceSourceCodeType)
@@ -175,7 +175,7 @@ namespace EdjCase.ICP.ClientGenerator
 								CandidType fCandidType = f.Value;
 								SourceCodeType fType = ResolveSourceCodeType(fCandidType, keepCandidCase);
 								return (ValueName.Default(f.Key, keepCandidCase), fType);
-								})
+							})
 							.Where(f => f.Item2 != null)
 							.ToList()!;
 						return new RecordSourceCodeType(fields);
@@ -201,8 +201,12 @@ namespace EdjCase.ICP.ClientGenerator
 
 		internal static ServiceSourceCodeType ResolveService(CandidServiceType s, bool keepCandidCase)
 		{
-			List<(ValueName Name, ServiceSourceCodeType.Func FuncInfo)> methods = s.Methods
-				.Select(m => (ValueName.Default(m.Key.ToString(), keepCandidCase), ResolveFunc(m.Value, keepCandidCase)))
+			List<(string CsharpName, string CandidName, ServiceSourceCodeType.Func FuncInfo)> methods = s.Methods
+				.Select(m =>
+				{
+					ValueName valueName = ValueName.Default(m.Key.ToString(), keepCandidCase);
+					return (valueName.PropertyName, valueName.CandidTag.Name!, ResolveFunc(m.Value, keepCandidCase));
+				})
 				.ToList();
 			return new ServiceSourceCodeType(methods);
 		}

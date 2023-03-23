@@ -1,3 +1,4 @@
+using EdjCase.ICP.Candid.Models;
 using System;
 
 namespace EdjCase.ICP.Candid.Mapping
@@ -7,17 +8,42 @@ namespace EdjCase.ICP.Candid.Mapping
 	/// the serializers will use the property names
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
-	public class CandidNameAttribute : Attribute
+	public class CandidNameAttribute : CandidTagAttribute
 	{
-		/// <summary>
-		/// The name to use for serialization of candid values
-		/// </summary>
-		public string Name { get; }
 
 		/// <param name="name">The name to use for serialization of candid values</param>
-		public CandidNameAttribute(string name)
+		public CandidNameAttribute(string name) : base(name)
 		{
-			this.Name = name;
+		}
+	}
+	/// <summary>
+	/// An attribute to specify a candid tag to use for serialization. If unspecified 
+	/// the serializers will use the property names
+	/// </summary>
+	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
+	public class CandidTagAttribute : Attribute
+	{
+		/// <summary>
+		/// The tag to use for serialization of candid values
+		/// </summary>
+		public CandidTag Tag { get; }
+
+		/// <param name="tag">The tag to use for serialization of candid values</param>
+		public CandidTagAttribute(CandidTag tag)
+		{
+			this.Tag = tag;
+		}
+
+		/// <param name="id">The tag id (name hash) to use for serialization of candid values</param>
+		public CandidTagAttribute(uint id)
+		{
+			this.Tag = id;
+		}
+
+		/// <param name="name">The tag name to use for serialization of candid values</param>
+		public CandidTagAttribute(string name)
+		{
+			this.Tag = name;
 		}
 	}
 
