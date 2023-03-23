@@ -69,5 +69,13 @@ public class Program
 		var client = new GovernanceApiClient(agent, canisterId, candidConverter);
 		var a = await client.GetProposalInfo(110174);
 
+
+		//CandidType natType = CandidType.Nat();
+		//CandidType textType = CandidType.Text();
+
+		//CandidType recordType = CandidType.Record();
+		//string strinifiedType = "record { field_1:nat64; field_2: vec nat8 }";
+		//recordType = CandidTextParser.Parse<CandidRecordType>(text);
+
 	}
 }
