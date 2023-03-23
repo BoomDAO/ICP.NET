@@ -11,22 +11,70 @@
 
 ## Create Type
 
+Some Examples:
+
 ```cs
-CandidType natType = CandidType.Nat();
-CandidType textType = CandidType.Text();
+// Nat (positive integer)
+CandidType natType = CandidType.Nat(); // shorthand for `new CandidPrimitiveType(PrimitiveType.Nat)`
 
-CandidType recordType = CandidType.Record();
-string strinifiedType = "record { field_1:nat64; field_2: vec nat8 }";
-recordType = CandidTextParser.Parse<CandidRecordType>(text);
+// Text (string)
+CandidType textType = CandidType.Text(); // shorthand for `new CandidPrimitiveType(PrimitiveType.Text)`
+
+// Opt (optional/nullable) Principal (identifier)
+CandidType optionalPrincipalType = CandidType.Opt(CandidType.Principal());
+
+// Record (dictionary/object)
+CandidType recordType = new CandidRecordType(new Dictionary<CandidTag, CandidType>
+{
+    { CandidTag.FromName("name"), CandidType.Text() },
+    { CandidTag.FromName("age"), CandidType.Nat() }
+});
+
+// Variant (union)
+CandidType variantType = new CandidVariantType(new Dictionary<CandidTag, CandidType>
+{
+    { CandidTag.FromName("option1"), CandidType.Bool() },
+    { CandidTag.FromName("option2"), CandidType.Null() }
+});
+
+// Vec (list/array) of Float32
+CandidType float32Vec = new CandidVectorType(CandidType.Float32());
 ```
 
-# Create Value
+## Create Value
 
+Some Examples:
+
+```cs
+// Nat (positive integer)
+CandidValue natType = CandidValue.Nat(4);
+
+// Text (string)
+CandidValue textType = CandidValue.Text("SomeText");
+
+// Opt (optional/nullable) Principal (identifier)
+CandidValue optionalPrincipalType = new CandidOptional(CandidValue.Principal(Principal.Anonymous()));
+
+// Record (dictionary/object)
+CandidValue recordType = new CandidRecord(new Dictionary<CandidTag, CandidValue>
+{
+    { CandidTag.FromName("name"), CandidValue.Text("Name1") },
+    { CandidTag.FromName("age"), CandidValue.Nat(21) }
+});
+
+// Variant (union)
+CandidValue variantType = new CandidVariant("option1", CandidValue.Bool(true));
+
+// Vec (list/array) of Float32
+CandidValue float32Vec = new CandidVector(new CandidValue[]
+{
+    CandidValue.Float32(1.1f),
+    CandidValue.Float32(2.2f),
+    CandidValue.Float32(3.3f)
+});
 ```
 
-```
-
-## Parse Arg From bytes
+## Parse From bytes
 
 When candid is encoded, its in the form of a `CandidArg`. Individual values and types are not usually encoded
 
@@ -43,27 +91,37 @@ CandidArg arg = CandidArg.FromBytes(rawCandidBytes);
 ## Reading Values (without custom types)
 
 ```cs
+// Assume arg is `(Nat, record { title : Text; length : Nat; })`
 CandidArg arg = ...;
 CandidTypedValue firstTypedValue = arg.Values[0];
+UnboundedUInt natValue = firstTypedValue.Value.AsNat();
 CandidTypedValue secondTypedValue = arg.Values[1];
-string title = firstArg.Value.AsRecord()["title"];
+CandidRecord recordValue = secondTypedValue.Value.AsRecord();
+string title = recordValue["title"].AsText();
+UnboundedUInt length = recordValue["length"].AsNat();
 ```
 
-# Using Custom Types
+# Using Self Defined Types
 
-## From Candid Value
+Self defined types are helpful for predefining classes to the candid schema of an endpoint. This can be done manually (as shown below) or done automattically with the [ClientGenerator](../ClientGenerator/README.md)
+
+## From Candid To Self Defined Type
+
+Single argument:
 
 ```cs
 CandidArg arg = ...;
 MyObj1 obj = arg.ToObjects<MyObj1>();
 ```
 
-## From Candid Arg
+Multi arguments:
 
 ```cs
 CandidArg arg = ...;
 (MyObj1 obj, MyObj2 obj2) = arg.ToObjects<MyObj1, MyObj2>();
 ```
+
+## To Candid From Self Defined Type
 
 ```cs
 // Serialze
@@ -75,7 +133,7 @@ MyObj obj = new MyObj
 CandidTypedValue value = CandidTypedValue.FromObject(obj);
 ```
 
-# Defining Variant Types
+## Defining Variant Types
 
 ```cs
 [Variant(typeof(MyVariantTag))] // Required to flag as variant and define options with enum
@@ -109,7 +167,7 @@ public enum MyVariant
 }
 ```
 
-# Defining Record Types
+## Defining Record Types
 
 ```cs
 public class MyRecord
@@ -132,7 +190,7 @@ public class MyRecord
 }
 ```
 
-# Defining Other Types
+## Defining Other Types
 
 ```cs
 (C# type) -> (Candid type)
@@ -159,21 +217,4 @@ OptionalValue<T> -> Opt T
 EmptyValue -> Empty
 ReservedValue -> Reserved
 NullValue -> Null
-```
-
-## Generate Candid Text representation
-
-```cs
-var type = new CandidRecordType(new Dictionary<CandidTag, CandidType>
-{
-    {
-        CandidTag.FromName("field_1"),
-        CandidType.Nat64()
-    },
-    {
-        CandidTag.FromName("field_2"),
-        new CandidVectorType(CandidType.Nat8())
-    }
-});
-string text = CandidTextGenerator.Generator(type, IndentType.Tab);
 ```

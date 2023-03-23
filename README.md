@@ -10,6 +10,74 @@ Collection of Internet Computer Protocol (ICP) libraries for .NET/Blazor
 
 - [Internet Identity (Experimental)](src/InternetIdentity/README.md) - Internet Identity authenticater (experimental and not secure)
 
+# Quickstart
+
+## Creating a client for a canister
+
+- Navigate to directory of .Net project
+  ```
+  cd {path/to/project}
+  ```
+- Add Agent nuget package to project
+  ```
+  dotnet add package EdjCase.ICP.Agent
+  ```
+- Install ClientGenerator
+
+  ```
+  dotnet tool install -g EdjCase.ICP.ClientGenerator
+  ```
+
+  This will allow a client to be automatically be generated for a canister. See [ClientGenerator README](src/ClientGenerator/README.md) for more details and advanced config
+
+- Initialize ClientGenerator config (first run only)
+  ```
+  candid-client-generator init
+  ```
+  This will create a TOML config file in the directory that can be changed for more advanced options
+- Update created config file `candid-client.toml`
+
+  If using a canister id:
+
+  ```toml
+  namespace = "ProjectGovernance" # Base namespace to use
+  output-directory = "./Clients" # Output directory
+
+  [[clients]]
+  name = "Governance" # Label of client to use
+  type = "canister" # Indicates to make client from a canister id
+  canister-id = "rrkah-fqaaa-aaaaa-aaaaq-cai" # Canister id to make client for
+  ```
+
+  If using a service definition file (.did)
+
+  ```toml
+  namespace = "ProjectGovernance" # Base namespace to use
+  output-directory = "./Clients" # Output directory
+
+  [[clients]]
+  name = "Governance" # Label of client to use
+  type = "file" # Indicates to make client from a service definition file
+  file-path = "Governance.did" # File to use
+  ```
+
+  For all configuration options see [ClientGenerator README](src/ClientGenerator/README.md) for more details
+
+- Generate Client
+  ```
+  candid-client-generator gen
+  ```
+  Will output C# file to the output directory specified in the config
+- Use client in code
+  ```cs
+  var agent = new HttpAgent();
+  Principal canisterId = Principal.FromText("rrkah-fqaaa-aaaaa-aaaaq-cai");
+  var client = new GovernanceApiClient(agent, canisterId);
+  OptionalValue<Sample.Shared.Governance.Models.ProposalInfo> proposalInfo = await client.GetProposalInfo(110174);
+  ...
+  ```
+- SHIP IT! 🚀
+
 # Candid Related Links
 
 - [IC Http Interface Spec](https://smartcontracts.org/docs/current/references/ic-interface-spec)

@@ -4,18 +4,11 @@ using System;
 using System.Threading.Tasks;
 using EdjCase.ICP.InternetIdentity;
 using EdjCase.ICP.Agent.Identities;
-using System.IO;
 using CommandLine;
 using Sample.Shared.Governance;
-using System.Security.Principal;
-using EdjCase.ICP.Agent.Responses;
-using EdjCase.ICP.Candid.Models.Types;
-using EdjCase.ICP.Candid.Models.Values;
-using Sample.Shared.Governance.Models;
 using EdjCase.ICP.Candid;
+using EdjCase.ICP.Agent.Responses;
 using System.Collections.Generic;
-using EdjCase.ICP.Candid.Mapping;
-using System.Reflection;
 
 public class Program
 {
@@ -63,19 +56,8 @@ public class Program
 		Console.WriteLine("Login success!");
 		var agent = new HttpAgent(identity);
 		Principal canisterId = Principal.FromText("rrkah-fqaaa-aaaaa-aaaaq-cai");
-		CandidConverter candidConverter = new CandidConverter(options =>
-		{
-		});
-		var client = new GovernanceApiClient(agent, canisterId, candidConverter);
-		var a = await client.GetProposalInfo(110174);
-
-
-		//CandidType natType = CandidType.Nat();
-		//CandidType textType = CandidType.Text();
-
-		//CandidType recordType = CandidType.Record();
-		//string strinifiedType = "record { field_1:nat64; field_2: vec nat8 }";
-		//recordType = CandidTextParser.Parse<CandidRecordType>(text);
+		var client = new GovernanceApiClient(agent, canisterId);
+		OptionalValue<Sample.Shared.Governance.Models.ProposalInfo> proposalInfo = await client.GetProposalInfo(110174);
 
 	}
 }
