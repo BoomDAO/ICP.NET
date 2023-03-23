@@ -5,8 +5,8 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
-	  <RootNamespace>ICP.Sample.CLI</RootNamespace>
-	  <LangVersion>9</LangVersion>
+    <RootNamespace>ICP.Sample.CLI</RootNamespace>
+    <LangVersion>9</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,7 +17,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\InternetIdentity\EdjCase.ICP.InternetIdentity.csproj" />
     <ProjectReference Include="..\Sample.Shared\Sample.Shared.csproj" />
-	  <ProjectReference Include="..\..\src\ClientGenerator\EdjCase.ICP.ClientGenerator.csproj" />
+    <ProjectReference Include="..\..\src\ClientGenerator\EdjCase.ICP.ClientGenerator.csproj" />
   </ItemGroup>
 
 
