@@ -6,7 +6,7 @@ feature-nullable = true
 [[clients]]
 name = "Dex"
 type = "file"
-file-path = "../ServiceDefinitionFiles/Dex.did"
+file-path = "ServiceDefinitions/Dex.did"
 
 [[clients]]
 name = "Governance"
@@ -16,7 +16,7 @@ canister-id = "rrkah-fqaaa-aaaaa-aaaaq-cai"
 [[clients]]
 name = "AddressBook"
 type = "file"
-file-path = "../ServiceDefinitionFiles/AddressBook.did"
+file-path = "ServiceDefinitions/AddressBook.did"
 output-directory = "C:/Git/ICP.NET/samples/Sample.Shared/Address" # override
 no-folders = true
 keep-candid-case = true
