@@ -66,7 +66,10 @@ public class Program
 		var agent = new HttpAgent(identity);
 		Principal canisterId = Principal.FromText("rrkah-fqaaa-aaaaa-aaaaq-cai");
 		var client = new GovernanceApiClient(agent, canisterId);
-		OptionalValue<Sample.Shared.Governance.Models.ProposalInfo> proposalInfo = await client.GetProposalInfo(110174);
-		Console.WriteLine(CandidTypedValue.FromObject(proposalInfo).ToString());
+		ulong proposalId = 110174;
+		Console.WriteLine($"Getting info for proposal {proposalId}...");
+		OptionalValue<Sample.Shared.Governance.Models.ProposalInfo> proposalInfo = await client.GetProposalInfo(proposalId);
+		CandidTypedValue rawCandid = CandidTypedValue.FromObject(proposalInfo);
+		Console.WriteLine("ProposalInfo:\n" + rawCandid.Value.ToString());
 	}
 }
