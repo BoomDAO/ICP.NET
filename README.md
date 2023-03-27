@@ -13,7 +13,7 @@ Collection of Internet Computer Protocol (ICP) libraries for .NET/Blazor
 # Quickstart
 
 ## Creating a client for a canister
-
+- Prerequisite: Have .Net 6 installed (https://dotnet.microsoft.com/en-us/download/dotnet)
 - Navigate to directory of .Net project
   ```
   cd {path/to/project}
