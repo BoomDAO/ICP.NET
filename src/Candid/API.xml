@@ -858,6 +858,9 @@
             <param name="value">The candid value. Must match the specified type</param>
             <param name="type">The candid type. Must match the specified value</param>
         </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidTypedValue.ToString">
+            <inheritdoc />
+        </member>
         <member name="M:EdjCase.ICP.Candid.Models.CandidTypedValue.ToObject``1(EdjCase.ICP.Candid.CandidConverter)">
             <summary>
             Helper method to convert a typed value to an generic type value

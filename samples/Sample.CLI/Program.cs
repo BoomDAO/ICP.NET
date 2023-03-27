@@ -49,15 +49,24 @@ public class Program
 
 	public static async Task Run(ulong anchor, string hostname)
 	{
-		LoginResult result = await Authenticator
-			.WithHttpAgent()
-			.LoginAsync(anchor, hostname);
-		DelegationIdentity identity = result.GetIdentityOrThrow();
-		Console.WriteLine("Login success!");
+		bool login = false; // TODO
+		IIdentity? identity;
+		if (login)
+		{
+			LoginResult result = await Authenticator
+				.WithHttpAgent()
+				.LoginAsync(anchor, hostname);
+			identity = result.GetIdentityOrThrow();
+			Console.WriteLine("Login success!");
+		}
+		else
+		{
+			identity = null; 
+		}
 		var agent = new HttpAgent(identity);
 		Principal canisterId = Principal.FromText("rrkah-fqaaa-aaaaa-aaaaq-cai");
 		var client = new GovernanceApiClient(agent, canisterId);
 		OptionalValue<Sample.Shared.Governance.Models.ProposalInfo> proposalInfo = await client.GetProposalInfo(110174);
-
+		Console.WriteLine(CandidTypedValue.FromObject(proposalInfo).ToString());
 	}
 }

@@ -30,7 +30,13 @@ namespace EdjCase.ICP.Candid.Models
 			this.Value = value ?? throw new ArgumentNullException(nameof(value));
 			this.Type = type ?? throw new ArgumentNullException(nameof(type));
 		}
-		
+
+		/// <inheritdoc />
+		public override string ToString()
+		{
+			return this.Value.ToString(); // TODO is this the best format?
+		}
+
 		/// <summary>
 		/// Helper method to convert a typed value to an generic type value
 		/// </summary>

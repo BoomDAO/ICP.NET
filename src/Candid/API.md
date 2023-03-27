@@ -319,6 +319,7 @@
   - [Reserved()](#M-EdjCase-ICP-Candid-Models-CandidTypedValue-Reserved 'EdjCase.ICP.Candid.Models.CandidTypedValue.Reserved')
   - [Text(value)](#M-EdjCase-ICP-Candid-Models-CandidTypedValue-Text-System-String- 'EdjCase.ICP.Candid.Models.CandidTypedValue.Text(System.String)')
   - [ToObject\`\`1(converter)](#M-EdjCase-ICP-Candid-Models-CandidTypedValue-ToObject``1-EdjCase-ICP-Candid-CandidConverter- 'EdjCase.ICP.Candid.Models.CandidTypedValue.ToObject``1(EdjCase.ICP.Candid.CandidConverter)')
+  - [ToString()](#M-EdjCase-ICP-Candid-Models-CandidTypedValue-ToString 'EdjCase.ICP.Candid.Models.CandidTypedValue.ToString')
   - [Vector(innerType,values)](#M-EdjCase-ICP-Candid-Models-CandidTypedValue-Vector-EdjCase-ICP-Candid-Models-Types-CandidType,EdjCase-ICP-Candid-Models-Values-CandidValue[]- 'EdjCase.ICP.Candid.Models.CandidTypedValue.Vector(EdjCase.ICP.Candid.Models.Types.CandidType,EdjCase.ICP.Candid.Models.Values.CandidValue[])')
   - [Vector\`\`1(innerType,values,valueConverter)](#M-EdjCase-ICP-Candid-Models-CandidTypedValue-Vector``1-EdjCase-ICP-Candid-Models-Types-CandidType,System-Collections-Generic-IEnumerable{``0},System-Func{``0,EdjCase-ICP-Candid-Models-Values-CandidValue}- 'EdjCase.ICP.Candid.Models.CandidTypedValue.Vector``1(EdjCase.ICP.Candid.Models.Types.CandidType,System.Collections.Generic.IEnumerable{``0},System.Func{``0,EdjCase.ICP.Candid.Models.Values.CandidValue})')
   - [op_Equality()](#M-EdjCase-ICP-Candid-Models-CandidTypedValue-op_Equality-EdjCase-ICP-Candid-Models-CandidTypedValue,EdjCase-ICP-Candid-Models-CandidTypedValue- 'EdjCase.ICP.Candid.Models.CandidTypedValue.op_Equality(EdjCase.ICP.Candid.Models.CandidTypedValue,EdjCase.ICP.Candid.Models.CandidTypedValue)')
@@ -4497,6 +4498,17 @@ Value of type T
 | Name | Description |
 | ---- | ----------- |
 | T | Type to convert the candid value to |
+
+<a name='M-EdjCase-ICP-Candid-Models-CandidTypedValue-ToString'></a>
+### ToString() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
 
 <a name='M-EdjCase-ICP-Candid-Models-CandidTypedValue-Vector-EdjCase-ICP-Candid-Models-Types-CandidType,EdjCase-ICP-Candid-Models-Values-CandidValue[]-'></a>
 ### Vector(innerType,values) `method`
