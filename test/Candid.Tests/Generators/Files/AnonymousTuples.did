@@ -1,0 +1,4 @@
+service : () -> {
+    a : () -> (vec record { nat; vec principal }) query;
+    b : () -> (vec record { text; text }) query;
+}
