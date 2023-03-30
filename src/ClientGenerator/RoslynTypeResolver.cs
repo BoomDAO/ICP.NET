@@ -13,6 +13,7 @@ using EdjCase.ICP.Agent.Responses;
 using System.Threading.Tasks;
 using EdjCase.ICP.Candid;
 using System.Xml.Linq;
+using System.Reflection;
 
 namespace EdjCase.ICP.ClientGenerator
 {
@@ -782,7 +783,7 @@ namespace EdjCase.ICP.ClientGenerator
 				.Select(t => (t.Name, typeResolver.ResolveType(t.Type, t.Name.PropertyName, parentType: clientName)))
 				.ToList();
 			List<(ValueName Name, ResolvedType Type)> resolvedReturnTypes = info.ReturnTypes
-				.Select(t => (t.Name, typeResolver.ResolveType(t.Type, t.Name.PropertyName, parentType: clientName)))
+				.Select(t => (t.Name, typeResolver.ResolveType(t.Type, StringUtil.ToPascalCase(csharpName) + StringUtil.ToPascalCase(t.Name.PropertyName), parentType: clientName)))
 				.ToList();
 
 			List<TypedValueName> argTypes = resolvedArgTypes

@@ -1,0 +1,80 @@
+﻿using EdjCase.ICP.Agent.Agents;
+using EdjCase.ICP.Candid.Models;
+using EdjCase.ICP.Candid;
+using Test;
+using System.Collections.Generic;
+using EdjCase.ICP.Agent.Responses;
+using EdjCase.ICP.Candid.Mapping;
+
+namespace Test
+{
+	public class AnonymousTuplesApiClient
+	{
+		public IAgent Agent { get; }
+
+		public Principal CanisterId { get; }
+
+		public CandidConverter Converter { get; }
+
+		public AnonymousTuplesApiClient(IAgent agent, Principal canisterId, CandidConverter converter = default)
+		{
+			this.Agent = agent;
+			this.CanisterId = canisterId;
+			this.Converter = converter;
+		}
+
+		public async System.Threading.Tasks.Task<List<AnonymousTuplesApiClient.AArg0ItemRecord>> A()
+		{
+			CandidArg arg = CandidArg.FromCandid();
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "a", arg);
+			CandidArg reply = response.ThrowOrGetReply();
+			return reply.ToObjects<List<AnonymousTuplesApiClient.AArg0ItemRecord>>(this.Converter);
+		}
+
+		public async System.Threading.Tasks.Task<List<AnonymousTuplesApiClient.BArg0ItemRecord>> B()
+		{
+			CandidArg arg = CandidArg.FromCandid();
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "b", arg);
+			CandidArg reply = response.ThrowOrGetReply();
+			return reply.ToObjects<List<AnonymousTuplesApiClient.BArg0ItemRecord>>(this.Converter);
+		}
+
+		public class AArg0ItemRecord
+		{
+			[CandidTag(0U)]
+			public UnboundedUInt F0 { get; set; }
+
+			[CandidTag(1U)]
+			public List<Principal> F1 { get; set; }
+
+			public AArg0ItemRecord(UnboundedUInt f0, List<Principal> f1)
+			{
+				this.F0 = f0;
+				this.F1 = f1;
+			}
+
+			public AArg0ItemRecord()
+			{
+			}
+		}
+
+		public class BArg0ItemRecord
+		{
+			[CandidTag(0U)]
+			public string F0 { get; set; }
+
+			[CandidTag(1U)]
+			public string F1 { get; set; }
+
+			public BArg0ItemRecord(string f0, string f1)
+			{
+				this.F0 = f0;
+				this.F1 = f1;
+			}
+
+			public BArg0ItemRecord()
+			{
+			}
+		}
+	}
+}

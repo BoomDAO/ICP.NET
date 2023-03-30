@@ -21,6 +21,7 @@ namespace EdjCase.ICP.Candid.Tests.Generators
 		[Theory]
 		[InlineData("Governance")]
 		[InlineData("Dex")]
+		[InlineData("AnonymousTuples")]
 		public void GenerateClients(string serviceName)
 		{
 			string fileText = GetFileText(serviceName + ".did");
