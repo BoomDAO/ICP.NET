@@ -582,7 +582,7 @@ True if the certificate is valid, otherwise false
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| rootPublicKey | [System.Byte[]](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Byte[] 'System.Byte[]') | The root public key of the internet computer network |
+| rootPublicKey | [System.Byte[]](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Byte[] 'System.Byte[]') | The root public key (DER encoded) of the internet computer network |
 
 <a name='T-EdjCase-ICP-Agent-Models-CertificateDelegation'></a>
 ## CertificateDelegation `type`

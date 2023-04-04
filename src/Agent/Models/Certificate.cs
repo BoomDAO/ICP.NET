@@ -1,6 +1,7 @@
 using EdjCase.Cryptography.BLS;
 using EdjCase.ICP.Candid.Models;
 using System;
+using static EdjCase.ICP.Candid.Models.HashTree;
 
 namespace EdjCase.ICP.Agent.Models
 {
@@ -40,11 +41,19 @@ namespace EdjCase.ICP.Agent.Models
 		/// Checks the validity of the certificate based off the 
 		/// specified root public key
 		/// </summary>
-		/// <param name="rootPublicKey">The root public key of the internet computer network</param>
+		/// <param name="rootPublicKey">The root public key (DER encoded) of the internet computer network</param>
 		/// <returns>True if the certificate is valid, otherwise false</returns>
 		public bool IsValid(byte[] rootPublicKey)
 		{
+			/*
+				verify_cert(cert) =
+					let root_hash = reconstruct(cert.tree)
+					let der_key = check_delegation(cert.delegation) // see section Delegations below
+					bls_key = extract_der(der_key)
+					verify_bls_signature(bls_key, cert.signature, domain_sep("ic-state-root") · root_hash)
+			 */
 			byte[] rootHash = this.Tree.BuildRootHash();
+			rootHash = EncodedValue.WithDomainSeperator("ic-state-root", rootHash);
 			if (this.Delegation != null)
 			{
 				// override the root key to the delegated one
@@ -55,7 +64,7 @@ namespace EdjCase.ICP.Agent.Models
 				}
 			}
 			var blsKey = new DerEncodedPublicKey(rootPublicKey).AsBls();
-			return BlsUtil.VerifySignature(blsKey, rootHash, this.Signature);
+			return IcpBlsUtil.VerifySignature(blsKey, rootHash, this.Signature);
 		}
 	}
 

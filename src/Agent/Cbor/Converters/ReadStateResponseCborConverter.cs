@@ -55,7 +55,7 @@ namespace EdjCase.ICP.Agent.Cbor.Converters
 			}
 		}
 
-		private static Certificate ReadCert(ref CborReader reader)
+		internal static Certificate ReadCert(ref CborReader reader)
 		{
 			var context = new CertContext();
 			CborUtil.ReadMap(ref reader, ref context, SetCertValue);
@@ -112,7 +112,7 @@ namespace EdjCase.ICP.Agent.Cbor.Converters
 			}
 		}
 
-		private static HashTree ReadTree(ref CborReader reader)
+		internal static HashTree ReadTree(ref CborReader reader)
 		{
 			_ = reader.ReadSize(); // Array size
 			uint nodeType = reader.ReadUInt32(); // Get tree node type

@@ -441,9 +441,12 @@
   - [Equals()](#M-EdjCase-ICP-Candid-Models-HashTree-EncodedValue-Equals-System-Byte[]- 'EdjCase.ICP.Candid.Models.HashTree.EncodedValue.Equals(System.Byte[])')
   - [GetHashCode()](#M-EdjCase-ICP-Candid-Models-HashTree-EncodedValue-GetHashCode 'EdjCase.ICP.Candid.Models.HashTree.EncodedValue.GetHashCode')
   - [ToString()](#M-EdjCase-ICP-Candid-Models-HashTree-EncodedValue-ToString 'EdjCase.ICP.Candid.Models.HashTree.EncodedValue.ToString')
+  - [Utf8Value(value)](#M-EdjCase-ICP-Candid-Models-HashTree-EncodedValue-Utf8Value-System-String- 'EdjCase.ICP.Candid.Models.HashTree.EncodedValue.Utf8Value(System.String)')
   - [op_Equality()](#M-EdjCase-ICP-Candid-Models-HashTree-EncodedValue-op_Equality-EdjCase-ICP-Candid-Models-HashTree-EncodedValue,EdjCase-ICP-Candid-Models-HashTree-EncodedValue- 'EdjCase.ICP.Candid.Models.HashTree.EncodedValue.op_Equality(EdjCase.ICP.Candid.Models.HashTree.EncodedValue,EdjCase.ICP.Candid.Models.HashTree.EncodedValue)')
   - [op_Implicit(value)](#M-EdjCase-ICP-Candid-Models-HashTree-EncodedValue-op_Implicit-EdjCase-ICP-Candid-Models-HashTree-EncodedValue-~System-Byte[] 'EdjCase.ICP.Candid.Models.HashTree.EncodedValue.op_Implicit(EdjCase.ICP.Candid.Models.HashTree.EncodedValue)~System.Byte[]')
   - [op_Implicit(bytes)](#M-EdjCase-ICP-Candid-Models-HashTree-EncodedValue-op_Implicit-System-Byte[]-~EdjCase-ICP-Candid-Models-HashTree-EncodedValue 'EdjCase.ICP.Candid.Models.HashTree.EncodedValue.op_Implicit(System.Byte[])~EdjCase.ICP.Candid.Models.HashTree.EncodedValue')
+  - [op_Implicit(value)](#M-EdjCase-ICP-Candid-Models-HashTree-EncodedValue-op_Implicit-EdjCase-ICP-Candid-Models-HashTree-EncodedValue-~System-String 'EdjCase.ICP.Candid.Models.HashTree.EncodedValue.op_Implicit(EdjCase.ICP.Candid.Models.HashTree.EncodedValue)~System.String')
+  - [op_Implicit(utf8Value)](#M-EdjCase-ICP-Candid-Models-HashTree-EncodedValue-op_Implicit-System-String-~EdjCase-ICP-Candid-Models-HashTree-EncodedValue 'EdjCase.ICP.Candid.Models.HashTree.EncodedValue.op_Implicit(System.String)~EdjCase.ICP.Candid.Models.HashTree.EncodedValue')
   - [op_Inequality()](#M-EdjCase-ICP-Candid-Models-HashTree-EncodedValue-op_Inequality-EdjCase-ICP-Candid-Models-HashTree-EncodedValue,EdjCase-ICP-Candid-Models-HashTree-EncodedValue- 'EdjCase.ICP.Candid.Models.HashTree.EncodedValue.op_Inequality(EdjCase.ICP.Candid.Models.HashTree.EncodedValue,EdjCase.ICP.Candid.Models.HashTree.EncodedValue)')
 - [FuncMode](#T-EdjCase-ICP-Candid-Models-Types-FuncMode 'EdjCase.ICP.Candid.Models.Types.FuncMode')
   - [Oneway](#F-EdjCase-ICP-Candid-Models-Types-FuncMode-Oneway 'EdjCase.ICP.Candid.Models.Types.FuncMode.Oneway')
@@ -456,12 +459,16 @@
   - [AsPruned()](#M-EdjCase-ICP-Candid-Models-HashTree-AsPruned 'EdjCase.ICP.Candid.Models.HashTree.AsPruned')
   - [BuildRootHash()](#M-EdjCase-ICP-Candid-Models-HashTree-BuildRootHash 'EdjCase.ICP.Candid.Models.HashTree.BuildRootHash')
   - [Empty()](#M-EdjCase-ICP-Candid-Models-HashTree-Empty 'EdjCase.ICP.Candid.Models.HashTree.Empty')
+  - [Equals()](#M-EdjCase-ICP-Candid-Models-HashTree-Equals-EdjCase-ICP-Candid-Models-HashTree- 'EdjCase.ICP.Candid.Models.HashTree.Equals(EdjCase.ICP.Candid.Models.HashTree)')
+  - [Equals()](#M-EdjCase-ICP-Candid-Models-HashTree-Equals-System-Object- 'EdjCase.ICP.Candid.Models.HashTree.Equals(System.Object)')
   - [Fork(left,right)](#M-EdjCase-ICP-Candid-Models-HashTree-Fork-EdjCase-ICP-Candid-Models-HashTree,EdjCase-ICP-Candid-Models-HashTree- 'EdjCase.ICP.Candid.Models.HashTree.Fork(EdjCase.ICP.Candid.Models.HashTree,EdjCase.ICP.Candid.Models.HashTree)')
   - [GetValueOrDefault(path)](#M-EdjCase-ICP-Candid-Models-HashTree-GetValueOrDefault-EdjCase-ICP-Candid-Models-StatePathSegment- 'EdjCase.ICP.Candid.Models.HashTree.GetValueOrDefault(EdjCase.ICP.Candid.Models.StatePathSegment)')
   - [GetValueOrDefault(path)](#M-EdjCase-ICP-Candid-Models-HashTree-GetValueOrDefault-EdjCase-ICP-Candid-Models-StatePath- 'EdjCase.ICP.Candid.Models.HashTree.GetValueOrDefault(EdjCase.ICP.Candid.Models.StatePath)')
   - [Labeled(label,tree)](#M-EdjCase-ICP-Candid-Models-HashTree-Labeled-EdjCase-ICP-Candid-Models-HashTree-EncodedValue,EdjCase-ICP-Candid-Models-HashTree- 'EdjCase.ICP.Candid.Models.HashTree.Labeled(EdjCase.ICP.Candid.Models.HashTree.EncodedValue,EdjCase.ICP.Candid.Models.HashTree)')
   - [Leaf(value)](#M-EdjCase-ICP-Candid-Models-HashTree-Leaf-EdjCase-ICP-Candid-Models-HashTree-EncodedValue- 'EdjCase.ICP.Candid.Models.HashTree.Leaf(EdjCase.ICP.Candid.Models.HashTree.EncodedValue)')
   - [Pruned(treeHash)](#M-EdjCase-ICP-Candid-Models-HashTree-Pruned-System-Byte[]- 'EdjCase.ICP.Candid.Models.HashTree.Pruned(System.Byte[])')
+  - [op_Equality()](#M-EdjCase-ICP-Candid-Models-HashTree-op_Equality-EdjCase-ICP-Candid-Models-HashTree,EdjCase-ICP-Candid-Models-HashTree- 'EdjCase.ICP.Candid.Models.HashTree.op_Equality(EdjCase.ICP.Candid.Models.HashTree,EdjCase.ICP.Candid.Models.HashTree)')
+  - [op_Inequality()](#M-EdjCase-ICP-Candid-Models-HashTree-op_Inequality-EdjCase-ICP-Candid-Models-HashTree,EdjCase-ICP-Candid-Models-HashTree- 'EdjCase.ICP.Candid.Models.HashTree.op_Inequality(EdjCase.ICP.Candid.Models.HashTree,EdjCase.ICP.Candid.Models.HashTree)')
 - [HashTreeType](#T-EdjCase-ICP-Candid-Models-HashTreeType 'EdjCase.ICP.Candid.Models.HashTreeType')
   - [Empty](#F-EdjCase-ICP-Candid-Models-HashTreeType-Empty 'EdjCase.ICP.Candid.Models.HashTreeType.Empty')
   - [Fork](#F-EdjCase-ICP-Candid-Models-HashTreeType-Fork 'EdjCase.ICP.Candid.Models.HashTreeType.Fork')
@@ -6203,6 +6210,23 @@ This method has no parameters.
 
 This method has no parameters.
 
+<a name='M-EdjCase-ICP-Candid-Models-HashTree-EncodedValue-Utf8Value-System-String-'></a>
+### Utf8Value(value) `method`
+
+##### Summary
+
+Creates an encoded value from a utf8 string value
+
+##### Returns
+
+UTF8 encoded value
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| value | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | UTF8 encoded string |
+
 <a name='M-EdjCase-ICP-Candid-Models-HashTree-EncodedValue-op_Equality-EdjCase-ICP-Candid-Models-HashTree-EncodedValue,EdjCase-ICP-Candid-Models-HashTree-EncodedValue-'></a>
 ### op_Equality() `method`
 
@@ -6239,6 +6263,32 @@ A helper method to implicitly convert an byte array to an encoded value
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | bytes | [System.Byte[])~EdjCase.ICP.Candid.Models.HashTree.EncodedValue](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Byte[])~EdjCase.ICP.Candid.Models.HashTree.EncodedValue 'System.Byte[])~EdjCase.ICP.Candid.Models.HashTree.EncodedValue') | The raw value to use with the encoded value |
+
+<a name='M-EdjCase-ICP-Candid-Models-HashTree-EncodedValue-op_Implicit-EdjCase-ICP-Candid-Models-HashTree-EncodedValue-~System-String'></a>
+### op_Implicit(value) `method`
+
+##### Summary
+
+A helper method to implicitly convert an encoded value to a UTF8 string
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| value | [EdjCase.ICP.Candid.Models.HashTree.EncodedValue)~System.String](#T-EdjCase-ICP-Candid-Models-HashTree-EncodedValue-~System-String 'EdjCase.ICP.Candid.Models.HashTree.EncodedValue)~System.String') | The encoded value to get the raw value from |
+
+<a name='M-EdjCase-ICP-Candid-Models-HashTree-EncodedValue-op_Implicit-System-String-~EdjCase-ICP-Candid-Models-HashTree-EncodedValue'></a>
+### op_Implicit(utf8Value) `method`
+
+##### Summary
+
+A helper method to implicitly convert a UTF8 string to an encoded value
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| utf8Value | [System.String)~EdjCase.ICP.Candid.Models.HashTree.EncodedValue](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String)~EdjCase.ICP.Candid.Models.HashTree.EncodedValue 'System.String)~EdjCase.ICP.Candid.Models.HashTree.EncodedValue') | The UTF8 string value to use with the encoded value |
 
 <a name='M-EdjCase-ICP-Candid-Models-HashTree-EncodedValue-op_Inequality-EdjCase-ICP-Candid-Models-HashTree-EncodedValue,EdjCase-ICP-Candid-Models-HashTree-EncodedValue-'></a>
 ### op_Inequality() `method`
@@ -6410,6 +6460,28 @@ An empty hash tree
 
 This method has no parameters.
 
+<a name='M-EdjCase-ICP-Candid-Models-HashTree-Equals-EdjCase-ICP-Candid-Models-HashTree-'></a>
+### Equals() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-HashTree-Equals-System-Object-'></a>
+### Equals() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
 <a name='M-EdjCase-ICP-Candid-Models-HashTree-Fork-EdjCase-ICP-Candid-Models-HashTree,EdjCase-ICP-Candid-Models-HashTree-'></a>
 ### Fork(left,right) `method`
 
@@ -6513,6 +6585,28 @@ An pruned hash tree
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | treeHash | [System.Byte[]](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Byte[] 'System.Byte[]') | The hash of the tree that was pruned |
+
+<a name='M-EdjCase-ICP-Candid-Models-HashTree-op_Equality-EdjCase-ICP-Candid-Models-HashTree,EdjCase-ICP-Candid-Models-HashTree-'></a>
+### op_Equality() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-HashTree-op_Inequality-EdjCase-ICP-Candid-Models-HashTree,EdjCase-ICP-Candid-Models-HashTree-'></a>
+### op_Inequality() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
 
 <a name='T-EdjCase-ICP-Candid-Models-HashTreeType'></a>
 ## HashTreeType `type`
