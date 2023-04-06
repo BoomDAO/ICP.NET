@@ -1,9 +1,9 @@
-using Dahomey.Cbor.Serialization;
-using Dahomey.Cbor.Util;
+
 using EdjCase.ICP.Agent;
 using Fido2Net;
 using System;
 using System.Collections.Generic;
+using System.Formats.Cbor;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -96,27 +96,24 @@ namespace EdjCase.ICP.InternetIdentity
 		/// </summary>
 		private static byte[] CreateSignatureFromAssertion(FidoAssertionStatement assertion, string clientDataJson)
 		{
-			using (ByteBufferWriter bufferWriter = new ByteBufferWriter())
-			{
-				var writer = new CborWriter(bufferWriter);
-				writer.WriteSemanticTag(55799);
+				var writer = new CborWriter();
+				writer.WriteTag(CborTag.SelfDescribeCbor);
 
-				writer.WriteBeginMap(3);
+				writer.WriteStartMap(3);
 
 				// TODO: figure out why the authenticator data has garbage at the start!?
 				// this is super fragile...
-				writer.WriteString(authenticator_data);
+				writer.WriteByteString(authenticator_data);
 				writer.WriteByteString(assertion.AuthData.Slice(2));
 
-				writer.WriteString(client_data_json);
-				writer.WriteString(clientDataJson);
+				writer.WriteByteString(client_data_json);
+				writer.WriteTextString(clientDataJson);
 
-				writer.WriteString(signature);
+				writer.WriteByteString(signature);
 				writer.WriteByteString(assertion.Signature);
 
-				writer.WriteEndMap(3);
-				return bufferWriter.WrittenSpan.ToArray();
-			}
+				writer.WriteEndMap();
+				return writer.Encode();
 		}
 
 	}

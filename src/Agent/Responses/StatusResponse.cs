@@ -1,4 +1,5 @@
-using Dahomey.Cbor.Attributes;
+using System;
+using System.Formats.Cbor;
 
 namespace EdjCase.ICP.Agent.Responses
 {
@@ -13,7 +14,6 @@ namespace EdjCase.ICP.Agent.Responses
 		/// The implementation may also return unversioned to indicate that it does not
 		/// comply to a particular version, e.g. in between releases.
 		/// </summary>
-		[CborProperty(Properties.IC_API_VERSION)]
 		public string ICApiVersion { get; }
 
 		/// <summary>
@@ -21,7 +21,6 @@ namespace EdjCase.ICP.Agent.Responses
 		/// by convention with the canonical location of the source code 
 		/// (e.g. https://github.com/dfinity/ic).
 		/// </summary>
-		[CborProperty(Properties.IMPLEMENTATION_SOURCE)]
 		public string? ImplementationSource { get; }
 
 		/// <summary>
@@ -29,15 +28,11 @@ namespace EdjCase.ICP.Agent.Responses
 		///  implementation, this is the version number. For non-released versions, output
 		///  of git describe like `0.1.13-13-g2414721` would also be very suitable.
 		/// </summary>
-		[CborIgnoreIfDefault]
-		[CborProperty(Properties.IMPLEMENTATION_VERSION)]
 		public string? ImplementationVersion { get; }
 
 		/// <summary>
 		/// Optional. The precise git revision of the Internet Computer Protocol implementation
 		/// </summary>
-		[CborIgnoreIfDefault]
-		[CborProperty(Properties.IMPLEMENTATION_REVISION)]
 		public string? ImplementationRevision { get; }
 
 		/// <summary>
@@ -47,8 +42,6 @@ namespace EdjCase.ICP.Agent.Responses
 		/// Internet Computer, agents must have an independent trustworthy source for this data,
 		/// and must not be tempted to fetch it from this insecure location.
 		/// </summary>
-		[CborIgnoreIfDefault]
-		[CborProperty(Properties.ROOT_KEY)]
 		public byte[]? DevelopmentRootKey { get; }
 
 		/// <param name="icApiVersion">Identifies the interface version supported, i.e. the version of the present
@@ -81,6 +74,59 @@ namespace EdjCase.ICP.Agent.Responses
 			this.DevelopmentRootKey = developmentRootKey;
 		}
 
+
+		internal static StatusResponse ReadCbor(CborReader reader)
+		{
+			string? icApiVersion = null;
+			string? implementationSource = null;
+			string? implementationVersion = null;
+			string? implementationRevision = null;
+			byte[]? developmentRootKey = null;
+
+			if (reader.ReadTag() != CborTag.SelfDescribeCbor)
+			{
+				throw new CborContentException("Expected self describe tag");
+			}
+
+			int? mapSize = reader.ReadStartMap();
+
+			while (reader.PeekState() != CborReaderState.EndMap)
+			{
+				string key = reader.ReadTextString();
+				switch (key)
+				{
+					case Properties.IC_API_VERSION:
+						icApiVersion = reader.ReadTextString();
+						break;
+					case Properties.IMPLEMENTATION_SOURCE:
+						implementationSource = reader.ReadTextString();
+						break;
+					case Properties.IMPLEMENTATION_VERSION:
+						implementationVersion = reader.ReadTextString();
+						break;
+					case Properties.IMPLEMENTATION_REVISION:
+						implementationRevision = reader.ReadTextString();
+						break;
+					case Properties.ROOT_KEY:
+						developmentRootKey = reader.ReadByteString();
+						break;
+					default:
+						//skip
+						reader.SkipValue();
+						break;
+				}
+			}
+
+			reader.ReadEndMap();
+
+			if (icApiVersion == null)
+			{
+				throw new CborContentException("Missing field: " + Properties.IC_API_VERSION);
+			}
+
+			return new StatusResponse(icApiVersion, implementationSource, implementationVersion, implementationRevision, developmentRootKey);
+		}
+
 		private class Properties
 		{
 			public const string IC_API_VERSION = "ic_api_version";
@@ -89,5 +135,7 @@ namespace EdjCase.ICP.Agent.Responses
 			public const string IMPLEMENTATION_REVISION = "impl_revision";
 			public const string ROOT_KEY = "root_key";
 		}
+
+
 	}
 }

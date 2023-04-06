@@ -1,7 +1,3 @@
-using Agent.Cbor;
-using Dahomey.Cbor;
-using Dahomey.Cbor.Serialization;
-using Dahomey.Cbor.Util;
 using EdjCase.ICP.Agent.Models;
 using EdjCase.ICP.Agent.Identities;
 using EdjCase.ICP.Agent.Requests;
@@ -10,15 +6,14 @@ using EdjCase.ICP.Candid.Crypto;
 using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid.Utilities;
 using System;
-using System.Buffers;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using EdjCase.ICP.Agent.Cbor.Converters;
 using EdjCase.ICP.Agent.Agents.Http;
 using System.Net.Http.Headers;
+using System.Formats.Cbor;
 
 namespace EdjCase.ICP.Agent.Agents
 {
@@ -30,15 +25,6 @@ namespace EdjCase.ICP.Agent.Agents
 		private const string CBOR_CONTENT_TYPE = "application/cbor";
 		private static byte[] mainnetRootKey = ByteUtil.FromHexString("308182301d060d2b0601040182dc7c0503010201060c2b0601040182dc7c05030201036100814c0e6ec71fab583b08bd81373c255c3c371b2e84863c98a4f1e08b74235d14fb5d9c0cd546d9685f913a0c0b2cc5341583bf4b4392e467db96d65b9bb4cb717112f8472e0d5a4d14505ffd7484b01291091c5f87b98883463f98091a0baaae");
 		private byte[]? rootKeyCache = null;
-
-		private static readonly Lazy<CborOptions> cborOptionsLazy = new Lazy<CborOptions>(() =>
-		{
-			var options = new CborOptions();
-			var provider = new CborConverterProvider();
-			options.Registry.ConverterRegistry.RegisterConverterProvider(provider);
-			options.Registry.ConverterRegistry.RegisterConverter(typeof(IHashable), new HashableCborConverter(options));
-			return options;
-		}, isThreadSafe: true);
 
 		/// <summary>
 		/// The identity that will be used on each request unless overriden
@@ -93,7 +79,10 @@ namespace EdjCase.ICP.Agent.Agents
 			string method,
 			CandidArg arg)
 		{
-			return await this.SendAsync<QueryRequest, QueryResponse>($"/api/v2/canister/{canisterId.ToText()}/query", BuildRequest);
+			Stream responseStream = await this.SendAsync($"/api/v2/canister/{canisterId.ToText()}/query", BuildRequest);
+
+			byte[] cborBytes = this.GetStreamBytesAsync(responseStream);
+			return QueryResponse.ReadCbor(new CborReader(cborBytes));
 
 			QueryRequest BuildRequest(Principal sender, ICTimestamp now)
 			{
@@ -105,7 +94,10 @@ namespace EdjCase.ICP.Agent.Agents
 		public async Task<ReadStateResponse> ReadStateAsync(Principal canisterId, List<StatePath> paths)
 		{
 			string url = $"/api/v2/canister/{canisterId.ToText()}/read_state";
-			ReadStateResponse response = await this.SendAsync<ReadStateRequest, ReadStateResponse>(url, BuildRequest);
+			Stream responseStream = await this.SendAsync(url, BuildRequest);
+			byte[] cborBytes = this.GetStreamBytesAsync(responseStream);
+			var reader = new CborReader(cborBytes);
+			ReadStateResponse response = ReadStateResponse.ReadCbor(reader);
 
 			byte[] rootPublicKey = await this.GetRootKeyAsync();
 			if (!response.Certificate.IsValid(rootPublicKey))
@@ -169,11 +161,24 @@ namespace EdjCase.ICP.Agent.Agents
 		/// <inheritdoc/>
 		public async Task<StatusResponse> GetReplicaStatusAsync()
 		{
-			return await this.SendAsync<StatusResponse>("/api/v2/status");
+			Stream stream = await this.SendAsync("/api/v2/status");
+			byte[] bytes = this.GetStreamBytesAsync(stream);
+			return StatusResponse.ReadCbor(new CborReader(bytes));
 		}
 
-
-
+		private byte[] GetStreamBytesAsync(Stream stream)
+		{
+			if(stream is MemoryStream ms)
+			{
+				return ms.ToArray();
+			}
+			using(MemoryStream memoryStream = new MemoryStream())
+			{
+				stream.CopyTo(memoryStream);
+				memoryStream.Position = 0;
+				return memoryStream.ToArray();
+			}
+		}
 
 		private async Task<RequestId> SendWithNoResponseAsync<TRequest>(string url, Func<Principal, ICTimestamp, TRequest> getRequest)
 			where TRequest : IRepresentationIndependentHashItem
@@ -183,30 +188,17 @@ namespace EdjCase.ICP.Agent.Agents
 			return requestId;
 		}
 
-		private async Task<TResponse> SendAsync<TResponse>(string url)
+		private async Task<Stream> SendAsync(string url)
 		{
 			Func<Task<Stream>> streamFunc = await this.SendRawAsync(url, null);
-			Stream stream = await streamFunc();
-
-			return await Dahomey.Cbor.Cbor.DeserializeAsync<TResponse>(stream, cborOptionsLazy.Value);
+			return await streamFunc();
 		}
 
-		private async Task<TResponse> SendAsync<TRequest, TResponse>(string url, Func<Principal, ICTimestamp, TRequest> getRequest)
+		private async Task<Stream> SendAsync<TRequest>(string url, Func<Principal, ICTimestamp, TRequest> getRequest)
 			where TRequest : IRepresentationIndependentHashItem
 		{
 			(Func<Task<Stream>> streamFunc, RequestId requestId) = await this.SendInternalAsync(url, getRequest);
-			Stream stream = await streamFunc();
-#if DEBUG
-			string cborHex;
-			using (var memoryStream = new MemoryStream())
-			{
-				stream.CopyTo(memoryStream);
-				byte[] cborBytes = memoryStream.ToArray();
-				cborHex = ByteUtil.ToHexString(cborBytes);
-			}
-			stream.Position = 0;
-#endif
-			return await Dahomey.Cbor.Cbor.DeserializeAsync<TResponse>(stream, cborOptionsLazy.Value);
+			return await streamFunc();
 		}
 
 		private async Task<(Func<Task<Stream>> ResponseFunc, RequestId RequestId)> SendInternalAsync<TRequest>(string url, Func<Principal, ICTimestamp, TRequest> getRequest)
@@ -249,14 +241,10 @@ namespace EdjCase.ICP.Agent.Agents
 
 		private byte[] SerializeSignedContent(SignedContent signedContent)
 		{
-			using (ByteBufferWriter bufferWriter = new ByteBufferWriter())
-			{
-				var writer = new CborWriter(bufferWriter);
-				writer.WriteSemanticTag(55799);
-				IBufferWriter<byte> b = bufferWriter;
-				Dahomey.Cbor.Cbor.Serialize(signedContent, in b, cborOptionsLazy.Value);
-				return bufferWriter.WrittenSpan.ToArray();
-			}
+			var writer = new CborWriter();
+			writer.WriteTag(CborTag.SelfDescribeCbor);
+			signedContent.WriteCbor(writer);
+			return writer.Encode();
 		}
 
 		private async Task<Func<Task<Stream>>> SendRawAsync(string url, byte[]? cborBody = null)

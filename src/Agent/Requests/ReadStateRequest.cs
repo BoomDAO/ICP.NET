@@ -1,7 +1,7 @@
-using Dahomey.Cbor.Attributes;
 using EdjCase.ICP.Candid.Models;
 using System;
 using System.Collections.Generic;
+using System.Formats.Cbor;
 
 namespace EdjCase.ICP.Agent.Requests
 {
@@ -13,26 +13,22 @@ namespace EdjCase.ICP.Agent.Requests
 		/// <summary>
 		/// The type of request to send. Will always be 'query'
 		/// </summary>
-		[CborProperty(Properties.REQUEST_TYPE)]
 		public string REQUEST_TYPE { get; } = "query";
 
 		/// <summary>
 		/// A list of paths to different state data to obtain. If not specified, data will be pruned and 
 		/// be unavailable in the response
 		/// </summary>
-		[CborProperty(Properties.PATHS)]
 		public List<StatePath> Paths { get; }
 
 		/// <summary>
 		/// The user who is sending the request
 		/// </summary>
-		[CborProperty(Properties.SENDER)]
 		public Principal Sender { get; }
 
 		/// <summary>
 		/// The expiration of the request to avoid replay attacks
 		/// </summary>
-		[CborProperty(Properties.INGRESS_EXPIRY)]
 		public ICTimestamp IngressExpiry { get; }
 
 		/// <param name="paths">A list of paths to different state data to obtain. If not specified, data will be pruned and 
@@ -62,6 +58,25 @@ namespace EdjCase.ICP.Agent.Requests
 			};
 		}
 
+
+		internal void WriteCbor(CborWriter writer)
+		{
+			writer.WriteStartMap(null);
+
+			writer.WriteTextString(Properties.REQUEST_TYPE);
+			writer.WriteTextString("read_state");
+
+			writer.WriteTextString(Properties.PATHS);
+			writer.WriteArray(this.Paths, CborWriterExtensions.WriteStatePath);
+
+			writer.WriteTextString(Properties.SENDER);
+			writer.WritePrincipal(this.Sender);
+
+			writer.WriteTextString(Properties.INGRESS_EXPIRY);
+			writer.WriteTimestamp(this.IngressExpiry);
+
+			writer.WriteEndMap();
+		}
 
 		private static class Properties
 		{
