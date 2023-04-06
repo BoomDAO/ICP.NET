@@ -1,4 +1,3 @@
-using Dahomey.Cbor.Attributes;
 using EdjCase.ICP.Candid.Crypto;
 using EdjCase.ICP.Candid.Models;
 using System;
@@ -16,27 +15,21 @@ namespace EdjCase.ICP.Agent.Models
 		/// <summary>
 		/// The public key from the authorizing identity
 		/// </summary>
-		[CborProperty(Properties.PUBLIC_KEY)]
 		public byte[] PublicKey { get; }
 
 		/// <summary>
 		/// The expiration when the delegation will no longer be valid
 		/// </summary>
-		[CborProperty(Properties.EXPIRATION)]
 		public ICTimestamp Expiration { get; }
 
 		/// <summary>
 		/// Optional. A list of canister ids where the delegation can be sent to and be authorized
 		/// </summary>
-		[CborIgnoreIfDefault]
-		[CborProperty(Properties.TARGETS)]
 		public List<Principal>? Targets { get; }
 
 		/// <summary>
 		/// Optional. A list of sender ids that can send this delegation and be authorized
 		/// </summary>
-		[CborIgnoreIfDefault]
-		[CborProperty(Properties.SENDERS)]
 		public List<Principal>? Senders { get; }
 
 		/// <param name="publicKey">The public key from the authorizing identity</param>

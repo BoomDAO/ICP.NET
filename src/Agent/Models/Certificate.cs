@@ -1,6 +1,9 @@
 using EdjCase.Cryptography.BLS;
 using EdjCase.ICP.Candid.Models;
 using System;
+using System.Formats.Cbor;
+using System.Linq;
+using System.Xml.Linq;
 
 namespace EdjCase.ICP.Agent.Models
 {
@@ -45,6 +48,7 @@ namespace EdjCase.ICP.Agent.Models
 		public bool IsValid(byte[] rootPublicKey)
 		{
 			byte[] rootHash = this.Tree.BuildRootHash();
+			rootHash = HashTree.EncodedValue.WithDomainSeperator("ic-state-root", rootHash);
 			if (this.Delegation != null)
 			{
 				// override the root key to the delegated one
@@ -56,6 +60,92 @@ namespace EdjCase.ICP.Agent.Models
 			}
 			var blsKey = new DerEncodedPublicKey(rootPublicKey).AsBls();
 			return BlsUtil.VerifySignature(blsKey, rootHash, this.Signature);
+		}
+
+		internal static Certificate ReadCbor(CborReader reader)
+		{
+			HashTree? hashTree = null;
+			byte[]? signature = null;
+			CertificateDelegation? delegation = null;
+
+			if (reader.ReadTag() != CborTag.SelfDescribeCbor)
+			{
+				throw new CborContentException("Expected self describe tag");
+			}
+
+			reader.ReadStartMap();
+			while (reader.PeekState() != CborReaderState.EndMap)
+			{
+				string name = reader.ReadTextString();
+				switch (name)
+				{
+					case "tree":
+						hashTree = ReadTreeCbor(reader);
+						break;
+					case "signature":
+						signature = reader.ReadByteString().ToArray();
+						break;
+					case "delegation":
+						delegation = CertificateDelegation.ReadCbor(reader);
+						break;
+					default:
+						// Skip
+						reader.SkipValue();
+						break;
+				}
+			}
+			reader.ReadEndMap();
+
+			if (hashTree == null)
+			{
+				throw new CborContentException("Missing field: tree");
+			}
+			if (signature == null)
+			{
+				throw new CborContentException("Missing field: signature");
+			}
+
+			return new Certificate(hashTree, signature, delegation);
+		}
+
+
+		internal static HashTree ReadTreeCbor(CborReader reader)
+		{
+			_ = reader.ReadStartArray(); // Array size
+			uint nodeType = reader.ReadUInt32(); // Get tree node type
+			HashTree hashTree;
+			switch (nodeType)
+			{
+				case 0:
+					hashTree = HashTree.Empty();
+					break;
+				case 1:
+					HashTree left = ReadTreeCbor(reader);
+					HashTree right = ReadTreeCbor(reader);
+					hashTree = HashTree.Fork(left, right);
+					break;
+				case 2:
+					byte[] labelBytes = reader.ReadByteString();
+					HashTree tree = ReadTreeCbor(reader);
+					hashTree = HashTree.Labeled(labelBytes, tree);
+					break;
+				case 3:
+					{
+						byte[] value = reader.ReadByteString();
+						hashTree = HashTree.Leaf(value);
+						break;
+					}
+				case 4:
+					{
+						byte[] value = reader.ReadByteString();
+						hashTree = HashTree.Pruned(value);
+						break;
+					}
+				default:
+					throw new NotImplementedException($"No hash tree node type of '{nodeType}' is implemented");
+			}
+			reader.ReadEndArray();
+			return hashTree;
 		}
 	}
 

@@ -1,7 +1,8 @@
-using Dahomey.Cbor.Attributes;
 using EdjCase.ICP.Candid.Models;
 using System;
 using System.Collections.Generic;
+using System.Formats.Cbor;
+using System.Linq;
 
 namespace EdjCase.ICP.Agent.Models
 {
@@ -13,29 +14,22 @@ namespace EdjCase.ICP.Agent.Models
 		/// <summary>
 		/// The content that is signed in the form of key value pairs
 		/// </summary>
-		[CborProperty(Properties.CONTENT)]
 		public Dictionary<string, IHashable> Content { get; }
 
 		/// <summary>
 		/// Public key used to authenticate this request, unless anonymous, then null
 		/// </summary>
-		[CborIgnoreIfDefault]
-		[CborProperty(Properties.SENDER_PUBLIC_KEY)]
 		public byte[]? SenderPublicKey { get; }
 
 		/// <summary>
 		/// Optional. A chain of delegations, starting with the one signed by sender_pubkey
 		/// and ending with the one delegating to the key relating to sender_sig.
 		/// </summary>
-		[CborIgnoreIfDefault]
-		[CborProperty(Properties.SENDER_DELEGATION)]
 		public List<SignedDelegation>? SenderDelegations { get; }
 
 		/// <summary>
 		/// Signature to authenticate this request, unless anonymous, then null
 		/// </summary>
-		[CborIgnoreIfDefault]
-		[CborProperty(Properties.SENDER_SIGNATURE)]
 		public byte[]? SenderSignature { get; }
 
 		/// <param name="content">The content that is signed in the form of key value pairs</param>
@@ -76,6 +70,40 @@ namespace EdjCase.ICP.Agent.Models
 				properties.Add(Properties.SENDER_DELEGATION, this.SenderDelegations.ToHashable());
 			}
 			return properties;
+		}
+
+		internal void WriteCbor(CborWriter writer)
+		{
+			writer.WriteStartMap(null);
+			writer.WriteTextString(Properties.CONTENT);
+			writer.WriteStartMap(this.Content.Count);
+			foreach ((string key, IHashable value) in this.Content)
+			{
+				writer.WriteTextString(key);
+				writer.WriteHashableValue(value);
+			}
+			writer.WriteEndMap();
+			if (this.SenderPublicKey != null)
+			{
+				writer.WriteTextString(Properties.SENDER_PUBLIC_KEY);
+				writer.WriteByteString(this.SenderPublicKey);
+			}
+			if (this.SenderDelegations?.Any() == true)
+			{
+				writer.WriteTextString(Properties.SENDER_DELEGATION);
+				writer.WriteStartArray(this.SenderDelegations.Count);
+				foreach(IHashable value in this.SenderDelegations)
+				{
+					writer.WriteHashableValue(value);
+				}
+				writer.WriteEndArray();
+			}
+			if (this.SenderSignature != null)
+			{
+				writer.WriteTextString(Properties.SENDER_SIGNATURE);
+				writer.WriteByteString(this.SenderSignature);
+			}
+			writer.WriteEndMap();
 		}
 
 		internal class Properties

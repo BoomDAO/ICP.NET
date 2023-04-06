@@ -6514,6 +6514,39 @@ An pruned hash tree
 | ---- | ---- | ----------- |
 | treeHash | [System.Byte[]](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Byte[] 'System.Byte[]') | The hash of the tree that was pruned |
 
+<a name='M-EdjCase-ICP-Candid-Models-HashTree-ToString'></a>
+### ToString() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-HashTree-op_Equality-EdjCase-ICP-Candid-Models-HashTree,EdjCase-ICP-Candid-Models-HashTree-'></a>
+### op_Equality() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-HashTree-op_Inequality-EdjCase-ICP-Candid-Models-HashTree,EdjCase-ICP-Candid-Models-HashTree-'></a>
+### op_Inequality() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
 <a name='T-EdjCase-ICP-Candid-Models-HashTreeType'></a>
 ## HashTreeType `type`
 

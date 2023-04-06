@@ -1,7 +1,5 @@
 using EdjCase.ICP.Candid.Mapping;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace EdjCase.ICP.Agent.Standards.ICRC1.Models
 {

@@ -1,5 +1,11 @@
+using EdjCase.ICP.Agent.Models;
+using EdjCase.ICP.Candid.Encodings;
 using EdjCase.ICP.Candid.Models;
+using EdjCase.ICP.Candid.Utilities;
 using System;
+using System.Formats.Cbor;
+using System.Linq;
+using System.Xml.Linq;
 
 namespace EdjCase.ICP.Agent.Responses
 {
@@ -75,6 +81,96 @@ namespace EdjCase.ICP.Agent.Responses
 		internal static QueryResponse Replied(CandidArg reply)
 		{
 			return new QueryResponse(QueryResponseType.Replied, reply);
+		}
+
+		internal static QueryResponse ReadCbor(CborReader reader)
+		{
+			string? status = null;
+			byte[]? replyArg = null;
+			UnboundedUInt? rejectCode = null;
+			string? rejectMessage = null;
+			string? errorCode = null;
+
+			if (reader.ReadTag() != CborTag.SelfDescribeCbor)
+			{
+				throw new CborContentException("Expected self describe tag");
+			}
+			reader.ReadStartMap();
+			while (reader.PeekState() != CborReaderState.EndMap)
+			{
+				string name = reader.ReadTextString();
+				switch (name)
+				{
+					case "status":
+						status = reader.ReadTextString();
+						break;
+					case "reply":
+						reader.ReadStartMap();
+
+						while (reader.PeekState() != CborReaderState.EndMap)
+						{
+							string replyField = reader.ReadTextString();
+							switch (replyField)
+							{
+								case "arg":
+									replyArg = reader.ReadByteString();
+									break;
+							}
+						}
+						reader.ReadEndMap();
+						break;
+					case "reject_code":
+						CborTag codeType = reader.PeekTag();
+						switch (codeType)
+						{
+							case CborTag.UnsignedBigNum:
+								rejectCode = reader.ReadUInt64();
+								break;
+							default:
+								byte[] codeBytes = reader.ReadByteString().ToArray();
+								rejectCode = LEB128.DecodeUnsigned(codeBytes);
+								break;
+						}
+						break;
+					case "reject_message":
+						rejectMessage = reader.ReadTextString();
+						break;
+					case "error_code":
+						errorCode = reader.ReadTextString();
+						break;
+					default:
+						throw new NotImplementedException($"Cannot deserialize query response. Unknown field '{name}'");
+				}
+			}
+			reader.ReadEndMap();
+
+			if (status == null)
+			{
+				throw new CborContentException("Missing field: status");
+			}
+
+			switch (status)
+			{
+				case "replied":
+					if (replyArg == null)
+					{
+						throw new CborContentException("Missing field: reply");
+					}
+#if DEBUG
+					string argHex = ByteUtil.ToHexString(replyArg!);
+#endif
+					var arg = CandidArg.FromBytes(replyArg!);
+					return QueryResponse.Replied(arg);
+				case "rejected":
+					if (rejectCode == null)
+					{
+						throw new CborContentException("Missing field: reject_code");
+					}
+					RejectCode code = (RejectCode)(ulong)rejectCode!;
+					return QueryResponse.Rejected(code, rejectMessage, errorCode);
+				default:
+					throw new NotImplementedException($"Cannot deserialize query response with status '{status}'");
+			}
 		}
 	}
 
