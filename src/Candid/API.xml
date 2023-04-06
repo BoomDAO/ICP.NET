@@ -1273,6 +1273,9 @@
             </summary>
             <returns>A byte array of the hash digest</returns>
         </member>
+        <member name="M:EdjCase.ICP.Candid.Models.HashTree.ToString">
+            <inheritdoc />
+        </member>
         <member name="T:EdjCase.ICP.Candid.Models.HashTree.EncodedValue">
             <summary>
             A helper class that wraps around a byte array, giving functions to convert 

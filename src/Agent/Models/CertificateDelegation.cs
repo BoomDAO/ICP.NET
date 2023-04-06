@@ -1,5 +1,7 @@
 using EdjCase.ICP.Candid.Models;
 using System;
+using System.Formats.Cbor;
+using System.Linq;
 
 namespace EdjCase.ICP.Agent.Models
 {
@@ -57,6 +59,47 @@ namespace EdjCase.ICP.Agent.Models
 		{
 			publicKey = this.GetPublicKey();
 			return this.Certificate.IsValid(publicKey);
+		}
+
+		internal static CertificateDelegation ReadCbor(CborReader reader)
+		{
+			Principal? subnetId = null;
+			Certificate? certificate = null;
+
+			reader.ReadStartMap();
+			while (reader.PeekState() != CborReaderState.EndMap)
+			{
+				string field = reader.ReadTextString();
+
+				switch (field)
+				{
+					case "subnet_id":
+						var prinBytes = reader.ReadByteString()!;
+						subnetId = Principal.FromBytes(prinBytes.ToArray());
+						break;
+					case "certificate":
+						var certBytes = reader.ReadByteString()!;
+						var certReader = new CborReader(certBytes);
+						certificate = Certificate.ReadCbor(certReader);
+						break;
+					default:
+						//skip
+						reader.SkipValue();
+						break;
+				}
+			}
+			reader.ReadEndMap();
+
+			if (subnetId == null)
+			{
+				throw new CborContentException("Missing field: subnet_id");
+			}
+			if (certificate == null)
+			{
+				throw new CborContentException("Missing field: certificate");
+			}
+
+			return new CertificateDelegation(subnetId, certificate);
 		}
 	}
 

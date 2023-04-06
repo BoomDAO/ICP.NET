@@ -1,7 +1,7 @@
-using Dahomey.Cbor.Attributes;
 using EdjCase.ICP.Candid.Models;
 using System;
 using System.Collections.Generic;
+using System.Formats.Cbor;
 
 namespace EdjCase.ICP.Agent.Requests
 {
@@ -13,45 +13,37 @@ namespace EdjCase.ICP.Agent.Requests
 		/// <summary>
 		/// The type of request to send. Will always be 'query'
 		/// </summary>
-		[CborProperty(Properties.REQUEST_TYPE)]
 		public string RequestType { get; } = "query";
 
 		/// <summary>
 		/// The principal of the canister to call
 		/// </summary>
-		[CborProperty(Properties.CANISTER_ID)]
 		public Principal CanisterId { get; }
 
 		/// <summary>
 		/// Name of the canister method to call
 		/// </summary>
-		[CborProperty(Properties.METHOD_NAME)]
 		public string Method { get; }
 
 		/// <summary>
 		/// Arguments to pass to the canister method
 		/// </summary>
-		[CborProperty(Properties.ARG)]
 		public CandidArg Arg { get; }
 
 		/// <summary>
 		/// The user who issued the request
 		/// </summary>
-		[CborProperty(Properties.SENDER)]
 		public Principal Sender { get; }
 
 		/// <summary>
 		/// An upper limit on the validity of the request, expressed in nanoseconds since 1970-01-01
 		/// </summary>
-		[CborProperty(Properties.INGRESS_EXPIRY)]
 		public ICTimestamp IngressExpiry { get; }
 
 		/// <summary>
 		/// Optional. Arbitrary user-provided data, typically randomly generated. 
 		/// This can be used to create distinct requests with otherwise identical fields.
 		/// </summary>
-		[CborIgnoreIfDefault]
-		[CborProperty(Properties.NONCE)]
 		public byte[]? Nonce { get; }
 
 		/// <param name="canisterId">The principal of the canister to call</param>
@@ -91,6 +83,37 @@ namespace EdjCase.ICP.Agent.Requests
 				properties.Add(Properties.NONCE, this.Nonce.ToHashable());
 			}
 			return properties;
+		}
+
+		internal void WriteCbor(CborWriter writer)
+		{
+			writer.WriteStartMap(null);
+
+			writer.WriteTextString(Properties.REQUEST_TYPE);
+			writer.WriteTextString(this.RequestType);
+
+			writer.WriteTextString(Properties.CANISTER_ID);
+			writer.WritePrincipal(this.CanisterId);
+
+			writer.WriteTextString(Properties.METHOD_NAME);
+			writer.WriteTextString(this.Method);
+
+			writer.WriteTextString(Properties.ARG);
+			writer.WriteByteString(this.Arg.Encode());
+
+			writer.WriteTextString(Properties.SENDER);
+			writer.WritePrincipal(this.Sender);
+
+			writer.WriteTextString(Properties.INGRESS_EXPIRY);
+			writer.WriteTimestamp(this.IngressExpiry);
+
+			if (this.Nonce != null)
+			{
+				writer.WriteTextString(Properties.NONCE);
+				writer.WriteByteString(this.Nonce);
+			}
+
+			writer.WriteEndMap();
 		}
 
 

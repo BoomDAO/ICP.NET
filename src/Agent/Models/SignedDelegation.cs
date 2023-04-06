@@ -1,4 +1,3 @@
-using Dahomey.Cbor.Attributes;
 using EdjCase.ICP.Agent.Identities;
 using EdjCase.ICP.Candid.Crypto;
 using EdjCase.ICP.Candid.Models;
@@ -15,13 +14,11 @@ namespace EdjCase.ICP.Agent.Models
 		/// <summary>
 		/// The delegation that is signed
 		/// </summary>
-		[CborProperty(Properties.DELEGATION)]
 		public Delegation Delegation { get; }
 
 		/// <summary>
 		/// The signature for the delegation
 		/// </summary>
-		[CborProperty(Properties.SIGNATURE)]
 		public byte[] Signature { get; }
 
 		/// <param name="delegation">The delegation that is signed</param>
@@ -86,7 +83,7 @@ namespace EdjCase.ICP.Agent.Models
 				.ComputeHash(hashFunction);
 		}
 
-		private class Properties
+		internal class Properties
 		{
 			public const string DELEGATION = "delegation";
 			public const string SIGNATURE = "signature";

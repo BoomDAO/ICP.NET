@@ -71,5 +71,9 @@ public class Program
 		OptionalValue<Sample.Shared.Governance.Models.ProposalInfo> proposalInfo = await client.GetProposalInfo(proposalId);
 		CandidTypedValue rawCandid = CandidTypedValue.FromObject(proposalInfo);
 		Console.WriteLine("ProposalInfo:\n" + rawCandid.Value.ToString());
+
+		var paths = new List<StatePath> { 
+		};
+		await agent.ReadStateAsync(canisterId, paths);
 	}
 }

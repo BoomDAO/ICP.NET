@@ -1,5 +1,6 @@
 using EdjCase.ICP.Candid.Crypto;
 using EdjCase.ICP.Candid.Encodings;
+using EdjCase.ICP.Candid.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -230,6 +231,29 @@ namespace EdjCase.ICP.Candid.Models
 			 */
 			SHA256HashFunction hashFunction = new(SHA256.Create());
 			return this.BuildHashInternal(hashFunction);
+		}
+
+
+		/// <inheritdoc />
+		public override string ToString()
+		{
+			switch(this.Type)
+			{
+				case HashTreeType.Empty:
+					return "Empty";
+				case HashTreeType.Pruned:
+					return "Pruned: " + ByteUtil.ToHexString(this.AsPruned());
+				case HashTreeType.Leaf:
+					return "Leaf: " + ByteUtil.ToHexString(this.AsLeaf());
+				case HashTreeType.Fork:
+					(HashTree left, HashTree right) = this.AsFork();
+					return $"Fork: {{ Left: {left}, Right: {right} }}";
+				case HashTreeType.Labeled:
+					(EncodedValue label, HashTree tree) = this.AsLabeled();
+					return $"Labeled: {ByteUtil.ToHexString(label.Value)} {tree}";
+				default:
+					throw new NotImplementedException();
+			}
 		}
 
 		/// <summary>
