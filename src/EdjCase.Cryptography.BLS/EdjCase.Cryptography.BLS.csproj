@@ -15,6 +15,9 @@
 		<Authors>Gekctek</Authors>
 		<PackageId>EdjCase.Cryptography.BLS</PackageId>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<DocumentationFile>API.xml</DocumentationFile>
+		<DocumentationMarkdown>$(MSBuildProjectDirectory)\API.md</DocumentationMarkdown>
 	</PropertyGroup>
 	
 	<ItemGroup>
@@ -34,6 +37,12 @@
 		<None Include=".\lib\libbls384_256.dylib" Pack="true" PackagePath="runtimes\osx-x64\native">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Vsxmd" Version="1.4.4">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 	</ItemGroup>
 
 </Project>

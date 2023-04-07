@@ -2,6 +2,9 @@ using System;
 
 namespace EdjCase.Cryptography.BLS
 {
+	/// <summary>
+	/// Class with functions around BLS signatures (ICP flavor only)
+	/// </summary>
 	public static class IcpBlsUtil
 	{
 		private const int PublicKeyLength = 96;
@@ -10,9 +13,16 @@ namespace EdjCase.Cryptography.BLS
 		private static object intializeLock = new object();
 		private static bool isInitialized = false;
 
+		/// <summary>
+		/// Verifies a BLS signature (ICP flavor only)
+		/// </summary>
+		/// <param name="publicKey">The signer public key</param>
+		/// <param name="messageHash">The SHA256 hash of the message</param>
+		/// <param name="signature">The signature of the message</param>
+		/// <returns>True if the signature is valid, otherwise false</returns>
 		public static bool VerifySignature(
 			byte[] publicKey,
-			byte[] hash,
+			byte[] messageHash,
 			byte[] signature
 		)
 		{
@@ -41,7 +51,7 @@ namespace EdjCase.Cryptography.BLS
 				throw new Exception($"Error deserializing BLS signature, length: {signatureBytesRead}");
 			}
 
-			int result = Interop.blsVerify(in blsSignature, in blsPublicKey, hash, (ulong)hash.Length);
+			int result = Interop.blsVerify(in blsSignature, in blsPublicKey, messageHash, (ulong)messageHash.Length);
 
 			return result == 1;
 		}
