@@ -508,6 +508,12 @@ namespace EdjCase.ICP.Candid.Models
 		}
 
 		/// <inheritdoc />
+		public override int GetHashCode()
+		{
+			return this.ToString().GetHashCode();
+		}
+
+		/// <inheritdoc />
 		public static bool operator ==(HashTree? v1, HashTree? v2)
 		{
 			if (ReferenceEquals(v1, null))

@@ -1360,6 +1360,9 @@
         <member name="M:EdjCase.ICP.Candid.Models.HashTree.Equals(System.Object)">
             <inheritdoc />
         </member>
+        <member name="M:EdjCase.ICP.Candid.Models.HashTree.GetHashCode">
+            <inheritdoc />
+        </member>
         <member name="M:EdjCase.ICP.Candid.Models.HashTree.op_Equality(EdjCase.ICP.Candid.Models.HashTree,EdjCase.ICP.Candid.Models.HashTree)">
             <inheritdoc />
         </member>

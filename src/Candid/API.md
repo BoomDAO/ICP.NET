@@ -462,6 +462,7 @@
   - [Equals()](#M-EdjCase-ICP-Candid-Models-HashTree-Equals-EdjCase-ICP-Candid-Models-HashTree- 'EdjCase.ICP.Candid.Models.HashTree.Equals(EdjCase.ICP.Candid.Models.HashTree)')
   - [Equals()](#M-EdjCase-ICP-Candid-Models-HashTree-Equals-System-Object- 'EdjCase.ICP.Candid.Models.HashTree.Equals(System.Object)')
   - [Fork(left,right)](#M-EdjCase-ICP-Candid-Models-HashTree-Fork-EdjCase-ICP-Candid-Models-HashTree,EdjCase-ICP-Candid-Models-HashTree- 'EdjCase.ICP.Candid.Models.HashTree.Fork(EdjCase.ICP.Candid.Models.HashTree,EdjCase.ICP.Candid.Models.HashTree)')
+  - [GetHashCode()](#M-EdjCase-ICP-Candid-Models-HashTree-GetHashCode 'EdjCase.ICP.Candid.Models.HashTree.GetHashCode')
   - [GetValueOrDefault(path)](#M-EdjCase-ICP-Candid-Models-HashTree-GetValueOrDefault-EdjCase-ICP-Candid-Models-StatePathSegment- 'EdjCase.ICP.Candid.Models.HashTree.GetValueOrDefault(EdjCase.ICP.Candid.Models.StatePathSegment)')
   - [GetValueOrDefault(path)](#M-EdjCase-ICP-Candid-Models-HashTree-GetValueOrDefault-EdjCase-ICP-Candid-Models-StatePath- 'EdjCase.ICP.Candid.Models.HashTree.GetValueOrDefault(EdjCase.ICP.Candid.Models.StatePath)')
   - [Labeled(label,tree)](#M-EdjCase-ICP-Candid-Models-HashTree-Labeled-EdjCase-ICP-Candid-Models-HashTree-EncodedValue,EdjCase-ICP-Candid-Models-HashTree- 'EdjCase.ICP.Candid.Models.HashTree.Labeled(EdjCase.ICP.Candid.Models.HashTree.EncodedValue,EdjCase.ICP.Candid.Models.HashTree)')
@@ -6500,6 +6501,17 @@ An forked hash tree
 | ---- | ---- | ----------- |
 | left | [EdjCase.ICP.Candid.Models.HashTree](#T-EdjCase-ICP-Candid-Models-HashTree 'EdjCase.ICP.Candid.Models.HashTree') | The branch to the left |
 | right | [EdjCase.ICP.Candid.Models.HashTree](#T-EdjCase-ICP-Candid-Models-HashTree 'EdjCase.ICP.Candid.Models.HashTree') | The branch to the right |
+
+<a name='M-EdjCase-ICP-Candid-Models-HashTree-GetHashCode'></a>
+### GetHashCode() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
 
 <a name='M-EdjCase-ICP-Candid-Models-HashTree-GetValueOrDefault-EdjCase-ICP-Candid-Models-StatePathSegment-'></a>
 ### GetValueOrDefault(path) `method`

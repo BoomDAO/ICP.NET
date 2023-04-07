@@ -1,12 +1,3 @@
-/**
-	@file
-	@brief C# interface of BLS signature
-	@author MITSUNARI Shigeo(@herumi)
-	@license modified new BSD license
-	http://opensource.org/licenses/BSD-3-Clause
-	@note
-	use bls384_256 built by `mklib dll eth` to use Ethereum mode
-*/
 using System;
 using System.Text;
 using System.Runtime.InteropServices;
@@ -41,7 +32,7 @@ namespace EdjCase.Cryptography.BLS
 			HashToCurve = 5, // irtf-cfrg-hash-to-curve
 		}
 
-		public const string dllName = "lib/" + (FP_UNIT_SIZE == 6 ? "bls384_256" : "bls256");
+		public const string dllName = "lib/bls384_256";
 		[DllImport(dllName)] public static extern int blsInit(int curveType, int compiledTimeVar);
 		[DllImport(dllName)] public static extern int blsGetFrByteSize();
 		[DllImport(dllName)] public static extern int blsGetG1ByteSize();
