@@ -39,7 +39,7 @@ namespace EdjCase.ICP.Candid.Models
 	/// <summary>
 	/// A variant model representing a hash tree where values can be pruned and labeled in the tree
 	/// </summary>
-	public class HashTree
+	public class HashTree : IEquatable<HashTree>
 	{
 		/// <summary>
 		/// The type the tree node is
@@ -221,12 +221,6 @@ namespace EdjCase.ICP.Candid.Models
 		public byte[] BuildRootHash()
 		{
 			/*
-				verify_cert(cert) =
-					let root_hash = reconstruct(cert.tree)
-					let der_key = check_delegation(cert.delegation) // see section Delegations below
-					bls_key = extract_der(der_key)
-					verify_bls_signature(bls_key, cert.signature, domain_sep("ic-state-root") · root_hash)
-
 				reconstruct(Empty)       = H(domain_sep("ic-hashtree-empty"))
 				reconstruct(Fork t1 t2)  = H(domain_sep("ic-hashtree-fork") · reconstruct(t1) · reconstruct(t2))
 				reconstruct(Labeled l t) = H(domain_sep("ic-hashtree-labeled") · l · reconstruct(t))
@@ -236,8 +230,7 @@ namespace EdjCase.ICP.Candid.Models
 				domain_sep(s) = byte(|s|) · s
 			 */
 			SHA256HashFunction hashFunction = new(SHA256.Create());
-			byte[] rootHash = this.BuildHashInternal(hashFunction);
-			return EncodedValue.WithDomainSeperator("ic-state-root", rootHash);
+			return this.BuildHashInternal(hashFunction);
 		}
 
 
@@ -382,16 +375,45 @@ namespace EdjCase.ICP.Candid.Models
 				return new EncodedValue(bytes);
 			}
 
+			/// <summary>
+			/// A helper method to implicitly convert an encoded value to a UTF8 string
+			/// </summary>
+			/// <param name="value">The encoded value to get the raw value from</param>
+			public static implicit operator string(EncodedValue value)
+			{
+				return value.AsUtf8();
+			}
+
+			/// <summary>
+			/// A helper method to implicitly convert a UTF8 string to an encoded value
+			/// </summary>
+			/// <param name="utf8Value">The UTF8 string value to use with the encoded value</param>
+			public static implicit operator EncodedValue(string utf8Value)
+			{
+				return EncodedValue.Utf8Value(utf8Value);
+			}
+
+			/// <summary>
+			/// Creates an encoded value from a utf8 string value
+			/// </summary>
+			/// <param name="value">UTF8 encoded string</param>
+			/// <returns>UTF8 encoded value</returns>
+			public static EncodedValue Utf8Value(string value)
+			{
+				return Encoding.UTF8.GetBytes(value);
+			}
+
 
 			internal static byte[] WithDomainSeperator(string value, params byte[][] encodedValues)
 			{
 				// domain_sep(s) = byte(|s|) · s
 				byte[] textBytes = Encoding.UTF8.GetBytes(value);
 				byte[] bytes = new byte[textBytes.Length + 1 + encodedValues.Sum(v => v.Length)];
-				bytes[0] = (byte)textBytes.Length;
+				bytes[0] = (byte)textBytes.Length; // First byte is the seperator length
 				int index = 1;
 				textBytes.CopyTo(bytes, index);
-				index++;
+				index += textBytes.Length;
+				// Append the other bytes
 				foreach (byte[] encodedValue in encodedValues)
 				{
 					encodedValue.CopyTo(bytes, index);
@@ -425,8 +447,7 @@ namespace EdjCase.ICP.Candid.Models
 					encodedValue = EncodedValue.WithDomainSeperator("ic-hashtree-leaf", leaf.Value);
 					break;
 				case HashTreeType.Pruned:
-					encodedValue = this.AsPruned();
-					break;
+					return this.AsPruned(); // Dont hash, its already a hash
 				default:
 					throw new NotImplementedException("Node type: " + this.Type);
 			}
@@ -441,6 +462,75 @@ namespace EdjCase.ICP.Candid.Models
 			{
 				throw new InvalidOperationException($"Node type '{this.Type}' cannot be cast as '{nodeType}'");
 			}
+		}
+
+		/// <inheritdoc />
+		public bool Equals(HashTree? other)
+		{
+			if (ReferenceEquals(other, null))
+			{
+				return false;
+			};
+			if (this.Type != other.Type)
+			{
+				return false;
+			}
+			switch (this.Type)
+			{
+				case HashTreeType.Labeled:
+					(EncodedValue label, HashTree innerTree) = this.AsLabeled();
+					(EncodedValue otherLabel, HashTree otherInnerTree) = other.AsLabeled();
+					return label == otherLabel && innerTree == otherInnerTree;
+				case HashTreeType.Leaf:
+					return this.AsLeaf() == other.AsLeaf();
+				case HashTreeType.Pruned:
+					return this.AsPruned().SequenceEqual(other.AsPruned());
+				case HashTreeType.Empty:
+					return true;
+				case HashTreeType.Fork:
+					(HashTree left, HashTree right) = this.AsFork();
+					(HashTree otherLeft, HashTree otherRight) = this.AsFork();
+					return left == otherLeft && right == otherRight;
+				default:
+					throw new NotImplementedException();
+
+			}
+		}
+
+		/// <inheritdoc />
+		public override bool Equals(object obj)
+		{
+			if (obj is not HashTree t)
+			{
+				return false;
+			}
+			return this.Equals(t);
+		}
+
+		/// <inheritdoc />
+		public override int GetHashCode()
+		{
+			return this.ToString().GetHashCode();
+		}
+
+		/// <inheritdoc />
+		public static bool operator ==(HashTree? v1, HashTree? v2)
+		{
+			if (ReferenceEquals(v1, null))
+			{
+				return ReferenceEquals(v2, null);
+			}
+			return v1.Equals(v2);
+		}
+
+		/// <inheritdoc />
+		public static bool operator !=(HashTree? v1, HashTree? v2)
+		{
+			if (ReferenceEquals(v1, null))
+			{
+				return ReferenceEquals(v2, null);
+			}
+			return !v1.Equals(v2);
 		}
 	}
 }

@@ -16,12 +16,12 @@ namespace EdjCase.ICP.Candid.Tests
 			"0d69632d73746174652d726f6f74b294b418b11ebe5dd7dd1dcb099e4e0372b9a42aef7a7a37fb4f25667d705ea9",
 			"89a2be21b5fa8ac9fab1527e041327ce899d7da971436a1f2165393947b4d942365bfe5488710e61a619ba48388a21b1"
 		)]
-		public void A(string publicKeyHex, string hashHex, string signatureHex)
+		public void VerifySignature(string publicKeyHex, string hashHex, string signatureHex)
 		{
 			byte[] publicKey = ByteUtil.FromHexString(publicKeyHex);
 			byte[] hash = ByteUtil.FromHexString(hashHex);
 			byte[] signature = ByteUtil.FromHexString(signatureHex);
-			bool isValid = EdjCase.Cryptography.BLS.BlsUtil.VerifySignature(publicKey, hash, signature);
+			bool isValid = EdjCase.Cryptography.BLS.IcpBlsUtil.VerifySignature(publicKey, hash, signature);
 			Assert.True(isValid);
 		}
 	}

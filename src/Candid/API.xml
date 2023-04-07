@@ -1335,6 +1335,40 @@
             </summary>
             <param name="bytes">The raw value to use with the encoded value</param>
         </member>
+        <member name="M:EdjCase.ICP.Candid.Models.HashTree.EncodedValue.op_Implicit(EdjCase.ICP.Candid.Models.HashTree.EncodedValue)~System.String">
+            <summary>
+            A helper method to implicitly convert an encoded value to a UTF8 string
+            </summary>
+            <param name="value">The encoded value to get the raw value from</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.HashTree.EncodedValue.op_Implicit(System.String)~EdjCase.ICP.Candid.Models.HashTree.EncodedValue">
+            <summary>
+            A helper method to implicitly convert a UTF8 string to an encoded value
+            </summary>
+            <param name="utf8Value">The UTF8 string value to use with the encoded value</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.HashTree.EncodedValue.Utf8Value(System.String)">
+            <summary>
+            Creates an encoded value from a utf8 string value
+            </summary>
+            <param name="value">UTF8 encoded string</param>
+            <returns>UTF8 encoded value</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.HashTree.Equals(EdjCase.ICP.Candid.Models.HashTree)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.HashTree.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.HashTree.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.HashTree.op_Equality(EdjCase.ICP.Candid.Models.HashTree,EdjCase.ICP.Candid.Models.HashTree)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.HashTree.op_Inequality(EdjCase.ICP.Candid.Models.HashTree,EdjCase.ICP.Candid.Models.HashTree)">
+            <inheritdoc />
+        </member>
         <member name="T:EdjCase.ICP.Candid.Models.ICTimestamp">
             <summary>
             Helper class to wrap around an unbounded uint to represent the nanoseconds since 1970-01-01
