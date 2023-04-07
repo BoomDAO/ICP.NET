@@ -467,6 +467,7 @@
   - [Labeled(label,tree)](#M-EdjCase-ICP-Candid-Models-HashTree-Labeled-EdjCase-ICP-Candid-Models-HashTree-EncodedValue,EdjCase-ICP-Candid-Models-HashTree- 'EdjCase.ICP.Candid.Models.HashTree.Labeled(EdjCase.ICP.Candid.Models.HashTree.EncodedValue,EdjCase.ICP.Candid.Models.HashTree)')
   - [Leaf(value)](#M-EdjCase-ICP-Candid-Models-HashTree-Leaf-EdjCase-ICP-Candid-Models-HashTree-EncodedValue- 'EdjCase.ICP.Candid.Models.HashTree.Leaf(EdjCase.ICP.Candid.Models.HashTree.EncodedValue)')
   - [Pruned(treeHash)](#M-EdjCase-ICP-Candid-Models-HashTree-Pruned-System-Byte[]- 'EdjCase.ICP.Candid.Models.HashTree.Pruned(System.Byte[])')
+  - [ToString()](#M-EdjCase-ICP-Candid-Models-HashTree-ToString 'EdjCase.ICP.Candid.Models.HashTree.ToString')
   - [op_Equality()](#M-EdjCase-ICP-Candid-Models-HashTree-op_Equality-EdjCase-ICP-Candid-Models-HashTree,EdjCase-ICP-Candid-Models-HashTree- 'EdjCase.ICP.Candid.Models.HashTree.op_Equality(EdjCase.ICP.Candid.Models.HashTree,EdjCase.ICP.Candid.Models.HashTree)')
   - [op_Inequality()](#M-EdjCase-ICP-Candid-Models-HashTree-op_Inequality-EdjCase-ICP-Candid-Models-HashTree,EdjCase-ICP-Candid-Models-HashTree- 'EdjCase.ICP.Candid.Models.HashTree.op_Inequality(EdjCase.ICP.Candid.Models.HashTree,EdjCase.ICP.Candid.Models.HashTree)')
 - [HashTreeType](#T-EdjCase-ICP-Candid-Models-HashTreeType 'EdjCase.ICP.Candid.Models.HashTreeType')
@@ -6585,6 +6586,17 @@ An pruned hash tree
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | treeHash | [System.Byte[]](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Byte[] 'System.Byte[]') | The hash of the tree that was pruned |
+
+<a name='M-EdjCase-ICP-Candid-Models-HashTree-ToString'></a>
+### ToString() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
 
 <a name='M-EdjCase-ICP-Candid-Models-HashTree-op_Equality-EdjCase-ICP-Candid-Models-HashTree,EdjCase-ICP-Candid-Models-HashTree-'></a>
 ### op_Equality() `method`

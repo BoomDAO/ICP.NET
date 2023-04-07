@@ -409,10 +409,11 @@ namespace EdjCase.ICP.Candid.Models
 				// domain_sep(s) = byte(|s|) · s
 				byte[] textBytes = Encoding.UTF8.GetBytes(value);
 				byte[] bytes = new byte[textBytes.Length + 1 + encodedValues.Sum(v => v.Length)];
-				bytes[0] = (byte)textBytes.Length;
+				bytes[0] = (byte)textBytes.Length; // First byte is the seperator length
 				int index = 1;
 				textBytes.CopyTo(bytes, index);
-				index++;
+				index += textBytes.Length;
+				// Append the other bytes
 				foreach (byte[] encodedValue in encodedValues)
 				{
 					encodedValue.CopyTo(bytes, index);
@@ -446,8 +447,7 @@ namespace EdjCase.ICP.Candid.Models
 					encodedValue = EncodedValue.WithDomainSeperator("ic-hashtree-leaf", leaf.Value);
 					break;
 				case HashTreeType.Pruned:
-					encodedValue = this.AsPruned();
-					break;
+					return this.AsPruned(); // Dont hash, its already a hash
 				default:
 					throw new NotImplementedException("Node type: " + this.Type);
 			}
