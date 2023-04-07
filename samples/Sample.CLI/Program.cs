@@ -49,7 +49,7 @@ public class Program
 
 	public static async Task Run(ulong anchor, string hostname)
 	{
-		bool login = false; // TODO
+		bool login = true; // TODO
 		IIdentity? identity;
 		if (login)
 		{

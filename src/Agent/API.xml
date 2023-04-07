@@ -485,14 +485,6 @@
             <returns>The delegation public key for the subnet</returns>
             <exception cref="T:System.InvalidOperationException">Throws if certificate is missing `subnet/{subnet_id}/public_key`</exception>
         </member>
-        <member name="M:EdjCase.ICP.Agent.Models.CertificateDelegation.IsValid(System.Byte[]@)">
-            <summary>
-            Checks if the Certificate signature is valid and
-            outputs the public key of the delegation
-            </summary>
-            <param name="publicKey">The public key of the delegation</param>
-            <returns>True if the certificate signature is valid, otherwise false</returns>
-        </member>
         <member name="T:EdjCase.ICP.Agent.Models.Delegation">
             <summary>
             A model that contains data on delegating authority from an identity

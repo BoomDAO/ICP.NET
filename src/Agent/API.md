@@ -38,7 +38,6 @@
   - [Certificate](#P-EdjCase-ICP-Agent-Models-CertificateDelegation-Certificate 'EdjCase.ICP.Agent.Models.CertificateDelegation.Certificate')
   - [SubnetId](#P-EdjCase-ICP-Agent-Models-CertificateDelegation-SubnetId 'EdjCase.ICP.Agent.Models.CertificateDelegation.SubnetId')
   - [GetPublicKey()](#M-EdjCase-ICP-Agent-Models-CertificateDelegation-GetPublicKey 'EdjCase.ICP.Agent.Models.CertificateDelegation.GetPublicKey')
-  - [IsValid(publicKey)](#M-EdjCase-ICP-Agent-Models-CertificateDelegation-IsValid-System-Byte[]@- 'EdjCase.ICP.Agent.Models.CertificateDelegation.IsValid(System.Byte[]@)')
 - [CreatedInFutureError](#T-EdjCase-ICP-Agent-Standards-ICRC1-Models-CreatedInFutureError 'EdjCase.ICP.Agent.Standards.ICRC1.Models.CreatedInFutureError')
   - [#ctor(ledgerTime)](#M-EdjCase-ICP-Agent-Standards-ICRC1-Models-CreatedInFutureError-#ctor-System-UInt64- 'EdjCase.ICP.Agent.Standards.ICRC1.Models.CreatedInFutureError.#ctor(System.UInt64)')
   - [LedgerTime](#P-EdjCase-ICP-Agent-Standards-ICRC1-Models-CreatedInFutureError-LedgerTime 'EdjCase.ICP.Agent.Standards.ICRC1.Models.CreatedInFutureError.LedgerTime')
@@ -645,24 +644,6 @@ This method has no parameters.
 | Name | Description |
 | ---- | ----------- |
 | [System.InvalidOperationException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.InvalidOperationException 'System.InvalidOperationException') | Throws if certificate is missing \`subnet/{subnet_id}/public_key\` |
-
-<a name='M-EdjCase-ICP-Agent-Models-CertificateDelegation-IsValid-System-Byte[]@-'></a>
-### IsValid(publicKey) `method`
-
-##### Summary
-
-Checks if the Certificate signature is valid and
-outputs the public key of the delegation
-
-##### Returns
-
-True if the certificate signature is valid, otherwise false
-
-##### Parameters
-
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| publicKey | [System.Byte[]@](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Byte[]@ 'System.Byte[]@') | The public key of the delegation |
 
 <a name='T-EdjCase-ICP-Agent-Standards-ICRC1-Models-CreatedInFutureError'></a>
 ## CreatedInFutureError `type`

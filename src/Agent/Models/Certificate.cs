@@ -3,6 +3,7 @@ using EdjCase.ICP.Candid.Models;
 using System;
 using System.Formats.Cbor;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Xml.Linq;
 
 namespace EdjCase.ICP.Agent.Models
@@ -59,11 +60,12 @@ namespace EdjCase.ICP.Agent.Models
 			if (this.Delegation != null)
 			{
 				// override the root key to the delegated one
-				if (!this.Delegation.IsValid(out rootPublicKey))
+				if (!this.Delegation.Certificate.IsValid(rootPublicKey))
 				{
 					// If delegation is not valid, then the cert is also not valid
 					return false;
 				}
+				rootPublicKey = this.Delegation.GetPublicKey();
 			}
 			var blsKey = new DerEncodedPublicKey(rootPublicKey).AsBls();
 			return IcpBlsUtil.VerifySignature(blsKey, rootHash, this.Signature);

@@ -250,7 +250,7 @@ namespace EdjCase.ICP.Candid.Models
 					return $"Fork: {{ Left: {left}, Right: {right} }}";
 				case HashTreeType.Labeled:
 					(EncodedValue label, HashTree tree) = this.AsLabeled();
-					return $"Labeled: {ByteUtil.ToHexString(label.Value)} {tree}";
+					return $"Labeled: {label.AsUtf8()}/{ByteUtil.ToHexString(label.Value)} {tree}";
 				default:
 					throw new NotImplementedException();
 			}
@@ -526,11 +526,7 @@ namespace EdjCase.ICP.Candid.Models
 		/// <inheritdoc />
 		public static bool operator !=(HashTree? v1, HashTree? v2)
 		{
-			if (ReferenceEquals(v1, null))
-			{
-				return ReferenceEquals(v2, null);
-			}
-			return !v1.Equals(v2);
+			return !(v1 == v2);
 		}
 	}
 }

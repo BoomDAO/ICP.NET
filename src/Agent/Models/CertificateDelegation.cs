@@ -49,18 +49,6 @@ namespace EdjCase.ICP.Agent.Models
 			return publicKey.AsLeaf();
 		}
 
-		/// <summary>
-		/// Checks if the Certificate signature is valid and
-		/// outputs the public key of the delegation
-		/// </summary>
-		/// <param name="publicKey">The public key of the delegation</param>
-		/// <returns>True if the certificate signature is valid, otherwise false</returns>
-		public bool IsValid(out byte[] publicKey)
-		{
-			publicKey = this.GetPublicKey();
-			return this.Certificate.IsValid(publicKey);
-		}
-
 		internal static CertificateDelegation ReadCbor(CborReader reader)
 		{
 			Principal? subnetId = null;
