@@ -238,7 +238,7 @@ namespace EdjCase.ICP.Candid.Parsers
 			CandidType t = GetNamedType(type, helper, recursiveId);
 			if (helper.CurrentToken.Type == CandidTextTokenType.SemiColon)
 			{
-				helper.MoveNextOrThrow();
+				helper.MoveNext();
 			}
 			return t;
 		}
