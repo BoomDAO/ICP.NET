@@ -63,14 +63,7 @@ public class Program
 		}
 		else
 		{
-			//string pemFile = "-----BEGIN EC PRIVATE KEY-----\nMHQCAQEEIIwNN1wBW0iIw7Rt/K2YOHBQvrcNoaIE9EqFcwbhJPqHoAcGBSuBBAAK\noUQDQgAElazp3fTx+SHEgLFNWFpg6sLzwMNnwoecdFaDbKGgRodBCNbJ1fDL5cVi\ncL4TSfPQp17x4NLP1Rz+JAkyX0KG+Q==\n-----END EC PRIVATE KEY-----";
-			//AsymmetricCipherKeyPair privateKey;
-			//using (TextReader reader = new StringReader(pemFile))
-			//{
-			//	identity = IdentityUtil.FromSec1(reader);
-			//}
-			byte[] sec1 = Convert.FromBase64String("MHQCAQEEIIwNN1wBW0iIw7Rt/K2YOHBQvrcNoaIE9EqFcwbhJPqHoAcGBSuBBAAK\noUQDQgAElazp3fTx+SHEgLFNWFpg6sLzwMNnwoecdFaDbKGgRodBCNbJ1fDL5cVi\ncL4TSfPQp17x4NLP1Rz+JAkyX0KG+Q==");
-			identity = IdentityUtil.FromSec1(sec1);
+			identity = null;
 		}
 		var agent = new HttpAgent(identity);
 		Principal canisterId = Principal.FromText("rrkah-fqaaa-aaaaa-aaaaq-cai");
