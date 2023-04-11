@@ -9,6 +9,8 @@ using Sample.Shared.Governance;
 using EdjCase.ICP.Candid;
 using EdjCase.ICP.Agent.Responses;
 using System.Collections.Generic;
+using EdjCase.ICP.Agent;
+using System.IO;
 
 public class Program
 {
@@ -49,7 +51,7 @@ public class Program
 
 	public static async Task Run(ulong anchor, string hostname)
 	{
-		bool login = true; // TODO
+		bool login = false; // TODO
 		IIdentity? identity;
 		if (login)
 		{
@@ -61,7 +63,14 @@ public class Program
 		}
 		else
 		{
-			identity = null; 
+			//string pemFile = "-----BEGIN EC PRIVATE KEY-----\nMHQCAQEEIIwNN1wBW0iIw7Rt/K2YOHBQvrcNoaIE9EqFcwbhJPqHoAcGBSuBBAAK\noUQDQgAElazp3fTx+SHEgLFNWFpg6sLzwMNnwoecdFaDbKGgRodBCNbJ1fDL5cVi\ncL4TSfPQp17x4NLP1Rz+JAkyX0KG+Q==\n-----END EC PRIVATE KEY-----";
+			//AsymmetricCipherKeyPair privateKey;
+			//using (TextReader reader = new StringReader(pemFile))
+			//{
+			//	identity = IdentityUtil.FromSec1(reader);
+			//}
+			byte[] sec1 = Convert.FromBase64String("MHQCAQEEIIwNN1wBW0iIw7Rt/K2YOHBQvrcNoaIE9EqFcwbhJPqHoAcGBSuBBAAK\noUQDQgAElazp3fTx+SHEgLFNWFpg6sLzwMNnwoecdFaDbKGgRodBCNbJ1fDL5cVi\ncL4TSfPQp17x4NLP1Rz+JAkyX0KG+Q==");
+			identity = IdentityUtil.FromSec1(sec1);
 		}
 		var agent = new HttpAgent(identity);
 		Principal canisterId = Principal.FromText("rrkah-fqaaa-aaaaa-aaaaq-cai");
@@ -75,5 +84,6 @@ public class Program
 		var paths = new List<StatePath> { 
 		};
 		await agent.ReadStateAsync(canisterId, paths);
+
 	}
 }

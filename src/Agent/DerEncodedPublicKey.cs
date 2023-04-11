@@ -13,6 +13,7 @@ namespace EdjCase.ICP.Agent
 		private static class OidConstants
 		{
 			public static readonly string[] Ed25519 = new string[] { "1.3.101.112" };
+			public static readonly string[] Secp256k1 = new string[] { "1.3.132.0.10" };
 			public static readonly string[] Bls = new string[] { "1.3.6.1.4.1.44668.5.3.1.2.1", "1.3.6.1.4.1.44668.5.3.2.1" };
 			public static readonly string[] Cose = new string[] { "1.3.6.1.4.1.56387.1.1" };
 		}
@@ -47,6 +48,17 @@ namespace EdjCase.ICP.Agent
 		public byte[] AsEd25519()
 		{
 			return this.As(OidConstants.Ed25519);
+		}
+
+		/// <summary>
+		/// Converts the DER encoded key to a `secp256k1` key IF a `secp256k1` key
+		/// otherwise throws an exception
+		/// </summary>
+		/// <exception cref="InvalidPublicKey">Throws if not a `secp256k1` key</exception>
+		/// <returns>Bytes of the `Ed25519` public key</returns>
+		public byte[] AsSecp256k1()
+		{
+			return this.As(OidConstants.Secp256k1);
 		}
 
 		/// <summary>
@@ -132,6 +144,16 @@ namespace EdjCase.ICP.Agent
 		public static DerEncodedPublicKey FromEd25519(byte[] value)
 		{
 			return From(value, OidConstants.Ed25519);
+		}
+
+		/// <summary>
+		/// Creates a DER public key from the raw bytes of a `secp256k1` key.
+		/// </summary>
+		/// <param name="value">Bytes of a `secp256k1` public key</param>
+		/// <returns>DER encoded key</returns>
+		public static DerEncodedPublicKey FromSecp256k1(byte[] value)
+		{
+			return From(value, OidConstants.Secp256k1);
 		}
 
 		/// <summary>

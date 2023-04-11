@@ -1,7 +1,10 @@
 using Chaos.NaCl;
 using EdjCase.ICP.Agent.Models;
+using System;
 using System.Collections.Generic;
+using System.Net.Http.Headers;
 using System.Security.Cryptography;
+using System.Text;
 
 namespace EdjCase.ICP.Agent.Identities
 {
@@ -47,6 +50,7 @@ namespace EdjCase.ICP.Agent.Identities
 		{
 			return null;
 		}
+
 
 		/// <summary>
 		/// Generates an identity with a new Ed25519 key pair
