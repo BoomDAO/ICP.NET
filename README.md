@@ -10,9 +10,17 @@ Collection of Internet Computer Protocol (ICP) libraries for .NET/Blazor
 
 - [Internet Identity (Experimental)](src/InternetIdentity/README.md) - Internet Identity authenticater (experimental and not secure)
 
-# Quickstart
 
-## Creating a client for a canister
+
+# 🎮 Unity Integration
+
+Note: WebGL/IL2CPP is not supported due to an issue with IL2CPP 
+- Download latest binaries for the agent: https://github.com/edjCase/ICP.NET/releases
+- Extract `.zip` to a plugins folder in your Unity Assets: `Assets/plugins/ICP.NET/`
+- If generating a client (see below), place the generated files into the scripts folder: `Assets/scripts/MyClient`
+- Start coding 💻
+
+# 📡 Generating a client for a canister
 - Prerequisite: Have .Net 6 installed (https://dotnet.microsoft.com/en-us/download/dotnet)
 - Navigate to directory of .Net project
   ```
