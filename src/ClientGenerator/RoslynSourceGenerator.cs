@@ -35,7 +35,7 @@ namespace EdjCase.ICP.ClientGenerator
 			string modelNamespace,
 			ServiceSourceCodeType service,
 			RoslynTypeResolver typeResolver,
-			Dictionary<ValueName, TypeName> aliases
+			Dictionary<string, TypeName> aliases
 		)
 		{
 			// Generate client class
@@ -48,7 +48,7 @@ namespace EdjCase.ICP.ClientGenerator
 		public static CompilationUnitSyntax? GenerateTypeSourceCode(
 			ResolvedType type,
 			string modelNamespace,
-			Dictionary<ValueName, TypeName> aliases
+			Dictionary<string, TypeName> aliases
 		)
 		{
 			// Generate client class
@@ -63,7 +63,7 @@ namespace EdjCase.ICP.ClientGenerator
 
 		private static CompilationUnitSyntax PostProcessSourceCode(
 			string modelNamespace,
-			Dictionary<ValueName, TypeName> aliases,
+			Dictionary<string, TypeName> aliases,
 			params MemberDeclarationSyntax[] members)
 		{
 			// Generate namespace with class in it
@@ -88,7 +88,7 @@ namespace EdjCase.ICP.ClientGenerator
 				// Add alias using statements
 				.AddUsings(aliases
 						.Select(a => SyntaxFactory.UsingDirective(
-							alias: SyntaxFactory.NameEquals(a.Key.PropertyName),
+							alias: SyntaxFactory.NameEquals(a.Key),
 							name: SyntaxFactory.IdentifierName(a.Value.GetNamespacedName())
 						))
 						.ToArray()

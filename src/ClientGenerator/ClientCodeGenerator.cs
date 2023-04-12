@@ -75,37 +75,37 @@ namespace EdjCase.ICP.ClientGenerator
 
 			// Mapping of A => Type
 			// where candid is: type A = Type;
-			Dictionary<ValueName, SourceCodeType> declaredTypes = service.DeclaredTypes
+			Dictionary<string, SourceCodeType> declaredTypes = service.DeclaredTypes
 				.Where(t => t.Value is not CandidServiceType) // avoid duplication service of type
 				.ToDictionary(
-					t => ValueName.Default(t.Key.ToString(), false),
+					t => t.Key.ToString(),
 					t => ResolveSourceCodeType(t.Value, options.KeepCandidCase)
 				);
 
 			string modelNamespace = options.NoFolders
 				? options.Namespace
 				: options.Namespace + ".Models";
-			HashSet<ValueName> aliases = declaredTypes
+			HashSet<string> aliases = declaredTypes
 				.Where(t => t.Value is CompiledTypeSourceCodeType || t.Value is ReferenceSourceCodeType)
 				.Select(t => t.Key)
 				.ToHashSet();
 
 			var typeResolver = new RoslynTypeResolver(modelNamespace, aliases, options.FeatureNullable, options.KeepCandidCase);
-			Dictionary<ValueName, ResolvedType> resolvedTypes = declaredTypes
+			Dictionary<string, ResolvedType> resolvedTypes = declaredTypes
 				.ToDictionary(
 					t => t.Key,
 					t => typeResolver.ResolveTypeDeclaration(t.Key, t.Value)
 				);
 
 			var typeFiles = new List<(string FileName, CompilationUnitSyntax Source)>();
-			Dictionary<ValueName, TypeName> aliasTypes = aliases
+			Dictionary<string, TypeName> aliasTypes = aliases
 				.ToDictionary(t => t, t => resolvedTypes[t].Name);
-			foreach ((ValueName id, ResolvedType typeInfo) in resolvedTypes)
+			foreach ((string id, ResolvedType typeInfo) in resolvedTypes)
 			{
 				CompilationUnitSyntax? sourceCode = RoslynSourceGenerator.GenerateTypeSourceCode(typeInfo, typeResolver.ModelNamespace, aliasTypes);
 				if (sourceCode != null)
 				{
-					typeFiles.Add((id.PropertyName, sourceCode));
+					typeFiles.Add((id, sourceCode));
 				}
 			}
 

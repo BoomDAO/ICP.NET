@@ -22,13 +22,13 @@ namespace EdjCase.ICP.ClientGenerator
 		private readonly Dictionary<string, ResolvedType> _resolvedTypes = new();
 
 		public string ModelNamespace { get; }
-		public HashSet<ValueName> Aliases { get; }
+		public HashSet<string> Aliases { get; }
 		public bool FeatureNullable { get; }
 		public bool KeepCandidCase { get; }
 
 		public RoslynTypeResolver(
 			string modelNamespace,
-			HashSet<ValueName> aliases,
+			HashSet<string> aliases,
 			bool featureNullable,
 			bool keepCandidCase)
 		{
@@ -39,7 +39,7 @@ namespace EdjCase.ICP.ClientGenerator
 		}
 
 		public ResolvedType ResolveTypeDeclaration(
-			ValueName typeName,
+			string typeName,
 			SourceCodeType type
 		)
 		{
@@ -49,14 +49,13 @@ namespace EdjCase.ICP.ClientGenerator
 			//    type X = blob;
 			//    type F = A<X>;
 
-			string typeNameStr = typeName.PropertyName;
 
-			if (this._resolvedTypes.TryGetValue(typeNameStr, out ResolvedType? existing))
+			if (this._resolvedTypes.TryGetValue(typeName, out ResolvedType? existing))
 			{
 				return existing;
 			}
-			ResolvedType res = this.ResolveTypeInner(type, typeNameStr, parentType: null);
-			this._resolvedTypes[typeNameStr] = res;
+			ResolvedType res = this.ResolveTypeInner(type, typeName, parentType: null);
+			this._resolvedTypes[typeName] = res;
 			return res;
 		}
 
@@ -110,12 +109,11 @@ namespace EdjCase.ICP.ClientGenerator
 					}
 				case ReferenceSourceCodeType re:
 					{
-						ValueName correctedRefId = ValueName.Default(re.Id.Value, false);
-						bool isAlias = this.Aliases.Contains(correctedRefId);
+						bool isAlias = this.Aliases.Contains(re.Id.Value);
 
 						string? @namespace = isAlias ? null : this.ModelNamespace;
 						return new ResolvedType(new TypeName(
-							correctedRefId.PropertyName,
+							re.Id.Value,
 							@namespace,
 							prefix: null
 						));
