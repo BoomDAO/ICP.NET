@@ -180,7 +180,7 @@ file-path = ""../MyService.did""
 			{
 				key = prefix + "." + key;
 			}
-			throw new InvalidOperationException("Failed to parse the `candid-client.toml` config. Missing required field: '{key}'");
+			throw new InvalidOperationException($"Failed to parse the `candid-client.toml` config. Missing required field: '{key}'");
 		}
 
 		private static T? GetOptional<T>(TomlTable table, string key)
