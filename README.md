@@ -1,6 +1,6 @@
 # ICP.NET
 
-Collection of Internet Computer Protocol (ICP) libraries for .NET/Blazor
+Collection of Internet Computer Protocol (ICP) libraries for .NET/Blazor/Unity
 
 - [Agent](src/Agent/README.md) - Library to communicate to and from the Internet Computer
 
