@@ -19,6 +19,5 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\..\src\Agent\EdjCase.ICP.Agent.csproj" />
-	  <ProjectReference Include="..\..\src\Candid\EdjCase.ICP.Candid.csproj" />
 	</ItemGroup>
 </Project>

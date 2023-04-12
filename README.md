@@ -10,6 +10,7 @@ Collection of Internet Computer Protocol (ICP) libraries for .NET/Blazor
 
 - [Internet Identity (Experimental)](src/InternetIdentity/README.md) - Internet Identity authenticater (experimental and not secure)
 
+## See each individual project README for more in depth guides
 
 
 # 🎮 Unity Integration

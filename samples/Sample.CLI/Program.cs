@@ -2,7 +2,6 @@ using EdjCase.ICP.Agent.Agents;
 using EdjCase.ICP.Candid.Models;
 using System;
 using System.Threading.Tasks;
-using EdjCase.ICP.InternetIdentity;
 using EdjCase.ICP.Agent.Identities;
 using CommandLine;
 using Sample.Shared.Governance;
@@ -49,20 +48,21 @@ public class Program
 
 	public static async Task Run(ulong anchor, string hostname)
 	{
-		bool login = true; // TODO
-		IIdentity? identity;
-		if (login)
-		{
-			LoginResult result = await Authenticator
-				.WithHttpAgent()
-				.LoginAsync(anchor, hostname);
-			identity = result.GetIdentityOrThrow();
-			Console.WriteLine("Login success!");
-		}
-		else
-		{
-			identity = null; 
-		}
+		//bool login = true; // TODO
+		//IIdentity? identity;
+		//if (login)
+		//{
+		//	LoginResult result = await Authenticator
+		//		.WithHttpAgent()
+		//		.LoginAsync(anchor, hostname);
+		//	identity = result.GetIdentityOrThrow();
+		//	Console.WriteLine("Login success!");
+		//}
+		//else
+		//{
+		//	identity = null; 
+		//}
+		IIdentity? identity = null;
 		var agent = new HttpAgent(identity);
 		Principal canisterId = Principal.FromText("rrkah-fqaaa-aaaaa-aaaaq-cai");
 		var client = new GovernanceApiClient(agent, canisterId);

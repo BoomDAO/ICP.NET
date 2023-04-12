@@ -157,13 +157,13 @@ file-path = ""../MyService.did""
 							source = await ClientCodeGenerator.GenerateClientFromCanisterAsync(canisterId, clientOptions, boundryNodeUrl);
 							break;
 						default:
-							throw new InvalidOperationException($"Invalid client type '{type}'");
+							throw new InvalidOperationException($"Failed to parse the `candid-client.toml` config. Invalid client type '{type}'");
 					}
 					WriteClient(source, clientOutputDirectory, clientNoFolders);
 				}
 				return 0;
 			}
-			catch (InvalidOperationException ex)
+			catch (Exception ex)
 			{
 				Console.WriteLine(ex.Message);
 				return 1;
@@ -180,7 +180,7 @@ file-path = ""../MyService.did""
 			{
 				key = prefix + "." + key;
 			}
-			throw new InvalidOperationException($"Missing key '{key}'");
+			throw new InvalidOperationException("Failed to parse the `candid-client.toml` config. Missing required field: '{key}'");
 		}
 
 		private static T? GetOptional<T>(TomlTable table, string key)
