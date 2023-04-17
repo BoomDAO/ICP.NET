@@ -223,13 +223,7 @@ file-path = ""../MyService.did""
 				Directory.CreateDirectory(directory);
 				string filePath = Path.Combine(directory, fileName + ".cs");
 
-				// Setup formatting options
-				AdhocWorkspace workspace = new();
-				OptionSet options = workspace.Options
-					.WithChangedOption(FormattingOptions.UseTabs, LanguageNames.CSharp, value: true)
-					.WithChangedOption(FormattingOptions.NewLine, LanguageNames.CSharp, value: Environment.NewLine);
-
-				string text = Formatter.Format(syntax, workspace, options).ToFullString();
+				string text = ClientSyntax.GenerateFileContents(syntax);
 
 				File.WriteAllText(filePath, text);
 			}

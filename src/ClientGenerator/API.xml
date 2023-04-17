@@ -96,5 +96,25 @@
             <param name="clientFile">The syntax of the client file</param>
             <param name="typeFiles">The syntax of different declared types for the client</param>
         </member>
+        <member name="M:EdjCase.ICP.ClientGenerator.ClientSyntax.Rewrite(Microsoft.CodeAnalysis.CSharp.CSharpSyntaxRewriter)">
+            <summary>
+            Rewrites the syntax with the specified `CSharpSyntaxRewriter`
+            </summary>
+            <param name="rewriter">A `CSharpSyntaxRewriter` to rewrite the csharp syntax</param>
+            <returns>Updated client syntax</returns>
+        </member>
+        <member name="M:EdjCase.ICP.ClientGenerator.ClientSyntax.GenerateFileContents">
+            <summary>
+            Converts the file syntax objects into source code string values to use as a file
+            </summary>
+            <returns>Client and type source code file contents</returns>
+        </member>
+        <member name="M:EdjCase.ICP.ClientGenerator.ClientSyntax.GenerateFileContents(Microsoft.CodeAnalysis.CSharp.Syntax.CompilationUnitSyntax)">
+            <summary>
+            Helper function to turn a client or type into a string of file contents
+            </summary>
+            <param name="syntax">The client or type file to convert to a string</param>
+            <returns>String source code of the specified syntax</returns>
+        </member>
     </members>
 </doc>
