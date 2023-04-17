@@ -26,25 +26,23 @@
 			<PackagePath>\</PackagePath>
 		</None>
 	</ItemGroup>
-
 	<ItemGroup>
-		<None Include=".\lib\bls384_256.dll" Pack="true" PackagePath="runtimes\win-x64\native">
+		<None Include="bls384_256.dll" Pack="true" PackagePath="runtimes\win-x64\native">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
+	  <None Update="bls384_256.dylib" Pack="true" PackagePath="runtimes\osx-x64\native">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="bls384_256.so" Pack="true" PackagePath="runtimes\linux-x64\native">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
 	</ItemGroup>
+
 	<ItemGroup>
 		<PackageReference Include="Vsxmd" Version="1.4.4">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-	</ItemGroup>
-	<ItemGroup>
-	  <None Update="lib\bls384_256.dylib" Pack="true" PackagePath="runtimes\osx-x64\native">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
-	  <None Update="lib\bls384_256.so" Pack="true" PackagePath="runtimes\linux-x64\native">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
 	</ItemGroup>
 
 </Project>

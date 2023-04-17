@@ -11,7 +11,6 @@ namespace EdjCase.Cryptography.BLS
 		public const int BN254 = 0;
 		public const int BLS12_381 = 5;
 
-		const int IoEcComp = 512; // fixed byte representation
 		public const int FR_UNIT_SIZE = 4;
 		public const int FP_UNIT_SIZE = 6;
 		public const int BLS_COMPILER_TIME_VAR_ADJ = 0;
@@ -32,7 +31,7 @@ namespace EdjCase.Cryptography.BLS
 			HashToCurve = 5, // irtf-cfrg-hash-to-curve
 		}
 
-		public const string dllName = "lib/bls384_256";
+		public const string dllName = "bls384_256";
 		[DllImport(dllName)] public static extern int blsInit(int curveType, int compiledTimeVar);
 		[DllImport(dllName)] public static extern int blsGetFrByteSize();
 		[DllImport(dllName)] public static extern int blsGetG1ByteSize();
