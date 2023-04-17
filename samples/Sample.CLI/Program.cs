@@ -8,6 +8,10 @@ using Sample.Shared.Governance;
 using EdjCase.ICP.Candid;
 using EdjCase.ICP.Agent.Responses;
 using System.Collections.Generic;
+using EdjCase.ICP.ClientGenerator;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Linq;
 
 public class Program
 {
@@ -36,5 +40,10 @@ public class Program
 
 		Console.WriteLine("Press ENTER to exit");
 		Console.ReadLine();
+
 	}
+}
+
+internal class MyCustomCSharpSyntaxRewriter : CSharpSyntaxRewriter
+{
 }
