@@ -23,8 +23,19 @@ public class Program
 		ulong proposalId = 110174;
 		Console.WriteLine($"Getting info for proposal {proposalId}...");
 		OptionalValue<Sample.Shared.Governance.Models.ProposalInfo> proposalInfo = await client.GetProposalInfo(proposalId);
+
 		CandidTypedValue rawCandid = CandidTypedValue.FromObject(proposalInfo);
 		Console.WriteLine("ProposalInfo:\n" + rawCandid.Value.ToString());
+
+		Console.WriteLine();
+		Console.WriteLine($"Getting the state for the governance canister ({canisterId})...");
+		var paths = new List<StatePath>
+		{
+		};
+		ReadStateResponse readStateResponse = await agent.ReadStateAsync(canisterId, paths);
+
+		Console.WriteLine("State:\n" + readStateResponse.Certificate.Tree);
+
 		Console.WriteLine("Press ENTER to exit");
 		Console.ReadLine();
 	}
