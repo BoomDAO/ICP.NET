@@ -40,7 +40,7 @@ namespace EdjCase.ICP.Agent.Models
 		/// <param name="senders">Optional. List of pricipals where requests can originate from</param>
 		/// <returns>A delegation signed by the delegating identity</returns>
 		public static SignedDelegation Create(
-			DerEncodedPublicKey keyToDelegateTo,
+			SubjectPublicKeyInfo keyToDelegateTo,
 			IIdentity delegatingIdentity,
 			ICTimestamp expiration,
 			List<Principal>? targets = null,
@@ -59,13 +59,13 @@ namespace EdjCase.ICP.Agent.Models
 		/// <param name="senders">Optional. List of pricipals where requests can originate from</param>
 		/// <returns>A delegation signed by the delegating identity</returns>
 		public static SignedDelegation Create(
-			DerEncodedPublicKey keyToDelegateTo,
+			SubjectPublicKeyInfo keyToDelegateTo,
 			Func<byte[], byte[]> signingFunc,
 			ICTimestamp expiration,
 			List<Principal>? targets = null,
 			List<Principal>? senders = null)
 		{
-			var delegation = new Delegation(keyToDelegateTo.Value, expiration, targets, senders);
+			var delegation = new Delegation(keyToDelegateTo, expiration, targets, senders);
 			byte[] challenge = delegation.BuildSigningChallenge();
 			byte[] signature = signingFunc(challenge);
 			return new SignedDelegation(delegation, signature);

@@ -22,18 +22,7 @@ namespace EdjCase.ICP.Agent
 	public class InvalidPublicKey : Exception
 	{
 		/// <summary></summary>
-		public InvalidPublicKey()
-		{
-		}
-	}
-
-	/// <summary>
-	/// Exception to indicate that the specified BLS public key is invalid
-	/// </summary>
-	public class InvalidSec1Key : Exception
-	{
-		/// <summary></summary>
-		public InvalidSec1Key(Exception innerEx) : base("Invalid SEC1 key value", innerEx)
+		public InvalidPublicKey(Exception innerEx) : base("Invalid public key value", innerEx)
 		{
 		}
 	}

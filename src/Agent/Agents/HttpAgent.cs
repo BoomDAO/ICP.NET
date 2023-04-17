@@ -99,7 +99,7 @@ namespace EdjCase.ICP.Agent.Agents
 			var reader = new CborReader(cborBytes);
 			ReadStateResponse response = ReadStateResponse.ReadCbor(reader);
 
-			byte[] rootPublicKey = await this.GetRootKeyAsync();
+			SubjectPublicKeyInfo rootPublicKey = await this.GetRootKeyAsync();
 			if (!response.Certificate.IsValid(rootPublicKey))
 			{
 				throw new InvalidCertificateException("Certificate signature does not match the IC public key");
@@ -147,14 +147,14 @@ namespace EdjCase.ICP.Agent.Agents
 
 
 		/// <inheritdoc/>
-		public async Task<byte[]> GetRootKeyAsync()
+		public async Task<SubjectPublicKeyInfo> GetRootKeyAsync()
 		{
 			if (this.rootKeyCache == null)
 			{
 				StatusResponse jsonObject = await this.GetReplicaStatusAsync();
 				this.rootKeyCache = jsonObject.DevelopmentRootKey ?? mainnetRootKey;
 			}
-			return this.rootKeyCache;
+			return SubjectPublicKeyInfo.FromDerEncoding(this.rootKeyCache);
 		}
 
 
@@ -211,8 +211,8 @@ namespace EdjCase.ICP.Agent.Agents
 			}
 			else
 			{
-				DerEncodedPublicKey publicKey = this.Identity.GetPublicKey();
-				principal = Principal.SelfAuthenticating(publicKey.Value);
+				SubjectPublicKeyInfo publicKey = this.Identity.GetPublicKey();
+				principal = publicKey.ToPrincipal();
 			}
 			TRequest request = getRequest(principal, ICTimestamp.Now());
 			Dictionary<string, IHashable> content = request.BuildHashableItem();

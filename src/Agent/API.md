@@ -32,7 +32,7 @@
   - [Delegation](#P-EdjCase-ICP-Agent-Models-Certificate-Delegation 'EdjCase.ICP.Agent.Models.Certificate.Delegation')
   - [Signature](#P-EdjCase-ICP-Agent-Models-Certificate-Signature 'EdjCase.ICP.Agent.Models.Certificate.Signature')
   - [Tree](#P-EdjCase-ICP-Agent-Models-Certificate-Tree 'EdjCase.ICP.Agent.Models.Certificate.Tree')
-  - [IsValid(rootPublicKey)](#M-EdjCase-ICP-Agent-Models-Certificate-IsValid-System-Byte[]- 'EdjCase.ICP.Agent.Models.Certificate.IsValid(System.Byte[])')
+  - [IsValid(rootPublicKey)](#M-EdjCase-ICP-Agent-Models-Certificate-IsValid-EdjCase-ICP-Agent-SubjectPublicKeyInfo- 'EdjCase.ICP.Agent.Models.Certificate.IsValid(EdjCase.ICP.Agent.SubjectPublicKeyInfo)')
 - [CertificateDelegation](#T-EdjCase-ICP-Agent-Models-CertificateDelegation 'EdjCase.ICP.Agent.Models.CertificateDelegation')
   - [#ctor(subnetId,certificate)](#M-EdjCase-ICP-Agent-Models-CertificateDelegation-#ctor-EdjCase-ICP-Candid-Models-Principal,EdjCase-ICP-Agent-Models-Certificate- 'EdjCase.ICP.Agent.Models.CertificateDelegation.#ctor(EdjCase.ICP.Candid.Models.Principal,EdjCase.ICP.Agent.Models.Certificate)')
   - [Certificate](#P-EdjCase-ICP-Agent-Models-CertificateDelegation-Certificate 'EdjCase.ICP.Agent.Models.CertificateDelegation.Certificate')
@@ -45,7 +45,7 @@
   - [#ctor(client)](#M-EdjCase-ICP-Agent-Agents-Http-DefaultHttpClient-#ctor-System-Net-Http-HttpClient- 'EdjCase.ICP.Agent.Agents.Http.DefaultHttpClient.#ctor(System.Net.Http.HttpClient)')
   - [SendAsync()](#M-EdjCase-ICP-Agent-Agents-Http-DefaultHttpClient-SendAsync-System-Net-Http-HttpRequestMessage- 'EdjCase.ICP.Agent.Agents.Http.DefaultHttpClient.SendAsync(System.Net.Http.HttpRequestMessage)')
 - [Delegation](#T-EdjCase-ICP-Agent-Models-Delegation 'EdjCase.ICP.Agent.Models.Delegation')
-  - [#ctor(publicKey,expiration,targets,senders)](#M-EdjCase-ICP-Agent-Models-Delegation-#ctor-System-Byte[],EdjCase-ICP-Candid-Models-ICTimestamp,System-Collections-Generic-List{EdjCase-ICP-Candid-Models-Principal},System-Collections-Generic-List{EdjCase-ICP-Candid-Models-Principal}- 'EdjCase.ICP.Agent.Models.Delegation.#ctor(System.Byte[],EdjCase.ICP.Candid.Models.ICTimestamp,System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal},System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal})')
+  - [#ctor(publicKey,expiration,targets,senders)](#M-EdjCase-ICP-Agent-Models-Delegation-#ctor-EdjCase-ICP-Agent-SubjectPublicKeyInfo,EdjCase-ICP-Candid-Models-ICTimestamp,System-Collections-Generic-List{EdjCase-ICP-Candid-Models-Principal},System-Collections-Generic-List{EdjCase-ICP-Candid-Models-Principal}- 'EdjCase.ICP.Agent.Models.Delegation.#ctor(EdjCase.ICP.Agent.SubjectPublicKeyInfo,EdjCase.ICP.Candid.Models.ICTimestamp,System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal},System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal})')
   - [Expiration](#P-EdjCase-ICP-Agent-Models-Delegation-Expiration 'EdjCase.ICP.Agent.Models.Delegation.Expiration')
   - [PublicKey](#P-EdjCase-ICP-Agent-Models-Delegation-PublicKey 'EdjCase.ICP.Agent.Models.Delegation.PublicKey')
   - [Senders](#P-EdjCase-ICP-Agent-Models-Delegation-Senders 'EdjCase.ICP.Agent.Models.Delegation.Senders')
@@ -54,10 +54,10 @@
   - [BuildSigningChallenge()](#M-EdjCase-ICP-Agent-Models-Delegation-BuildSigningChallenge 'EdjCase.ICP.Agent.Models.Delegation.BuildSigningChallenge')
   - [ComputeHash()](#M-EdjCase-ICP-Agent-Models-Delegation-ComputeHash-EdjCase-ICP-Candid-Crypto-IHashFunction- 'EdjCase.ICP.Agent.Models.Delegation.ComputeHash(EdjCase.ICP.Candid.Crypto.IHashFunction)')
 - [DelegationChain](#T-EdjCase-ICP-Agent-Models-DelegationChain 'EdjCase.ICP.Agent.Models.DelegationChain')
-  - [#ctor(publicKey,delegations)](#M-EdjCase-ICP-Agent-Models-DelegationChain-#ctor-EdjCase-ICP-Agent-DerEncodedPublicKey,System-Collections-Generic-List{EdjCase-ICP-Agent-Models-SignedDelegation}- 'EdjCase.ICP.Agent.Models.DelegationChain.#ctor(EdjCase.ICP.Agent.DerEncodedPublicKey,System.Collections.Generic.List{EdjCase.ICP.Agent.Models.SignedDelegation})')
+  - [#ctor(publicKey,delegations)](#M-EdjCase-ICP-Agent-Models-DelegationChain-#ctor-EdjCase-ICP-Agent-SubjectPublicKeyInfo,System-Collections-Generic-List{EdjCase-ICP-Agent-Models-SignedDelegation}- 'EdjCase.ICP.Agent.Models.DelegationChain.#ctor(EdjCase.ICP.Agent.SubjectPublicKeyInfo,System.Collections.Generic.List{EdjCase.ICP.Agent.Models.SignedDelegation})')
   - [Delegations](#P-EdjCase-ICP-Agent-Models-DelegationChain-Delegations 'EdjCase.ICP.Agent.Models.DelegationChain.Delegations')
   - [PublicKey](#P-EdjCase-ICP-Agent-Models-DelegationChain-PublicKey 'EdjCase.ICP.Agent.Models.DelegationChain.PublicKey')
-  - [Create(keyToDelegateTo,delegatingIdentity,expiration,targets,senders)](#M-EdjCase-ICP-Agent-Models-DelegationChain-Create-EdjCase-ICP-Agent-DerEncodedPublicKey,EdjCase-ICP-Agent-Identities-IIdentity,EdjCase-ICP-Candid-Models-ICTimestamp,System-Collections-Generic-List{EdjCase-ICP-Candid-Models-Principal},System-Collections-Generic-List{EdjCase-ICP-Candid-Models-Principal}- 'EdjCase.ICP.Agent.Models.DelegationChain.Create(EdjCase.ICP.Agent.DerEncodedPublicKey,EdjCase.ICP.Agent.Identities.IIdentity,EdjCase.ICP.Candid.Models.ICTimestamp,System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal},System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal})')
+  - [Create(keyToDelegateTo,delegatingIdentity,expiration,targets,senders)](#M-EdjCase-ICP-Agent-Models-DelegationChain-Create-EdjCase-ICP-Agent-SubjectPublicKeyInfo,EdjCase-ICP-Agent-Identities-IIdentity,EdjCase-ICP-Candid-Models-ICTimestamp,System-Collections-Generic-List{EdjCase-ICP-Candid-Models-Principal},System-Collections-Generic-List{EdjCase-ICP-Candid-Models-Principal}- 'EdjCase.ICP.Agent.Models.DelegationChain.Create(EdjCase.ICP.Agent.SubjectPublicKeyInfo,EdjCase.ICP.Agent.Identities.IIdentity,EdjCase.ICP.Candid.Models.ICTimestamp,System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal},System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal})')
 - [DelegationIdentity](#T-EdjCase-ICP-Agent-Identities-DelegationIdentity 'EdjCase.ICP.Agent.Identities.DelegationIdentity')
   - [#ctor(identity,chain)](#M-EdjCase-ICP-Agent-Identities-DelegationIdentity-#ctor-EdjCase-ICP-Agent-Identities-IIdentity,EdjCase-ICP-Agent-Models-DelegationChain- 'EdjCase.ICP.Agent.Identities.DelegationIdentity.#ctor(EdjCase.ICP.Agent.Identities.IIdentity,EdjCase.ICP.Agent.Models.DelegationChain)')
   - [Chain](#P-EdjCase-ICP-Agent-Identities-DelegationIdentity-Chain 'EdjCase.ICP.Agent.Identities.DelegationIdentity.Chain')
@@ -65,29 +65,20 @@
   - [GetPublicKey()](#M-EdjCase-ICP-Agent-Identities-DelegationIdentity-GetPublicKey 'EdjCase.ICP.Agent.Identities.DelegationIdentity.GetPublicKey')
   - [GetSenderDelegations()](#M-EdjCase-ICP-Agent-Identities-DelegationIdentity-GetSenderDelegations 'EdjCase.ICP.Agent.Identities.DelegationIdentity.GetSenderDelegations')
   - [Sign()](#M-EdjCase-ICP-Agent-Identities-DelegationIdentity-Sign-System-Byte[]- 'EdjCase.ICP.Agent.Identities.DelegationIdentity.Sign(System.Byte[])')
-- [DerEncodedPublicKey](#T-EdjCase-ICP-Agent-DerEncodedPublicKey 'EdjCase.ICP.Agent.DerEncodedPublicKey')
-  - [#ctor(derEncodedBytes)](#M-EdjCase-ICP-Agent-DerEncodedPublicKey-#ctor-System-Byte[]- 'EdjCase.ICP.Agent.DerEncodedPublicKey.#ctor(System.Byte[])')
-  - [Value](#P-EdjCase-ICP-Agent-DerEncodedPublicKey-Value 'EdjCase.ICP.Agent.DerEncodedPublicKey.Value')
-  - [As()](#M-EdjCase-ICP-Agent-DerEncodedPublicKey-As-System-String- 'EdjCase.ICP.Agent.DerEncodedPublicKey.As(System.String)')
-  - [As()](#M-EdjCase-ICP-Agent-DerEncodedPublicKey-As-System-Collections-Generic-IEnumerable{System-String}- 'EdjCase.ICP.Agent.DerEncodedPublicKey.As(System.Collections.Generic.IEnumerable{System.String})')
-  - [AsBls()](#M-EdjCase-ICP-Agent-DerEncodedPublicKey-AsBls 'EdjCase.ICP.Agent.DerEncodedPublicKey.AsBls')
-  - [AsCose()](#M-EdjCase-ICP-Agent-DerEncodedPublicKey-AsCose 'EdjCase.ICP.Agent.DerEncodedPublicKey.AsCose')
-  - [AsEd25519()](#M-EdjCase-ICP-Agent-DerEncodedPublicKey-AsEd25519 'EdjCase.ICP.Agent.DerEncodedPublicKey.AsEd25519')
-  - [From(value,oid)](#M-EdjCase-ICP-Agent-DerEncodedPublicKey-From-System-Byte[],System-String- 'EdjCase.ICP.Agent.DerEncodedPublicKey.From(System.Byte[],System.String)')
-  - [From(value,oids)](#M-EdjCase-ICP-Agent-DerEncodedPublicKey-From-System-Byte[],System-Collections-Generic-IEnumerable{System-String}- 'EdjCase.ICP.Agent.DerEncodedPublicKey.From(System.Byte[],System.Collections.Generic.IEnumerable{System.String})')
-  - [FromBls(value)](#M-EdjCase-ICP-Agent-DerEncodedPublicKey-FromBls-System-Byte[]- 'EdjCase.ICP.Agent.DerEncodedPublicKey.FromBls(System.Byte[])')
-  - [FromCose(value)](#M-EdjCase-ICP-Agent-DerEncodedPublicKey-FromCose-System-Byte[]- 'EdjCase.ICP.Agent.DerEncodedPublicKey.FromCose(System.Byte[])')
-  - [FromDer(value)](#M-EdjCase-ICP-Agent-DerEncodedPublicKey-FromDer-System-Byte[]- 'EdjCase.ICP.Agent.DerEncodedPublicKey.FromDer(System.Byte[])')
-  - [FromEd25519(value)](#M-EdjCase-ICP-Agent-DerEncodedPublicKey-FromEd25519-System-Byte[]- 'EdjCase.ICP.Agent.DerEncodedPublicKey.FromEd25519(System.Byte[])')
-  - [ToPrincipal()](#M-EdjCase-ICP-Agent-DerEncodedPublicKey-ToPrincipal 'EdjCase.ICP.Agent.DerEncodedPublicKey.ToPrincipal')
 - [DuplicateError](#T-EdjCase-ICP-Agent-Standards-ICRC1-Models-DuplicateError 'EdjCase.ICP.Agent.Standards.ICRC1.Models.DuplicateError')
   - [#ctor(duplicateOf)](#M-EdjCase-ICP-Agent-Standards-ICRC1-Models-DuplicateError-#ctor-EdjCase-ICP-Candid-Models-UnboundedUInt- 'EdjCase.ICP.Agent.Standards.ICRC1.Models.DuplicateError.#ctor(EdjCase.ICP.Candid.Models.UnboundedUInt)')
   - [DuplicateOf](#P-EdjCase-ICP-Agent-Standards-ICRC1-Models-DuplicateError-DuplicateOf 'EdjCase.ICP.Agent.Standards.ICRC1.Models.DuplicateError.DuplicateOf')
+- [EcdsaIdentity](#T-EdjCase-ICP-Agent-Identities-EcdsaIdentity 'EdjCase.ICP.Agent.Identities.EcdsaIdentity')
+  - [PrivateKey](#P-EdjCase-ICP-Agent-Identities-EcdsaIdentity-PrivateKey 'EdjCase.ICP.Agent.Identities.EcdsaIdentity.PrivateKey')
+  - [PublicKey](#P-EdjCase-ICP-Agent-Identities-EcdsaIdentity-PublicKey 'EdjCase.ICP.Agent.Identities.EcdsaIdentity.PublicKey')
+  - [GetPublicKey()](#M-EdjCase-ICP-Agent-Identities-EcdsaIdentity-GetPublicKey 'EdjCase.ICP.Agent.Identities.EcdsaIdentity.GetPublicKey')
+  - [GetSenderDelegations()](#M-EdjCase-ICP-Agent-Identities-EcdsaIdentity-GetSenderDelegations 'EdjCase.ICP.Agent.Identities.EcdsaIdentity.GetSenderDelegations')
+  - [Sign()](#M-EdjCase-ICP-Agent-Identities-EcdsaIdentity-Sign-System-Byte[]- 'EdjCase.ICP.Agent.Identities.EcdsaIdentity.Sign(System.Byte[])')
 - [Ed25519Identity](#T-EdjCase-ICP-Agent-Identities-Ed25519Identity 'EdjCase.ICP.Agent.Identities.Ed25519Identity')
-  - [#ctor(publicKey,privateKey)](#M-EdjCase-ICP-Agent-Identities-Ed25519Identity-#ctor-EdjCase-ICP-Agent-DerEncodedPublicKey,System-Byte[]- 'EdjCase.ICP.Agent.Identities.Ed25519Identity.#ctor(EdjCase.ICP.Agent.DerEncodedPublicKey,System.Byte[])')
+  - [#ctor(publicKey,privateKey)](#M-EdjCase-ICP-Agent-Identities-Ed25519Identity-#ctor-System-Byte[],System-Byte[]- 'EdjCase.ICP.Agent.Identities.Ed25519Identity.#ctor(System.Byte[],System.Byte[])')
   - [PrivateKey](#P-EdjCase-ICP-Agent-Identities-Ed25519Identity-PrivateKey 'EdjCase.ICP.Agent.Identities.Ed25519Identity.PrivateKey')
   - [PublicKey](#P-EdjCase-ICP-Agent-Identities-Ed25519Identity-PublicKey 'EdjCase.ICP.Agent.Identities.Ed25519Identity.PublicKey')
-  - [Create()](#M-EdjCase-ICP-Agent-Identities-Ed25519Identity-Create 'EdjCase.ICP.Agent.Identities.Ed25519Identity.Create')
+  - [Generate()](#M-EdjCase-ICP-Agent-Identities-Ed25519Identity-Generate 'EdjCase.ICP.Agent.Identities.Ed25519Identity.Generate')
   - [GetPublicKey()](#M-EdjCase-ICP-Agent-Identities-Ed25519Identity-GetPublicKey 'EdjCase.ICP.Agent.Identities.Ed25519Identity.GetPublicKey')
   - [GetSenderDelegations()](#M-EdjCase-ICP-Agent-Identities-Ed25519Identity-GetSenderDelegations 'EdjCase.ICP.Agent.Identities.Ed25519Identity.GetSenderDelegations')
   - [Sign()](#M-EdjCase-ICP-Agent-Identities-Ed25519Identity-Sign-System-Byte[]- 'EdjCase.ICP.Agent.Identities.Ed25519Identity.Sign(System.Byte[])')
@@ -143,7 +134,7 @@
 - [InvalidCertificateException](#T-EdjCase-ICP-Agent-InvalidCertificateException 'EdjCase.ICP.Agent.InvalidCertificateException')
   - [#ctor(message)](#M-EdjCase-ICP-Agent-InvalidCertificateException-#ctor-System-String- 'EdjCase.ICP.Agent.InvalidCertificateException.#ctor(System.String)')
 - [InvalidPublicKey](#T-EdjCase-ICP-Agent-InvalidPublicKey 'EdjCase.ICP.Agent.InvalidPublicKey')
-  - [#ctor()](#M-EdjCase-ICP-Agent-InvalidPublicKey-#ctor 'EdjCase.ICP.Agent.InvalidPublicKey.#ctor')
+  - [#ctor()](#M-EdjCase-ICP-Agent-InvalidPublicKey-#ctor-System-Exception- 'EdjCase.ICP.Agent.InvalidPublicKey.#ctor(System.Exception)')
 - [MetaData](#T-EdjCase-ICP-Agent-Standards-ICRC1-Models-MetaData 'EdjCase.ICP.Agent.Standards.ICRC1.Models.MetaData')
   - [#ctor(key,value)](#M-EdjCase-ICP-Agent-Standards-ICRC1-Models-MetaData-#ctor-System-String,EdjCase-ICP-Agent-Standards-ICRC1-Models-MetaDataValue- 'EdjCase.ICP.Agent.Standards.ICRC1.Models.MetaData.#ctor(System.String,EdjCase.ICP.Agent.Standards.ICRC1.Models.MetaDataValue)')
   - [Key](#P-EdjCase-ICP-Agent-Standards-ICRC1-Models-MetaData-Key 'EdjCase.ICP.Agent.Standards.ICRC1.Models.MetaData.Key')
@@ -214,7 +205,7 @@
   - [AsRejected()](#M-EdjCase-ICP-Agent-Responses-RequestStatus-AsRejected 'EdjCase.ICP.Agent.Responses.RequestStatus.AsRejected')
   - [AsReplied()](#M-EdjCase-ICP-Agent-Responses-RequestStatus-AsReplied 'EdjCase.ICP.Agent.Responses.RequestStatus.AsReplied')
 - [SignedContent](#T-EdjCase-ICP-Agent-Models-SignedContent 'EdjCase.ICP.Agent.Models.SignedContent')
-  - [#ctor(content,senderPublicKey,delegations,senderSignature)](#M-EdjCase-ICP-Agent-Models-SignedContent-#ctor-System-Collections-Generic-Dictionary{System-String,EdjCase-ICP-Candid-Models-IHashable},System-Byte[],System-Collections-Generic-List{EdjCase-ICP-Agent-Models-SignedDelegation},System-Byte[]- 'EdjCase.ICP.Agent.Models.SignedContent.#ctor(System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.Candid.Models.IHashable},System.Byte[],System.Collections.Generic.List{EdjCase.ICP.Agent.Models.SignedDelegation},System.Byte[])')
+  - [#ctor(content,senderPublicKey,delegations,senderSignature)](#M-EdjCase-ICP-Agent-Models-SignedContent-#ctor-System-Collections-Generic-Dictionary{System-String,EdjCase-ICP-Candid-Models-IHashable},EdjCase-ICP-Agent-SubjectPublicKeyInfo,System-Collections-Generic-List{EdjCase-ICP-Agent-Models-SignedDelegation},System-Byte[]- 'EdjCase.ICP.Agent.Models.SignedContent.#ctor(System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.Candid.Models.IHashable},EdjCase.ICP.Agent.SubjectPublicKeyInfo,System.Collections.Generic.List{EdjCase.ICP.Agent.Models.SignedDelegation},System.Byte[])')
   - [Content](#P-EdjCase-ICP-Agent-Models-SignedContent-Content 'EdjCase.ICP.Agent.Models.SignedContent.Content')
   - [SenderDelegations](#P-EdjCase-ICP-Agent-Models-SignedContent-SenderDelegations 'EdjCase.ICP.Agent.Models.SignedContent.SenderDelegations')
   - [SenderPublicKey](#P-EdjCase-ICP-Agent-Models-SignedContent-SenderPublicKey 'EdjCase.ICP.Agent.Models.SignedContent.SenderPublicKey')
@@ -225,8 +216,8 @@
   - [Delegation](#P-EdjCase-ICP-Agent-Models-SignedDelegation-Delegation 'EdjCase.ICP.Agent.Models.SignedDelegation.Delegation')
   - [Signature](#P-EdjCase-ICP-Agent-Models-SignedDelegation-Signature 'EdjCase.ICP.Agent.Models.SignedDelegation.Signature')
   - [ComputeHash()](#M-EdjCase-ICP-Agent-Models-SignedDelegation-ComputeHash-EdjCase-ICP-Candid-Crypto-IHashFunction- 'EdjCase.ICP.Agent.Models.SignedDelegation.ComputeHash(EdjCase.ICP.Candid.Crypto.IHashFunction)')
-  - [Create(keyToDelegateTo,delegatingIdentity,expiration,targets,senders)](#M-EdjCase-ICP-Agent-Models-SignedDelegation-Create-EdjCase-ICP-Agent-DerEncodedPublicKey,EdjCase-ICP-Agent-Identities-IIdentity,EdjCase-ICP-Candid-Models-ICTimestamp,System-Collections-Generic-List{EdjCase-ICP-Candid-Models-Principal},System-Collections-Generic-List{EdjCase-ICP-Candid-Models-Principal}- 'EdjCase.ICP.Agent.Models.SignedDelegation.Create(EdjCase.ICP.Agent.DerEncodedPublicKey,EdjCase.ICP.Agent.Identities.IIdentity,EdjCase.ICP.Candid.Models.ICTimestamp,System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal},System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal})')
-  - [Create(keyToDelegateTo,signingFunc,expiration,targets,senders)](#M-EdjCase-ICP-Agent-Models-SignedDelegation-Create-EdjCase-ICP-Agent-DerEncodedPublicKey,System-Func{System-Byte[],System-Byte[]},EdjCase-ICP-Candid-Models-ICTimestamp,System-Collections-Generic-List{EdjCase-ICP-Candid-Models-Principal},System-Collections-Generic-List{EdjCase-ICP-Candid-Models-Principal}- 'EdjCase.ICP.Agent.Models.SignedDelegation.Create(EdjCase.ICP.Agent.DerEncodedPublicKey,System.Func{System.Byte[],System.Byte[]},EdjCase.ICP.Candid.Models.ICTimestamp,System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal},System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal})')
+  - [Create(keyToDelegateTo,delegatingIdentity,expiration,targets,senders)](#M-EdjCase-ICP-Agent-Models-SignedDelegation-Create-EdjCase-ICP-Agent-SubjectPublicKeyInfo,EdjCase-ICP-Agent-Identities-IIdentity,EdjCase-ICP-Candid-Models-ICTimestamp,System-Collections-Generic-List{EdjCase-ICP-Candid-Models-Principal},System-Collections-Generic-List{EdjCase-ICP-Candid-Models-Principal}- 'EdjCase.ICP.Agent.Models.SignedDelegation.Create(EdjCase.ICP.Agent.SubjectPublicKeyInfo,EdjCase.ICP.Agent.Identities.IIdentity,EdjCase.ICP.Candid.Models.ICTimestamp,System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal},System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal})')
+  - [Create(keyToDelegateTo,signingFunc,expiration,targets,senders)](#M-EdjCase-ICP-Agent-Models-SignedDelegation-Create-EdjCase-ICP-Agent-SubjectPublicKeyInfo,System-Func{System-Byte[],System-Byte[]},EdjCase-ICP-Candid-Models-ICTimestamp,System-Collections-Generic-List{EdjCase-ICP-Candid-Models-Principal},System-Collections-Generic-List{EdjCase-ICP-Candid-Models-Principal}- 'EdjCase.ICP.Agent.Models.SignedDelegation.Create(EdjCase.ICP.Agent.SubjectPublicKeyInfo,System.Func{System.Byte[],System.Byte[]},EdjCase.ICP.Candid.Models.ICTimestamp,System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal},System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal})')
 - [StatusResponse](#T-EdjCase-ICP-Agent-Responses-StatusResponse 'EdjCase.ICP.Agent.Responses.StatusResponse')
   - [#ctor(icApiVersion,implementationSource,implementationVersion,implementationRevision,developmentRootKey)](#M-EdjCase-ICP-Agent-Responses-StatusResponse-#ctor-System-String,System-String,System-String,System-String,System-Byte[]- 'EdjCase.ICP.Agent.Responses.StatusResponse.#ctor(System.String,System.String,System.String,System.String,System.Byte[])')
   - [DevelopmentRootKey](#P-EdjCase-ICP-Agent-Responses-StatusResponse-DevelopmentRootKey 'EdjCase.ICP.Agent.Responses.StatusResponse.DevelopmentRootKey')
@@ -240,6 +231,8 @@
   - [Received](#F-EdjCase-ICP-Agent-Responses-RequestStatus-StatusType-Received 'EdjCase.ICP.Agent.Responses.RequestStatus.StatusType.Received')
   - [Rejected](#F-EdjCase-ICP-Agent-Responses-RequestStatus-StatusType-Rejected 'EdjCase.ICP.Agent.Responses.RequestStatus.StatusType.Rejected')
   - [Replied](#F-EdjCase-ICP-Agent-Responses-RequestStatus-StatusType-Replied 'EdjCase.ICP.Agent.Responses.RequestStatus.StatusType.Replied')
+- [SubjectPublicKeyInfo](#T-EdjCase-ICP-Agent-SubjectPublicKeyInfo 'EdjCase.ICP.Agent.SubjectPublicKeyInfo')
+  - [ToPrincipal()](#M-EdjCase-ICP-Agent-SubjectPublicKeyInfo-ToPrincipal 'EdjCase.ICP.Agent.SubjectPublicKeyInfo.ToPrincipal')
 - [SupportedStandard](#T-EdjCase-ICP-Agent-Standards-ICRC1-Models-SupportedStandard 'EdjCase.ICP.Agent.Standards.ICRC1.Models.SupportedStandard')
   - [#ctor(name,url)](#M-EdjCase-ICP-Agent-Standards-ICRC1-Models-SupportedStandard-#ctor-System-String,System-String- 'EdjCase.ICP.Agent.Standards.ICRC1.Models.SupportedStandard.#ctor(System.String,System.String)')
   - [Name](#P-EdjCase-ICP-Agent-Standards-ICRC1-Models-SupportedStandard-Name 'EdjCase.ICP.Agent.Standards.ICRC1.Models.SupportedStandard.Name')
@@ -565,7 +558,7 @@ A signature on the tree root hash. Used to validate the tree
 
 A partial state tree of the requested state data
 
-<a name='M-EdjCase-ICP-Agent-Models-Certificate-IsValid-System-Byte[]-'></a>
+<a name='M-EdjCase-ICP-Agent-Models-Certificate-IsValid-EdjCase-ICP-Agent-SubjectPublicKeyInfo-'></a>
 ### IsValid(rootPublicKey) `method`
 
 ##### Summary
@@ -581,7 +574,7 @@ True if the certificate is valid, otherwise false
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| rootPublicKey | [System.Byte[]](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Byte[] 'System.Byte[]') | The root public key (DER encoded) of the internet computer network |
+| rootPublicKey | [EdjCase.ICP.Agent.SubjectPublicKeyInfo](#T-EdjCase-ICP-Agent-SubjectPublicKeyInfo 'EdjCase.ICP.Agent.SubjectPublicKeyInfo') | The root public key (DER encoded) of the internet computer network |
 
 <a name='T-EdjCase-ICP-Agent-Models-CertificateDelegation'></a>
 ## CertificateDelegation `type`
@@ -722,14 +715,14 @@ EdjCase.ICP.Agent.Models
 
 A model that contains data on delegating authority from an identity
 
-<a name='M-EdjCase-ICP-Agent-Models-Delegation-#ctor-System-Byte[],EdjCase-ICP-Candid-Models-ICTimestamp,System-Collections-Generic-List{EdjCase-ICP-Candid-Models-Principal},System-Collections-Generic-List{EdjCase-ICP-Candid-Models-Principal}-'></a>
+<a name='M-EdjCase-ICP-Agent-Models-Delegation-#ctor-EdjCase-ICP-Agent-SubjectPublicKeyInfo,EdjCase-ICP-Candid-Models-ICTimestamp,System-Collections-Generic-List{EdjCase-ICP-Candid-Models-Principal},System-Collections-Generic-List{EdjCase-ICP-Candid-Models-Principal}-'></a>
 ### #ctor(publicKey,expiration,targets,senders) `constructor`
 
 ##### Parameters
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| publicKey | [System.Byte[]](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Byte[] 'System.Byte[]') | The public key from the authorizing identity |
+| publicKey | [EdjCase.ICP.Agent.SubjectPublicKeyInfo](#T-EdjCase-ICP-Agent-SubjectPublicKeyInfo 'EdjCase.ICP.Agent.SubjectPublicKeyInfo') | The public key from the authorizing identity |
 | expiration | [EdjCase.ICP.Candid.Models.ICTimestamp](#T-EdjCase-ICP-Candid-Models-ICTimestamp 'EdjCase.ICP.Candid.Models.ICTimestamp') | The expiration when the delegation will no longer be valid |
 | targets | [System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.List 'System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal}') | Optional. A list of canister ids where the delegation can be sent to and be authorized |
 | senders | [System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.List 'System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal}') | Optional. A list of sender ids that can send this delegation and be authorized |
@@ -817,14 +810,14 @@ EdjCase.ICP.Agent.Models
 A model containing a list of signed delegations to authorize an identity 
 to act on behalf of the chain's public key
 
-<a name='M-EdjCase-ICP-Agent-Models-DelegationChain-#ctor-EdjCase-ICP-Agent-DerEncodedPublicKey,System-Collections-Generic-List{EdjCase-ICP-Agent-Models-SignedDelegation}-'></a>
+<a name='M-EdjCase-ICP-Agent-Models-DelegationChain-#ctor-EdjCase-ICP-Agent-SubjectPublicKeyInfo,System-Collections-Generic-List{EdjCase-ICP-Agent-Models-SignedDelegation}-'></a>
 ### #ctor(publicKey,delegations) `constructor`
 
 ##### Parameters
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| publicKey | [EdjCase.ICP.Agent.DerEncodedPublicKey](#T-EdjCase-ICP-Agent-DerEncodedPublicKey 'EdjCase.ICP.Agent.DerEncodedPublicKey') | The public key of the identity that has delegated authority |
+| publicKey | [EdjCase.ICP.Agent.SubjectPublicKeyInfo](#T-EdjCase-ICP-Agent-SubjectPublicKeyInfo 'EdjCase.ICP.Agent.SubjectPublicKeyInfo') | The public key of the identity that has delegated authority, DER encoded |
 | delegations | [System.Collections.Generic.List{EdjCase.ICP.Agent.Models.SignedDelegation}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.List 'System.Collections.Generic.List{EdjCase.ICP.Agent.Models.SignedDelegation}') | The chain of delegations to authorize a key |
 
 <a name='P-EdjCase-ICP-Agent-Models-DelegationChain-Delegations'></a>
@@ -842,9 +835,9 @@ The last delegation is for the key to be authorized
 
 ##### Summary
 
-The public key of the identity that has delegated authority
+The public key of the identity that has delegated authority, DER encoded
 
-<a name='M-EdjCase-ICP-Agent-Models-DelegationChain-Create-EdjCase-ICP-Agent-DerEncodedPublicKey,EdjCase-ICP-Agent-Identities-IIdentity,EdjCase-ICP-Candid-Models-ICTimestamp,System-Collections-Generic-List{EdjCase-ICP-Candid-Models-Principal},System-Collections-Generic-List{EdjCase-ICP-Candid-Models-Principal}-'></a>
+<a name='M-EdjCase-ICP-Agent-Models-DelegationChain-Create-EdjCase-ICP-Agent-SubjectPublicKeyInfo,EdjCase-ICP-Agent-Identities-IIdentity,EdjCase-ICP-Candid-Models-ICTimestamp,System-Collections-Generic-List{EdjCase-ICP-Candid-Models-Principal},System-Collections-Generic-List{EdjCase-ICP-Candid-Models-Principal}-'></a>
 ### Create(keyToDelegateTo,delegatingIdentity,expiration,targets,senders) `method`
 
 ##### Summary
@@ -859,7 +852,7 @@ A delegation chain signed by the delegating identity
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| keyToDelegateTo | [EdjCase.ICP.Agent.DerEncodedPublicKey](#T-EdjCase-ICP-Agent-DerEncodedPublicKey 'EdjCase.ICP.Agent.DerEncodedPublicKey') | The key to delegate authority to |
+| keyToDelegateTo | [EdjCase.ICP.Agent.SubjectPublicKeyInfo](#T-EdjCase-ICP-Agent-SubjectPublicKeyInfo 'EdjCase.ICP.Agent.SubjectPublicKeyInfo') | The key to delegate authority to, DER encoded |
 | delegatingIdentity | [EdjCase.ICP.Agent.Identities.IIdentity](#T-EdjCase-ICP-Agent-Identities-IIdentity 'EdjCase.ICP.Agent.Identities.IIdentity') | The identity that is signing the delegation |
 | expiration | [EdjCase.ICP.Candid.Models.ICTimestamp](#T-EdjCase-ICP-Candid-Models-ICTimestamp 'EdjCase.ICP.Candid.Models.ICTimestamp') | How long to delegate for |
 | targets | [System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.List 'System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal}') | Optional. List of canister ids to limit delegation to |
@@ -938,262 +931,6 @@ This method has no parameters.
 
 This method has no parameters.
 
-<a name='T-EdjCase-ICP-Agent-DerEncodedPublicKey'></a>
-## DerEncodedPublicKey `type`
-
-##### Namespace
-
-EdjCase.ICP.Agent
-
-##### Summary
-
-A helper class to encode and decode public keys to the DER encoding
-
-<a name='M-EdjCase-ICP-Agent-DerEncodedPublicKey-#ctor-System-Byte[]-'></a>
-### #ctor(derEncodedBytes) `constructor`
-
-##### Parameters
-
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| derEncodedBytes | [System.Byte[]](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Byte[] 'System.Byte[]') | Raw value of the DER encoded public key |
-
-<a name='P-EdjCase-ICP-Agent-DerEncodedPublicKey-Value'></a>
-### Value `property`
-
-##### Summary
-
-Raw value of the DER encoded public key
-
-<a name='M-EdjCase-ICP-Agent-DerEncodedPublicKey-As-System-String-'></a>
-### As() `method`
-
-##### Summary
-
-Converts the DER encoded key to a raw key based on the OID specified IF its has
-the specified OID, otherwise throws an exception
-
-##### Returns
-
-Bytes of the decoded public key
-
-##### Parameters
-
-This method has no parameters.
-
-##### Exceptions
-
-| Name | Description |
-| ---- | ----------- |
-| [EdjCase.ICP.Agent.InvalidPublicKey](#T-EdjCase-ICP-Agent-InvalidPublicKey 'EdjCase.ICP.Agent.InvalidPublicKey') | Throws if not a key with the specified OID |
-
-<a name='M-EdjCase-ICP-Agent-DerEncodedPublicKey-As-System-Collections-Generic-IEnumerable{System-String}-'></a>
-### As() `method`
-
-##### Summary
-
-Converts the DER encoded key to a raw key based on the OIDs specified IF its has
-the specified OIDs, otherwise throws an exception
-
-##### Returns
-
-Bytes of the decoded public key
-
-##### Parameters
-
-This method has no parameters.
-
-##### Exceptions
-
-| Name | Description |
-| ---- | ----------- |
-| [EdjCase.ICP.Agent.InvalidPublicKey](#T-EdjCase-ICP-Agent-InvalidPublicKey 'EdjCase.ICP.Agent.InvalidPublicKey') | Throws if not a key with the specified OIDs |
-
-<a name='M-EdjCase-ICP-Agent-DerEncodedPublicKey-AsBls'></a>
-### AsBls() `method`
-
-##### Summary
-
-Converts the DER encoded key to a \`BLS\` key IF a \`BLS\` key
-otherwise throws an exception
-
-##### Returns
-
-Bytes of the \`BLS\` public key
-
-##### Parameters
-
-This method has no parameters.
-
-##### Exceptions
-
-| Name | Description |
-| ---- | ----------- |
-| [EdjCase.ICP.Agent.InvalidPublicKey](#T-EdjCase-ICP-Agent-InvalidPublicKey 'EdjCase.ICP.Agent.InvalidPublicKey') | Throws if not a \`BLS\` key |
-
-<a name='M-EdjCase-ICP-Agent-DerEncodedPublicKey-AsCose'></a>
-### AsCose() `method`
-
-##### Summary
-
-Converts the DER encoded key to a \`COSE\` key IF a \`COSE\` key
-otherwise throws an exception
-
-##### Returns
-
-Bytes of the \`COSE\` public key
-
-##### Parameters
-
-This method has no parameters.
-
-##### Exceptions
-
-| Name | Description |
-| ---- | ----------- |
-| [EdjCase.ICP.Agent.InvalidPublicKey](#T-EdjCase-ICP-Agent-InvalidPublicKey 'EdjCase.ICP.Agent.InvalidPublicKey') | Throws if not a \`COSE\` key |
-
-<a name='M-EdjCase-ICP-Agent-DerEncodedPublicKey-AsEd25519'></a>
-### AsEd25519() `method`
-
-##### Summary
-
-Converts the DER encoded key to a \`Ed25519\` key IF a \`Ed25519\` key
-otherwise throws an exception
-
-##### Returns
-
-Bytes of the \`Ed25519\` public key
-
-##### Parameters
-
-This method has no parameters.
-
-##### Exceptions
-
-| Name | Description |
-| ---- | ----------- |
-| [EdjCase.ICP.Agent.InvalidPublicKey](#T-EdjCase-ICP-Agent-InvalidPublicKey 'EdjCase.ICP.Agent.InvalidPublicKey') | Throws if not a \`Ed25519\` key |
-
-<a name='M-EdjCase-ICP-Agent-DerEncodedPublicKey-From-System-Byte[],System-String-'></a>
-### From(value,oid) `method`
-
-##### Summary
-
-Creates a DER public key from the raw bytes of a key that has the specified OID
-
-##### Returns
-
-DER encoded key
-
-##### Parameters
-
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| value | [System.Byte[]](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Byte[] 'System.Byte[]') | Bytes of a public key |
-| oid | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The OID for the DER encoding |
-
-<a name='M-EdjCase-ICP-Agent-DerEncodedPublicKey-From-System-Byte[],System-Collections-Generic-IEnumerable{System-String}-'></a>
-### From(value,oids) `method`
-
-##### Summary
-
-Creates a DER public key from the raw bytes of a key that has the specified OIDs
-
-##### Returns
-
-DER encoded key
-
-##### Parameters
-
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| value | [System.Byte[]](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Byte[] 'System.Byte[]') | Bytes of a public key |
-| oids | [System.Collections.Generic.IEnumerable{System.String}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.IEnumerable 'System.Collections.Generic.IEnumerable{System.String}') | The OIDs for the DER encoding |
-
-<a name='M-EdjCase-ICP-Agent-DerEncodedPublicKey-FromBls-System-Byte[]-'></a>
-### FromBls(value) `method`
-
-##### Summary
-
-Creates a DER public key from the raw bytes of a \`BLS\` key.
-
-##### Returns
-
-DER encoded key
-
-##### Parameters
-
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| value | [System.Byte[]](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Byte[] 'System.Byte[]') | Bytes of a \`BLS\` public key |
-
-<a name='M-EdjCase-ICP-Agent-DerEncodedPublicKey-FromCose-System-Byte[]-'></a>
-### FromCose(value) `method`
-
-##### Summary
-
-Creates a DER public key from the raw bytes of a \`COSE\` key.
-
-##### Returns
-
-DER encoded key
-
-##### Parameters
-
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| value | [System.Byte[]](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Byte[] 'System.Byte[]') | Bytes of a \`COSE\` public key |
-
-<a name='M-EdjCase-ICP-Agent-DerEncodedPublicKey-FromDer-System-Byte[]-'></a>
-### FromDer(value) `method`
-
-##### Summary
-
-Creates a DER public key from the raw bytes of a DER encoded key. Same as the constructor
-
-##### Returns
-
-DER encoded key
-
-##### Parameters
-
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| value | [System.Byte[]](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Byte[] 'System.Byte[]') | DER encoded bytes of a public key |
-
-<a name='M-EdjCase-ICP-Agent-DerEncodedPublicKey-FromEd25519-System-Byte[]-'></a>
-### FromEd25519(value) `method`
-
-##### Summary
-
-Creates a DER public key from the raw bytes of a \`ED25519\` key.
-
-##### Returns
-
-DER encoded key
-
-##### Parameters
-
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| value | [System.Byte[]](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Byte[] 'System.Byte[]') | Bytes of a \`ED25519\` public key |
-
-<a name='M-EdjCase-ICP-Agent-DerEncodedPublicKey-ToPrincipal'></a>
-### ToPrincipal() `method`
-
-##### Summary
-
-Converts the key to a self authenticating principal value
-
-##### Returns
-
-
-
-##### Parameters
-
-This method has no parameters.
-
 <a name='T-EdjCase-ICP-Agent-Standards-ICRC1-Models-DuplicateError'></a>
 ## DuplicateError `type`
 
@@ -1225,6 +962,64 @@ Primary constructor for the DuplicateError class
 
 The ID of the transaction that this transaction is a duplicate
 
+<a name='T-EdjCase-ICP-Agent-Identities-EcdsaIdentity'></a>
+## EcdsaIdentity `type`
+
+##### Namespace
+
+EdjCase.ICP.Agent.Identities
+
+##### Summary
+
+An identity using a Ed25519 key
+
+<a name='P-EdjCase-ICP-Agent-Identities-EcdsaIdentity-PrivateKey'></a>
+### PrivateKey `property`
+
+##### Summary
+
+The private key of the identity
+
+<a name='P-EdjCase-ICP-Agent-Identities-EcdsaIdentity-PublicKey'></a>
+### PublicKey `property`
+
+##### Summary
+
+The public key of the identity, DER encoded
+
+<a name='M-EdjCase-ICP-Agent-Identities-EcdsaIdentity-GetPublicKey'></a>
+### GetPublicKey() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Agent-Identities-EcdsaIdentity-GetSenderDelegations'></a>
+### GetSenderDelegations() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Agent-Identities-EcdsaIdentity-Sign-System-Byte[]-'></a>
+### Sign() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
 <a name='T-EdjCase-ICP-Agent-Identities-Ed25519Identity'></a>
 ## Ed25519Identity `type`
 
@@ -1236,14 +1031,14 @@ EdjCase.ICP.Agent.Identities
 
 An identity using a Ed25519 key
 
-<a name='M-EdjCase-ICP-Agent-Identities-Ed25519Identity-#ctor-EdjCase-ICP-Agent-DerEncodedPublicKey,System-Byte[]-'></a>
+<a name='M-EdjCase-ICP-Agent-Identities-Ed25519Identity-#ctor-System-Byte[],System-Byte[]-'></a>
 ### #ctor(publicKey,privateKey) `constructor`
 
 ##### Parameters
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| publicKey | [EdjCase.ICP.Agent.DerEncodedPublicKey](#T-EdjCase-ICP-Agent-DerEncodedPublicKey 'EdjCase.ICP.Agent.DerEncodedPublicKey') | The public key of the identity |
+| publicKey | [System.Byte[]](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Byte[] 'System.Byte[]') | The public key of the identity |
 | privateKey | [System.Byte[]](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Byte[] 'System.Byte[]') | The private key of the identity |
 
 <a name='P-EdjCase-ICP-Agent-Identities-Ed25519Identity-PrivateKey'></a>
@@ -1260,8 +1055,8 @@ The private key of the identity
 
 The public key of the identity
 
-<a name='M-EdjCase-ICP-Agent-Identities-Ed25519Identity-Create'></a>
-### Create() `method`
+<a name='M-EdjCase-ICP-Agent-Identities-Ed25519Identity-Generate'></a>
+### Generate() `method`
 
 ##### Summary
 
@@ -1985,9 +1780,9 @@ EdjCase.ICP.Agent
 
 ##### Summary
 
-Exception to indicate that the specified BLS public key is invalid
+Exception to indicate that the specified public key is invalid
 
-<a name='M-EdjCase-ICP-Agent-InvalidPublicKey-#ctor'></a>
+<a name='M-EdjCase-ICP-Agent-InvalidPublicKey-#ctor-System-Exception-'></a>
 ### #ctor() `constructor`
 
 ##### Summary
@@ -2723,7 +2518,7 @@ EdjCase.ICP.Agent.Models
 
 A model containing content and the signature information of it
 
-<a name='M-EdjCase-ICP-Agent-Models-SignedContent-#ctor-System-Collections-Generic-Dictionary{System-String,EdjCase-ICP-Candid-Models-IHashable},System-Byte[],System-Collections-Generic-List{EdjCase-ICP-Agent-Models-SignedDelegation},System-Byte[]-'></a>
+<a name='M-EdjCase-ICP-Agent-Models-SignedContent-#ctor-System-Collections-Generic-Dictionary{System-String,EdjCase-ICP-Candid-Models-IHashable},EdjCase-ICP-Agent-SubjectPublicKeyInfo,System-Collections-Generic-List{EdjCase-ICP-Agent-Models-SignedDelegation},System-Byte[]-'></a>
 ### #ctor(content,senderPublicKey,delegations,senderSignature) `constructor`
 
 ##### Parameters
@@ -2731,7 +2526,7 @@ A model containing content and the signature information of it
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | content | [System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.Candid.Models.IHashable}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.Dictionary 'System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.Candid.Models.IHashable}') | The content that is signed in the form of key value pairs |
-| senderPublicKey | [System.Byte[]](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Byte[] 'System.Byte[]') | Public key used to authenticate this request, unless anonymous, then null |
+| senderPublicKey | [EdjCase.ICP.Agent.SubjectPublicKeyInfo](#T-EdjCase-ICP-Agent-SubjectPublicKeyInfo 'EdjCase.ICP.Agent.SubjectPublicKeyInfo') | Public key used to authenticate this request, unless anonymous, then null |
 | delegations | [System.Collections.Generic.List{EdjCase.ICP.Agent.Models.SignedDelegation}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.List 'System.Collections.Generic.List{EdjCase.ICP.Agent.Models.SignedDelegation}') | Optional. A chain of delegations, starting with the one signed by sender_pubkey 
 and ending with the one delegating to the key relating to sender_sig. |
 | senderSignature | [System.Byte[]](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Byte[] 'System.Byte[]') | Signature to authenticate this request, unless anonymous, then null |
@@ -2822,7 +2617,7 @@ The signature for the delegation
 
 This method has no parameters.
 
-<a name='M-EdjCase-ICP-Agent-Models-SignedDelegation-Create-EdjCase-ICP-Agent-DerEncodedPublicKey,EdjCase-ICP-Agent-Identities-IIdentity,EdjCase-ICP-Candid-Models-ICTimestamp,System-Collections-Generic-List{EdjCase-ICP-Candid-Models-Principal},System-Collections-Generic-List{EdjCase-ICP-Candid-Models-Principal}-'></a>
+<a name='M-EdjCase-ICP-Agent-Models-SignedDelegation-Create-EdjCase-ICP-Agent-SubjectPublicKeyInfo,EdjCase-ICP-Agent-Identities-IIdentity,EdjCase-ICP-Candid-Models-ICTimestamp,System-Collections-Generic-List{EdjCase-ICP-Candid-Models-Principal},System-Collections-Generic-List{EdjCase-ICP-Candid-Models-Principal}-'></a>
 ### Create(keyToDelegateTo,delegatingIdentity,expiration,targets,senders) `method`
 
 ##### Summary
@@ -2837,13 +2632,13 @@ A delegation signed by the delegating identity
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| keyToDelegateTo | [EdjCase.ICP.Agent.DerEncodedPublicKey](#T-EdjCase-ICP-Agent-DerEncodedPublicKey 'EdjCase.ICP.Agent.DerEncodedPublicKey') | The key to delegate authority to |
+| keyToDelegateTo | [EdjCase.ICP.Agent.SubjectPublicKeyInfo](#T-EdjCase-ICP-Agent-SubjectPublicKeyInfo 'EdjCase.ICP.Agent.SubjectPublicKeyInfo') | The key to delegate authority to |
 | delegatingIdentity | [EdjCase.ICP.Agent.Identities.IIdentity](#T-EdjCase-ICP-Agent-Identities-IIdentity 'EdjCase.ICP.Agent.Identities.IIdentity') | The identity that is signing the delegation |
 | expiration | [EdjCase.ICP.Candid.Models.ICTimestamp](#T-EdjCase-ICP-Candid-Models-ICTimestamp 'EdjCase.ICP.Candid.Models.ICTimestamp') | How long to delegate for |
 | targets | [System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.List 'System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal}') | Optional. List of canister ids to limit delegation to |
 | senders | [System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.List 'System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal}') | Optional. List of pricipals where requests can originate from |
 
-<a name='M-EdjCase-ICP-Agent-Models-SignedDelegation-Create-EdjCase-ICP-Agent-DerEncodedPublicKey,System-Func{System-Byte[],System-Byte[]},EdjCase-ICP-Candid-Models-ICTimestamp,System-Collections-Generic-List{EdjCase-ICP-Candid-Models-Principal},System-Collections-Generic-List{EdjCase-ICP-Candid-Models-Principal}-'></a>
+<a name='M-EdjCase-ICP-Agent-Models-SignedDelegation-Create-EdjCase-ICP-Agent-SubjectPublicKeyInfo,System-Func{System-Byte[],System-Byte[]},EdjCase-ICP-Candid-Models-ICTimestamp,System-Collections-Generic-List{EdjCase-ICP-Candid-Models-Principal},System-Collections-Generic-List{EdjCase-ICP-Candid-Models-Principal}-'></a>
 ### Create(keyToDelegateTo,signingFunc,expiration,targets,senders) `method`
 
 ##### Summary
@@ -2858,7 +2653,7 @@ A delegation signed by the delegating identity
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| keyToDelegateTo | [EdjCase.ICP.Agent.DerEncodedPublicKey](#T-EdjCase-ICP-Agent-DerEncodedPublicKey 'EdjCase.ICP.Agent.DerEncodedPublicKey') | The key to delegate authority to |
+| keyToDelegateTo | [EdjCase.ICP.Agent.SubjectPublicKeyInfo](#T-EdjCase-ICP-Agent-SubjectPublicKeyInfo 'EdjCase.ICP.Agent.SubjectPublicKeyInfo') | The key to delegate authority to |
 | signingFunc | [System.Func{System.Byte[],System.Byte[]}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Func 'System.Func{System.Byte[],System.Byte[]}') | Function to sign the delegation bytes |
 | expiration | [EdjCase.ICP.Candid.Models.ICTimestamp](#T-EdjCase-ICP-Candid-Models-ICTimestamp 'EdjCase.ICP.Candid.Models.ICTimestamp') | How long to delegate for |
 | targets | [System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.List 'System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal}') | Optional. List of canister ids to limit delegation to |
@@ -2991,6 +2786,28 @@ The request has been processed and has reject data
 ##### Summary
 
 The request has been processed and it has reply data
+
+<a name='T-EdjCase-ICP-Agent-SubjectPublicKeyInfo'></a>
+## SubjectPublicKeyInfo `type`
+
+##### Namespace
+
+EdjCase.ICP.Agent
+
+<a name='M-EdjCase-ICP-Agent-SubjectPublicKeyInfo-ToPrincipal'></a>
+### ToPrincipal() `method`
+
+##### Summary
+
+Converts the key to a self authenticating principal value
+
+##### Returns
+
+
+
+##### Parameters
+
+This method has no parameters.
 
 <a name='T-EdjCase-ICP-Agent-Standards-ICRC1-Models-SupportedStandard'></a>
 ## SupportedStandard `type`

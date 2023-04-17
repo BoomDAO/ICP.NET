@@ -15,7 +15,7 @@ namespace EdjCase.ICP.Agent.Models
 		/// <summary>
 		/// The public key from the authorizing identity
 		/// </summary>
-		public byte[] PublicKey { get; }
+		public SubjectPublicKeyInfo PublicKey { get; }
 
 		/// <summary>
 		/// The expiration when the delegation will no longer be valid
@@ -38,7 +38,7 @@ namespace EdjCase.ICP.Agent.Models
 		/// <param name="senders">Optional. A list of sender ids that can send this delegation and be authorized</param>
 		/// <exception cref="ArgumentNullException"></exception>
 		public Delegation(
-			byte[] publicKey,
+			SubjectPublicKeyInfo publicKey,
 			ICTimestamp expiration,
 			List<Principal>? targets = null,
 			List<Principal>? senders = null
@@ -55,7 +55,7 @@ namespace EdjCase.ICP.Agent.Models
 		{
 			var obj = new Dictionary<string, IHashable>
 			{
-				{Properties.PUBLIC_KEY, this.PublicKey.ToHashable()},
+				{Properties.PUBLIC_KEY, this.PublicKey.ToDerEncoding().ToHashable()},
 				{Properties.EXPIRATION, this.Expiration},
 			};
 

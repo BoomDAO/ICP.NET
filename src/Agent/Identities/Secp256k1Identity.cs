@@ -1,35 +1,28 @@
-using Cryptography.ECDSA;
 using EdjCase.ICP.Agent.Models;
+using EdjCase.ICP.Candid.Utilities;
+using Org.BouncyCastle.Asn1.X9;
+using Org.BouncyCastle.Asn1;
+using Org.BouncyCastle.Crypto.Parameters;
+using Org.BouncyCastle.Crypto.Signers;
+using Org.BouncyCastle.Math;
+using Org.BouncyCastle.Security;
 using System;
 using System.Collections.Generic;
-using System.Net.Sockets;
-using System.Security.Cryptography;
-using System.Text;
+using Org.BouncyCastle.Crypto;
+using System.IO;
+using Org.BouncyCastle.OpenSsl;
 
 namespace EdjCase.ICP.Agent.Identities
 {
-	public class Secp256k1Identity : IIdentity
+	public class Secp256k1Identity : EcdsaIdentity
 	{
-		/// <summary>
-		/// The public key of the identity
-		/// </summary>
-		public DerEncodedPublicKey PublicKey { get; }
-
-		/// <summary>
-		/// The private key of the identity
-		/// </summary>
-		public byte[] PrivateKey { get; }
-
-		/// <param name="publicKey">The public key of the identity</param>
-		/// <param name="privateKey">The private key of the identity</param>
-		public Secp256k1Identity(DerEncodedPublicKey publicKey, byte[] privateKey)
+		internal const string CURVE_OID = "1.3.132.0.10";
+		public Secp256k1Identity(byte[] publicKey, byte[] privateKey)
+			: base(publicKey, privateKey, CURVE_OID)
 		{
-			// TODO validate that pub+priv match?
-			this.PublicKey = publicKey;
-			this.PrivateKey = privateKey;
 		}
 
-		public DerEncodedPublicKey GetPublicKey()
+		public SubjectPublicKeyInfo GetPublicKey()
 		{
 			return this.PublicKey;
 		}
@@ -39,17 +32,19 @@ namespace EdjCase.ICP.Agent.Identities
 			return null;
 		}
 
-		public byte[] Sign(byte[] data)
+		public static Secp256k1Identity FromPrivateKey(byte[] privateKey)
 		{
-			var parameters = new ECParameters
-			{
-				Curve = ECCurve.NamedCurves.nistP256,
-				D = this.PrivateKey
-			};
-			using (ECDsa ecdsa = ECDsa.Create(parameters))
-			{
-				return ecdsa.SignData(data, HashAlgorithmName.SHA256);
-			}
+			byte[] publicKey = EcdsaIdentity.DeriveUncompressedPublicKey(
+				privateKey,
+				CURVE_OID
+			);
+			return new Secp256k1Identity(publicKey, privateKey);
+		}
+
+		public static Secp256k1Identity Generate()
+		{
+			byte[] privateKey = CreatePrivateKey(CURVE_OID);
+			return Secp256k1Identity.FromPrivateKey(privateKey);
 		}
 	}
 }

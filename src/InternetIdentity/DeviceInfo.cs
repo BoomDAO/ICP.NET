@@ -10,19 +10,15 @@ namespace EdjCase.ICP.InternetIdentity
 		/// <summary>
 		/// DER encoded public key for the device
 		/// </summary>
-		public DerEncodedPublicKey PublicKey { get; }
+		public SubjectPublicKeyInfo PublicKey { get; }
 
 		/// <summary>
 		/// Optional. The credential id bytes for the device
 		/// </summary>
 		public byte[]? CredentialId { get; }
 
-		public DeviceInfo(byte[] publicKey, byte[]? credentialId) : this(DerEncodedPublicKey.FromDer(publicKey), credentialId)
-		{
 
-		}
-
-		public DeviceInfo(DerEncodedPublicKey publicKey, byte[]? credentialId)
+		public DeviceInfo(SubjectPublicKeyInfo publicKey, byte[]? credentialId)
 		{
 			this.PublicKey = publicKey ?? throw new ArgumentNullException(nameof(publicKey));
 			this.CredentialId = credentialId;

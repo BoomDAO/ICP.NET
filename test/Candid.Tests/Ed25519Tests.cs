@@ -13,15 +13,15 @@ namespace EdjCase.ICP.Candid.Tests
 		public void PubliKey_Der_Encoding(string publicKeyHex, string derEncodedPublicKeyHex)
 		{
 			byte[] publicKeyBytes = ByteUtil.FromHexString(publicKeyHex);
-			var publicKey = DerEncodedPublicKey.FromEd25519(publicKeyBytes);
+			var publicKey = SubjectPublicKeyInfo.Ed25519(publicKeyBytes);
 
 			byte[] expectedDer = ByteUtil.FromHexString(derEncodedPublicKeyHex);
 
-			var key = new DerEncodedPublicKey(expectedDer);
+			var key = SubjectPublicKeyInfo.FromDerEncoding(expectedDer);
 
-			Assert.Equal(publicKeyBytes, key.AsEd25519());
+			Assert.Equal(publicKeyBytes, key.PublicKey);
 
-			byte[] actualDer = publicKey.Value;
+			byte[] actualDer = publicKey.ToDerEncoding();
 
 			Assert.Equal(expectedDer, actualDer);
 		}

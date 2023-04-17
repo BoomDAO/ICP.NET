@@ -1,51 +1,65 @@
-using EdjCase.ICP.Candid.Models;
+using Org.BouncyCastle.Crypto.Parameters;
 using System;
-using System.Formats.Asn1;
-using System.Numerics;
+using Org.BouncyCastle.Crypto;
+using System.IO;
+using Org.BouncyCastle.OpenSsl;
 
 namespace EdjCase.ICP.Agent.Identities
 {
 	public static class IdentityUtil
 	{
-		public static IIdentity FromSec1(byte[] sec1Value)
+		public static Secp256k1Identity GenerateSecp256k1Identity()
 		{
-			try
+			return Secp256k1Identity.Generate();
+		}
+
+		public static Ed25519Identity GenerateEd25519Identity()
+		{
+			return Ed25519Identity.Generate();
+		}
+
+		public static Secp256k1Identity FromSecp256k1PrivateKey(byte[] privateKey)
+		{
+			return Secp256k1Identity.FromPrivateKey(privateKey);
+		}
+
+		public static Ed25519Identity FromEd25519PrivateKey(byte[] privateKey)
+		{
+			return Ed25519Identity.FromPrivateKey(privateKey);
+		}
+
+		public static IIdentity FromPemFile(Stream pemFile)
+		{
+			using (StreamReader reader = new StreamReader(pemFile))
 			{
-				AsnReader reader = new(sec1Value, AsnEncodingRules.DER);
-				AsnReader seqReader = reader.ReadSequence();
-				BigInteger version = seqReader.ReadInteger();
-				if(version != 1)
+				return FromPemFile(reader);
+			}
+		}
+
+		public static IIdentity FromPemFile(TextReader pemFileReader)
+		{
+			PemReader pemReader = new PemReader(pemFileReader);
+			object obj = pemReader.ReadObject();
+			if (obj is AsymmetricCipherKeyPair aKeyPair
+				&& aKeyPair.Private is ECPrivateKeyParameters ecPrivateKey)
+			{
+				byte[] privateKeyBytes = ecPrivateKey.D.ToByteArrayUnsigned();
+				string curveOid = ecPrivateKey.PublicKeyParamSet.Id;
+				switch (curveOid)
 				{
-					throw new NotImplementedException("Only version 1 in SEC1 parsing is implemented");
-				}
-				byte[] privateKey = seqReader.ReadOctetString();
-
-				Asn1Tag oidTag = new Asn1Tag(TagClass.ContextSpecific, tagValue: 0, isConstructed: true);
-
-				string oid = seqReader
-					.ReadSequence(oidTag)
-					.ReadObjectIdentifier();
-
-				Asn1Tag publicKeyTag = new Asn1Tag(TagClass.ContextSpecific, tagValue: 1, isConstructed: true);
-				byte[] publicKeyBytes = seqReader
-					.ReadSequence(publicKeyTag)
-					.ReadBitString(out int unusedBitCount);
-				
-				var publicKey = DerEncodedPublicKey.From(publicKeyBytes, oid);
-				var p = publicKey.ToPrincipal();
-				switch (oid)
-				{
-					case "1.3.132.0.10":
-						return new Secp256k1Identity(publicKey, privateKey);
-					case "1.3.101.112":
-						return new Ed25519Identity(publicKey, privateKey);
+					case Secp256k1Identity.CURVE_OID:
+						return Secp256k1Identity.FromPrivateKey(privateKeyBytes);
 					default:
-						throw new NotImplementedException($"DER oid '{oid}' not implemented");
+						throw new NotImplementedException($"There is no support for curve oid '{curveOid}'");
 				}
 			}
-			catch (Exception e)
+			else if (obj is Ed25519PrivateKeyParameters ed25519PrivateKey)
 			{
-				throw new InvalidSec1Key(e);
+				return Ed25519Identity.FromPrivateKey(ed25519PrivateKey.GetEncoded());
+			}
+			else
+			{
+				throw new NotImplementedException($"PEM data of type '{obj.GetType()}' is not yet supported");
 			}
 		}
 	}

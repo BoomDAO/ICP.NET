@@ -108,7 +108,7 @@ namespace System.Formats.Cbor
 			writer.WriteStartMap(null);
 
 			writer.WriteTextString(Delegation.Properties.PUBLIC_KEY);
-			writer.WriteByteString(d.PublicKey);
+			writer.WriteByteString(d.PublicKey.ToDerEncoding());
 
 			writer.WriteTextString(Delegation.Properties.EXPIRATION);
 			writer.WriteHashableValue(d.Expiration);

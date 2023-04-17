@@ -44,7 +44,7 @@ namespace EdjCase.ICP.InternetIdentity
 				// Only authentication devices
 				.Where(d => d["purpose"].AsVariant().Tag == CandidTag.FromName("authentication"))
 				.Select(d => new DeviceInfo(
-					publicKey: d["pubkey"].AsVectorAsArray(v => v.AsNat8()),
+					publicKey: SubjectPublicKeyInfo.FromDerEncoding(d["pubkey"].AsVectorAsArray(v => v.AsNat8())),
 					credentialId: d["credential_id"].AsOptional(o => o.AsVectorAsArray(v => v.AsNat8())).GetValueOrDefault()
 				))
 				.ToList();
@@ -59,13 +59,13 @@ namespace EdjCase.ICP.InternetIdentity
 			TimeSpan? maxTimeToLive = null
 		)
 		{
-			DerEncodedPublicKey sesionPublicKey = sessionIdentity.GetPublicKey();
+			SubjectPublicKeyInfo sesionPublicKey = sessionIdentity.GetPublicKey();
 
 			var anchorArg = CandidTypedValue.Nat64(anchor);
 			var hostnameArg = CandidTypedValue.Text(hostname);
 			var publicKeyArg = CandidTypedValue.Vector(
 				CandidType.Nat8(),
-				sesionPublicKey.Value,
+				sesionPublicKey.ToDerEncoding(),
 				v => CandidValue.Nat8(v)
 			);
 			CandidArg prepareArg = CandidArg.FromCandid(
@@ -115,7 +115,7 @@ namespace EdjCase.ICP.InternetIdentity
 						)
 						.GetValueOrDefault();
 
-					Delegation delegation = new Delegation(publicKey, exp, targets);
+					Delegation delegation = new Delegation(SubjectPublicKeyInfo.FromDerEncoding(publicKey), exp, targets);
 					var signedDelegation = new SignedDelegation(
 						delegation,
 						signature: signedDelegationRecord["signature"]
@@ -123,7 +123,7 @@ namespace EdjCase.ICP.InternetIdentity
 					);
 
 					var chain = new DelegationChain(
-						new DerEncodedPublicKey(userKey),
+						SubjectPublicKeyInfo.FromDerEncoding(userKey),
 						new List<SignedDelegation> { signedDelegation }
 					);
 					return new DelegationIdentity(sessionIdentity, chain);

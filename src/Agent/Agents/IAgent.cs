@@ -66,7 +66,7 @@ namespace EdjCase.ICP.Agent.Agents
 		/// Gets the root public key of the current Internet Computer network
 		/// </summary>
 		/// <returns>The root public key bytes </returns>
-		Task<byte[]> GetRootKeyAsync();
+		Task<SubjectPublicKeyInfo> GetRootKeyAsync();
 	}
 
 	/// <summary>

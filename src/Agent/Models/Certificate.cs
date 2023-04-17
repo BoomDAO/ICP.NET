@@ -46,7 +46,7 @@ namespace EdjCase.ICP.Agent.Models
 		/// </summary>
 		/// <param name="rootPublicKey">The root public key (DER encoded) of the internet computer network</param>
 		/// <returns>True if the certificate is valid, otherwise false</returns>
-		public bool IsValid(byte[] rootPublicKey)
+		public bool IsValid(SubjectPublicKeyInfo rootPublicKey)
 		{
 			/*
 				verify_cert(cert) =
@@ -67,8 +67,7 @@ namespace EdjCase.ICP.Agent.Models
 				}
 				rootPublicKey = this.Delegation.GetPublicKey();
 			}
-			var blsKey = new DerEncodedPublicKey(rootPublicKey).AsBls();
-			return IcpBlsUtil.VerifySignature(blsKey, rootHash, this.Signature);
+			return IcpBlsUtil.VerifySignature(rootPublicKey.PublicKey, rootHash, this.Signature);
 		}
 
 		internal static Certificate ReadCbor(CborReader reader)

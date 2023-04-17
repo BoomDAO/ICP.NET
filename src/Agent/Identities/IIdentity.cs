@@ -16,7 +16,7 @@ namespace EdjCase.ICP.Agent.Identities
 		/// Returns the public key of the identity
 		/// </summary>
 		/// <returns>Public key of the identity</returns>
-		public DerEncodedPublicKey GetPublicKey();
+		public SubjectPublicKeyInfo GetPublicKey();
 
 		/// <summary>
 		/// Gets the signed delegations for the identity.
@@ -47,13 +47,13 @@ namespace EdjCase.ICP.Agent.Identities
 		/// <returns>The content with signature(s) from the identity</returns>
 		public static SignedContent SignContent(this IIdentity identity, Dictionary<string, IHashable> content)
 		{
-			DerEncodedPublicKey senderPublicKey = identity.GetPublicKey();
+			SubjectPublicKeyInfo senderPublicKey = identity.GetPublicKey();
 			var sha256 = SHA256HashFunction.Create();
 			byte[] contentHash = content.ToHashable().ComputeHash(sha256);
 			byte[] domainSeparator = Encoding.UTF8.GetBytes("\x0Aic-request");
 			byte[] senderSignature = identity.Sign(domainSeparator.Concat(contentHash).ToArray());
 			List<SignedDelegation>? senderDelegations = identity.GetSenderDelegations();
-			return new SignedContent(content, senderPublicKey.Value, senderDelegations, senderSignature);
+			return new SignedContent(content, senderPublicKey, senderDelegations, senderSignature);
 		}
 	}
 }
