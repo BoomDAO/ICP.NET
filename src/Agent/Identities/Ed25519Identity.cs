@@ -67,6 +67,11 @@ namespace EdjCase.ICP.Agent.Identities
 			return new Ed25519Identity(publicKey, privateKey);
 		}
 
+		/// <summary>
+		/// Converts a raw ed25519 private key to a Secp256k1Identity, deriving the public key
+		/// </summary>
+		/// <param name="privateKey">Raw ed25519 private key</param>
+		/// <returns>Ed25519Identity with specified private key</returns>
 		public static Ed25519Identity FromPrivateKey(byte[] privateKey)
 		{
 			// Derive the public key

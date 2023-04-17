@@ -26,6 +26,12 @@ namespace EdjCase.ICP.Agent.Identities
 		/// </summary>
 		public byte[] PrivateKey { get; }
 
+		/// <summary>
+		/// Default constructor
+		/// </summary>
+		/// <param name="publicKey">The raw public key</param>
+		/// <param name="privateKey">The raw private key</param>
+		/// <param name="curveOid">The ecdsa curve OID to use</param>
 		protected EcdsaIdentity(
 			byte[] publicKey,
 			byte[] privateKey,
@@ -79,8 +85,13 @@ namespace EdjCase.ICP.Agent.Identities
 			return null;
 		}
 
-
-		internal static byte[] DeriveUncompressedPublicKey(byte[] privateKey, string curveOid)
+		/// <summary>
+		/// Derive the public key value from the private key and curve
+		/// </summary>
+		/// <param name="privateKey">The raw private key</param>
+		/// <param name="curveOid">The OID of the curve to use</param>
+		/// <returns>The raw uncompressed public key</returns>
+		public static byte[] DeriveUncompressedPublicKey(byte[] privateKey, string curveOid)
 		{
 			ECDomainParameters ecDomain = GetDomain(curveOid);
 			return DeriveUncompressedPublicKey(privateKey, ecDomain);
@@ -101,15 +112,19 @@ namespace EdjCase.ICP.Agent.Identities
 			
 		}
 
-
-		protected static byte[] CreatePrivateKey(string curveOid)
+		/// <summary>
+		/// Generates a new private key with the specified curve
+		/// </summary>
+		/// <param name="curveOid">The OID of the curve to use</param>
+		/// <returns>A raw private key</returns>
+		public static byte[] GeneratePrivateKey(string curveOid)
 		{
 			// Get the curve parameters from the OID
 			DerObjectIdentifier oid = new DerObjectIdentifier(curveOid);
 			X9ECParameters curve = ECNamedCurveTable.GetByOid(oid);
 			if(curve == null)
 			{
-				throw new Exception($"Curve with oid '{curveOid}' is not found or supported");
+				throw new NotImplementedException($"Curve with oid '{curveOid}' is not found or supported");
 			}
 
 			// Create a secure random generator

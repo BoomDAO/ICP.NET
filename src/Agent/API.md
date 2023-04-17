@@ -7,6 +7,14 @@
   - [#ctor(owner,subaccount)](#M-EdjCase-ICP-Agent-Standards-ICRC1-Models-Account-#ctor-EdjCase-ICP-Candid-Models-Principal,EdjCase-ICP-Candid-Models-OptionalValue{System-Collections-Generic-List{System-Byte}}- 'EdjCase.ICP.Agent.Standards.ICRC1.Models.Account.#ctor(EdjCase.ICP.Candid.Models.Principal,EdjCase.ICP.Candid.Models.OptionalValue{System.Collections.Generic.List{System.Byte}})')
   - [Owner](#P-EdjCase-ICP-Agent-Standards-ICRC1-Models-Account-Owner 'EdjCase.ICP.Agent.Standards.ICRC1.Models.Account.Owner')
   - [Subaccount](#P-EdjCase-ICP-Agent-Standards-ICRC1-Models-Account-Subaccount 'EdjCase.ICP.Agent.Standards.ICRC1.Models.Account.Subaccount')
+- [AlgorithmIdentifier](#T-EdjCase-ICP-Agent-AlgorithmIdentifier 'EdjCase.ICP.Agent.AlgorithmIdentifier')
+  - [#ctor(algorithmOid,parametersOid)](#M-EdjCase-ICP-Agent-AlgorithmIdentifier-#ctor-System-String,System-String- 'EdjCase.ICP.Agent.AlgorithmIdentifier.#ctor(System.String,System.String)')
+  - [AlgorithmOid](#P-EdjCase-ICP-Agent-AlgorithmIdentifier-AlgorithmOid 'EdjCase.ICP.Agent.AlgorithmIdentifier.AlgorithmOid')
+  - [ParametersOid](#P-EdjCase-ICP-Agent-AlgorithmIdentifier-ParametersOid 'EdjCase.ICP.Agent.AlgorithmIdentifier.ParametersOid')
+  - [Bls()](#M-EdjCase-ICP-Agent-AlgorithmIdentifier-Bls 'EdjCase.ICP.Agent.AlgorithmIdentifier.Bls')
+  - [Ecdsa(curveOid)](#M-EdjCase-ICP-Agent-AlgorithmIdentifier-Ecdsa-System-String- 'EdjCase.ICP.Agent.AlgorithmIdentifier.Ecdsa(System.String)')
+  - [Ed25519()](#M-EdjCase-ICP-Agent-AlgorithmIdentifier-Ed25519 'EdjCase.ICP.Agent.AlgorithmIdentifier.Ed25519')
+  - [Secp256k1()](#M-EdjCase-ICP-Agent-AlgorithmIdentifier-Secp256k1 'EdjCase.ICP.Agent.AlgorithmIdentifier.Secp256k1')
 - [BadBurnError](#T-EdjCase-ICP-Agent-Standards-ICRC1-Models-BadBurnError 'EdjCase.ICP.Agent.Standards.ICRC1.Models.BadBurnError')
   - [#ctor(minBurnAmount)](#M-EdjCase-ICP-Agent-Standards-ICRC1-Models-BadBurnError-#ctor-EdjCase-ICP-Candid-Models-UnboundedUInt- 'EdjCase.ICP.Agent.Standards.ICRC1.Models.BadBurnError.#ctor(EdjCase.ICP.Candid.Models.UnboundedUInt)')
   - [MinBurnAmount](#P-EdjCase-ICP-Agent-Standards-ICRC1-Models-BadBurnError-MinBurnAmount 'EdjCase.ICP.Agent.Standards.ICRC1.Models.BadBurnError.MinBurnAmount')
@@ -69,8 +77,11 @@
   - [#ctor(duplicateOf)](#M-EdjCase-ICP-Agent-Standards-ICRC1-Models-DuplicateError-#ctor-EdjCase-ICP-Candid-Models-UnboundedUInt- 'EdjCase.ICP.Agent.Standards.ICRC1.Models.DuplicateError.#ctor(EdjCase.ICP.Candid.Models.UnboundedUInt)')
   - [DuplicateOf](#P-EdjCase-ICP-Agent-Standards-ICRC1-Models-DuplicateError-DuplicateOf 'EdjCase.ICP.Agent.Standards.ICRC1.Models.DuplicateError.DuplicateOf')
 - [EcdsaIdentity](#T-EdjCase-ICP-Agent-Identities-EcdsaIdentity 'EdjCase.ICP.Agent.Identities.EcdsaIdentity')
+  - [#ctor(publicKey,privateKey,curveOid)](#M-EdjCase-ICP-Agent-Identities-EcdsaIdentity-#ctor-System-Byte[],System-Byte[],System-String- 'EdjCase.ICP.Agent.Identities.EcdsaIdentity.#ctor(System.Byte[],System.Byte[],System.String)')
   - [PrivateKey](#P-EdjCase-ICP-Agent-Identities-EcdsaIdentity-PrivateKey 'EdjCase.ICP.Agent.Identities.EcdsaIdentity.PrivateKey')
   - [PublicKey](#P-EdjCase-ICP-Agent-Identities-EcdsaIdentity-PublicKey 'EdjCase.ICP.Agent.Identities.EcdsaIdentity.PublicKey')
+  - [DeriveUncompressedPublicKey(privateKey,curveOid)](#M-EdjCase-ICP-Agent-Identities-EcdsaIdentity-DeriveUncompressedPublicKey-System-Byte[],System-String- 'EdjCase.ICP.Agent.Identities.EcdsaIdentity.DeriveUncompressedPublicKey(System.Byte[],System.String)')
+  - [GeneratePrivateKey(curveOid)](#M-EdjCase-ICP-Agent-Identities-EcdsaIdentity-GeneratePrivateKey-System-String- 'EdjCase.ICP.Agent.Identities.EcdsaIdentity.GeneratePrivateKey(System.String)')
   - [GetPublicKey()](#M-EdjCase-ICP-Agent-Identities-EcdsaIdentity-GetPublicKey 'EdjCase.ICP.Agent.Identities.EcdsaIdentity.GetPublicKey')
   - [GetSenderDelegations()](#M-EdjCase-ICP-Agent-Identities-EcdsaIdentity-GetSenderDelegations 'EdjCase.ICP.Agent.Identities.EcdsaIdentity.GetSenderDelegations')
   - [Sign()](#M-EdjCase-ICP-Agent-Identities-EcdsaIdentity-Sign-System-Byte[]- 'EdjCase.ICP.Agent.Identities.EcdsaIdentity.Sign(System.Byte[])')
@@ -78,6 +89,7 @@
   - [#ctor(publicKey,privateKey)](#M-EdjCase-ICP-Agent-Identities-Ed25519Identity-#ctor-System-Byte[],System-Byte[]- 'EdjCase.ICP.Agent.Identities.Ed25519Identity.#ctor(System.Byte[],System.Byte[])')
   - [PrivateKey](#P-EdjCase-ICP-Agent-Identities-Ed25519Identity-PrivateKey 'EdjCase.ICP.Agent.Identities.Ed25519Identity.PrivateKey')
   - [PublicKey](#P-EdjCase-ICP-Agent-Identities-Ed25519Identity-PublicKey 'EdjCase.ICP.Agent.Identities.Ed25519Identity.PublicKey')
+  - [FromPrivateKey(privateKey)](#M-EdjCase-ICP-Agent-Identities-Ed25519Identity-FromPrivateKey-System-Byte[]- 'EdjCase.ICP.Agent.Identities.Ed25519Identity.FromPrivateKey(System.Byte[])')
   - [Generate()](#M-EdjCase-ICP-Agent-Identities-Ed25519Identity-Generate 'EdjCase.ICP.Agent.Identities.Ed25519Identity.Generate')
   - [GetPublicKey()](#M-EdjCase-ICP-Agent-Identities-Ed25519Identity-GetPublicKey 'EdjCase.ICP.Agent.Identities.Ed25519Identity.GetPublicKey')
   - [GetSenderDelegations()](#M-EdjCase-ICP-Agent-Identities-Ed25519Identity-GetSenderDelegations 'EdjCase.ICP.Agent.Identities.Ed25519Identity.GetSenderDelegations')
@@ -128,6 +140,13 @@
   - [Sign(data)](#M-EdjCase-ICP-Agent-Identities-IIdentity-Sign-System-Byte[]- 'EdjCase.ICP.Agent.Identities.IIdentity.Sign(System.Byte[])')
 - [IIdentityExtensions](#T-EdjCase-ICP-Agent-Identities-IIdentityExtensions 'EdjCase.ICP.Agent.Identities.IIdentityExtensions')
   - [SignContent(identity,content)](#M-EdjCase-ICP-Agent-Identities-IIdentityExtensions-SignContent-EdjCase-ICP-Agent-Identities-IIdentity,System-Collections-Generic-Dictionary{System-String,EdjCase-ICP-Candid-Models-IHashable}- 'EdjCase.ICP.Agent.Identities.IIdentityExtensions.SignContent(EdjCase.ICP.Agent.Identities.IIdentity,System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.Candid.Models.IHashable})')
+- [IdentityUtil](#T-EdjCase-ICP-Agent-Identities-IdentityUtil 'EdjCase.ICP.Agent.Identities.IdentityUtil')
+  - [FromEd25519PrivateKey(privateKey)](#M-EdjCase-ICP-Agent-Identities-IdentityUtil-FromEd25519PrivateKey-System-Byte[]- 'EdjCase.ICP.Agent.Identities.IdentityUtil.FromEd25519PrivateKey(System.Byte[])')
+  - [FromPemFile(pemFile)](#M-EdjCase-ICP-Agent-Identities-IdentityUtil-FromPemFile-System-IO-Stream- 'EdjCase.ICP.Agent.Identities.IdentityUtil.FromPemFile(System.IO.Stream)')
+  - [FromPemFile(pemFileReader)](#M-EdjCase-ICP-Agent-Identities-IdentityUtil-FromPemFile-System-IO-TextReader- 'EdjCase.ICP.Agent.Identities.IdentityUtil.FromPemFile(System.IO.TextReader)')
+  - [FromSecp256k1PrivateKey(privateKey)](#M-EdjCase-ICP-Agent-Identities-IdentityUtil-FromSecp256k1PrivateKey-System-Byte[]- 'EdjCase.ICP.Agent.Identities.IdentityUtil.FromSecp256k1PrivateKey(System.Byte[])')
+  - [GenerateEd25519Identity()](#M-EdjCase-ICP-Agent-Identities-IdentityUtil-GenerateEd25519Identity 'EdjCase.ICP.Agent.Identities.IdentityUtil.GenerateEd25519Identity')
+  - [GenerateSecp256k1Identity()](#M-EdjCase-ICP-Agent-Identities-IdentityUtil-GenerateSecp256k1Identity 'EdjCase.ICP.Agent.Identities.IdentityUtil.GenerateSecp256k1Identity')
 - [InsufficientFundsError](#T-EdjCase-ICP-Agent-Standards-ICRC1-Models-InsufficientFundsError 'EdjCase.ICP.Agent.Standards.ICRC1.Models.InsufficientFundsError')
   - [#ctor(balance)](#M-EdjCase-ICP-Agent-Standards-ICRC1-Models-InsufficientFundsError-#ctor-EdjCase-ICP-Candid-Models-UnboundedUInt- 'EdjCase.ICP.Agent.Standards.ICRC1.Models.InsufficientFundsError.#ctor(EdjCase.ICP.Candid.Models.UnboundedUInt)')
   - [Balance](#P-EdjCase-ICP-Agent-Standards-ICRC1-Models-InsufficientFundsError-Balance 'EdjCase.ICP.Agent.Standards.ICRC1.Models.InsufficientFundsError.Balance')
@@ -204,6 +223,10 @@
   - [Type](#P-EdjCase-ICP-Agent-Responses-RequestStatus-Type 'EdjCase.ICP.Agent.Responses.RequestStatus.Type')
   - [AsRejected()](#M-EdjCase-ICP-Agent-Responses-RequestStatus-AsRejected 'EdjCase.ICP.Agent.Responses.RequestStatus.AsRejected')
   - [AsReplied()](#M-EdjCase-ICP-Agent-Responses-RequestStatus-AsReplied 'EdjCase.ICP.Agent.Responses.RequestStatus.AsReplied')
+- [Secp256k1Identity](#T-EdjCase-ICP-Agent-Identities-Secp256k1Identity 'EdjCase.ICP.Agent.Identities.Secp256k1Identity')
+  - [#ctor(publicKey,privateKey)](#M-EdjCase-ICP-Agent-Identities-Secp256k1Identity-#ctor-System-Byte[],System-Byte[]- 'EdjCase.ICP.Agent.Identities.Secp256k1Identity.#ctor(System.Byte[],System.Byte[])')
+  - [FromPrivateKey(privateKey)](#M-EdjCase-ICP-Agent-Identities-Secp256k1Identity-FromPrivateKey-System-Byte[]- 'EdjCase.ICP.Agent.Identities.Secp256k1Identity.FromPrivateKey(System.Byte[])')
+  - [Generate()](#M-EdjCase-ICP-Agent-Identities-Secp256k1Identity-Generate 'EdjCase.ICP.Agent.Identities.Secp256k1Identity.Generate')
 - [SignedContent](#T-EdjCase-ICP-Agent-Models-SignedContent 'EdjCase.ICP.Agent.Models.SignedContent')
   - [#ctor(content,senderPublicKey,delegations,senderSignature)](#M-EdjCase-ICP-Agent-Models-SignedContent-#ctor-System-Collections-Generic-Dictionary{System-String,EdjCase-ICP-Candid-Models-IHashable},EdjCase-ICP-Agent-SubjectPublicKeyInfo,System-Collections-Generic-List{EdjCase-ICP-Agent-Models-SignedDelegation},System-Byte[]- 'EdjCase.ICP.Agent.Models.SignedContent.#ctor(System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.Candid.Models.IHashable},EdjCase.ICP.Agent.SubjectPublicKeyInfo,System.Collections.Generic.List{EdjCase.ICP.Agent.Models.SignedDelegation},System.Byte[])')
   - [Content](#P-EdjCase-ICP-Agent-Models-SignedContent-Content 'EdjCase.ICP.Agent.Models.SignedContent.Content')
@@ -232,6 +255,15 @@
   - [Rejected](#F-EdjCase-ICP-Agent-Responses-RequestStatus-StatusType-Rejected 'EdjCase.ICP.Agent.Responses.RequestStatus.StatusType.Rejected')
   - [Replied](#F-EdjCase-ICP-Agent-Responses-RequestStatus-StatusType-Replied 'EdjCase.ICP.Agent.Responses.RequestStatus.StatusType.Replied')
 - [SubjectPublicKeyInfo](#T-EdjCase-ICP-Agent-SubjectPublicKeyInfo 'EdjCase.ICP.Agent.SubjectPublicKeyInfo')
+  - [#ctor(algorithm,subjectPublicKey)](#M-EdjCase-ICP-Agent-SubjectPublicKeyInfo-#ctor-EdjCase-ICP-Agent-AlgorithmIdentifier,System-Byte[]- 'EdjCase.ICP.Agent.SubjectPublicKeyInfo.#ctor(EdjCase.ICP.Agent.AlgorithmIdentifier,System.Byte[])')
+  - [Algorithm](#P-EdjCase-ICP-Agent-SubjectPublicKeyInfo-Algorithm 'EdjCase.ICP.Agent.SubjectPublicKeyInfo.Algorithm')
+  - [PublicKey](#P-EdjCase-ICP-Agent-SubjectPublicKeyInfo-PublicKey 'EdjCase.ICP.Agent.SubjectPublicKeyInfo.PublicKey')
+  - [Bls(publicKey)](#M-EdjCase-ICP-Agent-SubjectPublicKeyInfo-Bls-System-Byte[]- 'EdjCase.ICP.Agent.SubjectPublicKeyInfo.Bls(System.Byte[])')
+  - [Ecdsa(publicKey,curveOid)](#M-EdjCase-ICP-Agent-SubjectPublicKeyInfo-Ecdsa-System-Byte[],System-String- 'EdjCase.ICP.Agent.SubjectPublicKeyInfo.Ecdsa(System.Byte[],System.String)')
+  - [Ed25519(publicKey)](#M-EdjCase-ICP-Agent-SubjectPublicKeyInfo-Ed25519-System-Byte[]- 'EdjCase.ICP.Agent.SubjectPublicKeyInfo.Ed25519(System.Byte[])')
+  - [FromDerEncoding(derEncodedPublicKey)](#M-EdjCase-ICP-Agent-SubjectPublicKeyInfo-FromDerEncoding-System-Byte[]- 'EdjCase.ICP.Agent.SubjectPublicKeyInfo.FromDerEncoding(System.Byte[])')
+  - [Secp256k1(publicKey)](#M-EdjCase-ICP-Agent-SubjectPublicKeyInfo-Secp256k1-System-Byte[]- 'EdjCase.ICP.Agent.SubjectPublicKeyInfo.Secp256k1(System.Byte[])')
+  - [ToDerEncoding()](#M-EdjCase-ICP-Agent-SubjectPublicKeyInfo-ToDerEncoding 'EdjCase.ICP.Agent.SubjectPublicKeyInfo.ToDerEncoding')
   - [ToPrincipal()](#M-EdjCase-ICP-Agent-SubjectPublicKeyInfo-ToPrincipal 'EdjCase.ICP.Agent.SubjectPublicKeyInfo.ToPrincipal')
 - [SupportedStandard](#T-EdjCase-ICP-Agent-Standards-ICRC1-Models-SupportedStandard 'EdjCase.ICP.Agent.Standards.ICRC1.Models.SupportedStandard')
   - [#ctor(name,url)](#M-EdjCase-ICP-Agent-Standards-ICRC1-Models-SupportedStandard-#ctor-System-String,System-String- 'EdjCase.ICP.Agent.Standards.ICRC1.Models.SupportedStandard.#ctor(System.String,System.String)')
@@ -324,6 +356,108 @@ The owner of the account, represented as a Principal object
 ##### Summary
 
 The subaccount of the account, represented as an OptionalValue object
+
+<a name='T-EdjCase-ICP-Agent-AlgorithmIdentifier'></a>
+## AlgorithmIdentifier `type`
+
+##### Namespace
+
+EdjCase.ICP.Agent
+
+##### Summary
+
+A model to contain OID information for cryptographic algorithms and their curves.
+Used in SubjectPublicKeyInfo models
+
+<a name='M-EdjCase-ICP-Agent-AlgorithmIdentifier-#ctor-System-String,System-String-'></a>
+### #ctor(algorithmOid,parametersOid) `constructor`
+
+##### Summary
+
+Default constructor
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| algorithmOid | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The OID of the algorithm |
+| parametersOid | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The OID of the parameters of the algorithm, such as a specific curve OID |
+
+<a name='P-EdjCase-ICP-Agent-AlgorithmIdentifier-AlgorithmOid'></a>
+### AlgorithmOid `property`
+
+##### Summary
+
+The OID of the algorithm
+
+<a name='P-EdjCase-ICP-Agent-AlgorithmIdentifier-ParametersOid'></a>
+### ParametersOid `property`
+
+##### Summary
+
+The OID of the parameters of the algorithm, such as a specific curve OID
+
+<a name='M-EdjCase-ICP-Agent-AlgorithmIdentifier-Bls'></a>
+### Bls() `method`
+
+##### Summary
+
+Helper method to create an \`AlgorithmIdentifier\` for Bls
+
+##### Returns
+
+AlgorithmIdentifier for Bls
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Agent-AlgorithmIdentifier-Ecdsa-System-String-'></a>
+### Ecdsa(curveOid) `method`
+
+##### Summary
+
+Helper method to create an \`AlgorithmIdentifier\` for Ecdsa
+
+##### Returns
+
+AlgorithmIdentifier for Ecdsa
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| curveOid | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The OID of the specific curve to use for ECDSA |
+
+<a name='M-EdjCase-ICP-Agent-AlgorithmIdentifier-Ed25519'></a>
+### Ed25519() `method`
+
+##### Summary
+
+Helper method to create an \`AlgorithmIdentifier\` for Ed25519
+
+##### Returns
+
+AlgorithmIdentifier for Ed25519
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Agent-AlgorithmIdentifier-Secp256k1'></a>
+### Secp256k1() `method`
+
+##### Summary
+
+Helper method to create an \`AlgorithmIdentifier\` for Secp256k1
+
+##### Returns
+
+AlgorithmIdentifier for Secp256k1
+
+##### Parameters
+
+This method has no parameters.
 
 <a name='T-EdjCase-ICP-Agent-Standards-ICRC1-Models-BadBurnError'></a>
 ## BadBurnError `type`
@@ -973,6 +1107,21 @@ EdjCase.ICP.Agent.Identities
 
 An identity using a Ed25519 key
 
+<a name='M-EdjCase-ICP-Agent-Identities-EcdsaIdentity-#ctor-System-Byte[],System-Byte[],System-String-'></a>
+### #ctor(publicKey,privateKey,curveOid) `constructor`
+
+##### Summary
+
+Default constructor
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| publicKey | [System.Byte[]](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Byte[] 'System.Byte[]') | The raw public key |
+| privateKey | [System.Byte[]](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Byte[] 'System.Byte[]') | The raw private key |
+| curveOid | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The ecdsa curve OID to use |
+
 <a name='P-EdjCase-ICP-Agent-Identities-EcdsaIdentity-PrivateKey'></a>
 ### PrivateKey `property`
 
@@ -986,6 +1135,41 @@ The private key of the identity
 ##### Summary
 
 The public key of the identity, DER encoded
+
+<a name='M-EdjCase-ICP-Agent-Identities-EcdsaIdentity-DeriveUncompressedPublicKey-System-Byte[],System-String-'></a>
+### DeriveUncompressedPublicKey(privateKey,curveOid) `method`
+
+##### Summary
+
+Derive the public key value from the private key and curve
+
+##### Returns
+
+The raw uncompressed public key
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| privateKey | [System.Byte[]](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Byte[] 'System.Byte[]') | The raw private key |
+| curveOid | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The OID of the curve to use |
+
+<a name='M-EdjCase-ICP-Agent-Identities-EcdsaIdentity-GeneratePrivateKey-System-String-'></a>
+### GeneratePrivateKey(curveOid) `method`
+
+##### Summary
+
+Generates a new private key with the specified curve
+
+##### Returns
+
+A raw private key
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| curveOid | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The OID of the curve to use |
 
 <a name='M-EdjCase-ICP-Agent-Identities-EcdsaIdentity-GetPublicKey'></a>
 ### GetPublicKey() `method`
@@ -1054,6 +1238,23 @@ The private key of the identity
 ##### Summary
 
 The public key of the identity
+
+<a name='M-EdjCase-ICP-Agent-Identities-Ed25519Identity-FromPrivateKey-System-Byte[]-'></a>
+### FromPrivateKey(privateKey) `method`
+
+##### Summary
+
+Converts a raw ed25519 private key to a Secp256k1Identity, deriving the public key
+
+##### Returns
+
+Ed25519Identity with specified private key
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| privateKey | [System.Byte[]](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Byte[] 'System.Byte[]') | Raw ed25519 private key |
 
 <a name='M-EdjCase-ICP-Agent-Identities-Ed25519Identity-Generate'></a>
 ### Generate() `method`
@@ -1719,6 +1920,115 @@ The content with signature(s) from the identity
 | ---- | ---- | ----------- |
 | identity | [EdjCase.ICP.Agent.Identities.IIdentity](#T-EdjCase-ICP-Agent-Identities-IIdentity 'EdjCase.ICP.Agent.Identities.IIdentity') | The identity to sign the content with |
 | content | [System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.Candid.Models.IHashable}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.Dictionary 'System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.Candid.Models.IHashable}') | The data that needs to be signed |
+
+<a name='T-EdjCase-ICP-Agent-Identities-IdentityUtil'></a>
+## IdentityUtil `type`
+
+##### Namespace
+
+EdjCase.ICP.Agent.Identities
+
+##### Summary
+
+Utility class for helper methods around Identities
+
+<a name='M-EdjCase-ICP-Agent-Identities-IdentityUtil-FromEd25519PrivateKey-System-Byte[]-'></a>
+### FromEd25519PrivateKey(privateKey) `method`
+
+##### Summary
+
+Converts a raw private key into a Ed25519Identity class
+
+##### Returns
+
+Ed25519 identity
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| privateKey | [System.Byte[]](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Byte[] 'System.Byte[]') | A raw Ed25519 private key |
+
+<a name='M-EdjCase-ICP-Agent-Identities-IdentityUtil-FromPemFile-System-IO-Stream-'></a>
+### FromPemFile(pemFile) `method`
+
+##### Summary
+
+Parses a PEM file into the proper IIdentity class
+
+##### Returns
+
+IIdentity for the private key
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| pemFile | [System.IO.Stream](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.IO.Stream 'System.IO.Stream') | The stream of a PEM file |
+
+<a name='M-EdjCase-ICP-Agent-Identities-IdentityUtil-FromPemFile-System-IO-TextReader-'></a>
+### FromPemFile(pemFileReader) `method`
+
+##### Summary
+
+Parses a PEM file into the proper IIdentity class
+
+##### Returns
+
+IIdentity for the private key
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| pemFileReader | [System.IO.TextReader](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.IO.TextReader 'System.IO.TextReader') | The text reader of a PEM file |
+
+<a name='M-EdjCase-ICP-Agent-Identities-IdentityUtil-FromSecp256k1PrivateKey-System-Byte[]-'></a>
+### FromSecp256k1PrivateKey(privateKey) `method`
+
+##### Summary
+
+Converts a raw private key into a Secp256k1Identity class
+
+##### Returns
+
+Secp256k1 identity
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| privateKey | [System.Byte[]](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Byte[] 'System.Byte[]') | A raw Secp256k1 private key |
+
+<a name='M-EdjCase-ICP-Agent-Identities-IdentityUtil-GenerateEd25519Identity'></a>
+### GenerateEd25519Identity() `method`
+
+##### Summary
+
+Generates a new Ed25519 identity with a new private key
+
+##### Returns
+
+Ed25519 identity
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Agent-Identities-IdentityUtil-GenerateSecp256k1Identity'></a>
+### GenerateSecp256k1Identity() `method`
+
+##### Summary
+
+Generates a new Secp256k1 identity with a new private key
+
+##### Returns
+
+Secp256k1 identity
+
+##### Parameters
+
+This method has no parameters.
 
 <a name='T-EdjCase-ICP-Agent-Standards-ICRC1-Models-InsufficientFundsError'></a>
 ## InsufficientFundsError `type`
@@ -2507,6 +2817,64 @@ Candid arg of reply
 
 This method has no parameters.
 
+<a name='T-EdjCase-ICP-Agent-Identities-Secp256k1Identity'></a>
+## Secp256k1Identity `type`
+
+##### Namespace
+
+EdjCase.ICP.Agent.Identities
+
+##### Summary
+
+An identity using a Ed25519 key
+
+<a name='M-EdjCase-ICP-Agent-Identities-Secp256k1Identity-#ctor-System-Byte[],System-Byte[]-'></a>
+### #ctor(publicKey,privateKey) `constructor`
+
+##### Summary
+
+Default constructor
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| publicKey | [System.Byte[]](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Byte[] 'System.Byte[]') | The raw Secp256k1 public key |
+| privateKey | [System.Byte[]](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Byte[] 'System.Byte[]') | The raw Secp256k1 private key |
+
+<a name='M-EdjCase-ICP-Agent-Identities-Secp256k1Identity-FromPrivateKey-System-Byte[]-'></a>
+### FromPrivateKey(privateKey) `method`
+
+##### Summary
+
+Converts a raw secp256k1 private key to a Secp256k1Identity, deriving the public key
+
+##### Returns
+
+Secp256k1Identity with specified private key
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| privateKey | [System.Byte[]](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Byte[] 'System.Byte[]') | Raw secp256k1 private key |
+
+<a name='M-EdjCase-ICP-Agent-Identities-Secp256k1Identity-Generate'></a>
+### Generate() `method`
+
+##### Summary
+
+Generates a new secp256k1 public/private key pair and creates an identity
+for them
+
+##### Returns
+
+Secp256k1Identity with new key pair
+
+##### Parameters
+
+This method has no parameters.
+
 <a name='T-EdjCase-ICP-Agent-Models-SignedContent'></a>
 ## SignedContent `type`
 
@@ -2794,6 +3162,145 @@ The request has been processed and it has reply data
 
 EdjCase.ICP.Agent
 
+##### Summary
+
+A model representing a public key value and the cryptographic algorithm that is for
+
+<a name='M-EdjCase-ICP-Agent-SubjectPublicKeyInfo-#ctor-EdjCase-ICP-Agent-AlgorithmIdentifier,System-Byte[]-'></a>
+### #ctor(algorithm,subjectPublicKey) `constructor`
+
+##### Summary
+
+Default constructor
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| algorithm | [EdjCase.ICP.Agent.AlgorithmIdentifier](#T-EdjCase-ICP-Agent-AlgorithmIdentifier 'EdjCase.ICP.Agent.AlgorithmIdentifier') | The cryptographic algorithm that the public key is for |
+| subjectPublicKey | [System.Byte[]](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Byte[] 'System.Byte[]') | The raw public key bytes |
+
+<a name='P-EdjCase-ICP-Agent-SubjectPublicKeyInfo-Algorithm'></a>
+### Algorithm `property`
+
+##### Summary
+
+The cryptographic algorithm that the public key is for
+
+<a name='P-EdjCase-ICP-Agent-SubjectPublicKeyInfo-PublicKey'></a>
+### PublicKey `property`
+
+##### Summary
+
+The raw public key bytes
+
+<a name='M-EdjCase-ICP-Agent-SubjectPublicKeyInfo-Bls-System-Byte[]-'></a>
+### Bls(publicKey) `method`
+
+##### Summary
+
+Converts a raw bls public key into a subject public key info
+
+##### Returns
+
+Bls SubjectPublicKeyInfo
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| publicKey | [System.Byte[]](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Byte[] 'System.Byte[]') | A raw bls public key |
+
+<a name='M-EdjCase-ICP-Agent-SubjectPublicKeyInfo-Ecdsa-System-Byte[],System-String-'></a>
+### Ecdsa(publicKey,curveOid) `method`
+
+##### Summary
+
+Converts a raw ed25519 public key into a subject public key info
+
+##### Returns
+
+Ed25519 SubjectPublicKeyInfo
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| publicKey | [System.Byte[]](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Byte[] 'System.Byte[]') | A raw ed25519 public key |
+| curveOid | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The OID of the ecdsa curve (eg "1.3.132.0.10" for secp256k1) |
+
+<a name='M-EdjCase-ICP-Agent-SubjectPublicKeyInfo-Ed25519-System-Byte[]-'></a>
+### Ed25519(publicKey) `method`
+
+##### Summary
+
+Converts a raw ed25519 public key into a subject public key info
+
+##### Returns
+
+Ed25519 SubjectPublicKeyInfo
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| publicKey | [System.Byte[]](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Byte[] 'System.Byte[]') | A raw ed25519 public key |
+
+<a name='M-EdjCase-ICP-Agent-SubjectPublicKeyInfo-FromDerEncoding-System-Byte[]-'></a>
+### FromDerEncoding(derEncodedPublicKey) `method`
+
+##### Summary
+
+Parses a DER encoded subject public key info
+
+##### Returns
+
+
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| derEncodedPublicKey | [System.Byte[]](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Byte[] 'System.Byte[]') | A DER encoded public key |
+
+##### Exceptions
+
+| Name | Description |
+| ---- | ----------- |
+| [EdjCase.ICP.Agent.InvalidPublicKey](#T-EdjCase-ICP-Agent-InvalidPublicKey 'EdjCase.ICP.Agent.InvalidPublicKey') |  |
+
+<a name='M-EdjCase-ICP-Agent-SubjectPublicKeyInfo-Secp256k1-System-Byte[]-'></a>
+### Secp256k1(publicKey) `method`
+
+##### Summary
+
+Converts a raw secp256k1 public key into a subject public key info
+
+##### Returns
+
+Secp256k1 SubjectPublicKeyInfo
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| publicKey | [System.Byte[]](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Byte[] 'System.Byte[]') | A raw secp256k1 public key |
+
+<a name='M-EdjCase-ICP-Agent-SubjectPublicKeyInfo-ToDerEncoding'></a>
+### ToDerEncoding() `method`
+
+##### Summary
+
+Converts the subject public key info into a DER encoded byte array
+
+##### Returns
+
+A DER encoded byte array
+
+##### Parameters
+
+This method has no parameters.
+
 <a name='M-EdjCase-ICP-Agent-SubjectPublicKeyInfo-ToPrincipal'></a>
 ### ToPrincipal() `method`
 
@@ -2803,7 +3310,7 @@ Converts the key to a self authenticating principal value
 
 ##### Returns
 
-
+Principal of the public key
 
 ##### Parameters
 
