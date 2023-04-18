@@ -19,7 +19,7 @@
 		<DocumentationFile>API.xml</DocumentationFile>
 		<DocumentationMarkdown>$(MSBuildProjectDirectory)\API.md</DocumentationMarkdown>
 	</PropertyGroup>
-	
+
 	<ItemGroup>
 		<None Include="README.md">
 			<Pack>True</Pack>
@@ -30,12 +30,12 @@
 		<None Include="bls384_256.dll" Pack="true" PackagePath="runtimes\win-x64\native">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
-	  <None Update="libbls384_256.dylib" Pack="true" PackagePath="runtimes\osx-x64\native">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
-	  <None Update="bls384_256.so" Pack="true" PackagePath="runtimes\linux-x64\native">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
+		<None Update="bls384_256.dylib" Pack="true" PackagePath="runtimes\osx-x64\native">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="bls384_256.so" Pack="true" PackagePath="runtimes\linux-x64\native">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
 	</ItemGroup>
 
 	<ItemGroup>
