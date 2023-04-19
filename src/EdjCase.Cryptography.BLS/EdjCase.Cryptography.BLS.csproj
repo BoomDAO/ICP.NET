@@ -27,25 +27,23 @@
 		</None>
 	</ItemGroup>
 	<ItemGroup>
-		<None Include="bls384_256.dll">
-			<PackagePath>runtimes\win-x64\native</PackagePath>
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-			<Pack>true</Pack>
-		</None>
-		<None Update="libbls384_256.dylib">
-		  <PackagePath>runtimes\osx-x64\native</PackagePath>
-		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		  <Pack>true</Pack>
-		</None>
-		<None Update="bls384_256.so">
+		<None Update="lib\libbls384_256.so">
+			<Link>libbls384_256.so</Link>
 			<PackagePath>runtimes\linux-x64\native</PackagePath>
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 			<Pack>true</Pack>
 		</None>
-		<None Update="bls384_256.dylib">
+		<None Update="lib\libbls384_256.dylib">
+			<Link>libbls384_256.dylib</Link>
 			<PackagePath>runtimes\osx-x64\native</PackagePath>
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 			<Pack>true</Pack>
+		</None>
+		<None Update="lib\bls384_256.dll">
+			<Link>bls384_256.dll</Link>
+		  <PackagePath>runtimes\win-x64\native</PackagePath>
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		  <Pack>true</Pack>
 		</None>
 	</ItemGroup>
 
