@@ -4,6 +4,32 @@
         <name>EdjCase.ICP.Agent</name>
     </assembly>
     <members>
+        <member name="T:EdjCase.ICP.Agent.Agents.Http.DefaultHttpClient">
+            <summary>
+            The default http client to use with the built in `HttpClient`
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Agents.Http.DefaultHttpClient.#ctor(System.Net.Http.HttpClient)">
+            <summary>
+            Default constructor
+            </summary>
+            <param name="client">HTTP client to use</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Agents.Http.DefaultHttpClient.SendAsync(System.Net.Http.HttpRequestMessage)">
+            <inheritdoc />
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Agents.Http.IHttpClient">
+            <summary>
+            A simple http request interface for sending messages
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Agents.Http.IHttpClient.SendAsync(System.Net.Http.HttpRequestMessage)">
+            <summary>
+            Sends an http request and awaits a response
+            </summary>
+            <param name="message">Http request to send</param>
+            <returns>Response from the request</returns>
+        </member>
         <member name="T:EdjCase.ICP.Agent.Agents.HttpAgent">
             <summary>
             An `IAgent` implementation using HTTP to make requests to the IC
@@ -40,32 +66,6 @@
         </member>
         <member name="M:EdjCase.ICP.Agent.Agents.HttpAgent.GetReplicaStatusAsync">
             <inheritdoc/>
-        </member>
-        <member name="T:EdjCase.ICP.Agent.Agents.Http.DefaultHttpClient">
-            <summary>
-            The default http client to use with the built in `HttpClient`
-            </summary>
-        </member>
-        <member name="M:EdjCase.ICP.Agent.Agents.Http.DefaultHttpClient.#ctor(System.Net.Http.HttpClient)">
-            <summary>
-            Default constructor
-            </summary>
-            <param name="client">HTTP client to use</param>
-        </member>
-        <member name="M:EdjCase.ICP.Agent.Agents.Http.DefaultHttpClient.SendAsync(System.Net.Http.HttpRequestMessage)">
-            <inheritdoc />
-        </member>
-        <member name="T:EdjCase.ICP.Agent.Agents.Http.IHttpClient">
-            <summary>
-            A simple http request interface for sending messages
-            </summary>
-        </member>
-        <member name="M:EdjCase.ICP.Agent.Agents.Http.IHttpClient.SendAsync(System.Net.Http.HttpRequestMessage)">
-            <summary>
-            Sends an http request and awaits a response
-            </summary>
-            <param name="message">Http request to send</param>
-            <returns>Response from the request</returns>
         </member>
         <member name="T:EdjCase.ICP.Agent.Agents.IAgent">
             <summary>
