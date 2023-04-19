@@ -46,7 +46,7 @@ namespace EdjCase.Cryptography.BLS
 			Delegates.Verify verify;
 			if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
 			{
-				string libraryName = "libbls384_256";
+				string libraryName = "libbls384_256.dylib";
 				IntPtr libraryHandle = NativeInterop.LoadNativeLibrary(libraryName);
 				T Get<T>(string functionName)
 				{
@@ -55,7 +55,7 @@ namespace EdjCase.Cryptography.BLS
 				}
 				init = Get<Delegates.Init>("blsInit");
 				setEthSerialization = Get<Delegates.SetEthSerialization>("blsSetETHserialization");
-				setMapToMode = Get<Delegates.SetMapToMode>("setMapToMode");
+				setMapToMode = Get<Delegates.SetMapToMode>("blsSetMapToMode");
 				setGeneratorOfPublicKey = Get<Delegates.SetGeneratorOfPublicKey>("blsSetGeneratorOfPublicKey");
 				mclBnG1SetDst = Get<Delegates.MclBnG1SetDst>("mclBnG1_setDst");
 				publicKeyDeserialize = Get<Delegates.PublicKeyDeserialize>("blsPublicKeyDeserialize");
