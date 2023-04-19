@@ -65,6 +65,7 @@ namespace EdjCase.Cryptography.BLS
 			{
 				if (!IcpBlsUtil.isInitialized)
 				{
+					Environment.SetEnvironmentVariable("DYLD_PRINT_LIBRARIES", "1");
 					Interop.Init(Interop.MCL_BLS12_381);
 					Interop.SetETHserialization(true);
 					Interop.SetMapToMode(Interop.MapToMode.HashToCurve);
