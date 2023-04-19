@@ -26,14 +26,14 @@ namespace EdjCase.Cryptography.BLS
 		public const int PUBLICKEY_SERIALIZE_SIZE = PUBLICKEY_UNIT_SIZE * 8;
 		public const int SIGNATURE_SERIALIZE_SIZE = SIGNATURE_UNIT_SIZE * 8;
 		public const int MSG_SIZE = 32;
-		
+
 		public enum MapToMode
 		{
 			Original = 0, // for backward compatibility
 			HashToCurve = 5, // irtf-cfrg-hash-to-curve
 		}
 
-		public const string dllName = "bls384_256";
+		public const string dllName = "libbls384_256.dylib";
 		[DllImport(dllName)] public static extern int blsInit(int curveType, int compiledTimeVar);
 		[DllImport(dllName)] public static extern int blsGetFrByteSize();
 		[DllImport(dllName)] public static extern int blsGetG1ByteSize();
@@ -146,7 +146,7 @@ namespace EdjCase.Cryptography.BLS
 		// set dst of HashAndMap
 		[DllImport(dllName)] public static extern int mclBnG1_setDst([In][MarshalAs(UnmanagedType.LPStr)] string dst, ulong dstSize);
 		[DllImport(dllName)] public static extern int mclBnG2_setDst([In][MarshalAs(UnmanagedType.LPStr)] string dst, ulong dstSize);
-		
+
 		public static void Init(int curveType = BLS12_381)
 		{
 			if (!Environment.Is64BitProcess)
