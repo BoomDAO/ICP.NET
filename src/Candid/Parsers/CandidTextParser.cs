@@ -131,7 +131,8 @@ namespace EdjCase.ICP.Candid.Parsers
 				if (helper.NextToken?.Type == CandidTextTokenType.Colon)
 				{
 					// `label`: `type`
-					string rawLabel = helper.CurrentToken.GetTextValueOrThrow();
+					string rawLabel = helper.CurrentToken.GetTextValueOrThrow()
+						.Trim('\"'); // Sometimes there are quotes for escaping reserved words
 					label = uint.TryParse(rawLabel, out uint id)
 						? CandidTag.FromId(id)
 						: CandidTag.FromName(rawLabel);
@@ -165,7 +166,9 @@ namespace EdjCase.ICP.Candid.Parsers
 			helper.MoveNextOrThrow();
 			while (helper.CurrentToken.Type != CandidTextTokenType.CloseCurlyBrace)
 			{
-				string label = helper.CurrentToken.GetTextValueOrThrow();
+				string label = helper.CurrentToken
+					.GetTextValueOrThrow()
+					.Trim('\"'); // Sometimes there are quotes for escaping reserved words
 				helper.MoveNextOrThrow();
 				CandidType fieldType;
 				switch (helper.CurrentToken.Type)
