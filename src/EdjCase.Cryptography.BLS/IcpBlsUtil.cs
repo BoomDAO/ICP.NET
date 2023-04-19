@@ -35,7 +35,7 @@ namespace EdjCase.Cryptography.BLS
 			{
 				throw new ArgumentOutOfRangeException(nameof(publicKey), publicKey.Length, $"Public Key must be {PublicKeyLength} bytes long.");
 			}
-			throw new Exception(string.Join('\n', Directory.GetFiles("/Users/runner/work/ICP.NET/ICP.NET/test/Candid.Tests/bin/Debug/net6.0/")));
+			
 			EnsureInitialized();
 
 			var blsPublicKey = default(Interop.PublicKey);
