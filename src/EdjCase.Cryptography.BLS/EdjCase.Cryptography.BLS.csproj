@@ -32,6 +32,11 @@
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 			<Pack>true</Pack>
 		</None>
+		<None Update="libbls384_256.dylib">
+		  <PackagePath>runtimes\osx-x64\native</PackagePath>
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		  <Pack>true</Pack>
+		</None>
 		<None Update="bls384_256.so">
 			<PackagePath>runtimes\linux-x64\native</PackagePath>
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
