@@ -1,4 +1,5 @@
 using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid.Models;
 using Sample.Shared.Governance.Models;
 using System.Collections.Generic;
 
@@ -6,6 +7,9 @@ namespace Sample.Shared.Governance.Models
 {
 	public class RewardEvent
 	{
+		[CandidName("rounds_since_last_distribution")]
+		public OptionalValue<ulong> RoundsSinceLastDistribution { get; set; }
+
 		[CandidName("day_after_genesis")]
 		public ulong DayAfterGenesis { get; set; }
 
@@ -21,8 +25,9 @@ namespace Sample.Shared.Governance.Models
 		[CandidName("settled_proposals")]
 		public List<NeuronId> SettledProposals { get; set; }
 
-		public RewardEvent(ulong dayAfterGenesis, ulong actualTimestampSeconds, ulong totalAvailableE8sEquivalent, ulong distributedE8sEquivalent, List<NeuronId> settledProposals)
+		public RewardEvent(OptionalValue<ulong> roundsSinceLastDistribution, ulong dayAfterGenesis, ulong actualTimestampSeconds, ulong totalAvailableE8sEquivalent, ulong distributedE8sEquivalent, List<NeuronId> settledProposals)
 		{
+			this.RoundsSinceLastDistribution = roundsSinceLastDistribution;
 			this.DayAfterGenesis = dayAfterGenesis;
 			this.ActualTimestampSeconds = actualTimestampSeconds;
 			this.TotalAvailableE8sEquivalent = totalAvailableE8sEquivalent;
