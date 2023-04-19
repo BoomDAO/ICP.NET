@@ -17,7 +17,7 @@ jobs:
       - name: otool
         run: otool -L /Users/runner/work/ICP.NET/ICP.NET/src/EdjCase.Cryptography.BLS/lib/libbls384_256.dylib
       - name: Install GMP
-        run: brew install gmp
+        run: brew --prefix gmp
       - name: Checkout submodule
         uses: Mushus/checkout-submodule@v1.0.1
         with:
