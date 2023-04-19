@@ -25,7 +25,9 @@ namespace EdjCase.Cryptography.BLS
 		public const int SECRETKEY_SERIALIZE_SIZE = SECRETKEY_UNIT_SIZE * 8;
 		public const int PUBLICKEY_SERIALIZE_SIZE = PUBLICKEY_UNIT_SIZE * 8;
 		public const int SIGNATURE_SERIALIZE_SIZE = SIGNATURE_UNIT_SIZE * 8;
-		public const int MSG_SIZE = 32; public enum MapToMode
+		public const int MSG_SIZE = 32;
+		
+		public enum MapToMode
 		{
 			Original = 0, // for backward compatibility
 			HashToCurve = 5, // irtf-cfrg-hash-to-curve
@@ -140,7 +142,7 @@ namespace EdjCase.Cryptography.BLS
 		[DllImport(dllName)] public static extern int blsAggregateVerifyNoCheck(in Signature sig, in PublicKey pubVec, in Msg msgVec, ulong msgSize, ulong n);
 		[DllImport(dllName)] public static extern void blsSetETHserialization(int mode);
 		[DllImport(dllName)] public static extern int blsSetMapToMode(int mode);
-		[DllImport(dllName)] public static extern int blsSetGeneratorOfPublicKey(ref PublicKey pub);
+		[DllImport(dllName)] public static extern int blsSetGeneratorOfPublicKey(in PublicKey pub);
 		// set dst of HashAndMap
 		[DllImport(dllName)] public static extern int mclBnG1_setDst([In][MarshalAs(UnmanagedType.LPStr)] string dst, ulong dstSize);
 		[DllImport(dllName)] public static extern int mclBnG2_setDst([In][MarshalAs(UnmanagedType.LPStr)] string dst, ulong dstSize);
@@ -154,7 +156,7 @@ namespace EdjCase.Cryptography.BLS
 			int err = blsInit(curveType, COMPILED_TIME_VAR);
 			if (err != 0)
 			{
-				throw new ArgumentException("blsInit");
+				throw new Exception("BLS failed to initialize");
 			}
 		}
 
@@ -635,9 +637,9 @@ namespace EdjCase.Cryptography.BLS
 				throw new Exception("SetMapToMode");
 			}
 		}
-		public static void SetGeneratorOfPublicKey(ref PublicKey pub)
+		public static void SetGeneratorOfPublicKey(PublicKey pub)
 		{
-			if (blsSetGeneratorOfPublicKey(ref pub) != 0)
+			if (blsSetGeneratorOfPublicKey(in pub) != 0)
 			{
 				throw new ArgumentException("SetGeneratorOfPublicKey");
 			}
