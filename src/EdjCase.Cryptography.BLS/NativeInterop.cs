@@ -22,6 +22,9 @@ namespace EdjCase.Cryptography.BLS
 		[DllImport(LibDl, SetLastError = true)]
 		private static extern IntPtr dlsym(IntPtr handle, string symbol);
 
+		[DllImport(LibDl, SetLastError = true)]
+		private static extern string dlerror();
+
 		public static IntPtr LoadNativeLibrary(string libraryName)
 		{
 			IntPtr libraryHandle;
@@ -29,15 +32,24 @@ namespace EdjCase.Cryptography.BLS
 			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
 			{
 				libraryHandle = LoadLibrary(libraryName);
+
+				if (libraryHandle == IntPtr.Zero)
+				{
+					throw new Exception($"Unable to load native library '{libraryName}'");
+				}
 			}
 			else
 			{
+				dlerror(); // Clear any existing error
 				libraryHandle = dlopen(libraryName, RtldNow);
-			}
-
-			if (libraryHandle == IntPtr.Zero)
-			{
-				throw new Exception($"Unable to load native library '{libraryName}'");
+				if (libraryHandle == IntPtr.Zero)
+				{
+					string error = dlerror();
+					if (!string.IsNullOrEmpty(error))
+					{
+						throw new Exception($"Error loading native library: {error}");
+					}
+				}
 			}
 
 			return libraryHandle;
