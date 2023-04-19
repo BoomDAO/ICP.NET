@@ -36,6 +36,9 @@
 		<None Update="bls384_256.so" Pack="true" PackagePath="runtimes\linux-x64\native">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
+		<None Update="libbls384_256.dylib">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
 	</ItemGroup>
 
 	<ItemGroup>
