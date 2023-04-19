@@ -27,6 +27,4 @@ jobs:
       - name: Build
         run: dotnet build --no-restore
       - name: Test
-        run: dotnet test --no-build 
-        env:
-          DYLD_PRINT_LIBRARIES: 1
+        run: dotnet test --no-build

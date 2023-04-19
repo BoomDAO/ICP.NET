@@ -216,18 +216,6 @@ namespace EdjCase.Cryptography.BLS
 		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern int mclBnG2_setDst([In][MarshalAs(UnmanagedType.LPStr)] string dst, ulong dstSize);
 
-		public static void Init(int curveType = BLS12_381)
-		{
-			if (!Environment.Is64BitProcess)
-			{
-				throw new PlatformNotSupportedException("not 64-bit system");
-			}
-			int err = blsInit(curveType, COMPILED_TIME_VAR);
-			if (err != 0)
-			{
-				throw new Exception("BLS failed to initialize");
-			}
-		}
 
 		[StructLayout(LayoutKind.Sequential)]
 		public unsafe struct Id
@@ -694,31 +682,6 @@ namespace EdjCase.Cryptography.BLS
 				return false;
 			}
 			return AggregateVerifyNoCheck(in sig, in pubVec, in msgVec);
-		}
-		public static void SetETHserialization(bool b)
-		{
-			blsSetETHserialization(b ? 1 : 0);
-		}
-		public static void SetMapToMode(MapToMode mode)
-		{
-			if (blsSetMapToMode((int)mode) != 0)
-			{
-				throw new Exception("SetMapToMode");
-			}
-		}
-		public static void SetGeneratorOfPublicKey(PublicKey pub)
-		{
-			if (blsSetGeneratorOfPublicKey(in pub) != 0)
-			{
-				throw new ArgumentException("SetGeneratorOfPublicKey");
-			}
-		}
-		public static void SetDstG1(string dst)
-		{
-			if (mclBnG1_setDst(dst, (ulong)dst.Length) != 0)
-			{
-				throw new ArgumentException("SetDstG1:" + dst);
-			}
 		}
 		public static void SetDstG2(string dst)
 		{
