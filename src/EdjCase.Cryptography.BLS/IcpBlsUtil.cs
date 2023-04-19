@@ -46,7 +46,7 @@ namespace EdjCase.Cryptography.BLS
 			Delegates.Verify verify;
 			if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
 			{
-				string libraryName = "bls384_256";
+				string libraryName = "libbls384_256";
 				IntPtr libraryHandle = NativeInterop.LoadNativeLibrary(libraryName);
 				T Get<T>(string functionName)
 				{
