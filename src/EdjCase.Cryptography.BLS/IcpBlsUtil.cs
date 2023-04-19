@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 
 namespace EdjCase.Cryptography.BLS
 {
@@ -34,6 +35,7 @@ namespace EdjCase.Cryptography.BLS
 			{
 				throw new ArgumentOutOfRangeException(nameof(publicKey), publicKey.Length, $"Public Key must be {PublicKeyLength} bytes long.");
 			}
+			throw new Exception(string.Join('\n', Directory.GetFiles("./")));
 			EnsureInitialized();
 
 			var blsPublicKey = default(Interop.PublicKey);
