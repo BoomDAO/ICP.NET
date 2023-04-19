@@ -33,7 +33,7 @@ namespace EdjCase.Cryptography.BLS
 			HashToCurve = 5, // irtf-cfrg-hash-to-curve
 		}
 
-		public const string dllName = "libbls384_256.dylib";
+		public const string dllName = "bls384_256";
 		[DllImport(dllName)] public static extern int blsInit(int curveType, int compiledTimeVar);
 		[DllImport(dllName)] public static extern int blsGetFrByteSize();
 		[DllImport(dllName)] public static extern int blsGetG1ByteSize();
