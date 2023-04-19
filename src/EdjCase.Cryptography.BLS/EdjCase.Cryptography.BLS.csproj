@@ -47,11 +47,6 @@
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 			<Pack>true</Pack>
 		</None>
-		<None Update="libbls384_256">
-			<PackagePath>runtimes\osx-x64\native</PackagePath>
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-			<Pack>true</Pack>
-		</None>
 	</ItemGroup>
 
 	<ItemGroup>
