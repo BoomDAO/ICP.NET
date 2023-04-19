@@ -20,8 +20,3 @@ file-path = "ServiceDefinitions/AddressBook.did"
 output-directory = "C:/Git/ICP.NET/samples/Sample.Shared/Address" # override
 no-folders = true
 keep-candid-case = true
-
-[[clients]]
-name = "A"
-type = "file"
-file-path = "C:/Git/ICP.NET/src/EdjCase.Cryptography.BLS/netdata.did"
