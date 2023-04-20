@@ -29,7 +29,7 @@ namespace EdjCase.Cryptography.BLS
 		{
 			IntPtr libraryHandle;
 
-			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+			if (false)
 			{
 				libraryHandle = LoadLibrary(libraryName);
 
@@ -59,7 +59,7 @@ namespace EdjCase.Cryptography.BLS
 		{
 			IntPtr functionPointer;
 
-			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+			if (false)
 			{
 				functionPointer = GetProcAddress(libraryHandle, functionName);
 			}
