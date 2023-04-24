@@ -49,7 +49,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Cortex.Cryptography.Bls" Version="0.4.0" />
 		<PackageReference Include="Vsxmd" Version="1.4.4">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
