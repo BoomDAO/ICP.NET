@@ -35,6 +35,9 @@ namespace EdjCase.Cryptography.BLS
 			{
 				throw new ArgumentOutOfRangeException(nameof(publicKey), publicKey.Length, $"Public Key must be {PublicKeyLength} bytes long.");
 			}
+			var a = Cortex.Cryptography.BLS.Create();
+			a.ImportSubjectPublicKeyInfo(publicKey, out int b); 
+			return true;
 
 			Delegates.Init init;
 			Delegates.SetEthSerialization setEthSerialization;
