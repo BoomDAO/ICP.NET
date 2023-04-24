@@ -1,3 +1,4 @@
+using Cortex.Cryptography;
 using System;
 using System.Runtime.InteropServices;
 
@@ -35,7 +36,7 @@ namespace EdjCase.Cryptography.BLS
 			{
 				throw new ArgumentOutOfRangeException(nameof(publicKey), publicKey.Length, $"Public Key must be {PublicKeyLength} bytes long.");
 			}
-			var a = Cortex.Cryptography.BLS.Create();
+			var a = Cortex.Cryptography.BLS.Create("ECDsa");
 			a.ImportSubjectPublicKeyInfo(publicKey, out int b); 
 			return true;
 
