@@ -36,13 +36,6 @@ namespace EdjCase.Cryptography.BLS
 			{
 				throw new ArgumentOutOfRangeException(nameof(publicKey), publicKey.Length, $"Public Key must be {PublicKeyLength} bytes long.");
 			}
-			var parameters = new BLSParameters
-			{
-				PublicKey = new byte[48],
-				
-			};
-			var a = new Cortex.Cryptography.BLSHerumi(parameters);
-			return a.VerifyHash(messageHash, new byte[96]);
 
 			Delegates.Init init;
 			Delegates.SetEthSerialization setEthSerialization;
