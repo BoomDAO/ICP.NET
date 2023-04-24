@@ -44,7 +44,7 @@ namespace EdjCase.Cryptography.BLS
 			Delegates.PublicKeyDeserialize publicKeyDeserialize;
 			Delegates.SignatureDeserialize signatureDeserialize;
 			Delegates.Verify verify;
-			if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+			if (false)
 			{
 				string libraryName = "libbls384_256.dylib";
 				IntPtr libraryHandle = NativeInterop.LoadNativeLibrary(libraryName);
