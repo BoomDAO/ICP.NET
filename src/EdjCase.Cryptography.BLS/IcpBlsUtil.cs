@@ -38,7 +38,7 @@ namespace EdjCase.Cryptography.BLS
 			}
 			var parameters = new BLSParameters
 			{
-				PublicKey = new byte[96],
+				PublicKey = new byte[48],
 				
 			};
 			var a = new Cortex.Cryptography.BLSHerumi(parameters);
