@@ -120,10 +120,10 @@ namespace EdjCase.ICP.Agent.Responses
 						reader.ReadEndMap();
 						break;
 					case "reject_code":
-						CborTag codeType = reader.PeekTag();
-						switch (codeType)
+						CborReaderState state = reader.PeekState();
+						switch (state)
 						{
-							case CborTag.UnsignedBigNum:
+							case CborReaderState.UnsignedInteger:
 								rejectCode = reader.ReadUInt64();
 								break;
 							default:
