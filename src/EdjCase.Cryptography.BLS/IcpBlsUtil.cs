@@ -42,7 +42,7 @@ namespace EdjCase.Cryptography.BLS
 				
 			};
 			var a = new Cortex.Cryptography.BLSHerumi(parameters);
-			return a.VerifyHash(messageHash, signature);
+			return a.VerifyHash(messageHash, new byte[96]);
 
 			Delegates.Init init;
 			Delegates.SetEthSerialization setEthSerialization;
