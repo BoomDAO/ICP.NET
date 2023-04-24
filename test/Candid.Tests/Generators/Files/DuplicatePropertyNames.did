@@ -1,0 +1,8 @@
+type Result = {
+    a : nat64;
+    _a : nat64;
+};
+
+service : () -> {
+    a : () -> (Result) query;
+}
