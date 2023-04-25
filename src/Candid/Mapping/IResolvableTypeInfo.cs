@@ -486,9 +486,7 @@ namespace EdjCase.ICP.Candid.Mapping
 				{
 					tag = CandidTag.FromName(property.Name);
 				}
-				CustomMapperAttribute? customMapperAttribute = property.GetCustomAttribute<CustomMapperAttribute>();
-
-				PropertyMetaData propertyMetaData = new(property, customMapperAttribute?.Mapper);
+				PropertyMetaData propertyMetaData = new(property, CustomMapper: null); // TODO attribute custom mapper
 				propertyMetaDataMap.Add(tag, propertyMetaData);
 			}
 			List<Type> dependencies = propertyMetaDataMap
