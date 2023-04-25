@@ -46,6 +46,7 @@ namespace EdjCase.Cryptography.BLS
 			}
 			else
 			{
+				libraryName = "lib" + libraryName;
 				string? runtime = null;
 				if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
 				{
@@ -72,7 +73,7 @@ namespace EdjCase.Cryptography.BLS
 				{					
 					throw new NotImplementedException($"OS '{RuntimeInformation.OSDescription}' and architecture '{RuntimeInformation.OSArchitecture}' is not yet supported");
 				}
-				libraryHandle = dlopen($"runtimes/{runtime}/native/lib" + libraryName, RtldNow);
+				libraryHandle = dlopen($"runtimes/{runtime}/native/" + libraryName, RtldNow);
 			}
 
 			if (libraryHandle == IntPtr.Zero)
