@@ -1363,6 +1363,29 @@ namespace EdjCase.ICP.ClientGenerator
 				// TODO
 				throw new NotImplementedException("Null, empty or reserved properties are not yet supported");
 			}
+			var uniquePropertyNames = new HashSet<ValueName>();
+			ClassProperty FixDuplicates(ClassProperty property)
+			{
+				ValueName name = property.Name;
+				int i = 0;
+				while (!uniquePropertyNames.Add(name))
+				{
+					// Add number suffix till there are no duplicates
+					i++;
+					name = property.Name.WithSuffix(i.ToString());
+				}
+				if (i > 0)
+				{
+					return new ClassProperty(name, property.Type, property.Access, property.HasSetter, property.Attributes);
+				}
+				return property;
+			}
+			properties = properties
+				.Select(FixDuplicates) // Fix if there are duplicate names
+				.ToList();
+			optionalProperties = optionalProperties
+				?.Select(FixDuplicates) // Fix if there are duplicate names
+				.ToList();
 			List<ConstructorDeclarationSyntax> constructors = new();
 			IEnumerable<PropertyDeclarationSyntax> properySyntaxList = properties
 				.Concat(optionalProperties ?? new List<ClassProperty>())

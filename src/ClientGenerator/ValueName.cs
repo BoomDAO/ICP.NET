@@ -147,7 +147,9 @@ namespace EdjCase.ICP.ClientGenerator
 			string propertyName = !keepCandidCase
 				? StringUtil.ToPascalCase(stringValue)
 				: stringValue;
-			string variableName = StringUtil.ToCamelCase(stringValue);
+			string variableName = !keepCandidCase
+				? StringUtil.ToCamelCase(stringValue)
+				: StringUtil.TransformFirstAlpha(stringValue, char.ToLower); // Still should have lower first char
 			if (IsKeyword(propertyName))
 			{
 				// Add @ before reserved words
@@ -162,10 +164,16 @@ namespace EdjCase.ICP.ClientGenerator
 			return new ValueName(propertyName, variableName, tag);
 		}
 
+
 		private static bool IsKeyword(string value)
 		{
 			// TODO better way to check for reserved names
 			return ReservedWords.Contains(value);
+		}
+
+		public ValueName WithSuffix(string suffix)
+		{
+			return new ValueName(this.PropertyName + suffix, this.VariableName + suffix, this.CandidTag);
 		}
 	}
 
