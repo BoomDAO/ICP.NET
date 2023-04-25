@@ -2,6 +2,7 @@
 
 	<PropertyGroup>
 		<TargetFramework>netstandard2.1</TargetFramework>
+		<RuntimeIdentifiers>win-x64;linux-x64;osx-x64;osx-arm64</RuntimeIdentifiers>
 		<Nullable>enable</Nullable>
 		<LangVersion>latest</LangVersion>
 		<RootNamespace>EdjCase.Cryptography.BLS</RootNamespace>
@@ -19,7 +20,9 @@
 		<DocumentationFile>API.xml</DocumentationFile>
 		<DocumentationMarkdown>$(MSBuildProjectDirectory)\API.md</DocumentationMarkdown>
 		<UseAppHost>true</UseAppHost>
+		<PlatformTarget>AnyCPU</PlatformTarget>
 	</PropertyGroup>
+
 
 	<ItemGroup>
 		<None Include="README.md">
@@ -27,24 +30,12 @@
 			<PackagePath>\</PackagePath>
 		</None>
 	</ItemGroup>
+
 	<ItemGroup>
-		<None Update="lib\libbls384_256.so">
-			<Link>libbls384_256.so</Link>
-			<PackagePath>runtimes\linux-x64\native</PackagePath>
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		<None Include="runtimes/**/*">
 			<Pack>true</Pack>
-		</None>
-		<None Update="lib\libbls384_256.dylib">
-			<Link>libbls384_256.dylib</Link>
-			<PackagePath>runtimes\osx-x64\native</PackagePath>
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-			<Pack>true</Pack>
-		</None>
-		<None Update="lib\bls384_256.dll">
-			<Link>bls384_256.dll</Link>
-		  <PackagePath>runtimes\win-x64\native</PackagePath>
-		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		  <Pack>true</Pack>
+			<PackagePath>runtimes</PackagePath>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
 	</ItemGroup>
 
