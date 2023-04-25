@@ -427,9 +427,6 @@
 - [CompoundTypeTable](#T-EdjCase-ICP-Candid-Models-CompoundTypeTable 'EdjCase.ICP.Candid.Models.CompoundTypeTable')
   - [CompoundTypeIndexMap](#F-EdjCase-ICP-Candid-Models-CompoundTypeTable-CompoundTypeIndexMap 'EdjCase.ICP.Candid.Models.CompoundTypeTable.CompoundTypeIndexMap')
   - [TryAdd(typeDef)](#M-EdjCase-ICP-Candid-Models-CompoundTypeTable-TryAdd-EdjCase-ICP-Candid-Models-Types-CandidCompoundType- 'EdjCase.ICP.Candid.Models.CompoundTypeTable.TryAdd(EdjCase.ICP.Candid.Models.Types.CandidCompoundType)')
-- [CustomMapperAttribute](#T-EdjCase-ICP-Candid-Mapping-CustomMapperAttribute 'EdjCase.ICP.Candid.Mapping.CustomMapperAttribute')
-  - [#ctor(mapper)](#M-EdjCase-ICP-Candid-Mapping-CustomMapperAttribute-#ctor-EdjCase-ICP-Candid-Mapping-ICandidValueMapper- 'EdjCase.ICP.Candid.Mapping.CustomMapperAttribute.#ctor(EdjCase.ICP.Candid.Mapping.ICandidValueMapper)')
-  - [Mapper](#P-EdjCase-ICP-Candid-Mapping-CustomMapperAttribute-Mapper 'EdjCase.ICP.Candid.Mapping.CustomMapperAttribute.Mapper')
 - [EmptyValue](#T-EdjCase-ICP-Candid-Models-EmptyValue 'EdjCase.ICP.Candid.Models.EmptyValue')
 - [EncodedValue](#T-EdjCase-ICP-Candid-Models-HashTree-EncodedValue 'EdjCase.ICP.Candid.Models.HashTree.EncodedValue')
   - [#ctor(value)](#M-EdjCase-ICP-Candid-Models-HashTree-EncodedValue-#ctor-System-Byte[]- 'EdjCase.ICP.Candid.Models.HashTree.EncodedValue.#ctor(System.Byte[])')
@@ -6060,33 +6057,6 @@ True if added, otherwise false
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | typeDef | [EdjCase.ICP.Candid.Models.Types.CandidCompoundType](#T-EdjCase-ICP-Candid-Models-Types-CandidCompoundType 'EdjCase.ICP.Candid.Models.Types.CandidCompoundType') | Type to add to table |
-
-<a name='T-EdjCase-ICP-Candid-Mapping-CustomMapperAttribute'></a>
-## CustomMapperAttribute `type`
-
-##### Namespace
-
-EdjCase.ICP.Candid.Mapping
-
-##### Summary
-
-An attribute that specifies a custom mapper for the class, struct, property or field
-
-<a name='M-EdjCase-ICP-Candid-Mapping-CustomMapperAttribute-#ctor-EdjCase-ICP-Candid-Mapping-ICandidValueMapper-'></a>
-### #ctor(mapper) `constructor`
-
-##### Parameters
-
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| mapper | [EdjCase.ICP.Candid.Mapping.ICandidValueMapper](#T-EdjCase-ICP-Candid-Mapping-ICandidValueMapper 'EdjCase.ICP.Candid.Mapping.ICandidValueMapper') | The object mapper to use for the decorated item |
-
-<a name='P-EdjCase-ICP-Candid-Mapping-CustomMapperAttribute-Mapper'></a>
-### Mapper `property`
-
-##### Summary
-
-The object mapper to use for the decorated item
 
 <a name='T-EdjCase-ICP-Candid-Models-EmptyValue'></a>
 ## EmptyValue `type`

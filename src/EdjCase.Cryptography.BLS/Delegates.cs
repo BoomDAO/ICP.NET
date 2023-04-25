@@ -16,5 +16,6 @@ namespace EdjCase.Cryptography.BLS
 		public delegate ulong PublicKeyDeserialize(ref Interop.PublicKey pub, [In] byte[] buf, ulong bufSize);
 		public delegate ulong SignatureDeserialize(ref Signature sig, [In] byte[] buf, ulong bufSize);
 		public delegate int Verify(in Signature sig, in PublicKey pub, [In] byte[] buf, ulong size);
+		public delegate int PublicKeySetHexStr(ref PublicKey pub, [In][MarshalAs(UnmanagedType.LPStr)] string buf, ulong bufSize);
 	}
 }

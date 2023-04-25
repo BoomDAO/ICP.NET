@@ -28,12 +28,54 @@ namespace EdjCase.Cryptography.BLS
 
 			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
 			{
-				libraryHandle = LoadLibrary(libraryName);
-
+				string? runtime = null;
+				switch (RuntimeInformation.OSArchitecture)
+				{
+					case Architecture.X64:
+						runtime = "win-x64";
+						break;
+					case Architecture.Arm64:
+						runtime = "win-arm64";
+						break;
+				}
+				if (runtime == null)
+				{
+					throw new NotImplementedException($"OS '{RuntimeInformation.OSDescription}' and architecture '{RuntimeInformation.OSArchitecture}' is not yet supported");
+				}
+				libraryHandle = LoadLibrary($"runtimes/{runtime}/native/" + libraryName);
 			}
 			else
 			{
-				libraryHandle = dlopen(libraryName, RtldNow);
+				libraryName = "lib" + libraryName;
+				string? runtime = null;
+				if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+				{
+					libraryName += ".so";
+					switch (RuntimeInformation.OSArchitecture)
+					{
+						case Architecture.X64:
+							runtime = "linux-x64";
+							break;
+					}
+				}
+				else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+				{
+					libraryName += ".dylib";
+					switch (RuntimeInformation.OSArchitecture)
+					{
+						case Architecture.X64:
+							runtime = "osx-x64";
+							break;
+						case Architecture.Arm64:
+							runtime = "osx-arm64";
+							break;
+					}
+				}
+				if (runtime == null)
+				{					
+					throw new NotImplementedException($"OS '{RuntimeInformation.OSDescription}' and architecture '{RuntimeInformation.OSArchitecture}' is not yet supported");
+				}
+				libraryHandle = dlopen($"runtimes/{runtime}/native/" + libraryName, RtldNow);
 			}
 
 			if (libraryHandle == IntPtr.Zero)

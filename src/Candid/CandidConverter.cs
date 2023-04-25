@@ -140,11 +140,6 @@ namespace EdjCase.ICP.Candid
 
 		private ICandidValueMapper ResolveUncached(Type type)
 		{
-			CustomMapperAttribute? mapperAttr = type.GetCustomAttribute<CustomMapperAttribute>();
-			if (mapperAttr != null)
-			{
-				return mapperAttr.Mapper;
-			}
 			ICandidValueMapper? mapper = null;
 			if (this._options.CustomMappers != null)
 			{
