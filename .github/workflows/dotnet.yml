@@ -21,7 +21,7 @@ jobs:
         with:
           dotnet-version: 6.0.x
       - name: Install libdl
-        run: whereis libdl
+        run: sudo apt update && sudo apt install -y libc-dev
       - name: Restore dependencies
         run: dotnet restore
       - name: Build

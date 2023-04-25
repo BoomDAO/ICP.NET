@@ -50,6 +50,7 @@ namespace EdjCase.Cryptography.BLS
 				string? runtime = null;
 				if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
 				{
+					libraryName += ".so";
 					switch (RuntimeInformation.OSArchitecture)
 					{
 						case Architecture.X64:
@@ -59,6 +60,7 @@ namespace EdjCase.Cryptography.BLS
 				}
 				else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
 				{
+					libraryName += ".dylib";
 					switch (RuntimeInformation.OSArchitecture)
 					{
 						case Architecture.X64:
