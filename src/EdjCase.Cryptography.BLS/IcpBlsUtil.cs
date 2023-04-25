@@ -83,7 +83,7 @@ namespace EdjCase.Cryptography.BLS
 					{
 						throw new PlatformNotSupportedException("not 64-bit system");
 					}
-					if(cache == null)
+					if (cache == null)
 					{
 						cache = DelegatesCache.Create();
 					}
@@ -129,7 +129,8 @@ namespace EdjCase.Cryptography.BLS
 			Delegates.MclBnG1SetDst mclBnG1SetDst,
 			Delegates.PublicKeyDeserialize publicKeyDeserialize,
 			Delegates.SignatureDeserialize signatureDeserialize,
-			Delegates.Verify verify
+			Delegates.Verify verify,
+			Delegates.PublicKeySetHexStr publicKeySetHexStr
 		)
 		{
 			this.init = init ?? throw new ArgumentNullException(nameof(init));
@@ -140,6 +141,7 @@ namespace EdjCase.Cryptography.BLS
 			this.publicKeyDeserialize = publicKeyDeserialize ?? throw new ArgumentNullException(nameof(publicKeyDeserialize));
 			this.signatureDeserialize = signatureDeserialize ?? throw new ArgumentNullException(nameof(signatureDeserialize));
 			this.verify = verify ?? throw new ArgumentNullException(nameof(verify));
+			this.publicKeySetHexStr = publicKeySetHexStr ?? throw new ArgumentNullException(nameof(publicKeySetHexStr));
 		}
 
 		public Delegates.Init init { get; }
@@ -203,7 +205,8 @@ namespace EdjCase.Cryptography.BLS
 				mclBnG1SetDst,
 				publicKeyDeserialize,
 				signatureDeserialize,
-				verify
+				verify,
+				publicKeySetHexStr
 			);
 		}
 	}
