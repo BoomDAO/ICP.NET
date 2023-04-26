@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -26,6 +29,7 @@ namespace EdjCase.Cryptography.BLS
 		{
 			IntPtr libraryHandle;
 
+			string basePath = Directory.GetParent(Assembly.GetExecutingAssembly().Location).FullName;
 			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
 			{
 				string? runtime = null;
@@ -34,15 +38,12 @@ namespace EdjCase.Cryptography.BLS
 					case Architecture.X64:
 						runtime = "win-x64";
 						break;
-					case Architecture.Arm64:
-						runtime = "win-arm64";
-						break;
 				}
 				if (runtime == null)
 				{
 					throw new NotImplementedException($"OS '{RuntimeInformation.OSDescription}' and architecture '{RuntimeInformation.OSArchitecture}' is not yet supported");
 				}
-				libraryHandle = LoadLibrary($"runtimes/{runtime}/native/" + libraryName);
+				libraryHandle = LoadLibrary($"{basePath}/runtimes/{runtime}/native/" + libraryName);
 			}
 			else
 			{
@@ -75,7 +76,7 @@ namespace EdjCase.Cryptography.BLS
 				{					
 					throw new NotImplementedException($"OS '{RuntimeInformation.OSDescription}' and architecture '{RuntimeInformation.OSArchitecture}' is not yet supported");
 				}
-				libraryHandle = dlopen($"runtimes/{runtime}/native/" + libraryName, RtldNow);
+				libraryHandle = dlopen($"{basePath}/runtimes/{runtime}/native/" + libraryName, RtldNow);
 			}
 
 			if (libraryHandle == IntPtr.Zero)
