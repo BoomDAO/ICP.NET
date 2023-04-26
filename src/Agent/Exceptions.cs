@@ -69,6 +69,9 @@ namespace EdjCase.ICP.Agent
 			this.RejectMessage = rejectMessage;
 			this.ErrorCode = errorCode;
 		}
+
+		/// <inheritdoc />
+		public override string Message => $"Call was rejected. Code: {this.RejectCode}, Message: {this.RejectMessage}, ErrorCode: {this.ErrorCode}";
 	}
 
 	/// <summary>
