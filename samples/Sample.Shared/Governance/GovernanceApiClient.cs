@@ -60,6 +60,14 @@ namespace Sample.Shared.Governance
 			return reply.ToObjects<Models.Result_2>(this.Converter);
 		}
 
+		public async System.Threading.Tasks.Task<Models.RewardEvent> GetLatestRewardEvent()
+		{
+			CandidArg arg = CandidArg.FromCandid();
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_latest_reward_event", arg);
+			CandidArg reply = response.ThrowOrGetReply();
+			return reply.ToObjects<Models.RewardEvent>(this.Converter);
+		}
+
 		public async System.Threading.Tasks.Task<Models.Result_3> GetMetrics()
 		{
 			CandidArg arg = CandidArg.FromCandid();

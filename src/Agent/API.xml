@@ -301,6 +301,9 @@
             <param name="rejectMessage">The human readable message of the rejection error</param>
             <param name="errorCode">Optional. Specific error code for differentiating specific errors</param>
         </member>
+        <member name="P:EdjCase.ICP.Agent.CallRejectedException.Message">
+            <inheritdoc />
+        </member>
         <member name="T:EdjCase.ICP.Agent.QueryRejectedException">
             <summary>
             Exception for when a query to a canister is rejected/has an error

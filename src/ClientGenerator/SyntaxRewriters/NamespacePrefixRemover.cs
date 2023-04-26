@@ -38,13 +38,34 @@ namespace EdjCase.ICP.ClientGenerator.SyntaxRewriters
 			return this.VisitInternal(node, base.VisitQualifiedName);
 		}
 
+		private TypeSyntax StripNamespace(TypeSyntax typeSyntax)
+		{
+			switch (typeSyntax)
+			{
+				case NameSyntax n:
+					return this.StripNamespace(n);
+				case TupleTypeSyntax tt:
+					return tt.WithElements(
+						SyntaxFactory.SeparatedList(
+							tt.Elements.Select(e =>
+							{
+								TypeSyntax type = this.StripNamespace(e.Type);
+								return SyntaxFactory.TupleElement(type, e.Identifier);
+							})
+						)
+					);
+				default:
+					return typeSyntax;
+			}
+		}
+
 		private NameSyntax StripNamespace(NameSyntax node)
 		{
 			switch (node)
 			{
 				case GenericNameSyntax g:
-					IEnumerable<NameSyntax> genericTypeNames = g.TypeArgumentList.Arguments
-						.Select(t => this.StripNamespace((NameSyntax)t));
+					IEnumerable<TypeSyntax> genericTypeNames = g.TypeArgumentList.Arguments
+						.Select(this.StripNamespace);
 
 					return g
 						.WithTypeArgumentList(
@@ -69,7 +90,7 @@ namespace EdjCase.ICP.ClientGenerator.SyntaxRewriters
 							.WithTrailingTrivia(i.Identifier.TrailingTrivia)
 							.WithLeadingTrivia(i.Identifier.LeadingTrivia)
 							.WithAdditionalAnnotations(i.Identifier.GetAnnotations());
-						if(name is IdentifierNameSyntax n)
+						if (name is IdentifierNameSyntax n)
 						{
 							// No namepsace, avoid stack overflow
 							return n;

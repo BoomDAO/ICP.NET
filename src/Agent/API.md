@@ -16,6 +16,7 @@
 - [CallRejectedException](#T-EdjCase-ICP-Agent-CallRejectedException 'EdjCase.ICP.Agent.CallRejectedException')
   - [#ctor(rejectCode,rejectMessage,errorCode)](#M-EdjCase-ICP-Agent-CallRejectedException-#ctor-EdjCase-ICP-Agent-Responses-RejectCode,System-String,System-String- 'EdjCase.ICP.Agent.CallRejectedException.#ctor(EdjCase.ICP.Agent.Responses.RejectCode,System.String,System.String)')
   - [ErrorCode](#P-EdjCase-ICP-Agent-CallRejectedException-ErrorCode 'EdjCase.ICP.Agent.CallRejectedException.ErrorCode')
+  - [Message](#P-EdjCase-ICP-Agent-CallRejectedException-Message 'EdjCase.ICP.Agent.CallRejectedException.Message')
   - [RejectCode](#P-EdjCase-ICP-Agent-CallRejectedException-RejectCode 'EdjCase.ICP.Agent.CallRejectedException.RejectCode')
   - [RejectMessage](#P-EdjCase-ICP-Agent-CallRejectedException-RejectMessage 'EdjCase.ICP.Agent.CallRejectedException.RejectMessage')
 - [CallRequest](#T-EdjCase-ICP-Agent-Requests-CallRequest 'EdjCase.ICP.Agent.Requests.CallRequest')
@@ -422,6 +423,13 @@ Exception for when a call to a canister is rejected/has an error
 ##### Summary
 
 Optional. Specific error code for differentiating specific errors
+
+<a name='P-EdjCase-ICP-Agent-CallRejectedException-Message'></a>
+### Message `property`
+
+##### Summary
+
+*Inherit from parent.*
 
 <a name='P-EdjCase-ICP-Agent-CallRejectedException-RejectCode'></a>
 ### RejectCode `property`

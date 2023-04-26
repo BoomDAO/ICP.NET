@@ -1589,6 +1589,7 @@ Type File: 'Governance'
 
 using EdjCase.ICP.Candid.Mapping;
 using Test.Models;
+using System;
 using System.Collections.Generic;
 using EdjCase.ICP.Candid.Models;
 
@@ -1597,7 +1598,7 @@ namespace Test.Models
 	public class Governance
 	{
 		[CandidName("default_followees")]
-		public List<Governance.DefaultFolloweesItemRecord> DefaultFollowees { get; set; }
+		public List<ValueTuple<int, Followees>> DefaultFollowees { get; set; }
 
 		[CandidName("wait_for_quiet_threshold_seconds")]
 		public ulong WaitForQuietThresholdSeconds { get; set; }
@@ -1621,18 +1622,18 @@ namespace Test.Models
 		public ulong ShortVotingPeriodSeconds { get; set; }
 
 		[CandidName("proposals")]
-		public List<Governance.ProposalsItemRecord> Proposals { get; set; }
+		public List<ValueTuple<ulong, ProposalData>> Proposals { get; set; }
 
 		[CandidName("in_flight_commands")]
-		public List<Governance.InFlightCommandsItemRecord> InFlightCommands { get; set; }
+		public List<ValueTuple<ulong, NeuronInFlightCommand>> InFlightCommands { get; set; }
 
 		[CandidName("neurons")]
-		public List<Governance.NeuronsItemRecord> Neurons { get; set; }
+		public List<ValueTuple<ulong, Neuron>> Neurons { get; set; }
 
 		[CandidName("genesis_timestamp_seconds")]
 		public ulong GenesisTimestampSeconds { get; set; }
 
-		public Governance(List<Governance.DefaultFolloweesItemRecord> defaultFollowees, ulong waitForQuietThresholdSeconds, OptionalValue<GovernanceCachedMetrics> metrics, List<NodeProvider> nodeProviders, OptionalValue<NetworkEconomics> economics, OptionalValue<RewardEvent> latestRewardEvent, List<NeuronStakeTransfer> toClaimTransfers, ulong shortVotingPeriodSeconds, List<Governance.ProposalsItemRecord> proposals, List<Governance.InFlightCommandsItemRecord> inFlightCommands, List<Governance.NeuronsItemRecord> neurons, ulong genesisTimestampSeconds)
+		public Governance(List<ValueTuple<int, Followees>> defaultFollowees, ulong waitForQuietThresholdSeconds, OptionalValue<GovernanceCachedMetrics> metrics, List<NodeProvider> nodeProviders, OptionalValue<NetworkEconomics> economics, OptionalValue<RewardEvent> latestRewardEvent, List<NeuronStakeTransfer> toClaimTransfers, ulong shortVotingPeriodSeconds, List<ValueTuple<ulong, ProposalData>> proposals, List<ValueTuple<ulong, NeuronInFlightCommand>> inFlightCommands, List<ValueTuple<ulong, Neuron>> neurons, ulong genesisTimestampSeconds)
 		{
 			this.DefaultFollowees = defaultFollowees;
 			this.WaitForQuietThresholdSeconds = waitForQuietThresholdSeconds;
@@ -1651,89 +1652,13 @@ namespace Test.Models
 		public Governance()
 		{
 		}
-
-		public class DefaultFolloweesItemRecord
-		{
-			[CandidTag(0U)]
-			public int F0 { get; set; }
-
-			[CandidTag(1U)]
-			public Followees F1 { get; set; }
-
-			public DefaultFolloweesItemRecord(int f0, Followees f1)
-			{
-				this.F0 = f0;
-				this.F1 = f1;
-			}
-
-			public DefaultFolloweesItemRecord()
-			{
-			}
-		}
-
-		public class ProposalsItemRecord
-		{
-			[CandidTag(0U)]
-			public ulong F0 { get; set; }
-
-			[CandidTag(1U)]
-			public ProposalData F1 { get; set; }
-
-			public ProposalsItemRecord(ulong f0, ProposalData f1)
-			{
-				this.F0 = f0;
-				this.F1 = f1;
-			}
-
-			public ProposalsItemRecord()
-			{
-			}
-		}
-
-		public class InFlightCommandsItemRecord
-		{
-			[CandidTag(0U)]
-			public ulong F0 { get; set; }
-
-			[CandidTag(1U)]
-			public NeuronInFlightCommand F1 { get; set; }
-
-			public InFlightCommandsItemRecord(ulong f0, NeuronInFlightCommand f1)
-			{
-				this.F0 = f0;
-				this.F1 = f1;
-			}
-
-			public InFlightCommandsItemRecord()
-			{
-			}
-		}
-
-		public class NeuronsItemRecord
-		{
-			[CandidTag(0U)]
-			public ulong F0 { get; set; }
-
-			[CandidTag(1U)]
-			public Neuron F1 { get; set; }
-
-			public NeuronsItemRecord(ulong f0, Neuron f1)
-			{
-				this.F0 = f0;
-				this.F1 = f1;
-			}
-
-			public NeuronsItemRecord()
-			{
-			}
-		}
 	}
 }
 
 Type File: 'GovernanceCachedMetrics'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
+using System;
 using System.Collections.Generic;
 
 namespace Test.Models
@@ -1741,7 +1666,7 @@ namespace Test.Models
 	public class GovernanceCachedMetrics
 	{
 		[CandidName("not_dissolving_neurons_e8s_buckets")]
-		public List<GovernanceCachedMetrics.NotDissolvingNeuronsE8sBucketsItemRecord> NotDissolvingNeuronsE8sBuckets { get; set; }
+		public List<ValueTuple<ulong, double>> NotDissolvingNeuronsE8sBuckets { get; set; }
 
 		[CandidName("garbage_collectable_neurons_count")]
 		public ulong GarbageCollectableNeuronsCount { get; set; }
@@ -1750,7 +1675,7 @@ namespace Test.Models
 		public ulong NeuronsWithInvalidStakeCount { get; set; }
 
 		[CandidName("not_dissolving_neurons_count_buckets")]
-		public List<GovernanceCachedMetrics.NotDissolvingNeuronsCountBucketsItemRecord> NotDissolvingNeuronsCountBuckets { get; set; }
+		public List<ValueTuple<ulong, ulong>> NotDissolvingNeuronsCountBuckets { get; set; }
 
 		[CandidName("total_supply_icp")]
 		public ulong TotalSupplyIcp { get; set; }
@@ -1774,13 +1699,13 @@ namespace Test.Models
 		public ulong NeuronsWithLessThan6MonthsDissolveDelayE8s { get; set; }
 
 		[CandidName("dissolving_neurons_count_buckets")]
-		public List<GovernanceCachedMetrics.DissolvingNeuronsCountBucketsItemRecord> DissolvingNeuronsCountBuckets { get; set; }
+		public List<ValueTuple<ulong, ulong>> DissolvingNeuronsCountBuckets { get; set; }
 
 		[CandidName("dissolving_neurons_count")]
 		public ulong DissolvingNeuronsCount { get; set; }
 
 		[CandidName("dissolving_neurons_e8s_buckets")]
-		public List<GovernanceCachedMetrics.DissolvingNeuronsE8sBucketsItemRecord> DissolvingNeuronsE8sBuckets { get; set; }
+		public List<ValueTuple<ulong, double>> DissolvingNeuronsE8sBuckets { get; set; }
 
 		[CandidName("community_fund_total_staked_e8s")]
 		public ulong CommunityFundTotalStakedE8s { get; set; }
@@ -1788,7 +1713,7 @@ namespace Test.Models
 		[CandidName("timestamp_seconds")]
 		public ulong TimestampSeconds { get; set; }
 
-		public GovernanceCachedMetrics(List<GovernanceCachedMetrics.NotDissolvingNeuronsE8sBucketsItemRecord> notDissolvingNeuronsE8sBuckets, ulong garbageCollectableNeuronsCount, ulong neuronsWithInvalidStakeCount, List<GovernanceCachedMetrics.NotDissolvingNeuronsCountBucketsItemRecord> notDissolvingNeuronsCountBuckets, ulong totalSupplyIcp, ulong neuronsWithLessThan6MonthsDissolveDelayCount, ulong dissolvedNeuronsCount, ulong totalStakedE8s, ulong notDissolvingNeuronsCount, ulong dissolvedNeuronsE8s, ulong neuronsWithLessThan6MonthsDissolveDelayE8s, List<GovernanceCachedMetrics.DissolvingNeuronsCountBucketsItemRecord> dissolvingNeuronsCountBuckets, ulong dissolvingNeuronsCount, List<GovernanceCachedMetrics.DissolvingNeuronsE8sBucketsItemRecord> dissolvingNeuronsE8sBuckets, ulong communityFundTotalStakedE8s, ulong timestampSeconds)
+		public GovernanceCachedMetrics(List<ValueTuple<ulong, double>> notDissolvingNeuronsE8sBuckets, ulong garbageCollectableNeuronsCount, ulong neuronsWithInvalidStakeCount, List<ValueTuple<ulong, ulong>> notDissolvingNeuronsCountBuckets, ulong totalSupplyIcp, ulong neuronsWithLessThan6MonthsDissolveDelayCount, ulong dissolvedNeuronsCount, ulong totalStakedE8s, ulong notDissolvingNeuronsCount, ulong dissolvedNeuronsE8s, ulong neuronsWithLessThan6MonthsDissolveDelayE8s, List<ValueTuple<ulong, ulong>> dissolvingNeuronsCountBuckets, ulong dissolvingNeuronsCount, List<ValueTuple<ulong, double>> dissolvingNeuronsE8sBuckets, ulong communityFundTotalStakedE8s, ulong timestampSeconds)
 		{
 			this.NotDissolvingNeuronsE8sBuckets = notDissolvingNeuronsE8sBuckets;
 			this.GarbageCollectableNeuronsCount = garbageCollectableNeuronsCount;
@@ -1810,82 +1735,6 @@ namespace Test.Models
 
 		public GovernanceCachedMetrics()
 		{
-		}
-
-		public class NotDissolvingNeuronsE8sBucketsItemRecord
-		{
-			[CandidTag(0U)]
-			public ulong F0 { get; set; }
-
-			[CandidTag(1U)]
-			public double F1 { get; set; }
-
-			public NotDissolvingNeuronsE8sBucketsItemRecord(ulong f0, double f1)
-			{
-				this.F0 = f0;
-				this.F1 = f1;
-			}
-
-			public NotDissolvingNeuronsE8sBucketsItemRecord()
-			{
-			}
-		}
-
-		public class NotDissolvingNeuronsCountBucketsItemRecord
-		{
-			[CandidTag(0U)]
-			public ulong F0 { get; set; }
-
-			[CandidTag(1U)]
-			public ulong F1 { get; set; }
-
-			public NotDissolvingNeuronsCountBucketsItemRecord(ulong f0, ulong f1)
-			{
-				this.F0 = f0;
-				this.F1 = f1;
-			}
-
-			public NotDissolvingNeuronsCountBucketsItemRecord()
-			{
-			}
-		}
-
-		public class DissolvingNeuronsCountBucketsItemRecord
-		{
-			[CandidTag(0U)]
-			public ulong F0 { get; set; }
-
-			[CandidTag(1U)]
-			public ulong F1 { get; set; }
-
-			public DissolvingNeuronsCountBucketsItemRecord(ulong f0, ulong f1)
-			{
-				this.F0 = f0;
-				this.F1 = f1;
-			}
-
-			public DissolvingNeuronsCountBucketsItemRecord()
-			{
-			}
-		}
-
-		public class DissolvingNeuronsE8sBucketsItemRecord
-		{
-			[CandidTag(0U)]
-			public ulong F0 { get; set; }
-
-			[CandidTag(1U)]
-			public double F1 { get; set; }
-
-			public DissolvingNeuronsE8sBucketsItemRecord(ulong f0, double f1)
-			{
-				this.F0 = f0;
-				this.F1 = f1;
-			}
-
-			public DissolvingNeuronsE8sBucketsItemRecord()
-			{
-			}
 		}
 	}
 }
@@ -2048,6 +1897,7 @@ Type File: 'ListNeuronsResponse'
 
 using EdjCase.ICP.Candid.Mapping;
 using Test.Models;
+using System;
 using System.Collections.Generic;
 
 namespace Test.Models
@@ -2055,12 +1905,12 @@ namespace Test.Models
 	public class ListNeuronsResponse
 	{
 		[CandidName("neuron_infos")]
-		public List<ListNeuronsResponse.NeuronInfosItemRecord> NeuronInfos { get; set; }
+		public List<ValueTuple<ulong, NeuronInfo>> NeuronInfos { get; set; }
 
 		[CandidName("full_neurons")]
 		public List<Neuron> FullNeurons { get; set; }
 
-		public ListNeuronsResponse(List<ListNeuronsResponse.NeuronInfosItemRecord> neuronInfos, List<Neuron> fullNeurons)
+		public ListNeuronsResponse(List<ValueTuple<ulong, NeuronInfo>> neuronInfos, List<Neuron> fullNeurons)
 		{
 			this.NeuronInfos = neuronInfos;
 			this.FullNeurons = fullNeurons;
@@ -2068,25 +1918,6 @@ namespace Test.Models
 
 		public ListNeuronsResponse()
 		{
-		}
-
-		public class NeuronInfosItemRecord
-		{
-			[CandidTag(0U)]
-			public ulong F0 { get; set; }
-
-			[CandidTag(1U)]
-			public NeuronInfo F1 { get; set; }
-
-			public NeuronInfosItemRecord(ulong f0, NeuronInfo f1)
-			{
-				this.F0 = f0;
-				this.F1 = f1;
-			}
-
-			public NeuronInfosItemRecord()
-			{
-			}
 		}
 	}
 }
@@ -2410,6 +2241,7 @@ using EdjCase.ICP.Candid.Mapping;
 using Test.Models;
 using EdjCase.ICP.Candid.Models;
 using System.Collections.Generic;
+using System;
 
 namespace Test.Models
 {
@@ -2455,7 +2287,7 @@ namespace Test.Models
 		public OptionalValue<DissolveState> DissolveState { get; set; }
 
 		[CandidName("followees")]
-		public List<Neuron.FolloweesItemRecord> Followees { get; set; }
+		public List<ValueTuple<int, Followees>> Followees { get; set; }
 
 		[CandidName("neuron_fees_e8s")]
 		public ulong NeuronFeesE8s { get; set; }
@@ -2466,7 +2298,7 @@ namespace Test.Models
 		[CandidName("known_neuron_data")]
 		public OptionalValue<KnownNeuronData> KnownNeuronData { get; set; }
 
-		public Neuron(OptionalValue<NeuronId> id, OptionalValue<Principal> controller, List<BallotInfo> recentBallots, bool kycVerified, bool notForProfit, ulong maturityE8sEquivalent, ulong cachedNeuronStakeE8s, ulong createdTimestampSeconds, ulong agingSinceTimestampSeconds, List<Principal> hotKeys, List<byte> account, OptionalValue<ulong> joinedCommunityFundTimestampSeconds, OptionalValue<DissolveState> dissolveState, List<Neuron.FolloweesItemRecord> followees, ulong neuronFeesE8s, OptionalValue<NeuronStakeTransfer> transfer, OptionalValue<KnownNeuronData> knownNeuronData)
+		public Neuron(OptionalValue<NeuronId> id, OptionalValue<Principal> controller, List<BallotInfo> recentBallots, bool kycVerified, bool notForProfit, ulong maturityE8sEquivalent, ulong cachedNeuronStakeE8s, ulong createdTimestampSeconds, ulong agingSinceTimestampSeconds, List<Principal> hotKeys, List<byte> account, OptionalValue<ulong> joinedCommunityFundTimestampSeconds, OptionalValue<DissolveState> dissolveState, List<ValueTuple<int, Followees>> followees, ulong neuronFeesE8s, OptionalValue<NeuronStakeTransfer> transfer, OptionalValue<KnownNeuronData> knownNeuronData)
 		{
 			this.Id = id;
 			this.Controller = controller;
@@ -2489,25 +2321,6 @@ namespace Test.Models
 
 		public Neuron()
 		{
-		}
-
-		public class FolloweesItemRecord
-		{
-			[CandidTag(0U)]
-			public int F0 { get; set; }
-
-			[CandidTag(1U)]
-			public Followees F1 { get; set; }
-
-			public FolloweesItemRecord(int f0, Followees f1)
-			{
-				this.F0 = f0;
-				this.F1 = f1;
-			}
-
-			public FolloweesItemRecord()
-			{
-			}
 		}
 	}
 }
@@ -2961,6 +2774,7 @@ Type File: 'ProposalData'
 using EdjCase.ICP.Candid.Mapping;
 using Test.Models;
 using EdjCase.ICP.Candid.Models;
+using System;
 using System.Collections.Generic;
 
 namespace Test.Models
@@ -2974,7 +2788,7 @@ namespace Test.Models
 		public OptionalValue<GovernanceError> FailureReason { get; set; }
 
 		[CandidName("ballots")]
-		public List<ProposalData.BallotsItemRecord> Ballots { get; set; }
+		public List<ValueTuple<ulong, Ballot>> Ballots { get; set; }
 
 		[CandidName("proposal_timestamp_seconds")]
 		public ulong ProposalTimestampSeconds { get; set; }
@@ -3006,7 +2820,7 @@ namespace Test.Models
 		[CandidName("executed_timestamp_seconds")]
 		public ulong ExecutedTimestampSeconds { get; set; }
 
-		public ProposalData(OptionalValue<NeuronId> id, OptionalValue<GovernanceError> failureReason, List<ProposalData.BallotsItemRecord> ballots, ulong proposalTimestampSeconds, ulong rewardEventRound, ulong failedTimestampSeconds, ulong rejectCostE8s, OptionalValue<Tally> latestTally, ulong decidedTimestampSeconds, OptionalValue<Proposal> proposal, OptionalValue<NeuronId> proposer, OptionalValue<WaitForQuietState> waitForQuietState, ulong executedTimestampSeconds)
+		public ProposalData(OptionalValue<NeuronId> id, OptionalValue<GovernanceError> failureReason, List<ValueTuple<ulong, Ballot>> ballots, ulong proposalTimestampSeconds, ulong rewardEventRound, ulong failedTimestampSeconds, ulong rejectCostE8s, OptionalValue<Tally> latestTally, ulong decidedTimestampSeconds, OptionalValue<Proposal> proposal, OptionalValue<NeuronId> proposer, OptionalValue<WaitForQuietState> waitForQuietState, ulong executedTimestampSeconds)
 		{
 			this.Id = id;
 			this.FailureReason = failureReason;
@@ -3026,25 +2840,6 @@ namespace Test.Models
 		public ProposalData()
 		{
 		}
-
-		public class BallotsItemRecord
-		{
-			[CandidTag(0U)]
-			public ulong F0 { get; set; }
-
-			[CandidTag(1U)]
-			public Ballot F1 { get; set; }
-
-			public BallotsItemRecord(ulong f0, Ballot f1)
-			{
-				this.F0 = f0;
-				this.F1 = f1;
-			}
-
-			public BallotsItemRecord()
-			{
-			}
-		}
 	}
 }
 
@@ -3053,6 +2848,7 @@ Type File: 'ProposalInfo'
 using EdjCase.ICP.Candid.Mapping;
 using Test.Models;
 using EdjCase.ICP.Candid.Models;
+using System;
 using System.Collections.Generic;
 
 namespace Test.Models
@@ -3072,7 +2868,7 @@ namespace Test.Models
 		public OptionalValue<GovernanceError> FailureReason { get; set; }
 
 		[CandidName("ballots")]
-		public List<ProposalInfo.BallotsItemRecord> Ballots { get; set; }
+		public List<ValueTuple<ulong, Ballot>> Ballots { get; set; }
 
 		[CandidName("proposal_timestamp_seconds")]
 		public ulong ProposalTimestampSeconds { get; set; }
@@ -3107,7 +2903,7 @@ namespace Test.Models
 		[CandidName("executed_timestamp_seconds")]
 		public ulong ExecutedTimestampSeconds { get; set; }
 
-		public ProposalInfo(OptionalValue<NeuronId> id, int status, int topic, OptionalValue<GovernanceError> failureReason, List<ProposalInfo.BallotsItemRecord> ballots, ulong proposalTimestampSeconds, ulong rewardEventRound, OptionalValue<ulong> deadlineTimestampSeconds, ulong failedTimestampSeconds, ulong rejectCostE8s, OptionalValue<Tally> latestTally, int rewardStatus, ulong decidedTimestampSeconds, OptionalValue<Proposal> proposal, OptionalValue<NeuronId> proposer, ulong executedTimestampSeconds)
+		public ProposalInfo(OptionalValue<NeuronId> id, int status, int topic, OptionalValue<GovernanceError> failureReason, List<ValueTuple<ulong, Ballot>> ballots, ulong proposalTimestampSeconds, ulong rewardEventRound, OptionalValue<ulong> deadlineTimestampSeconds, ulong failedTimestampSeconds, ulong rejectCostE8s, OptionalValue<Tally> latestTally, int rewardStatus, ulong decidedTimestampSeconds, OptionalValue<Proposal> proposal, OptionalValue<NeuronId> proposer, ulong executedTimestampSeconds)
 		{
 			this.Id = id;
 			this.Status = status;
@@ -3129,25 +2925,6 @@ namespace Test.Models
 
 		public ProposalInfo()
 		{
-		}
-
-		public class BallotsItemRecord
-		{
-			[CandidTag(0U)]
-			public ulong F0 { get; set; }
-
-			[CandidTag(1U)]
-			public Ballot F1 { get; set; }
-
-			public BallotsItemRecord(ulong f0, Ballot f1)
-			{
-				this.F0 = f0;
-				this.F1 = f1;
-			}
-
-			public BallotsItemRecord()
-			{
-			}
 		}
 	}
 }
@@ -3812,6 +3589,7 @@ Type File: 'SetDefaultFollowees'
 
 using EdjCase.ICP.Candid.Mapping;
 using Test.Models;
+using System;
 using System.Collections.Generic;
 
 namespace Test.Models
@@ -3819,34 +3597,15 @@ namespace Test.Models
 	public class SetDefaultFollowees
 	{
 		[CandidName("default_followees")]
-		public List<SetDefaultFollowees.DefaultFolloweesItemRecord> DefaultFollowees { get; set; }
+		public List<ValueTuple<int, Followees>> DefaultFollowees { get; set; }
 
-		public SetDefaultFollowees(List<SetDefaultFollowees.DefaultFolloweesItemRecord> defaultFollowees)
+		public SetDefaultFollowees(List<ValueTuple<int, Followees>> defaultFollowees)
 		{
 			this.DefaultFollowees = defaultFollowees;
 		}
 
 		public SetDefaultFollowees()
 		{
-		}
-
-		public class DefaultFolloweesItemRecord
-		{
-			[CandidTag(0U)]
-			public int F0 { get; set; }
-
-			[CandidTag(1U)]
-			public Followees F1 { get; set; }
-
-			public DefaultFolloweesItemRecord(int f0, Followees f1)
-			{
-				this.F0 = f0;
-				this.F1 = f1;
-			}
-
-			public DefaultFolloweesItemRecord()
-			{
-			}
 		}
 	}
 }

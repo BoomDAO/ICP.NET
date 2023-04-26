@@ -1,5 +1,5 @@
 using EdjCase.ICP.Candid.Mapping;
-using Sample.Shared.Governance.Models;
+using System;
 using System.Collections.Generic;
 
 namespace Sample.Shared.Governance.Models
@@ -7,7 +7,7 @@ namespace Sample.Shared.Governance.Models
 	public class GovernanceCachedMetrics
 	{
 		[CandidName("not_dissolving_neurons_e8s_buckets")]
-		public List<GovernanceCachedMetrics.NotDissolvingNeuronsE8sBucketsItemRecord> NotDissolvingNeuronsE8sBuckets { get; set; }
+		public List<ValueTuple<ulong, double>> NotDissolvingNeuronsE8sBuckets { get; set; }
 
 		[CandidName("garbage_collectable_neurons_count")]
 		public ulong GarbageCollectableNeuronsCount { get; set; }
@@ -16,7 +16,7 @@ namespace Sample.Shared.Governance.Models
 		public ulong NeuronsWithInvalidStakeCount { get; set; }
 
 		[CandidName("not_dissolving_neurons_count_buckets")]
-		public List<GovernanceCachedMetrics.NotDissolvingNeuronsCountBucketsItemRecord> NotDissolvingNeuronsCountBuckets { get; set; }
+		public List<ValueTuple<ulong, ulong>> NotDissolvingNeuronsCountBuckets { get; set; }
 
 		[CandidName("total_supply_icp")]
 		public ulong TotalSupplyIcp { get; set; }
@@ -46,13 +46,13 @@ namespace Sample.Shared.Governance.Models
 		public ulong NeuronsWithLessThan6MonthsDissolveDelayE8s { get; set; }
 
 		[CandidName("dissolving_neurons_count_buckets")]
-		public List<GovernanceCachedMetrics.DissolvingNeuronsCountBucketsItemRecord> DissolvingNeuronsCountBuckets { get; set; }
+		public List<ValueTuple<ulong, ulong>> DissolvingNeuronsCountBuckets { get; set; }
 
 		[CandidName("dissolving_neurons_count")]
 		public ulong DissolvingNeuronsCount { get; set; }
 
 		[CandidName("dissolving_neurons_e8s_buckets")]
-		public List<GovernanceCachedMetrics.DissolvingNeuronsE8sBucketsItemRecord> DissolvingNeuronsE8sBuckets { get; set; }
+		public List<ValueTuple<ulong, double>> DissolvingNeuronsE8sBuckets { get; set; }
 
 		[CandidName("community_fund_total_staked_e8s")]
 		public ulong CommunityFundTotalStakedE8s { get; set; }
@@ -60,7 +60,7 @@ namespace Sample.Shared.Governance.Models
 		[CandidName("timestamp_seconds")]
 		public ulong TimestampSeconds { get; set; }
 
-		public GovernanceCachedMetrics(List<GovernanceCachedMetrics.NotDissolvingNeuronsE8sBucketsItemRecord> notDissolvingNeuronsE8sBuckets, ulong garbageCollectableNeuronsCount, ulong neuronsWithInvalidStakeCount, List<GovernanceCachedMetrics.NotDissolvingNeuronsCountBucketsItemRecord> notDissolvingNeuronsCountBuckets, ulong totalSupplyIcp, ulong neuronsWithLessThan6MonthsDissolveDelayCount, ulong dissolvedNeuronsCount, ulong communityFundTotalMaturityE8sEquivalent, ulong totalStakedE8s, ulong notDissolvingNeuronsCount, ulong totalLockedE8s, ulong dissolvedNeuronsE8s, ulong neuronsWithLessThan6MonthsDissolveDelayE8s, List<GovernanceCachedMetrics.DissolvingNeuronsCountBucketsItemRecord> dissolvingNeuronsCountBuckets, ulong dissolvingNeuronsCount, List<GovernanceCachedMetrics.DissolvingNeuronsE8sBucketsItemRecord> dissolvingNeuronsE8sBuckets, ulong communityFundTotalStakedE8s, ulong timestampSeconds)
+		public GovernanceCachedMetrics(List<ValueTuple<ulong, double>> notDissolvingNeuronsE8sBuckets, ulong garbageCollectableNeuronsCount, ulong neuronsWithInvalidStakeCount, List<ValueTuple<ulong, ulong>> notDissolvingNeuronsCountBuckets, ulong totalSupplyIcp, ulong neuronsWithLessThan6MonthsDissolveDelayCount, ulong dissolvedNeuronsCount, ulong communityFundTotalMaturityE8sEquivalent, ulong totalStakedE8s, ulong notDissolvingNeuronsCount, ulong totalLockedE8s, ulong dissolvedNeuronsE8s, ulong neuronsWithLessThan6MonthsDissolveDelayE8s, List<ValueTuple<ulong, ulong>> dissolvingNeuronsCountBuckets, ulong dissolvingNeuronsCount, List<ValueTuple<ulong, double>> dissolvingNeuronsE8sBuckets, ulong communityFundTotalStakedE8s, ulong timestampSeconds)
 		{
 			this.NotDissolvingNeuronsE8sBuckets = notDissolvingNeuronsE8sBuckets;
 			this.GarbageCollectableNeuronsCount = garbageCollectableNeuronsCount;
@@ -84,82 +84,6 @@ namespace Sample.Shared.Governance.Models
 
 		public GovernanceCachedMetrics()
 		{
-		}
-
-		public class NotDissolvingNeuronsE8sBucketsItemRecord
-		{
-			[CandidTag(0U)]
-			public ulong F0 { get; set; }
-
-			[CandidTag(1U)]
-			public double F1 { get; set; }
-
-			public NotDissolvingNeuronsE8sBucketsItemRecord(ulong f0, double f1)
-			{
-				this.F0 = f0;
-				this.F1 = f1;
-			}
-
-			public NotDissolvingNeuronsE8sBucketsItemRecord()
-			{
-			}
-		}
-
-		public class NotDissolvingNeuronsCountBucketsItemRecord
-		{
-			[CandidTag(0U)]
-			public ulong F0 { get; set; }
-
-			[CandidTag(1U)]
-			public ulong F1 { get; set; }
-
-			public NotDissolvingNeuronsCountBucketsItemRecord(ulong f0, ulong f1)
-			{
-				this.F0 = f0;
-				this.F1 = f1;
-			}
-
-			public NotDissolvingNeuronsCountBucketsItemRecord()
-			{
-			}
-		}
-
-		public class DissolvingNeuronsCountBucketsItemRecord
-		{
-			[CandidTag(0U)]
-			public ulong F0 { get; set; }
-
-			[CandidTag(1U)]
-			public ulong F1 { get; set; }
-
-			public DissolvingNeuronsCountBucketsItemRecord(ulong f0, ulong f1)
-			{
-				this.F0 = f0;
-				this.F1 = f1;
-			}
-
-			public DissolvingNeuronsCountBucketsItemRecord()
-			{
-			}
-		}
-
-		public class DissolvingNeuronsE8sBucketsItemRecord
-		{
-			[CandidTag(0U)]
-			public ulong F0 { get; set; }
-
-			[CandidTag(1U)]
-			public double F1 { get; set; }
-
-			public DissolvingNeuronsE8sBucketsItemRecord(ulong f0, double f1)
-			{
-				this.F0 = f0;
-				this.F1 = f1;
-			}
-
-			public DissolvingNeuronsE8sBucketsItemRecord()
-			{
-			}
 		}
 	}
 }
