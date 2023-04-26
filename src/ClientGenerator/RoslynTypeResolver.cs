@@ -133,6 +133,27 @@ namespace EdjCase.ICP.ClientGenerator
 						}
 						return new ResolvedType(variantName, enumSyntax);
 					}
+				case TupleSourceCodeType r:
+					{
+						ResolvedType[] innerResolvedTypes = r.Fields
+							.Select(f => this.ResolveType(f, nameContext + "Item", parentType))
+							.ToArray();
+						TypeName[] innerTypes = innerResolvedTypes
+							.Select(t => t.Name)
+							.ToArray();
+						MemberDeclarationSyntax[] innerSyntax = innerResolvedTypes
+							.Where(t => t.GeneratedSyntax != null)
+							.SelectMany(t => t.GeneratedSyntax!)
+							.ToArray();
+
+						var cType = new TypeName(
+							"ValueTuple",
+							"System",
+							prefix: null,
+							innerTypes
+						);
+						return new ResolvedType(cType, innerSyntax);
+					}
 				case RecordSourceCodeType r:
 					{
 						if (parentType != null)
@@ -781,7 +802,7 @@ namespace EdjCase.ICP.ClientGenerator
 				.Select(t => (t.Name, typeResolver.ResolveType(t.Type, t.Name.PropertyName, parentType: clientName)))
 				.ToList();
 			List<(ValueName Name, ResolvedType Type)> resolvedReturnTypes = info.ReturnTypes
-				.Select(t => (t.Name, typeResolver.ResolveType(t.Type, StringUtil.ToPascalCase(csharpName) + StringUtil.ToPascalCase(t.Name.PropertyName), parentType: clientName)))
+				.Select((t, i) => (t.Name, typeResolver.ResolveType(t.Type, StringUtil.ToPascalCase(csharpName) + StringUtil.ToPascalCase(t.Name.PropertyName) + i, parentType: clientName)))
 				.ToList();
 
 			List<TypedValueName> argTypes = resolvedArgTypes
@@ -792,7 +813,7 @@ namespace EdjCase.ICP.ClientGenerator
 				.ToList();
 
 			BlockSyntax body = GenerateFuncMethodBody(
-				candidName : candidName,
+				candidName: candidName,
 				argTypes,
 				returnTypes,
 				isOneway: info.IsOneway,
@@ -1273,7 +1294,7 @@ namespace EdjCase.ICP.ClientGenerator
 					returnType = SyntaxFactory.TupleType(SyntaxFactory.SeparatedList(
 						returnTypes
 						.Where(t => t != null)
-						.Select(t => SyntaxFactory.TupleElement(t.Type.ToTypeSyntax(), t.Value.PropertyName.ToSyntaxIdentifier()))
+						.Select(t => SyntaxFactory.TupleElement(t.Type.ToTypeSyntax(), (" " + t.Value.PropertyName).ToSyntaxIdentifier()))
 					));
 				}
 			}

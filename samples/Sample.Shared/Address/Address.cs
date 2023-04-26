@@ -12,11 +12,11 @@ namespace Sample.Shared.AddressBook
 
 		public string country { get; set; }
 
-		public address(string street, string city, UnboundedUInt zipCode, string country)
+		public address(string street, string city, UnboundedUInt zip_code, string country)
 		{
 			this.street = street;
 			this.city = city;
-			this.zip_code = zipCode;
+			this.zip_code = zip_code;
 			this.country = country;
 		}
 
