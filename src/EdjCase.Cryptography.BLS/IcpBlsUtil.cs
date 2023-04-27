@@ -13,7 +13,7 @@ namespace EdjCase.Cryptography.BLS
 
 		private static object intializeLock = new object();
 		private static bool isInitialized = false;
-		private static DelegatesCache cache;
+		private static DelegatesCache? cache;
 
 		/// <summary>
 		/// Verifies a BLS signature (ICP flavor only)
@@ -53,7 +53,7 @@ namespace EdjCase.Cryptography.BLS
 			EnsureInitialized();
 
 			var blsPublicKey = default(Interop.PublicKey);
-			ulong publicKeyBytesRead = cache.publicKeyDeserialize(ref blsPublicKey, publicKey, (ulong)publicKey!.LongLength);
+			ulong publicKeyBytesRead = cache!.publicKeyDeserialize(ref blsPublicKey, publicKey, (ulong)publicKey!.LongLength);
 
 			if (publicKeyBytesRead != (ulong)publicKey.Length)
 			{
@@ -166,37 +166,24 @@ namespace EdjCase.Cryptography.BLS
 			Delegates.SignatureDeserialize signatureDeserialize;
 			Delegates.Verify verify;
 			Delegates.PublicKeySetHexStr publicKeySetHexStr;
-			if (true)
-			{
-				string libraryName = "bls384_256";
+			const string libraryName = "bls384_256";
 
-				IntPtr libraryHandle = NativeInterop.LoadNativeLibrary(libraryName);
-				T Get<T>(string functionName)
-				{
-					IntPtr blsInitPtr = NativeInterop.GetFunctionPointer(libraryHandle, functionName);
-					return Marshal.GetDelegateForFunctionPointer<T>(blsInitPtr);
-				}
-				init = Get<Delegates.Init>("blsInit");
-				setEthSerialization = Get<Delegates.SetEthSerialization>("blsSetETHserialization");
-				setMapToMode = Get<Delegates.SetMapToMode>("blsSetMapToMode");
-				setGeneratorOfPublicKey = Get<Delegates.SetGeneratorOfPublicKey>("blsSetGeneratorOfPublicKey");
-				mclBnG1SetDst = Get<Delegates.MclBnG1SetDst>("mclBnG1_setDst");
-				publicKeyDeserialize = Get<Delegates.PublicKeyDeserialize>("blsPublicKeyDeserialize");
-				signatureDeserialize = Get<Delegates.SignatureDeserialize>("blsSignatureDeserialize");
-				verify = Get<Delegates.Verify>("blsVerify");
-				publicKeySetHexStr = Get<Delegates.PublicKeySetHexStr>("blsPublicKeySetHexStr");
-			}
-			else
+			IntPtr libraryHandle = NativeInterop.LoadNativeLibrary(libraryName);
+			T Get<T>(string functionName)
 			{
-				init = Interop.blsInit;
-				setEthSerialization = Interop.blsSetETHserialization;
-				setMapToMode = Interop.blsSetMapToMode;
-				setGeneratorOfPublicKey = Interop.blsSetGeneratorOfPublicKey;
-				mclBnG1SetDst = Interop.mclBnG1_setDst;
-				publicKeyDeserialize = Interop.blsPublicKeyDeserialize;
-				signatureDeserialize = Interop.blsSignatureDeserialize;
-				verify = Interop.blsVerify;
+				IntPtr blsInitPtr = NativeInterop.GetFunctionPointer(libraryHandle, functionName);
+				return Marshal.GetDelegateForFunctionPointer<T>(blsInitPtr);
 			}
+			init = Get<Delegates.Init>("blsInit");
+			setEthSerialization = Get<Delegates.SetEthSerialization>("blsSetETHserialization");
+			setMapToMode = Get<Delegates.SetMapToMode>("blsSetMapToMode");
+			setGeneratorOfPublicKey = Get<Delegates.SetGeneratorOfPublicKey>("blsSetGeneratorOfPublicKey");
+			mclBnG1SetDst = Get<Delegates.MclBnG1SetDst>("mclBnG1_setDst");
+			publicKeyDeserialize = Get<Delegates.PublicKeyDeserialize>("blsPublicKeyDeserialize");
+			signatureDeserialize = Get<Delegates.SignatureDeserialize>("blsSignatureDeserialize");
+			verify = Get<Delegates.Verify>("blsVerify");
+			publicKeySetHexStr = Get<Delegates.PublicKeySetHexStr>("blsPublicKeySetHexStr");
+
 			return new DelegatesCache(
 				init,
 				setEthSerialization,

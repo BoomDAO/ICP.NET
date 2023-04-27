@@ -34,7 +34,9 @@ namespace EdjCase.ICP.Candid.Utilities
 
 		public static string ToHexString(this ReadOnlySpan<byte> bytes)
 		{
-			Span<char> stringValue = stackalloc char[bytes.Length * 2];
+			Span<char> stringValue = bytes.Length > 1_000
+				? new char[bytes.Length * 2]
+				: stackalloc char[bytes.Length * 2];
 			int i = 0;
 			foreach (byte b in bytes)
 			{

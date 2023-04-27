@@ -278,6 +278,10 @@ namespace EdjCase.ICP.Candid.Mapping
 				{
 					return BuildOpt(objType);
 				}
+				if (objType.Name.StartsWith("ValueTuple"))
+				{
+					return BuildTuple(objType, objType.GenericTypeArguments);
+				}
 				if (genericTypeDefinition == typeof(List<>))
 				{
 					Type innerType = objType.GenericTypeArguments[0];
@@ -459,6 +463,26 @@ namespace EdjCase.ICP.Candid.Mapping
 
 				var mapper = new VariantMapper(type, objType, typeProperty, valueProperty, options);
 				return (mapper, type);
+			});
+		}
+
+		private static IResolvableTypeInfo BuildTuple(Type objType, Type[] innerTypes)
+		{
+
+			return new ComplexTypeInfo(objType, innerTypes.ToList(), (resolvedMappings) =>
+			{
+				List<(Type, CandidType)> tupleTypes = innerTypes
+					.Select(p => (p, resolvedMappings[p]))
+					.ToList();
+				Dictionary<CandidTag, CandidType> fieldTypes = tupleTypes
+					.Select((t, i) => (Index: i, Type: t))
+					.ToDictionary(
+						p => CandidTag.FromId((uint)p.Index),
+						p => p.Type.Item2
+					);
+				CandidRecordType type = new CandidRecordType(fieldTypes);
+
+				return (new TupleMapper(objType, tupleTypes), type);
 			});
 		}
 
