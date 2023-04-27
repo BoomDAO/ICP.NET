@@ -778,6 +778,21 @@
         <member name="M:EdjCase.ICP.Agent.Requests.ReadStateRequest.BuildHashableItem">
             <inheritdoc />
         </member>
+        <member name="P:EdjCase.ICP.Agent.Responses.CallRejectedResponse.Code">
+            <summary>
+            The type of query reject
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Responses.CallRejectedResponse.Message">
+            <summary>
+            Optional. A human readable message about the rejection
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Responses.CallRejectedResponse.ErrorCode">
+            <summary>
+            Optional. A specific error id for the reject
+            </summary>
+        </member>
         <member name="T:EdjCase.ICP.Agent.Responses.QueryResponse">
             <summary>
             A model representing the response data in the form of a variant
