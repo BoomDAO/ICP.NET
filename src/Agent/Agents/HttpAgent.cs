@@ -14,6 +14,8 @@ using System.Threading.Tasks;
 using EdjCase.ICP.Agent.Agents.Http;
 using System.Net.Http.Headers;
 using System.Formats.Cbor;
+using EdjCase.ICP.Candid.Encodings;
+using System.Linq;
 
 namespace EdjCase.ICP.Agent.Agents
 {
@@ -65,7 +67,24 @@ namespace EdjCase.ICP.Agent.Agents
 			{
 				effectiveCanisterId = canisterId;
 			}
-			return await this.SendWithNoResponseAsync($"/api/v2/canister/{effectiveCanisterId.ToText()}/call", BuildRequest);
+			(CallRejectedResponse? response, RequestId requestId) = await this.SendAsync($"/api/v2/canister/{effectiveCanisterId.ToText()}/call", BuildRequest, async httpResponse =>
+			{
+				await this.ThrowIfError(httpResponse);
+				if (httpResponse.StatusCode == System.Net.HttpStatusCode.OK)
+				{
+					// If returns with a body, then an error happened https://forum.dfinity.org/t/breaking-changes-to-the-replica-api-agent-developers-take-note/19651
+
+					byte[] cborBytes = await httpResponse.Content.ReadAsByteArrayAsync();
+					var reader = new CborReader(cborBytes);
+					return CallRejectedResponse.FromCbor(reader);
+				}
+				return null;
+			});
+			if(response != null)
+			{
+				throw new CallRejectedException(response.Code, response.Message, response.ErrorCode);
+			}
+			return requestId;
 
 			CallRequest BuildRequest(Principal sender, ICTimestamp now)
 			{
@@ -79,10 +98,13 @@ namespace EdjCase.ICP.Agent.Agents
 			string method,
 			CandidArg arg)
 		{
-			Stream responseStream = await this.SendAsync($"/api/v2/canister/{canisterId.ToText()}/query", BuildRequest);
-
-			byte[] cborBytes = this.GetStreamBytesAsync(responseStream);
-			return QueryResponse.ReadCbor(new CborReader(cborBytes));
+			(QueryResponse response, RequestId requestId) = await this.SendAsync($"/api/v2/canister/{canisterId.ToText()}/query", BuildRequest, async httpResponse =>
+			{
+				await this.ThrowIfError(httpResponse);
+				byte[] cborBytes = await httpResponse.Content.ReadAsByteArrayAsync();
+				return QueryResponse.ReadCbor(new CborReader(cborBytes));
+			});
+			return response;
 
 			QueryRequest BuildRequest(Principal sender, ICTimestamp now)
 			{
@@ -94,10 +116,13 @@ namespace EdjCase.ICP.Agent.Agents
 		public async Task<ReadStateResponse> ReadStateAsync(Principal canisterId, List<StatePath> paths)
 		{
 			string url = $"/api/v2/canister/{canisterId.ToText()}/read_state";
-			Stream responseStream = await this.SendAsync(url, BuildRequest);
-			byte[] cborBytes = this.GetStreamBytesAsync(responseStream);
-			var reader = new CborReader(cborBytes);
-			ReadStateResponse response = ReadStateResponse.ReadCbor(reader);
+			(ReadStateResponse response, RequestId requestId) = await this.SendAsync(url, BuildRequest, async httpResponse =>
+			{
+				await this.ThrowIfError(httpResponse);
+				byte[] cborBytes = await httpResponse.Content.ReadAsByteArrayAsync();
+				var reader = new CborReader(cborBytes);
+				return ReadStateResponse.ReadCbor(reader);
+			});
 
 			byte[] rootPublicKey = await this.GetRootKeyAsync();
 			if (!response.Certificate.IsValid(rootPublicKey))
@@ -161,18 +186,30 @@ namespace EdjCase.ICP.Agent.Agents
 		/// <inheritdoc/>
 		public async Task<StatusResponse> GetReplicaStatusAsync()
 		{
-			Stream stream = await this.SendAsync("/api/v2/status");
-			byte[] bytes = this.GetStreamBytesAsync(stream);
-			return StatusResponse.ReadCbor(new CborReader(bytes));
+			return await this.SendRawAsync("/api/v2/status", null, async response =>
+			{
+				byte[] bytes = await response.Content.ReadAsByteArrayAsync();
+				return StatusResponse.ReadCbor(new CborReader(bytes));
+			});
+		}
+
+		private async Task ThrowIfError(HttpResponseMessage response)
+		{
+			if (!response.IsSuccessStatusCode)
+			{
+				byte[] bytes = await response.Content.ReadAsByteArrayAsync();
+				string message = Encoding.UTF8.GetString(bytes);
+				throw new Exception($"Response returned a failed status. HttpStatusCode={response.StatusCode} Reason={response.ReasonPhrase} Message={message}");
+			}
 		}
 
 		private byte[] GetStreamBytesAsync(Stream stream)
 		{
-			if(stream is MemoryStream ms)
+			if (stream is MemoryStream ms)
 			{
 				return ms.ToArray();
 			}
-			using(MemoryStream memoryStream = new MemoryStream())
+			using (MemoryStream memoryStream = new MemoryStream())
 			{
 				stream.CopyTo(memoryStream);
 				memoryStream.Position = 0;
@@ -180,28 +217,11 @@ namespace EdjCase.ICP.Agent.Agents
 			}
 		}
 
-		private async Task<RequestId> SendWithNoResponseAsync<TRequest>(string url, Func<Principal, ICTimestamp, TRequest> getRequest)
-			where TRequest : IRepresentationIndependentHashItem
-		{
-			(Func<Task<Stream>> streamFunc, RequestId requestId) = await this.SendInternalAsync(url, getRequest);
-
-			return requestId;
-		}
-
-		private async Task<Stream> SendAsync(string url)
-		{
-			Func<Task<Stream>> streamFunc = await this.SendRawAsync(url, null);
-			return await streamFunc();
-		}
-
-		private async Task<Stream> SendAsync<TRequest>(string url, Func<Principal, ICTimestamp, TRequest> getRequest)
-			where TRequest : IRepresentationIndependentHashItem
-		{
-			(Func<Task<Stream>> streamFunc, RequestId requestId) = await this.SendInternalAsync(url, getRequest);
-			return await streamFunc();
-		}
-
-		private async Task<(Func<Task<Stream>> ResponseFunc, RequestId RequestId)> SendInternalAsync<TRequest>(string url, Func<Principal, ICTimestamp, TRequest> getRequest)
+		private async Task<(T Response, RequestId RequestId)> SendAsync<T, TRequest>(
+			string url,
+			Func<Principal, ICTimestamp, TRequest> getRequest,
+			Func<HttpResponseMessage, Task<T>> handleResponse
+		)
 			where TRequest : IRepresentationIndependentHashItem
 		{
 			Principal principal;
@@ -232,10 +252,10 @@ namespace EdjCase.ICP.Agent.Agents
 #if DEBUG
 			string hex = ByteUtil.ToHexString(cborBody);
 #endif
-			Func<Task<Stream>> responseFunc = await this.SendRawAsync(url, cborBody);
+			T response = await this.SendRawAsync(url, cborBody, handleResponse);
 			var sha256 = SHA256HashFunction.Create();
 			RequestId requestId = RequestId.FromObject(content, sha256); // TODO this is redundant, `CreateSignedContent` hashes it too
-			return (responseFunc, requestId);
+			return (response, requestId);
 
 		}
 
@@ -247,7 +267,7 @@ namespace EdjCase.ICP.Agent.Agents
 			return writer.Encode();
 		}
 
-		private async Task<Func<Task<Stream>>> SendRawAsync(string url, byte[]? cborBody = null)
+		private async Task<T> SendRawAsync<T>(string url, byte[]? cborBody, Func<HttpResponseMessage, Task<T>> handleResponse)
 		{
 			HttpRequestMessage request;
 			if (cborBody != null)
@@ -267,13 +287,7 @@ namespace EdjCase.ICP.Agent.Agents
 
 			}
 			HttpResponseMessage response = await this.httpClient.SendAsync(request);
-			if (!response.IsSuccessStatusCode)
-			{
-				byte[] bytes = await response.Content.ReadAsByteArrayAsync();
-				string message = Encoding.UTF8.GetString(bytes);
-				throw new Exception($"Response returned a failed status. HttpStatusCode={response.StatusCode} Reason={response.ReasonPhrase} Message={message}");
-			}
-			return response.Content.ReadAsStreamAsync;
+			return await handleResponse(response);
 		}
 	}
 

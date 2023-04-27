@@ -19,6 +19,10 @@
   - [Message](#P-EdjCase-ICP-Agent-CallRejectedException-Message 'EdjCase.ICP.Agent.CallRejectedException.Message')
   - [RejectCode](#P-EdjCase-ICP-Agent-CallRejectedException-RejectCode 'EdjCase.ICP.Agent.CallRejectedException.RejectCode')
   - [RejectMessage](#P-EdjCase-ICP-Agent-CallRejectedException-RejectMessage 'EdjCase.ICP.Agent.CallRejectedException.RejectMessage')
+- [CallRejectedResponse](#T-EdjCase-ICP-Agent-Responses-CallRejectedResponse 'EdjCase.ICP.Agent.Responses.CallRejectedResponse')
+  - [Code](#P-EdjCase-ICP-Agent-Responses-CallRejectedResponse-Code 'EdjCase.ICP.Agent.Responses.CallRejectedResponse.Code')
+  - [ErrorCode](#P-EdjCase-ICP-Agent-Responses-CallRejectedResponse-ErrorCode 'EdjCase.ICP.Agent.Responses.CallRejectedResponse.ErrorCode')
+  - [Message](#P-EdjCase-ICP-Agent-Responses-CallRejectedResponse-Message 'EdjCase.ICP.Agent.Responses.CallRejectedResponse.Message')
 - [CallRequest](#T-EdjCase-ICP-Agent-Requests-CallRequest 'EdjCase.ICP.Agent.Requests.CallRequest')
   - [#ctor(canisterId,method,arg,sender,ingressExpiry,nonce)](#M-EdjCase-ICP-Agent-Requests-CallRequest-#ctor-EdjCase-ICP-Candid-Models-Principal,System-String,EdjCase-ICP-Candid-Models-CandidArg,EdjCase-ICP-Candid-Models-Principal,EdjCase-ICP-Candid-Models-ICTimestamp,System-Byte[]- 'EdjCase.ICP.Agent.Requests.CallRequest.#ctor(EdjCase.ICP.Candid.Models.Principal,System.String,EdjCase.ICP.Candid.Models.CandidArg,EdjCase.ICP.Candid.Models.Principal,EdjCase.ICP.Candid.Models.ICTimestamp,System.Byte[])')
   - [Arg](#P-EdjCase-ICP-Agent-Requests-CallRequest-Arg 'EdjCase.ICP.Agent.Requests.CallRequest.Arg')
@@ -444,6 +448,34 @@ The type of rejection that occurred
 ##### Summary
 
 The human readable message of the rejection error
+
+<a name='T-EdjCase-ICP-Agent-Responses-CallRejectedResponse'></a>
+## CallRejectedResponse `type`
+
+##### Namespace
+
+EdjCase.ICP.Agent.Responses
+
+<a name='P-EdjCase-ICP-Agent-Responses-CallRejectedResponse-Code'></a>
+### Code `property`
+
+##### Summary
+
+The type of query reject
+
+<a name='P-EdjCase-ICP-Agent-Responses-CallRejectedResponse-ErrorCode'></a>
+### ErrorCode `property`
+
+##### Summary
+
+Optional. A specific error id for the reject
+
+<a name='P-EdjCase-ICP-Agent-Responses-CallRejectedResponse-Message'></a>
+### Message `property`
+
+##### Summary
+
+Optional. A human readable message about the rejection
 
 <a name='T-EdjCase-ICP-Agent-Requests-CallRequest'></a>
 ## CallRequest `type`
