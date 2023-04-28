@@ -176,14 +176,20 @@ namespace EdjCase.ICP.ClientGenerator
 							.SequenceEqual(Enumerable.Range(0, o.Fields.Count).Select(i => (uint)i));
 						if (isTuple)
 						{
-							List<SourceCodeType> tupleFields = o.Fields
-								.Select(f =>
-								{
-									return ResolveSourceCodeType(f.Value, keepCandidCase);
-								})
-								.Where(f => f != null)
-								.ToList()!;
-							return new TupleSourceCodeType(tupleFields);
+							bool containsTypeReference = o.Fields.Any(f => f.Value is CandidReferenceType);
+							if (!containsTypeReference)
+							{
+								// Only be a tuple if it doesnt reference any other type
+								// This is due to complications with C# aliasing
+								List<SourceCodeType> tupleFields = o.Fields
+									.Select(f =>
+									{
+										return ResolveSourceCodeType(f.Value, keepCandidCase);
+									})
+									.Where(f => f != null)
+									.ToList()!;
+								return new TupleSourceCodeType(tupleFields);
+							}
 						}
 						List<(ValueName Key, SourceCodeType Type)> fields = o.Fields
 							.Select(f =>
