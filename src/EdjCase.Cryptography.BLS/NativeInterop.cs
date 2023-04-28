@@ -43,7 +43,8 @@ namespace EdjCase.Cryptography.BLS
 				{
 					throw new NotImplementedException($"OS '{RuntimeInformation.OSDescription}' and architecture '{RuntimeInformation.OSArchitecture}' is not yet supported");
 				}
-				libraryHandle = LoadLibrary($"{basePath}/runtimes/{runtime}/native/" + libraryName);
+				libraryName = $"{basePath}/runtimes/{runtime}/native/" + libraryName;
+				libraryHandle = LoadLibrary(libraryName);
 			}
 			else
 			{
@@ -76,7 +77,8 @@ namespace EdjCase.Cryptography.BLS
 				{					
 					throw new NotImplementedException($"OS '{RuntimeInformation.OSDescription}' and architecture '{RuntimeInformation.OSArchitecture}' is not yet supported");
 				}
-				libraryHandle = dlopen($"{basePath}/runtimes/{runtime}/native/" + libraryName, RtldNow);
+				libraryName = $"{basePath}/runtimes/{runtime}/native/" + libraryName;
+				libraryHandle = dlopen(libraryName, RtldNow);
 			}
 
 			if (libraryHandle == IntPtr.Zero)
