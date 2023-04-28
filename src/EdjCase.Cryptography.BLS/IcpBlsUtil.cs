@@ -90,7 +90,7 @@ namespace EdjCase.Cryptography.BLS
 					int err = cache.init(Interop.MCL_BLS12_381, Interop.COMPILED_TIME_VAR);
 					if (err != 0)
 					{
-						throw new Exception("BLS failed to initialize");
+						throw new Exception("BLS failed to initialize with error code: " + err);
 					}
 					cache.setEthSerialization(1);
 					if (cache.setMapToMode((int)Interop.MapToMode.HashToCurve) != 0)

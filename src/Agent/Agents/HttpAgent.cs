@@ -203,20 +203,6 @@ namespace EdjCase.ICP.Agent.Agents
 			}
 		}
 
-		private byte[] GetStreamBytesAsync(Stream stream)
-		{
-			if (stream is MemoryStream ms)
-			{
-				return ms.ToArray();
-			}
-			using (MemoryStream memoryStream = new MemoryStream())
-			{
-				stream.CopyTo(memoryStream);
-				memoryStream.Position = 0;
-				return memoryStream.ToArray();
-			}
-		}
-
 		private async Task<(T Response, RequestId RequestId)> SendAsync<T, TRequest>(
 			string url,
 			Func<Principal, ICTimestamp, TRequest> getRequest,
