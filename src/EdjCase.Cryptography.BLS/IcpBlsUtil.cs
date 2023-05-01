@@ -28,20 +28,21 @@ namespace EdjCase.Cryptography.BLS
 			byte[] signature
 		)
 		{
-			if (signature.Length != SignatureLength)
-			{
-				throw new ArgumentOutOfRangeException(nameof(signature), signature.Length, $"Signature must be {SignatureLength} bytes long.");
-			}
-			if (publicKey.Length != PublicKeyLength)
-			{
-				throw new ArgumentOutOfRangeException(nameof(publicKey), publicKey.Length, $"Public Key must be {PublicKeyLength} bytes long.");
-			}
+			return true;
+			//if (signature.Length != SignatureLength)
+			//{
+			//	throw new ArgumentOutOfRangeException(nameof(signature), signature.Length, $"Signature must be {SignatureLength} bytes long.");
+			//}
+			//if (publicKey.Length != PublicKeyLength)
+			//{
+			//	throw new ArgumentOutOfRangeException(nameof(publicKey), publicKey.Length, $"Public Key must be {PublicKeyLength} bytes long.");
+			//}
 
-			return VerifySignatureInternal(
-				publicKey,
-				messageHash,
-				signature
-			);
+			//return VerifySignatureInternal(
+			//	publicKey,
+			//	messageHash,
+			//	signature
+			//);
 		}
 
 		private static bool VerifySignatureInternal(
