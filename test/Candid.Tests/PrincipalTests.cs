@@ -39,8 +39,8 @@ namespace EdjCase.ICP.Candid.Tests
 
 			byte[] publicKeyBytes = ByteUtil.FromHexString(publicKeyHex);
 
-			var publicKey = DerEncodedPublicKey.FromDer(publicKeyBytes);
-			var publicKeyPrincipal = Principal.SelfAuthenticating(publicKey.Value);
+			var publicKey = SubjectPublicKeyInfo.FromDerEncoding(publicKeyBytes);
+			var publicKeyPrincipal = publicKey.ToPrincipal();
 			Assert.Equal(principal, publicKeyPrincipal);
 
 

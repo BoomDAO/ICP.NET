@@ -11,9 +11,9 @@ namespace EdjCase.ICP.Agent.Models
 	public class DelegationChain
 	{
 		/// <summary>
-		/// The public key of the identity that has delegated authority
+		/// The public key of the identity that has delegated authority, DER encoded
 		/// </summary>
-		public DerEncodedPublicKey PublicKey { get; }
+		public SubjectPublicKeyInfo PublicKey { get; }
 
 		/// <summary>
 		/// <para>The chain of delegations to authorize a key<br/>
@@ -23,9 +23,9 @@ namespace EdjCase.ICP.Agent.Models
 		/// </summary>
 		public List<SignedDelegation> Delegations { get; }
 
-		/// <param name="publicKey">The public key of the identity that has delegated authority</param>
+		/// <param name="publicKey">The public key of the identity that has delegated authority, DER encoded</param>
 		/// <param name="delegations">The chain of delegations to authorize a key</param>
-		public DelegationChain(DerEncodedPublicKey publicKey, List<SignedDelegation> delegations)
+		public DelegationChain(SubjectPublicKeyInfo publicKey, List<SignedDelegation> delegations)
 		{
 			this.PublicKey = publicKey;
 			this.Delegations = delegations;
@@ -34,14 +34,14 @@ namespace EdjCase.ICP.Agent.Models
 		/// <summary>
 		/// Creates a delegation chain from the specified keys
 		/// </summary>
-		/// <param name="keyToDelegateTo">The key to delegate authority to</param>
+		/// <param name="keyToDelegateTo">The key to delegate authority to, DER encoded</param>
 		/// <param name="delegatingIdentity">The identity that is signing the delegation</param>
 		/// <param name="expiration">How long to delegate for</param>
 		/// <param name="targets">Optional. List of canister ids to limit delegation to</param>
 		/// <param name="senders">Optional. List of pricipals where requests can originate from</param>
 		/// <returns>A delegation chain signed by the delegating identity</returns>
 		public static DelegationChain Create(
-			DerEncodedPublicKey keyToDelegateTo,
+			SubjectPublicKeyInfo keyToDelegateTo,
 			IIdentity delegatingIdentity,
 			ICTimestamp expiration,
 			List<Principal>? targets = null,

@@ -148,108 +148,53 @@
             <param name="cancellationToken">Optional. If specified, will be used to prematurely end the waiting</param>
             <returns>The id of the request that can be used to look up its status with `GetRequestStatusAsync`</returns>
         </member>
-        <member name="T:EdjCase.ICP.Agent.DerEncodedPublicKey">
+        <member name="T:EdjCase.ICP.Agent.AlgorithmIdentifier">
             <summary>
-            A helper class to encode and decode public keys to the DER encoding
+            A model to contain OID information for cryptographic algorithms and their curves.
+            Used in SubjectPublicKeyInfo models
             </summary>
         </member>
-        <member name="P:EdjCase.ICP.Agent.DerEncodedPublicKey.Value">
+        <member name="P:EdjCase.ICP.Agent.AlgorithmIdentifier.AlgorithmOid">
             <summary>
-            Raw value of the DER encoded public key
+            The OID of the algorithm
             </summary>
         </member>
-        <member name="M:EdjCase.ICP.Agent.DerEncodedPublicKey.#ctor(System.Byte[])">
-            <param name="derEncodedBytes">Raw value of the DER encoded public key</param>
-        </member>
-        <member name="M:EdjCase.ICP.Agent.DerEncodedPublicKey.ToPrincipal">
+        <member name="P:EdjCase.ICP.Agent.AlgorithmIdentifier.ParametersOid">
             <summary>
-            Converts the key to a self authenticating principal value
+            The OID of the parameters of the algorithm, such as a specific curve OID
             </summary>
-            <returns></returns>
         </member>
-        <member name="M:EdjCase.ICP.Agent.DerEncodedPublicKey.AsEd25519">
+        <member name="M:EdjCase.ICP.Agent.AlgorithmIdentifier.#ctor(System.String,System.String)">
             <summary>
-            Converts the DER encoded key to a `Ed25519` key IF a `Ed25519` key
-            otherwise throws an exception
+            Default constructor
             </summary>
-            <exception cref="T:EdjCase.ICP.Agent.InvalidPublicKey">Throws if not a `Ed25519` key</exception>
-            <returns>Bytes of the `Ed25519` public key</returns>
+            <param name="algorithmOid">The OID of the algorithm</param>
+            <param name="parametersOid">The OID of the parameters of the algorithm, such as a specific curve OID</param>
         </member>
-        <member name="M:EdjCase.ICP.Agent.DerEncodedPublicKey.AsBls">
+        <member name="M:EdjCase.ICP.Agent.AlgorithmIdentifier.Ed25519">
             <summary>
-            Converts the DER encoded key to a `BLS` key IF a `BLS` key
-            otherwise throws an exception
+            Helper method to create an `AlgorithmIdentifier` for Ed25519
             </summary>
-            <exception cref="T:EdjCase.ICP.Agent.InvalidPublicKey">Throws if not a `BLS` key</exception>
-            <returns>Bytes of the `BLS` public key</returns>
+            <returns>AlgorithmIdentifier for Ed25519</returns>
         </member>
-        <member name="M:EdjCase.ICP.Agent.DerEncodedPublicKey.AsCose">
+        <member name="M:EdjCase.ICP.Agent.AlgorithmIdentifier.Secp256k1">
             <summary>
-            Converts the DER encoded key to a `COSE` key IF a `COSE` key
-            otherwise throws an exception
+            Helper method to create an `AlgorithmIdentifier` for Secp256k1
             </summary>
-            <exception cref="T:EdjCase.ICP.Agent.InvalidPublicKey">Throws if not a `COSE` key</exception>
-            <returns>Bytes of the `COSE` public key</returns>
+            <returns>AlgorithmIdentifier for Secp256k1</returns>
         </member>
-        <member name="M:EdjCase.ICP.Agent.DerEncodedPublicKey.As(System.String)">
+        <member name="M:EdjCase.ICP.Agent.AlgorithmIdentifier.Ecdsa(System.String)">
             <summary>
-            Converts the DER encoded key to a raw key based on the OID specified IF its has
-            the specified OID, otherwise throws an exception
+            Helper method to create an `AlgorithmIdentifier` for Ecdsa
             </summary>
-            <exception cref="T:EdjCase.ICP.Agent.InvalidPublicKey">Throws if not a key with the specified OID</exception>
-            <returns>Bytes of the decoded public key</returns>
+            <param name="curveOid">The OID of the specific curve to use for ECDSA</param>
+            <returns>AlgorithmIdentifier for Ecdsa</returns>
         </member>
-        <member name="M:EdjCase.ICP.Agent.DerEncodedPublicKey.As(System.Collections.Generic.IEnumerable{System.String})">
+        <member name="M:EdjCase.ICP.Agent.AlgorithmIdentifier.Bls">
             <summary>
-            Converts the DER encoded key to a raw key based on the OIDs specified IF its has
-            the specified OIDs, otherwise throws an exception
+            Helper method to create an `AlgorithmIdentifier` for Bls
             </summary>
-            <exception cref="T:EdjCase.ICP.Agent.InvalidPublicKey">Throws if not a key with the specified OIDs</exception>
-            <returns>Bytes of the decoded public key</returns>
-        </member>
-        <member name="M:EdjCase.ICP.Agent.DerEncodedPublicKey.FromDer(System.Byte[])">
-            <summary>
-            Creates a DER public key from the raw bytes of a DER encoded key. Same as the constructor
-            </summary>
-            <param name="value">DER encoded bytes of a public key</param>
-            <returns>DER encoded key</returns>
-        </member>
-        <member name="M:EdjCase.ICP.Agent.DerEncodedPublicKey.FromEd25519(System.Byte[])">
-            <summary>
-            Creates a DER public key from the raw bytes of a `ED25519` key.
-            </summary>
-            <param name="value">Bytes of a `ED25519` public key</param>
-            <returns>DER encoded key</returns>
-        </member>
-        <member name="M:EdjCase.ICP.Agent.DerEncodedPublicKey.FromBls(System.Byte[])">
-            <summary>
-            Creates a DER public key from the raw bytes of a `BLS` key.
-            </summary>
-            <param name="value">Bytes of a `BLS` public key</param>
-            <returns>DER encoded key</returns>
-        </member>
-        <member name="M:EdjCase.ICP.Agent.DerEncodedPublicKey.FromCose(System.Byte[])">
-            <summary>
-            Creates a DER public key from the raw bytes of a `COSE` key.
-            </summary>
-            <param name="value">Bytes of a `COSE` public key</param>
-            <returns>DER encoded key</returns>
-        </member>
-        <member name="M:EdjCase.ICP.Agent.DerEncodedPublicKey.From(System.Byte[],System.String)">
-            <summary>
-            Creates a DER public key from the raw bytes of a key that has the specified OID
-            </summary>
-            <param name="value">Bytes of a public key</param>
-            <param name="oid">The OID for the DER encoding</param>
-            <returns>DER encoded key</returns>
-        </member>
-        <member name="M:EdjCase.ICP.Agent.DerEncodedPublicKey.From(System.Byte[],System.Collections.Generic.IEnumerable{System.String})">
-            <summary>
-            Creates a DER public key from the raw bytes of a key that has the specified OIDs
-            </summary>
-            <param name="value">Bytes of a public key</param>
-            <param name="oids">The OIDs for the DER encoding</param>
-            <returns>DER encoded key</returns>
+            <returns>AlgorithmIdentifier for Bls</returns>
         </member>
         <member name="T:EdjCase.ICP.Agent.RequestCleanedUpException">
             <summary>
@@ -262,10 +207,10 @@
         </member>
         <member name="T:EdjCase.ICP.Agent.InvalidPublicKey">
             <summary>
-            Exception to indicate that the specified BLS public key is invalid
+            Exception to indicate that the specified public key is invalid
             </summary>
         </member>
-        <member name="M:EdjCase.ICP.Agent.InvalidPublicKey.#ctor">
+        <member name="M:EdjCase.ICP.Agent.InvalidPublicKey.#ctor(System.Exception)">
             <summary></summary>
         </member>
         <member name="T:EdjCase.ICP.Agent.InvalidCertificateException">
@@ -353,6 +298,53 @@
         <member name="M:EdjCase.ICP.Agent.Identities.DelegationIdentity.GetSenderDelegations">
             <inheritdoc/>
         </member>
+        <member name="T:EdjCase.ICP.Agent.Identities.EcdsaIdentity">
+            <summary>
+            An identity using a Ed25519 key
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Identities.EcdsaIdentity.PublicKey">
+            <summary>
+            The public key of the identity, DER encoded
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Identities.EcdsaIdentity.PrivateKey">
+            <summary>
+            The private key of the identity
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Identities.EcdsaIdentity.#ctor(System.Byte[],System.Byte[],System.String)">
+            <summary>
+            Default constructor
+            </summary>
+            <param name="publicKey">The raw public key</param>
+            <param name="privateKey">The raw private key</param>
+            <param name="curveOid">The ecdsa curve OID to use</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Identities.EcdsaIdentity.GetPublicKey">
+            <inheritdoc/>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Identities.EcdsaIdentity.Sign(System.Byte[])">
+            <inheritdoc/>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Identities.EcdsaIdentity.GetSenderDelegations">
+            <inheritdoc/>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Identities.EcdsaIdentity.DeriveUncompressedPublicKey(System.Byte[],System.String)">
+            <summary>
+            Derive the public key value from the private key and curve
+            </summary>
+            <param name="privateKey">The raw private key</param>
+            <param name="curveOid">The OID of the curve to use</param>
+            <returns>The raw uncompressed public key</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Identities.EcdsaIdentity.GeneratePrivateKey(System.String)">
+            <summary>
+            Generates a new private key with the specified curve
+            </summary>
+            <param name="curveOid">The OID of the curve to use</param>
+            <returns>A raw private key</returns>
+        </member>
         <member name="T:EdjCase.ICP.Agent.Identities.Ed25519Identity">
             <summary>
             An identity using a Ed25519 key
@@ -368,7 +360,7 @@
             The private key of the identity
             </summary>
         </member>
-        <member name="M:EdjCase.ICP.Agent.Identities.Ed25519Identity.#ctor(EdjCase.ICP.Agent.DerEncodedPublicKey,System.Byte[])">
+        <member name="M:EdjCase.ICP.Agent.Identities.Ed25519Identity.#ctor(System.Byte[],System.Byte[])">
             <param name="publicKey">The public key of the identity</param>
             <param name="privateKey">The private key of the identity</param>
         </member>
@@ -381,11 +373,63 @@
         <member name="M:EdjCase.ICP.Agent.Identities.Ed25519Identity.GetSenderDelegations">
             <inheritdoc/>
         </member>
-        <member name="M:EdjCase.ICP.Agent.Identities.Ed25519Identity.Create">
+        <member name="M:EdjCase.ICP.Agent.Identities.Ed25519Identity.Generate">
             <summary>
             Generates an identity with a new Ed25519 key pair
             </summary>
             <returns>A Ed25519 identity</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Identities.Ed25519Identity.FromPrivateKey(System.Byte[])">
+            <summary>
+            Converts a raw ed25519 private key to a Secp256k1Identity, deriving the public key
+            </summary>
+            <param name="privateKey">Raw ed25519 private key</param>
+            <returns>Ed25519Identity with specified private key</returns>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Identities.IdentityUtil">
+            <summary>
+            Utility class for helper methods around Identities
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Identities.IdentityUtil.GenerateSecp256k1Identity">
+            <summary>
+            Generates a new Secp256k1 identity with a new private key
+            </summary>
+            <returns>Secp256k1 identity</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Identities.IdentityUtil.GenerateEd25519Identity">
+            <summary>
+            Generates a new Ed25519 identity with a new private key
+            </summary>
+            <returns>Ed25519 identity</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Identities.IdentityUtil.FromSecp256k1PrivateKey(System.Byte[])">
+            <summary>
+            Converts a raw private key into a Secp256k1Identity class
+            </summary>
+            <param name="privateKey">A raw Secp256k1 private key</param>
+            <returns>Secp256k1 identity</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Identities.IdentityUtil.FromEd25519PrivateKey(System.Byte[])">
+            <summary>
+            Converts a raw private key into a Ed25519Identity class
+            </summary>
+            <param name="privateKey">A raw Ed25519 private key</param>
+            <returns>Ed25519 identity</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Identities.IdentityUtil.FromPemFile(System.IO.Stream)">
+            <summary>
+            Parses a PEM file into the proper IIdentity class
+            </summary>
+            <param name="pemFile">The stream of a PEM file</param>
+            <returns>IIdentity for the private key</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Identities.IdentityUtil.FromPemFile(System.IO.TextReader)">
+            <summary>
+            Parses a PEM file into the proper IIdentity class
+            </summary>
+            <param name="pemFileReader">The text reader of a PEM file</param>
+            <returns>IIdentity for the private key</returns>
         </member>
         <member name="T:EdjCase.ICP.Agent.Identities.IIdentity">
             <summary>
@@ -426,6 +470,32 @@
             <param name="content">The data that needs to be signed</param>
             <returns>The content with signature(s) from the identity</returns>
         </member>
+        <member name="T:EdjCase.ICP.Agent.Identities.Secp256k1Identity">
+            <summary>
+            An identity using a Ed25519 key
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Identities.Secp256k1Identity.#ctor(System.Byte[],System.Byte[])">
+            <summary>
+            Default constructor
+            </summary>
+            <param name="publicKey">The raw Secp256k1 public key</param>
+            <param name="privateKey">The raw Secp256k1 private key</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Identities.Secp256k1Identity.FromPrivateKey(System.Byte[])">
+            <summary>
+            Converts a raw secp256k1 private key to a Secp256k1Identity, deriving the public key
+            </summary>
+            <param name="privateKey">Raw secp256k1 private key</param>
+            <returns>Secp256k1Identity with specified private key</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Identities.Secp256k1Identity.Generate">
+            <summary>
+            Generates a new secp256k1 public/private key pair and creates an identity
+            for them
+            </summary>
+            <returns>Secp256k1Identity with new key pair</returns>
+        </member>
         <member name="T:EdjCase.ICP.Agent.Models.Certificate">
             <summary>
             A model that contains a state tree along with a validation signature. If required
@@ -453,7 +523,7 @@
             <param name="delegation">Optional. A signed delegation that links a public key to the root public key</param>
             <exception cref="T:System.ArgumentNullException">Throws if either `tree` or `signature` are null</exception>
         </member>
-        <member name="M:EdjCase.ICP.Agent.Models.Certificate.IsValid(System.Byte[])">
+        <member name="M:EdjCase.ICP.Agent.Models.Certificate.IsValid(EdjCase.ICP.Agent.SubjectPublicKeyInfo)">
             <summary>
             Checks the validity of the certificate based off the 
             specified root public key
@@ -513,7 +583,7 @@
             Optional. A list of sender ids that can send this delegation and be authorized
             </summary>
         </member>
-        <member name="M:EdjCase.ICP.Agent.Models.Delegation.#ctor(System.Byte[],EdjCase.ICP.Candid.Models.ICTimestamp,System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal},System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal})">
+        <member name="M:EdjCase.ICP.Agent.Models.Delegation.#ctor(EdjCase.ICP.Agent.SubjectPublicKeyInfo,EdjCase.ICP.Candid.Models.ICTimestamp,System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal},System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal})">
             <param name="publicKey">The public key from the authorizing identity</param>
             <param name="expiration">The expiration when the delegation will no longer be valid</param>
             <param name="targets">Optional. A list of canister ids where the delegation can be sent to and be authorized</param>
@@ -540,7 +610,7 @@
         </member>
         <member name="P:EdjCase.ICP.Agent.Models.DelegationChain.PublicKey">
             <summary>
-            The public key of the identity that has delegated authority
+            The public key of the identity that has delegated authority, DER encoded
             </summary>
         </member>
         <member name="P:EdjCase.ICP.Agent.Models.DelegationChain.Delegations">
@@ -551,15 +621,15 @@
             The last delegation is for the key to be authorized</para>
             </summary>
         </member>
-        <member name="M:EdjCase.ICP.Agent.Models.DelegationChain.#ctor(EdjCase.ICP.Agent.DerEncodedPublicKey,System.Collections.Generic.List{EdjCase.ICP.Agent.Models.SignedDelegation})">
-            <param name="publicKey">The public key of the identity that has delegated authority</param>
+        <member name="M:EdjCase.ICP.Agent.Models.DelegationChain.#ctor(EdjCase.ICP.Agent.SubjectPublicKeyInfo,System.Collections.Generic.List{EdjCase.ICP.Agent.Models.SignedDelegation})">
+            <param name="publicKey">The public key of the identity that has delegated authority, DER encoded</param>
             <param name="delegations">The chain of delegations to authorize a key</param>
         </member>
-        <member name="M:EdjCase.ICP.Agent.Models.DelegationChain.Create(EdjCase.ICP.Agent.DerEncodedPublicKey,EdjCase.ICP.Agent.Identities.IIdentity,EdjCase.ICP.Candid.Models.ICTimestamp,System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal},System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal})">
+        <member name="M:EdjCase.ICP.Agent.Models.DelegationChain.Create(EdjCase.ICP.Agent.SubjectPublicKeyInfo,EdjCase.ICP.Agent.Identities.IIdentity,EdjCase.ICP.Candid.Models.ICTimestamp,System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal},System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal})">
             <summary>
             Creates a delegation chain from the specified keys
             </summary>
-            <param name="keyToDelegateTo">The key to delegate authority to</param>
+            <param name="keyToDelegateTo">The key to delegate authority to, DER encoded</param>
             <param name="delegatingIdentity">The identity that is signing the delegation</param>
             <param name="expiration">How long to delegate for</param>
             <param name="targets">Optional. List of canister ids to limit delegation to</param>
@@ -592,7 +662,7 @@
             Signature to authenticate this request, unless anonymous, then null
             </summary>
         </member>
-        <member name="M:EdjCase.ICP.Agent.Models.SignedContent.#ctor(System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.Candid.Models.IHashable},System.Byte[],System.Collections.Generic.List{EdjCase.ICP.Agent.Models.SignedDelegation},System.Byte[])">
+        <member name="M:EdjCase.ICP.Agent.Models.SignedContent.#ctor(System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.Candid.Models.IHashable},EdjCase.ICP.Agent.SubjectPublicKeyInfo,System.Collections.Generic.List{EdjCase.ICP.Agent.Models.SignedDelegation},System.Byte[])">
             <param name="content">The content that is signed in the form of key value pairs</param>
             <param name="senderPublicKey">Public key used to authenticate this request, unless anonymous, then null</param>
             <param name="delegations">Optional. A chain of delegations, starting with the one signed by sender_pubkey 
@@ -621,7 +691,7 @@
             <param name="delegation">The delegation that is signed</param>
             <param name="signature">The signature for the delegation</param>
         </member>
-        <member name="M:EdjCase.ICP.Agent.Models.SignedDelegation.Create(EdjCase.ICP.Agent.DerEncodedPublicKey,EdjCase.ICP.Agent.Identities.IIdentity,EdjCase.ICP.Candid.Models.ICTimestamp,System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal},System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal})">
+        <member name="M:EdjCase.ICP.Agent.Models.SignedDelegation.Create(EdjCase.ICP.Agent.SubjectPublicKeyInfo,EdjCase.ICP.Agent.Identities.IIdentity,EdjCase.ICP.Candid.Models.ICTimestamp,System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal},System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal})">
             <summary>
             Creates a delegation signed by the delegating identity, authorizing the public key
             </summary>
@@ -632,7 +702,7 @@
             <param name="senders">Optional. List of pricipals where requests can originate from</param>
             <returns>A delegation signed by the delegating identity</returns>
         </member>
-        <member name="M:EdjCase.ICP.Agent.Models.SignedDelegation.Create(EdjCase.ICP.Agent.DerEncodedPublicKey,System.Func{System.Byte[],System.Byte[]},EdjCase.ICP.Candid.Models.ICTimestamp,System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal},System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal})">
+        <member name="M:EdjCase.ICP.Agent.Models.SignedDelegation.Create(EdjCase.ICP.Agent.SubjectPublicKeyInfo,System.Func{System.Byte[],System.Byte[]},EdjCase.ICP.Candid.Models.ICTimestamp,System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal},System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal})">
             <summary>
             Creates a delegation signed by the delegating identity, authorizing the public key
             </summary>
@@ -1631,6 +1701,77 @@
             <summary>
             Indicates a failed transfer operation with the associated TransferError object containing information about the error
             </summary>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.SubjectPublicKeyInfo">
+            <summary>
+            A model representing a public key value and the cryptographic algorithm that is for
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.SubjectPublicKeyInfo.Algorithm">
+            <summary>
+            The cryptographic algorithm that the public key is for
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.SubjectPublicKeyInfo.PublicKey">
+            <summary>
+            The raw public key bytes
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.SubjectPublicKeyInfo.#ctor(EdjCase.ICP.Agent.AlgorithmIdentifier,System.Byte[])">
+            <summary>
+            Default constructor
+            </summary>
+            <param name="algorithm">The cryptographic algorithm that the public key is for</param>
+            <param name="subjectPublicKey">The raw public key bytes</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.SubjectPublicKeyInfo.ToPrincipal">
+            <summary>
+            Converts the key to a self authenticating principal value
+            </summary>
+            <returns>Principal of the public key</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.SubjectPublicKeyInfo.ToDerEncoding">
+            <summary>
+            Converts the subject public key info into a DER encoded byte array
+            </summary>
+            <returns>A DER encoded byte array</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.SubjectPublicKeyInfo.FromDerEncoding(System.Byte[])">
+            <summary>
+            Parses a DER encoded subject public key info 
+            </summary>
+            <param name="derEncodedPublicKey">A DER encoded public key</param>
+            <returns></returns>
+            <exception cref="T:EdjCase.ICP.Agent.InvalidPublicKey"></exception>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.SubjectPublicKeyInfo.Ed25519(System.Byte[])">
+            <summary>
+            Converts a raw ed25519 public key into a subject public key info
+            </summary>
+            <param name="publicKey">A raw ed25519 public key</param>
+            <returns>Ed25519 SubjectPublicKeyInfo</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.SubjectPublicKeyInfo.Ecdsa(System.Byte[],System.String)">
+            <summary>
+            Converts a raw ed25519 public key into a subject public key info
+            </summary>
+            <param name="publicKey">A raw ed25519 public key</param>
+            <param name="curveOid">The OID of the ecdsa curve (eg "1.3.132.0.10" for secp256k1)</param>
+            <returns>Ed25519 SubjectPublicKeyInfo</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.SubjectPublicKeyInfo.Secp256k1(System.Byte[])">
+            <summary>
+            Converts a raw secp256k1 public key into a subject public key info
+            </summary>
+            <param name="publicKey">A raw secp256k1 public key</param>
+            <returns>Secp256k1 SubjectPublicKeyInfo</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.SubjectPublicKeyInfo.Bls(System.Byte[])">
+            <summary>
+            Converts a raw bls public key into a subject public key info
+            </summary>
+            <param name="publicKey">A raw bls public key</param>
+            <returns>Bls SubjectPublicKeyInfo</returns>
         </member>
     </members>
 </doc>

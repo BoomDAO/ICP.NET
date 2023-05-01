@@ -13,7 +13,7 @@ namespace EdjCase.ICP.InternetIdentity
 
 	internal interface IFido2Client
 	{
-		Task<(DerEncodedPublicKey PublicKey, byte[] Signature)?> SignAsync(byte[] challenge, IList<DeviceInfo> devices);
+		Task<(SubjectPublicKeyInfo PublicKey, byte[] Signature)?> SignAsync(byte[] challenge, IList<DeviceInfo> devices);
 	}
 
 	internal class Fido2Client : IFido2Client
@@ -25,7 +25,7 @@ namespace EdjCase.ICP.InternetIdentity
 		private static byte[] signature = Encoding.ASCII.GetBytes("signature");
 
 
-		public Task<(DerEncodedPublicKey PublicKey, byte[] Signature)?> SignAsync(byte[] challenge, IList<DeviceInfo> devices)
+		public Task<(SubjectPublicKeyInfo PublicKey, byte[] Signature)?> SignAsync(byte[] challenge, IList<DeviceInfo> devices)
 		{
 			return Task.Factory.StartNew(
 				function: () => Sign(challenge, devices),
@@ -33,7 +33,7 @@ namespace EdjCase.ICP.InternetIdentity
 			);
 		}
 
-		public static (DerEncodedPublicKey PublicKey, byte[] Signature)? Sign(byte[] challenge, IList<DeviceInfo> devices)
+		public static (SubjectPublicKeyInfo PublicKey, byte[] Signature)? Sign(byte[] challenge, IList<DeviceInfo> devices)
 		{
 			using (var assert = new FidoAssertion())
 			{

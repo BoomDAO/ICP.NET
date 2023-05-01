@@ -32,7 +32,7 @@ namespace EdjCase.ICP.Agent.Identities
 		}
 
 		/// <inheritdoc/>
-		public DerEncodedPublicKey GetPublicKey()
+		public SubjectPublicKeyInfo GetPublicKey()
 		{
 			return this.Chain.PublicKey;
 		}

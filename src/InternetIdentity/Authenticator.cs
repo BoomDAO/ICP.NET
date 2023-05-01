@@ -46,7 +46,7 @@ namespace EdjCase.ICP.InternetIdentity
 				return LoginResult.FromError(ErrorType.InvalidAnchorOrNoDevices);
 			}
 
-			sessionIdentity = sessionIdentity ?? Ed25519Identity.Create();
+			sessionIdentity = sessionIdentity ?? Ed25519Identity.Generate();
 
 			try
 			{
@@ -112,14 +112,14 @@ namespace EdjCase.ICP.InternetIdentity
 			Principal identityCanisterId = this.identityClient.GetCanisterId();
 			var targets = new List<Principal> { identityCanisterId };
 
-			DerEncodedPublicKey sessionPublicKey = sessionIdentity.GetPublicKey();
+			SubjectPublicKeyInfo sessionPublicKey = sessionIdentity.GetPublicKey();
 
 			// Create delegation represented by the session key, then sign it with the device
-			var sessionDelegation = new Delegation(sessionPublicKey.Value, expiration, targets);
+			var sessionDelegation = new Delegation(sessionPublicKey, expiration, targets);
 			byte[] challenge = sessionDelegation.BuildSigningChallenge();
 
 			// TODO can detect the device before signing?
-			(DerEncodedPublicKey PublicKey, byte[] Signature)? signInfo = await this.fidoClient.SignAsync(challenge, devices);
+			(SubjectPublicKeyInfo PublicKey, byte[] Signature)? signInfo = await this.fidoClient.SignAsync(challenge, devices);
 
 			if (signInfo == null)
 			{

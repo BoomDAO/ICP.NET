@@ -117,9 +117,8 @@ else if (this.MadeCall && this.ProposalId != null)
         if (identityValues != null && chainModel != null)
         {
             byte[] publicKeyBytes = FromHexString(identityValues[0]);
-            var publicKey = DerEncodedPublicKey.FromDer(publicKeyBytes);
             byte[] privateKey = FromHexString(identityValues[1]);
-            var identity = new Ed25519Identity(publicKey, privateKey);
+            var identity = new Ed25519Identity(publicKeyBytes, privateKey);
             DelegationChain chain = chainModel.ToCommon();
             this.Client.Agent.Identity = new DelegationIdentity(identity, chain);
         }
@@ -159,7 +158,8 @@ else if (this.MadeCall && this.ProposalId != null)
             List<SignedDelegation> delegations = this.Delegations
                 .Select(d => d.ToCommon())
                 .ToList();
-            var publicKey = DerEncodedPublicKey.FromDer(Convert.FromHexString(this.PublicKey));
+            byte[] publicKeyBytes = Convert.FromHexString(this.PublicKey);
+            SubjectPublicKeyInfo publicKey = SubjectPublicKeyInfo.Ed25519(publicKeyBytes);
             return new DelegationChain(publicKey, delegations);
         }
     }
@@ -188,10 +188,11 @@ else if (this.MadeCall && this.ProposalId != null)
 
         public Delegation ToCommon()
         {
-            var publicKey = DerEncodedPublicKey.FromDer(Convert.FromHexString(this.PubKey));
+            byte[] publicKeyBytes = Convert.FromHexString(this.PubKey);
+            SubjectPublicKeyInfo publicKey = SubjectPublicKeyInfo.Ed25519(publicKeyBytes);
             ulong nanosecondsFromNow = (ulong)ToBigInteger(FromHexString(this.Expiration), isUnsigned: true, isBigEndian: true);
             ICTimestamp expiration = ICTimestamp.FromNanoSeconds(nanosecondsFromNow);
-            return new Delegation(publicKey.Value, expiration, targets: null);
+            return new Delegation(publicKey, expiration, targets: null);
         }
 
         public static System.Numerics.BigInteger ToBigInteger(byte[] bytes, bool isUnsigned, bool isBigEndian)

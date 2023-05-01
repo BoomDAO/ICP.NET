@@ -18,7 +18,7 @@ namespace EdjCase.ICP.Candid.Tests
 		[Fact]
 		public async Task Authenticator__LoginAsync()
 		{
-			Ed25519Identity deviceIdentity = Ed25519Identity.Create();
+			Ed25519Identity deviceIdentity = Ed25519Identity.Generate();
 
 			List<DeviceInfo> devices = new List<DeviceInfo>
 			{
@@ -26,12 +26,12 @@ namespace EdjCase.ICP.Candid.Tests
 			};
 			ulong anchor = 1;
 			string clientHostname = "nns.ic0.app";
-			Ed25519Identity sessionIdentity = Ed25519Identity.Create();
+			Ed25519Identity sessionIdentity = Ed25519Identity.Generate();
 			TimeSpan maxTimeToLive = TimeSpan.FromSeconds(60);
 			byte[] challenge = new byte[32];
 			var canisterId = Principal.FromText("rrkah-fqaaa-aaaaa-aaaaq-cai");
 
-			var delegation = new Delegation(sessionIdentity.PublicKey.Value, ICTimestamp.Future(maxTimeToLive), targets: null, senders: null);
+			var delegation = new Delegation(sessionIdentity.PublicKey, ICTimestamp.Future(maxTimeToLive), targets: null, senders: null);
 			byte[] deviceSignature = deviceIdentity.Sign(challenge);
 			var delegations = new List<SignedDelegation>
 			{
@@ -66,12 +66,12 @@ namespace EdjCase.ICP.Candid.Tests
 		[Fact]
 		public async Task Authenticator__LoginAsync__No_Devices__Error()
 		{
-			Ed25519Identity deviceIdentity = Ed25519Identity.Create();
+			Ed25519Identity deviceIdentity = Ed25519Identity.Generate();
 
 			List<DeviceInfo> devices = new List<DeviceInfo>();
 			ulong anchor = 1;
 			string clientHostname = "nns.ic0.app";
-			Ed25519Identity sessionIdentity = Ed25519Identity.Create();
+			Ed25519Identity sessionIdentity = Ed25519Identity.Generate();
 			TimeSpan maxTimeToLive = TimeSpan.FromSeconds(60);
 			byte[] challenge = new byte[32];
 
@@ -92,19 +92,19 @@ namespace EdjCase.ICP.Candid.Tests
 		[Fact]
 		public async Task Authenticator__LoginAsync__Auth_Fail__Error()
 		{
-			Ed25519Identity deviceIdentity = Ed25519Identity.Create();
+			Ed25519Identity deviceIdentity = Ed25519Identity.Generate();
 			List<DeviceInfo> devices = new List<DeviceInfo>
 			{
 				new DeviceInfo(deviceIdentity.PublicKey, null)
 			};
 			ulong anchor = 1;
 			string clientHostname = "nns.ic0.app";
-			Ed25519Identity sessionIdentity = Ed25519Identity.Create();
+			Ed25519Identity sessionIdentity = Ed25519Identity.Generate();
 			TimeSpan maxTimeToLive = TimeSpan.FromSeconds(60);
 			byte[] challenge = new byte[32];
 			var canisterId = Principal.FromText("rrkah-fqaaa-aaaaa-aaaaq-cai");
 
-			var delegation = new Delegation(sessionIdentity.PublicKey.Value, ICTimestamp.Future(maxTimeToLive), targets: null, senders: null);
+			var delegation = new Delegation(sessionIdentity.PublicKey, ICTimestamp.Future(maxTimeToLive), targets: null, senders: null);
 			byte[] deviceSignature = deviceIdentity.Sign(challenge);
 			var delegations = new List<SignedDelegation>
 			{
@@ -138,19 +138,19 @@ namespace EdjCase.ICP.Candid.Tests
 		[Fact]
 		public async Task Authenticator__LoginAsync__No_Matching_Device__Error()
 		{
-			Ed25519Identity deviceIdentity = Ed25519Identity.Create();
+			Ed25519Identity deviceIdentity = Ed25519Identity.Generate();
 			List<DeviceInfo> devices = new List<DeviceInfo>
 			{
 				new DeviceInfo(deviceIdentity.PublicKey, null)
 			};
 			ulong anchor = 1;
 			string clientHostname = "nns.ic0.app";
-			Ed25519Identity sessionIdentity = Ed25519Identity.Create();
+			Ed25519Identity sessionIdentity = Ed25519Identity.Generate();
 			TimeSpan maxTimeToLive = TimeSpan.FromSeconds(60);
 			byte[] challenge = new byte[32];
 			var canisterId = Principal.FromText("rrkah-fqaaa-aaaaa-aaaaq-cai");
 
-			var delegation = new Delegation(sessionIdentity.PublicKey.Value, ICTimestamp.Future(maxTimeToLive), targets: null, senders: null);
+			var delegation = new Delegation(sessionIdentity.PublicKey, ICTimestamp.Future(maxTimeToLive), targets: null, senders: null);
 			byte[] deviceSignature = deviceIdentity.Sign(challenge);
 			var delegations = new List<SignedDelegation>
 			{
@@ -173,7 +173,7 @@ namespace EdjCase.ICP.Candid.Tests
 			var fidoClient = new Mock<IFido2Client>(MockBehavior.Strict);
 			fidoClient
 				.Setup(f => f.SignAsync(It.IsAny<byte[]>(), devices))
-				.ReturnsAsync((ValueTuple<DerEncodedPublicKey, byte[]>?)null);
+				.ReturnsAsync((ValueTuple<SubjectPublicKeyInfo, byte[]>?)null);
 			var authentiator = new Authenticator(identityClient.Object, fidoClient.Object);
 			LoginResult result = await authentiator.LoginAsync(anchor, clientHostname, sessionIdentity, maxTimeToLive);
 			Assert.False(result.IsSuccessful);

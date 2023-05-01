@@ -1,7 +1,8 @@
-using Chaos.NaCl;
 using EdjCase.ICP.Agent.Models;
+using Org.BouncyCastle.Crypto.Parameters;
+using Org.BouncyCastle.Crypto.Signers;
+using Org.BouncyCastle.Security;
 using System.Collections.Generic;
-using System.Security.Cryptography;
 
 namespace EdjCase.ICP.Agent.Identities
 {
@@ -13,7 +14,7 @@ namespace EdjCase.ICP.Agent.Identities
 		/// <summary>
 		/// The public key of the identity
 		/// </summary>
-		public DerEncodedPublicKey PublicKey { get; }
+		public SubjectPublicKeyInfo PublicKey { get; }
 
 		/// <summary>
 		/// The private key of the identity
@@ -22,15 +23,16 @@ namespace EdjCase.ICP.Agent.Identities
 
 		/// <param name="publicKey">The public key of the identity</param>
 		/// <param name="privateKey">The private key of the identity</param>
-		public Ed25519Identity(DerEncodedPublicKey publicKey, byte[] privateKey)
+		public Ed25519Identity(byte[] publicKey, byte[] privateKey)
 		{
 			// TODO validate that pub+priv match?
-			this.PublicKey = publicKey;
+			var algorithm = AlgorithmIdentifier.Ed25519();
+			this.PublicKey = new SubjectPublicKeyInfo(algorithm, publicKey);
 			this.PrivateKey = privateKey;
 		}
 
 		/// <inheritdoc/>
-		public DerEncodedPublicKey GetPublicKey()
+		public SubjectPublicKeyInfo GetPublicKey()
 		{
 			return this.PublicKey;
 		}
@@ -39,7 +41,11 @@ namespace EdjCase.ICP.Agent.Identities
 		/// <inheritdoc/>
 		public byte[] Sign(byte[] message)
 		{
-			return Ed25519.Sign(message, this.PrivateKey);
+			var privateKey = new Ed25519PrivateKeyParameters(this.PrivateKey, 0);
+			Ed25519Signer signer = new Ed25519Signer();
+			signer.Init(true, privateKey);
+			signer.BlockUpdate(message, 0, message.Length);
+			return signer.GenerateSignature();
 		}
 
 		/// <inheritdoc/>
@@ -48,20 +54,32 @@ namespace EdjCase.ICP.Agent.Identities
 			return null;
 		}
 
+
 		/// <summary>
 		/// Generates an identity with a new Ed25519 key pair
 		/// </summary>
 		/// <returns>A Ed25519 identity</returns>
-		public static Ed25519Identity Create()
+		public static Ed25519Identity Generate()
 		{
-			byte[] seed = new byte[Ed25519.PrivateKeySeedSizeInBytes];
-			using (var cryptoRng = new RNGCryptoServiceProvider())
-			{
-				cryptoRng.GetBytes(seed);
-				Ed25519.KeyPairFromSeed(publicKey: out var pub, expandedPrivateKey: out var priv, seed);
-				var publicKey = DerEncodedPublicKey.FromEd25519(pub);
-				return new Ed25519Identity(publicKey, priv);
-			}
+			var key = new Ed25519PrivateKeyParameters(new SecureRandom());
+			byte[] privateKey = key.GetEncoded();
+			byte[] publicKey = key.GeneratePublicKey().GetEncoded();
+			return new Ed25519Identity(publicKey, privateKey);
+		}
+
+		/// <summary>
+		/// Converts a raw ed25519 private key to a Secp256k1Identity, deriving the public key
+		/// </summary>
+		/// <param name="privateKey">Raw ed25519 private key</param>
+		/// <returns>Ed25519Identity with specified private key</returns>
+		public static Ed25519Identity FromPrivateKey(byte[] privateKey)
+		{
+			// Derive the public key
+			byte[] publicKey = new Ed25519PrivateKeyParameters(privateKey, 0)
+				.GeneratePublicKey()
+				.GetEncoded();
+
+			return new Ed25519Identity(publicKey, privateKey);
 		}
 	}
 }

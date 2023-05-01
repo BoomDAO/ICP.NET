@@ -34,7 +34,7 @@ namespace EdjCase.ICP.Agent.Models
 		/// </summary>
 		/// <returns>The delegation public key for the subnet</returns>
 		/// <exception cref="InvalidOperationException">Throws if certificate is missing `subnet/{subnet_id}/public_key`</exception>
-		public byte[] GetPublicKey()
+		public SubjectPublicKeyInfo GetPublicKey()
 		{
 			StatePath path = StatePath.FromSegments(
 				"subnet",
@@ -46,7 +46,7 @@ namespace EdjCase.ICP.Agent.Models
 			{
 				throw new InvalidCertificateException("Certificate does not contain the subnet public key");
 			}
-			return publicKey.AsLeaf();
+			return SubjectPublicKeyInfo.FromDerEncoding(publicKey.AsLeaf());
 		}
 
 		internal static CertificateDelegation ReadCbor(CborReader reader)

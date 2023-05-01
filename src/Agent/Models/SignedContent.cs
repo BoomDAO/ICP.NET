@@ -19,7 +19,7 @@ namespace EdjCase.ICP.Agent.Models
 		/// <summary>
 		/// Public key used to authenticate this request, unless anonymous, then null
 		/// </summary>
-		public byte[]? SenderPublicKey { get; }
+		public SubjectPublicKeyInfo? SenderPublicKey { get; }
 
 		/// <summary>
 		/// Optional. A chain of delegations, starting with the one signed by sender_pubkey
@@ -39,7 +39,7 @@ namespace EdjCase.ICP.Agent.Models
 		/// <param name="senderSignature">Signature to authenticate this request, unless anonymous, then null</param>
 		public SignedContent(
 			Dictionary<string, IHashable> content,
-			byte[]? senderPublicKey,
+			SubjectPublicKeyInfo? senderPublicKey,
 			List<SignedDelegation>? delegations,
 			byte[]? senderSignature
 		)
@@ -59,7 +59,7 @@ namespace EdjCase.ICP.Agent.Models
 			};
 			if (this.SenderPublicKey != null)
 			{
-				properties.Add(Properties.SENDER_PUBLIC_KEY, this.SenderPublicKey.ToHashable());
+				properties.Add(Properties.SENDER_PUBLIC_KEY, this.SenderPublicKey.ToDerEncoding().ToHashable());
 			}
 			if (this.SenderSignature != null)
 			{
@@ -86,7 +86,7 @@ namespace EdjCase.ICP.Agent.Models
 			if (this.SenderPublicKey != null)
 			{
 				writer.WriteTextString(Properties.SENDER_PUBLIC_KEY);
-				writer.WriteByteString(this.SenderPublicKey);
+				writer.WriteByteString(this.SenderPublicKey.ToDerEncoding());
 			}
 			if (this.SenderDelegations?.Any() == true)
 			{

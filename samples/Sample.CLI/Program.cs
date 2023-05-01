@@ -8,6 +8,8 @@ using Sample.Shared.Governance;
 using EdjCase.ICP.Candid;
 using EdjCase.ICP.Agent.Responses;
 using System.Collections.Generic;
+using EdjCase.ICP.Agent;
+using System.IO;
 
 public class Program
 {
