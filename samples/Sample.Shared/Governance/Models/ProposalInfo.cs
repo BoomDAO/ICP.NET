@@ -1,6 +1,7 @@
 using EdjCase.ICP.Candid.Mapping;
 using Sample.Shared.Governance.Models;
 using EdjCase.ICP.Candid.Models;
+using System;
 using System.Collections.Generic;
 
 namespace Sample.Shared.Governance.Models
@@ -20,7 +21,7 @@ namespace Sample.Shared.Governance.Models
 		public OptionalValue<GovernanceError> FailureReason { get; set; }
 
 		[CandidName("ballots")]
-		public List<ProposalInfo.BallotsItemRecord> Ballots { get; set; }
+		public List<ValueTuple<ulong, Ballot>> Ballots { get; set; }
 
 		[CandidName("proposal_timestamp_seconds")]
 		public ulong ProposalTimestampSeconds { get; set; }
@@ -58,7 +59,7 @@ namespace Sample.Shared.Governance.Models
 		[CandidName("executed_timestamp_seconds")]
 		public ulong ExecutedTimestampSeconds { get; set; }
 
-		public ProposalInfo(OptionalValue<NeuronId> id, int status, int topic, OptionalValue<GovernanceError> failureReason, List<ProposalInfo.BallotsItemRecord> ballots, ulong proposalTimestampSeconds, ulong rewardEventRound, OptionalValue<ulong> deadlineTimestampSeconds, ulong failedTimestampSeconds, ulong rejectCostE8s, OptionalValue<DerivedProposalInformation> derivedProposalInformation, OptionalValue<Tally> latestTally, int rewardStatus, ulong decidedTimestampSeconds, OptionalValue<Proposal> proposal, OptionalValue<NeuronId> proposer, ulong executedTimestampSeconds)
+		public ProposalInfo(OptionalValue<NeuronId> id, int status, int topic, OptionalValue<GovernanceError> failureReason, List<ValueTuple<ulong, Ballot>> ballots, ulong proposalTimestampSeconds, ulong rewardEventRound, OptionalValue<ulong> deadlineTimestampSeconds, ulong failedTimestampSeconds, ulong rejectCostE8s, OptionalValue<DerivedProposalInformation> derivedProposalInformation, OptionalValue<Tally> latestTally, int rewardStatus, ulong decidedTimestampSeconds, OptionalValue<Proposal> proposal, OptionalValue<NeuronId> proposer, ulong executedTimestampSeconds)
 		{
 			this.Id = id;
 			this.Status = status;
@@ -81,25 +82,6 @@ namespace Sample.Shared.Governance.Models
 
 		public ProposalInfo()
 		{
-		}
-
-		public class BallotsItemRecord
-		{
-			[CandidTag(0U)]
-			public ulong F0 { get; set; }
-
-			[CandidTag(1U)]
-			public Ballot F1 { get; set; }
-
-			public BallotsItemRecord(ulong f0, Ballot f1)
-			{
-				this.F0 = f0;
-				this.F1 = f1;
-			}
-
-			public BallotsItemRecord()
-			{
-			}
 		}
 	}
 }

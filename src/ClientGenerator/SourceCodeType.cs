@@ -7,12 +7,15 @@ namespace EdjCase.ICP.ClientGenerator
 {
 	internal abstract class SourceCodeType
 	{
+		public abstract bool IsPredefinedType { get; }
 	}
 
 	internal class CompiledTypeSourceCodeType : SourceCodeType
 	{
 		public Type Type { get; }
 		public SourceCodeType? GenericType { get; }
+
+		public override bool IsPredefinedType { get; } = true;
 
 		public CompiledTypeSourceCodeType(Type type, SourceCodeType? genericType = null)
 		{
@@ -24,17 +27,32 @@ namespace EdjCase.ICP.ClientGenerator
 	internal class ReferenceSourceCodeType : SourceCodeType
 	{
 		public CandidId Id { get; }
+
+		public override bool IsPredefinedType { get; } = true;
 		public ReferenceSourceCodeType(CandidId id)
 		{
 			this.Id = id ?? throw new ArgumentNullException(nameof(id));
 		}
 	}
 
+	internal class TupleSourceCodeType : SourceCodeType
+	{
+		public List<SourceCodeType> Fields { get; }
+
+		public override bool IsPredefinedType { get; } = true;
+
+		public TupleSourceCodeType(List<SourceCodeType> fields)
+		{
+			this.Fields = fields ?? throw new ArgumentNullException(nameof(fields));
+		}
+	}
 
 	internal class RecordSourceCodeType : SourceCodeType
 	{
 		public List<(ValueName Tag, SourceCodeType Type)> Fields { get; }
 
+
+		public override bool IsPredefinedType { get; } = false;
 
 		public RecordSourceCodeType(List<(ValueName Tag, SourceCodeType Type)> fields)
 		{
@@ -45,6 +63,7 @@ namespace EdjCase.ICP.ClientGenerator
 	internal class VariantSourceCodeType : SourceCodeType
 	{
 		public List<(ValueName Tag, SourceCodeType? Type)> Options { get; }
+		public override bool IsPredefinedType { get; } = false;
 
 		public VariantSourceCodeType(List<(ValueName Tag, SourceCodeType? Type)> options)
 		{
@@ -55,6 +74,7 @@ namespace EdjCase.ICP.ClientGenerator
 	internal class ServiceSourceCodeType : SourceCodeType
 	{
 		public List<(string CsharpName, string CandidName, Func FuncInfo)> Methods { get; set; }
+		public override bool IsPredefinedType { get; } = false;
 		public ServiceSourceCodeType(List<(string CsharpName, string CandidName, Func FuncInfo)> methods)
 		{
 			this.Methods = methods ?? throw new ArgumentNullException(nameof(methods));

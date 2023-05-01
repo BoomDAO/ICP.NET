@@ -44,35 +44,43 @@ namespace Sample.Shared.Governance
 			return reply.ToObjects<string>(this.Converter);
 		}
 
-		public async System.Threading.Tasks.Task<Models.Result2> GetFullNeuron(ulong arg0)
+		public async System.Threading.Tasks.Task<Models.Result_2> GetFullNeuron(ulong arg0)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_full_neuron", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<Models.Result2>(this.Converter);
+			return reply.ToObjects<Models.Result_2>(this.Converter);
 		}
 
-		public async System.Threading.Tasks.Task<Models.Result2> GetFullNeuronByIdOrSubaccount(Models.NeuronIdOrSubaccount arg0)
+		public async System.Threading.Tasks.Task<Models.Result_2> GetFullNeuronByIdOrSubaccount(Models.NeuronIdOrSubaccount arg0)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_full_neuron_by_id_or_subaccount", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<Models.Result2>(this.Converter);
+			return reply.ToObjects<Models.Result_2>(this.Converter);
 		}
 
-		public async System.Threading.Tasks.Task<Models.Result3> GetMetrics()
+		public async System.Threading.Tasks.Task<Models.RewardEvent> GetLatestRewardEvent()
+		{
+			CandidArg arg = CandidArg.FromCandid();
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_latest_reward_event", arg);
+			CandidArg reply = response.ThrowOrGetReply();
+			return reply.ToObjects<Models.RewardEvent>(this.Converter);
+		}
+
+		public async System.Threading.Tasks.Task<Models.Result_3> GetMetrics()
 		{
 			CandidArg arg = CandidArg.FromCandid();
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_metrics", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<Models.Result3>(this.Converter);
+			return reply.ToObjects<Models.Result_3>(this.Converter);
 		}
 
-		public async System.Threading.Tasks.Task<Models.Result4> GetMonthlyNodeProviderRewards()
+		public async System.Threading.Tasks.Task<Models.Result_4> GetMonthlyNodeProviderRewards()
 		{
 			CandidArg arg = CandidArg.FromCandid();
 			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "get_monthly_node_provider_rewards", arg);
-			return reply.ToObjects<Models.Result4>(this.Converter);
+			return reply.ToObjects<Models.Result_4>(this.Converter);
 		}
 
 		public async System.Threading.Tasks.Task<OptionalValue<Models.MostRecentMonthlyNodeProviderRewards>> GetMostRecentMonthlyNodeProviderRewards()
@@ -99,28 +107,28 @@ namespace Sample.Shared.Governance
 			return reply.ToObjects<List<ulong>>(this.Converter);
 		}
 
-		public async System.Threading.Tasks.Task<Models.Result5> GetNeuronInfo(ulong arg0)
+		public async System.Threading.Tasks.Task<Models.Result_5> GetNeuronInfo(ulong arg0)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_neuron_info", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<Models.Result5>(this.Converter);
+			return reply.ToObjects<Models.Result_5>(this.Converter);
 		}
 
-		public async System.Threading.Tasks.Task<Models.Result5> GetNeuronInfoByIdOrSubaccount(Models.NeuronIdOrSubaccount arg0)
+		public async System.Threading.Tasks.Task<Models.Result_5> GetNeuronInfoByIdOrSubaccount(Models.NeuronIdOrSubaccount arg0)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_neuron_info_by_id_or_subaccount", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<Models.Result5>(this.Converter);
+			return reply.ToObjects<Models.Result_5>(this.Converter);
 		}
 
-		public async System.Threading.Tasks.Task<Models.Result6> GetNodeProviderByCaller(NullValue arg0)
+		public async System.Threading.Tasks.Task<Models.Result_6> GetNodeProviderByCaller(NullValue arg0)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_node_provider_by_caller", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<Models.Result6>(this.Converter);
+			return reply.ToObjects<Models.Result_6>(this.Converter);
 		}
 
 		public async System.Threading.Tasks.Task<List<Models.ProposalInfo>> GetPendingProposals()

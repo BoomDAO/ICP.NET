@@ -1,5 +1,6 @@
 using EdjCase.ICP.Candid.Mapping;
 using Sample.Shared.Governance.Models;
+using System;
 using System.Collections.Generic;
 using EdjCase.ICP.Candid.Models;
 
@@ -8,7 +9,7 @@ namespace Sample.Shared.Governance.Models
 	public class Governance
 	{
 		[CandidName("default_followees")]
-		public List<Governance.DefaultFolloweesItemRecord> DefaultFollowees { get; set; }
+		public List<ValueTuple<int, Followees>> DefaultFollowees { get; set; }
 
 		[CandidName("most_recent_monthly_node_provider_rewards")]
 		public OptionalValue<MostRecentMonthlyNodeProviderRewards> MostRecentMonthlyNodeProviderRewards { get; set; }
@@ -44,18 +45,18 @@ namespace Sample.Shared.Governance.Models
 		public ulong ShortVotingPeriodSeconds { get; set; }
 
 		[CandidName("proposals")]
-		public List<Governance.ProposalsItemRecord> Proposals { get; set; }
+		public List<ValueTuple<ulong, ProposalData>> Proposals { get; set; }
 
 		[CandidName("in_flight_commands")]
-		public List<Governance.InFlightCommandsItemRecord> InFlightCommands { get; set; }
+		public List<ValueTuple<ulong, NeuronInFlightCommand>> InFlightCommands { get; set; }
 
 		[CandidName("neurons")]
-		public List<Governance.NeuronsItemRecord> Neurons { get; set; }
+		public List<ValueTuple<ulong, Neuron>> Neurons { get; set; }
 
 		[CandidName("genesis_timestamp_seconds")]
 		public ulong GenesisTimestampSeconds { get; set; }
 
-		public Governance(List<Governance.DefaultFolloweesItemRecord> defaultFollowees, OptionalValue<MostRecentMonthlyNodeProviderRewards> mostRecentMonthlyNodeProviderRewards, OptionalValue<ulong> maturityModulationLastUpdatedAtTimestampSeconds, ulong waitForQuietThresholdSeconds, OptionalValue<GovernanceCachedMetrics> metrics, List<NodeProvider> nodeProviders, OptionalValue<int> cachedDailyMaturityModulationBasisPoints, OptionalValue<NetworkEconomics> economics, OptionalValue<bool> spawningNeurons, OptionalValue<RewardEvent> latestRewardEvent, List<NeuronStakeTransfer> toClaimTransfers, ulong shortVotingPeriodSeconds, List<Governance.ProposalsItemRecord> proposals, List<Governance.InFlightCommandsItemRecord> inFlightCommands, List<Governance.NeuronsItemRecord> neurons, ulong genesisTimestampSeconds)
+		public Governance(List<ValueTuple<int, Followees>> defaultFollowees, OptionalValue<MostRecentMonthlyNodeProviderRewards> mostRecentMonthlyNodeProviderRewards, OptionalValue<ulong> maturityModulationLastUpdatedAtTimestampSeconds, ulong waitForQuietThresholdSeconds, OptionalValue<GovernanceCachedMetrics> metrics, List<NodeProvider> nodeProviders, OptionalValue<int> cachedDailyMaturityModulationBasisPoints, OptionalValue<NetworkEconomics> economics, OptionalValue<bool> spawningNeurons, OptionalValue<RewardEvent> latestRewardEvent, List<NeuronStakeTransfer> toClaimTransfers, ulong shortVotingPeriodSeconds, List<ValueTuple<ulong, ProposalData>> proposals, List<ValueTuple<ulong, NeuronInFlightCommand>> inFlightCommands, List<ValueTuple<ulong, Neuron>> neurons, ulong genesisTimestampSeconds)
 		{
 			this.DefaultFollowees = defaultFollowees;
 			this.MostRecentMonthlyNodeProviderRewards = mostRecentMonthlyNodeProviderRewards;
@@ -77,82 +78,6 @@ namespace Sample.Shared.Governance.Models
 
 		public Governance()
 		{
-		}
-
-		public class DefaultFolloweesItemRecord
-		{
-			[CandidTag(0U)]
-			public int F0 { get; set; }
-
-			[CandidTag(1U)]
-			public Followees F1 { get; set; }
-
-			public DefaultFolloweesItemRecord(int f0, Followees f1)
-			{
-				this.F0 = f0;
-				this.F1 = f1;
-			}
-
-			public DefaultFolloweesItemRecord()
-			{
-			}
-		}
-
-		public class ProposalsItemRecord
-		{
-			[CandidTag(0U)]
-			public ulong F0 { get; set; }
-
-			[CandidTag(1U)]
-			public ProposalData F1 { get; set; }
-
-			public ProposalsItemRecord(ulong f0, ProposalData f1)
-			{
-				this.F0 = f0;
-				this.F1 = f1;
-			}
-
-			public ProposalsItemRecord()
-			{
-			}
-		}
-
-		public class InFlightCommandsItemRecord
-		{
-			[CandidTag(0U)]
-			public ulong F0 { get; set; }
-
-			[CandidTag(1U)]
-			public NeuronInFlightCommand F1 { get; set; }
-
-			public InFlightCommandsItemRecord(ulong f0, NeuronInFlightCommand f1)
-			{
-				this.F0 = f0;
-				this.F1 = f1;
-			}
-
-			public InFlightCommandsItemRecord()
-			{
-			}
-		}
-
-		public class NeuronsItemRecord
-		{
-			[CandidTag(0U)]
-			public ulong F0 { get; set; }
-
-			[CandidTag(1U)]
-			public Neuron F1 { get; set; }
-
-			public NeuronsItemRecord(ulong f0, Neuron f1)
-			{
-				this.F0 = f0;
-				this.F1 = f1;
-			}
-
-			public NeuronsItemRecord()
-			{
-			}
 		}
 	}
 }

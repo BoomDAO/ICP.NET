@@ -27,7 +27,10 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 			object obj = Activator.CreateInstance(this.Type);
 			foreach ((CandidTag tag, PropertyMetaData property) in this.Properties)
 			{
-				CandidValue fieldCandidValue = record.Fields[tag];
+				if (!record.Fields.TryGetValue(tag, out CandidValue fieldCandidValue))
+				{
+					throw new Exception($"Could not map candid record to type '{this.Type}'. Record is missing field '{tag}'");
+				}
 				object? fieldValue;
 				if (property.CustomMapper != null)
 				{

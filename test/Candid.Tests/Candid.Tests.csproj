@@ -7,15 +7,18 @@
 		<IsPackable>false</IsPackable>
 
 		<RootNamespace>ICP.Candid.Tests</RootNamespace>
+		<UseAppHost>true</UseAppHost>
 	</PropertyGroup>
 
 	<ItemGroup>
 	  <None Remove="Generators\Files\AnonymousTuples.did" />
 	  <None Remove="Generators\Files\Dex.did" />
+	  <None Remove="Generators\Files\DuplicatePropertyNames.did" />
 	  <None Remove="Generators\Files\Governance.did" />
 	</ItemGroup>
 
 	<ItemGroup>
+	  <EmbeddedResource Include="Generators\Files\DuplicatePropertyNames.did" />
 	  <EmbeddedResource Include="Generators\Files\AnonymousTuples.did" />
 	  <EmbeddedResource Include="Generators\Files\Dex.did" />
 	  <EmbeddedResource Include="Generators\Files\Governance.did" />

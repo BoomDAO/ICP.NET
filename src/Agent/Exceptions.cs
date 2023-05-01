@@ -53,7 +53,7 @@ namespace EdjCase.ICP.Agent
 		/// <summary>
 		/// The human readable message of the rejection error
 		/// </summary>
-		public string RejectMessage { get; }
+		public string? RejectMessage { get; }
 
 		/// <summary>
 		/// Optional. Specific error code for differentiating specific errors
@@ -63,12 +63,15 @@ namespace EdjCase.ICP.Agent
 		/// <param name="rejectCode">The type of rejection that occurred</param>
 		/// <param name="rejectMessage">The human readable message of the rejection error</param>
 		/// <param name="errorCode">Optional. Specific error code for differentiating specific errors</param>
-		public CallRejectedException(RejectCode rejectCode, string rejectMessage, string? errorCode)
+		public CallRejectedException(RejectCode rejectCode, string? rejectMessage, string? errorCode)
 		{
 			this.RejectCode = rejectCode;
 			this.RejectMessage = rejectMessage;
 			this.ErrorCode = errorCode;
 		}
+
+		/// <inheritdoc />
+		public override string Message => $"Call was rejected. Code: {this.RejectCode}, Message: {this.RejectMessage}, ErrorCode: {this.ErrorCode}";
 	}
 
 	/// <summary>

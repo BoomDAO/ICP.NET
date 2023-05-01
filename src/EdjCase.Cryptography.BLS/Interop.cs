@@ -25,138 +25,197 @@ namespace EdjCase.Cryptography.BLS
 		public const int SECRETKEY_SERIALIZE_SIZE = SECRETKEY_UNIT_SIZE * 8;
 		public const int PUBLICKEY_SERIALIZE_SIZE = PUBLICKEY_UNIT_SIZE * 8;
 		public const int SIGNATURE_SERIALIZE_SIZE = SIGNATURE_UNIT_SIZE * 8;
-		public const int MSG_SIZE = 32; public enum MapToMode
+		public const int MSG_SIZE = 32;
+
+		public enum MapToMode
 		{
 			Original = 0, // for backward compatibility
 			HashToCurve = 5, // irtf-cfrg-hash-to-curve
 		}
 
 		public const string dllName = "bls384_256";
-		[DllImport(dllName)] public static extern int blsInit(int curveType, int compiledTimeVar);
-		[DllImport(dllName)] public static extern int blsGetFrByteSize();
-		[DllImport(dllName)] public static extern int blsGetG1ByteSize();
 
-		[DllImport(dllName)] public static extern void blsIdSetInt(ref Id id, int x);
-		[DllImport(dllName)] public static extern int blsIdSetDecStr(ref Id id, [In][MarshalAs(UnmanagedType.LPStr)] string buf, ulong bufSize);
-		[DllImport(dllName)] public static extern int blsIdSetHexStr(ref Id id, [In][MarshalAs(UnmanagedType.LPStr)] string buf, ulong bufSize);
-		[DllImport(dllName)] public static extern ulong blsIdGetDecStr([Out] StringBuilder buf, ulong maxBufSize, in Id id);
-		[DllImport(dllName)] public static extern ulong blsIdGetHexStr([Out] StringBuilder buf, ulong maxBufSize, in Id id);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern int blsInit(int curveType, int compiledTimeVar);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern int blsGetFrByteSize();
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern int blsGetG1ByteSize();
 
-		[DllImport(dllName)] public static extern ulong blsIdSerialize([Out] byte[] buf, ulong maxBufSize, in Id id);
-		[DllImport(dllName)] public static extern ulong blsSecretKeySerialize([Out] byte[] buf, ulong maxBufSize, in SecretKey sec);
-		[DllImport(dllName)] public static extern ulong blsPublicKeySerialize([Out] byte[] buf, ulong maxBufSize, in PublicKey pub);
-		[DllImport(dllName)] public static extern ulong blsSignatureSerialize([Out] byte[] buf, ulong maxBufSize, in Signature sig);
-		[DllImport(dllName)] public static extern ulong blsIdDeserialize(ref Id id, [In] byte[] buf, ulong bufSize);
-		[DllImport(dllName)] public static extern ulong blsSecretKeyDeserialize(ref SecretKey sec, [In] byte[] buf, ulong bufSize);
-		[DllImport(dllName)] public static extern ulong blsPublicKeyDeserialize(ref PublicKey pub, [In] byte[] buf, ulong bufSize);
-		[DllImport(dllName)] public static extern ulong blsSignatureDeserialize(ref Signature sig, [In] byte[] buf, ulong bufSize);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void blsIdSetInt(ref Id id, int x);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern int blsIdSetDecStr(ref Id id, [In][MarshalAs(UnmanagedType.LPStr)] string buf, ulong bufSize);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern int blsIdSetHexStr(ref Id id, [In][MarshalAs(UnmanagedType.LPStr)] string buf, ulong bufSize);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern ulong blsIdGetDecStr([Out] StringBuilder buf, ulong maxBufSize, in Id id);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern ulong blsIdGetHexStr([Out] StringBuilder buf, ulong maxBufSize, in Id id);
 
-		[DllImport(dllName)] public static extern int blsIdIsEqual(in Id lhs, in Id rhs);
-		[DllImport(dllName)] public static extern int blsSecretKeyIsEqual(in SecretKey lhs, in SecretKey rhs);
-		[DllImport(dllName)] public static extern int blsPublicKeyIsEqual(in PublicKey lhs, in PublicKey rhs);
-		[DllImport(dllName)] public static extern int blsSignatureIsEqual(in Signature lhs, in Signature rhs);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern ulong blsIdSerialize([Out] byte[] buf, ulong maxBufSize, in Id id);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern ulong blsSecretKeySerialize([Out] byte[] buf, ulong maxBufSize, in SecretKey sec);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern ulong blsPublicKeySerialize([Out] byte[] buf, ulong maxBufSize, in PublicKey pub);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern ulong blsSignatureSerialize([Out] byte[] buf, ulong maxBufSize, in Signature sig);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern ulong blsIdDeserialize(ref Id id, [In] byte[] buf, ulong bufSize);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern ulong blsSecretKeyDeserialize(ref SecretKey sec, [In] byte[] buf, ulong bufSize);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern ulong blsPublicKeyDeserialize(ref PublicKey pub, [In] byte[] buf, ulong bufSize);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern ulong blsSignatureDeserialize(ref Signature sig, [In] byte[] buf, ulong bufSize);
+
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern int blsIdIsEqual(in Id lhs, in Id rhs);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern int blsSecretKeyIsEqual(in SecretKey lhs, in SecretKey rhs);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern int blsPublicKeyIsEqual(in PublicKey lhs, in PublicKey rhs);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern int blsSignatureIsEqual(in Signature lhs, in Signature rhs);
 		// add
-		[DllImport(dllName)] public static extern void blsSecretKeyAdd(ref SecretKey sec, in SecretKey rhs);
-		[DllImport(dllName)] public static extern void blsPublicKeyAdd(ref PublicKey pub, in PublicKey rhs);
-		[DllImport(dllName)] public static extern void blsSignatureAdd(ref Signature sig, in Signature rhs);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void blsSecretKeyAdd(ref SecretKey sec, in SecretKey rhs);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void blsPublicKeyAdd(ref PublicKey pub, in PublicKey rhs);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void blsSignatureAdd(ref Signature sig, in Signature rhs);
 		// sub
-		[DllImport(dllName)] public static extern void blsSecretKeySub(ref SecretKey sec, in SecretKey rhs);
-		[DllImport(dllName)] public static extern void blsPublicKeySub(ref PublicKey pub, in PublicKey rhs);
-		[DllImport(dllName)] public static extern void blsSignatureSub(ref Signature sig, in Signature rhs);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void blsSecretKeySub(ref SecretKey sec, in SecretKey rhs);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void blsPublicKeySub(ref PublicKey pub, in PublicKey rhs);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void blsSignatureSub(ref Signature sig, in Signature rhs);
 
 		// neg
-		[DllImport(dllName)] public static extern void blsSecretKeyNeg(ref SecretKey x);
-		[DllImport(dllName)] public static extern void blsPublicKeyNeg(ref PublicKey x);
-		[DllImport(dllName)] public static extern void blsSignatureNeg(ref Signature x);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void blsSecretKeyNeg(ref SecretKey x);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void blsPublicKeyNeg(ref PublicKey x);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void blsSignatureNeg(ref Signature x);
 		// mul Fr
-		[DllImport(dllName)] public static extern void blsSecretKeyMul(ref SecretKey sec, in SecretKey rhs);
-		[DllImport(dllName)] public static extern void blsPublicKeyMul(ref PublicKey pub, in SecretKey rhs);
-		[DllImport(dllName)] public static extern void blsSignatureMul(ref Signature sig, in SecretKey rhs);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void blsSecretKeyMul(ref SecretKey sec, in SecretKey rhs);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void blsPublicKeyMul(ref PublicKey pub, in SecretKey rhs);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void blsSignatureMul(ref Signature sig, in SecretKey rhs);
 
 		// mulVec
-		[DllImport(dllName)] public static extern int blsPublicKeyMulVec(ref PublicKey pub, in PublicKey pubVec, in SecretKey idVec, ulong n);
-		[DllImport(dllName)] public static extern int blsSignatureMulVec(ref Signature sig, in Signature sigVec, in SecretKey idVec, ulong n);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern int blsPublicKeyMulVec(ref PublicKey pub, in PublicKey pubVec, in SecretKey idVec, ulong n);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern int blsSignatureMulVec(ref Signature sig, in Signature sigVec, in SecretKey idVec, ulong n);
 		// zero
-		[DllImport(dllName)] public static extern int blsSecretKeyIsZero(in SecretKey x);
-		[DllImport(dllName)] public static extern int blsPublicKeyIsZero(in PublicKey x);
-		[DllImport(dllName)] public static extern int blsSignatureIsZero(in Signature x);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern int blsSecretKeyIsZero(in SecretKey x);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern int blsPublicKeyIsZero(in PublicKey x);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern int blsSignatureIsZero(in Signature x);
 		//	hash buf and set
-		[DllImport(dllName)] public static extern int blsHashToSecretKey(ref SecretKey sec, [In] byte[] buf, ulong bufSize);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern int blsHashToSecretKey(ref SecretKey sec, [In] byte[] buf, ulong bufSize);
 		/*
 			set secretKey if system has /dev/urandom or CryptGenRandom
 			return 0 if success else -1
 		*/
-		[DllImport(dllName)] public static extern int blsSecretKeySetByCSPRNG(ref SecretKey sec);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern int blsSecretKeySetByCSPRNG(ref SecretKey sec);
 
-		[DllImport(dllName)] public static extern void blsGetPublicKey(ref PublicKey pub, in SecretKey sec);
-		[DllImport(dllName)] public static extern void blsGetPop(ref Signature sig, in SecretKey sec);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void blsGetPublicKey(ref PublicKey pub, in SecretKey sec);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void blsGetPop(ref Signature sig, in SecretKey sec);
 
 		// return 0 if success
-		[DllImport(dllName)] public static extern int blsSecretKeyShare(ref SecretKey sec, in SecretKey msk, ulong k, in Id id);
-		[DllImport(dllName)] public static extern int blsPublicKeyShare(ref PublicKey pub, in PublicKey mpk, ulong k, in Id id);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern int blsSecretKeyShare(ref SecretKey sec, in SecretKey msk, ulong k, in Id id);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern int blsPublicKeyShare(ref PublicKey pub, in PublicKey mpk, ulong k, in Id id);
 
 
-		[DllImport(dllName)] public static extern int blsSecretKeyRecover(ref SecretKey sec, in SecretKey secVec, in Id idVec, ulong n);
-		[DllImport(dllName)] public static extern int blsPublicKeyRecover(ref PublicKey pub, in PublicKey pubVec, in Id idVec, ulong n);
-		[DllImport(dllName)] public static extern int blsSignatureRecover(ref Signature sig, in Signature sigVec, in Id idVec, ulong n);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern int blsSecretKeyRecover(ref SecretKey sec, in SecretKey secVec, in Id idVec, ulong n);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern int blsPublicKeyRecover(ref PublicKey pub, in PublicKey pubVec, in Id idVec, ulong n);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern int blsSignatureRecover(ref Signature sig, in Signature sigVec, in Id idVec, ulong n);
 
-		[DllImport(dllName)] public static extern void blsSign(ref Signature sig, in SecretKey sec, [In] byte[] buf, ulong size);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void blsSign(ref Signature sig, in SecretKey sec, [In] byte[] buf, ulong size);
 
 		// return 1 if valid
-		[DllImport(dllName)] public static extern int blsVerify(in Signature sig, in PublicKey pub, [In] byte[] buf, ulong size);
-		[DllImport(dllName)] public static extern int blsVerifyPop(in Signature sig, in PublicKey pub);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern int blsVerify(in Signature sig, in PublicKey pub, [In] byte[] buf, ulong size);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern int blsVerifyPop(in Signature sig, in PublicKey pub);
 
 		//////////////////////////////////////////////////////////////////////////
 		// the following apis will be removed
 
 		// mask buf with (1 << (bitLen(r) - 1)) - 1 if buf >= r
-		[DllImport(dllName)] public static extern int blsIdSetLittleEndian(ref Id id, [In][MarshalAs(UnmanagedType.LPStr)] string buf, ulong bufSize);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern int blsIdSetLittleEndian(ref Id id, [In][MarshalAs(UnmanagedType.LPStr)] string buf, ulong bufSize);
 		/*
 			return written byte size if success else 0
 		*/
-		[DllImport(dllName)] public static extern ulong blsIdGetLittleEndian([Out] StringBuilder buf, ulong maxBufSize, in Id id);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern ulong blsIdGetLittleEndian([Out] StringBuilder buf, ulong maxBufSize, in Id id);
 
 		// return 0 if success
 		// mask buf with (1 << (bitLen(r) - 1)) - 1 if buf >= r
-		[DllImport(dllName)] public static extern int blsSecretKeySetLittleEndian(ref SecretKey sec, [In] byte[] buf, ulong bufSize);
-		[DllImport(dllName)] public static extern int blsSecretKeySetDecStr(ref SecretKey sec, [In][MarshalAs(UnmanagedType.LPStr)] string buf, ulong bufSize);
-		[DllImport(dllName)] public static extern int blsSecretKeySetHexStr(ref SecretKey sec, [In][MarshalAs(UnmanagedType.LPStr)] string buf, ulong bufSize);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern int blsSecretKeySetLittleEndian(ref SecretKey sec, [In] byte[] buf, ulong bufSize);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern int blsSecretKeySetDecStr(ref SecretKey sec, [In][MarshalAs(UnmanagedType.LPStr)] string buf, ulong bufSize);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern int blsSecretKeySetHexStr(ref SecretKey sec, [In][MarshalAs(UnmanagedType.LPStr)] string buf, ulong bufSize);
 		/*
 			return written byte size if success else 0
 		*/
-		[DllImport(dllName)] public static extern ulong blsSecretKeyGetLittleEndian([Out] byte[] buf, ulong maxBufSize, in SecretKey sec);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern ulong blsSecretKeyGetLittleEndian([Out] byte[] buf, ulong maxBufSize, in SecretKey sec);
 		/*
 			return strlen(buf) if success else 0
 			buf is '\0' terminated
 		*/
-		[DllImport(dllName)] public static extern ulong blsSecretKeyGetDecStr([Out] StringBuilder buf, ulong maxBufSize, in SecretKey sec);
-		[DllImport(dllName)] public static extern ulong blsSecretKeyGetHexStr([Out] StringBuilder buf, ulong maxBufSize, in SecretKey sec);
-		[DllImport(dllName)] public static extern int blsPublicKeySetHexStr(ref PublicKey pub, [In][MarshalAs(UnmanagedType.LPStr)] string buf, ulong bufSize);
-		[DllImport(dllName)] public static extern ulong blsPublicKeyGetHexStr([Out] StringBuilder buf, ulong maxBufSize, in PublicKey pub);
-		[DllImport(dllName)] public static extern int blsSignatureSetHexStr(ref Signature sig, [In][MarshalAs(UnmanagedType.LPStr)] string buf, ulong bufSize);
-		[DllImport(dllName)] public static extern ulong blsSignatureGetHexStr([Out] StringBuilder buf, ulong maxBufSize, in Signature sig);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern ulong blsSecretKeyGetDecStr([Out] StringBuilder buf, ulong maxBufSize, in SecretKey sec);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern ulong blsSecretKeyGetHexStr([Out] StringBuilder buf, ulong maxBufSize, in SecretKey sec);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern int blsPublicKeySetHexStr(ref PublicKey pub, [In][MarshalAs(UnmanagedType.LPStr)] string buf, ulong bufSize);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern ulong blsPublicKeyGetHexStr([Out] StringBuilder buf, ulong maxBufSize, in PublicKey pub);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern int blsSignatureSetHexStr(ref Signature sig, [In][MarshalAs(UnmanagedType.LPStr)] string buf, ulong bufSize);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern ulong blsSignatureGetHexStr([Out] StringBuilder buf, ulong maxBufSize, in Signature sig);
 
-		[DllImport(dllName)] public static extern int blsFastAggregateVerify(in Signature sig, in PublicKey pubVec, ulong n, [In] byte[] msg, ulong msgSize);
-		[DllImport(dllName)] public static extern int blsAggregateVerifyNoCheck(in Signature sig, in PublicKey pubVec, in Msg msgVec, ulong msgSize, ulong n);
-		[DllImport(dllName)] public static extern void blsSetETHserialization(int mode);
-		[DllImport(dllName)] public static extern int blsSetMapToMode(int mode);
-		[DllImport(dllName)] public static extern int blsSetGeneratorOfPublicKey(ref PublicKey pub);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern int blsFastAggregateVerify(in Signature sig, in PublicKey pubVec, ulong n, [In] byte[] msg, ulong msgSize);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern int blsAggregateVerifyNoCheck(in Signature sig, in PublicKey pubVec, in Msg msgVec, ulong msgSize, ulong n);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void blsSetETHserialization(int mode);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern int blsSetMapToMode(int mode);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern int blsSetGeneratorOfPublicKey(in PublicKey pub);
 		// set dst of HashAndMap
-		[DllImport(dllName)] public static extern int mclBnG1_setDst([In][MarshalAs(UnmanagedType.LPStr)] string dst, ulong dstSize);
-		[DllImport(dllName)] public static extern int mclBnG2_setDst([In][MarshalAs(UnmanagedType.LPStr)] string dst, ulong dstSize);
-		
-		public static void Init(int curveType = BLS12_381)
-		{
-			if (!Environment.Is64BitProcess)
-			{
-				throw new PlatformNotSupportedException("not 64-bit system");
-			}
-			int err = blsInit(curveType, COMPILED_TIME_VAR);
-			if (err != 0)
-			{
-				throw new ArgumentException("blsInit");
-			}
-		}
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern int mclBnG1_setDst([In][MarshalAs(UnmanagedType.LPStr)] string dst, ulong dstSize);
+		[DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern int mclBnG2_setDst([In][MarshalAs(UnmanagedType.LPStr)] string dst, ulong dstSize);
+
 
 		[StructLayout(LayoutKind.Sequential)]
 		public unsafe struct Id
@@ -351,79 +410,6 @@ namespace EdjCase.Cryptography.BLS
 		public unsafe struct PublicKey
 		{
 			private fixed ulong v[PUBLICKEY_UNIT_SIZE];
-			public byte[] Serialize()
-			{
-				ulong bufSize = (ulong)blsGetG1ByteSize() * 2;
-				byte[] buf = new byte[bufSize];
-				ulong n = blsPublicKeySerialize(buf, bufSize, this);
-				if (n != bufSize)
-				{
-					throw new ArithmeticException("blsPublicKeySerialize");
-				}
-				return buf;
-			}
-			public void Deserialize(byte[] buf)
-			{
-				ulong bufSize = (ulong)buf.Length;
-				ulong n = blsPublicKeyDeserialize(ref this, buf, bufSize);
-				if (n == 0 || n != bufSize)
-				{
-					throw new ArithmeticException("blsPublicKeyDeserialize");
-				}
-			}
-			public bool IsEqual(in PublicKey rhs)
-			{
-				return blsPublicKeyIsEqual(this, rhs) != 0;
-			}
-			public bool IsZero()
-			{
-				return blsPublicKeyIsZero(this) != 0;
-			}
-			public void SetStr(string s)
-			{
-				if (blsPublicKeySetHexStr(ref this, s, (ulong)s.Length) != 0)
-				{
-					throw new ArgumentException("blsPublicKeySetStr:" + s);
-				}
-			}
-			public string GetHexStr()
-			{
-				StringBuilder sb = new StringBuilder(1024);
-				ulong size = blsPublicKeyGetHexStr(sb, (ulong)sb.Capacity, this);
-				if (size == 0)
-				{
-					throw new ArgumentException("blsPublicKeyGetStr");
-				}
-				return sb.ToString(0, (int)size);
-			}
-			public void Add(in PublicKey rhs)
-			{
-				blsPublicKeyAdd(ref this, rhs);
-			}
-			public void Sub(in PublicKey rhs)
-			{
-				blsPublicKeySub(ref this, rhs);
-			}
-			public void Neg()
-			{
-				blsPublicKeyNeg(ref this);
-			}
-			public void Mul(in SecretKey rhs)
-			{
-				blsPublicKeyMul(ref this, rhs);
-			}
-			public bool Verify(in Signature sig, byte[] buf)
-			{
-				return blsVerify(sig, this, buf, (ulong)buf.Length) == 1;
-			}
-			public bool Verify(in Signature sig, string s)
-			{
-				return this.Verify(sig, Encoding.UTF8.GetBytes(s));
-			}
-			public bool VerifyPop(in Signature pop)
-			{
-				return blsVerifyPop(pop, this) == 1;
-			}
 		}
 		// publicKey = sum_{i=0}^{mpk.Length - 1} mpk[i] * id^i
 		public static PublicKey SharePublicKey(in PublicKey[] mpk, in Id id)
@@ -623,31 +609,6 @@ namespace EdjCase.Cryptography.BLS
 				return false;
 			}
 			return AggregateVerifyNoCheck(in sig, in pubVec, in msgVec);
-		}
-		public static void SetETHserialization(bool b)
-		{
-			blsSetETHserialization(b ? 1 : 0);
-		}
-		public static void SetMapToMode(MapToMode mode)
-		{
-			if (blsSetMapToMode((int)mode) != 0)
-			{
-				throw new Exception("SetMapToMode");
-			}
-		}
-		public static void SetGeneratorOfPublicKey(ref PublicKey pub)
-		{
-			if (blsSetGeneratorOfPublicKey(ref pub) != 0)
-			{
-				throw new ArgumentException("SetGeneratorOfPublicKey");
-			}
-		}
-		public static void SetDstG1(string dst)
-		{
-			if (mclBnG1_setDst(dst, (ulong)dst.Length) != 0)
-			{
-				throw new ArgumentException("SetDstG1:" + dst);
-			}
 		}
 		public static void SetDstG2(string dst)
 		{

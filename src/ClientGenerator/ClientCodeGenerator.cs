@@ -86,7 +86,7 @@ namespace EdjCase.ICP.ClientGenerator
 				? options.Namespace
 				: options.Namespace + ".Models";
 			HashSet<string> aliases = declaredTypes
-				.Where(t => t.Value is CompiledTypeSourceCodeType || t.Value is ReferenceSourceCodeType)
+				.Where(t => t.Value.IsPredefinedType)
 				.Select(t => t.Key)
 				.ToHashSet();
 
@@ -169,6 +169,28 @@ namespace EdjCase.ICP.ClientGenerator
 					}
 				case CandidRecordType o:
 					{
+						// Check if tuple (tag ids are 0...N)
+						bool isTuple = o.Fields.Any() && o.Fields
+							.Select(f => f.Key.Id)
+							.OrderBy(f => f)
+							.SequenceEqual(Enumerable.Range(0, o.Fields.Count).Select(i => (uint)i));
+						if (isTuple)
+						{
+							bool containsTypeReference = o.Fields.Any(f => f.Value is CandidReferenceType);
+							if (!containsTypeReference)
+							{
+								// Only be a tuple if it doesnt reference any other type
+								// This is due to complications with C# aliasing
+								List<SourceCodeType> tupleFields = o.Fields
+									.Select(f =>
+									{
+										return ResolveSourceCodeType(f.Value, keepCandidCase);
+									})
+									.Where(f => f != null)
+									.ToList()!;
+								return new TupleSourceCodeType(tupleFields);
+							}
+						}
 						List<(ValueName Key, SourceCodeType Type)> fields = o.Fields
 							.Select(f =>
 							{

@@ -7,9 +7,9 @@ namespace Sample.Shared.Governance.Models
 	public class ClaimOrRefreshNeuronFromAccountResponse
 	{
 		[CandidName("result")]
-		public OptionalValue<Result1> Result { get; set; }
+		public OptionalValue<Result_1> Result { get; set; }
 
-		public ClaimOrRefreshNeuronFromAccountResponse(OptionalValue<Result1> result)
+		public ClaimOrRefreshNeuronFromAccountResponse(OptionalValue<Result_1> result)
 		{
 			this.Result = result;
 		}

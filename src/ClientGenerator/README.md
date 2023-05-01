@@ -79,3 +79,23 @@ candid-client-generator gen ./
 - `no-folders` - (Bool) OPTIONAL. If true, no sub-folders will be generated for the client. All generated files will be in a flat structure. Defaults to false. Overrides the top level `no-folders`
 - `feature-nullable` - (Bool) Optional. Sets whether to use the C# nullable feature when generating the client (like `object?`). Defaults to true. Overrides the top level `feature-nullable`
 - `keep-candid-case` - (Bool) Optional. If true, the names of properties and methods will keep the raw candid name. Otherwise they will be converted to something prettier. Defaults to false. Overrides the top level `keep-candid-case`
+
+
+# Custom Client Generators via Code
+Due to the complexity of different use cases, custom tweaks to the output of the client generators might be helpful. This process
+can be handled with calling the `ClientCodeGenerator` manually and using the .NET `CSharpSyntaxRewriter` (tutorial can be found [HERE](https://joshvarty.com/2014/08/15/learn-roslyn-now-part-5-csharpsyntaxrewriter/))
+
+```cs
+var options = new ClientGenerationOptions(
+	name: "MyClient",
+	@namespace: "My.Namespace",
+	noFolders: false,
+	featureNullable: true,
+	keepCandidCase: false
+);
+ClientSyntax syntax = await ClientCodeGenerator.GenerateClientFromCanisterAsync(canisterId, options);
+var rewriter = new MyCustomCSharpSyntaxRewriter();
+syntax = syntax.Rewrite(rewriter);
+(string clientFile, List<(string Name, string Contents)> typeFiles) = syntax.GenerateFileContents();
+// Write string contents to files...
+```

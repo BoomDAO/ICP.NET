@@ -380,9 +380,9 @@ namespace Test.Models
 	{
 		public OptionalValue<Principal> new_hot_key { get; set; }
 
-		public AddHotKey(OptionalValue<Principal> newHotKey)
+		public AddHotKey(OptionalValue<Principal> new_hot_key)
 		{
-			this.new_hot_key = newHotKey;
+			this.new_hot_key = new_hot_key;
 		}
 
 		public AddHotKey()
@@ -464,10 +464,10 @@ namespace Test.Models
 
 		public ulong voting_power { get; set; }
 
-		public Ballot(int vote, ulong votingPower)
+		public Ballot(int vote, ulong voting_power)
 		{
 			this.vote = vote;
-			this.voting_power = votingPower;
+			this.voting_power = voting_power;
 		}
 
 		public Ballot()
@@ -489,10 +489,10 @@ namespace Test.Models
 
 		public OptionalValue<NeuronId> proposal_id { get; set; }
 
-		public BallotInfo(int vote, OptionalValue<NeuronId> proposalId)
+		public BallotInfo(int vote, OptionalValue<NeuronId> proposal_id)
 		{
 			this.vote = vote;
-			this.proposal_id = proposalId;
+			this.proposal_id = proposal_id;
 		}
 
 		public BallotInfo()
@@ -734,9 +734,9 @@ namespace Test.Models
 	{
 		public OptionalValue<NeuronId> refreshed_neuron_id { get; set; }
 
-		public ClaimOrRefreshResponse(OptionalValue<NeuronId> refreshedNeuronId)
+		public ClaimOrRefreshResponse(OptionalValue<NeuronId> refreshed_neuron_id)
 		{
-			this.refreshed_neuron_id = refreshedNeuronId;
+			this.refreshed_neuron_id = refreshed_neuron_id;
 		}
 
 		public ClaimOrRefreshResponse()
@@ -1334,9 +1334,9 @@ namespace Test.Models
 
 		public OptionalValue<Amount> amount { get; set; }
 
-		public Disburse(OptionalValue<AccountIdentifier> toAccount, OptionalValue<Amount> amount)
+		public Disburse(OptionalValue<AccountIdentifier> to_account, OptionalValue<Amount> amount)
 		{
-			this.to_account = toAccount;
+			this.to_account = to_account;
 			this.amount = amount;
 		}
 
@@ -1354,9 +1354,9 @@ namespace Test.Models
 	{
 		public ulong transfer_block_height { get; set; }
 
-		public DisburseResponse(ulong transferBlockHeight)
+		public DisburseResponse(ulong transfer_block_height)
 		{
-			this.transfer_block_height = transferBlockHeight;
+			this.transfer_block_height = transfer_block_height;
 		}
 
 		public DisburseResponse()
@@ -1383,12 +1383,12 @@ namespace Test.Models
 
 		public ulong nonce { get; set; }
 
-		public DisburseToNeuron(ulong dissolveDelaySeconds, bool kycVerified, ulong amountE8s, OptionalValue<Principal> newController, ulong nonce)
+		public DisburseToNeuron(ulong dissolve_delay_seconds, bool kyc_verified, ulong amount_e8s, OptionalValue<Principal> new_controller, ulong nonce)
 		{
-			this.dissolve_delay_seconds = dissolveDelaySeconds;
-			this.kyc_verified = kycVerified;
-			this.amount_e8s = amountE8s;
-			this.new_controller = newController;
+			this.dissolve_delay_seconds = dissolve_delay_seconds;
+			this.kyc_verified = kyc_verified;
+			this.amount_e8s = amount_e8s;
+			this.new_controller = new_controller;
 			this.nonce = nonce;
 		}
 
@@ -1477,9 +1477,9 @@ namespace Test.Models
 
 		public List<byte> payload { get; set; }
 
-		public ExecuteNnsFunction(int nnsFunction, List<byte> payload)
+		public ExecuteNnsFunction(int nns_function, List<byte> payload)
 		{
-			this.nns_function = nnsFunction;
+			this.nns_function = nns_function;
 			this.payload = payload;
 		}
 
@@ -1571,20 +1571,20 @@ namespace Test.Models
 
 		public ulong genesis_timestamp_seconds { get; set; }
 
-		public Governance(List<Governance.default_followeesItemRecord> defaultFollowees, ulong waitForQuietThresholdSeconds, OptionalValue<GovernanceCachedMetrics> metrics, List<NodeProvider> nodeProviders, OptionalValue<NetworkEconomics> economics, OptionalValue<RewardEvent> latestRewardEvent, List<NeuronStakeTransfer> toClaimTransfers, ulong shortVotingPeriodSeconds, List<Governance.proposalsItemRecord> proposals, List<Governance.in_flight_commandsItemRecord> inFlightCommands, List<Governance.neuronsItemRecord> neurons, ulong genesisTimestampSeconds)
+		public Governance(List<Governance.default_followeesItemRecord> default_followees, ulong wait_for_quiet_threshold_seconds, OptionalValue<GovernanceCachedMetrics> metrics, List<NodeProvider> node_providers, OptionalValue<NetworkEconomics> economics, OptionalValue<RewardEvent> latest_reward_event, List<NeuronStakeTransfer> to_claim_transfers, ulong short_voting_period_seconds, List<Governance.proposalsItemRecord> proposals, List<Governance.in_flight_commandsItemRecord> in_flight_commands, List<Governance.neuronsItemRecord> neurons, ulong genesis_timestamp_seconds)
 		{
-			this.default_followees = defaultFollowees;
-			this.wait_for_quiet_threshold_seconds = waitForQuietThresholdSeconds;
+			this.default_followees = default_followees;
+			this.wait_for_quiet_threshold_seconds = wait_for_quiet_threshold_seconds;
 			this.metrics = metrics;
-			this.node_providers = nodeProviders;
+			this.node_providers = node_providers;
 			this.economics = economics;
-			this.latest_reward_event = latestRewardEvent;
-			this.to_claim_transfers = toClaimTransfers;
-			this.short_voting_period_seconds = shortVotingPeriodSeconds;
+			this.latest_reward_event = latest_reward_event;
+			this.to_claim_transfers = to_claim_transfers;
+			this.short_voting_period_seconds = short_voting_period_seconds;
 			this.proposals = proposals;
-			this.in_flight_commands = inFlightCommands;
+			this.in_flight_commands = in_flight_commands;
 			this.neurons = neurons;
-			this.genesis_timestamp_seconds = genesisTimestampSeconds;
+			this.genesis_timestamp_seconds = genesis_timestamp_seconds;
 		}
 
 		public Governance()
@@ -1671,21 +1671,20 @@ namespace Test.Models
 
 Type File: 'GovernanceCachedMetrics'
 
-using Test.Models;
+using System;
 using System.Collections.Generic;
-using EdjCase.ICP.Candid.Mapping;
 
 namespace Test.Models
 {
 	public class GovernanceCachedMetrics
 	{
-		public List<GovernanceCachedMetrics.not_dissolving_neurons_e8s_bucketsItemRecord> not_dissolving_neurons_e8s_buckets { get; set; }
+		public List<ValueTuple<ulong, double>> not_dissolving_neurons_e8s_buckets { get; set; }
 
 		public ulong garbage_collectable_neurons_count { get; set; }
 
 		public ulong neurons_with_invalid_stake_count { get; set; }
 
-		public List<GovernanceCachedMetrics.not_dissolving_neurons_count_bucketsItemRecord> not_dissolving_neurons_count_buckets { get; set; }
+		public List<ValueTuple<ulong, ulong>> not_dissolving_neurons_count_buckets { get; set; }
 
 		public ulong total_supply_icp { get; set; }
 
@@ -1701,114 +1700,38 @@ namespace Test.Models
 
 		public ulong neurons_with_less_than_6_months_dissolve_delay_e8s { get; set; }
 
-		public List<GovernanceCachedMetrics.dissolving_neurons_count_bucketsItemRecord> dissolving_neurons_count_buckets { get; set; }
+		public List<ValueTuple<ulong, ulong>> dissolving_neurons_count_buckets { get; set; }
 
 		public ulong dissolving_neurons_count { get; set; }
 
-		public List<GovernanceCachedMetrics.dissolving_neurons_e8s_bucketsItemRecord> dissolving_neurons_e8s_buckets { get; set; }
+		public List<ValueTuple<ulong, double>> dissolving_neurons_e8s_buckets { get; set; }
 
 		public ulong community_fund_total_staked_e8s { get; set; }
 
 		public ulong timestamp_seconds { get; set; }
 
-		public GovernanceCachedMetrics(List<GovernanceCachedMetrics.not_dissolving_neurons_e8s_bucketsItemRecord> notDissolvingNeuronsE8sBuckets, ulong garbageCollectableNeuronsCount, ulong neuronsWithInvalidStakeCount, List<GovernanceCachedMetrics.not_dissolving_neurons_count_bucketsItemRecord> notDissolvingNeuronsCountBuckets, ulong totalSupplyIcp, ulong neuronsWithLessThan6MonthsDissolveDelayCount, ulong dissolvedNeuronsCount, ulong totalStakedE8s, ulong notDissolvingNeuronsCount, ulong dissolvedNeuronsE8s, ulong neuronsWithLessThan6MonthsDissolveDelayE8s, List<GovernanceCachedMetrics.dissolving_neurons_count_bucketsItemRecord> dissolvingNeuronsCountBuckets, ulong dissolvingNeuronsCount, List<GovernanceCachedMetrics.dissolving_neurons_e8s_bucketsItemRecord> dissolvingNeuronsE8sBuckets, ulong communityFundTotalStakedE8s, ulong timestampSeconds)
+		public GovernanceCachedMetrics(List<ValueTuple<ulong, double>> not_dissolving_neurons_e8s_buckets, ulong garbage_collectable_neurons_count, ulong neurons_with_invalid_stake_count, List<ValueTuple<ulong, ulong>> not_dissolving_neurons_count_buckets, ulong total_supply_icp, ulong neurons_with_less_than_6_months_dissolve_delay_count, ulong dissolved_neurons_count, ulong total_staked_e8s, ulong not_dissolving_neurons_count, ulong dissolved_neurons_e8s, ulong neurons_with_less_than_6_months_dissolve_delay_e8s, List<ValueTuple<ulong, ulong>> dissolving_neurons_count_buckets, ulong dissolving_neurons_count, List<ValueTuple<ulong, double>> dissolving_neurons_e8s_buckets, ulong community_fund_total_staked_e8s, ulong timestamp_seconds)
 		{
-			this.not_dissolving_neurons_e8s_buckets = notDissolvingNeuronsE8sBuckets;
-			this.garbage_collectable_neurons_count = garbageCollectableNeuronsCount;
-			this.neurons_with_invalid_stake_count = neuronsWithInvalidStakeCount;
-			this.not_dissolving_neurons_count_buckets = notDissolvingNeuronsCountBuckets;
-			this.total_supply_icp = totalSupplyIcp;
-			this.neurons_with_less_than_6_months_dissolve_delay_count = neuronsWithLessThan6MonthsDissolveDelayCount;
-			this.dissolved_neurons_count = dissolvedNeuronsCount;
-			this.total_staked_e8s = totalStakedE8s;
-			this.not_dissolving_neurons_count = notDissolvingNeuronsCount;
-			this.dissolved_neurons_e8s = dissolvedNeuronsE8s;
-			this.neurons_with_less_than_6_months_dissolve_delay_e8s = neuronsWithLessThan6MonthsDissolveDelayE8s;
-			this.dissolving_neurons_count_buckets = dissolvingNeuronsCountBuckets;
-			this.dissolving_neurons_count = dissolvingNeuronsCount;
-			this.dissolving_neurons_e8s_buckets = dissolvingNeuronsE8sBuckets;
-			this.community_fund_total_staked_e8s = communityFundTotalStakedE8s;
-			this.timestamp_seconds = timestampSeconds;
+			this.not_dissolving_neurons_e8s_buckets = not_dissolving_neurons_e8s_buckets;
+			this.garbage_collectable_neurons_count = garbage_collectable_neurons_count;
+			this.neurons_with_invalid_stake_count = neurons_with_invalid_stake_count;
+			this.not_dissolving_neurons_count_buckets = not_dissolving_neurons_count_buckets;
+			this.total_supply_icp = total_supply_icp;
+			this.neurons_with_less_than_6_months_dissolve_delay_count = neurons_with_less_than_6_months_dissolve_delay_count;
+			this.dissolved_neurons_count = dissolved_neurons_count;
+			this.total_staked_e8s = total_staked_e8s;
+			this.not_dissolving_neurons_count = not_dissolving_neurons_count;
+			this.dissolved_neurons_e8s = dissolved_neurons_e8s;
+			this.neurons_with_less_than_6_months_dissolve_delay_e8s = neurons_with_less_than_6_months_dissolve_delay_e8s;
+			this.dissolving_neurons_count_buckets = dissolving_neurons_count_buckets;
+			this.dissolving_neurons_count = dissolving_neurons_count;
+			this.dissolving_neurons_e8s_buckets = dissolving_neurons_e8s_buckets;
+			this.community_fund_total_staked_e8s = community_fund_total_staked_e8s;
+			this.timestamp_seconds = timestamp_seconds;
 		}
 
 		public GovernanceCachedMetrics()
 		{
-		}
-
-		public class not_dissolving_neurons_e8s_bucketsItemRecord
-		{
-			[CandidTag(0U)]
-			public ulong F0 { get; set; }
-
-			[CandidTag(1U)]
-			public double F1 { get; set; }
-
-			public not_dissolving_neurons_e8s_bucketsItemRecord(ulong f0, double f1)
-			{
-				this.F0 = f0;
-				this.F1 = f1;
-			}
-
-			public not_dissolving_neurons_e8s_bucketsItemRecord()
-			{
-			}
-		}
-
-		public class not_dissolving_neurons_count_bucketsItemRecord
-		{
-			[CandidTag(0U)]
-			public ulong F0 { get; set; }
-
-			[CandidTag(1U)]
-			public ulong F1 { get; set; }
-
-			public not_dissolving_neurons_count_bucketsItemRecord(ulong f0, ulong f1)
-			{
-				this.F0 = f0;
-				this.F1 = f1;
-			}
-
-			public not_dissolving_neurons_count_bucketsItemRecord()
-			{
-			}
-		}
-
-		public class dissolving_neurons_count_bucketsItemRecord
-		{
-			[CandidTag(0U)]
-			public ulong F0 { get; set; }
-
-			[CandidTag(1U)]
-			public ulong F1 { get; set; }
-
-			public dissolving_neurons_count_bucketsItemRecord(ulong f0, ulong f1)
-			{
-				this.F0 = f0;
-				this.F1 = f1;
-			}
-
-			public dissolving_neurons_count_bucketsItemRecord()
-			{
-			}
-		}
-
-		public class dissolving_neurons_e8s_bucketsItemRecord
-		{
-			[CandidTag(0U)]
-			public ulong F0 { get; set; }
-
-			[CandidTag(1U)]
-			public double F1 { get; set; }
-
-			public dissolving_neurons_e8s_bucketsItemRecord(ulong f0, double f1)
-			{
-				this.F0 = f0;
-				this.F1 = f1;
-			}
-
-			public dissolving_neurons_e8s_bucketsItemRecord()
-			{
-			}
 		}
 	}
 }
@@ -1823,10 +1746,10 @@ namespace Test.Models
 
 		public int error_type { get; set; }
 
-		public GovernanceError(string errorMessage, int errorType)
+		public GovernanceError(string error_message, int error_type)
 		{
-			this.error_message = errorMessage;
-			this.error_type = errorType;
+			this.error_message = error_message;
+			this.error_type = error_type;
 		}
 
 		public GovernanceError()
@@ -1843,9 +1766,9 @@ namespace Test.Models
 	{
 		public uint additional_dissolve_delay_seconds { get; set; }
 
-		public IncreaseDissolveDelay(uint additionalDissolveDelaySeconds)
+		public IncreaseDissolveDelay(uint additional_dissolve_delay_seconds)
 		{
-			this.additional_dissolve_delay_seconds = additionalDissolveDelaySeconds;
+			this.additional_dissolve_delay_seconds = additional_dissolve_delay_seconds;
 		}
 
 		public IncreaseDissolveDelay()
@@ -1867,10 +1790,10 @@ namespace Test.Models
 
 		public OptionalValue<KnownNeuronData> known_neuron_data { get; set; }
 
-		public KnownNeuron(OptionalValue<NeuronId> id, OptionalValue<KnownNeuronData> knownNeuronData)
+		public KnownNeuron(OptionalValue<NeuronId> id, OptionalValue<KnownNeuronData> known_neuron_data)
 		{
 			this.id = id;
-			this.known_neuron_data = knownNeuronData;
+			this.known_neuron_data = known_neuron_data;
 		}
 
 		public KnownNeuron()
@@ -1914,9 +1837,9 @@ namespace Test.Models
 	{
 		public List<KnownNeuron> known_neurons { get; set; }
 
-		public ListKnownNeuronsResponse(List<KnownNeuron> knownNeurons)
+		public ListKnownNeuronsResponse(List<KnownNeuron> known_neurons)
 		{
-			this.known_neurons = knownNeurons;
+			this.known_neurons = known_neurons;
 		}
 
 		public ListKnownNeuronsResponse()
@@ -1937,10 +1860,10 @@ namespace Test.Models
 
 		public bool include_neurons_readable_by_caller { get; set; }
 
-		public ListNeurons(List<ulong> neuronIds, bool includeNeuronsReadableByCaller)
+		public ListNeurons(List<ulong> neuron_ids, bool include_neurons_readable_by_caller)
 		{
-			this.neuron_ids = neuronIds;
-			this.include_neurons_readable_by_caller = includeNeuronsReadableByCaller;
+			this.neuron_ids = neuron_ids;
+			this.include_neurons_readable_by_caller = include_neurons_readable_by_caller;
 		}
 
 		public ListNeurons()
@@ -1963,10 +1886,10 @@ namespace Test.Models
 
 		public List<Neuron> full_neurons { get; set; }
 
-		public ListNeuronsResponse(List<ListNeuronsResponse.neuron_infosItemRecord> neuronInfos, List<Neuron> fullNeurons)
+		public ListNeuronsResponse(List<ListNeuronsResponse.neuron_infosItemRecord> neuron_infos, List<Neuron> full_neurons)
 		{
-			this.neuron_infos = neuronInfos;
-			this.full_neurons = fullNeurons;
+			this.neuron_infos = neuron_infos;
+			this.full_neurons = full_neurons;
 		}
 
 		public ListNeuronsResponse()
@@ -2005,9 +1928,9 @@ namespace Test.Models
 	{
 		public List<NodeProvider> node_providers { get; set; }
 
-		public ListNodeProvidersResponse(List<NodeProvider> nodeProviders)
+		public ListNodeProvidersResponse(List<NodeProvider> node_providers)
 		{
-			this.node_providers = nodeProviders;
+			this.node_providers = node_providers;
 		}
 
 		public ListNodeProvidersResponse()
@@ -2036,13 +1959,13 @@ namespace Test.Models
 
 		public List<int> include_status { get; set; }
 
-		public ListProposalInfo(List<int> includeRewardStatus, OptionalValue<NeuronId> beforeProposal, uint limit, List<int> excludeTopic, List<int> includeStatus)
+		public ListProposalInfo(List<int> include_reward_status, OptionalValue<NeuronId> before_proposal, uint limit, List<int> exclude_topic, List<int> include_status)
 		{
-			this.include_reward_status = includeRewardStatus;
-			this.before_proposal = beforeProposal;
+			this.include_reward_status = include_reward_status;
+			this.before_proposal = before_proposal;
 			this.limit = limit;
-			this.exclude_topic = excludeTopic;
-			this.include_status = includeStatus;
+			this.exclude_topic = exclude_topic;
+			this.include_status = include_status;
 		}
 
 		public ListProposalInfo()
@@ -2062,9 +1985,9 @@ namespace Test.Models
 	{
 		public List<ProposalInfo> proposal_info { get; set; }
 
-		public ListProposalInfoResponse(List<ProposalInfo> proposalInfo)
+		public ListProposalInfoResponse(List<ProposalInfo> proposal_info)
 		{
-			this.proposal_info = proposalInfo;
+			this.proposal_info = proposal_info;
 		}
 
 		public ListProposalInfoResponse()
@@ -2084,9 +2007,9 @@ namespace Test.Models
 	{
 		public OptionalValue<NeuronId> proposal_id { get; set; }
 
-		public MakeProposalResponse(OptionalValue<NeuronId> proposalId)
+		public MakeProposalResponse(OptionalValue<NeuronId> proposal_id)
 		{
-			this.proposal_id = proposalId;
+			this.proposal_id = proposal_id;
 		}
 
 		public MakeProposalResponse()
@@ -2110,11 +2033,11 @@ namespace Test.Models
 
 		public OptionalValue<NeuronIdOrSubaccount> neuron_id_or_subaccount { get; set; }
 
-		public ManageNeuron(OptionalValue<NeuronId> id, OptionalValue<Command> command, OptionalValue<NeuronIdOrSubaccount> neuronIdOrSubaccount)
+		public ManageNeuron(OptionalValue<NeuronId> id, OptionalValue<Command> command, OptionalValue<NeuronIdOrSubaccount> neuron_id_or_subaccount)
 		{
 			this.id = id;
 			this.command = command;
-			this.neuron_id_or_subaccount = neuronIdOrSubaccount;
+			this.neuron_id_or_subaccount = neuron_id_or_subaccount;
 		}
 
 		public ManageNeuron()
@@ -2156,9 +2079,9 @@ namespace Test.Models
 	{
 		public OptionalValue<NeuronId> source_neuron_id { get; set; }
 
-		public Merge(OptionalValue<NeuronId> sourceNeuronId)
+		public Merge(OptionalValue<NeuronId> source_neuron_id)
 		{
-			this.source_neuron_id = sourceNeuronId;
+			this.source_neuron_id = source_neuron_id;
 		}
 
 		public Merge()
@@ -2175,9 +2098,9 @@ namespace Test.Models
 	{
 		public uint percentage_to_merge { get; set; }
 
-		public MergeMaturity(uint percentageToMerge)
+		public MergeMaturity(uint percentage_to_merge)
 		{
-			this.percentage_to_merge = percentageToMerge;
+			this.percentage_to_merge = percentage_to_merge;
 		}
 
 		public MergeMaturity()
@@ -2196,10 +2119,10 @@ namespace Test.Models
 
 		public ulong new_stake_e8s { get; set; }
 
-		public MergeMaturityResponse(ulong mergedMaturityE8s, ulong newStakeE8s)
+		public MergeMaturityResponse(ulong merged_maturity_e8s, ulong new_stake_e8s)
 		{
-			this.merged_maturity_e8s = mergedMaturityE8s;
-			this.new_stake_e8s = newStakeE8s;
+			this.merged_maturity_e8s = merged_maturity_e8s;
+			this.new_stake_e8s = new_stake_e8s;
 		}
 
 		public MergeMaturityResponse()
@@ -2216,9 +2139,9 @@ namespace Test.Models
 	{
 		public string motion_text { get; set; }
 
-		public Motion(string motionText)
+		public Motion(string motion_text)
 		{
-			this.motion_text = motionText;
+			this.motion_text = motion_text;
 		}
 
 		public Motion()
@@ -2249,16 +2172,16 @@ namespace Test.Models
 
 		public ulong maximum_node_provider_rewards_e8s { get; set; }
 
-		public NetworkEconomics(ulong neuronMinimumStakeE8s, uint maxProposalsToKeepPerTopic, ulong neuronManagementFeePerProposalE8s, ulong rejectCostE8s, ulong transactionFeeE8s, ulong neuronSpawnDissolveDelaySeconds, ulong minimumIcpXdrRate, ulong maximumNodeProviderRewardsE8s)
+		public NetworkEconomics(ulong neuron_minimum_stake_e8s, uint max_proposals_to_keep_per_topic, ulong neuron_management_fee_per_proposal_e8s, ulong reject_cost_e8s, ulong transaction_fee_e8s, ulong neuron_spawn_dissolve_delay_seconds, ulong minimum_icp_xdr_rate, ulong maximum_node_provider_rewards_e8s)
 		{
-			this.neuron_minimum_stake_e8s = neuronMinimumStakeE8s;
-			this.max_proposals_to_keep_per_topic = maxProposalsToKeepPerTopic;
-			this.neuron_management_fee_per_proposal_e8s = neuronManagementFeePerProposalE8s;
-			this.reject_cost_e8s = rejectCostE8s;
-			this.transaction_fee_e8s = transactionFeeE8s;
-			this.neuron_spawn_dissolve_delay_seconds = neuronSpawnDissolveDelaySeconds;
-			this.minimum_icp_xdr_rate = minimumIcpXdrRate;
-			this.maximum_node_provider_rewards_e8s = maximumNodeProviderRewardsE8s;
+			this.neuron_minimum_stake_e8s = neuron_minimum_stake_e8s;
+			this.max_proposals_to_keep_per_topic = max_proposals_to_keep_per_topic;
+			this.neuron_management_fee_per_proposal_e8s = neuron_management_fee_per_proposal_e8s;
+			this.reject_cost_e8s = reject_cost_e8s;
+			this.transaction_fee_e8s = transaction_fee_e8s;
+			this.neuron_spawn_dissolve_delay_seconds = neuron_spawn_dissolve_delay_seconds;
+			this.minimum_icp_xdr_rate = minimum_icp_xdr_rate;
+			this.maximum_node_provider_rewards_e8s = maximum_node_provider_rewards_e8s;
 		}
 
 		public NetworkEconomics()
@@ -2312,25 +2235,25 @@ namespace Test.Models
 
 		public OptionalValue<KnownNeuronData> known_neuron_data { get; set; }
 
-		public Neuron(OptionalValue<NeuronId> id, OptionalValue<Principal> controller, List<BallotInfo> recentBallots, bool kycVerified, bool notForProfit, ulong maturityE8sEquivalent, ulong cachedNeuronStakeE8s, ulong createdTimestampSeconds, ulong agingSinceTimestampSeconds, List<Principal> hotKeys, List<byte> account, OptionalValue<ulong> joinedCommunityFundTimestampSeconds, OptionalValue<DissolveState> dissolveState, List<Neuron.followeesItemRecord> followees, ulong neuronFeesE8s, OptionalValue<NeuronStakeTransfer> transfer, OptionalValue<KnownNeuronData> knownNeuronData)
+		public Neuron(OptionalValue<NeuronId> id, OptionalValue<Principal> controller, List<BallotInfo> recent_ballots, bool kyc_verified, bool not_for_profit, ulong maturity_e8s_equivalent, ulong cached_neuron_stake_e8s, ulong created_timestamp_seconds, ulong aging_since_timestamp_seconds, List<Principal> hot_keys, List<byte> account, OptionalValue<ulong> joined_community_fund_timestamp_seconds, OptionalValue<DissolveState> dissolve_state, List<Neuron.followeesItemRecord> followees, ulong neuron_fees_e8s, OptionalValue<NeuronStakeTransfer> transfer, OptionalValue<KnownNeuronData> known_neuron_data)
 		{
 			this.id = id;
 			this.controller = controller;
-			this.recent_ballots = recentBallots;
-			this.kyc_verified = kycVerified;
-			this.not_for_profit = notForProfit;
-			this.maturity_e8s_equivalent = maturityE8sEquivalent;
-			this.cached_neuron_stake_e8s = cachedNeuronStakeE8s;
-			this.created_timestamp_seconds = createdTimestampSeconds;
-			this.aging_since_timestamp_seconds = agingSinceTimestampSeconds;
-			this.hot_keys = hotKeys;
+			this.recent_ballots = recent_ballots;
+			this.kyc_verified = kyc_verified;
+			this.not_for_profit = not_for_profit;
+			this.maturity_e8s_equivalent = maturity_e8s_equivalent;
+			this.cached_neuron_stake_e8s = cached_neuron_stake_e8s;
+			this.created_timestamp_seconds = created_timestamp_seconds;
+			this.aging_since_timestamp_seconds = aging_since_timestamp_seconds;
+			this.hot_keys = hot_keys;
 			this.account = account;
-			this.joined_community_fund_timestamp_seconds = joinedCommunityFundTimestampSeconds;
-			this.dissolve_state = dissolveState;
+			this.joined_community_fund_timestamp_seconds = joined_community_fund_timestamp_seconds;
+			this.dissolve_state = dissolve_state;
 			this.followees = followees;
-			this.neuron_fees_e8s = neuronFeesE8s;
+			this.neuron_fees_e8s = neuron_fees_e8s;
 			this.transfer = transfer;
-			this.known_neuron_data = knownNeuronData;
+			this.known_neuron_data = known_neuron_data;
 		}
 
 		public Neuron()
@@ -2500,18 +2423,18 @@ namespace Test.Models
 
 		public ulong age_seconds { get; set; }
 
-		public NeuronInfo(ulong dissolveDelaySeconds, List<BallotInfo> recentBallots, ulong createdTimestampSeconds, int state, ulong stakeE8s, OptionalValue<ulong> joinedCommunityFundTimestampSeconds, ulong retrievedAtTimestampSeconds, OptionalValue<KnownNeuronData> knownNeuronData, ulong votingPower, ulong ageSeconds)
+		public NeuronInfo(ulong dissolve_delay_seconds, List<BallotInfo> recent_ballots, ulong created_timestamp_seconds, int state, ulong stake_e8s, OptionalValue<ulong> joined_community_fund_timestamp_seconds, ulong retrieved_at_timestamp_seconds, OptionalValue<KnownNeuronData> known_neuron_data, ulong voting_power, ulong age_seconds)
 		{
-			this.dissolve_delay_seconds = dissolveDelaySeconds;
-			this.recent_ballots = recentBallots;
-			this.created_timestamp_seconds = createdTimestampSeconds;
+			this.dissolve_delay_seconds = dissolve_delay_seconds;
+			this.recent_ballots = recent_ballots;
+			this.created_timestamp_seconds = created_timestamp_seconds;
 			this.state = state;
-			this.stake_e8s = stakeE8s;
-			this.joined_community_fund_timestamp_seconds = joinedCommunityFundTimestampSeconds;
-			this.retrieved_at_timestamp_seconds = retrievedAtTimestampSeconds;
-			this.known_neuron_data = knownNeuronData;
-			this.voting_power = votingPower;
-			this.age_seconds = ageSeconds;
+			this.stake_e8s = stake_e8s;
+			this.joined_community_fund_timestamp_seconds = joined_community_fund_timestamp_seconds;
+			this.retrieved_at_timestamp_seconds = retrieved_at_timestamp_seconds;
+			this.known_neuron_data = known_neuron_data;
+			this.voting_power = voting_power;
+			this.age_seconds = age_seconds;
 		}
 
 		public NeuronInfo()
@@ -2543,15 +2466,15 @@ namespace Test.Models
 
 		public ulong block_height { get; set; }
 
-		public NeuronStakeTransfer(List<byte> toSubaccount, ulong neuronStakeE8s, OptionalValue<Principal> from, ulong memo, List<byte> fromSubaccount, ulong transferTimestamp, ulong blockHeight)
+		public NeuronStakeTransfer(List<byte> to_subaccount, ulong neuron_stake_e8s, OptionalValue<Principal> from, ulong memo, List<byte> from_subaccount, ulong transfer_timestamp, ulong block_height)
 		{
-			this.to_subaccount = toSubaccount;
-			this.neuron_stake_e8s = neuronStakeE8s;
+			this.to_subaccount = to_subaccount;
+			this.neuron_stake_e8s = neuron_stake_e8s;
 			this.from = from;
 			this.memo = memo;
-			this.from_subaccount = fromSubaccount;
-			this.transfer_timestamp = transferTimestamp;
-			this.block_height = blockHeight;
+			this.from_subaccount = from_subaccount;
+			this.transfer_timestamp = transfer_timestamp;
+			this.block_height = block_height;
 		}
 
 		public NeuronStakeTransfer()
@@ -2573,10 +2496,10 @@ namespace Test.Models
 
 		public OptionalValue<AccountIdentifier> reward_account { get; set; }
 
-		public NodeProvider(OptionalValue<Principal> id, OptionalValue<AccountIdentifier> rewardAccount)
+		public NodeProvider(OptionalValue<Principal> id, OptionalValue<AccountIdentifier> reward_account)
 		{
 			this.id = id;
-			this.reward_account = rewardAccount;
+			this.reward_account = reward_account;
 		}
 
 		public NodeProvider()
@@ -2806,21 +2729,21 @@ namespace Test.Models
 
 		public ulong executed_timestamp_seconds { get; set; }
 
-		public ProposalData(OptionalValue<NeuronId> id, OptionalValue<GovernanceError> failureReason, List<ProposalData.ballotsItemRecord> ballots, ulong proposalTimestampSeconds, ulong rewardEventRound, ulong failedTimestampSeconds, ulong rejectCostE8s, OptionalValue<Tally> latestTally, ulong decidedTimestampSeconds, OptionalValue<Proposal> proposal, OptionalValue<NeuronId> proposer, OptionalValue<WaitForQuietState> waitForQuietState, ulong executedTimestampSeconds)
+		public ProposalData(OptionalValue<NeuronId> id, OptionalValue<GovernanceError> failure_reason, List<ProposalData.ballotsItemRecord> ballots, ulong proposal_timestamp_seconds, ulong reward_event_round, ulong failed_timestamp_seconds, ulong reject_cost_e8s, OptionalValue<Tally> latest_tally, ulong decided_timestamp_seconds, OptionalValue<Proposal> proposal, OptionalValue<NeuronId> proposer, OptionalValue<WaitForQuietState> wait_for_quiet_state, ulong executed_timestamp_seconds)
 		{
 			this.id = id;
-			this.failure_reason = failureReason;
+			this.failure_reason = failure_reason;
 			this.ballots = ballots;
-			this.proposal_timestamp_seconds = proposalTimestampSeconds;
-			this.reward_event_round = rewardEventRound;
-			this.failed_timestamp_seconds = failedTimestampSeconds;
-			this.reject_cost_e8s = rejectCostE8s;
-			this.latest_tally = latestTally;
-			this.decided_timestamp_seconds = decidedTimestampSeconds;
+			this.proposal_timestamp_seconds = proposal_timestamp_seconds;
+			this.reward_event_round = reward_event_round;
+			this.failed_timestamp_seconds = failed_timestamp_seconds;
+			this.reject_cost_e8s = reject_cost_e8s;
+			this.latest_tally = latest_tally;
+			this.decided_timestamp_seconds = decided_timestamp_seconds;
 			this.proposal = proposal;
 			this.proposer = proposer;
-			this.wait_for_quiet_state = waitForQuietState;
-			this.executed_timestamp_seconds = executedTimestampSeconds;
+			this.wait_for_quiet_state = wait_for_quiet_state;
+			this.executed_timestamp_seconds = executed_timestamp_seconds;
 		}
 
 		public ProposalData()
@@ -2891,24 +2814,24 @@ namespace Test.Models
 
 		public ulong executed_timestamp_seconds { get; set; }
 
-		public ProposalInfo(OptionalValue<NeuronId> id, int status, int topic, OptionalValue<GovernanceError> failureReason, List<ProposalInfo.ballotsItemRecord> ballots, ulong proposalTimestampSeconds, ulong rewardEventRound, OptionalValue<ulong> deadlineTimestampSeconds, ulong failedTimestampSeconds, ulong rejectCostE8s, OptionalValue<Tally> latestTally, int rewardStatus, ulong decidedTimestampSeconds, OptionalValue<Proposal> proposal, OptionalValue<NeuronId> proposer, ulong executedTimestampSeconds)
+		public ProposalInfo(OptionalValue<NeuronId> id, int status, int topic, OptionalValue<GovernanceError> failure_reason, List<ProposalInfo.ballotsItemRecord> ballots, ulong proposal_timestamp_seconds, ulong reward_event_round, OptionalValue<ulong> deadline_timestamp_seconds, ulong failed_timestamp_seconds, ulong reject_cost_e8s, OptionalValue<Tally> latest_tally, int reward_status, ulong decided_timestamp_seconds, OptionalValue<Proposal> proposal, OptionalValue<NeuronId> proposer, ulong executed_timestamp_seconds)
 		{
 			this.id = id;
 			this.status = status;
 			this.topic = topic;
-			this.failure_reason = failureReason;
+			this.failure_reason = failure_reason;
 			this.ballots = ballots;
-			this.proposal_timestamp_seconds = proposalTimestampSeconds;
-			this.reward_event_round = rewardEventRound;
-			this.deadline_timestamp_seconds = deadlineTimestampSeconds;
-			this.failed_timestamp_seconds = failedTimestampSeconds;
-			this.reject_cost_e8s = rejectCostE8s;
-			this.latest_tally = latestTally;
-			this.reward_status = rewardStatus;
-			this.decided_timestamp_seconds = decidedTimestampSeconds;
+			this.proposal_timestamp_seconds = proposal_timestamp_seconds;
+			this.reward_event_round = reward_event_round;
+			this.deadline_timestamp_seconds = deadline_timestamp_seconds;
+			this.failed_timestamp_seconds = failed_timestamp_seconds;
+			this.reject_cost_e8s = reject_cost_e8s;
+			this.latest_tally = latest_tally;
+			this.reward_status = reward_status;
+			this.decided_timestamp_seconds = decided_timestamp_seconds;
 			this.proposal = proposal;
 			this.proposer = proposer;
-			this.executed_timestamp_seconds = executedTimestampSeconds;
+			this.executed_timestamp_seconds = executed_timestamp_seconds;
 		}
 
 		public ProposalInfo()
@@ -2971,9 +2894,9 @@ namespace Test.Models
 	{
 		public OptionalValue<Principal> hot_key_to_remove { get; set; }
 
-		public RemoveHotKey(OptionalValue<Principal> hotKeyToRemove)
+		public RemoveHotKey(OptionalValue<Principal> hot_key_to_remove)
 		{
-			this.hot_key_to_remove = hotKeyToRemove;
+			this.hot_key_to_remove = hot_key_to_remove;
 		}
 
 		public RemoveHotKey()
@@ -3394,12 +3317,12 @@ namespace Test.Models
 
 		public List<NeuronId> settled_proposals { get; set; }
 
-		public RewardEvent(ulong dayAfterGenesis, ulong actualTimestampSeconds, ulong distributedE8sEquivalent, List<NeuronId> settledProposals)
+		public RewardEvent(ulong day_after_genesis, ulong actual_timestamp_seconds, ulong distributed_e8s_equivalent, List<NeuronId> settled_proposals)
 		{
-			this.day_after_genesis = dayAfterGenesis;
-			this.actual_timestamp_seconds = actualTimestampSeconds;
-			this.distributed_e8s_equivalent = distributedE8sEquivalent;
-			this.settled_proposals = settledProposals;
+			this.day_after_genesis = day_after_genesis;
+			this.actual_timestamp_seconds = actual_timestamp_seconds;
+			this.distributed_e8s_equivalent = distributed_e8s_equivalent;
+			this.settled_proposals = settled_proposals;
 		}
 
 		public RewardEvent()
@@ -3490,11 +3413,11 @@ namespace Test.Models
 
 		public ulong amount_e8s { get; set; }
 
-		public RewardNodeProvider(OptionalValue<NodeProvider> nodeProvider, OptionalValue<RewardMode> rewardMode, ulong amountE8s)
+		public RewardNodeProvider(OptionalValue<NodeProvider> node_provider, OptionalValue<RewardMode> reward_mode, ulong amount_e8s)
 		{
-			this.node_provider = nodeProvider;
-			this.reward_mode = rewardMode;
-			this.amount_e8s = amountE8s;
+			this.node_provider = node_provider;
+			this.reward_mode = reward_mode;
+			this.amount_e8s = amount_e8s;
 		}
 
 		public RewardNodeProvider()
@@ -3517,9 +3440,9 @@ namespace Test.Models
 
 		public List<RewardNodeProvider> rewards { get; set; }
 
-		public RewardNodeProviders(OptionalValue<bool> useRegistryDerivedRewards, List<RewardNodeProvider> rewards)
+		public RewardNodeProviders(OptionalValue<bool> use_registry_derived_rewards, List<RewardNodeProvider> rewards)
 		{
-			this.use_registry_derived_rewards = useRegistryDerivedRewards;
+			this.use_registry_derived_rewards = use_registry_derived_rewards;
 			this.rewards = rewards;
 		}
 
@@ -3540,9 +3463,9 @@ namespace Test.Models
 	{
 		public OptionalValue<AccountIdentifier> to_account { get; set; }
 
-		public RewardToAccount(OptionalValue<AccountIdentifier> toAccount)
+		public RewardToAccount(OptionalValue<AccountIdentifier> to_account)
 		{
-			this.to_account = toAccount;
+			this.to_account = to_account;
 		}
 
 		public RewardToAccount()
@@ -3559,9 +3482,9 @@ namespace Test.Models
 	{
 		public ulong dissolve_delay_seconds { get; set; }
 
-		public RewardToNeuron(ulong dissolveDelaySeconds)
+		public RewardToNeuron(ulong dissolve_delay_seconds)
 		{
-			this.dissolve_delay_seconds = dissolveDelaySeconds;
+			this.dissolve_delay_seconds = dissolve_delay_seconds;
 		}
 
 		public RewardToNeuron()
@@ -3582,9 +3505,9 @@ namespace Test.Models
 	{
 		public List<SetDefaultFollowees.default_followeesItemRecord> default_followees { get; set; }
 
-		public SetDefaultFollowees(List<SetDefaultFollowees.default_followeesItemRecord> defaultFollowees)
+		public SetDefaultFollowees(List<SetDefaultFollowees.default_followeesItemRecord> default_followees)
 		{
-			this.default_followees = defaultFollowees;
+			this.default_followees = default_followees;
 		}
 
 		public SetDefaultFollowees()
@@ -3620,9 +3543,9 @@ namespace Test.Models
 	{
 		public ulong dissolve_timestamp_seconds { get; set; }
 
-		public SetDissolveTimestamp(ulong dissolveTimestampSeconds)
+		public SetDissolveTimestamp(ulong dissolve_timestamp_seconds)
 		{
-			this.dissolve_timestamp_seconds = dissolveTimestampSeconds;
+			this.dissolve_timestamp_seconds = dissolve_timestamp_seconds;
 		}
 
 		public SetDissolveTimestamp()
@@ -3645,10 +3568,10 @@ namespace Test.Models
 
 		public OptionalValue<ulong> nonce { get; set; }
 
-		public Spawn(OptionalValue<uint> percentageToSpawn, OptionalValue<Principal> newController, OptionalValue<ulong> nonce)
+		public Spawn(OptionalValue<uint> percentage_to_spawn, OptionalValue<Principal> new_controller, OptionalValue<ulong> nonce)
 		{
-			this.percentage_to_spawn = percentageToSpawn;
-			this.new_controller = newController;
+			this.percentage_to_spawn = percentage_to_spawn;
+			this.new_controller = new_controller;
 			this.nonce = nonce;
 		}
 
@@ -3669,9 +3592,9 @@ namespace Test.Models
 	{
 		public OptionalValue<NeuronId> created_neuron_id { get; set; }
 
-		public SpawnResponse(OptionalValue<NeuronId> createdNeuronId)
+		public SpawnResponse(OptionalValue<NeuronId> created_neuron_id)
 		{
-			this.created_neuron_id = createdNeuronId;
+			this.created_neuron_id = created_neuron_id;
 		}
 
 		public SpawnResponse()
@@ -3688,9 +3611,9 @@ namespace Test.Models
 	{
 		public ulong amount_e8s { get; set; }
 
-		public Split(ulong amountE8s)
+		public Split(ulong amount_e8s)
 		{
-			this.amount_e8s = amountE8s;
+			this.amount_e8s = amount_e8s;
 		}
 
 		public Split()
@@ -3713,12 +3636,12 @@ namespace Test.Models
 
 		public ulong timestamp_seconds { get; set; }
 
-		public Tally(ulong no, ulong yes, ulong total, ulong timestampSeconds)
+		public Tally(ulong no, ulong yes, ulong total, ulong timestamp_seconds)
 		{
 			this.no = no;
 			this.yes = yes;
 			this.total = total;
-			this.timestamp_seconds = timestampSeconds;
+			this.timestamp_seconds = timestamp_seconds;
 		}
 
 		public Tally()
@@ -3738,9 +3661,9 @@ namespace Test.Models
 	{
 		public OptionalValue<AccountIdentifier> reward_account { get; set; }
 
-		public UpdateNodeProvider(OptionalValue<AccountIdentifier> rewardAccount)
+		public UpdateNodeProvider(OptionalValue<AccountIdentifier> reward_account)
 		{
-			this.reward_account = rewardAccount;
+			this.reward_account = reward_account;
 		}
 
 		public UpdateNodeProvider()
@@ -3757,9 +3680,9 @@ namespace Test.Models
 	{
 		public ulong current_deadline_timestamp_seconds { get; set; }
 
-		public WaitForQuietState(ulong currentDeadlineTimestampSeconds)
+		public WaitForQuietState(ulong current_deadline_timestamp_seconds)
 		{
-			this.current_deadline_timestamp_seconds = currentDeadlineTimestampSeconds;
+			this.current_deadline_timestamp_seconds = current_deadline_timestamp_seconds;
 		}
 
 		public WaitForQuietState()

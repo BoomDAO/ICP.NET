@@ -36,7 +36,11 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 		{
 			CandidVariant variant = value.AsVariant();
 			object obj = Activator.CreateInstance(this.Type, nonPublic: true);
-			Option optionInfo = this.Options[variant.Tag];
+
+			if (!this.Options.TryGetValue(variant.Tag, out Option optionInfo))
+			{
+				throw new Exception($"Could not map candid variant to type '{this.Type}'. Type is missing option '{variant.Tag}'");
+			}
 
 			object? variantValue;
 			if (optionInfo.Type != null)
@@ -57,7 +61,12 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 			Enum enumValue = (Enum)this.TypeProperty.GetValue(obj);
 			CandidTag innerTag = this.EnumMapping[enumValue];
 			object? innerObj = this.ValueProperty.GetValue(obj);
-			Option optionInfo = this.Options[innerTag];
+
+			if (!this.Options.TryGetValue(innerTag, out Option optionInfo))
+			{
+				throw new Exception($"Could not map type '{this.Type}' to a candid variant. Variant is missing option '{innerTag}'");
+			}
+
 
 			CandidValue innerValue;
 			if (optionInfo.Type != null)

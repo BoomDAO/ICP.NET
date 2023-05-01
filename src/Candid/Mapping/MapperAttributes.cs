@@ -48,24 +48,6 @@ namespace EdjCase.ICP.Candid.Mapping
 	}
 
 	/// <summary>
-	/// An attribute that specifies a custom mapper for the class, struct, property or field
-	/// </summary>
-	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Property | AttributeTargets.Field)]
-	public class CustomMapperAttribute : Attribute
-	{
-		/// <summary>
-		/// The object mapper to use for the decorated item
-		/// </summary>
-		public ICandidValueMapper Mapper { get; }
-
-		/// <param name="mapper">The object mapper to use for the decorated item</param>
-		public CustomMapperAttribute(ICandidValueMapper mapper)
-		{
-			this.Mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-		}
-	}
-
-	/// <summary>
 	/// An attribute to ignore a property/field of a class during serialization
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]

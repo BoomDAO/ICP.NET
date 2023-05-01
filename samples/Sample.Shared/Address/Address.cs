@@ -2,7 +2,7 @@ using EdjCase.ICP.Candid.Models;
 
 namespace Sample.Shared.AddressBook
 {
-	public class Address
+	public class address
 	{
 		public string street { get; set; }
 
@@ -12,15 +12,15 @@ namespace Sample.Shared.AddressBook
 
 		public string country { get; set; }
 
-		public Address(string street, string city, UnboundedUInt zipCode, string country)
+		public address(string street, string city, UnboundedUInt zip_code, string country)
 		{
 			this.street = street;
 			this.city = city;
-			this.zip_code = zipCode;
+			this.zip_code = zip_code;
 			this.country = country;
 		}
 
-		public Address()
+		public address()
 		{
 		}
 	}

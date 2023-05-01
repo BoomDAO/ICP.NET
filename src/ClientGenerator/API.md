@@ -19,6 +19,9 @@
   - [ClientFile](#P-EdjCase-ICP-ClientGenerator-ClientSyntax-ClientFile 'EdjCase.ICP.ClientGenerator.ClientSyntax.ClientFile')
   - [Name](#P-EdjCase-ICP-ClientGenerator-ClientSyntax-Name 'EdjCase.ICP.ClientGenerator.ClientSyntax.Name')
   - [TypeFiles](#P-EdjCase-ICP-ClientGenerator-ClientSyntax-TypeFiles 'EdjCase.ICP.ClientGenerator.ClientSyntax.TypeFiles')
+  - [GenerateFileContents()](#M-EdjCase-ICP-ClientGenerator-ClientSyntax-GenerateFileContents 'EdjCase.ICP.ClientGenerator.ClientSyntax.GenerateFileContents')
+  - [GenerateFileContents(syntax)](#M-EdjCase-ICP-ClientGenerator-ClientSyntax-GenerateFileContents-Microsoft-CodeAnalysis-CSharp-Syntax-CompilationUnitSyntax- 'EdjCase.ICP.ClientGenerator.ClientSyntax.GenerateFileContents(Microsoft.CodeAnalysis.CSharp.Syntax.CompilationUnitSyntax)')
+  - [Rewrite(rewriter)](#M-EdjCase-ICP-ClientGenerator-ClientSyntax-Rewrite-Microsoft-CodeAnalysis-CSharp-CSharpSyntaxRewriter- 'EdjCase.ICP.ClientGenerator.ClientSyntax.Rewrite(Microsoft.CodeAnalysis.CSharp.CSharpSyntaxRewriter)')
 
 <a name='T-EdjCase-ICP-ClientGenerator-ClientCodeGenerator'></a>
 ## ClientCodeGenerator `type`
@@ -178,3 +181,52 @@ The name of the client
 ##### Summary
 
 The syntax of different declared types for the client
+
+<a name='M-EdjCase-ICP-ClientGenerator-ClientSyntax-GenerateFileContents'></a>
+### GenerateFileContents() `method`
+
+##### Summary
+
+Converts the file syntax objects into source code string values to use as a file
+
+##### Returns
+
+Client and type source code file contents
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-ClientGenerator-ClientSyntax-GenerateFileContents-Microsoft-CodeAnalysis-CSharp-Syntax-CompilationUnitSyntax-'></a>
+### GenerateFileContents(syntax) `method`
+
+##### Summary
+
+Helper function to turn a client or type into a string of file contents
+
+##### Returns
+
+String source code of the specified syntax
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| syntax | [Microsoft.CodeAnalysis.CSharp.Syntax.CompilationUnitSyntax](#T-Microsoft-CodeAnalysis-CSharp-Syntax-CompilationUnitSyntax 'Microsoft.CodeAnalysis.CSharp.Syntax.CompilationUnitSyntax') | The client or type file to convert to a string |
+
+<a name='M-EdjCase-ICP-ClientGenerator-ClientSyntax-Rewrite-Microsoft-CodeAnalysis-CSharp-CSharpSyntaxRewriter-'></a>
+### Rewrite(rewriter) `method`
+
+##### Summary
+
+Rewrites the syntax with the specified \`CSharpSyntaxRewriter\`
+
+##### Returns
+
+Updated client syntax
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| rewriter | [Microsoft.CodeAnalysis.CSharp.CSharpSyntaxRewriter](#T-Microsoft-CodeAnalysis-CSharp-CSharpSyntaxRewriter 'Microsoft.CodeAnalysis.CSharp.CSharpSyntaxRewriter') | A \`CSharpSyntaxRewriter\` to rewrite the csharp syntax |
