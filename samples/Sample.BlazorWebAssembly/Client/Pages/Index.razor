@@ -116,9 +116,8 @@ else if (this.MadeCall && this.ProposalId != null)
         DelegationChainModel? chainModel = await this.GetLocalStorageValueAsync<DelegationChainModel>("ic-delegation");
         if (identityValues != null && chainModel != null)
         {
-            byte[] publicKeyBytes = FromHexString(identityValues[0]);
             byte[] privateKey = FromHexString(identityValues[1]);
-            var identity = new Ed25519Identity(publicKeyBytes, privateKey);
+            var identity = Ed25519Identity.FromPrivateKey(privateKey);
             DelegationChain chain = chainModel.ToCommon();
             this.Client.Agent.Identity = new DelegationIdentity(identity, chain);
         }
@@ -159,7 +158,7 @@ else if (this.MadeCall && this.ProposalId != null)
                 .Select(d => d.ToCommon())
                 .ToList();
             byte[] publicKeyBytes = Convert.FromHexString(this.PublicKey);
-            SubjectPublicKeyInfo publicKey = SubjectPublicKeyInfo.Ed25519(publicKeyBytes);
+            SubjectPublicKeyInfo publicKey = SubjectPublicKeyInfo.FromDerEncoding(publicKeyBytes);
             return new DelegationChain(publicKey, delegations);
         }
     }
@@ -189,7 +188,7 @@ else if (this.MadeCall && this.ProposalId != null)
         public Delegation ToCommon()
         {
             byte[] publicKeyBytes = Convert.FromHexString(this.PubKey);
-            SubjectPublicKeyInfo publicKey = SubjectPublicKeyInfo.Ed25519(publicKeyBytes);
+            SubjectPublicKeyInfo publicKey = SubjectPublicKeyInfo.FromDerEncoding(publicKeyBytes);
             ulong nanosecondsFromNow = (ulong)ToBigInteger(FromHexString(this.Expiration), isUnsigned: true, isBigEndian: true);
             ICTimestamp expiration = ICTimestamp.FromNanoSeconds(nanosecondsFromNow);
             return new Delegation(publicKey, expiration, targets: null);
