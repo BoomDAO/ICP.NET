@@ -63,7 +63,7 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 			bool hasValue = (bool)this.hasValueProp.GetValue(obj);
 			if (!hasValue)
 			{
-				return CandidOptional.Null();
+				return new CandidOptional();
 			}
 			object innerValue = this.valueGetFunc.Invoke(obj, new object[0]);
 			CandidValue innerTypedValue = converter.FromObject(innerValue);
