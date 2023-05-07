@@ -40,10 +40,19 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="bls.wasm" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Include="bls.wasm" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Vsxmd" Version="1.4.4">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+		<PackageReference Include="Wasmtime" Version="8.0.1" />
 	</ItemGroup>
 
 </Project>
