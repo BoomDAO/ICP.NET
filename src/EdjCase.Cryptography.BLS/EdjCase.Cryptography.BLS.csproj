@@ -32,18 +32,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Include="runtimes/**/*">
-			<Pack>true</Pack>
-			<PackagePath>runtimes</PackagePath>
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Remove="bls.wasm" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <EmbeddedResource Include="bls.wasm" />
 	</ItemGroup>
 
