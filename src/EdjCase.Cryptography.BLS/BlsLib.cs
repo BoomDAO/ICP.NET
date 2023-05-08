@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
+using System.Net;
 using System.Runtime.InteropServices;
 using System.Text;
 using Wasmtime;
@@ -11,8 +13,6 @@ namespace EdjCase.Cryptography.BLS
 
 	internal class BlsLib
 	{
-		private ConcurrentDictionary<string, object> _funcCache = new();
-
 		private readonly Instance instance;
 
 		public BlsLib(
@@ -51,11 +51,10 @@ namespace EdjCase.Cryptography.BLS
 			}
 		}
 
-		public void SetGeneratorOfPublicKey(PublicKey publicKey)
+		public void SetGeneratorOfPublicKey(byte[] publicKey)
 		{
 			using MallocScope scope = this.DisposableMalloc(Constants.PUBLICKEY_UNIT_SIZE);
-			this.instance.GetMemory("memory")!
-				.Write(scope.Address, publicKey);
+			scope.SetValue(publicKey);
 
 			int error = this.instance
 				.GetFunction<int, int>("blsSetGeneratorOfPublicKey")!
@@ -69,25 +68,9 @@ namespace EdjCase.Cryptography.BLS
 		private MallocScope DisposableMalloc(int size)
 		{
 			int address = this.Malloc(size);
-			return new MallocScope(this, address);
+			return new MallocScope(this, address, size);
 		}
 
-		private class MallocScope : IDisposable
-		{
-			private BlsLib blsLib;
-			public int Address { get; }
-
-			public MallocScope(BlsLib blsLib, int address)
-			{
-				this.blsLib = blsLib;
-				this.Address = address;
-			}
-
-			public void Dispose()
-			{
-				this.blsLib.Free(this.Address);
-			}
-		}
 
 		public int Malloc(int size)
 		{
@@ -106,8 +89,7 @@ namespace EdjCase.Cryptography.BLS
 		public void MclBnG1SetDst(string dst)
 		{
 			using MallocScope dstScope = this.DisposableMalloc(dst.Length);
-			this.instance.GetMemory("memory")!
-				.WriteString(dstScope.Address, dst);
+			dstScope.SetValue(Encoding.UTF8.GetBytes(dst));
 			int error = this.instance
 				.GetFunction<int, int, int>("mclBnG1_setDst")!
 				.Invoke(dstScope.Address, dst.Length);
@@ -117,13 +99,11 @@ namespace EdjCase.Cryptography.BLS
 			}
 		}
 
-		public PublicKey PublicKeyDeserialize(byte[] publicKeyBytes)
+		public byte[] PublicKeyDeserialize(byte[] publicKeyBytes)
 		{
 			using MallocScope keyScope = this.DisposableMalloc(Constants.PUBLICKEY_UNIT_SIZE);
 			using MallocScope bytesScope = this.DisposableMalloc(publicKeyBytes.Length);
-			Span<byte> publicKeyDst = this.instance.GetMemory("memory")!
-				.GetSpan(bytesScope.Address, publicKeyBytes.Length);
-			publicKeyBytes.CopyTo(publicKeyDst);
+			bytesScope.SetValue(publicKeyBytes);
 
 			int publicKeyBytesRead = this.instance
 				.GetFunction<int, int, int, int>("blsPublicKeyDeserialize")!
@@ -132,16 +112,14 @@ namespace EdjCase.Cryptography.BLS
 			{
 				throw new Exception($"Error deserializing BLS public key");
 			}
-			return this.instance.GetMemory("memory")!
-				.Read<PublicKey>(keyScope.Address);
+			return keyScope.GetValue();
 		}
-		public Signature SignatureDeserialize(byte[] signatureBytes)
+		public byte[] SignatureDeserialize(byte[] signatureBytes)
 		{
 			using MallocScope sigScope = this.DisposableMalloc(Constants.SIGNATURE_UNIT_SIZE);
 			using MallocScope bytesScope = this.DisposableMalloc(signatureBytes.Length);
-			Span<byte> sigDst = this.instance.GetMemory("memory")!
-				.GetSpan(bytesScope.Address, signatureBytes.Length);
-			signatureBytes.CopyTo(sigDst);
+			bytesScope.SetValue(signatureBytes);
+			
 
 			int signatureBytesRead = this.instance
 				.GetFunction<int, int, int, int>("blsSignatureDeserialize")!
@@ -150,23 +128,19 @@ namespace EdjCase.Cryptography.BLS
 			{
 				throw new Exception($"Error deserializing BLS signature, length: {signatureBytesRead}");
 			}
-			return this.instance.GetMemory("memory")!
-				.Read<Signature>(sigScope.Address);
+			return sigScope.GetValue();
 		}
 
-		public bool Verify(Signature signature, PublicKey publicKey, byte[] message)
+		public bool Verify(byte[] signature, byte[] publicKey, byte[] message)
 		{
 			using MallocScope sigScope = this.DisposableMalloc(Constants.SIGNATURE_UNIT_SIZE);
-			this.instance.GetMemory("memory")!
-				.Write(sigScope.Address, signature);
+			sigScope.SetValue(signature);
+
 			using MallocScope keyScope = this.DisposableMalloc(Constants.PUBLICKEY_UNIT_SIZE);
-			this.instance.GetMemory("memory")!
-				.Write(keyScope.Address, publicKey);
+			keyScope.SetValue(publicKey);
 
 			using MallocScope msgScope = this.DisposableMalloc(message.Length);
-			Span<byte> dst = this.instance.GetMemory("memory")!
-				.GetSpan(msgScope.Address, message.Length);
-			message.CopyTo(dst);
+			msgScope.SetValue(message);
 
 			int verifyResult = this.instance
 				.GetFunction<int, int, int, int, int>("blsVerify")!
@@ -174,13 +148,11 @@ namespace EdjCase.Cryptography.BLS
 			return verifyResult == 1;
 		}
 
-		public PublicKey PublicKeySetHexStr(string hex)
+		public byte[] PublicKeySetHexStr(string hex)
 		{
 			byte[] hexBytes = Encoding.UTF8.GetBytes(hex);
 			using MallocScope hexScope = this.DisposableMalloc(hexBytes.Length);
-			Span<byte> hexDest = this.instance.GetMemory("memory")!
-				.GetSpan(hexScope.Address, hexBytes.Length);
-			hexBytes.CopyTo(hexDest);
+			hexScope.SetValue(hexBytes);
 
 			using MallocScope keyScope = this.DisposableMalloc(Constants.PUBLICKEY_UNIT_SIZE);
 			int error = this.instance
@@ -191,8 +163,7 @@ namespace EdjCase.Cryptography.BLS
 			{
 				throw new ArgumentException("blsPublicKeySetStr:" + hex);
 			}
-			return this.instance.GetMemory("memory")!
-				.Read<PublicKey>(keyScope.Address);
+			return keyScope.GetValue();
 		}
 
 		public static BlsLib Create()
@@ -220,6 +191,39 @@ namespace EdjCase.Cryptography.BLS
 		{
 			Original = 0, // for backward compatibility
 			HashToCurve = 5, // irtf-cfrg-hash-to-curve
+		}
+
+		private class MallocScope : IDisposable
+		{
+			private BlsLib blsLib;
+			public int Address { get; }
+			public int Size { get; }
+
+			public MallocScope(BlsLib blsLib, int address, int size)
+			{
+				this.blsLib = blsLib;
+				this.Address = address;
+				this.Size = size;
+			}
+
+			public void Dispose()
+			{
+				this.blsLib.Free(this.Address);
+			}
+
+			public void SetValue(Span<byte> value)
+			{
+				Span<byte> dst = this.blsLib.instance.GetMemory("memory")!
+					.GetSpan(this.Address, this.Size);
+				value.CopyTo(dst);
+			}
+
+			public byte[] GetValue()
+			{
+				return this.blsLib.instance.GetMemory("memory")!
+					.GetSpan(this.Address, this.Size)
+					.ToArray();
+			}
 		}
 
 
