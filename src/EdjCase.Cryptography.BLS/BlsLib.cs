@@ -3,8 +3,10 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using System.Text;
 using Wasmtime;
 
@@ -51,7 +53,7 @@ namespace EdjCase.Cryptography.BLS
 			}
 		}
 
-		public void SetGeneratorOfPublicKey(byte[] publicKey)
+		public void SetGeneratorOfPublicKey(PublicKey publicKey)
 		{
 			using MallocScope scope = this.DisposableMalloc(Constants.PUBLICKEY_UNIT_SIZE);
 			scope.SetValue(publicKey);
@@ -81,15 +83,15 @@ namespace EdjCase.Cryptography.BLS
 
 		public void Free(int address)
 		{
-			this.instance
-				.GetAction<int>("blsFree")!
-				.Invoke(address);
+			//this.instance
+			//	.GetAction<int>("blsFree")!
+			//	.Invoke(address);
 		}
 
 		public void MclBnG1SetDst(string dst)
 		{
-			using MallocScope dstScope = this.DisposableMalloc(dst.Length);
-			dstScope.SetValue(Encoding.UTF8.GetBytes(dst));
+			using MallocScope dstScope = this.DisposableMalloc(dst.Length + 1);
+			dstScope.SetValue(Encoding.ASCII.GetBytes(dst));
 			int error = this.instance
 				.GetFunction<int, int, int>("mclBnG1_setDst")!
 				.Invoke(dstScope.Address, dst.Length);
@@ -148,9 +150,9 @@ namespace EdjCase.Cryptography.BLS
 			return verifyResult == 1;
 		}
 
-		public byte[] PublicKeySetHexStr(string hex)
+		public PublicKey PublicKeySetHexStr(string hex)
 		{
-			byte[] hexBytes = Encoding.UTF8.GetBytes(hex);
+			byte[] hexBytes = Encoding.ASCII.GetBytes(hex);
 			using MallocScope hexScope = this.DisposableMalloc(hexBytes.Length);
 			hexScope.SetValue(hexBytes);
 
@@ -163,7 +165,7 @@ namespace EdjCase.Cryptography.BLS
 			{
 				throw new ArgumentException("blsPublicKeySetStr:" + hex);
 			}
-			return keyScope.GetValue();
+			return keyScope.GetValue<PublicKey>();
 		}
 
 		public static BlsLib Create()
