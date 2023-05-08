@@ -90,7 +90,7 @@ namespace EdjCase.Cryptography.BLS
 
 		public void MclBnG1SetDst(string dst)
 		{
-			using MallocScope dstScope = this.DisposableMalloc(dst.Length + 1);
+			using MallocScope dstScope = this.DisposableMalloc(dst.Length);
 			dstScope.SetValue(Encoding.ASCII.GetBytes(dst));
 			int error = this.instance
 				.GetFunction<int, int, int>("mclBnG1_setDst")!
