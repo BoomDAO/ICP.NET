@@ -50,7 +50,7 @@ namespace EdjCase.Cryptography.BLS
 			);
 		}
 
-		private static bool VerifySignatureInternal(
+		private unsafe static bool VerifySignatureInternal(
 			byte[] publicKey,
 			byte[] messageHash,
 			byte[] signature
@@ -58,14 +58,23 @@ namespace EdjCase.Cryptography.BLS
 		{
 			EnsureInitialized();
 
-			byte[] blsPublicKey = blsLib!.PublicKeyDeserialize(publicKey);
-			string h1 = BitConverter.ToString(blsPublicKey);
+			BlsLib.PublicKey blsPublicKey = blsLib!.PublicKeyDeserialize(publicKey);
+			var a = GetSignatureValues(blsPublicKey.v, Constants.PUBLICKEY_UNIT_SIZE);
 
-			byte[] blsSignature = blsLib.SignatureDeserialize(signature);
-			string h2 = BitConverter.ToString(blsSignature);
+			BlsLib.Signature blsSignature = blsLib.SignatureDeserialize(signature);
+			var b = GetSignatureValues(blsSignature.v, Constants.SIGNATURE_UNIT_SIZE);
 
 
 			return blsLib.Verify(blsSignature, blsPublicKey, messageHash);
+		}
+		private unsafe static string GetSignatureValues(ulong* p, int size)
+		{
+			ulong[] signatureValues = new ulong[size];
+			for (int i = 0; i < size; i++)
+			{
+				signatureValues[i] = *(p + i);
+			}
+			return string.Join("-", signatureValues);
 		}
 
 

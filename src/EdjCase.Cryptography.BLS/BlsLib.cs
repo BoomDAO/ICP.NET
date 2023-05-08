@@ -81,9 +81,9 @@ namespace EdjCase.Cryptography.BLS
 
 		public void Free(int address)
 		{
-			//this.instance
-			//	.GetAction<int>("blsFree")!
-			//	.Invoke(address);
+			this.instance
+				.GetAction<int>("blsFree")!
+				.Invoke(address);
 		}
 
 		public void MclBnG1SetDst(string dst)
@@ -99,7 +99,7 @@ namespace EdjCase.Cryptography.BLS
 			}
 		}
 
-		public byte[] PublicKeyDeserialize(byte[] publicKeyBytes)
+		public PublicKey PublicKeyDeserialize(byte[] publicKeyBytes)
 		{
 			using MallocScope keyScope = this.DisposableMalloc(Constants.PUBLICKEY_UNIT_SIZE);
 			using MallocScope bytesScope = this.DisposableMalloc(publicKeyBytes.Length);
@@ -112,9 +112,9 @@ namespace EdjCase.Cryptography.BLS
 			{
 				throw new Exception($"Error deserializing BLS public key");
 			}
-			return keyScope.GetValue();
+			return keyScope.GetValue<PublicKey>();
 		}
-		public byte[] SignatureDeserialize(byte[] signatureBytes)
+		public Signature SignatureDeserialize(byte[] signatureBytes)
 		{
 			using MallocScope sigScope = this.DisposableMalloc(Constants.SIGNATURE_UNIT_SIZE);
 			using MallocScope bytesScope = this.DisposableMalloc(signatureBytes.Length);
@@ -128,10 +128,10 @@ namespace EdjCase.Cryptography.BLS
 			{
 				throw new Exception($"Error deserializing BLS signature, length: {signatureBytesRead}");
 			}
-			return sigScope.GetValue();
+			return sigScope.GetValue<Signature>();
 		}
 
-		public bool Verify(byte[] signature, byte[] publicKey, byte[] message)
+		public bool Verify(Signature signature, PublicKey publicKey, byte[] message)
 		{
 			using MallocScope sigScope = this.DisposableMalloc(Constants.SIGNATURE_UNIT_SIZE);
 			sigScope.SetValue(signature);
@@ -218,11 +218,25 @@ namespace EdjCase.Cryptography.BLS
 				value.CopyTo(dst);
 			}
 
+			public void SetValue<T>(T value)
+				where T : unmanaged
+			{
+				this.blsLib.instance.GetMemory("memory")!
+					.Write(this.Address, value);
+			}
+
 			public byte[] GetValue()
 			{
 				return this.blsLib.instance.GetMemory("memory")!
 					.GetSpan(this.Address, this.Size)
 					.ToArray();
+			}
+
+			public T GetValue<T>()
+				where T : unmanaged
+			{
+				return this.blsLib.instance.GetMemory("memory")!
+					.Read<T>(this.Address);
 			}
 		}
 
@@ -230,13 +244,13 @@ namespace EdjCase.Cryptography.BLS
 		[StructLayout(LayoutKind.Sequential)]
 		internal unsafe struct PublicKey
 		{
-			private fixed ulong v[Constants.PUBLICKEY_UNIT_SIZE];
+			public fixed ulong v[Constants.PUBLICKEY_UNIT_SIZE];
 		}
 
 		[StructLayout(LayoutKind.Sequential)]
 		internal unsafe struct Signature
 		{
-			private fixed ulong v[Constants.SIGNATURE_UNIT_SIZE];
+			public fixed ulong v[Constants.SIGNATURE_UNIT_SIZE];
 		}
 	}
 }
