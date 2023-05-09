@@ -1,4 +1,4 @@
-using EdjCase.Cryptography.BLS;
+using EdjCase.ICP.BLS;
 using EdjCase.ICP.Candid.Models;
 using System;
 using System.Formats.Cbor;
@@ -67,7 +67,7 @@ namespace EdjCase.ICP.Agent.Models
 				}
 				rootPublicKey = this.Delegation.GetPublicKey();
 			}
-			return IcpBlsUtil.VerifySignature(rootPublicKey.PublicKey, rootHash, this.Signature);
+			return BlsUtil.VerifySignature(rootPublicKey.PublicKey, rootHash, this.Signature);
 		}
 
 		internal static Certificate ReadCbor(CborReader reader)

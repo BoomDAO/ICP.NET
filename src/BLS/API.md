@@ -1,23 +1,23 @@
 <a name='assembly'></a>
-# EdjCase.Cryptography.BLS
+# EdjCase.ICP.BLS
 
 ## Contents
 
-- [IcpBlsUtil](#T-EdjCase-Cryptography-BLS-IcpBlsUtil 'EdjCase.Cryptography.BLS.IcpBlsUtil')
-  - [VerifySignature(publicKey,messageHash,signature)](#M-EdjCase-Cryptography-BLS-IcpBlsUtil-VerifySignature-System-Byte[],System-Byte[],System-Byte[]- 'EdjCase.Cryptography.BLS.IcpBlsUtil.VerifySignature(System.Byte[],System.Byte[],System.Byte[])')
+- [BlsUtil](#T-EdjCase-ICP-BLS-BlsUtil 'EdjCase.ICP.BLS.BlsUtil')
+  - [VerifySignature(publicKey,messageHash,signature)](#M-EdjCase-ICP-BLS-BlsUtil-VerifySignature-System-Byte[],System-Byte[],System-Byte[]- 'EdjCase.ICP.BLS.BlsUtil.VerifySignature(System.Byte[],System.Byte[],System.Byte[])')
 
-<a name='T-EdjCase-Cryptography-BLS-IcpBlsUtil'></a>
-## IcpBlsUtil `type`
+<a name='T-EdjCase-ICP-BLS-BlsUtil'></a>
+## BlsUtil `type`
 
 ##### Namespace
 
-EdjCase.Cryptography.BLS
+EdjCase.ICP.BLS
 
 ##### Summary
 
 Class with functions around BLS signatures (ICP flavor only)
 
-<a name='M-EdjCase-Cryptography-BLS-IcpBlsUtil-VerifySignature-System-Byte[],System-Byte[],System-Byte[]-'></a>
+<a name='M-EdjCase-ICP-BLS-BlsUtil-VerifySignature-System-Byte[],System-Byte[],System-Byte[]-'></a>
 ### VerifySignature(publicKey,messageHash,signature) `method`
 
 ##### Summary

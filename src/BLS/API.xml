@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        <name>EdjCase.Cryptography.BLS</name>
+        <name>EdjCase.ICP.BLS</name>
     </assembly>
     <members>
-        <member name="T:EdjCase.Cryptography.BLS.IcpBlsUtil">
+        <member name="T:EdjCase.ICP.BLS.BlsUtil">
             <summary>
             Class with functions around BLS signatures (ICP flavor only)
             </summary>
         </member>
-        <member name="M:EdjCase.Cryptography.BLS.IcpBlsUtil.VerifySignature(System.Byte[],System.Byte[],System.Byte[])">
+        <member name="M:EdjCase.ICP.BLS.BlsUtil.VerifySignature(System.Byte[],System.Byte[],System.Byte[])">
             <summary>
             Verifies a BLS signature (ICP flavor only)
             </summary>

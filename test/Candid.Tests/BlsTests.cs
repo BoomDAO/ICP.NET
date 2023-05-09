@@ -1,3 +1,4 @@
+using EdjCase.ICP.BLS;
 using EdjCase.ICP.Candid.Utilities;
 using Xunit;
 
@@ -21,7 +22,7 @@ namespace EdjCase.ICP.Candid.Tests
 			byte[] publicKey = ByteUtil.FromHexString(publicKeyHex);
 			byte[] hash = ByteUtil.FromHexString(hashHex);
 			byte[] signature = ByteUtil.FromHexString(signatureHex);
-			bool isValid = EdjCase.Cryptography.BLS.IcpBlsUtil.VerifySignature(publicKey, hash, signature);
+			bool isValid = BlsUtil.VerifySignature(publicKey, hash, signature);
 			Assert.True(isValid);
 		}
 	}

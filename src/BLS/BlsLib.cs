@@ -1,18 +1,10 @@
 using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Net;
-using System.Runtime.InteropServices;
-using System.Security.Cryptography;
 using System.Text;
 using Wasmtime;
 
-namespace EdjCase.Cryptography.BLS
+namespace EdjCase.ICP.BLS
 {
-
 	internal class BlsLib
 	{
 		private readonly Instance instance;
@@ -53,9 +45,9 @@ namespace EdjCase.Cryptography.BLS
 			}
 		}
 
-		public void SetGeneratorOfPublicKey(PublicKey publicKey)
+		public void SetGeneratorOfPublicKey(byte[] publicKey)
 		{
-			using MallocScope scope = this.DisposableMalloc(Constants.PUBLICKEY_UNIT_SIZE);
+			using MallocScope scope = this.DisposableMalloc(publicKey.Length);
 			scope.SetValue(publicKey);
 
 			int error = this.instance
@@ -83,9 +75,9 @@ namespace EdjCase.Cryptography.BLS
 
 		public void Free(int address)
 		{
-			//this.instance
-			//	.GetAction<int>("blsFree")!
-			//	.Invoke(address);
+			this.instance
+				.GetAction<int>("blsFree")!
+				.Invoke(address);
 		}
 
 		public void MclBnG1SetDst(string dst)
@@ -101,9 +93,9 @@ namespace EdjCase.Cryptography.BLS
 			}
 		}
 
-		public PublicKey PublicKeyDeserialize(byte[] publicKeyBytes)
+		public byte[] PublicKeyDeserialize(byte[] publicKeyBytes)
 		{
-			using MallocScope keyScope = this.DisposableMalloc(Constants.PUBLICKEY_UNIT_SIZE);
+			using MallocScope keyScope = this.DisposableMalloc(Constants.PUBLICKEY_SIZE);
 			using MallocScope bytesScope = this.DisposableMalloc(publicKeyBytes.Length);
 			bytesScope.SetValue(publicKeyBytes);
 
@@ -114,11 +106,12 @@ namespace EdjCase.Cryptography.BLS
 			{
 				throw new Exception($"Error deserializing BLS public key");
 			}
-			return keyScope.GetValue<PublicKey>();
+			return keyScope.GetValue();
 		}
-		public Signature SignatureDeserialize(byte[] signatureBytes)
+
+		public byte[] SignatureDeserialize(byte[] signatureBytes)
 		{
-			using MallocScope sigScope = this.DisposableMalloc(Constants.SIGNATURE_UNIT_SIZE);
+			using MallocScope sigScope = this.DisposableMalloc(Constants.SIGNATURE_SIZE);
 			using MallocScope bytesScope = this.DisposableMalloc(signatureBytes.Length);
 			bytesScope.SetValue(signatureBytes);
 			
@@ -130,15 +123,15 @@ namespace EdjCase.Cryptography.BLS
 			{
 				throw new Exception($"Error deserializing BLS signature, length: {signatureBytesRead}");
 			}
-			return sigScope.GetValue<Signature>();
+			return sigScope.GetValue();
 		}
 
-		public bool Verify(Signature signature, PublicKey publicKey, byte[] message)
+		public bool Verify(byte[] signature, byte[] publicKey, byte[] message)
 		{
-			using MallocScope sigScope = this.DisposableMalloc(Constants.SIGNATURE_UNIT_SIZE);
+			using MallocScope sigScope = this.DisposableMalloc(signature.Length);
 			sigScope.SetValue(signature);
 
-			using MallocScope keyScope = this.DisposableMalloc(Constants.PUBLICKEY_UNIT_SIZE);
+			using MallocScope keyScope = this.DisposableMalloc(publicKey.Length);
 			keyScope.SetValue(publicKey);
 
 			using MallocScope msgScope = this.DisposableMalloc(message.Length);
@@ -150,13 +143,13 @@ namespace EdjCase.Cryptography.BLS
 			return verifyResult == 1;
 		}
 
-		public PublicKey PublicKeySetHexStr(string hex)
+		public byte[] PublicKeySetHexStr(string hex)
 		{
 			byte[] hexBytes = Encoding.ASCII.GetBytes(hex);
 			using MallocScope hexScope = this.DisposableMalloc(hexBytes.Length);
 			hexScope.SetValue(hexBytes);
 
-			using MallocScope keyScope = this.DisposableMalloc(Constants.PUBLICKEY_UNIT_SIZE);
+			using MallocScope keyScope = this.DisposableMalloc(Constants.PUBLICKEY_SIZE);
 			int error = this.instance
 				.GetFunction<int, int, int, int>("blsPublicKeySetHexStr")!
 				.Invoke(keyScope.Address, hexScope.Address, hex.Length);
@@ -165,15 +158,15 @@ namespace EdjCase.Cryptography.BLS
 			{
 				throw new ArgumentException("blsPublicKeySetStr:" + hex);
 			}
-			return keyScope.GetValue<PublicKey>();
+			return keyScope.GetValue();
 		}
 
 		public static BlsLib Create()
 		{
 			var engine = new Engine(new Config().WithReferenceTypes(true));
-			using Stream stream = typeof(IcpBlsUtil)
+			using Stream stream = typeof(BlsUtil)
 				.Assembly
-				.GetManifestResourceStream("EdjCase.Cryptography.BLS.bls.wasm");
+				.GetManifestResourceStream("EdjCase.ICP.BLS.bls.wasm");
 			var module = Module.FromStream(engine, "hello", stream);
 
 			var linker = new Linker(engine);
@@ -243,16 +236,16 @@ namespace EdjCase.Cryptography.BLS
 		}
 
 
-		[StructLayout(LayoutKind.Sequential)]
-		internal unsafe struct PublicKey
-		{
-			public fixed ulong v[Constants.PUBLICKEY_UNIT_SIZE];
-		}
+		//[StructLayout(LayoutKind.Sequential)]
+		//internal unsafe struct PublicKey
+		//{
+		//	public fixed uint v[Constants.PUBLICKEY_UNIT_SIZE];
+		//}
 
-		[StructLayout(LayoutKind.Sequential)]
-		internal unsafe struct Signature
-		{
-			public fixed ulong v[Constants.SIGNATURE_UNIT_SIZE];
-		}
+		//[StructLayout(LayoutKind.Sequential)]
+		//internal unsafe struct Signature
+		//{
+		//	public fixed ulong v[Constants.SIGNATURE_UNIT_SIZE];
+		//}
 	}
 }
