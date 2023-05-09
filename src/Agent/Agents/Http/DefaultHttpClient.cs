@@ -1,3 +1,4 @@
+using EdjCase.ICP.Candid.Models;
 using Org.BouncyCastle.Asn1.Ocsp;
 using System;
 using System.Net.Http;
@@ -41,13 +42,13 @@ namespace EdjCase.ICP.Agent.Agents.Http
 			{
 				Content = content
 			};
-			request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(CBOR_CONTENT_TYPE));
-
 			return await this.SendAsync(request);
 		}
 
 		private async Task<HttpResponse> SendAsync(HttpRequestMessage message)
 		{
+			message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(CBOR_CONTENT_TYPE));
+
 			HttpResponseMessage response = await this.httpClient.SendAsync(message);
 
 			return new HttpResponse(response.StatusCode, response.Content.ReadAsByteArrayAsync);
