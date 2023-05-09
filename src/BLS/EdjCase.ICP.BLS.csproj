@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>netstandard2.1</TargetFramework> 
+		<Nullable>enable</Nullable>
+		<LangVersion>latest</LangVersion>
+		<RootNamespace>EdjCase.ICP.BLS</RootNamespace>
+		<RepositoryUrl>https://github.com/EdjCase/ICP.NET</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageTags>.net;ICP;IC</PackageTags>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageProjectUrl>https://github.com/EdjCase/ICP.NET</PackageProjectUrl>
+		<Product>EdjCase.ICP.BLS</Product>
+		<Company>Edjcase</Company>
+		<Authors>Gekctek</Authors>
+		<PackageId>EdjCase.ICP.BLS</PackageId>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<DocumentationFile>API.xml</DocumentationFile>
+		<DocumentationMarkdown>$(MSBuildProjectDirectory)\API.md</DocumentationMarkdown>
+	</PropertyGroup>
+
+
+	<ItemGroup>
+		<None Include="README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Include="bls.wasm" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Vsxmd" Version="1.4.4">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Wasmtime" Version="8.0.1" />
+	</ItemGroup>
+
+</Project>
