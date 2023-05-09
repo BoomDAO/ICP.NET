@@ -4,32 +4,6 @@
         <name>EdjCase.ICP.Agent</name>
     </assembly>
     <members>
-        <member name="T:EdjCase.ICP.Agent.Agents.Http.DefaultHttpClient">
-            <summary>
-            The default http client to use with the built in `HttpClient`
-            </summary>
-        </member>
-        <member name="M:EdjCase.ICP.Agent.Agents.Http.DefaultHttpClient.#ctor(System.Net.Http.HttpClient)">
-            <summary>
-            Default constructor
-            </summary>
-            <param name="client">HTTP client to use</param>
-        </member>
-        <member name="M:EdjCase.ICP.Agent.Agents.Http.DefaultHttpClient.SendAsync(System.Net.Http.HttpRequestMessage)">
-            <inheritdoc />
-        </member>
-        <member name="T:EdjCase.ICP.Agent.Agents.Http.IHttpClient">
-            <summary>
-            A simple http request interface for sending messages
-            </summary>
-        </member>
-        <member name="M:EdjCase.ICP.Agent.Agents.Http.IHttpClient.SendAsync(System.Net.Http.HttpRequestMessage)">
-            <summary>
-            Sends an http request and awaits a response
-            </summary>
-            <param name="message">Http request to send</param>
-            <returns>Response from the request</returns>
-        </member>
         <member name="T:EdjCase.ICP.Agent.Agents.HttpAgent">
             <summary>
             An `IAgent` implementation using HTTP to make requests to the IC
@@ -66,6 +40,72 @@
         </member>
         <member name="M:EdjCase.ICP.Agent.Agents.HttpAgent.GetReplicaStatusAsync">
             <inheritdoc/>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Agents.Http.DefaultHttpClient">
+            <summary>
+            The default http client to use with the built in `HttpClient`
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Agents.Http.DefaultHttpClient.#ctor(System.Net.Http.HttpClient)">
+            <summary>
+            Default constructor
+            </summary>
+            <param name="client">HTTP client to use</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Agents.Http.DefaultHttpClient.GetAsync(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Agents.Http.DefaultHttpClient.PostAsync(System.String,System.Byte[])">
+            <inheritdoc />
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Agents.Http.IHttpClient">
+            <summary>
+            A simple http request interface for sending messages
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Agents.Http.IHttpClient.GetAsync(System.String)">
+            <summary>
+            Sends a GET http request and awaits the response
+            </summary>
+            <param name="url">The url to send the GET request to</param>
+            <returns>The http response</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Agents.Http.IHttpClient.PostAsync(System.String,System.Byte[])">
+            <summary>
+            Sends a POST http request and awaits a response
+            </summary>
+            <param name="url">The url to send the POST request to</param>
+            <param name="cborBody">The CBOR encoded body to send</param>
+            <returns>The http response</returns>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Agents.Http.HttpResponse">
+            <summary>
+            A model holding the HTTP response info
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Agents.Http.HttpResponse.StatusCode">
+            <summary>
+            The HTTP status code
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Agents.Http.HttpResponse.#ctor(System.Net.HttpStatusCode,System.Func{System.Threading.Tasks.Task{System.Byte[]}})">
+            <summary>
+            Default constructor
+            </summary>
+            <param name="statusCode">The status code from the http response</param>
+            <param name="getContentFunc">A func that returns the http response content</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Agents.Http.HttpResponse.GetContentAsync">
+            <summary>
+            Returns the response content bytes
+            </summary>
+            <returns>Content bytes</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Agents.Http.HttpResponse.ThrowIfErrorAsync">
+            <summary>
+            Throws an exception if the status code is not 200-299, otherwise does nothing
+            </summary>
+            <returns></returns>
         </member>
         <member name="T:EdjCase.ICP.Agent.Agents.IAgent">
             <summary>

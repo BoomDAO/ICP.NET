@@ -24,7 +24,6 @@ namespace EdjCase.ICP.Agent.Agents
 	/// </summary>
 	public class HttpAgent : IAgent
 	{
-		private const string CBOR_CONTENT_TYPE = "application/cbor";
 		private static byte[] mainnetRootKey = ByteUtil.FromHexString("308182301d060d2b0601040182dc7c0503010201060c2b0601040182dc7c05030201036100814c0e6ec71fab583b08bd81373c255c3c371b2e84863c98a4f1e08b74235d14fb5d9c0cd546d9685f913a0c0b2cc5341583bf4b4392e467db96d65b9bb4cb717112f8472e0d5a4d14505ffd7484b01291091c5f87b98883463f98091a0baaae");
 		private byte[]? rootKeyCache = null;
 
@@ -67,21 +66,16 @@ namespace EdjCase.ICP.Agent.Agents
 			{
 				effectiveCanisterId = canisterId;
 			}
-			(CallRejectedResponse? response, RequestId requestId) = await this.SendAsync($"/api/v2/canister/{effectiveCanisterId.ToText()}/call", BuildRequest, async httpResponse =>
-			{
-				await this.ThrowIfError(httpResponse);
-				if (httpResponse.StatusCode == System.Net.HttpStatusCode.OK)
-				{
-					// If returns with a body, then an error happened https://forum.dfinity.org/t/breaking-changes-to-the-replica-api-agent-developers-take-note/19651
+			(HttpResponse httpResponse, RequestId requestId) = await this.SendAsync($"/api/v2/canister/{effectiveCanisterId.ToText()}/call", BuildRequest);
 
-					byte[] cborBytes = await httpResponse.Content.ReadAsByteArrayAsync();
-					var reader = new CborReader(cborBytes);
-					return CallRejectedResponse.FromCbor(reader);
-				}
-				return null;
-			});
-			if(response != null)
+			await httpResponse.ThrowIfErrorAsync();
+			if (httpResponse.StatusCode == System.Net.HttpStatusCode.OK)
 			{
+				// If returns with a body, then an error happened https://forum.dfinity.org/t/breaking-changes-to-the-replica-api-agent-developers-take-note/19651
+
+				byte[] cborBytes = await httpResponse.GetContentAsync();
+				var reader = new CborReader(cborBytes);
+				CallRejectedResponse response = CallRejectedResponse.FromCbor(reader);
 				throw new CallRejectedException(response.Code, response.Message, response.ErrorCode);
 			}
 			return requestId;
@@ -98,13 +92,10 @@ namespace EdjCase.ICP.Agent.Agents
 			string method,
 			CandidArg arg)
 		{
-			(QueryResponse response, RequestId requestId) = await this.SendAsync($"/api/v2/canister/{canisterId.ToText()}/query", BuildRequest, async httpResponse =>
-			{
-				await this.ThrowIfError(httpResponse);
-				byte[] cborBytes = await httpResponse.Content.ReadAsByteArrayAsync();
-				return QueryResponse.ReadCbor(new CborReader(cborBytes));
-			});
-			return response;
+			(HttpResponse httpResponse, RequestId requestId) = await this.SendAsync($"/api/v2/canister/{canisterId.ToText()}/query", BuildRequest);
+			await httpResponse.ThrowIfErrorAsync();
+			byte[] cborBytes = await httpResponse.GetContentAsync();
+			return QueryResponse.ReadCbor(new CborReader(cborBytes));
 
 			QueryRequest BuildRequest(Principal sender, ICTimestamp now)
 			{
@@ -116,13 +107,12 @@ namespace EdjCase.ICP.Agent.Agents
 		public async Task<ReadStateResponse> ReadStateAsync(Principal canisterId, List<StatePath> paths)
 		{
 			string url = $"/api/v2/canister/{canisterId.ToText()}/read_state";
-			(ReadStateResponse response, RequestId requestId) = await this.SendAsync(url, BuildRequest, async httpResponse =>
-			{
-				await this.ThrowIfError(httpResponse);
-				byte[] cborBytes = await httpResponse.Content.ReadAsByteArrayAsync();
-				var reader = new CborReader(cborBytes);
-				return ReadStateResponse.ReadCbor(reader);
-			});
+			(HttpResponse httpResponse, RequestId requestId) = await this.SendAsync(url, BuildRequest);
+
+			await httpResponse.ThrowIfErrorAsync();
+			byte[] cborBytes = await httpResponse.GetContentAsync();
+			var reader = new CborReader(cborBytes);
+			ReadStateResponse response = ReadStateResponse.ReadCbor(reader);
 
 			SubjectPublicKeyInfo rootPublicKey = await this.GetRootKeyAsync();
 			if (!response.Certificate.IsValid(rootPublicKey))
@@ -186,27 +176,15 @@ namespace EdjCase.ICP.Agent.Agents
 		/// <inheritdoc/>
 		public async Task<StatusResponse> GetReplicaStatusAsync()
 		{
-			return await this.SendRawAsync("/api/v2/status", null, async response =>
-			{
-				byte[] bytes = await response.Content.ReadAsByteArrayAsync();
-				return StatusResponse.ReadCbor(new CborReader(bytes));
-			});
+			HttpResponse httpResponse = await this.httpClient.GetAsync("/api/v2/status");
+			await httpResponse.ThrowIfErrorAsync();
+			byte[] bytes = await httpResponse.GetContentAsync();
+			return StatusResponse.ReadCbor(new CborReader(bytes));
 		}
 
-		private async Task ThrowIfError(HttpResponseMessage response)
-		{
-			if (!response.IsSuccessStatusCode)
-			{
-				byte[] bytes = await response.Content.ReadAsByteArrayAsync();
-				string message = Encoding.UTF8.GetString(bytes);
-				throw new Exception($"Response returned a failed status. HttpStatusCode={response.StatusCode} Reason={response.ReasonPhrase} Message={message}");
-			}
-		}
-
-		private async Task<(T Response, RequestId RequestId)> SendAsync<T, TRequest>(
+		private async Task<(HttpResponse Response, RequestId RequestId)> SendAsync<TRequest>(
 			string url,
-			Func<Principal, ICTimestamp, TRequest> getRequest,
-			Func<HttpResponseMessage, Task<T>> handleResponse
+			Func<Principal, ICTimestamp, TRequest> getRequest
 		)
 			where TRequest : IRepresentationIndependentHashItem
 		{
@@ -238,10 +216,10 @@ namespace EdjCase.ICP.Agent.Agents
 #if DEBUG
 			string hex = ByteUtil.ToHexString(cborBody);
 #endif
-			T response = await this.SendRawAsync(url, cborBody, handleResponse);
+			HttpResponse httpResponse = await this.httpClient.PostAsync(url, cborBody);
 			var sha256 = SHA256HashFunction.Create();
 			RequestId requestId = RequestId.FromObject(content, sha256); // TODO this is redundant, `CreateSignedContent` hashes it too
-			return (response, requestId);
+			return (httpResponse, requestId);
 
 		}
 
@@ -253,28 +231,6 @@ namespace EdjCase.ICP.Agent.Agents
 			return writer.Encode();
 		}
 
-		private async Task<T> SendRawAsync<T>(string url, byte[]? cborBody, Func<HttpResponseMessage, Task<T>> handleResponse)
-		{
-			HttpRequestMessage request;
-			if (cborBody != null)
-			{
-				var content = new ByteArrayContent(cborBody);
-				content.Headers.Remove("Content-Type");
-				content.Headers.Add("Content-Type", CBOR_CONTENT_TYPE);
-				request = new HttpRequestMessage(HttpMethod.Post, url)
-				{
-					Content = content
-				};
-				request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(CBOR_CONTENT_TYPE));
-			}
-			else
-			{
-				request = new HttpRequestMessage(HttpMethod.Get, url);
-
-			}
-			HttpResponseMessage response = await this.httpClient.SendAsync(request);
-			return await handleResponse(response);
-		}
 	}
 
 }

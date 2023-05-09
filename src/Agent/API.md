@@ -56,7 +56,8 @@
   - [LedgerTime](#P-EdjCase-ICP-Agent-Standards-ICRC1-Models-CreatedInFutureError-LedgerTime 'EdjCase.ICP.Agent.Standards.ICRC1.Models.CreatedInFutureError.LedgerTime')
 - [DefaultHttpClient](#T-EdjCase-ICP-Agent-Agents-Http-DefaultHttpClient 'EdjCase.ICP.Agent.Agents.Http.DefaultHttpClient')
   - [#ctor(client)](#M-EdjCase-ICP-Agent-Agents-Http-DefaultHttpClient-#ctor-System-Net-Http-HttpClient- 'EdjCase.ICP.Agent.Agents.Http.DefaultHttpClient.#ctor(System.Net.Http.HttpClient)')
-  - [SendAsync()](#M-EdjCase-ICP-Agent-Agents-Http-DefaultHttpClient-SendAsync-System-Net-Http-HttpRequestMessage- 'EdjCase.ICP.Agent.Agents.Http.DefaultHttpClient.SendAsync(System.Net.Http.HttpRequestMessage)')
+  - [GetAsync()](#M-EdjCase-ICP-Agent-Agents-Http-DefaultHttpClient-GetAsync-System-String- 'EdjCase.ICP.Agent.Agents.Http.DefaultHttpClient.GetAsync(System.String)')
+  - [PostAsync()](#M-EdjCase-ICP-Agent-Agents-Http-DefaultHttpClient-PostAsync-System-String,System-Byte[]- 'EdjCase.ICP.Agent.Agents.Http.DefaultHttpClient.PostAsync(System.String,System.Byte[])')
 - [Delegation](#T-EdjCase-ICP-Agent-Models-Delegation 'EdjCase.ICP.Agent.Models.Delegation')
   - [#ctor(publicKey,expiration,targets,senders)](#M-EdjCase-ICP-Agent-Models-Delegation-#ctor-EdjCase-ICP-Agent-SubjectPublicKeyInfo,EdjCase-ICP-Candid-Models-ICTimestamp,System-Collections-Generic-List{EdjCase-ICP-Candid-Models-Principal},System-Collections-Generic-List{EdjCase-ICP-Candid-Models-Principal}- 'EdjCase.ICP.Agent.Models.Delegation.#ctor(EdjCase.ICP.Agent.SubjectPublicKeyInfo,EdjCase.ICP.Candid.Models.ICTimestamp,System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal},System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal})')
   - [Expiration](#P-EdjCase-ICP-Agent-Models-Delegation-Expiration 'EdjCase.ICP.Agent.Models.Delegation.Expiration')
@@ -113,6 +114,11 @@
   - [GetRootKeyAsync()](#M-EdjCase-ICP-Agent-Agents-HttpAgent-GetRootKeyAsync 'EdjCase.ICP.Agent.Agents.HttpAgent.GetRootKeyAsync')
   - [QueryAsync()](#M-EdjCase-ICP-Agent-Agents-HttpAgent-QueryAsync-EdjCase-ICP-Candid-Models-Principal,System-String,EdjCase-ICP-Candid-Models-CandidArg- 'EdjCase.ICP.Agent.Agents.HttpAgent.QueryAsync(EdjCase.ICP.Candid.Models.Principal,System.String,EdjCase.ICP.Candid.Models.CandidArg)')
   - [ReadStateAsync()](#M-EdjCase-ICP-Agent-Agents-HttpAgent-ReadStateAsync-EdjCase-ICP-Candid-Models-Principal,System-Collections-Generic-List{EdjCase-ICP-Candid-Models-StatePath}- 'EdjCase.ICP.Agent.Agents.HttpAgent.ReadStateAsync(EdjCase.ICP.Candid.Models.Principal,System.Collections.Generic.List{EdjCase.ICP.Candid.Models.StatePath})')
+- [HttpResponse](#T-EdjCase-ICP-Agent-Agents-Http-HttpResponse 'EdjCase.ICP.Agent.Agents.Http.HttpResponse')
+  - [#ctor(statusCode,getContentFunc)](#M-EdjCase-ICP-Agent-Agents-Http-HttpResponse-#ctor-System-Net-HttpStatusCode,System-Func{System-Threading-Tasks-Task{System-Byte[]}}- 'EdjCase.ICP.Agent.Agents.Http.HttpResponse.#ctor(System.Net.HttpStatusCode,System.Func{System.Threading.Tasks.Task{System.Byte[]}})')
+  - [StatusCode](#P-EdjCase-ICP-Agent-Agents-Http-HttpResponse-StatusCode 'EdjCase.ICP.Agent.Agents.Http.HttpResponse.StatusCode')
+  - [GetContentAsync()](#M-EdjCase-ICP-Agent-Agents-Http-HttpResponse-GetContentAsync 'EdjCase.ICP.Agent.Agents.Http.HttpResponse.GetContentAsync')
+  - [ThrowIfErrorAsync()](#M-EdjCase-ICP-Agent-Agents-Http-HttpResponse-ThrowIfErrorAsync 'EdjCase.ICP.Agent.Agents.Http.HttpResponse.ThrowIfErrorAsync')
 - [IAgent](#T-EdjCase-ICP-Agent-Agents-IAgent 'EdjCase.ICP.Agent.Agents.IAgent')
   - [Identity](#P-EdjCase-ICP-Agent-Agents-IAgent-Identity 'EdjCase.ICP.Agent.Agents.IAgent.Identity')
   - [CallAsync(canisterId,method,arg,effectiveCanisterId)](#M-EdjCase-ICP-Agent-Agents-IAgent-CallAsync-EdjCase-ICP-Candid-Models-Principal,System-String,EdjCase-ICP-Candid-Models-CandidArg,EdjCase-ICP-Candid-Models-Principal- 'EdjCase.ICP.Agent.Agents.IAgent.CallAsync(EdjCase.ICP.Candid.Models.Principal,System.String,EdjCase.ICP.Candid.Models.CandidArg,EdjCase.ICP.Candid.Models.Principal)')
@@ -138,7 +144,8 @@
   - [TotalSupply()](#M-EdjCase-ICP-Agent-Standards-ICRC1-ICRC1Client-TotalSupply 'EdjCase.ICP.Agent.Standards.ICRC1.ICRC1Client.TotalSupply')
   - [Transfer(args)](#M-EdjCase-ICP-Agent-Standards-ICRC1-ICRC1Client-Transfer-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferArgs- 'EdjCase.ICP.Agent.Standards.ICRC1.ICRC1Client.Transfer(EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferArgs)')
 - [IHttpClient](#T-EdjCase-ICP-Agent-Agents-Http-IHttpClient 'EdjCase.ICP.Agent.Agents.Http.IHttpClient')
-  - [SendAsync(message)](#M-EdjCase-ICP-Agent-Agents-Http-IHttpClient-SendAsync-System-Net-Http-HttpRequestMessage- 'EdjCase.ICP.Agent.Agents.Http.IHttpClient.SendAsync(System.Net.Http.HttpRequestMessage)')
+  - [GetAsync(url)](#M-EdjCase-ICP-Agent-Agents-Http-IHttpClient-GetAsync-System-String- 'EdjCase.ICP.Agent.Agents.Http.IHttpClient.GetAsync(System.String)')
+  - [PostAsync(url,cborBody)](#M-EdjCase-ICP-Agent-Agents-Http-IHttpClient-PostAsync-System-String,System-Byte[]- 'EdjCase.ICP.Agent.Agents.Http.IHttpClient.PostAsync(System.String,System.Byte[])')
 - [IIdentity](#T-EdjCase-ICP-Agent-Identities-IIdentity 'EdjCase.ICP.Agent.Identities.IIdentity')
   - [GetPublicKey()](#M-EdjCase-ICP-Agent-Identities-IIdentity-GetPublicKey 'EdjCase.ICP.Agent.Identities.IIdentity.GetPublicKey')
   - [GetSenderDelegations()](#M-EdjCase-ICP-Agent-Identities-IIdentity-GetSenderDelegations 'EdjCase.ICP.Agent.Identities.IIdentity.GetSenderDelegations')
@@ -867,8 +874,19 @@ Default constructor
 | ---- | ---- | ----------- |
 | client | [System.Net.Http.HttpClient](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Net.Http.HttpClient 'System.Net.Http.HttpClient') | HTTP client to use |
 
-<a name='M-EdjCase-ICP-Agent-Agents-Http-DefaultHttpClient-SendAsync-System-Net-Http-HttpRequestMessage-'></a>
-### SendAsync() `method`
+<a name='M-EdjCase-ICP-Agent-Agents-Http-DefaultHttpClient-GetAsync-System-String-'></a>
+### GetAsync() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Agent-Agents-Http-DefaultHttpClient-PostAsync-System-String,System-Byte[]-'></a>
+### PostAsync() `method`
 
 ##### Summary
 
@@ -1488,6 +1506,68 @@ This method has no parameters.
 
 This method has no parameters.
 
+<a name='T-EdjCase-ICP-Agent-Agents-Http-HttpResponse'></a>
+## HttpResponse `type`
+
+##### Namespace
+
+EdjCase.ICP.Agent.Agents.Http
+
+##### Summary
+
+A model holding the HTTP response info
+
+<a name='M-EdjCase-ICP-Agent-Agents-Http-HttpResponse-#ctor-System-Net-HttpStatusCode,System-Func{System-Threading-Tasks-Task{System-Byte[]}}-'></a>
+### #ctor(statusCode,getContentFunc) `constructor`
+
+##### Summary
+
+Default constructor
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| statusCode | [System.Net.HttpStatusCode](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Net.HttpStatusCode 'System.Net.HttpStatusCode') | The status code from the http response |
+| getContentFunc | [System.Func{System.Threading.Tasks.Task{System.Byte[]}}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Func 'System.Func{System.Threading.Tasks.Task{System.Byte[]}}') | A func that returns the http response content |
+
+<a name='P-EdjCase-ICP-Agent-Agents-Http-HttpResponse-StatusCode'></a>
+### StatusCode `property`
+
+##### Summary
+
+The HTTP status code
+
+<a name='M-EdjCase-ICP-Agent-Agents-Http-HttpResponse-GetContentAsync'></a>
+### GetContentAsync() `method`
+
+##### Summary
+
+Returns the response content bytes
+
+##### Returns
+
+Content bytes
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Agent-Agents-Http-HttpResponse-ThrowIfErrorAsync'></a>
+### ThrowIfErrorAsync() `method`
+
+##### Summary
+
+Throws an exception if the status code is not 200-299, otherwise does nothing
+
+##### Returns
+
+
+
+##### Parameters
+
+This method has no parameters.
+
 <a name='T-EdjCase-ICP-Agent-Agents-IAgent'></a>
 ## IAgent `type`
 
@@ -1855,22 +1935,40 @@ EdjCase.ICP.Agent.Agents.Http
 
 A simple http request interface for sending messages
 
-<a name='M-EdjCase-ICP-Agent-Agents-Http-IHttpClient-SendAsync-System-Net-Http-HttpRequestMessage-'></a>
-### SendAsync(message) `method`
+<a name='M-EdjCase-ICP-Agent-Agents-Http-IHttpClient-GetAsync-System-String-'></a>
+### GetAsync(url) `method`
 
 ##### Summary
 
-Sends an http request and awaits a response
+Sends a GET http request and awaits the response
 
 ##### Returns
 
-Response from the request
+The http response
 
 ##### Parameters
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| message | [System.Net.Http.HttpRequestMessage](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Net.Http.HttpRequestMessage 'System.Net.Http.HttpRequestMessage') | Http request to send |
+| url | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The url to send the GET request to |
+
+<a name='M-EdjCase-ICP-Agent-Agents-Http-IHttpClient-PostAsync-System-String,System-Byte[]-'></a>
+### PostAsync(url,cborBody) `method`
+
+##### Summary
+
+Sends a POST http request and awaits a response
+
+##### Returns
+
+The http response
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| url | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The url to send the POST request to |
+| cborBody | [System.Byte[]](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Byte[] 'System.Byte[]') | The CBOR encoded body to send |
 
 <a name='T-EdjCase-ICP-Agent-Identities-IIdentity'></a>
 ## IIdentity `type`
