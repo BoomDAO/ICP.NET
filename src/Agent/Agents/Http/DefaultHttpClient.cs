@@ -1,4 +1,7 @@
+using Org.BouncyCastle.Asn1.Ocsp;
+using System;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace EdjCase.ICP.Agent.Agents.Http
@@ -8,6 +11,8 @@ namespace EdjCase.ICP.Agent.Agents.Http
 	/// </summary>
 	public class DefaultHttpClient : IHttpClient
 	{
+		private const string CBOR_CONTENT_TYPE = "application/cbor";
+
 		private readonly HttpClient httpClient;
 
 		/// <summary>
@@ -20,9 +25,32 @@ namespace EdjCase.ICP.Agent.Agents.Http
 		}
 
 		/// <inheritdoc />
-		public async Task<HttpResponseMessage> SendAsync(HttpRequestMessage message)
+		public async Task<HttpResponse> GetAsync(string url)
 		{
-			return await this.httpClient.SendAsync(message);
+			HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, url);
+			return await this.SendAsync(request);
+		}
+
+		/// <inheritdoc />
+		public async Task<HttpResponse> PostAsync(string url, byte[] cborBody)
+		{
+			var content = new ByteArrayContent(cborBody);
+			content.Headers.Remove("Content-Type");
+			content.Headers.Add("Content-Type", CBOR_CONTENT_TYPE);
+			HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, url)
+			{
+				Content = content
+			};
+			request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(CBOR_CONTENT_TYPE));
+
+			return await this.SendAsync(request);
+		}
+
+		private async Task<HttpResponse> SendAsync(HttpRequestMessage message)
+		{
+			HttpResponseMessage response = await this.httpClient.SendAsync(message);
+
+			return new HttpResponse(response.StatusCode, response.Content.ReadAsByteArrayAsync);
 		}
 	}
 }
