@@ -38,12 +38,12 @@ namespace Sample.Shared.Governance.Models
 			return new Operation(OperationTag.ChangeAutoStakeMaturity, info);
 		}
 
-		public static Operation StopDissolving(Operation.StopDissolvingRecord info)
+		public static Operation StopDissolving(Operation.StopDissolvingInfo info)
 		{
 			return new Operation(OperationTag.StopDissolving, info);
 		}
 
-		public static Operation StartDissolving(Operation.StartDissolvingRecord info)
+		public static Operation StartDissolving(Operation.StartDissolvingInfo info)
 		{
 			return new Operation(OperationTag.StartDissolving, info);
 		}
@@ -53,12 +53,12 @@ namespace Sample.Shared.Governance.Models
 			return new Operation(OperationTag.IncreaseDissolveDelay, info);
 		}
 
-		public static Operation JoinCommunityFund(Operation.JoinCommunityFundRecord info)
+		public static Operation JoinCommunityFund(Operation.JoinCommunityFundInfo info)
 		{
 			return new Operation(OperationTag.JoinCommunityFund, info);
 		}
 
-		public static Operation LeaveCommunityFund(Operation.LeaveCommunityFundRecord info)
+		public static Operation LeaveCommunityFund(Operation.LeaveCommunityFundInfo info)
 		{
 			return new Operation(OperationTag.LeaveCommunityFund, info);
 		}
@@ -86,16 +86,16 @@ namespace Sample.Shared.Governance.Models
 			return (ChangeAutoStakeMaturity)this.Value!;
 		}
 
-		public Operation.StopDissolvingRecord AsStopDissolving()
+		public Operation.StopDissolvingInfo AsStopDissolving()
 		{
 			this.ValidateTag(OperationTag.StopDissolving);
-			return (Operation.StopDissolvingRecord)this.Value!;
+			return (Operation.StopDissolvingInfo)this.Value!;
 		}
 
-		public Operation.StartDissolvingRecord AsStartDissolving()
+		public Operation.StartDissolvingInfo AsStartDissolving()
 		{
 			this.ValidateTag(OperationTag.StartDissolving);
-			return (Operation.StartDissolvingRecord)this.Value!;
+			return (Operation.StartDissolvingInfo)this.Value!;
 		}
 
 		public IncreaseDissolveDelay AsIncreaseDissolveDelay()
@@ -104,16 +104,16 @@ namespace Sample.Shared.Governance.Models
 			return (IncreaseDissolveDelay)this.Value!;
 		}
 
-		public Operation.JoinCommunityFundRecord AsJoinCommunityFund()
+		public Operation.JoinCommunityFundInfo AsJoinCommunityFund()
 		{
 			this.ValidateTag(OperationTag.JoinCommunityFund);
-			return (Operation.JoinCommunityFundRecord)this.Value!;
+			return (Operation.JoinCommunityFundInfo)this.Value!;
 		}
 
-		public Operation.LeaveCommunityFundRecord AsLeaveCommunityFund()
+		public Operation.LeaveCommunityFundInfo AsLeaveCommunityFund()
 		{
 			this.ValidateTag(OperationTag.LeaveCommunityFund);
-			return (Operation.LeaveCommunityFundRecord)this.Value!;
+			return (Operation.LeaveCommunityFundInfo)this.Value!;
 		}
 
 		public SetDissolveTimestamp AsSetDissolveTimestamp()
@@ -130,30 +130,30 @@ namespace Sample.Shared.Governance.Models
 			}
 		}
 
-		public class StopDissolvingRecord
+		public class StopDissolvingInfo
 		{
-			public StopDissolvingRecord()
+			public StopDissolvingInfo()
 			{
 			}
 		}
 
-		public class StartDissolvingRecord
+		public class StartDissolvingInfo
 		{
-			public StartDissolvingRecord()
+			public StartDissolvingInfo()
 			{
 			}
 		}
 
-		public class JoinCommunityFundRecord
+		public class JoinCommunityFundInfo
 		{
-			public JoinCommunityFundRecord()
+			public JoinCommunityFundInfo()
 			{
 			}
 		}
 
-		public class LeaveCommunityFundRecord
+		public class LeaveCommunityFundInfo
 		{
-			public LeaveCommunityFundRecord()
+			public LeaveCommunityFundInfo()
 			{
 			}
 		}
@@ -167,15 +167,15 @@ namespace Sample.Shared.Governance.Models
 		AddHotKey,
 		[VariantOptionType(typeof(ChangeAutoStakeMaturity))]
 		ChangeAutoStakeMaturity,
-		[VariantOptionType(typeof(Operation.StopDissolvingRecord))]
+		[VariantOptionType(typeof(Operation.StopDissolvingInfo))]
 		StopDissolving,
-		[VariantOptionType(typeof(Operation.StartDissolvingRecord))]
+		[VariantOptionType(typeof(Operation.StartDissolvingInfo))]
 		StartDissolving,
 		[VariantOptionType(typeof(IncreaseDissolveDelay))]
 		IncreaseDissolveDelay,
-		[VariantOptionType(typeof(Operation.JoinCommunityFundRecord))]
+		[VariantOptionType(typeof(Operation.JoinCommunityFundInfo))]
 		JoinCommunityFund,
-		[VariantOptionType(typeof(Operation.LeaveCommunityFundRecord))]
+		[VariantOptionType(typeof(Operation.LeaveCommunityFundInfo))]
 		LeaveCommunityFund,
 		[VariantOptionType(typeof(SetDissolveTimestamp))]
 		SetDissolveTimestamp

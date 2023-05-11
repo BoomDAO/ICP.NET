@@ -1,18 +1,20 @@
 using EdjCase.ICP.Candid.Mapping;
+using Sample.Shared.Governance.Models;
+using EdjCase.ICP.Candid.Models;
 
 namespace Sample.Shared.Governance.Models
 {
 	public class NeuronBasketConstructionParameters
 	{
-		[CandidName("dissolve_delay_interval_seconds")]
-		public ulong DissolveDelayIntervalSeconds { get; set; }
+		[CandidName("dissolve_delay_interval")]
+		public OptionalValue<Duration> DissolveDelayInterval { get; set; }
 
 		[CandidName("count")]
-		public ulong Count { get; set; }
+		public OptionalValue<ulong> Count { get; set; }
 
-		public NeuronBasketConstructionParameters(ulong dissolveDelayIntervalSeconds, ulong count)
+		public NeuronBasketConstructionParameters(OptionalValue<Duration> dissolveDelayInterval, OptionalValue<ulong> count)
 		{
-			this.DissolveDelayIntervalSeconds = dissolveDelayIntervalSeconds;
+			this.DissolveDelayInterval = dissolveDelayInterval;
 			this.Count = count;
 		}
 

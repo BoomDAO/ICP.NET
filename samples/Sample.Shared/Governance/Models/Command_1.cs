@@ -38,7 +38,7 @@ namespace Sample.Shared.Governance.Models
 			return new Command_1(Command_1Tag.Split, info);
 		}
 
-		public static Command_1 Follow(Command_1.FollowRecord info)
+		public static Command_1 Follow(Command_1.FollowInfo info)
 		{
 			return new Command_1(Command_1Tag.Follow, info);
 		}
@@ -48,17 +48,17 @@ namespace Sample.Shared.Governance.Models
 			return new Command_1(Command_1Tag.ClaimOrRefresh, info);
 		}
 
-		public static Command_1 Configure(Command_1.ConfigureRecord info)
+		public static Command_1 Configure(Command_1.ConfigureInfo info)
 		{
 			return new Command_1(Command_1Tag.Configure, info);
 		}
 
-		public static Command_1 RegisterVote(Command_1.RegisterVoteRecord info)
+		public static Command_1 RegisterVote(Command_1.RegisterVoteInfo info)
 		{
 			return new Command_1(Command_1Tag.RegisterVote, info);
 		}
 
-		public static Command_1 Merge(Command_1.MergeRecord info)
+		public static Command_1 Merge(Command_1.MergeInfo info)
 		{
 			return new Command_1(Command_1Tag.Merge, info);
 		}
@@ -106,10 +106,10 @@ namespace Sample.Shared.Governance.Models
 			return (SpawnResponse)this.Value!;
 		}
 
-		public Command_1.FollowRecord AsFollow()
+		public Command_1.FollowInfo AsFollow()
 		{
 			this.ValidateTag(Command_1Tag.Follow);
-			return (Command_1.FollowRecord)this.Value!;
+			return (Command_1.FollowInfo)this.Value!;
 		}
 
 		public ClaimOrRefreshResponse AsClaimOrRefresh()
@@ -118,22 +118,22 @@ namespace Sample.Shared.Governance.Models
 			return (ClaimOrRefreshResponse)this.Value!;
 		}
 
-		public Command_1.ConfigureRecord AsConfigure()
+		public Command_1.ConfigureInfo AsConfigure()
 		{
 			this.ValidateTag(Command_1Tag.Configure);
-			return (Command_1.ConfigureRecord)this.Value!;
+			return (Command_1.ConfigureInfo)this.Value!;
 		}
 
-		public Command_1.RegisterVoteRecord AsRegisterVote()
+		public Command_1.RegisterVoteInfo AsRegisterVote()
 		{
 			this.ValidateTag(Command_1Tag.RegisterVote);
-			return (Command_1.RegisterVoteRecord)this.Value!;
+			return (Command_1.RegisterVoteInfo)this.Value!;
 		}
 
-		public Command_1.MergeRecord AsMerge()
+		public Command_1.MergeInfo AsMerge()
 		{
 			this.ValidateTag(Command_1Tag.Merge);
-			return (Command_1.MergeRecord)this.Value!;
+			return (Command_1.MergeInfo)this.Value!;
 		}
 
 		public SpawnResponse AsDisburseToNeuron()
@@ -174,30 +174,30 @@ namespace Sample.Shared.Governance.Models
 			}
 		}
 
-		public class FollowRecord
+		public class FollowInfo
 		{
-			public FollowRecord()
+			public FollowInfo()
 			{
 			}
 		}
 
-		public class ConfigureRecord
+		public class ConfigureInfo
 		{
-			public ConfigureRecord()
+			public ConfigureInfo()
 			{
 			}
 		}
 
-		public class RegisterVoteRecord
+		public class RegisterVoteInfo
 		{
-			public RegisterVoteRecord()
+			public RegisterVoteInfo()
 			{
 			}
 		}
 
-		public class MergeRecord
+		public class MergeInfo
 		{
-			public MergeRecord()
+			public MergeInfo()
 			{
 			}
 		}
@@ -211,15 +211,15 @@ namespace Sample.Shared.Governance.Models
 		Spawn,
 		[VariantOptionType(typeof(SpawnResponse))]
 		Split,
-		[VariantOptionType(typeof(Command_1.FollowRecord))]
+		[VariantOptionType(typeof(Command_1.FollowInfo))]
 		Follow,
 		[VariantOptionType(typeof(ClaimOrRefreshResponse))]
 		ClaimOrRefresh,
-		[VariantOptionType(typeof(Command_1.ConfigureRecord))]
+		[VariantOptionType(typeof(Command_1.ConfigureInfo))]
 		Configure,
-		[VariantOptionType(typeof(Command_1.RegisterVoteRecord))]
+		[VariantOptionType(typeof(Command_1.RegisterVoteInfo))]
 		RegisterVote,
-		[VariantOptionType(typeof(Command_1.MergeRecord))]
+		[VariantOptionType(typeof(Command_1.MergeInfo))]
 		Merge,
 		[VariantOptionType(typeof(SpawnResponse))]
 		DisburseToNeuron,

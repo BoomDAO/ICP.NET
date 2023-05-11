@@ -28,7 +28,7 @@ namespace Sample.Shared.Governance.Models
 			return new Result_7(Result_7Tag.Committed, info);
 		}
 
-		public static Result_7 Aborted(Result_7.AbortedRecord info)
+		public static Result_7 Aborted(Result_7.AbortedInfo info)
 		{
 			return new Result_7(Result_7Tag.Aborted, info);
 		}
@@ -39,10 +39,10 @@ namespace Sample.Shared.Governance.Models
 			return (Committed)this.Value!;
 		}
 
-		public Result_7.AbortedRecord AsAborted()
+		public Result_7.AbortedInfo AsAborted()
 		{
 			this.ValidateTag(Result_7Tag.Aborted);
-			return (Result_7.AbortedRecord)this.Value!;
+			return (Result_7.AbortedInfo)this.Value!;
 		}
 
 		private void ValidateTag(Result_7Tag tag)
@@ -53,9 +53,9 @@ namespace Sample.Shared.Governance.Models
 			}
 		}
 
-		public class AbortedRecord
+		public class AbortedInfo
 		{
-			public AbortedRecord()
+			public AbortedInfo()
 			{
 			}
 		}
@@ -65,7 +65,7 @@ namespace Sample.Shared.Governance.Models
 	{
 		[VariantOptionType(typeof(Committed))]
 		Committed,
-		[VariantOptionType(typeof(Result_7.AbortedRecord))]
+		[VariantOptionType(typeof(Result_7.AbortedInfo))]
 		Aborted
 	}
 }

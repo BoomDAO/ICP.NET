@@ -90,7 +90,7 @@ namespace EdjCase.ICP.Candid.Models
 		/// <inheritdoc />
 		public override string ToString()
 		{
-			return this.Value.ToString();
+			return this.Value;
 		}
 
 		/// <inheritdoc />

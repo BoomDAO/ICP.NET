@@ -10,7 +10,7 @@ namespace Sample.Shared.Governance.Models
 		public ulong MinParticipantIcpE8s { get; set; }
 
 		[CandidName("neuron_basket_construction_parameters")]
-		public OptionalValue<NeuronBasketConstructionParameters> NeuronBasketConstructionParameters { get; set; }
+		public OptionalValue<NeuronBasketConstructionParameters_1> NeuronBasketConstructionParameters { get; set; }
 
 		[CandidName("max_icp_e8s")]
 		public ulong MaxIcpE8s { get; set; }
@@ -33,7 +33,7 @@ namespace Sample.Shared.Governance.Models
 		[CandidName("min_icp_e8s")]
 		public ulong MinIcpE8s { get; set; }
 
-		public Params(ulong minParticipantIcpE8s, OptionalValue<NeuronBasketConstructionParameters> neuronBasketConstructionParameters, ulong maxIcpE8s, ulong swapDueTimestampSeconds, uint minParticipants, ulong snsTokenE8s, OptionalValue<ulong> saleDelaySeconds, ulong maxParticipantIcpE8s, ulong minIcpE8s)
+		public Params(ulong minParticipantIcpE8s, OptionalValue<NeuronBasketConstructionParameters_1> neuronBasketConstructionParameters, ulong maxIcpE8s, ulong swapDueTimestampSeconds, uint minParticipants, ulong snsTokenE8s, OptionalValue<ulong> saleDelaySeconds, ulong maxParticipantIcpE8s, ulong minIcpE8s)
 		{
 			this.MinParticipantIcpE8s = minParticipantIcpE8s;
 			this.NeuronBasketConstructionParameters = neuronBasketConstructionParameters;
