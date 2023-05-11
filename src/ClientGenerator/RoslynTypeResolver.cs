@@ -228,7 +228,7 @@ namespace EdjCase.ICP.ClientGenerator
 				{
 					string nameContext = option.Type.IsPredefinedType
 						? option.Tag.PropertyName
-						: option.Tag.PropertyName + "Info";
+						: option.Tag.PropertyName + "Info"; // If need to generate sub type, add suffix to avoid name collision
 					resolvedType = this.ResolveType(option.Type, nameContext, variantTypeName);
 				}
 				return (option.Tag, resolvedType);
@@ -588,7 +588,7 @@ namespace EdjCase.ICP.ClientGenerator
 			{
 				string nameContext = option.Type.IsPredefinedType
 					? option.Tag.PropertyName
-					: option.Tag.PropertyName + "Info";
+					: option.Tag.PropertyName + "Info"; // If need to generate sub type, add suffix to avoid name collision
 				ResolvedType resolvedType = this.ResolveType(option.Type, nameContext, recordTypeName);
 				return (option.Tag, resolvedType);
 			}
