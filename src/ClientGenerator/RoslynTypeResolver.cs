@@ -121,10 +121,6 @@ namespace EdjCase.ICP.ClientGenerator
 					}
 				case VariantSourceCodeType v:
 					{
-						if (parentType != null)
-						{
-							nameContext += "Variant";
-						}
 						TypeName variantName = this.BuildType(nameContext, parentType);
 						(ClassDeclarationSyntax? classSyntax, EnumDeclarationSyntax enumSyntax) = this.GenerateVariant(variantName, v, parentType);
 						if (classSyntax != null)
@@ -136,7 +132,7 @@ namespace EdjCase.ICP.ClientGenerator
 				case TupleSourceCodeType r:
 					{
 						ResolvedType[] innerResolvedTypes = r.Fields
-							.Select(f => this.ResolveType(f, nameContext + "Item", parentType))
+							.Select(f => this.ResolveType(f, nameContext, parentType))
 							.ToArray();
 						TypeName[] innerTypes = innerResolvedTypes
 							.Select(t => t.Name)
@@ -156,10 +152,6 @@ namespace EdjCase.ICP.ClientGenerator
 					}
 				case RecordSourceCodeType r:
 					{
-						if (parentType != null)
-						{
-							nameContext += "Record";
-						}
 						TypeName recordName = this.BuildType(nameContext, parentType);
 						ClassDeclarationSyntax classSyntax = this.GenerateRecord(recordName, r);
 						return new ResolvedType(recordName, classSyntax);
@@ -170,7 +162,9 @@ namespace EdjCase.ICP.ClientGenerator
 		}
 
 
-		public ClassDeclarationSyntax GenerateClient(TypeName clientName, ServiceSourceCodeType service)
+		public ClassDeclarationSyntax GenerateClient(
+			TypeName clientName,
+			ServiceSourceCodeType service)
 		{
 			ValueName candidConverterProperty = ValueName.Default("Converter", this.KeepCandidCase);
 			List<ClassProperty> properties = new()
@@ -223,9 +217,26 @@ namespace EdjCase.ICP.ClientGenerator
 			TypeName? parentType
 		)
 		{
+			(ValueName Name, ResolvedType? Type) ResolveOption((ValueName Tag, SourceCodeType? Type) option, int i)
+			{
+				ResolvedType? resolvedType;
+				if (option.Type == null)
+				{
+					resolvedType = null;
+				}
+				else
+				{
+					string nameContext = option.Type.IsPredefinedType
+						? option.Tag.PropertyName
+						: option.Tag.PropertyName + "Info"; // If need to generate sub type, add suffix to avoid name collision
+					resolvedType = this.ResolveType(option.Type, nameContext, variantTypeName);
+				}
+				return (option.Tag, resolvedType);
+			}
+
 
 			List<(ValueName Name, ResolvedType? Type)> resolvedOptions = variant.Options
-				.Select((o, i) => (o.Tag, o.Type == null ? null : this.ResolveType(o.Type, o.Tag.PropertyName, variantTypeName)))
+				.Select(ResolveOption)
 				.ToList();
 
 
@@ -573,8 +584,16 @@ namespace EdjCase.ICP.ClientGenerator
 
 		internal ClassDeclarationSyntax GenerateRecord(TypeName recordTypeName, RecordSourceCodeType record)
 		{
+			(ValueName Name, ResolvedType Type) ResolveField((ValueName Tag, SourceCodeType Type) option, int i)
+			{
+				string nameContext = option.Type.IsPredefinedType
+					? option.Tag.PropertyName
+					: option.Tag.PropertyName + "Info"; // If need to generate sub type, add suffix to avoid name collision
+				ResolvedType resolvedType = this.ResolveType(option.Type, nameContext, recordTypeName);
+				return (option.Tag, resolvedType);
+			}
 			List<(ValueName Tag, ResolvedType Type)> resolvedFields = record.Fields
-				.Select((f, i) => (f.Tag, this.ResolveType(f.Type, f.Tag.PropertyName, parentType: recordTypeName)))
+				.Select(ResolveField)
 				.ToList();
 			List<MemberDeclarationSyntax> subItems = resolvedFields
 				.SelectMany(f => f.Type.GeneratedSyntax ?? Array.Empty<MemberDeclarationSyntax>())
@@ -798,11 +817,18 @@ namespace EdjCase.ICP.ClientGenerator
 			ValueName candidConverterProperty
 		)
 		{
+			(ValueName Name, ResolvedType Type) ResolveType((ValueName Name, SourceCodeType Type) type, int i)
+			{
+				string nameContext = StringUtil.ToPascalCase(csharpName) + StringUtil.ToPascalCase(type.Name.PropertyName);
+				ResolvedType resolvedType = typeResolver.ResolveType(type.Type, nameContext, parentType: clientName);
+				return (type.Name, resolvedType);
+			}
+			
 			List<(ValueName Name, ResolvedType Type)> resolvedArgTypes = info.ArgTypes
-				.Select(t => (t.Name, typeResolver.ResolveType(t.Type, t.Name.PropertyName, parentType: clientName)))
+				.Select(ResolveType)
 				.ToList();
 			List<(ValueName Name, ResolvedType Type)> resolvedReturnTypes = info.ReturnTypes
-				.Select((t, i) => (t.Name, typeResolver.ResolveType(t.Type, StringUtil.ToPascalCase(csharpName) + StringUtil.ToPascalCase(t.Name.PropertyName) + i, parentType: clientName)))
+				.Select(ResolveType)
 				.ToList();
 
 			List<TypedValueName> argTypes = resolvedArgTypes
@@ -949,7 +975,8 @@ namespace EdjCase.ICP.ClientGenerator
 			else
 			{
 				// `CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, {methodName}, arg)`
-				StatementSyntax invokeCallAndWait = GenerateCallAndWait(candidName, argName, variableName);
+				string? replyVariableName = returnTypes.Any() ? variableName : null; // Dont include reply variable if its not used
+				StatementSyntax invokeCallAndWait = GenerateCallAndWait(candidName, argName, replyVariableName);
 				statements.Add(invokeCallAndWait);
 
 			}
@@ -1079,7 +1106,7 @@ namespace EdjCase.ICP.ClientGenerator
 				);
 		}
 
-		private static StatementSyntax GenerateCallAndWait(string methodName, string argName, string variableName)
+		private static StatementSyntax GenerateCallAndWait(string methodName, string argName, string? variableName)
 		{
 			InvocationExpressionSyntax apiCall = SyntaxFactory.InvocationExpression(
 					SyntaxFactory.MemberAccessExpression(
@@ -1118,22 +1145,32 @@ namespace EdjCase.ICP.ClientGenerator
 						)
 					)
 				);
-			return SyntaxFactory.LocalDeclarationStatement(
-				SyntaxFactory.VariableDeclaration(
-					SyntaxFactory.IdentifierName(typeof(CandidArg).FullName!)
-				)
-				.WithVariables(
-					SyntaxFactory.SingletonSeparatedList(
-						SyntaxFactory.VariableDeclarator(
-							SyntaxFactory.Identifier(variableName)
-						)
-						.WithInitializer(
-							SyntaxFactory.EqualsValueClause(
-								SyntaxFactory.AwaitExpression(apiCall)
+			if (variableName != null)
+			{
+				// `CandidArg reply = await ...`
+				return SyntaxFactory.LocalDeclarationStatement(
+					SyntaxFactory.VariableDeclaration(
+						SyntaxFactory.IdentifierName(typeof(CandidArg).FullName!)
+					)
+					.WithVariables(
+						SyntaxFactory.SingletonSeparatedList(
+							SyntaxFactory.VariableDeclarator(
+								SyntaxFactory.Identifier(variableName)
+							)
+							.WithInitializer(
+								SyntaxFactory.EqualsValueClause(
+									SyntaxFactory.AwaitExpression(apiCall)
+								)
 							)
 						)
 					)
-				)
+				);
+			}
+			// No variable, just await 
+			// `await ...`
+
+			return SyntaxFactory.ExpressionStatement(
+				SyntaxFactory.AwaitExpression(apiCall)
 			);
 		}
 		private static StatementSyntax GenerateCall(string methodName, string argName)

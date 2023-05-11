@@ -48,7 +48,7 @@ namespace Sample.Shared.Governance.Models
 			return new Command_2(Command_2Tag.DisburseToNeuron, info);
 		}
 
-		public static Command_2 SyncCommand(Command_2.SyncCommandRecord info)
+		public static Command_2 SyncCommand(Command_2.SyncCommandInfo info)
 		{
 			return new Command_2(Command_2Tag.SyncCommand, info);
 		}
@@ -98,10 +98,10 @@ namespace Sample.Shared.Governance.Models
 			return (DisburseToNeuron)this.Value!;
 		}
 
-		public Command_2.SyncCommandRecord AsSyncCommand()
+		public Command_2.SyncCommandInfo AsSyncCommand()
 		{
 			this.ValidateTag(Command_2Tag.SyncCommand);
-			return (Command_2.SyncCommandRecord)this.Value!;
+			return (Command_2.SyncCommandInfo)this.Value!;
 		}
 
 		public ClaimOrRefresh AsClaimOrRefreshNeuron()
@@ -130,9 +130,9 @@ namespace Sample.Shared.Governance.Models
 			}
 		}
 
-		public class SyncCommandRecord
+		public class SyncCommandInfo
 		{
-			public SyncCommandRecord()
+			public SyncCommandInfo()
 			{
 			}
 		}
@@ -150,7 +150,7 @@ namespace Sample.Shared.Governance.Models
 		Merge,
 		[VariantOptionType(typeof(DisburseToNeuron))]
 		DisburseToNeuron,
-		[VariantOptionType(typeof(Command_2.SyncCommandRecord))]
+		[VariantOptionType(typeof(Command_2.SyncCommandInfo))]
 		SyncCommand,
 		[VariantOptionType(typeof(ClaimOrRefresh))]
 		ClaimOrRefreshNeuron,

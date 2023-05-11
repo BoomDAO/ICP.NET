@@ -23,7 +23,7 @@ namespace Sample.Shared.Governance.Models
 		{
 		}
 
-		public static By NeuronIdOrSubaccount(By.NeuronIdOrSubaccountRecord info)
+		public static By NeuronIdOrSubaccount(By.NeuronIdOrSubaccountInfo info)
 		{
 			return new By(ByTag.NeuronIdOrSubaccount, info);
 		}
@@ -38,10 +38,10 @@ namespace Sample.Shared.Governance.Models
 			return new By(ByTag.Memo, info);
 		}
 
-		public By.NeuronIdOrSubaccountRecord AsNeuronIdOrSubaccount()
+		public By.NeuronIdOrSubaccountInfo AsNeuronIdOrSubaccount()
 		{
 			this.ValidateTag(ByTag.NeuronIdOrSubaccount);
-			return (By.NeuronIdOrSubaccountRecord)this.Value!;
+			return (By.NeuronIdOrSubaccountInfo)this.Value!;
 		}
 
 		public ClaimOrRefreshNeuronFromAccount AsMemoAndController()
@@ -64,9 +64,9 @@ namespace Sample.Shared.Governance.Models
 			}
 		}
 
-		public class NeuronIdOrSubaccountRecord
+		public class NeuronIdOrSubaccountInfo
 		{
-			public NeuronIdOrSubaccountRecord()
+			public NeuronIdOrSubaccountInfo()
 			{
 			}
 		}
@@ -74,7 +74,7 @@ namespace Sample.Shared.Governance.Models
 
 	public enum ByTag
 	{
-		[VariantOptionType(typeof(By.NeuronIdOrSubaccountRecord))]
+		[VariantOptionType(typeof(By.NeuronIdOrSubaccountInfo))]
 		NeuronIdOrSubaccount,
 		[VariantOptionType(typeof(ClaimOrRefreshNeuronFromAccount))]
 		MemoAndController,

@@ -25,7 +25,7 @@ namespace Sample.Shared.AddressBook
 		public async Task set_address(string name, address addr)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(name), CandidTypedValue.FromObject(addr));
-			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "set_address", arg);
+			await this.Agent.CallAndWaitAsync(this.CanisterId, "set_address", arg);
 		}
 
 		public async System.Threading.Tasks.Task<OptionalValue<address>> get_address(string name)

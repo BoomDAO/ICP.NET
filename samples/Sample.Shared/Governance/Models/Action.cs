@@ -33,6 +33,11 @@ namespace Sample.Shared.Governance.Models
 			return new Action(ActionTag.ManageNeuron, info);
 		}
 
+		public static Action CreateServiceNervousSystem(CreateServiceNervousSystem info)
+		{
+			return new Action(ActionTag.CreateServiceNervousSystem, info);
+		}
+
 		public static Action ExecuteNnsFunction(ExecuteNnsFunction info)
 		{
 			return new Action(ActionTag.ExecuteNnsFunction, info);
@@ -93,6 +98,12 @@ namespace Sample.Shared.Governance.Models
 		{
 			this.ValidateTag(ActionTag.ManageNeuron);
 			return (ManageNeuron)this.Value!;
+		}
+
+		public CreateServiceNervousSystem AsCreateServiceNervousSystem()
+		{
+			this.ValidateTag(ActionTag.CreateServiceNervousSystem);
+			return (CreateServiceNervousSystem)this.Value!;
 		}
 
 		public ExecuteNnsFunction AsExecuteNnsFunction()
@@ -170,6 +181,8 @@ namespace Sample.Shared.Governance.Models
 		RegisterKnownNeuron,
 		[VariantOptionType(typeof(ManageNeuron))]
 		ManageNeuron,
+		[VariantOptionType(typeof(CreateServiceNervousSystem))]
+		CreateServiceNervousSystem,
 		[VariantOptionType(typeof(ExecuteNnsFunction))]
 		ExecuteNnsFunction,
 		[VariantOptionType(typeof(RewardNodeProvider))]
