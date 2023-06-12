@@ -12,26 +12,34 @@ namespace Sample.Shared.Governance.Models
 		[CandidName("neuron_basket_construction_parameters")]
 		public OptionalValue<NeuronBasketConstructionParameters> NeuronBasketConstructionParameters { get; set; }
 
+		[CandidName("confirmation_text")]
+		public OptionalValue<string> ConfirmationText { get; set; }
+
 		[CandidName("maximum_participant_icp")]
-		public OptionalValue<ulong> MaximumParticipantIcp { get; set; }
+		public OptionalValue<Tokens> MaximumParticipantIcp { get; set; }
 
 		[CandidName("minimum_icp")]
-		public OptionalValue<ulong> MinimumIcp { get; set; }
+		public OptionalValue<Tokens> MinimumIcp { get; set; }
 
 		[CandidName("minimum_participant_icp")]
-		public OptionalValue<ulong> MinimumParticipantIcp { get; set; }
+		public OptionalValue<Tokens> MinimumParticipantIcp { get; set; }
 
 		[CandidName("maximum_icp")]
-		public OptionalValue<ulong> MaximumIcp { get; set; }
+		public OptionalValue<Tokens> MaximumIcp { get; set; }
 
-		public SwapParameters(OptionalValue<ulong> minimumParticipants, OptionalValue<NeuronBasketConstructionParameters> neuronBasketConstructionParameters, OptionalValue<ulong> maximumParticipantIcp, OptionalValue<ulong> minimumIcp, OptionalValue<ulong> minimumParticipantIcp, OptionalValue<ulong> maximumIcp)
+		[CandidName("restricted_countries")]
+		public OptionalValue<Countries> RestrictedCountries { get; set; }
+
+		public SwapParameters(OptionalValue<ulong> minimumParticipants, OptionalValue<NeuronBasketConstructionParameters> neuronBasketConstructionParameters, OptionalValue<string> confirmationText, OptionalValue<Tokens> maximumParticipantIcp, OptionalValue<Tokens> minimumIcp, OptionalValue<Tokens> minimumParticipantIcp, OptionalValue<Tokens> maximumIcp, OptionalValue<Countries> restrictedCountries)
 		{
 			this.MinimumParticipants = minimumParticipants;
 			this.NeuronBasketConstructionParameters = neuronBasketConstructionParameters;
+			this.ConfirmationText = confirmationText;
 			this.MaximumParticipantIcp = maximumParticipantIcp;
 			this.MinimumIcp = minimumIcp;
 			this.MinimumParticipantIcp = minimumParticipantIcp;
 			this.MaximumIcp = maximumIcp;
+			this.RestrictedCountries = restrictedCountries;
 		}
 
 		public SwapParameters()
