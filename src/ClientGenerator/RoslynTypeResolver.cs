@@ -278,7 +278,7 @@ namespace EdjCase.ICP.ClientGenerator
 
 				// TODO auto change the property values of all class types if it matches the name
 				ValueName tagName = ValueName.Default(variantTypeName.GetName() == "Tag" ? "TagValue" : "Tag", this.KeepCandidCase);
-				ValueName valueName = ValueName.Default(variantTypeName.GetName() == "Value" ? "Value_" : "Value", this.KeepCandidCase);
+				ValueName valueName = ValueName.Default(variantTypeName.GetName() == "Value" ? "ValueValue" : "Value", this.KeepCandidCase);
 
 				// 'As{X}' methods (if has option type)
 				methods.AddRange(

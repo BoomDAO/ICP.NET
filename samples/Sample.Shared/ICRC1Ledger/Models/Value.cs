@@ -23,12 +23,12 @@ namespace Sample.Shared.ICRC1Ledger.Models
 		public ValueTag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public System.Object? Value { get; set; }
+		public System.Object? ValueValue { get; set; }
 
-		public Value(ValueTag tag, object? value)
+		public Value(ValueTag tag, object? valueValue)
 		{
 			this.Tag = tag;
-			this.Value = value;
+			this.ValueValue = valueValue;
 		}
 
 		protected Value()
@@ -73,43 +73,43 @@ namespace Sample.Shared.ICRC1Ledger.Models
 		public List<byte> AsBlob()
 		{
 			this.ValidateTag(ValueTag.Blob);
-			return (List<byte>)this.Value!;
+			return (List<byte>)this.ValueValue!;
 		}
 
 		public string AsText()
 		{
 			this.ValidateTag(ValueTag.Text);
-			return (string)this.Value!;
+			return (string)this.ValueValue!;
 		}
 
 		public UnboundedUInt AsNat()
 		{
 			this.ValidateTag(ValueTag.Nat);
-			return (UnboundedUInt)this.Value!;
+			return (UnboundedUInt)this.ValueValue!;
 		}
 
 		public ulong AsNat64()
 		{
 			this.ValidateTag(ValueTag.Nat64);
-			return (ulong)this.Value!;
+			return (ulong)this.ValueValue!;
 		}
 
 		public UnboundedInt AsInt()
 		{
 			this.ValidateTag(ValueTag.Int);
-			return (UnboundedInt)this.Value!;
+			return (UnboundedInt)this.ValueValue!;
 		}
 
 		public List<Value> AsArray()
 		{
 			this.ValidateTag(ValueTag.Array);
-			return (List<Value>)this.Value!;
+			return (List<Value>)this.ValueValue!;
 		}
 
 		public Map AsMap()
 		{
 			this.ValidateTag(ValueTag.Map);
-			return (Map)this.Value!;
+			return (Map)this.ValueValue!;
 		}
 
 		private void ValidateTag(ValueTag tag)
