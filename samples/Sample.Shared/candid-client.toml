@@ -14,6 +14,11 @@ type = "canister"
 canister-id = "rrkah-fqaaa-aaaaa-aaaaq-cai"
 
 [[clients]]
+name = "ICRC1Ledger"
+type = "canister"
+canister-id = "mxzaz-hqaaa-aaaar-qaada-cai"
+
+[[clients]]
 name = "AddressBook"
 type = "file"
 file-path = "ServiceDefinitions/AddressBook.did"

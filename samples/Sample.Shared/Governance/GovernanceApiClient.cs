@@ -193,6 +193,13 @@ namespace Sample.Shared.Governance
 			return reply.ToObjects<Models.Result>(this.Converter);
 		}
 
+		public async System.Threading.Tasks.Task<Models.ManageNeuronResponse> SimulateManageNeuron(Models.ManageNeuron arg0)
+		{
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "simulate_manage_neuron", arg);
+			return reply.ToObjects<Models.ManageNeuronResponse>(this.Converter);
+		}
+
 		public async System.Threading.Tasks.Task<Models.Result> TransferGtcNeuron(Models.NeuronId arg0, Models.NeuronId arg1)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0), CandidTypedValue.FromObject(arg1));

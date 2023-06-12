@@ -58,7 +58,7 @@ namespace Sample.Shared.Governance.Models
 			return new Command_1(Command_1Tag.RegisterVote, info);
 		}
 
-		public static Command_1 Merge(Command_1.MergeInfo info)
+		public static Command_1 Merge(MergeResponse info)
 		{
 			return new Command_1(Command_1Tag.Merge, info);
 		}
@@ -130,10 +130,10 @@ namespace Sample.Shared.Governance.Models
 			return (Command_1.RegisterVoteInfo)this.Value!;
 		}
 
-		public Command_1.MergeInfo AsMerge()
+		public MergeResponse AsMerge()
 		{
 			this.ValidateTag(Command_1Tag.Merge);
-			return (Command_1.MergeInfo)this.Value!;
+			return (MergeResponse)this.Value!;
 		}
 
 		public SpawnResponse AsDisburseToNeuron()
@@ -194,13 +194,6 @@ namespace Sample.Shared.Governance.Models
 			{
 			}
 		}
-
-		public class MergeInfo
-		{
-			public MergeInfo()
-			{
-			}
-		}
 	}
 
 	public enum Command_1Tag
@@ -219,7 +212,7 @@ namespace Sample.Shared.Governance.Models
 		Configure,
 		[VariantOptionType(typeof(Command_1.RegisterVoteInfo))]
 		RegisterVote,
-		[VariantOptionType(typeof(Command_1.MergeInfo))]
+		[VariantOptionType(typeof(MergeResponse))]
 		Merge,
 		[VariantOptionType(typeof(SpawnResponse))]
 		DisburseToNeuron,
