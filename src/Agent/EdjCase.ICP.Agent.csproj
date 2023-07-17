@@ -36,7 +36,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\BLS\EdjCase.ICP.BLS.csproj" />
 	  <ProjectReference Include="..\Candid\EdjCase.ICP.Candid.csproj" />
 	</ItemGroup>
 </Project>
