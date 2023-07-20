@@ -98,8 +98,6 @@ namespace EdjCase.ICP.Agent.Agents
 
 			while (true)
 			{
-				await Task.Delay(100, cancellationToken ?? CancellationToken.None);
-
 				cancellationToken?.ThrowIfCancellationRequested();
 
 				RequestStatus? requestStatus = await agent.GetRequestStatusAsync(canisterId, id);
