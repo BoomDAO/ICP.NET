@@ -45,7 +45,7 @@
   - [Delegation](#P-EdjCase-ICP-Agent-Models-Certificate-Delegation 'EdjCase.ICP.Agent.Models.Certificate.Delegation')
   - [Signature](#P-EdjCase-ICP-Agent-Models-Certificate-Signature 'EdjCase.ICP.Agent.Models.Certificate.Signature')
   - [Tree](#P-EdjCase-ICP-Agent-Models-Certificate-Tree 'EdjCase.ICP.Agent.Models.Certificate.Tree')
-  - [IsValid(rootPublicKey)](#M-EdjCase-ICP-Agent-Models-Certificate-IsValid-EdjCase-ICP-Agent-SubjectPublicKeyInfo- 'EdjCase.ICP.Agent.Models.Certificate.IsValid(EdjCase.ICP.Agent.SubjectPublicKeyInfo)')
+  - [IsValid(bls,rootPublicKey)](#M-EdjCase-ICP-Agent-Models-Certificate-IsValid-EdjCase-ICP-BLS-IBlsCryptography,EdjCase-ICP-Agent-SubjectPublicKeyInfo- 'EdjCase.ICP.Agent.Models.Certificate.IsValid(EdjCase.ICP.BLS.IBlsCryptography,EdjCase.ICP.Agent.SubjectPublicKeyInfo)')
 - [CertificateDelegation](#T-EdjCase-ICP-Agent-Models-CertificateDelegation 'EdjCase.ICP.Agent.Models.CertificateDelegation')
   - [#ctor(subnetId,certificate)](#M-EdjCase-ICP-Agent-Models-CertificateDelegation-#ctor-EdjCase-ICP-Candid-Models-Principal,EdjCase-ICP-Agent-Models-Certificate- 'EdjCase.ICP.Agent.Models.CertificateDelegation.#ctor(EdjCase.ICP.Candid.Models.Principal,EdjCase.ICP.Agent.Models.Certificate)')
   - [Certificate](#P-EdjCase-ICP-Agent-Models-CertificateDelegation-Certificate 'EdjCase.ICP.Agent.Models.CertificateDelegation.Certificate')
@@ -105,8 +105,8 @@
   - [ErrorCode](#P-EdjCase-ICP-Agent-Standards-ICRC1-Models-GenericError-ErrorCode 'EdjCase.ICP.Agent.Standards.ICRC1.Models.GenericError.ErrorCode')
   - [Message](#P-EdjCase-ICP-Agent-Standards-ICRC1-Models-GenericError-Message 'EdjCase.ICP.Agent.Standards.ICRC1.Models.GenericError.Message')
 - [HttpAgent](#T-EdjCase-ICP-Agent-Agents-HttpAgent 'EdjCase.ICP.Agent.Agents.HttpAgent')
-  - [#ctor(identity,httpClient)](#M-EdjCase-ICP-Agent-Agents-HttpAgent-#ctor-EdjCase-ICP-Agent-Agents-Http-IHttpClient,EdjCase-ICP-Agent-Identities-IIdentity- 'EdjCase.ICP.Agent.Agents.HttpAgent.#ctor(EdjCase.ICP.Agent.Agents.Http.IHttpClient,EdjCase.ICP.Agent.Identities.IIdentity)')
-  - [#ctor(identity,httpBoundryNodeUrl)](#M-EdjCase-ICP-Agent-Agents-HttpAgent-#ctor-EdjCase-ICP-Agent-Identities-IIdentity,System-Uri- 'EdjCase.ICP.Agent.Agents.HttpAgent.#ctor(EdjCase.ICP.Agent.Identities.IIdentity,System.Uri)')
+  - [#ctor(identity,bls,httpClient)](#M-EdjCase-ICP-Agent-Agents-HttpAgent-#ctor-EdjCase-ICP-Agent-Agents-Http-IHttpClient,EdjCase-ICP-Agent-Identities-IIdentity,EdjCase-ICP-BLS-IBlsCryptography- 'EdjCase.ICP.Agent.Agents.HttpAgent.#ctor(EdjCase.ICP.Agent.Agents.Http.IHttpClient,EdjCase.ICP.Agent.Identities.IIdentity,EdjCase.ICP.BLS.IBlsCryptography)')
+  - [#ctor(identity,bls,httpBoundryNodeUrl)](#M-EdjCase-ICP-Agent-Agents-HttpAgent-#ctor-EdjCase-ICP-Agent-Identities-IIdentity,System-Uri,EdjCase-ICP-BLS-IBlsCryptography- 'EdjCase.ICP.Agent.Agents.HttpAgent.#ctor(EdjCase.ICP.Agent.Identities.IIdentity,System.Uri,EdjCase.ICP.BLS.IBlsCryptography)')
   - [Identity](#P-EdjCase-ICP-Agent-Agents-HttpAgent-Identity 'EdjCase.ICP.Agent.Agents.HttpAgent.Identity')
   - [CallAsync()](#M-EdjCase-ICP-Agent-Agents-HttpAgent-CallAsync-EdjCase-ICP-Candid-Models-Principal,System-String,EdjCase-ICP-Candid-Models-CandidArg,EdjCase-ICP-Candid-Models-Principal- 'EdjCase.ICP.Agent.Agents.HttpAgent.CallAsync(EdjCase.ICP.Candid.Models.Principal,System.String,EdjCase.ICP.Candid.Models.CandidArg,EdjCase.ICP.Candid.Models.Principal)')
   - [GetReplicaStatusAsync()](#M-EdjCase-ICP-Agent-Agents-HttpAgent-GetReplicaStatusAsync 'EdjCase.ICP.Agent.Agents.HttpAgent.GetReplicaStatusAsync')
@@ -739,8 +739,8 @@ A signature on the tree root hash. Used to validate the tree
 
 A partial state tree of the requested state data
 
-<a name='M-EdjCase-ICP-Agent-Models-Certificate-IsValid-EdjCase-ICP-Agent-SubjectPublicKeyInfo-'></a>
-### IsValid(rootPublicKey) `method`
+<a name='M-EdjCase-ICP-Agent-Models-Certificate-IsValid-EdjCase-ICP-BLS-IBlsCryptography,EdjCase-ICP-Agent-SubjectPublicKeyInfo-'></a>
+### IsValid(bls,rootPublicKey) `method`
 
 ##### Summary
 
@@ -755,6 +755,7 @@ True if the certificate is valid, otherwise false
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
+| bls | [EdjCase.ICP.BLS.IBlsCryptography](#T-EdjCase-ICP-BLS-IBlsCryptography 'EdjCase.ICP.BLS.IBlsCryptography') | BLS crytography implementation to verify signature |
 | rootPublicKey | [EdjCase.ICP.Agent.SubjectPublicKeyInfo](#T-EdjCase-ICP-Agent-SubjectPublicKeyInfo 'EdjCase.ICP.Agent.SubjectPublicKeyInfo') | The root public key (DER encoded) of the internet computer network |
 
 <a name='T-EdjCase-ICP-Agent-Models-CertificateDelegation'></a>
@@ -1412,25 +1413,27 @@ EdjCase.ICP.Agent.Agents
 
 An \`IAgent\` implementation using HTTP to make requests to the IC
 
-<a name='M-EdjCase-ICP-Agent-Agents-HttpAgent-#ctor-EdjCase-ICP-Agent-Agents-Http-IHttpClient,EdjCase-ICP-Agent-Identities-IIdentity-'></a>
-### #ctor(identity,httpClient) `constructor`
+<a name='M-EdjCase-ICP-Agent-Agents-HttpAgent-#ctor-EdjCase-ICP-Agent-Agents-Http-IHttpClient,EdjCase-ICP-Agent-Identities-IIdentity,EdjCase-ICP-BLS-IBlsCryptography-'></a>
+### #ctor(identity,bls,httpClient) `constructor`
 
 ##### Parameters
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | identity | [EdjCase.ICP.Agent.Agents.Http.IHttpClient](#T-EdjCase-ICP-Agent-Agents-Http-IHttpClient 'EdjCase.ICP.Agent.Agents.Http.IHttpClient') | Optional. Identity to use for each request. If unspecified, will use anonymous identity |
-| httpClient | [EdjCase.ICP.Agent.Identities.IIdentity](#T-EdjCase-ICP-Agent-Identities-IIdentity 'EdjCase.ICP.Agent.Identities.IIdentity') | Optional. Sets the http client to use, otherwise will use the default http client |
+| bls | [EdjCase.ICP.Agent.Identities.IIdentity](#T-EdjCase-ICP-Agent-Identities-IIdentity 'EdjCase.ICP.Agent.Identities.IIdentity') | Optional. Bls crypto implementation to validate signatures. If unspecified, will use default implementation |
+| httpClient | [EdjCase.ICP.BLS.IBlsCryptography](#T-EdjCase-ICP-BLS-IBlsCryptography 'EdjCase.ICP.BLS.IBlsCryptography') | Optional. Sets the http client to use, otherwise will use the default http client |
 
-<a name='M-EdjCase-ICP-Agent-Agents-HttpAgent-#ctor-EdjCase-ICP-Agent-Identities-IIdentity,System-Uri-'></a>
-### #ctor(identity,httpBoundryNodeUrl) `constructor`
+<a name='M-EdjCase-ICP-Agent-Agents-HttpAgent-#ctor-EdjCase-ICP-Agent-Identities-IIdentity,System-Uri,EdjCase-ICP-BLS-IBlsCryptography-'></a>
+### #ctor(identity,bls,httpBoundryNodeUrl) `constructor`
 
 ##### Parameters
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | identity | [EdjCase.ICP.Agent.Identities.IIdentity](#T-EdjCase-ICP-Agent-Identities-IIdentity 'EdjCase.ICP.Agent.Identities.IIdentity') | Optional. Identity to use for each request. If unspecified, will use anonymous identity |
-| httpBoundryNodeUrl | [System.Uri](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Uri 'System.Uri') | Url to the boundry node to connect to. Defaults to \`https://ic0.app/\` |
+| bls | [System.Uri](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Uri 'System.Uri') | Optional. Bls crypto implementation to validate signatures. If unspecified, will use default implementation |
+| httpBoundryNodeUrl | [EdjCase.ICP.BLS.IBlsCryptography](#T-EdjCase-ICP-BLS-IBlsCryptography 'EdjCase.ICP.BLS.IBlsCryptography') | Url to the boundry node to connect to. Defaults to \`https://ic0.app/\` |
 
 <a name='P-EdjCase-ICP-Agent-Agents-HttpAgent-Identity'></a>
 ### Identity `property`
