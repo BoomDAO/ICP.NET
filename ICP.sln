@@ -42,6 +42,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnityAssets", "UnityAssets", "{94023B5A-0650-4E67-A685-D1C979DA717F}"
 	ProjectSection(SolutionItems) = preProject
 		UnityAssets\UnityHttp.cs = UnityAssets\UnityHttp.cs
+		UnityAssets\WebGlBls.cs = UnityAssets\WebGlBls.cs
 	EndProjectSection
 EndProject
 Global

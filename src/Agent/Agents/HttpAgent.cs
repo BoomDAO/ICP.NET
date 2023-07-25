@@ -16,6 +16,7 @@ using System.Net.Http.Headers;
 using System.Formats.Cbor;
 using EdjCase.ICP.Candid.Encodings;
 using System.Linq;
+using EdjCase.ICP.BLS;
 
 namespace EdjCase.ICP.Agent.Agents
 {
@@ -34,24 +35,37 @@ namespace EdjCase.ICP.Agent.Agents
 		public IIdentity? Identity { get; set; }
 
 		private readonly IHttpClient httpClient;
+		private readonly IBlsCryptography bls;
 
 		/// <param name="identity">Optional. Identity to use for each request. If unspecified, will use anonymous identity</param>
+		/// <param name="bls">Optional. Bls crypto implementation to validate signatures. If unspecified, will use default implementation</param>
 		/// <param name="httpClient">Optional. Sets the http client to use, otherwise will use the default http client</param>
-		public HttpAgent(IHttpClient httpClient, IIdentity? identity = null)
+		public HttpAgent(
+			IHttpClient httpClient,
+			IIdentity? identity = null,
+			IBlsCryptography? bls = null
+		)
 		{
 			this.Identity = identity;
 			this.httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+			this.bls = bls ?? new WasmBlsCryptography();
 		}
 
 		/// <param name="identity">Optional. Identity to use for each request. If unspecified, will use anonymous identity</param>
+		/// <param name="bls">Optional. Bls crypto implementation to validate signatures. If unspecified, will use default implementation</param>
 		/// <param name="httpBoundryNodeUrl">Url to the boundry node to connect to. Defaults to `https://ic0.app/`</param>
-		public HttpAgent(IIdentity? identity = null, Uri? httpBoundryNodeUrl = null)
+		public HttpAgent(
+			IIdentity? identity = null,
+			Uri? httpBoundryNodeUrl = null,
+			IBlsCryptography? bls = null
+		)
 		{
 			this.Identity = identity;
 			this.httpClient = new DefaultHttpClient(new HttpClient()
 			{
 				BaseAddress = httpBoundryNodeUrl ?? new Uri("https://ic0.app/")
 			});
+			this.bls = bls ?? new WasmBlsCryptography();
 		}
 
 
@@ -115,7 +129,7 @@ namespace EdjCase.ICP.Agent.Agents
 			ReadStateResponse response = ReadStateResponse.ReadCbor(reader);
 
 			SubjectPublicKeyInfo rootPublicKey = await this.GetRootKeyAsync();
-			if (!response.Certificate.IsValid(rootPublicKey))
+			if (!response.Certificate.IsValid(this.bls, rootPublicKey))
 			{
 				throw new InvalidCertificateException("Certificate signature does not match the IC public key");
 			}

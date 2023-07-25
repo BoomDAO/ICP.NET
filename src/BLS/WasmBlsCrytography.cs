@@ -1,16 +1,98 @@
 using System;
+using System.Collections.Concurrent;
+using System.Drawing;
 using System.IO;
+using System.Net;
+using System.Runtime.InteropServices;
 using System.Text;
 using Wasmtime;
 
 namespace EdjCase.ICP.BLS
 {
-	internal class BlsLib
+	/// <summary>
+	/// Class with functions around BLS signatures (ICP flavor only)
+	/// </summary>
+	public class WasmBlsCryptography : IBlsCryptography
+	{
+		private const int PublicKeyLength = 96;
+		private const int SignatureLength = 48;
+
+		private static object intializeLock = new object();
+		private static bool isInitialized = false;
+		private static WasmBlsInstance? instance;
+
+		/// <inheritdoc />
+		public bool VerifySignature(
+			byte[] publicKey,
+			byte[] messageHash,
+			byte[] signature
+		)
+		{
+			if (signature.Length != SignatureLength)
+			{
+				throw new ArgumentOutOfRangeException(nameof(signature), signature.Length, $"Signature must be {SignatureLength} bytes long.");
+			}
+			if (publicKey.Length != PublicKeyLength)
+			{
+				throw new ArgumentOutOfRangeException(nameof(publicKey), publicKey.Length, $"Public Key must be {PublicKeyLength} bytes long.");
+			}
+
+			return VerifySignatureInternal(
+				publicKey,
+				messageHash,
+				signature
+			);
+		}
+
+		private static bool VerifySignatureInternal(
+			byte[] publicKey,
+			byte[] messageHash,
+			byte[] signature
+		)
+		{
+			EnsureInitialized();
+
+			byte[] blsPublicKey = instance!.PublicKeyDeserialize(publicKey);
+
+			byte[] blsSignature = instance.SignatureDeserialize(signature);
+
+			return instance.Verify(blsSignature, blsPublicKey, messageHash);
+		}
+
+
+		private static void EnsureInitialized()
+		{
+			lock (WasmBlsCryptography.intializeLock)
+			{
+				if (!WasmBlsCryptography.isInitialized)
+				{
+					if (!Environment.Is64BitProcess)
+					{
+						throw new PlatformNotSupportedException("not 64-bit system");
+					}
+					if (instance == null)
+					{
+						instance = WasmBlsInstance.Create();
+					}
+					instance.Init(Constants.BLS12_381, Constants.COMPILED_TIME_VAR);
+
+					instance.SetEthSerialization(true);
+					instance.SetMapToMode(WasmBlsInstance.MapToMode.HashToCurve);
+					string s = "1 0x24aa2b2f08f0a91260805272dc51051c6e47ad4fa403b02b4510b647ae3d1770bac0326a805bbefd48056c8c121bdb8 0x13e02b6052719f607dacd3a088274f65596bd0d09920b61ab5da61bbdc7f5049334cf11213945d57e5ac7d055d042b7e 0x0ce5d527727d6e118cc9cdc6da2e351aadfd9baa8cbdd3a76d429a695160d12c923ac9cc3baca289e193548608b82801 0x0606c4a02ea734cc32acd2b02bc28b99cb3e287e85a763af267492ab572e99ab3f370d275cec1da1aaa9075ff05f79be";
+					byte[] gen = instance.PublicKeySetHexStr(s);
+					instance.SetGeneratorOfPublicKey(gen);
+					string dst = "BLS_SIG_BLS12381G1_XMD:SHA-256_SSWU_RO_NUL_";
+					instance.MclBnG1SetDst(dst);
+					WasmBlsCryptography.isInitialized = true;
+				}
+			}
+		}
+	}
+	internal class WasmBlsInstance
 	{
 		private readonly Instance instance;
 
-		public BlsLib(
-			Instance instance)
+		public WasmBlsInstance(Instance instance)
 		{
 			this.instance = instance;
 		}
@@ -114,7 +196,7 @@ namespace EdjCase.ICP.BLS
 			using MallocScope sigScope = this.DisposableMalloc(Constants.SIGNATURE_SIZE);
 			using MallocScope bytesScope = this.DisposableMalloc(signatureBytes.Length);
 			bytesScope.SetValue(signatureBytes);
-			
+
 
 			int signatureBytesRead = this.instance
 				.GetFunction<int, int, int, int>("blsSignatureDeserialize")!
@@ -161,10 +243,10 @@ namespace EdjCase.ICP.BLS
 			return keyScope.GetValue();
 		}
 
-		public static BlsLib Create()
+		public static WasmBlsInstance Create()
 		{
 			var engine = new Engine(new Config().WithReferenceTypes(true));
-			using Stream stream = typeof(BlsUtil)
+			using Stream stream = typeof(WasmBlsInstance)
 				.Assembly
 				.GetManifestResourceStream("EdjCase.ICP.BLS.bls.wasm");
 			var module = Module.FromStream(engine, "hello", stream);
@@ -180,7 +262,7 @@ namespace EdjCase.ICP.BLS
 
 			// TODO dispose?
 
-			return new BlsLib(instance);
+			return new WasmBlsInstance(instance);
 		}
 		internal enum MapToMode
 		{
@@ -190,11 +272,11 @@ namespace EdjCase.ICP.BLS
 
 		private class MallocScope : IDisposable
 		{
-			private BlsLib blsLib;
+			private WasmBlsInstance blsLib;
 			public int Address { get; }
 			public int Size { get; }
 
-			public MallocScope(BlsLib blsLib, int address, int size)
+			public MallocScope(WasmBlsInstance blsLib, int address, int size)
 			{
 				this.blsLib = blsLib;
 				this.Address = address;
@@ -234,18 +316,6 @@ namespace EdjCase.ICP.BLS
 					.Read<T>(this.Address);
 			}
 		}
-
-
-		//[StructLayout(LayoutKind.Sequential)]
-		//internal unsafe struct PublicKey
-		//{
-		//	public fixed uint v[Constants.PUBLICKEY_UNIT_SIZE];
-		//}
-
-		//[StructLayout(LayoutKind.Sequential)]
-		//internal unsafe struct Signature
-		//{
-		//	public fixed ulong v[Constants.SIGNATURE_UNIT_SIZE];
-		//}
 	}
+
 }
