@@ -1,0 +1,11 @@
+The following files should be added to the `Plugins/ICP.NET/` directory in Unity
+- UnityHttp.cs - An alternative HttpClient that uses UnityWebRequest (needed for WebGL)
+	To use, create a `UnityHttpClient` instance and when creating an `HttpAgent` pass it as a parameter instead of the default
+- WebGlBlsCrytography.cs - The WebGL version of the bls signature verify library, run in the browswer vs in C#/WASM
+	To use, create a `WebGlBlsCrytography` instance and when creating an `HttpAgent` pass it as a parameter instead of the default
+- Bls.jslib - The bridge between the C# code and JS to allow C# to invoke the JS bls signature verification
+
+Other files:
+- bls.js - Add to unity project and reference from an HTML file with a script tag. Loads in the JS bls signature verification that will be used with `WebGlBlsCrytography.cs`.
+	To generate the bls.js file, run `npx esbuild --bundle src/index.ts --outfile=dist/index.js` on github.com/dfinity/agent-js project in the directory `packages/bls-verify/`
+	Also modify the bls.js file to change `var blsVerify = ...` to `window.blsVerify = ...`. // TODO find a better way to export function
