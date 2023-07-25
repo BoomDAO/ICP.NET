@@ -15,9 +15,9 @@ Collection of Internet Computer Protocol (ICP) libraries for .NET/Blazor/Unity
 
 # 🎮 Unity Integration
 
-Note: WebGL/IL2CPP is not supported YET due to an issue with IL2CPP, working on it
-- Download latest binaries for the agent: https://github.com/edjCase/ICP.NET/releases
-- Extract `.zip` to a plugins folder in your Unity Assets: `Assets/plugins/ICP.NET/`
+- Download latest `agent.unitypackage` from: https://github.com/edjCase/ICP.NET/releases
+- Import `agent.unitypackage` into your unity project
+- If using WebGL, follow the additional WebGL instructions in the [Agent Docs](src/Agent/README.md)
 - If generating a client (see below), place the generated files into the scripts folder: `Assets/scripts/MyClient`
 - Start coding 💻
 

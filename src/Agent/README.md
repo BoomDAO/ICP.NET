@@ -167,3 +167,23 @@ DelegationChain chain = ...;
 var innerIdentity = new Ed25519Identity(publicKeyBytes, privateKey);
 var delegatedIdentity = new DelegationIdentity(innerIdentity, chain);
 ```
+
+# WebGL Builds
+Due to how WebGL works by converting C# to JS/WASM using IL2CPP there are a few additional steps to avoid
+incompatibilities. 
+- UnityHttpClient - The .NET `HttpClient` does not work in many cases, so `UnityHttpClient` is added via Unity C# script.
+    ```cs
+    var client = new UnityHttpClient();
+    var agent = new HttpAgent(client);
+    ```
+- WebGlBlsCryptography - The BLS signature verification relies on a 3rd party library and due to that library not being directly compatible with the WebGL builds, `WebGlBlsCryptography` needs to be used instead of the default `WasmBlsCryptography` class.
+    
+    ```cs
+    var bls = new WebGlBlsCrytography();
+    var agent = new HttpAgent(client, bls: bls);
+    ```
+    In addition, the `bls.js` file located in `{icp.net base dir}/UnityAssets/` needs to be included in the Unity project and referenced by the HTML page
+    ```html
+    <script src="{path_to_dir}/bls.js"/>
+    ```
+    That will load in the JS bls library that will be referenced by the `Bls.jslib` that is included in the ICP.NET unity package
