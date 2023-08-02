@@ -8,8 +8,6 @@ Collection of Internet Computer Protocol (ICP) libraries for .NET/Blazor/Unity
 
 - [Client Generator](src/ClientGenerator/README.md) - Client source code generator for ICP canisters
 
-- [Internet Identity (Experimental)](src/InternetIdentity/README.md) - Internet Identity authenticater (experimental and not secure)
-
 ## See each individual project README for more in depth guides
 
 
