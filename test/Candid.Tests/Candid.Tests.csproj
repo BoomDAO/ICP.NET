@@ -47,7 +47,6 @@
 		<ProjectReference Include="..\..\src\Candid\EdjCase.ICP.Candid.csproj" />
 		<ProjectReference Include="..\..\src\Agent\EdjCase.ICP.Agent.csproj" />
 		<ProjectReference Include="..\..\src\ClientGenerator\EdjCase.ICP.ClientGenerator.csproj" />
-		<ProjectReference Include="..\..\src\InternetIdentity\EdjCase.ICP.InternetIdentity.csproj" />
 	</ItemGroup>
 
 </Project>
