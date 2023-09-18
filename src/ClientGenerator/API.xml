@@ -10,7 +10,7 @@
             or from a canister id
             </summary>
         </member>
-        <member name="M:EdjCase.ICP.ClientGenerator.ClientCodeGenerator.GenerateClientFromCanisterAsync(EdjCase.ICP.Candid.Models.Principal,EdjCase.ICP.ClientGenerator.ClientGenerationOptions,System.Uri)">
+        <member name="M:EdjCase.ICP.ClientGenerator.ClientCodeGenerator.GenerateClientFromCanisterAsync(EdjCase.ICP.Candid.Models.Principal,EdjCase.ICP.ClientGenerator.ClientGenerationOptions)">
             <summary>
             Creates client source code for a canister based on its id. This only works if 
             the canister has the `candid:service` meta data available in its public state
@@ -48,7 +48,7 @@
             The base namespace to use in the generated files
             </summary>
         </member>
-        <member name="P:EdjCase.ICP.ClientGenerator.ClientGenerationOptions.NoFolders">
+        <member name="P:EdjCase.ICP.ClientGenerator.ClientGenerationOptions.OutputDirectory">
             <summary>
             If true, there will be no folders, all files will be in the same directory
             </summary>
@@ -64,12 +64,19 @@
             Otherwise they will be converted to something prettier
             </summary>
         </member>
-        <member name="M:EdjCase.ICP.ClientGenerator.ClientGenerationOptions.#ctor(System.String,System.String,System.Boolean,System.Boolean,System.Boolean)">
+        <member name="P:EdjCase.ICP.ClientGenerator.ClientGenerationOptions.Types">
+            <summary>
+            Optional. Specifies options for each candid type in the definition.
+            Only supports named types, no anonymous types
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.ClientGenerator.ClientGenerationOptions.#ctor(System.String,System.String,System.Boolean,System.String,System.String,System.Boolean,System.Boolean,System.Boolean,System.Uri,System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.ClientGenerator.ITypeOptions})">
             <param name="name">The name of the client class and file to use</param>
             <param name="namespace">The base namespace to use in the generated files</param>
             <param name="noFolders">If true, there will be no folders, all files will be in the same directory</param>
             <param name="featureNullable">If true, the nullable C# feature will be used</param>
             <param name="keepCandidCase">If true, the names of properties and methods will keep the raw candid name. Otherwise they will be converted to something prettier</param>
+            <param name="types">Optional. Specifies options for each candid type in the definition</param>
         </member>
         <member name="T:EdjCase.ICP.ClientGenerator.ClientSyntax">
             <summary>

@@ -26,11 +26,10 @@ namespace EdjCase.ICP.ClientGenerator
 		/// <param name="httpBoundryNodeUrl">Optional. The http boundry node url to use, otherwise uses the default</param>
 		public static async Task<ClientSyntax> GenerateClientFromCanisterAsync(
 			Principal canisterId,
-			ClientGenerationOptions options,
-			Uri? httpBoundryNodeUrl = null
+			ClientGenerationOptions options
 		)
 		{
-			var agent = new HttpAgent(identity: null, httpBoundryNodeUrl: httpBoundryNodeUrl);
+			var agent = new HttpAgent(identity: null, httpBoundryNodeUrl: options.BoundryNodeUrl);
 			var candidServicePath = StatePath.FromSegments("canister", canisterId.Raw, "metadata", "candid:service");
 			var paths = new List<StatePath>
 			{
@@ -77,10 +76,18 @@ namespace EdjCase.ICP.ClientGenerator
 			// where candid is: type A = Type;
 			Dictionary<string, SourceCodeType> declaredTypes = service.DeclaredTypes
 				.Where(t => t.Value is not CandidServiceType) // avoid duplication service of type
-				.ToDictionary(
-					t => t.Key.ToString(),
-					t => ResolveSourceCodeType(t.Value, options.KeepCandidCase)
-				);
+				.Select(t =>
+				{
+					ITypeOptions? typeOptions = options.Types.GetValueOrDefault(t.Key.ToString());
+					string typeName = typeOptions?.NameOverride ?? t.Key.ToString();
+					SourceCodeType sourceCodeType = ResolveSourceCodeType(
+						t.Value,
+						options.KeepCandidCase,
+						typeOptions
+					);
+					return (Name: typeName, Type: sourceCodeType);
+				})
+				.ToDictionary(t => t.Name, t => t.Type);
 
 			string modelNamespace = options.NoFolders
 				? options.Namespace
@@ -110,7 +117,7 @@ namespace EdjCase.ICP.ClientGenerator
 			}
 
 			string clientName = options.Name + "ApiClient";
-			TypeName clientTypeName = new(clientName, options.Namespace, prefix: null);
+			TypeName clientTypeName = new ClassicTypeName(clientName, options.Namespace, prefix: null);
 			ServiceSourceCodeType serviceSourceType = ResolveService(service.Service, options.KeepCandidCase);
 			CompilationUnitSyntax clientSource = RoslynSourceGenerator.GenerateClientSourceCode(clientTypeName, options.Namespace, serviceSourceType, typeResolver, aliasTypes);
 
@@ -118,8 +125,21 @@ namespace EdjCase.ICP.ClientGenerator
 			return new ClientSyntax(clientName, clientSource, typeFiles);
 		}
 
-		private static SourceCodeType ResolveSourceCodeType(CandidType type, bool keepCandidCase)
+		private static SourceCodeType ResolveSourceCodeType(
+			CandidType type,
+			bool keepCandidCase,
+			ITypeOptions? typeOptions)
 		{
+			T? GetTypeOptions<T>()
+				where T : class, ITypeOptions
+			{
+				if (typeOptions != null
+					&& typeOptions is not T)
+				{
+					throw new Exception($"Type is '{typeOptions.GetType()}' but type options assume '{typeof(T)}'. Fix config");
+				}
+				return typeOptions as T;
+			}
 
 			switch (type)
 			{
@@ -158,59 +178,101 @@ namespace EdjCase.ICP.ClientGenerator
 					}
 				case CandidVectorType v:
 					{
-						SourceCodeType innerType = ResolveSourceCodeType(v.InnerType, keepCandidCase);
-						return new CompiledTypeSourceCodeType(typeof(List<>), innerType);
+						VectorTypeOptions? vTypeOptions = GetTypeOptions<VectorTypeOptions>();
+						ITypeOptions? innerTypeOptions = vTypeOptions?.InnerType;
+						SourceCodeType innerType = ResolveSourceCodeType(
+							v.InnerType,
+							keepCandidCase,
+							innerTypeOptions
+						);
+						switch (vTypeOptions?.Representation ?? VectorRepresentation.List)
+						{
+							case VectorRepresentation.Array:
+								return new CompiledTypeSourceCodeType(typeof(Array), innerType);
+							case VectorRepresentation.List:
+								return new CompiledTypeSourceCodeType(typeof(List<>), innerType);
+							default:
+								throw new NotImplementedException();
+						}
 					}
 				case CandidOptionalType o:
 					{
-						SourceCodeType innerType = ResolveSourceCodeType(o.Value, keepCandidCase);
+						SourceCodeType innerType = ResolveSourceCodeType(
+							o.Value,
+							keepCandidCase,
+							typeOptions: null
+						);
 
 						return new CompiledTypeSourceCodeType(typeof(OptionalValue<>), innerType);
 					}
 				case CandidRecordType o:
 					{
+						RecordTypeOptions? rTypeOptions = GetTypeOptions<RecordTypeOptions>();
 						// Check if tuple (tag ids are 0...N)
-						bool isTuple = o.Fields.Any() && o.Fields
-							.Select(f => f.Key.Id)
-							.OrderBy(f => f)
-							.SequenceEqual(Enumerable.Range(0, o.Fields.Count).Select(i => (uint)i));
-						if (isTuple)
+
+						RecordRepresentation representation;
+						if ((rTypeOptions?.Representation) != null)
 						{
-							bool containsTypeReference = o.Fields.Any(f => f.Value is CandidReferenceType);
-							if (!containsTypeReference)
-							{
+							representation = rTypeOptions!.Representation.Value;
+						}
+						else
+						{
+							bool isTuple = o.Fields.Any()
+								&& o.Fields
+									.Select(f => f.Key.Id)
+									.OrderBy(f => f)
+									.SequenceEqual(Enumerable.Range(0, o.Fields.Count).Select(i => (uint)i))
 								// Only be a tuple if it doesnt reference any other type
 								// This is due to complications with C# aliasing
+								&& o.Fields.Any(f => f.Value is CandidReferenceType);
+
+							representation = isTuple ? RecordRepresentation.Tuple : RecordRepresentation.CustomType;
+						}
+
+						switch (representation)
+						{
+							case RecordRepresentation.CustomType:
+								List<(ValueName Key, SourceCodeType Type)> fields = o.Fields
+									.Select(f =>
+									{
+										CandidType fCandidType = f.Value;
+										ITypeOptions? fieldTypeOptions = f.Key.Name == null ? null : rTypeOptions?.Fields.GetValueOrDefault(f.Key.Name);
+										SourceCodeType fType = ResolveSourceCodeType(fCandidType, keepCandidCase, fieldTypeOptions);
+										return (ValueName.Default(f.Key, keepCandidCase), fType);
+									})
+									.Where(f => f.Item2 != null)
+									.ToList()!;
+								return new RecordSourceCodeType(fields);
+							case RecordRepresentation.Tuple:
 								List<SourceCodeType> tupleFields = o.Fields
 									.Select(f =>
 									{
-										return ResolveSourceCodeType(f.Value, keepCandidCase);
+										ITypeOptions? fieldTypeOptions = rTypeOptions?.Fields.GetValueOrDefault(f.Key.ToString());
+										return ResolveSourceCodeType(
+											f.Value,
+											keepCandidCase,
+											fieldTypeOptions
+										);
 									})
 									.Where(f => f != null)
 									.ToList()!;
 								return new TupleSourceCodeType(tupleFields);
-							}
+
+							default:
+								throw new NotImplementedException();
 						}
-						List<(ValueName Key, SourceCodeType Type)> fields = o.Fields
-							.Select(f =>
-							{
-								CandidType fCandidType = f.Value;
-								SourceCodeType fType = ResolveSourceCodeType(fCandidType, keepCandidCase);
-								return (ValueName.Default(f.Key, keepCandidCase), fType);
-							})
-							.Where(f => f.Item2 != null)
-							.ToList()!;
-						return new RecordSourceCodeType(fields);
 					}
 				case CandidVariantType va:
 					{
+						VariantTypeOptions? variantTypeOptions = GetTypeOptions<VariantTypeOptions>();
 						List<(ValueName Key, SourceCodeType? Type)> fields = va.Options
 							.Select(f =>
 							{
+								ITypeOptions? innerTypeOptions = f.Key.Name == null ? null : variantTypeOptions?.Options.GetValueOrDefault(f.Key.Name);
 								// If type is null, then just be a typeless variant
 								SourceCodeType? sourceCodeType = f.Value == CandidType.Null()
 									? null
-									: ResolveSourceCodeType(f.Value, keepCandidCase);
+									: ResolveSourceCodeType(f.Value, keepCandidCase, innerTypeOptions);
 								return (ValueName.Default(f.Key, keepCandidCase), sourceCodeType);
 							})
 							.ToList();
@@ -249,7 +311,7 @@ namespace EdjCase.ICP.ClientGenerator
 			(ValueName Name, SourceCodeType Type) ResolveXType((CandidId? Name, CandidType Type) a, int i)
 			{
 				ValueName name = ValueName.Default(a.Name?.ToString() ?? "arg" + i, keepCandidCase);
-				SourceCodeType type = ResolveSourceCodeType(a.Type, keepCandidCase);
+				SourceCodeType type = ResolveSourceCodeType(a.Type, keepCandidCase, null);
 				return (name, type);
 			}
 		}

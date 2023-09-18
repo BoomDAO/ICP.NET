@@ -44,6 +44,8 @@ namespace EdjCase.ICP.ClientGenerator.SyntaxRewriters
 			{
 				case NameSyntax n:
 					return this.StripNamespace(n);
+				case ArrayTypeSyntax a:
+					return a.WithElementType(this.StripNamespace(a.ElementType));
 				case TupleTypeSyntax tt:
 					return tt.WithElements(
 						SyntaxFactory.SeparatedList(
@@ -155,6 +157,8 @@ namespace EdjCase.ICP.ClientGenerator.SyntaxRewriters
 				or MemberAccessExpressionSyntax
 				or CastExpressionSyntax
 				or TypeArgumentListSyntax
+				or TupleTypeSyntax
+				or ArrayTypeSyntax
 				or AttributeSyntax
 				or PropertyDeclarationSyntax
 				or ObjectCreationExpressionSyntax

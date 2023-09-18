@@ -88,22 +88,34 @@ namespace EdjCase.ICP.ClientGenerator
 								innerTypes = resolvedGenericType.GeneratedSyntax;
 							}
 						}
-
-						string typeName = c.Type.Name;
-						if (c.Type.IsGenericTypeDefinition)
+						TypeName cType;
+						if (c.Type == typeof(Array))
 						{
-							// Remove the `1 from the end
-							typeName = typeName[..^2];
-						}
-						var cType = new TypeName(
-							typeName,
-							c.Type.Namespace,
-							prefix: null,
-							resolvedGenericType == null ? Array.Empty<TypeName>() : new[]
+							if (resolvedGenericType == null)
 							{
-								resolvedGenericType.Name
+								cType = new ClassicTypeName("Array", "System", null);
 							}
-						);
+							else
+							{
+								TypeName elementTypeName = resolvedGenericType.Name;
+								cType = new ArrayTypeName(elementTypeName);
+							}
+						}
+						else
+						{
+							string typeName = c.Type.Name;
+							if (c.Type.IsGenericTypeDefinition)
+							{
+								// Remove the `1 from the end
+								typeName = typeName[..^2];
+							}
+							cType = new ClassicTypeName(
+								typeName,
+								c.Type.Namespace,
+								prefix: null,
+								resolvedGenericType?.Name
+							);
+						}
 
 						return new ResolvedType(cType, innerTypes);
 					}
@@ -112,7 +124,7 @@ namespace EdjCase.ICP.ClientGenerator
 						bool isAlias = this.Aliases.Contains(re.Id.Value);
 
 						string? @namespace = isAlias ? null : this.ModelNamespace;
-						return new ResolvedType(new TypeName(
+						return new ResolvedType(new ClassicTypeName(
 							re.Id.Value,
 							@namespace,
 							prefix: null
@@ -134,20 +146,15 @@ namespace EdjCase.ICP.ClientGenerator
 						ResolvedType[] innerResolvedTypes = r.Fields
 							.Select(f => this.ResolveType(f, nameContext, parentType))
 							.ToArray();
-						TypeName[] innerTypes = innerResolvedTypes
+						List<TypeName> innerTypes = innerResolvedTypes
 							.Select(t => t.Name)
-							.ToArray();
+							.ToList();
 						MemberDeclarationSyntax[] innerSyntax = innerResolvedTypes
 							.Where(t => t.GeneratedSyntax != null)
 							.SelectMany(t => t.GeneratedSyntax!)
 							.ToArray();
 
-						var cType = new TypeName(
-							"ValueTuple",
-							"System",
-							prefix: null,
-							innerTypes
-						);
+						var cType = new TupleTypeName(innerTypes);
 						return new ResolvedType(cType, innerSyntax);
 					}
 				case RecordSourceCodeType r:
@@ -172,7 +179,7 @@ namespace EdjCase.ICP.ClientGenerator
 				// public IAgent Agent { get; }
 				new ClassProperty(
 					name: ValueName.Default("Agent", this.KeepCandidCase),
-					type: TypeName.FromType<IAgent>(),
+					type: ClassicTypeName.FromType<IAgent>(),
 					access: AccessType.Public,
 					hasSetter: false
 				),
@@ -180,7 +187,7 @@ namespace EdjCase.ICP.ClientGenerator
 				// public Principal CanisterId { get; }
 				new ClassProperty(
 					name: ValueName.Default("CanisterId", this.KeepCandidCase),
-					type: TypeName.FromType<Principal>(),
+					type: ClassicTypeName.FromType<Principal>(),
 					access: AccessType.Public,
 					hasSetter: false
 				),
@@ -191,7 +198,7 @@ namespace EdjCase.ICP.ClientGenerator
 				// public CandidConverter? Converter { get; }
 				new ClassProperty(
 					name: candidConverterProperty,
-					type: TypeName.FromType<CandidConverter>(isNullable: this.FeatureNullable),
+					type: ClassicTypeName.FromType<CandidConverter>(isNullable: this.FeatureNullable),
 					access: AccessType.Public,
 					hasSetter: false
 				)
@@ -306,7 +313,7 @@ namespace EdjCase.ICP.ClientGenerator
 				),
 				new ClassProperty(
 					valueName,
-					TypeName.FromType<object>(isNullable: this.FeatureNullable),
+					ClassicTypeName.FromType<object>(isNullable: this.FeatureNullable),
 					access: AccessType.Public,
 					hasSetter: true,
 					AttributeInfo.FromType<VariantValuePropertyAttribute>()
@@ -350,7 +357,7 @@ namespace EdjCase.ICP.ClientGenerator
 				prefix = @namespace[(lastDotIndex + 1)..];
 				@namespace = @namespace[..lastDotIndex];
 			}
-			return new TypeName(name, @namespace, prefix);
+			return new ClassicTypeName(name, @namespace, prefix);
 		}
 
 		private MethodDeclarationSyntax GenerateVariantValidateTypeMethod(TypeName enumTypeName, ValueName tagName)
@@ -552,7 +559,7 @@ namespace EdjCase.ICP.ClientGenerator
 				body: SyntaxFactory.Block(
 				SyntaxFactory.ReturnStatement(
 					SyntaxFactory.ObjectCreationExpression(
-						SyntaxFactory.IdentifierName(variantTypeName.GetNamespacedName())
+						variantTypeName.ToTypeSyntax()
 					)
 					.WithArgumentList(
 						SyntaxFactory.ArgumentList(
@@ -561,7 +568,7 @@ namespace EdjCase.ICP.ClientGenerator
 										SyntaxFactory.Argument(
 											SyntaxFactory.MemberAccessExpression(
 												SyntaxKind.SimpleMemberAccessExpression,
-												SyntaxFactory.IdentifierName(enumTypeName.GetNamespacedName()),
+												enumTypeName.ToTypeSyntax(),
 												SyntaxFactory.IdentifierName(optionTypeName.PropertyName)
 											)
 										),
@@ -677,9 +684,10 @@ namespace EdjCase.ICP.ClientGenerator
 						.WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken))
 				);
 			}
+
 			PropertyDeclarationSyntax propertySyntax = SyntaxFactory
 				.PropertyDeclaration(
-					SyntaxFactory.IdentifierName(property.Type.GetNamespacedName()),
+					property.Type.ToTypeSyntax(),
 					SyntaxFactory.Identifier(property.Name.PropertyName)
 				)
 				.WithAccessorList(SyntaxFactory.AccessorList(
@@ -718,7 +726,7 @@ namespace EdjCase.ICP.ClientGenerator
 						// Indicate there is no associated name, just an id
 						// Usually with tuples like 'record { text; nat; }'
 						attributeList.Add(GenerateAttribute(
-							new AttributeInfo(TypeName.FromType<CandidTagAttribute>(), v.Name.CandidTag.Id)
+							new AttributeInfo(ClassicTypeName.FromType<CandidTagAttribute>(), v.Name.CandidTag.Id)
 						));
 					}
 					else if (v.Name.CandidTag.Name != v.Name.PropertyName)
@@ -726,7 +734,7 @@ namespace EdjCase.ICP.ClientGenerator
 						// [CandidName({candidName}]
 						// Only add if names differ
 						attributeList.Add(GenerateAttribute(
-							new AttributeInfo(TypeName.FromType<CandidNameAttribute>(), v.Name.CandidTag.Name!)
+							new AttributeInfo(ClassicTypeName.FromType<CandidNameAttribute>(), v.Name.CandidTag.Name!)
 						));
 					}
 
@@ -734,7 +742,7 @@ namespace EdjCase.ICP.ClientGenerator
 					{
 						// [VariantOptionType(typeof({type}))]
 						attributeList.Add(GenerateAttribute(
-							new AttributeInfo(TypeName.FromType<VariantOptionTypeAttribute>(), v.Type)
+							new AttributeInfo(ClassicTypeName.FromType<VariantOptionTypeAttribute>(), v.Type)
 						));
 
 					}
@@ -1488,7 +1496,7 @@ namespace EdjCase.ICP.ClientGenerator
 						SyntaxFactory.BaseList(
 							SyntaxFactory.SeparatedList(
 								implementTypes
-									.Select(t => SyntaxFactory.SimpleBaseType(SyntaxFactory.IdentifierName(t.GetNamespacedName())))
+									.Select(t => SyntaxFactory.SimpleBaseType(t.ToTypeSyntax()))
 									.Cast<BaseTypeSyntax>()
 									.ToArray()
 							)
@@ -1554,7 +1562,7 @@ namespace EdjCase.ICP.ClientGenerator
 
 			public static AttributeInfo FromType<T>(params object[]? args)
 			{
-				TypeName type = TypeName.FromType<T>();
+				TypeName type = ClassicTypeName.FromType<T>();
 				return new AttributeInfo(type, args);
 			}
 		}
