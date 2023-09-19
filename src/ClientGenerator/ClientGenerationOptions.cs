@@ -21,6 +21,7 @@ namespace EdjCase.ICP.ClientGenerator
 		public string Name { get; }
 		public bool GetDefinitionFromCansiter { get; }
 		public string FilePathOrCanisterId { get; }
+		public bool PurgeOutputDirectory { get; }
 		/// <summary>
 		/// The base namespace to use in the generated files
 		/// </summary>
@@ -60,6 +61,7 @@ namespace EdjCase.ICP.ClientGenerator
 			bool getDefinitionFromCanister,
 			string filePathOrCandidId,
 			string outputDirectory,
+			bool purgeOutputDirectory = true,
 			bool noFolders = false,
 			bool featureNullable = false,
 			bool keepCandidCase = false,
@@ -77,6 +79,7 @@ namespace EdjCase.ICP.ClientGenerator
 			this.GetDefinitionFromCansiter = getDefinitionFromCanister;
 			this.FilePathOrCanisterId = filePathOrCandidId;
 			this.OutputDirectory = outputDirectory;
+			this.PurgeOutputDirectory = purgeOutputDirectory;
 			this.NoFolders = noFolders;
 			this.FeatureNullable = featureNullable;
 			this.KeepCandidCase = keepCandidCase;

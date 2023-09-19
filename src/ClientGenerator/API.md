@@ -8,7 +8,7 @@
   - [GenerateClientFromCanisterAsync(canisterId,options,httpBoundryNodeUrl)](#M-EdjCase-ICP-ClientGenerator-ClientCodeGenerator-GenerateClientFromCanisterAsync-EdjCase-ICP-Candid-Models-Principal,EdjCase-ICP-ClientGenerator-ClientGenerationOptions- 'EdjCase.ICP.ClientGenerator.ClientCodeGenerator.GenerateClientFromCanisterAsync(EdjCase.ICP.Candid.Models.Principal,EdjCase.ICP.ClientGenerator.ClientGenerationOptions)')
   - [GenerateClientFromFile(fileText,options)](#M-EdjCase-ICP-ClientGenerator-ClientCodeGenerator-GenerateClientFromFile-System-String,EdjCase-ICP-ClientGenerator-ClientGenerationOptions- 'EdjCase.ICP.ClientGenerator.ClientCodeGenerator.GenerateClientFromFile(System.String,EdjCase.ICP.ClientGenerator.ClientGenerationOptions)')
 - [ClientGenerationOptions](#T-EdjCase-ICP-ClientGenerator-ClientGenerationOptions 'EdjCase.ICP.ClientGenerator.ClientGenerationOptions')
-  - [#ctor(name,namespace,noFolders,featureNullable,keepCandidCase,types)](#M-EdjCase-ICP-ClientGenerator-ClientGenerationOptions-#ctor-System-String,System-String,System-Boolean,System-String,System-String,System-Boolean,System-Boolean,System-Boolean,System-Uri,System-Collections-Generic-Dictionary{System-String,EdjCase-ICP-ClientGenerator-ITypeOptions}- 'EdjCase.ICP.ClientGenerator.ClientGenerationOptions.#ctor(System.String,System.String,System.Boolean,System.String,System.String,System.Boolean,System.Boolean,System.Boolean,System.Uri,System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.ClientGenerator.ITypeOptions})')
+  - [#ctor(name,namespace,noFolders,featureNullable,keepCandidCase,types)](#M-EdjCase-ICP-ClientGenerator-ClientGenerationOptions-#ctor-System-String,System-String,System-Boolean,System-String,System-String,System-Boolean,System-Boolean,System-Boolean,System-Boolean,System-Uri,System-Collections-Generic-Dictionary{System-String,EdjCase-ICP-ClientGenerator-ITypeOptions}- 'EdjCase.ICP.ClientGenerator.ClientGenerationOptions.#ctor(System.String,System.String,System.Boolean,System.String,System.String,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Uri,System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.ClientGenerator.ITypeOptions})')
   - [FeatureNullable](#P-EdjCase-ICP-ClientGenerator-ClientGenerationOptions-FeatureNullable 'EdjCase.ICP.ClientGenerator.ClientGenerationOptions.FeatureNullable')
   - [KeepCandidCase](#P-EdjCase-ICP-ClientGenerator-ClientGenerationOptions-KeepCandidCase 'EdjCase.ICP.ClientGenerator.ClientGenerationOptions.KeepCandidCase')
   - [Name](#P-EdjCase-ICP-ClientGenerator-ClientGenerationOptions-Name 'EdjCase.ICP.ClientGenerator.ClientGenerationOptions.Name')
@@ -90,7 +90,7 @@ EdjCase.ICP.ClientGenerator
 
 Options for generating a client
 
-<a name='M-EdjCase-ICP-ClientGenerator-ClientGenerationOptions-#ctor-System-String,System-String,System-Boolean,System-String,System-String,System-Boolean,System-Boolean,System-Boolean,System-Uri,System-Collections-Generic-Dictionary{System-String,EdjCase-ICP-ClientGenerator-ITypeOptions}-'></a>
+<a name='M-EdjCase-ICP-ClientGenerator-ClientGenerationOptions-#ctor-System-String,System-String,System-Boolean,System-String,System-String,System-Boolean,System-Boolean,System-Boolean,System-Boolean,System-Uri,System-Collections-Generic-Dictionary{System-String,EdjCase-ICP-ClientGenerator-ITypeOptions}-'></a>
 ### #ctor(name,namespace,noFolders,featureNullable,keepCandidCase,types) `constructor`
 
 ##### Parameters

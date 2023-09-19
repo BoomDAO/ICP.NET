@@ -132,7 +132,7 @@ file-path = ""../MyService.did""
 						// Use file name for client name
 						source = ClientCodeGenerator.GenerateClientFromFile(fileText, clientOptions);
 					}
-					WriteClient(source, clientOptions.OutputDirectory, clientOptions.NoFolders);
+					WriteClient(source, clientOptions);
 				}
 				return 0;
 			}
@@ -143,16 +143,22 @@ file-path = ""../MyService.did""
 			}
 		}
 
-		private static void WriteClient(ClientSyntax result, string outputDirectory, bool noFolders)
+		private static void WriteClient(ClientSyntax result, ClientGenerationOptions options)
 		{
-			Console.WriteLine($"Writing client file to: {outputDirectory}\\{result.Name}.cs");
+			if (options.PurgeOutputDirectory)
+			{
+				Console.WriteLine($"Purging output directory: {options.OutputDirectory}");
+				Directory.Delete(options.OutputDirectory, true);
+			}
+
+			Console.WriteLine($"Writing client file to: {options.OutputDirectory}\\{result.Name}.cs");
 			WriteFile(null, result.Name, result.ClientFile);
 
 
-			Console.WriteLine($"Writing data model files to directory: {outputDirectory}\\Models\\");
+			Console.WriteLine($"Writing data model files to directory: {options.OutputDirectory}\\Models\\");
 			foreach ((string name, CompilationUnitSyntax sourceCode) in result.TypeFiles)
 			{
-				WriteFile(noFolders ? null : "Models", name, sourceCode);
+				WriteFile(options.NoFolders ? null : "Models", name, sourceCode);
 			}
 			Console.WriteLine("Client successfully generated!");
 			Console.WriteLine();
@@ -169,8 +175,8 @@ file-path = ""../MyService.did""
 					.Split(invalidFileNameChars, StringSplitOptions.RemoveEmptyEntries);
 				fileName = string.Join("_", split).TrimEnd('.');
 				string directory = subDirectory == null
-					? outputDirectory
-					: Path.Combine(outputDirectory, subDirectory);
+					? options.OutputDirectory
+					: Path.Combine(options.OutputDirectory, subDirectory);
 				Directory.CreateDirectory(directory);
 				string filePath = Path.Combine(directory, fileName + ".cs");
 

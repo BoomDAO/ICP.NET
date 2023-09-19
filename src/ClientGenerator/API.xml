@@ -70,7 +70,7 @@
             Only supports named types, no anonymous types
             </summary>
         </member>
-        <member name="M:EdjCase.ICP.ClientGenerator.ClientGenerationOptions.#ctor(System.String,System.String,System.Boolean,System.String,System.String,System.Boolean,System.Boolean,System.Boolean,System.Uri,System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.ClientGenerator.ITypeOptions})">
+        <member name="M:EdjCase.ICP.ClientGenerator.ClientGenerationOptions.#ctor(System.String,System.String,System.Boolean,System.String,System.String,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Uri,System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.ClientGenerator.ITypeOptions})">
             <param name="name">The name of the client class and file to use</param>
             <param name="namespace">The base namespace to use in the generated files</param>
             <param name="noFolders">If true, there will be no folders, all files will be in the same directory</param>

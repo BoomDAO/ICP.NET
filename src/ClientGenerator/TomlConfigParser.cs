@@ -25,6 +25,7 @@ namespace EdjCase.ICP.ClientGenerator
 
 			string baseNamespace = GetRequired<string>(config, "namespace");
 			string? baseUrl = GetOptional<string?>(config, "url");
+			bool? purgeDirectory = GetOptional<bool?>(config, "purge-directory");
 			bool? noFolders = GetOptional<bool?>(config, "no-folders");
 			Uri? boundryNodeUrl = baseUrl == null ? null : new Uri(baseUrl);
 			string outputDirectory = Path.GetRelativePath("./", GetOptional<string?>(config, "output-directory") ?? "./");
@@ -56,6 +57,7 @@ namespace EdjCase.ICP.ClientGenerator
 					string @namespace = baseNamespace + "." + name;
 					string clientOutputDirectory = GetOptional<string?>(client, "output-directory") ?? Path.Combine(outputDirectory, name);
 					string clientNamespace = GetOptional<string?>(client, "namespace") ?? @namespace;
+					bool clientPurgeOutputDirectory = GetOptional<bool?>(client, "purge-directory") ?? purgeDirectory ?? true;
 					bool clientNoFolders = GetOptional<bool?>(client, "no-folders") ?? noFolders ?? false;
 					bool clientFeatureNullable = GetOptional<bool?>(client, "feature-nullable") ?? featureNullable ?? true;
 					bool clientKeepCandidCase = GetOptional<bool?>(client, "keep-candid-case") ?? keepCandidCase ?? false;
@@ -68,6 +70,7 @@ namespace EdjCase.ICP.ClientGenerator
 						getDefinitionFromCanister,
 						filePathOrCandidId,
 						clientOutputDirectory,
+						clientPurgeOutputDirectory,
 						clientNoFolders,
 						clientFeatureNullable,
 						clientKeepCandidCase,
