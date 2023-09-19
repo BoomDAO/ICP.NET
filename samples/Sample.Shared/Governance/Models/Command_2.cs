@@ -11,7 +11,7 @@ namespace Sample.Shared.Governance.Models
 		public Command_2Tag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public System.Object? Value { get; set; }
+		public object? Value { get; set; }
 
 		public Command_2(Command_2Tag tag, object? value)
 		{

@@ -21,7 +21,7 @@ namespace Sample.Shared.ICRC1Ledger.Models
 		public ChangeFeeCollectorTag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public System.Object? Value { get; set; }
+		public object? Value { get; set; }
 
 		public ChangeFeeCollector(ChangeFeeCollectorTag tag, object? value)
 		{

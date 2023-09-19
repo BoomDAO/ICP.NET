@@ -14,7 +14,7 @@ namespace Sample.Shared.Dex.Models
 		public OrderPlacementReceiptTag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public System.Object? Value { get; set; }
+		public object? Value { get; set; }
 
 		public OrderPlacementReceipt(OrderPlacementReceiptTag tag, object? value)
 		{

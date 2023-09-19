@@ -224,7 +224,7 @@ namespace EdjCase.ICP.ClientGenerator
 									.SequenceEqual(Enumerable.Range(0, o.Fields.Count).Select(i => (uint)i))
 								// Only be a tuple if it doesnt reference any other type
 								// This is due to complications with C# aliasing
-								&& o.Fields.Any(f => f.Value is CandidReferenceType);
+								&& !o.Fields.Any(f => f.Value is CandidReferenceType);
 
 							representation = isTuple ? RecordRepresentation.Tuple : RecordRepresentation.CustomType;
 						}

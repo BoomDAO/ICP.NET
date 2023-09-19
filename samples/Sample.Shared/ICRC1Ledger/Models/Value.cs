@@ -23,7 +23,7 @@ namespace Sample.Shared.ICRC1Ledger.Models
 		public ValueTag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public System.Object? ValueValue { get; set; }
+		public object? ValueValue { get; set; }
 
 		public Value(ValueTag tag, object? valueValue)
 		{

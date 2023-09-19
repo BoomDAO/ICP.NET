@@ -44,9 +44,32 @@ namespace EdjCase.ICP.ClientGenerator
 				// TODO?
 				throw new NotImplementedException();
 			}
-			// TODO handle `fake` nullables like `object?`
-			string name = isNullable ? type.Name + "?" : type.Name;
-			return new ClassicTypeName(name, type.Namespace, prefix: null); // TODO prefix
+			var typeName = new ClassicTypeName(type.Name, type.Namespace, prefix: null); // TODO prefix
+			if (isNullable)
+			{
+				// Wrap in nullable type
+				return new OptionalTypeName(typeName);
+			}
+			return typeName;
+		}
+	}
+
+	internal class OptionalTypeName : TypeName
+	{
+		public TypeName InnerType { get; set; }
+		public OptionalTypeName(TypeName innerType) : base(null, null)
+		{
+			this.InnerType = innerType;
+		}
+
+		public override TypeSyntax ToTypeSyntax()
+		{
+			return SyntaxFactory.NullableType(this.InnerType.ToTypeSyntax());
+		}
+
+		protected override string BuildName(Func<TypeName, string> buildInnerName)
+		{
+			return buildInnerName(this.InnerType) + "?";
 		}
 	}
 
@@ -61,7 +84,7 @@ namespace EdjCase.ICP.ClientGenerator
 		}
 		protected override string BuildName(Func<TypeName, string> buildInnerName)
 		{
-			string elements = string.Join(", ", this.ElementTypeNameList.Select(e => buildInnerName));
+			string elements = string.Join(", ", this.ElementTypeNameList.Select(buildInnerName));
 			return $"ValueTuple<{elements}>";
 		}
 

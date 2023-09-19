@@ -32,13 +32,17 @@ namespace Sample.Shared.ICRC1Ledger.Models
 		[CandidName("change_fee_collector")]
 		public OptionalValue<ChangeFeeCollector> ChangeFeeCollector { get; set; }
 
-		public UpgradeArgs(OptionalValue<List<UpgradeArgs.MetadataItemItem>> metadata, OptionalValue<string> tokenSymbol, OptionalValue<string> tokenName, OptionalValue<ulong> transferFee, OptionalValue<ChangeFeeCollector> changeFeeCollector)
+		[CandidName("max_memo_length")]
+		public OptionalValue<ushort> MaxMemoLength { get; set; }
+
+		public UpgradeArgs(OptionalValue<List<UpgradeArgs.MetadataItemItem>> metadata, OptionalValue<string> tokenSymbol, OptionalValue<string> tokenName, OptionalValue<ulong> transferFee, OptionalValue<ChangeFeeCollector> changeFeeCollector, OptionalValue<ushort> maxMemoLength)
 		{
 			this.Metadata = metadata;
 			this.TokenSymbol = tokenSymbol;
 			this.TokenName = tokenName;
 			this.TransferFee = transferFee;
 			this.ChangeFeeCollector = changeFeeCollector;
+			this.MaxMemoLength = maxMemoLength;
 		}
 
 		public UpgradeArgs()

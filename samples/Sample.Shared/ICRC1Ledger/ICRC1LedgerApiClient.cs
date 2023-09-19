@@ -24,7 +24,7 @@ namespace Sample.Shared.ICRC1Ledger
 
 		public Principal CanisterId { get; }
 
-		public EdjCase.ICP.Candid.CandidConverter? Converter { get; }
+		public CandidConverter? Converter { get; }
 
 		public ICRC1LedgerApiClient(IAgent agent, Principal canisterId, CandidConverter? converter = default)
 		{

@@ -23,7 +23,7 @@ namespace Sample.Shared.ICRC1Ledger.Models
 		public MetadataValueTag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public System.Object? Value { get; set; }
+		public object? Value { get; set; }
 
 		public MetadataValue(MetadataValueTag tag, object? value)
 		{

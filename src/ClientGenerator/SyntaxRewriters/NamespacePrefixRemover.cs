@@ -159,6 +159,7 @@ namespace EdjCase.ICP.ClientGenerator.SyntaxRewriters
 				or TypeArgumentListSyntax
 				or TupleTypeSyntax
 				or ArrayTypeSyntax
+				or NullableTypeSyntax
 				or AttributeSyntax
 				or PropertyDeclarationSyntax
 				or ObjectCreationExpressionSyntax

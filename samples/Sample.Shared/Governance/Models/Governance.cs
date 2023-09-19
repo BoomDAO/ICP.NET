@@ -10,6 +10,9 @@ namespace Sample.Shared.Governance.Models
 		[CandidName("default_followees")]
 		public List<Governance.DefaultFolloweesItem> DefaultFollowees { get; set; }
 
+		[CandidName("making_sns_proposal")]
+		public OptionalValue<MakingSnsProposal> MakingSnsProposal { get; set; }
+
 		[CandidName("most_recent_monthly_node_provider_rewards")]
 		public OptionalValue<MostRecentMonthlyNodeProviderRewards> MostRecentMonthlyNodeProviderRewards { get; set; }
 
@@ -21,6 +24,9 @@ namespace Sample.Shared.Governance.Models
 
 		[CandidName("metrics")]
 		public OptionalValue<GovernanceCachedMetrics> Metrics { get; set; }
+
+		[CandidName("neuron_management_voting_period_seconds")]
+		public OptionalValue<ulong> NeuronManagementVotingPeriodSeconds { get; set; }
 
 		[CandidName("node_providers")]
 		public List<NodeProvider> NodeProviders { get; set; }
@@ -43,6 +49,9 @@ namespace Sample.Shared.Governance.Models
 		[CandidName("short_voting_period_seconds")]
 		public ulong ShortVotingPeriodSeconds { get; set; }
 
+		[CandidName("migrations")]
+		public OptionalValue<Migrations> Migrations { get; set; }
+
 		[CandidName("proposals")]
 		public List<Governance.ProposalsItem> Proposals { get; set; }
 
@@ -55,13 +64,15 @@ namespace Sample.Shared.Governance.Models
 		[CandidName("genesis_timestamp_seconds")]
 		public ulong GenesisTimestampSeconds { get; set; }
 
-		public Governance(List<Governance.DefaultFolloweesItem> defaultFollowees, OptionalValue<MostRecentMonthlyNodeProviderRewards> mostRecentMonthlyNodeProviderRewards, OptionalValue<ulong> maturityModulationLastUpdatedAtTimestampSeconds, ulong waitForQuietThresholdSeconds, OptionalValue<GovernanceCachedMetrics> metrics, List<NodeProvider> nodeProviders, OptionalValue<int> cachedDailyMaturityModulationBasisPoints, OptionalValue<NetworkEconomics> economics, OptionalValue<bool> spawningNeurons, OptionalValue<RewardEvent> latestRewardEvent, List<NeuronStakeTransfer> toClaimTransfers, ulong shortVotingPeriodSeconds, List<Governance.ProposalsItem> proposals, List<Governance.InFlightCommandsItem> inFlightCommands, List<Governance.NeuronsItem> neurons, ulong genesisTimestampSeconds)
+		public Governance(List<Governance.DefaultFolloweesItem> defaultFollowees, OptionalValue<MakingSnsProposal> makingSnsProposal, OptionalValue<MostRecentMonthlyNodeProviderRewards> mostRecentMonthlyNodeProviderRewards, OptionalValue<ulong> maturityModulationLastUpdatedAtTimestampSeconds, ulong waitForQuietThresholdSeconds, OptionalValue<GovernanceCachedMetrics> metrics, OptionalValue<ulong> neuronManagementVotingPeriodSeconds, List<NodeProvider> nodeProviders, OptionalValue<int> cachedDailyMaturityModulationBasisPoints, OptionalValue<NetworkEconomics> economics, OptionalValue<bool> spawningNeurons, OptionalValue<RewardEvent> latestRewardEvent, List<NeuronStakeTransfer> toClaimTransfers, ulong shortVotingPeriodSeconds, OptionalValue<Migrations> migrations, List<Governance.ProposalsItem> proposals, List<Governance.InFlightCommandsItem> inFlightCommands, List<Governance.NeuronsItem> neurons, ulong genesisTimestampSeconds)
 		{
 			this.DefaultFollowees = defaultFollowees;
+			this.MakingSnsProposal = makingSnsProposal;
 			this.MostRecentMonthlyNodeProviderRewards = mostRecentMonthlyNodeProviderRewards;
 			this.MaturityModulationLastUpdatedAtTimestampSeconds = maturityModulationLastUpdatedAtTimestampSeconds;
 			this.WaitForQuietThresholdSeconds = waitForQuietThresholdSeconds;
 			this.Metrics = metrics;
+			this.NeuronManagementVotingPeriodSeconds = neuronManagementVotingPeriodSeconds;
 			this.NodeProviders = nodeProviders;
 			this.CachedDailyMaturityModulationBasisPoints = cachedDailyMaturityModulationBasisPoints;
 			this.Economics = economics;
@@ -69,6 +80,7 @@ namespace Sample.Shared.Governance.Models
 			this.LatestRewardEvent = latestRewardEvent;
 			this.ToClaimTransfers = toClaimTransfers;
 			this.ShortVotingPeriodSeconds = shortVotingPeriodSeconds;
+			this.Migrations = migrations;
 			this.Proposals = proposals;
 			this.InFlightCommands = inFlightCommands;
 			this.Neurons = neurons;

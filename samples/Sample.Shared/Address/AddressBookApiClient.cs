@@ -13,7 +13,7 @@ namespace Sample.Shared.AddressBook
 
 		public Principal CanisterId { get; }
 
-		public EdjCase.ICP.Candid.CandidConverter? Converter { get; }
+		public CandidConverter? Converter { get; }
 
 		public AddressBookApiClient(IAgent agent, Principal canisterId, CandidConverter? converter = default)
 		{
