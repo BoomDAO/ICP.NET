@@ -1,3 +1,4 @@
+using EdjCase.ICP.Candid.Models;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
@@ -7,24 +8,18 @@ using System.Text;
 
 namespace EdjCase.ICP.ClientGenerator
 {
-	internal class ClassicTypeName : TypeName
+	internal class SimpleTypeName : TypeName
 	{
 		public string Name { get; }
-		public TypeName? GenericType { get; }
 
-		public ClassicTypeName(string name, string? @namespace, string? prefix, TypeName? genericType = null)
+		public SimpleTypeName(string name, string? @namespace, string? prefix)
 			: base(@namespace, prefix)
 		{
 			this.Name = name;
-			this.GenericType = genericType;
 		}
 
 		protected override string BuildName(Func<TypeName, string> buildInnerName)
 		{
-			if (this.GenericType != null)
-			{
-				return this.Name + $"<{buildInnerName(this.GenericType)}>";
-			}
 			return this.Name;
 		}
 
@@ -44,20 +39,109 @@ namespace EdjCase.ICP.ClientGenerator
 				// TODO?
 				throw new NotImplementedException();
 			}
-			var typeName = new ClassicTypeName(type.Name, type.Namespace, prefix: null); // TODO prefix
+			var typeName = new SimpleTypeName(type.Name, type.Namespace, prefix: null); // TODO prefix
 			if (isNullable)
 			{
 				// Wrap in nullable type
-				return new OptionalTypeName(typeName);
+				return new NullableTypeName(typeName);
 			}
 			return typeName;
 		}
 	}
 
-	internal class OptionalTypeName : TypeName
+	internal class ListTypeName : TypeName
 	{
 		public TypeName InnerType { get; set; }
-		public OptionalTypeName(TypeName innerType) : base(null, null)
+		public ListTypeName(TypeName innerType) : base("System.Collections.Generic", null)
+		{
+			this.InnerType = innerType;
+		}
+
+		public override TypeSyntax ToTypeSyntax()
+		{
+			return SyntaxFactory.GenericName(
+					SyntaxFactory.Identifier("System.Collections.Generic.List")
+				)
+				.WithTypeArgumentList(
+					SyntaxFactory.TypeArgumentList(
+						SyntaxFactory.SingletonSeparatedList(
+							this.InnerType.ToTypeSyntax()
+						)
+					)
+				);
+		}
+
+		protected override string BuildName(Func<TypeName, string> buildInnerName)
+		{
+			return $"List<{buildInnerName(this.InnerType)}>";
+		}
+	}
+
+	internal class DictionaryTypeName : TypeName
+	{
+		public TypeName KeyType { get; set; }
+		public TypeName ValueType { get; set; }
+		public DictionaryTypeName(TypeName keyType, TypeName valueType) : base("System.Collections.Generic", null)
+		{
+			this.KeyType = keyType;
+			this.ValueType = valueType;
+		}
+
+		public override TypeSyntax ToTypeSyntax()
+		{
+			return SyntaxFactory.GenericName(
+					SyntaxFactory.Identifier("System.Collections.Generic.Dictionary")
+				)
+				.WithTypeArgumentList(
+					SyntaxFactory.TypeArgumentList(
+						SyntaxFactory.SeparatedList(
+							new[] {
+								this.KeyType.ToTypeSyntax(),
+								this.ValueType.ToTypeSyntax()
+							}
+						)
+					)
+				);
+		}
+
+		protected override string BuildName(Func<TypeName, string> buildInnerName)
+		{
+			return $"Dictionary<{buildInnerName(this.KeyType)}, {buildInnerName(this.ValueType)}>";
+		}
+	}
+
+	internal class OptionalValueTypeName : TypeName
+	{
+		public TypeName InnerType { get; set; }
+		public OptionalValueTypeName(TypeName innerType) : base(typeof(OptionalValue<>).Namespace, null)
+		{
+			this.InnerType = innerType;
+		}
+
+		public override TypeSyntax ToTypeSyntax()
+		{
+			return SyntaxFactory.GenericName(
+					SyntaxFactory.Identifier(typeof(OptionalValue<>).Namespace + ".OptionalValue")
+				)
+				.WithTypeArgumentList(
+					SyntaxFactory.TypeArgumentList(
+						SyntaxFactory.SingletonSeparatedList(
+							this.InnerType.ToTypeSyntax()
+						)
+					)
+				);
+		}
+
+		protected override string BuildName(Func<TypeName, string> buildInnerName)
+		{
+			return $"OptionalValue<{buildInnerName(this.InnerType)}>";
+		}
+	}
+
+	internal class NullableTypeName : TypeName
+	{
+		public TypeName InnerType { get; set; }
+		public NullableTypeName(TypeName innerType) : base(null, null)
 		{
 			this.InnerType = innerType;
 		}
@@ -78,14 +162,14 @@ namespace EdjCase.ICP.ClientGenerator
 		public List<TypeName> ElementTypeNameList { get; }
 
 		public TupleTypeName(List<TypeName> elementTypeNameList)
-			: base("System", prefix: null)
+			: base(null, prefix: null)
 		{
 			this.ElementTypeNameList = elementTypeNameList;
 		}
 		protected override string BuildName(Func<TypeName, string> buildInnerName)
 		{
 			string elements = string.Join(", ", this.ElementTypeNameList.Select(buildInnerName));
-			return $"ValueTuple<{elements}>";
+			return $"({elements})";
 		}
 
 		public override TypeSyntax ToTypeSyntax()
@@ -101,21 +185,29 @@ namespace EdjCase.ICP.ClientGenerator
 
 	internal class ArrayTypeName : TypeName
 	{
-		public TypeName ElementTypeName { get; }
+		public TypeName? ElementTypeName { get; }
 
-		public ArrayTypeName(TypeName elementTypeName)
-			: base("System", prefix: null)
+		public ArrayTypeName(TypeName? elementTypeName)
+			: base(elementTypeName == null ? "System" : null, prefix: null)
 		{
 			this.ElementTypeName = elementTypeName;
 		}
 
 		protected override string BuildName(Func<TypeName, string> buildInnerName)
 		{
+			if(this.ElementTypeName == null)
+			{
+				return "Array";
+			}
 			return buildInnerName(this.ElementTypeName) + "[]";
 		}
 
 		public override TypeSyntax ToTypeSyntax()
 		{
+			if (this.ElementTypeName == null)
+			{
+				return SyntaxFactory.IdentifierName("System.Array");
+			}
 			return SyntaxFactory.ArrayType(this.ElementTypeName.ToTypeSyntax())
 				.WithRankSpecifiers(
 					SyntaxFactory.SingletonList<ArrayRankSpecifierSyntax>(

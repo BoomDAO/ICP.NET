@@ -10,17 +10,64 @@ namespace EdjCase.ICP.ClientGenerator
 		public abstract bool IsPredefinedType { get; }
 	}
 
-	internal class CompiledTypeSourceCodeType : SourceCodeType
+	internal class NonGenericSourceCodeType : SourceCodeType
 	{
 		public Type Type { get; }
+		public override bool IsPredefinedType { get; } = true;
+
+		public NonGenericSourceCodeType(Type primitiveType)
+		{
+			this.Type = primitiveType;
+		}
+	}
+
+	internal class ArraySourceCodeType : SourceCodeType
+	{
 		public SourceCodeType? GenericType { get; }
 
 		public override bool IsPredefinedType { get; } = true;
 
-		public CompiledTypeSourceCodeType(Type type, SourceCodeType? genericType = null)
+		public ArraySourceCodeType(SourceCodeType? genericType)
 		{
-			this.Type = type ?? throw new ArgumentNullException(nameof(type));
 			this.GenericType = genericType;
+		}
+	}
+
+	internal class ListSourceCodeType : SourceCodeType
+	{
+		public SourceCodeType GenericType { get; }
+
+		public override bool IsPredefinedType { get; } = true;
+
+		public ListSourceCodeType(SourceCodeType genericType)
+		{
+			this.GenericType = genericType;
+		}
+	}
+
+	internal class OptionalValueSourceCodeType : SourceCodeType
+	{
+		public SourceCodeType GenericType { get; }
+
+		public override bool IsPredefinedType { get; } = true;
+
+		public OptionalValueSourceCodeType(SourceCodeType genericType)
+		{
+			this.GenericType = genericType;
+		}
+	}
+
+	internal class DictionarySourceCodeType : SourceCodeType
+	{
+		public SourceCodeType KeyType { get; }
+		public SourceCodeType ValueType { get; }
+
+		public override bool IsPredefinedType { get; } = true;
+
+		public DictionarySourceCodeType(SourceCodeType keyType, SourceCodeType valueType)
+		{
+			this.KeyType = keyType;
+			this.ValueType = valueType;
 		}
 	}
 

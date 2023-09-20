@@ -104,7 +104,7 @@ namespace EdjCase.ICP.ClientGenerator
 								RecordRepresentation? representation = GetEnumOptional<RecordRepresentation>(t, "representation");
 								typeOptions = new RecordTypeOptions
 								{
-									NameOverride = typeName,
+									//NameOverride = typeName, // TODO
 									Representation = representation,
 									Fields = fields
 								};
@@ -115,7 +115,7 @@ namespace EdjCase.ICP.ClientGenerator
 								VectorRepresentation? representation = GetEnumOptional<VectorRepresentation>(t, "representation");
 								typeOptions = new VectorTypeOptions
 								{
-									NameOverride = typeName,
+									//NameOverride = typeName, // TODO
 									Representation = representation,
 									InnerType = null // TODO
 								};
@@ -127,7 +127,7 @@ namespace EdjCase.ICP.ClientGenerator
 								Dictionary<string, ITypeOptions> options = BuildTypes(optionTypeTable);
 								typeOptions = new VariantTypeOptions
 								{
-									NameOverride = typeName,
+									//NameOverride = typeName, // TODO
 									Options = options
 								};
 								break;

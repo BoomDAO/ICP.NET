@@ -17,7 +17,6 @@
             </summary>
             <param name="canisterId">The canister to get the definition from</param>
             <param name="options">The options for client generation</param>
-            <param name="httpBoundryNodeUrl">Optional. The http boundry node url to use, otherwise uses the default</param>
         </member>
         <member name="M:EdjCase.ICP.ClientGenerator.ClientCodeGenerator.GenerateClientFromFile(System.String,EdjCase.ICP.ClientGenerator.ClientGenerationOptions)">
             <summary>

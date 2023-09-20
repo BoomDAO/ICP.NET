@@ -90,7 +90,7 @@ namespace EdjCase.ICP.ClientGenerator
 
 	public interface ITypeOptions
 	{
-		public  string? NameOverride { get; init; }
+		//public  string? NameOverride { get; init; } // TODO
 
 		public CandidTypeCode Type { get; }
 
@@ -99,7 +99,7 @@ namespace EdjCase.ICP.ClientGenerator
 	public class RecordTypeOptions : ITypeOptions
 	{
 		public CandidTypeCode Type { get; } = CandidTypeCode.Record;
-		public string? NameOverride { get; init; }
+		//public string? NameOverride { get; init; } // TODO
 		public RecordRepresentation? Representation { get; init; }
 		public Dictionary<string, ITypeOptions> Fields { get; init; }
 
@@ -114,7 +114,7 @@ namespace EdjCase.ICP.ClientGenerator
 	public class VectorTypeOptions : ITypeOptions
 	{
 		public CandidTypeCode Type { get; } = CandidTypeCode.Vector;
-		public string? NameOverride { get; init; }
+		//public string? NameOverride { get; init; } // TODO
 		public VectorRepresentation? Representation { get; init; }
 		public ITypeOptions? InnerType { get; init; }
 	}
@@ -129,7 +129,7 @@ namespace EdjCase.ICP.ClientGenerator
 	public class VariantTypeOptions : ITypeOptions
 	{
 		public CandidTypeCode Type { get; } = CandidTypeCode.Vector;
-		public string? NameOverride { get; init; }
+		//public string? NameOverride { get; init; } // TODO
 		public Dictionary<string, ITypeOptions> Options { get; init; }
 	}
 }

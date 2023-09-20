@@ -10,8 +10,8 @@ using Block = Sample.Shared.ICRC1Ledger.Models.Value;
 using QueryBlockArchiveFn = EdjCase.ICP.Candid.Models.Values.CandidFunc;
 using EdjCase.ICP.Candid.Mapping;
 using EdjCase.ICP.Candid.Models;
-using Sample.Shared.ICRC1Ledger.Models;
 using System.Collections.Generic;
+using Sample.Shared.ICRC1Ledger.Models;
 
 namespace Sample.Shared.ICRC1Ledger.Models
 {

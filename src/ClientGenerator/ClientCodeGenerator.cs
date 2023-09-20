@@ -23,7 +23,6 @@ namespace EdjCase.ICP.ClientGenerator
 		/// </summary>
 		/// <param name="canisterId">The canister to get the definition from</param>
 		/// <param name="options">The options for client generation</param>
-		/// <param name="httpBoundryNodeUrl">Optional. The http boundry node url to use, otherwise uses the default</param>
 		public static async Task<ClientSyntax> GenerateClientFromCanisterAsync(
 			Principal canisterId,
 			ClientGenerationOptions options
@@ -79,7 +78,8 @@ namespace EdjCase.ICP.ClientGenerator
 				.Select(t =>
 				{
 					ITypeOptions? typeOptions = options.Types.GetValueOrDefault(t.Key.ToString());
-					string typeName = typeOptions?.NameOverride ?? t.Key.ToString();
+					//string typeName = typeOptions?.NameOverride ?? t.Key.ToString(); // TODO
+					string typeName = t.Key.ToString();
 					SourceCodeType sourceCodeType = ResolveSourceCodeType(
 						t.Value,
 						options.KeepCandidCase,
@@ -117,7 +117,7 @@ namespace EdjCase.ICP.ClientGenerator
 			}
 
 			string clientName = options.Name + "ApiClient";
-			TypeName clientTypeName = new ClassicTypeName(clientName, options.Namespace, prefix: null);
+			TypeName clientTypeName = new SimpleTypeName(clientName, options.Namespace, prefix: null);
 			ServiceSourceCodeType serviceSourceType = ResolveService(service.Service, options.KeepCandidCase);
 			CompilationUnitSyntax clientSource = RoslynSourceGenerator.GenerateClientSourceCode(clientTypeName, options.Namespace, serviceSourceType, typeResolver, aliasTypes);
 
@@ -145,30 +145,30 @@ namespace EdjCase.ICP.ClientGenerator
 			{
 				case CandidFuncType f:
 					{
-						return new CompiledTypeSourceCodeType(typeof(CandidFunc));
+						return new NonGenericSourceCodeType(typeof(CandidFunc));
 					}
 				case CandidPrimitiveType p:
 					{
 						return p.PrimitiveType switch
 						{
-							PrimitiveType.Text => new CompiledTypeSourceCodeType(typeof(string)),
-							PrimitiveType.Nat => new CompiledTypeSourceCodeType(typeof(UnboundedUInt)),
-							PrimitiveType.Nat8 => new CompiledTypeSourceCodeType(typeof(byte)),
-							PrimitiveType.Nat16 => new CompiledTypeSourceCodeType(typeof(ushort)),
-							PrimitiveType.Nat32 => new CompiledTypeSourceCodeType(typeof(uint)),
-							PrimitiveType.Nat64 => new CompiledTypeSourceCodeType(typeof(ulong)),
-							PrimitiveType.Int => new CompiledTypeSourceCodeType(typeof(UnboundedInt)),
-							PrimitiveType.Int8 => new CompiledTypeSourceCodeType(typeof(sbyte)),
-							PrimitiveType.Int16 => new CompiledTypeSourceCodeType(typeof(short)),
-							PrimitiveType.Int32 => new CompiledTypeSourceCodeType(typeof(int)),
-							PrimitiveType.Int64 => new CompiledTypeSourceCodeType(typeof(long)),
-							PrimitiveType.Float32 => new CompiledTypeSourceCodeType(typeof(float)),
-							PrimitiveType.Float64 => new CompiledTypeSourceCodeType(typeof(double)),
-							PrimitiveType.Bool => new CompiledTypeSourceCodeType(typeof(bool)),
-							PrimitiveType.Principal => new CompiledTypeSourceCodeType(typeof(Principal)),
-							PrimitiveType.Reserved => new CompiledTypeSourceCodeType(typeof(ReservedValue)),
-							PrimitiveType.Empty => new CompiledTypeSourceCodeType(typeof(EmptyValue)),
-							PrimitiveType.Null => new CompiledTypeSourceCodeType(typeof(NullValue)),
+							PrimitiveType.Text => new NonGenericSourceCodeType(typeof(string)),
+							PrimitiveType.Nat => new NonGenericSourceCodeType(typeof(UnboundedUInt)),
+							PrimitiveType.Nat8 => new NonGenericSourceCodeType(typeof(byte)),
+							PrimitiveType.Nat16 => new NonGenericSourceCodeType(typeof(ushort)),
+							PrimitiveType.Nat32 => new NonGenericSourceCodeType(typeof(uint)),
+							PrimitiveType.Nat64 => new NonGenericSourceCodeType(typeof(ulong)),
+							PrimitiveType.Int => new NonGenericSourceCodeType(typeof(UnboundedInt)),
+							PrimitiveType.Int8 => new NonGenericSourceCodeType(typeof(sbyte)),
+							PrimitiveType.Int16 => new NonGenericSourceCodeType(typeof(short)),
+							PrimitiveType.Int32 => new NonGenericSourceCodeType(typeof(int)),
+							PrimitiveType.Int64 => new NonGenericSourceCodeType(typeof(long)),
+							PrimitiveType.Float32 => new NonGenericSourceCodeType(typeof(float)),
+							PrimitiveType.Float64 => new NonGenericSourceCodeType(typeof(double)),
+							PrimitiveType.Bool => new NonGenericSourceCodeType(typeof(bool)),
+							PrimitiveType.Principal => new NonGenericSourceCodeType(typeof(Principal)),
+							PrimitiveType.Reserved => new NonGenericSourceCodeType(typeof(ReservedValue)),
+							PrimitiveType.Empty => new NonGenericSourceCodeType(typeof(EmptyValue)),
+							PrimitiveType.Null => new NonGenericSourceCodeType(typeof(NullValue)),
 							_ => throw new NotImplementedException(),
 						};
 					}
@@ -188,9 +188,17 @@ namespace EdjCase.ICP.ClientGenerator
 						switch (vTypeOptions?.Representation ?? VectorRepresentation.List)
 						{
 							case VectorRepresentation.Array:
-								return new CompiledTypeSourceCodeType(typeof(Array), innerType);
+								return new ArraySourceCodeType(innerType);
 							case VectorRepresentation.List:
-								return new CompiledTypeSourceCodeType(typeof(List<>), innerType);
+								return new ListSourceCodeType(innerType);
+							case VectorRepresentation.Dictionary:
+								if (innerType is not TupleSourceCodeType t || t.Fields.Count != 2)
+								{
+									throw new Exception("List to dictionary conversion is only compatible with `vec record { a; b }` candid types");
+								}
+								SourceCodeType keyType = t.Fields[0];
+								SourceCodeType valueType = t.Fields[1];
+								return new DictionarySourceCodeType(keyType, valueType);
 							default:
 								throw new NotImplementedException();
 						}
@@ -203,7 +211,7 @@ namespace EdjCase.ICP.ClientGenerator
 							typeOptions: null
 						);
 
-						return new CompiledTypeSourceCodeType(typeof(OptionalValue<>), innerType);
+						return new OptionalValueSourceCodeType(innerType);
 					}
 				case CandidRecordType o:
 					{

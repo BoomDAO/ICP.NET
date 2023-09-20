@@ -76,55 +76,71 @@ namespace EdjCase.ICP.ClientGenerator
 		{
 			switch (type)
 			{
-				case CompiledTypeSourceCodeType c:
+				case NonGenericSourceCodeType c:
 					{
-						ResolvedType? resolvedGenericType = null;
-						MemberDeclarationSyntax[]? innerTypes = null;
-						if (c.GenericType != null)
-						{
-							resolvedGenericType = this.ResolveType(c.GenericType, nameContext + "Item", parentType);
-							if (resolvedGenericType.GeneratedSyntax != null)
-							{
-								innerTypes = resolvedGenericType.GeneratedSyntax;
-							}
-						}
-						TypeName cType;
-						if (c.Type == typeof(Array))
-						{
-							if (resolvedGenericType == null)
-							{
-								cType = new ClassicTypeName("Array", "System", null);
-							}
-							else
-							{
-								TypeName elementTypeName = resolvedGenericType.Name;
-								cType = new ArrayTypeName(elementTypeName);
-							}
-						}
-						else
-						{
-							string typeName = c.Type.Name;
-							if (c.Type.IsGenericTypeDefinition)
-							{
-								// Remove the `1 from the end
-								typeName = typeName[..^2];
-							}
-							cType = new ClassicTypeName(
-								typeName,
-								c.Type.Namespace,
-								prefix: null,
-								resolvedGenericType?.Name
-							);
-						}
+						var cType = new SimpleTypeName(
+							c.Type.Name,
+							c.Type.Namespace,
+							prefix: null
+						);
+						return new ResolvedType(cType);
+					}
+				case ListSourceCodeType l:
+					{
+						ResolvedType resolvedGenericType = this.ResolveType(l.GenericType, nameContext + "Item", parentType);
 
-						return new ResolvedType(cType, innerTypes);
+						var name = new ListTypeName(resolvedGenericType.Name);
+						return new ResolvedType(name, resolvedGenericType.GeneratedSyntax);
+					}
+				case DictionarySourceCodeType d:
+					{
+						ResolvedType resolvedKeyType = this.ResolveType(d.KeyType, nameContext + "Key", parentType);
+						ResolvedType resolvedValueType = this.ResolveType(d.KeyType, nameContext + "Value", parentType);
+						MemberDeclarationSyntax[] generatedSyntax = (resolvedKeyType.GeneratedSyntax ?? Array.Empty<MemberDeclarationSyntax>())
+							.Concat(resolvedValueType.GeneratedSyntax ?? Array.Empty<MemberDeclarationSyntax>())
+							.ToArray();
+
+						var name = new DictionaryTypeName(resolvedKeyType.Name, resolvedValueType.Name);
+						return new ResolvedType(name, generatedSyntax);
+					}
+				case TupleSourceCodeType t:
+					{
+						List<ResolvedType> resolvedGenericTypes = t.Fields
+							.Select((f, i) => this.ResolveType(f, nameContext + "Value_" + i, parentType))
+							.ToList();
+						List<TypeName> elementTypeNames = resolvedGenericTypes
+							.Select(f => f.Name)
+							.ToList();
+						MemberDeclarationSyntax[] generatedSyntax = resolvedGenericTypes
+							.SelectMany(t => t.GeneratedSyntax ?? Array.Empty<MemberDeclarationSyntax>())
+							.ToArray();
+						var name = new TupleTypeName(elementTypeNames);
+						return new ResolvedType(name, generatedSyntax);
+					}
+				case OptionalValueSourceCodeType v:
+					{
+						ResolvedType resolvedGenericType = this.ResolveType(v.GenericType, nameContext + "Value", parentType);
+
+						var name = new OptionalValueTypeName(resolvedGenericType.Name);
+						return new ResolvedType(name, resolvedGenericType.GeneratedSyntax);
+					}
+				case ArraySourceCodeType a:
+					{
+						if (a.GenericType == null)
+						{
+							return new ResolvedType(new ArrayTypeName(null));
+						}
+						ResolvedType resolvedGenericType = this.ResolveType(a.GenericType, nameContext + "Item", parentType);
+
+						var name = new ArrayTypeName(resolvedGenericType.Name);
+						return new ResolvedType(name, resolvedGenericType.GeneratedSyntax);
 					}
 				case ReferenceSourceCodeType re:
 					{
 						bool isAlias = this.Aliases.Contains(re.Id.Value);
 
 						string? @namespace = isAlias ? null : this.ModelNamespace;
-						return new ResolvedType(new ClassicTypeName(
+						return new ResolvedType(new SimpleTypeName(
 							re.Id.Value,
 							@namespace,
 							prefix: null
@@ -140,22 +156,6 @@ namespace EdjCase.ICP.ClientGenerator
 							return new ResolvedType(variantName, classSyntax, enumSyntax);
 						}
 						return new ResolvedType(variantName, enumSyntax);
-					}
-				case TupleSourceCodeType r:
-					{
-						ResolvedType[] innerResolvedTypes = r.Fields
-							.Select(f => this.ResolveType(f, nameContext, parentType))
-							.ToArray();
-						List<TypeName> innerTypes = innerResolvedTypes
-							.Select(t => t.Name)
-							.ToList();
-						MemberDeclarationSyntax[] innerSyntax = innerResolvedTypes
-							.Where(t => t.GeneratedSyntax != null)
-							.SelectMany(t => t.GeneratedSyntax!)
-							.ToArray();
-
-						var cType = new TupleTypeName(innerTypes);
-						return new ResolvedType(cType, innerSyntax);
 					}
 				case RecordSourceCodeType r:
 					{
@@ -179,7 +179,7 @@ namespace EdjCase.ICP.ClientGenerator
 				// public IAgent Agent { get; }
 				new ClassProperty(
 					name: ValueName.Default("Agent", this.KeepCandidCase),
-					type: ClassicTypeName.FromType<IAgent>(),
+					type: SimpleTypeName.FromType<IAgent>(),
 					access: AccessType.Public,
 					hasSetter: false
 				),
@@ -187,7 +187,7 @@ namespace EdjCase.ICP.ClientGenerator
 				// public Principal CanisterId { get; }
 				new ClassProperty(
 					name: ValueName.Default("CanisterId", this.KeepCandidCase),
-					type: ClassicTypeName.FromType<Principal>(),
+					type: SimpleTypeName.FromType<Principal>(),
 					access: AccessType.Public,
 					hasSetter: false
 				),
@@ -198,7 +198,7 @@ namespace EdjCase.ICP.ClientGenerator
 				// public CandidConverter? Converter { get; }
 				new ClassProperty(
 					name: candidConverterProperty,
-					type: ClassicTypeName.FromType<CandidConverter>(isNullable: this.FeatureNullable),
+					type: SimpleTypeName.FromType<CandidConverter>(isNullable: this.FeatureNullable),
 					access: AccessType.Public,
 					hasSetter: false
 				)
@@ -313,7 +313,7 @@ namespace EdjCase.ICP.ClientGenerator
 				),
 				new ClassProperty(
 					valueName,
-					ClassicTypeName.FromType<object>(isNullable: this.FeatureNullable),
+					SimpleTypeName.FromType<object>(isNullable: this.FeatureNullable),
 					access: AccessType.Public,
 					hasSetter: true,
 					AttributeInfo.FromType<VariantValuePropertyAttribute>()
@@ -357,7 +357,7 @@ namespace EdjCase.ICP.ClientGenerator
 				prefix = @namespace[(lastDotIndex + 1)..];
 				@namespace = @namespace[..lastDotIndex];
 			}
-			return new ClassicTypeName(name, @namespace, prefix);
+			return new SimpleTypeName(name, @namespace, prefix);
 		}
 
 		private MethodDeclarationSyntax GenerateVariantValidateTypeMethod(TypeName enumTypeName, ValueName tagName)
@@ -726,7 +726,7 @@ namespace EdjCase.ICP.ClientGenerator
 						// Indicate there is no associated name, just an id
 						// Usually with tuples like 'record { text; nat; }'
 						attributeList.Add(GenerateAttribute(
-							new AttributeInfo(ClassicTypeName.FromType<CandidTagAttribute>(), v.Name.CandidTag.Id)
+							new AttributeInfo(SimpleTypeName.FromType<CandidTagAttribute>(), v.Name.CandidTag.Id)
 						));
 					}
 					else if (v.Name.CandidTag.Name != v.Name.PropertyName)
@@ -734,7 +734,7 @@ namespace EdjCase.ICP.ClientGenerator
 						// [CandidName({candidName}]
 						// Only add if names differ
 						attributeList.Add(GenerateAttribute(
-							new AttributeInfo(ClassicTypeName.FromType<CandidNameAttribute>(), v.Name.CandidTag.Name!)
+							new AttributeInfo(SimpleTypeName.FromType<CandidNameAttribute>(), v.Name.CandidTag.Name!)
 						));
 					}
 
@@ -742,7 +742,7 @@ namespace EdjCase.ICP.ClientGenerator
 					{
 						// [VariantOptionType(typeof({type}))]
 						attributeList.Add(GenerateAttribute(
-							new AttributeInfo(ClassicTypeName.FromType<VariantOptionTypeAttribute>(), v.Type)
+							new AttributeInfo(SimpleTypeName.FromType<VariantOptionTypeAttribute>(), v.Type)
 						));
 
 					}
@@ -1562,7 +1562,7 @@ namespace EdjCase.ICP.ClientGenerator
 
 			public static AttributeInfo FromType<T>(params object[]? args)
 			{
-				TypeName type = ClassicTypeName.FromType<T>();
+				TypeName type = SimpleTypeName.FromType<T>();
 				return new AttributeInfo(type, args);
 			}
 		}

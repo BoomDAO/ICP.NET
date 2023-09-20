@@ -3,8 +3,8 @@ using OrderId = System.UInt32;
 using EdjCase.ICP.Agent.Agents;
 using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid;
-using Sample.Shared.Dex;
 using System.Threading.Tasks;
+using Sample.Shared.Dex;
 using System.Collections.Generic;
 using EdjCase.ICP.Agent.Responses;
 
@@ -25,7 +25,7 @@ namespace Sample.Shared.Dex
 			this.Converter = converter;
 		}
 
-		public async System.Threading.Tasks.Task<Models.CancelOrderReceipt> CancelOrder(OrderId arg0)
+		public async Task<Models.CancelOrderReceipt> CancelOrder(OrderId arg0)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
 			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "cancelOrder", arg);
@@ -44,14 +44,14 @@ namespace Sample.Shared.Dex
 			await this.Agent.CallAsync(this.CanisterId, "credit", arg);
 		}
 
-		public async System.Threading.Tasks.Task<Models.DepositReceipt> Deposit(Token arg0)
+		public async Task<Models.DepositReceipt> Deposit(Token arg0)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
 			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "deposit", arg);
 			return reply.ToObjects<Models.DepositReceipt>(this.Converter);
 		}
 
-		public async System.Threading.Tasks.Task<List<Models.Balance>> GetAllBalances()
+		public async Task<List<Models.Balance>> GetAllBalances()
 		{
 			CandidArg arg = CandidArg.FromCandid();
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "getAllBalances", arg);
@@ -59,7 +59,7 @@ namespace Sample.Shared.Dex
 			return reply.ToObjects<List<Models.Balance>>(this.Converter);
 		}
 
-		public async System.Threading.Tasks.Task<UnboundedUInt> GetBalance(Token arg0)
+		public async Task<UnboundedUInt> GetBalance(Token arg0)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "getBalance", arg);
@@ -67,7 +67,7 @@ namespace Sample.Shared.Dex
 			return reply.ToObjects<UnboundedUInt>(this.Converter);
 		}
 
-		public async System.Threading.Tasks.Task<List<Models.Balance>> GetBalances()
+		public async Task<List<Models.Balance>> GetBalances()
 		{
 			CandidArg arg = CandidArg.FromCandid();
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "getBalances", arg);
@@ -75,42 +75,42 @@ namespace Sample.Shared.Dex
 			return reply.ToObjects<List<Models.Balance>>(this.Converter);
 		}
 
-		public async System.Threading.Tasks.Task<List<byte>> GetDepositAddress()
+		public async Task<List<byte>> GetDepositAddress()
 		{
 			CandidArg arg = CandidArg.FromCandid();
 			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "getDepositAddress", arg);
 			return reply.ToObjects<List<byte>>(this.Converter);
 		}
 
-		public async System.Threading.Tasks.Task<OptionalValue<Models.Order>> GetOrder(OrderId arg0)
+		public async Task<OptionalValue<Models.Order>> GetOrder(OrderId arg0)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
 			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "getOrder", arg);
 			return reply.ToObjects<OptionalValue<Models.Order>>(this.Converter);
 		}
 
-		public async System.Threading.Tasks.Task<List<Models.Order>> GetOrders()
+		public async Task<List<Models.Order>> GetOrders()
 		{
 			CandidArg arg = CandidArg.FromCandid();
 			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "getOrders", arg);
 			return reply.ToObjects<List<Models.Order>>(this.Converter);
 		}
 
-		public async System.Threading.Tasks.Task<string> GetSymbol(Token arg0)
+		public async Task<string> GetSymbol(Token arg0)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
 			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "getSymbol", arg);
 			return reply.ToObjects<string>(this.Converter);
 		}
 
-		public async System.Threading.Tasks.Task<Models.OrderPlacementReceipt> PlaceOrder(Token arg0, UnboundedUInt arg1, Token arg2, UnboundedUInt arg3)
+		public async Task<Models.OrderPlacementReceipt> PlaceOrder(Token arg0, UnboundedUInt arg1, Token arg2, UnboundedUInt arg3)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0), CandidTypedValue.FromObject(arg1), CandidTypedValue.FromObject(arg2), CandidTypedValue.FromObject(arg3));
 			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "placeOrder", arg);
 			return reply.ToObjects<Models.OrderPlacementReceipt>(this.Converter);
 		}
 
-		public async System.Threading.Tasks.Task<Principal> Whoami()
+		public async Task<Principal> Whoami()
 		{
 			CandidArg arg = CandidArg.FromCandid();
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "whoami", arg);
@@ -118,7 +118,7 @@ namespace Sample.Shared.Dex
 			return reply.ToObjects<Principal>(this.Converter);
 		}
 
-		public async System.Threading.Tasks.Task<Models.WithdrawReceipt> Withdraw(Token arg0, UnboundedUInt arg1, Principal arg2)
+		public async Task<Models.WithdrawReceipt> Withdraw(Token arg0, UnboundedUInt arg1, Principal arg2)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0), CandidTypedValue.FromObject(arg1), CandidTypedValue.FromObject(arg2));
 			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "withdraw", arg);

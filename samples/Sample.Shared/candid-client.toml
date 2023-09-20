@@ -28,3 +28,6 @@ canister-id = "rrkah-fqaaa-aaaaa-aaaaq-cai"
 [clients.types.AccountIdentifier]
 type = "record"
 name = "AccountId"
+[clients.types.AccountIdentifier.fields.hash]
+type = "vec"
+representation = "Array"

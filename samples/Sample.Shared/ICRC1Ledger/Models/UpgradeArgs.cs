@@ -9,16 +9,16 @@ using Map = System.Collections.Generic.List<Sample.Shared.ICRC1Ledger.Models.Map
 using Block = Sample.Shared.ICRC1Ledger.Models.Value;
 using QueryBlockArchiveFn = EdjCase.ICP.Candid.Models.Values.CandidFunc;
 using EdjCase.ICP.Candid.Mapping;
-using Sample.Shared.ICRC1Ledger.Models;
-using System.Collections.Generic;
 using EdjCase.ICP.Candid.Models;
+using System.Collections.Generic;
+using Sample.Shared.ICRC1Ledger.Models;
 
 namespace Sample.Shared.ICRC1Ledger.Models
 {
 	public class UpgradeArgs
 	{
 		[CandidName("metadata")]
-		public OptionalValue<List<UpgradeArgs.MetadataItemItem>> Metadata { get; set; }
+		public OptionalValue<List<UpgradeArgs.MetadataValueItem>> Metadata { get; set; }
 
 		[CandidName("token_symbol")]
 		public OptionalValue<string> TokenSymbol { get; set; }
@@ -35,7 +35,7 @@ namespace Sample.Shared.ICRC1Ledger.Models
 		[CandidName("max_memo_length")]
 		public OptionalValue<ushort> MaxMemoLength { get; set; }
 
-		public UpgradeArgs(OptionalValue<List<UpgradeArgs.MetadataItemItem>> metadata, OptionalValue<string> tokenSymbol, OptionalValue<string> tokenName, OptionalValue<ulong> transferFee, OptionalValue<ChangeFeeCollector> changeFeeCollector, OptionalValue<ushort> maxMemoLength)
+		public UpgradeArgs(OptionalValue<List<UpgradeArgs.MetadataValueItem>> metadata, OptionalValue<string> tokenSymbol, OptionalValue<string> tokenName, OptionalValue<ulong> transferFee, OptionalValue<ChangeFeeCollector> changeFeeCollector, OptionalValue<ushort> maxMemoLength)
 		{
 			this.Metadata = metadata;
 			this.TokenSymbol = tokenSymbol;
@@ -49,7 +49,7 @@ namespace Sample.Shared.ICRC1Ledger.Models
 		{
 		}
 
-		public class MetadataItemItem
+		public class MetadataValueItem
 		{
 			[CandidTag(0U)]
 			public string F0 { get; set; }
@@ -57,13 +57,13 @@ namespace Sample.Shared.ICRC1Ledger.Models
 			[CandidTag(1U)]
 			public MetadataValue F1 { get; set; }
 
-			public MetadataItemItem(string f0, MetadataValue f1)
+			public MetadataValueItem(string f0, MetadataValue f1)
 			{
 				this.F0 = f0;
 				this.F1 = f1;
 			}
 
-			public MetadataItemItem()
+			public MetadataValueItem()
 			{
 			}
 		}

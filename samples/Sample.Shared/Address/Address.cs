@@ -1,8 +1,9 @@
+using Dict = System.Collections.Generic.List<(System.String, EdjCase.ICP.Candid.Models.UnboundedUInt)>;
 using EdjCase.ICP.Candid.Models;
 
 namespace Sample.Shared.AddressBook
 {
-	public class address
+	public class Address
 	{
 		public string street { get; set; }
 
@@ -12,7 +13,7 @@ namespace Sample.Shared.AddressBook
 
 		public string country { get; set; }
 
-		public address(string street, string city, UnboundedUInt zip_code, string country)
+		public Address(string street, string city, UnboundedUInt zip_code, string country)
 		{
 			this.street = street;
 			this.city = city;
@@ -20,7 +21,7 @@ namespace Sample.Shared.AddressBook
 			this.country = country;
 		}
 
-		public address()
+		public Address()
 		{
 		}
 	}

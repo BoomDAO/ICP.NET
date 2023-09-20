@@ -1,6 +1,6 @@
 using EdjCase.ICP.Candid.Mapping;
-using EdjCase.ICP.Candid.Models;
 using System.Collections.Generic;
+using EdjCase.ICP.Candid.Models;
 
 namespace Sample.Shared.Governance.Models
 {

@@ -9,8 +9,8 @@ using Map = System.Collections.Generic.List<Sample.Shared.ICRC1Ledger.Models.Map
 using Block = Sample.Shared.ICRC1Ledger.Models.Value;
 using QueryBlockArchiveFn = EdjCase.ICP.Candid.Models.Values.CandidFunc;
 using EdjCase.ICP.Candid.Mapping;
-using Sample.Shared.ICRC1Ledger.Models;
 using EdjCase.ICP.Candid.Models;
+using Sample.Shared.ICRC1Ledger.Models;
 using System.Collections.Generic;
 
 namespace Sample.Shared.ICRC1Ledger.Models
@@ -21,18 +21,18 @@ namespace Sample.Shared.ICRC1Ledger.Models
 		public string Kind { get; set; }
 
 		[CandidName("mint")]
-		public OptionalValue<Transaction.MintItem> Mint { get; set; }
+		public OptionalValue<Transaction.MintValue> Mint { get; set; }
 
 		[CandidName("burn")]
-		public OptionalValue<Transaction.BurnItem> Burn { get; set; }
+		public OptionalValue<Transaction.BurnValue> Burn { get; set; }
 
 		[CandidName("transfer")]
-		public OptionalValue<Transaction.TransferItem> Transfer { get; set; }
+		public OptionalValue<Transaction.TransferValue> Transfer { get; set; }
 
 		[CandidName("timestamp")]
 		public ulong Timestamp { get; set; }
 
-		public Transaction(string kind, OptionalValue<Transaction.MintItem> mint, OptionalValue<Transaction.BurnItem> burn, OptionalValue<Transaction.TransferItem> transfer, ulong timestamp)
+		public Transaction(string kind, OptionalValue<Transaction.MintValue> mint, OptionalValue<Transaction.BurnValue> burn, OptionalValue<Transaction.TransferValue> transfer, ulong timestamp)
 		{
 			this.Kind = kind;
 			this.Mint = mint;
@@ -45,7 +45,7 @@ namespace Sample.Shared.ICRC1Ledger.Models
 		{
 		}
 
-		public class MintItem
+		public class MintValue
 		{
 			[CandidName("amount")]
 			public UnboundedUInt Amount { get; set; }
@@ -59,7 +59,7 @@ namespace Sample.Shared.ICRC1Ledger.Models
 			[CandidName("created_at_time")]
 			public OptionalValue<ulong> CreatedAtTime { get; set; }
 
-			public MintItem(UnboundedUInt amount, Account to, OptionalValue<List<byte>> memo, OptionalValue<ulong> createdAtTime)
+			public MintValue(UnboundedUInt amount, Account to, OptionalValue<List<byte>> memo, OptionalValue<ulong> createdAtTime)
 			{
 				this.Amount = amount;
 				this.To = to;
@@ -67,12 +67,12 @@ namespace Sample.Shared.ICRC1Ledger.Models
 				this.CreatedAtTime = createdAtTime;
 			}
 
-			public MintItem()
+			public MintValue()
 			{
 			}
 		}
 
-		public class BurnItem
+		public class BurnValue
 		{
 			[CandidName("amount")]
 			public UnboundedUInt Amount { get; set; }
@@ -86,7 +86,7 @@ namespace Sample.Shared.ICRC1Ledger.Models
 			[CandidName("created_at_time")]
 			public OptionalValue<ulong> CreatedAtTime { get; set; }
 
-			public BurnItem(UnboundedUInt amount, Account from, OptionalValue<List<byte>> memo, OptionalValue<ulong> createdAtTime)
+			public BurnValue(UnboundedUInt amount, Account from, OptionalValue<List<byte>> memo, OptionalValue<ulong> createdAtTime)
 			{
 				this.Amount = amount;
 				this.From = from;
@@ -94,12 +94,12 @@ namespace Sample.Shared.ICRC1Ledger.Models
 				this.CreatedAtTime = createdAtTime;
 			}
 
-			public BurnItem()
+			public BurnValue()
 			{
 			}
 		}
 
-		public class TransferItem
+		public class TransferValue
 		{
 			[CandidName("amount")]
 			public UnboundedUInt Amount { get; set; }
@@ -119,7 +119,7 @@ namespace Sample.Shared.ICRC1Ledger.Models
 			[CandidName("fee")]
 			public OptionalValue<UnboundedUInt> Fee { get; set; }
 
-			public TransferItem(UnboundedUInt amount, Account from, Account to, OptionalValue<List<byte>> memo, OptionalValue<ulong> createdAtTime, OptionalValue<UnboundedUInt> fee)
+			public TransferValue(UnboundedUInt amount, Account from, Account to, OptionalValue<List<byte>> memo, OptionalValue<ulong> createdAtTime, OptionalValue<UnboundedUInt> fee)
 			{
 				this.Amount = amount;
 				this.From = from;
@@ -129,7 +129,7 @@ namespace Sample.Shared.ICRC1Ledger.Models
 				this.Fee = fee;
 			}
 
-			public TransferItem()
+			public TransferValue()
 			{
 			}
 		}

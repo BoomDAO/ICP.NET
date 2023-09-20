@@ -61,81 +61,80 @@ namespace EdjCase.ICP.ClientGenerator.SyntaxRewriters
 			}
 		}
 
+		private string StripNamespace(string fullName)
+		{
+			string? builtInType = fullName switch
+			{
+				"System.String" => "string",
+				"System.Byte" => "byte",
+				"System.UInt16" => "ushort",
+				"System.UInt32" => "uint",
+				"System.UInt64" => "ulong",
+				"System.SByte" => "sbyte",
+				"System.Int16" => "short",
+				"System.Int32" => "int",
+				"System.Int64" => "long",
+				"System.Single" => "float",
+				"System.Double" => "double",
+				"System.Boolean" => "bool",
+				"System.Decimal" => "decimal",
+				"System.Char" => "char",
+				"System.Object" => "object",
+				_ => null,
+			};
+			if (builtInType != null)
+			{
+				return builtInType;
+			}
+			string[] components = fullName.Split('.', StringSplitOptions.RemoveEmptyEntries);
+			string @namespace = string.Join(".", components[..^1]);
+			string type = components.Last();
+
+			// Handle any custom nested types 
+			if (@namespace.StartsWith(this.ModelNamespace + "."))
+			{
+				// Add parent class name to type
+				type = @namespace.Substring(this.ModelNamespace.Length + 1) + "." + type;
+				// Remove parent class name from namespace
+				@namespace = this.ModelNamespace;
+			}
+			if (!string.IsNullOrWhiteSpace(@namespace))
+			{
+				this.UniqueNamespaces.Add(@namespace.ToString());
+			}
+			return type;
+		}
+
 		private NameSyntax StripNamespace(NameSyntax node)
 		{
 			switch (node)
 			{
 				case GenericNameSyntax g:
-					IEnumerable<TypeSyntax> genericTypeNames = g.TypeArgumentList.Arguments
-						.Select(this.StripNamespace);
+					{
+						IEnumerable<TypeSyntax> genericTypeNames = g.TypeArgumentList.Arguments
+							.Select(this.StripNamespace);
 
-					return g
-						.WithTypeArgumentList(
-							SyntaxFactory.TypeArgumentList(
-								SyntaxFactory.SeparatedList(
-									genericTypeNames
-										.Select(a => SyntaxFactory.ParseTypeName(a.ToString()))
+						string newId = this.StripNamespace(g.Identifier.Text);
+						return g
+							.WithIdentifier(SyntaxFactory.ParseToken(newId))
+							.WithTypeArgumentList(
+								SyntaxFactory.TypeArgumentList(
+									SyntaxFactory.SeparatedList(
+										genericTypeNames
+											.Select(a => SyntaxFactory.ParseTypeName(a.ToString()))
+									)
 								)
-							)
-						);
+							);
+					}
 				case IdentifierNameSyntax i:
 					{
-						bool isOptional = i.Identifier.Text.EndsWith('?');
-						if (isOptional)
-						{
-							// TODO when parsed, the ? is removed
-							return i;
-						}
-
-						// TODO? Not sure whats up with this, but parse it into its real type
-						NameSyntax name = SyntaxFactory.ParseName(i.Identifier.Text)
-							.WithTrailingTrivia(i.Identifier.TrailingTrivia)
-							.WithLeadingTrivia(i.Identifier.LeadingTrivia)
-							.WithAdditionalAnnotations(i.Identifier.GetAnnotations());
-						if (name is IdentifierNameSyntax n)
-						{
-							// No namepsace, avoid stack overflow
-							return n;
-						}
-						return this.StripNamespace(name);
+						string newId = this.StripNamespace(i.Identifier.Text);
+						return SyntaxFactory.IdentifierName(newId);
 					}
 				case QualifiedNameSyntax q:
 					{
-						string? builtInType = q.ToString() switch
-						{
-							"System.String" => "string",
-							"System.Byte" => "byte",
-							"System.UInt16" => "ushort",
-							"System.UInt32" => "uint",
-							"System.UInt64" => "ulong",
-							"System.SByte" => "sbyte",
-							"System.Int16" => "short",
-							"System.Int32" => "int",
-							"System.Int64" => "long",
-							"System.Single" => "float",
-							"System.Double" => "double",
-							"System.Boolean" => "bool",
-							"System.Decimal" => "decimal",
-							"System.Char" => "char",
-							"System.Object" => "object",
-							_ => null,
-						};
-						if (builtInType != null)
-						{
-							return SyntaxFactory.IdentifierName(builtInType);
-						}
-						NameSyntax @namespace = q.Left;
-						NameSyntax type = this.StripNamespace(q.Right);
-
-						// Handle any nested types
-						while (@namespace is QualifiedNameSyntax nQ
-							&& nQ.ToString().StartsWith(this.ModelNamespace + "."))
-						{
-							type = SyntaxFactory.ParseName(nQ.Right.ToString() + "." + type);
-							@namespace = nQ.Left;
-						}
-						this.UniqueNamespaces.Add(@namespace.ToString());
-						return type;
+						string t = this.StripNamespace(q.ToString());
+						return SyntaxFactory.IdentifierName(t);
 					}
 				default:
 					throw new NotImplementedException();
@@ -148,7 +147,7 @@ namespace EdjCase.ICP.ClientGenerator.SyntaxRewriters
 			Func<T, SyntaxNode?> baseFunc)
 			where T : NameSyntax
 		{
-			return node.Parent switch
+			bool shouldStrip = node.Parent switch
 			{
 				ParameterSyntax
 				or TypeOfExpressionSyntax
@@ -159,20 +158,30 @@ namespace EdjCase.ICP.ClientGenerator.SyntaxRewriters
 				or TypeArgumentListSyntax
 				or TupleTypeSyntax
 				or ArrayTypeSyntax
-				or NullableTypeSyntax
+				or PredefinedTypeSyntax
+				or SimpleBaseTypeSyntax
 				or AttributeSyntax
 				or PropertyDeclarationSyntax
 				or ObjectCreationExpressionSyntax
-				or VariableDeclarationSyntax => this.StripNamespace(node),
+				or VariableDeclarationSyntax => true,
 
 				NamespaceDeclarationSyntax
-				or QualifiedNameSyntax
 				or AssignmentExpressionSyntax
 				or ArgumentSyntax
-				or InterpolationSyntax => baseFunc(node), // Nodes where to not touch because they are just namespaces without types
+				or QualifiedNameSyntax
+				or InterpolationSyntax => false, // Nodes where to not touch because they are just namespaces without types
 
-				_ => baseFunc(node) // Catch all do nothing
+				_ => false// Catch all do nothing
 			};
+			if (node.ToString().Contains("Tasks.Task"))
+			{
+				int a = 1;
+			}
+			if (shouldStrip)
+			{
+				return this.StripNamespace(node);
+			}
+			return baseFunc(node);
 		}
 	}
 }
