@@ -5,7 +5,7 @@ using Duration = System.UInt64;
 using Tokens = EdjCase.ICP.Candid.Models.UnboundedUInt;
 using TxIndex = EdjCase.ICP.Candid.Models.UnboundedUInt;
 using QueryArchiveFn = EdjCase.ICP.Candid.Models.Values.CandidFunc;
-using Map = System.Collections.Generic.List<Sample.Shared.ICRC1Ledger.Models.MapItem>;
+using Map = System.Collections.Generic.List<(System.String, Sample.Shared.ICRC1Ledger.Models.Value)>;
 using Block = Sample.Shared.ICRC1Ledger.Models.Value;
 using QueryBlockArchiveFn = EdjCase.ICP.Candid.Models.Values.CandidFunc;
 using EdjCase.ICP.Candid.Mapping;
@@ -33,15 +33,15 @@ namespace Sample.Shared.ICRC1Ledger.Models
 		public string TokenName { get; set; }
 
 		[CandidName("metadata")]
-		public List<InitArgs.MetadataItem> Metadata { get; set; }
+		public List<(string, MetadataValue)> Metadata { get; set; }
 
 		[CandidName("initial_balances")]
-		public List<InitArgs.InitialBalancesItem> InitialBalances { get; set; }
+		public List<(Account, ulong)> InitialBalances { get; set; }
 
 		[CandidName("archive_options")]
 		public InitArgs.ArchiveOptionsInfo ArchiveOptions { get; set; }
 
-		public InitArgs(Account mintingAccount, OptionalValue<Account> feeCollectorAccount, ulong transferFee, string tokenSymbol, string tokenName, List<InitArgs.MetadataItem> metadata, List<InitArgs.InitialBalancesItem> initialBalances, InitArgs.ArchiveOptionsInfo archiveOptions)
+		public InitArgs(Account mintingAccount, OptionalValue<Account> feeCollectorAccount, ulong transferFee, string tokenSymbol, string tokenName, List<(string, MetadataValue)> metadata, List<(Account, ulong)> initialBalances, InitArgs.ArchiveOptionsInfo archiveOptions)
 		{
 			this.MintingAccount = mintingAccount;
 			this.FeeCollectorAccount = feeCollectorAccount;
@@ -55,44 +55,6 @@ namespace Sample.Shared.ICRC1Ledger.Models
 
 		public InitArgs()
 		{
-		}
-
-		public class MetadataItem
-		{
-			[CandidTag(0U)]
-			public string F0 { get; set; }
-
-			[CandidTag(1U)]
-			public MetadataValue F1 { get; set; }
-
-			public MetadataItem(string f0, MetadataValue f1)
-			{
-				this.F0 = f0;
-				this.F1 = f1;
-			}
-
-			public MetadataItem()
-			{
-			}
-		}
-
-		public class InitialBalancesItem
-		{
-			[CandidTag(0U)]
-			public Account F0 { get; set; }
-
-			[CandidTag(1U)]
-			public ulong F1 { get; set; }
-
-			public InitialBalancesItem(Account f0, ulong f1)
-			{
-				this.F0 = f0;
-				this.F1 = f1;
-			}
-
-			public InitialBalancesItem()
-			{
-			}
 		}
 
 		public class ArchiveOptionsInfo

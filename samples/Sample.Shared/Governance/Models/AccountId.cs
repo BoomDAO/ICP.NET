@@ -2,17 +2,17 @@ using EdjCase.ICP.Candid.Mapping;
 
 namespace Sample.Shared.Governance.Models
 {
-	public class AccountIdentifier
+	public class AccountId
 	{
 		[CandidName("hash")]
 		public byte[] Hash { get; set; }
 
-		public AccountIdentifier(byte[] hash)
+		public AccountId(byte[] hash)
 		{
 			this.Hash = hash;
 		}
 
-		public AccountIdentifier()
+		public AccountId()
 		{
 		}
 	}

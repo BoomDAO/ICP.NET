@@ -4,48 +4,48 @@ using System;
 
 namespace Sample.Shared.Governance.Models
 {
-	[Variant(typeof(Result_4Tag))]
-	public class Result_4
+	[Variant(typeof(Result4Tag))]
+	public class Result4
 	{
 		[VariantTagProperty()]
-		public Result_4Tag Tag { get; set; }
+		public Result4Tag Tag { get; set; }
 
 		[VariantValueProperty()]
 		public object? Value { get; set; }
 
-		public Result_4(Result_4Tag tag, object? value)
+		public Result4(Result4Tag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
 		}
 
-		protected Result_4()
+		protected Result4()
 		{
 		}
 
-		public static Result_4 Ok(RewardNodeProviders info)
+		public static Result4 Ok(RewardNodeProviders info)
 		{
-			return new Result_4(Result_4Tag.Ok, info);
+			return new Result4(Result4Tag.Ok, info);
 		}
 
-		public static Result_4 Err(GovernanceError info)
+		public static Result4 Err(GovernanceError info)
 		{
-			return new Result_4(Result_4Tag.Err, info);
+			return new Result4(Result4Tag.Err, info);
 		}
 
 		public RewardNodeProviders AsOk()
 		{
-			this.ValidateTag(Result_4Tag.Ok);
+			this.ValidateTag(Result4Tag.Ok);
 			return (RewardNodeProviders)this.Value!;
 		}
 
 		public GovernanceError AsErr()
 		{
-			this.ValidateTag(Result_4Tag.Err);
+			this.ValidateTag(Result4Tag.Err);
 			return (GovernanceError)this.Value!;
 		}
 
-		private void ValidateTag(Result_4Tag tag)
+		private void ValidateTag(Result4Tag tag)
 		{
 			if (!this.Tag.Equals(tag))
 			{
@@ -54,7 +54,7 @@ namespace Sample.Shared.Governance.Models
 		}
 	}
 
-	public enum Result_4Tag
+	public enum Result4Tag
 	{
 		[VariantOptionType(typeof(RewardNodeProviders))]
 		Ok,

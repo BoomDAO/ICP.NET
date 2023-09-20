@@ -31,3 +31,9 @@ name = "AccountId"
 [clients.types.AccountIdentifier.fields.hash]
 type = "vec"
 representation = "Array"
+[clients.types.Governance]
+type = "record"
+[clients.types.Governance.fields.default_followees]
+type = "vec"
+representation = "Dictionary"
+

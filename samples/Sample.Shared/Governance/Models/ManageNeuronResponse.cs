@@ -7,9 +7,9 @@ namespace Sample.Shared.Governance.Models
 	public class ManageNeuronResponse
 	{
 		[CandidName("command")]
-		public OptionalValue<Command_1> Command { get; set; }
+		public OptionalValue<Command1> Command { get; set; }
 
-		public ManageNeuronResponse(OptionalValue<Command_1> command)
+		public ManageNeuronResponse(OptionalValue<Command1> command)
 		{
 			this.Command = command;
 		}

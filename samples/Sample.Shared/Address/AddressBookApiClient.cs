@@ -23,13 +23,13 @@ namespace Sample.Shared.AddressBook
 			this.Converter = converter;
 		}
 
-		public async Task set_address(string name, Address addr)
+		public async Task SetAddress(string name, Address addr)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(name), CandidTypedValue.FromObject(addr));
 			await this.Agent.CallAndWaitAsync(this.CanisterId, "set_address", arg);
 		}
 
-		public async Task<OptionalValue<Address>> get_address(string name)
+		public async Task<OptionalValue<Address>> GetAddress(string name)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(name));
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_address", arg);
@@ -37,7 +37,7 @@ namespace Sample.Shared.AddressBook
 			return reply.ToObjects<OptionalValue<Address>>(this.Converter);
 		}
 
-		public async Task<Dict> get_dict()
+		public async Task<Dict> GetDict()
 		{
 			CandidArg arg = CandidArg.FromCandid();
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_dict", arg);

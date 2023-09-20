@@ -4,48 +4,48 @@ using System;
 
 namespace Sample.Shared.Governance.Models
 {
-	[Variant(typeof(Result_6Tag))]
-	public class Result_6
+	[Variant(typeof(Result6Tag))]
+	public class Result6
 	{
 		[VariantTagProperty()]
-		public Result_6Tag Tag { get; set; }
+		public Result6Tag Tag { get; set; }
 
 		[VariantValueProperty()]
 		public object? Value { get; set; }
 
-		public Result_6(Result_6Tag tag, object? value)
+		public Result6(Result6Tag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
 		}
 
-		protected Result_6()
+		protected Result6()
 		{
 		}
 
-		public static Result_6 Ok(NodeProvider info)
+		public static Result6 Ok(NodeProvider info)
 		{
-			return new Result_6(Result_6Tag.Ok, info);
+			return new Result6(Result6Tag.Ok, info);
 		}
 
-		public static Result_6 Err(GovernanceError info)
+		public static Result6 Err(GovernanceError info)
 		{
-			return new Result_6(Result_6Tag.Err, info);
+			return new Result6(Result6Tag.Err, info);
 		}
 
 		public NodeProvider AsOk()
 		{
-			this.ValidateTag(Result_6Tag.Ok);
+			this.ValidateTag(Result6Tag.Ok);
 			return (NodeProvider)this.Value!;
 		}
 
 		public GovernanceError AsErr()
 		{
-			this.ValidateTag(Result_6Tag.Err);
+			this.ValidateTag(Result6Tag.Err);
 			return (GovernanceError)this.Value!;
 		}
 
-		private void ValidateTag(Result_6Tag tag)
+		private void ValidateTag(Result6Tag tag)
 		{
 			if (!this.Tag.Equals(tag))
 			{
@@ -54,7 +54,7 @@ namespace Sample.Shared.Governance.Models
 		}
 	}
 
-	public enum Result_6Tag
+	public enum Result6Tag
 	{
 		[VariantOptionType(typeof(NodeProvider))]
 		Ok,

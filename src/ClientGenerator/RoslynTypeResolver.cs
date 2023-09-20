@@ -24,18 +24,22 @@ namespace EdjCase.ICP.ClientGenerator
 		public string ModelNamespace { get; }
 		public HashSet<string> Aliases { get; }
 		public bool FeatureNullable { get; }
-		public bool KeepCandidCase { get; }
+		public NameHelper NameHelper { get; }
+		public Dictionary<string, string> TypeNames { get; }
 
 		public RoslynTypeResolver(
 			string modelNamespace,
 			HashSet<string> aliases,
 			bool featureNullable,
-			bool keepCandidCase)
+			NameHelper nameHelper,
+			Dictionary<string, string> typeNames
+		)
 		{
 			this.ModelNamespace = modelNamespace;
 			this.Aliases = aliases;
 			this.FeatureNullable = featureNullable;
-			this.KeepCandidCase = keepCandidCase;
+			this.NameHelper = nameHelper;
+			this.TypeNames = typeNames;
 		}
 
 		public ResolvedType ResolveTypeDeclaration(
@@ -138,10 +142,11 @@ namespace EdjCase.ICP.ClientGenerator
 				case ReferenceSourceCodeType re:
 					{
 						bool isAlias = this.Aliases.Contains(re.Id.Value);
+						string name = this.TypeNames[re.Id.Value];
 
 						string? @namespace = isAlias ? null : this.ModelNamespace;
 						return new ResolvedType(new SimpleTypeName(
-							re.Id.Value,
+							name,
 							@namespace,
 							prefix: null
 						));
@@ -173,12 +178,12 @@ namespace EdjCase.ICP.ClientGenerator
 			TypeName clientName,
 			ServiceSourceCodeType service)
 		{
-			ValueName candidConverterProperty = ValueName.Default("Converter", this.KeepCandidCase);
+			string candidConverterProperty = "Converter";
 			List<ClassProperty> properties = new()
 			{
 				// public IAgent Agent { get; }
 				new ClassProperty(
-					name: ValueName.Default("Agent", this.KeepCandidCase),
+					name: "Agent",
 					type: SimpleTypeName.FromType<IAgent>(),
 					access: AccessType.Public,
 					hasSetter: false
@@ -186,7 +191,7 @@ namespace EdjCase.ICP.ClientGenerator
 				
 				// public Principal CanisterId { get; }
 				new ClassProperty(
-					name: ValueName.Default("CanisterId", this.KeepCandidCase),
+					name: "CanisterId",
 					type: SimpleTypeName.FromType<Principal>(),
 					access: AccessType.Public,
 					hasSetter: false
@@ -205,10 +210,10 @@ namespace EdjCase.ICP.ClientGenerator
 			};
 
 			List<(MethodDeclarationSyntax Method, List<MemberDeclarationSyntax> SubTypes)> methods = service.Methods
-				.Select(method => GenerateFuncMethod(method.CsharpName, method.CandidName, method.FuncInfo, clientName, this, candidConverterProperty))
+				.Select(method => this.GenerateFuncMethod(method.CsharpName, method.CandidName, method.FuncInfo, clientName, this, candidConverterProperty))
 				.ToList();
 
-			return GenerateClass(
+			return this.GenerateClass(
 				clientName,
 				properties,
 				optionalProperties: optionalProperties,
@@ -224,7 +229,7 @@ namespace EdjCase.ICP.ClientGenerator
 			TypeName? parentType
 		)
 		{
-			(ValueName Name, ResolvedType? Type) ResolveOption((ValueName Tag, SourceCodeType? Type) option, int i)
+			(ResolvedName Name, ResolvedType? Type) ResolveOption((ResolvedName Tag, SourceCodeType? Type) option, int i)
 			{
 				ResolvedType? resolvedType;
 				if (option.Type == null)
@@ -234,20 +239,20 @@ namespace EdjCase.ICP.ClientGenerator
 				else
 				{
 					string nameContext = option.Type.IsPredefinedType
-						? option.Tag.PropertyName
-						: option.Tag.PropertyName + "Info"; // If need to generate sub type, add suffix to avoid name collision
+						? option.Tag.Name
+						: option.Tag.Name + "Info"; // If need to generate sub type, add suffix to avoid name collision
 					resolvedType = this.ResolveType(option.Type, nameContext, variantTypeName);
 				}
 				return (option.Tag, resolvedType);
 			}
 
 
-			List<(ValueName Name, ResolvedType? Type)> resolvedOptions = variant.Options
+			List<(ResolvedName Name, ResolvedType? Type)> resolvedOptions = variant.Options
 				.Select(ResolveOption)
 				.ToList();
 
 
-			List<(ValueName Name, TypeName? Type)> enumOptions = resolvedOptions
+			List<(ResolvedName Name, TypeName? Type)> enumOptions = resolvedOptions
 				.Select(o => (o.Name, o.Type?.Name))
 				.ToList();
 
@@ -256,7 +261,7 @@ namespace EdjCase.ICP.ClientGenerator
 				// If there are no types, just create an enum value
 
 				TypeName enumTypeName = this.BuildType(variantTypeName.GetName(), parentType);
-				EnumDeclarationSyntax enumSyntax = GenerateEnum(enumTypeName, enumOptions);
+				EnumDeclarationSyntax enumSyntax = this.GenerateEnum(enumTypeName, enumOptions);
 				return (null, enumSyntax);
 			}
 			else
@@ -266,7 +271,6 @@ namespace EdjCase.ICP.ClientGenerator
 
 				List<MethodDeclarationSyntax> methods = new();
 
-				ValueName optionValueParamName = ValueName.Default("info", this.KeepCandidCase);
 
 				// Creation methods
 				// public static {VariantType} {OptionName}({VariantOptionType} value)
@@ -279,13 +283,13 @@ namespace EdjCase.ICP.ClientGenerator
 							enumTypeName,
 							o.Name,
 							o.Type,
-							optionValueParamName
+							"info"
 						))
 				);
 
 				// TODO auto change the property values of all class types if it matches the name
-				ValueName tagName = ValueName.Default(variantTypeName.GetName() == "Tag" ? "TagValue" : "Tag", this.KeepCandidCase);
-				ValueName valueName = ValueName.Default(variantTypeName.GetName() == "Value" ? "ValueValue" : "Value", this.KeepCandidCase);
+				string tagName = variantTypeName.GetName() == "Tag" ? "TagValue" : "Tag";
+				string valueName = variantTypeName.GetName() == "Value" ? "ValueValue" : "Value";
 
 				// 'As{X}' methods (if has option type)
 				methods.AddRange(
@@ -323,10 +327,10 @@ namespace EdjCase.ICP.ClientGenerator
 				List<AttributeListSyntax> attributes = new()
 			{
 				// [Variant(typeof({enumType})]
-				GenerateAttribute(AttributeInfo.FromType<VariantAttribute>(enumTypeName))
+				this.GenerateAttribute(AttributeInfo.FromType<VariantAttribute>(enumTypeName))
 			};
 
-				ClassDeclarationSyntax classSyntax = GenerateClass(
+				ClassDeclarationSyntax classSyntax = this.GenerateClass(
 					name: variantTypeName,
 					properties: properties,
 					optionalProperties: null,
@@ -337,7 +341,7 @@ namespace EdjCase.ICP.ClientGenerator
 						.SelectMany(o => o.Type?.GeneratedSyntax ?? Array.Empty<MemberDeclarationSyntax>())
 						.ToList()
 				);
-				EnumDeclarationSyntax enumSyntax = GenerateEnum(enumTypeName, enumOptions);
+				EnumDeclarationSyntax enumSyntax = this.GenerateEnum(enumTypeName, enumOptions);
 				return (classSyntax, enumSyntax);
 			}
 		}
@@ -360,7 +364,10 @@ namespace EdjCase.ICP.ClientGenerator
 			return new SimpleTypeName(name, @namespace, prefix);
 		}
 
-		private MethodDeclarationSyntax GenerateVariantValidateTypeMethod(TypeName enumTypeName, ValueName tagName)
+		private MethodDeclarationSyntax GenerateVariantValidateTypeMethod(
+			TypeName enumTypeName,
+			string tagName
+		)
 		{
 			// Generate helper function to validate the variant 'As_' methods
 			//private void ValidateTag({VariantEnum} tag)
@@ -370,6 +377,7 @@ namespace EdjCase.ICP.ClientGenerator
 			//		throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
 			//	}
 			//}
+			string argName = this.NameHelper.ToCamelCase(tagName);
 			BlockSyntax body = SyntaxFactory.Block(
 				SyntaxFactory.IfStatement(
 				SyntaxFactory.PrefixUnaryExpression(
@@ -380,7 +388,7 @@ namespace EdjCase.ICP.ClientGenerator
 							SyntaxFactory.MemberAccessExpression(
 								SyntaxKind.SimpleMemberAccessExpression,
 								SyntaxFactory.ThisExpression(),
-								SyntaxFactory.IdentifierName(tagName.PropertyName)
+								SyntaxFactory.IdentifierName(tagName)
 							),
 							SyntaxFactory.IdentifierName(nameof(CandidTag.Equals))
 						)
@@ -389,7 +397,7 @@ namespace EdjCase.ICP.ClientGenerator
 						SyntaxFactory.ArgumentList(
 							SyntaxFactory.SingletonSeparatedList<ArgumentSyntax>(
 								SyntaxFactory.Argument(
-									SyntaxFactory.IdentifierName(tagName.VariableName)
+									SyntaxFactory.IdentifierName(argName)
 								)
 							)
 						)
@@ -425,7 +433,7 @@ namespace EdjCase.ICP.ClientGenerator
 															SyntaxFactory.MemberAccessExpression(
 																SyntaxKind.SimpleMemberAccessExpression,
 																SyntaxFactory.ThisExpression(),
-																SyntaxFactory.IdentifierName(tagName.PropertyName)
+																SyntaxFactory.IdentifierName(tagName)
 															)
 														),
 														SyntaxFactory.InterpolatedStringText()
@@ -439,7 +447,7 @@ namespace EdjCase.ICP.ClientGenerator
 															)
 														),
 														SyntaxFactory.Interpolation(
-															SyntaxFactory.IdentifierName(tagName.VariableName)
+															SyntaxFactory.IdentifierName(argName)
 														),
 														SyntaxFactory.InterpolatedStringText()
 														.WithTextToken(
@@ -462,22 +470,22 @@ namespace EdjCase.ICP.ClientGenerator
 					)
 				)
 			));
-			return GenerateMethod(
+			return this.GenerateMethod(
 				body: body,
 				access: AccessType.Private,
 				isStatic: false,
 				isAsync: false,
 				returnTypes: null,
 				name: "ValidateTag",
-				new TypedValueName(enumTypeName, ValueName.Default("tag", this.KeepCandidCase))
+				(enumTypeName, "tag")
 			);
 		}
 
 		private MethodDeclarationSyntax GenerateVariantOptionAsMethod(
 			TypeName enumType,
-			ValueName optionName,
+			ResolvedName optionName,
 			ResolvedType optionType,
-			ValueName valueName
+			string valueName
 		)
 		{
 			// public {VariantOptionType} As{OptionName}()
@@ -501,7 +509,7 @@ namespace EdjCase.ICP.ClientGenerator
 									SyntaxFactory.MemberAccessExpression(
 										SyntaxKind.SimpleMemberAccessExpression,
 										enumType.ToTypeSyntax(),
-										SyntaxFactory.IdentifierName(optionName.PropertyName)
+										SyntaxFactory.IdentifierName(optionName.Name)
 									)
 								)
 							)
@@ -516,45 +524,45 @@ namespace EdjCase.ICP.ClientGenerator
 							SyntaxFactory.MemberAccessExpression(
 								SyntaxKind.SimpleMemberAccessExpression,
 								SyntaxFactory.ThisExpression(),
-								SyntaxFactory.IdentifierName(valueName.PropertyName)
+								SyntaxFactory.IdentifierName(valueName)
 							)
 						)
 					)
 				)
 			);
-			return GenerateMethod(
+			return this.GenerateMethod(
 				body: body,
 				access: AccessType.Public,
 				isStatic: false,
 				isAsync: false,
 				returnTypes: new List<TypedValueName> { new TypedValueName(optionType.Name, optionName) },
-				name: "As" + optionName.PropertyName
+				name: "As" + optionName.Name
 			);
 		}
 
 		private MethodDeclarationSyntax GenerateVariantOptionCreationMethod(
 			TypeName variantTypeName,
 			TypeName enumTypeName,
-			ValueName optionTypeName,
+			ResolvedName optionTypeName,
 			ResolvedType? optionType,
-			ValueName optionValueParamName
+			string optionValueParamName
 		)
 		{
 			ExpressionSyntax arg = optionType == null
 				// If option type is not specified, then use `null`
 				? SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression)
 				// If option type is specified, then use param
-				: SyntaxFactory.IdentifierName(optionValueParamName.VariableName);
+				: SyntaxFactory.IdentifierName(optionValueParamName);
 
-			var creationParameters = new List<TypedValueName>();
+			var creationParameters = new List<(TypeName, string)>();
 			if (optionType != null)
 			{
-				creationParameters.Add(new TypedValueName(optionType.Name, optionValueParamName));
+				creationParameters.Add((optionType.Name, optionValueParamName));
 			}
-			string methodName = optionTypeName.PropertyName == variantTypeName.GetName()
-				? optionTypeName.PropertyName + "_" // Escape colliding names
-				: optionTypeName.PropertyName;
-			return GenerateMethod(
+			string methodName = optionTypeName.Name == variantTypeName.GetName()
+				? optionTypeName.Name + "_" // Escape colliding names
+				: optionTypeName.Name;
+			return this.GenerateMethod(
 				// return new {VariantType}({VariantEnum}.{Option}, value);
 				body: SyntaxFactory.Block(
 				SyntaxFactory.ReturnStatement(
@@ -569,7 +577,7 @@ namespace EdjCase.ICP.ClientGenerator
 											SyntaxFactory.MemberAccessExpression(
 												SyntaxKind.SimpleMemberAccessExpression,
 												enumTypeName.ToTypeSyntax(),
-												SyntaxFactory.IdentifierName(optionTypeName.PropertyName)
+												SyntaxFactory.IdentifierName(optionTypeName.Name)
 											)
 										),
 										SyntaxFactory.Token(SyntaxKind.CommaToken),
@@ -585,21 +593,21 @@ namespace EdjCase.ICP.ClientGenerator
 				isAsync: false,
 				returnTypes: new List<TypedValueName> { new TypedValueName(variantTypeName, optionTypeName) },
 				name: methodName,
-				parameters: creationParameters?.ToArray() ?? Array.Empty<TypedValueName>()
+				parameters: creationParameters?.ToArray() ?? Array.Empty<(TypeName, string)>()
 			);
 		}
 
 		internal ClassDeclarationSyntax GenerateRecord(TypeName recordTypeName, RecordSourceCodeType record)
 		{
-			(ValueName Name, ResolvedType Type) ResolveField((ValueName Tag, SourceCodeType Type) option, int i)
+			(ResolvedName Name, ResolvedType Type) ResolveField((ResolvedName Tag, SourceCodeType Type) option, int i)
 			{
 				string nameContext = option.Type.IsPredefinedType
-					? option.Tag.PropertyName
-					: option.Tag.PropertyName + "Info"; // If need to generate sub type, add suffix to avoid name collision
+					? option.Tag.Name
+					: option.Tag.Name + "Info"; // If need to generate sub type, add suffix to avoid name collision
 				ResolvedType resolvedType = this.ResolveType(option.Type, nameContext, recordTypeName);
 				return (option.Tag, resolvedType);
 			}
-			List<(ValueName Tag, ResolvedType Type)> resolvedFields = record.Fields
+			List<(ResolvedName Tag, ResolvedType Type)> resolvedFields = record.Fields
 				.Select(ResolveField)
 				.ToList();
 			List<MemberDeclarationSyntax> subItems = resolvedFields
@@ -609,13 +617,12 @@ namespace EdjCase.ICP.ClientGenerator
 			List<ClassProperty> properties = resolvedFields
 				.Select((f, i) =>
 				{
-					ValueName propertyName = f.Tag;
-					if (propertyName.PropertyName == recordTypeName.GetName())
+					ResolvedName propertyName = f.Tag;
+					if (propertyName.Name == recordTypeName.GetName())
 					{
 						// Cant match the class name
-						propertyName = new ValueName(
-							propertyName: propertyName.PropertyName + "_", // TODO best way to escape it. @ does not work
-							variableName: propertyName.VariableName,
+						propertyName = new ResolvedName(
+							name: propertyName.Name + "_", // TODO best way to escape it. @ does not work
 							candidTag: propertyName.CandidTag
 						);
 					}
@@ -630,7 +637,7 @@ namespace EdjCase.ICP.ClientGenerator
 							AttributeInfo.FromType<CandidTagAttribute>(propertyName.CandidTag)
 						};
 					}
-					else if (propertyName.CandidTag != propertyName.PropertyName)
+					else if (propertyName.CandidTag != propertyName.Name)
 					{
 						// [CandidName("{fieldCandidName}")]
 						// Only add attribute if the name is different
@@ -643,7 +650,7 @@ namespace EdjCase.ICP.ClientGenerator
 
 					// public {fieldType} {fieldName} {{ get; set; }}
 					return new ClassProperty(
-						name: propertyName,
+						name: propertyName.Name,
 						type: f.Type.Name,
 						access: AccessType.Public,
 						hasSetter: true,
@@ -652,7 +659,7 @@ namespace EdjCase.ICP.ClientGenerator
 				})
 				.ToList();
 
-			return GenerateClass(
+			return this.GenerateClass(
 				name: recordTypeName,
 				properties: properties,
 				optionalProperties: null,
@@ -662,7 +669,7 @@ namespace EdjCase.ICP.ClientGenerator
 
 		}
 
-		private static PropertyDeclarationSyntax? GenerateProperty(ClassProperty property)
+		private PropertyDeclarationSyntax? GenerateProperty(ClassProperty property)
 		{
 			if (property.Type == null)
 			{
@@ -688,14 +695,14 @@ namespace EdjCase.ICP.ClientGenerator
 			PropertyDeclarationSyntax propertySyntax = SyntaxFactory
 				.PropertyDeclaration(
 					property.Type.ToTypeSyntax(),
-					SyntaxFactory.Identifier(property.Name.PropertyName)
+					SyntaxFactory.Identifier(property.Name)
 				)
 				.WithAccessorList(SyntaxFactory.AccessorList(
 					SyntaxFactory.List(accessors)
 				));
 
 			// Add `public`, `private`, etc...
-			SyntaxToken? accessSyntaxToken = GenerateAccessToken(property.Access);
+			SyntaxToken? accessSyntaxToken = this.GenerateAccessToken(property.Access);
 			if (accessSyntaxToken != null)
 			{
 				propertySyntax = propertySyntax
@@ -704,7 +711,7 @@ namespace EdjCase.ICP.ClientGenerator
 			if (property.Attributes?.Any() == true)
 			{
 				IEnumerable<AttributeListSyntax> attributes = property.Attributes
-					.Select(a => GenerateAttribute(a));
+					.Select(a => this.GenerateAttribute(a));
 				propertySyntax = propertySyntax
 					.WithAttributeLists(SyntaxFactory.List(attributes));
 			}
@@ -712,7 +719,7 @@ namespace EdjCase.ICP.ClientGenerator
 			return propertySyntax;
 		}
 
-		private static EnumDeclarationSyntax GenerateEnum(TypeName enumName, List<(ValueName Name, TypeName? Type)> values)
+		private EnumDeclarationSyntax GenerateEnum(TypeName enumName, List<(ResolvedName Name, TypeName? Type)> values)
 		{
 			// Build enum options based on the values
 			IEnumerable<SyntaxNode> enumOptions = values
@@ -725,15 +732,15 @@ namespace EdjCase.ICP.ClientGenerator
 						// [CandidTagId({candidTagId})]
 						// Indicate there is no associated name, just an id
 						// Usually with tuples like 'record { text; nat; }'
-						attributeList.Add(GenerateAttribute(
+						attributeList.Add(this.GenerateAttribute(
 							new AttributeInfo(SimpleTypeName.FromType<CandidTagAttribute>(), v.Name.CandidTag.Id)
 						));
 					}
-					else if (v.Name.CandidTag.Name != v.Name.PropertyName)
+					else if (v.Name.CandidTag.Name != v.Name.Name)
 					{
 						// [CandidName({candidName}]
 						// Only add if names differ
-						attributeList.Add(GenerateAttribute(
+						attributeList.Add(this.GenerateAttribute(
 							new AttributeInfo(SimpleTypeName.FromType<CandidNameAttribute>(), v.Name.CandidTag.Name!)
 						));
 					}
@@ -741,14 +748,14 @@ namespace EdjCase.ICP.ClientGenerator
 					if (v.Type != null)
 					{
 						// [VariantOptionType(typeof({type}))]
-						attributeList.Add(GenerateAttribute(
+						attributeList.Add(this.GenerateAttribute(
 							new AttributeInfo(SimpleTypeName.FromType<VariantOptionTypeAttribute>(), v.Type)
 						));
 
 					}
 					return SyntaxFactory
 						// {optionName},
-						.EnumMemberDeclaration(SyntaxFactory.Identifier(v.Name.PropertyName))
+						.EnumMemberDeclaration(SyntaxFactory.Identifier(v.Name.Name))
 						// Add attributes
 						.WithAttributeLists(SyntaxFactory.List(attributeList));
 				});
@@ -771,7 +778,7 @@ namespace EdjCase.ICP.ClientGenerator
 
 
 
-		private static AttributeListSyntax GenerateAttribute(AttributeInfo attribute)
+		private AttributeListSyntax GenerateAttribute(AttributeInfo attribute)
 		{
 			IEnumerable<AttributeArgumentSyntax> arguments = attribute.Args?
 				.Select<object, ExpressionSyntax>(a =>
@@ -816,37 +823,37 @@ namespace EdjCase.ICP.ClientGenerator
 			);
 		}
 
-		private static (MethodDeclarationSyntax Method, List<MemberDeclarationSyntax> SubTypes) GenerateFuncMethod(
+		private (MethodDeclarationSyntax Method, List<MemberDeclarationSyntax> SubTypes) GenerateFuncMethod(
 			string csharpName,
 			string candidName,
 			ServiceSourceCodeType.Func info,
 			TypeName clientName,
 			RoslynTypeResolver typeResolver,
-			ValueName candidConverterProperty
+			string candidConverterProperty
 		)
 		{
-			(ValueName Name, ResolvedType Type) ResolveType((ValueName Name, SourceCodeType Type) type, int i)
+			(ResolvedName Name, ResolvedType Type) ResolveType((ResolvedName Name, SourceCodeType Type) type, int i)
 			{
-				string nameContext = StringUtil.ToPascalCase(csharpName) + StringUtil.ToPascalCase(type.Name.PropertyName);
+				string nameContext = StringUtil.ToPascalCase(csharpName) + StringUtil.ToPascalCase(type.Name.Name);
 				ResolvedType resolvedType = typeResolver.ResolveType(type.Type, nameContext, parentType: clientName);
 				return (type.Name, resolvedType);
 			}
 			
-			List<(ValueName Name, ResolvedType Type)> resolvedArgTypes = info.ArgTypes
+			List<(ResolvedName Name, ResolvedType Type)> resolvedArgTypes = info.ArgTypes
 				.Select(ResolveType)
 				.ToList();
-			List<(ValueName Name, ResolvedType Type)> resolvedReturnTypes = info.ReturnTypes
+			List<(ResolvedName Name, ResolvedType Type)> resolvedReturnTypes = info.ReturnTypes
 				.Select(ResolveType)
 				.ToList();
 
-			List<TypedValueName> argTypes = resolvedArgTypes
-				.Select(t => new TypedValueName(t.Type.Name, t.Name))
+			List<(TypeName, string)> argTypes = resolvedArgTypes
+				.Select(t => (t.Type.Name, t.Name.ToCamelCase()))
 				.ToList();
 			List<TypedValueName> returnTypes = resolvedReturnTypes
 				.Select(t => new TypedValueName(t.Type.Name, t.Name))
 				.ToList();
 
-			BlockSyntax body = GenerateFuncMethodBody(
+			BlockSyntax body = this.GenerateFuncMethodBody(
 				candidName: candidName,
 				argTypes,
 				returnTypes,
@@ -864,7 +871,7 @@ namespace EdjCase.ICP.ClientGenerator
 				)
 				.ToList();
 
-			MethodDeclarationSyntax method = GenerateMethod(
+			MethodDeclarationSyntax method = this.GenerateMethod(
 				body: body,
 				access: AccessType.Public,
 				isStatic: false,
@@ -876,50 +883,36 @@ namespace EdjCase.ICP.ClientGenerator
 			return (method, subTypes);
 		}
 
-		private static BlockSyntax GenerateFuncMethodBody(
+		private BlockSyntax GenerateFuncMethodBody(
 			string candidName,
-			List<TypedValueName> argTypes,
+			List<(TypeName Type, string Name)> argTypes,
 			List<TypedValueName> returnTypes,
 			bool isOneway,
 			bool isQuery,
 			RoslynTypeResolver typeResolver,
-			ValueName candidConverterProperty
+			string candidConverterProperty
 		)
 		{
 			// Build arguments for conversion to CandidArg
 			IEnumerable<ArgumentSyntax> fromCandidArguments = argTypes
 				.Select(t =>
 				{
-					ExpressionSyntax expression;
-					if (t == null)
-					{
-						// `CandidTypedValue.Null();`
-						expression = SyntaxFactory.InvocationExpression(
-							SyntaxFactory.MemberAccessExpression(
-								SyntaxKind.SimpleMemberAccessExpression,
-								SyntaxFactory.IdentifierName(typeof(CandidTypedValue).FullName!),
-								SyntaxFactory.IdentifierName(nameof(CandidTypedValue.Null))
-							)
-						);
-					}
-					else
-					{
-						// `CandidTypedValue.FromObject({argX});`
-						expression = SyntaxFactory.InvocationExpression(
-							SyntaxFactory.MemberAccessExpression(
-								SyntaxKind.SimpleMemberAccessExpression,
-								SyntaxFactory.IdentifierName(typeof(CandidTypedValue).FullName!),
-								SyntaxFactory.IdentifierName(nameof(CandidTypedValue.FromObject))
+					// `CandidTypedValue.FromObject({argX});`
+					string argName = this.NameHelper.ToCamelCase(t.Name);
+					ExpressionSyntax expression = SyntaxFactory.InvocationExpression(
+						SyntaxFactory.MemberAccessExpression(
+							SyntaxKind.SimpleMemberAccessExpression,
+							SyntaxFactory.IdentifierName(typeof(CandidTypedValue).FullName!),
+							SyntaxFactory.IdentifierName(nameof(CandidTypedValue.FromObject))
+						)
+					)
+					.WithArgumentList(
+						SyntaxFactory.ArgumentList(
+							SyntaxFactory.SingletonSeparatedList(
+								SyntaxFactory.Argument(SyntaxFactory.IdentifierName(argName.ToSyntaxIdentifier()))
 							)
 						)
-						.WithArgumentList(
-							SyntaxFactory.ArgumentList(
-								SyntaxFactory.SingletonSeparatedList(
-									SyntaxFactory.Argument(SyntaxFactory.IdentifierName(t.Value.VariableName.ToSyntaxIdentifier()))
-								)
-							)
-						);
-					}
+					);
 					return SyntaxFactory.Argument(expression);
 				});
 
@@ -964,7 +957,7 @@ namespace EdjCase.ICP.ClientGenerator
 				// No return args
 				// Query and Oneway are exclusive annotations in the IC
 				// `await this.Agent.CallAsync(this.CanisterId, {methodName}, arg)`
-				StatementSyntax invokeCall = GenerateCall(candidName, argName);
+				StatementSyntax invokeCall = this.GenerateCall(candidName, argName);
 				statements.Add(invokeCall);
 				return SyntaxFactory.Block(statements);
 			}
@@ -972,11 +965,11 @@ namespace EdjCase.ICP.ClientGenerator
 			{
 				const string responseName = "response";
 				// `QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, {methodName}, arg);`
-				StatementSyntax invokeQueryCall = GenerateQueryCall(candidName, argName, responseName);
+				StatementSyntax invokeQueryCall = this.GenerateQueryCall(candidName, argName, responseName);
 				statements.Add(invokeQueryCall);
 
 				// `CandidArg reply = response.ThrowOrGetReply();`
-				StatementSyntax invokeThrowOrGetReply = GenerateThrowOrGetReply(variableName, responseName);
+				StatementSyntax invokeThrowOrGetReply = this.GenerateThrowOrGetReply(variableName, responseName);
 				statements.Add(invokeThrowOrGetReply);
 
 			}
@@ -984,7 +977,7 @@ namespace EdjCase.ICP.ClientGenerator
 			{
 				// `CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, {methodName}, arg)`
 				string? replyVariableName = returnTypes.Any() ? variableName : null; // Dont include reply variable if its not used
-				StatementSyntax invokeCallAndWait = GenerateCallAndWait(candidName, argName, replyVariableName);
+				StatementSyntax invokeCallAndWait = this.GenerateCallAndWait(candidName, argName, replyVariableName);
 				statements.Add(invokeCallAndWait);
 
 			}
@@ -994,7 +987,7 @@ namespace EdjCase.ICP.ClientGenerator
 					SyntaxFactory.MemberAccessExpression(
 						SyntaxKind.SimpleMemberAccessExpression,
 						SyntaxFactory.ThisExpression(),
-						SyntaxFactory.IdentifierName(candidConverterProperty.PropertyName)
+						SyntaxFactory.IdentifierName(candidConverterProperty)
 					)
 				);
 				statements.Add(
@@ -1028,7 +1021,7 @@ namespace EdjCase.ICP.ClientGenerator
 			return SyntaxFactory.Block(statements);
 		}
 
-		private static StatementSyntax GenerateThrowOrGetReply(string variableName, string responseName)
+		private StatementSyntax GenerateThrowOrGetReply(string variableName, string responseName)
 		{
 			return SyntaxFactory.LocalDeclarationStatement(
 				SyntaxFactory.VariableDeclaration(
@@ -1055,7 +1048,7 @@ namespace EdjCase.ICP.ClientGenerator
 			);
 		}
 
-		private static StatementSyntax GenerateQueryCall(string methodName, string argName, string responseName)
+		private StatementSyntax GenerateQueryCall(string methodName, string argName, string responseName)
 		{
 			return SyntaxFactory.LocalDeclarationStatement(
 					SyntaxFactory.VariableDeclaration(
@@ -1114,7 +1107,7 @@ namespace EdjCase.ICP.ClientGenerator
 				);
 		}
 
-		private static StatementSyntax GenerateCallAndWait(string methodName, string argName, string? variableName)
+		private StatementSyntax GenerateCallAndWait(string methodName, string argName, string? variableName)
 		{
 			InvocationExpressionSyntax apiCall = SyntaxFactory.InvocationExpression(
 					SyntaxFactory.MemberAccessExpression(
@@ -1181,7 +1174,7 @@ namespace EdjCase.ICP.ClientGenerator
 				SyntaxFactory.AwaitExpression(apiCall)
 			);
 		}
-		private static StatementSyntax GenerateCall(string methodName, string argName)
+		private StatementSyntax GenerateCall(string methodName, string argName)
 		{
 			InvocationExpressionSyntax apiCall = SyntaxFactory.InvocationExpression(
 					SyntaxFactory.MemberAccessExpression(
@@ -1225,7 +1218,7 @@ namespace EdjCase.ICP.ClientGenerator
 			);
 		}
 
-		private static ConstructorDeclarationSyntax GenerateConstructor(
+		private ConstructorDeclarationSyntax GenerateConstructor(
 			TypeName name,
 			AccessType access,
 			List<ClassProperty> properties,
@@ -1237,14 +1230,15 @@ namespace EdjCase.ICP.ClientGenerator
 				.Concat(optionalProperties)
 				.Select(p =>
 				{
-					var value = SyntaxFactory.IdentifierName(p.Name.VariableName);
+					string argName = this.NameHelper.ToCamelCase(p.Name);
+					var value = SyntaxFactory.IdentifierName(argName);
 					return SyntaxFactory.ExpressionStatement(
 						SyntaxFactory.AssignmentExpression(
 							SyntaxKind.SimpleAssignmentExpression,
 							SyntaxFactory.MemberAccessExpression(
 								SyntaxKind.SimpleMemberAccessExpression,
 								SyntaxFactory.ThisExpression(),
-								SyntaxFactory.IdentifierName(p.Name.PropertyName)
+								SyntaxFactory.IdentifierName(p.Name)
 							),
 							value
 						)
@@ -1265,8 +1259,9 @@ namespace EdjCase.ICP.ClientGenerator
 							.Where(p => p.Type != null)
 							.Select(p =>
 							{
+								string argName = this.NameHelper.ToCamelCase(p.Name);
 								return SyntaxFactory.Parameter(
-									SyntaxFactory.Identifier(p.Name.VariableName)
+									SyntaxFactory.Identifier(argName)
 								)
 								.WithType(p.Type!.ToTypeSyntax());
 							})
@@ -1274,8 +1269,9 @@ namespace EdjCase.ICP.ClientGenerator
 								.Where(p => p.Type != null)
 								.Select(p =>
 								{
+									string argName = this.NameHelper.ToCamelCase(p.Name);
 									return SyntaxFactory.Parameter(
-										SyntaxFactory.Identifier(p.Name.VariableName)
+										SyntaxFactory.Identifier(argName)
 									)
 									.WithType(p.Type!.ToTypeSyntax())
 									// Add `= default` to the end
@@ -1291,7 +1287,7 @@ namespace EdjCase.ICP.ClientGenerator
 				.WithBody(body);
 
 			// Add access (public, private, ...)
-			SyntaxToken? accessSyntaxToken = GenerateAccessToken(access);
+			SyntaxToken? accessSyntaxToken = this.GenerateAccessToken(access);
 			if (accessSyntaxToken != null)
 			{
 				constructor = constructor
@@ -1303,7 +1299,7 @@ namespace EdjCase.ICP.ClientGenerator
 			return constructor;
 		}
 
-		private static SyntaxToken? GenerateAccessToken(AccessType access)
+		private SyntaxToken? GenerateAccessToken(AccessType access)
 		{
 			SyntaxKind? accessKeyword = access switch
 			{
@@ -1316,14 +1312,14 @@ namespace EdjCase.ICP.ClientGenerator
 			return accessKeyword == null ? null : SyntaxFactory.Token(accessKeyword.Value);
 		}
 
-		private static MethodDeclarationSyntax GenerateMethod(
+		private MethodDeclarationSyntax GenerateMethod(
 			BlockSyntax body,
 			AccessType access,
 			bool isStatic,
 			bool isAsync,
 			List<TypedValueName>? returnTypes,
 			string name,
-			params TypedValueName[] parameters)
+			params (TypeName Type, string Name)[] parameters)
 		{
 			TypeSyntax? returnType = null;
 			if (returnTypes?.Any() == true)
@@ -1339,7 +1335,7 @@ namespace EdjCase.ICP.ClientGenerator
 					returnType = SyntaxFactory.TupleType(SyntaxFactory.SeparatedList(
 						returnTypes
 						.Where(t => t != null)
-						.Select(t => SyntaxFactory.TupleElement(t.Type.ToTypeSyntax(), (" " + t.Value.PropertyName).ToSyntaxIdentifier()))
+						.Select(t => SyntaxFactory.TupleElement(t.Type.ToTypeSyntax(), (" " + t.Value.Name).ToSyntaxIdentifier()))
 					));
 				}
 			}
@@ -1405,7 +1401,7 @@ namespace EdjCase.ICP.ClientGenerator
 				.Select(p =>
 				{
 					return SyntaxFactory
-						.Parameter(p.Value.VariableName.ToSyntaxIdentifier())
+						.Parameter(p.Name.ToSyntaxIdentifier())
 						.WithType(p.Type.ToTypeSyntax());
 				});
 			return SyntaxFactory.MethodDeclaration(returnType, SyntaxFactory.Identifier(name))
@@ -1414,7 +1410,7 @@ namespace EdjCase.ICP.ClientGenerator
 				.WithBody(body);
 		}
 
-		private static ClassDeclarationSyntax GenerateClass(
+		private ClassDeclarationSyntax GenerateClass(
 			TypeName name,
 			List<ClassProperty> properties,
 			List<ClassProperty>? optionalProperties = null,
@@ -1429,16 +1425,16 @@ namespace EdjCase.ICP.ClientGenerator
 				// TODO
 				throw new NotImplementedException("Null, empty or reserved properties are not yet supported");
 			}
-			var uniquePropertyNames = new HashSet<ValueName>();
+			var uniquePropertyNames = new HashSet<string>();
 			ClassProperty FixDuplicates(ClassProperty property)
 			{
-				ValueName name = property.Name;
+				string name = property.Name;
 				int i = 0;
 				while (!uniquePropertyNames.Add(name))
 				{
 					// Add number suffix till there are no duplicates
 					i++;
-					name = property.Name.WithSuffix(i.ToString());
+					name = property.Name + i.ToString();
 				}
 				if (i > 0)
 				{
@@ -1455,17 +1451,17 @@ namespace EdjCase.ICP.ClientGenerator
 			List<ConstructorDeclarationSyntax> constructors = new();
 			IEnumerable<PropertyDeclarationSyntax> properySyntaxList = properties
 				.Concat(optionalProperties ?? new List<ClassProperty>())
-				.Select(GenerateProperty)
+				.Select(this.GenerateProperty)
 				.Where(p => p != null)!;
 			if (properties.Any())
 			{
 				// Only create constructor if there are properties
-				constructors.Add(GenerateConstructor(name, AccessType.Public, properties, optionalProperties));
+				constructors.Add(this.GenerateConstructor(name, AccessType.Public, properties, optionalProperties));
 			}
 			if (emptyConstructorAccess != null)
 			{
 				// Empty Constrcutor for reflection
-				constructors.Add(GenerateConstructor(
+				constructors.Add(this.GenerateConstructor(
 					name: name,
 					access: emptyConstructorAccess.Value,
 					properties: new List<ClassProperty>()
@@ -1525,14 +1521,14 @@ namespace EdjCase.ICP.ClientGenerator
 		private class ClassProperty
 		{
 			public AccessType Access { get; }
-			public ValueName Name { get; }
+			public string Name { get; }
 			public TypeName? Type { get; }
 			public bool IsNullable { get; }
 			public bool HasSetter { get; }
 			public AttributeInfo[]? Attributes { get; }
 
 			public ClassProperty(
-				ValueName name,
+				string name,
 				TypeName? type,
 				AccessType access,
 				bool hasSetter,

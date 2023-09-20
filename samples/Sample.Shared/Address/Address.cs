@@ -1,24 +1,29 @@
 using Dict = System.Collections.Generic.List<(System.String, EdjCase.ICP.Candid.Models.UnboundedUInt)>;
+using EdjCase.ICP.Candid.Mapping;
 using EdjCase.ICP.Candid.Models;
 
 namespace Sample.Shared.AddressBook
 {
 	public class Address
 	{
-		public string street { get; set; }
+		[CandidName("street")]
+		public string Street { get; set; }
 
-		public string city { get; set; }
+		[CandidName("city")]
+		public string City { get; set; }
 
-		public UnboundedUInt zip_code { get; set; }
+		[CandidName("zip_code")]
+		public UnboundedUInt ZipCode { get; set; }
 
-		public string country { get; set; }
+		[CandidName("country")]
+		public string Country { get; set; }
 
-		public Address(string street, string city, UnboundedUInt zip_code, string country)
+		public Address(string street, string city, UnboundedUInt zipCode, string country)
 		{
-			this.street = street;
-			this.city = city;
-			this.zip_code = zip_code;
-			this.country = country;
+			this.Street = street;
+			this.City = city;
+			this.ZipCode = zipCode;
+			this.Country = country;
 		}
 
 		public Address()

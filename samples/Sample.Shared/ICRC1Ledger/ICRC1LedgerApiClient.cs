@@ -5,7 +5,7 @@ using Duration = System.UInt64;
 using Tokens = EdjCase.ICP.Candid.Models.UnboundedUInt;
 using TxIndex = EdjCase.ICP.Candid.Models.UnboundedUInt;
 using QueryArchiveFn = EdjCase.ICP.Candid.Models.Values.CandidFunc;
-using Map = System.Collections.Generic.List<Sample.Shared.ICRC1Ledger.Models.MapItem>;
+using Map = System.Collections.Generic.List<(System.String, Sample.Shared.ICRC1Ledger.Models.Value)>;
 using Block = Sample.Shared.ICRC1Ledger.Models.Value;
 using QueryBlockArchiveFn = EdjCase.ICP.Candid.Models.Values.CandidFunc;
 using EdjCase.ICP.Agent.Agents;
@@ -58,12 +58,12 @@ namespace Sample.Shared.ICRC1Ledger
 			return reply.ToObjects<byte>(this.Converter);
 		}
 
-		public async Task<List<ICRC1LedgerApiClient.Icrc1MetadataArg0Item>> Icrc1Metadata()
+		public async Task<List<(string, Models.MetadataValue)>> Icrc1Metadata()
 		{
 			CandidArg arg = CandidArg.FromCandid();
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "icrc1_metadata", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<List<ICRC1LedgerApiClient.Icrc1MetadataArg0Item>>(this.Converter);
+			return reply.ToObjects<List<(string, Models.MetadataValue)>>(this.Converter);
 		}
 
 		public async Task<Tokens> Icrc1TotalSupply()
@@ -135,25 +135,6 @@ namespace Sample.Shared.ICRC1Ledger
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_data_certificate", arg);
 			CandidArg reply = response.ThrowOrGetReply();
 			return reply.ToObjects<Models.DataCertificate>(this.Converter);
-		}
-
-		public class Icrc1MetadataArg0Item
-		{
-			[CandidTag(0U)]
-			public string F0 { get; set; }
-
-			[CandidTag(1U)]
-			public Models.MetadataValue F1 { get; set; }
-
-			public Icrc1MetadataArg0Item(string f0, Models.MetadataValue f1)
-			{
-				this.F0 = f0;
-				this.F1 = f1;
-			}
-
-			public Icrc1MetadataArg0Item()
-			{
-			}
 		}
 
 		public class Icrc1SupportedStandardsArg0Item

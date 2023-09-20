@@ -96,12 +96,12 @@ namespace EdjCase.ICP.ClientGenerator
 
 	internal class RecordSourceCodeType : SourceCodeType
 	{
-		public List<(ValueName Tag, SourceCodeType Type)> Fields { get; }
+		public List<(ResolvedName Tag, SourceCodeType Type)> Fields { get; }
 
 
 		public override bool IsPredefinedType { get; } = false;
 
-		public RecordSourceCodeType(List<(ValueName Tag, SourceCodeType Type)> fields)
+		public RecordSourceCodeType(List<(ResolvedName Tag, SourceCodeType Type)> fields)
 		{
 			this.Fields = fields ?? throw new ArgumentNullException(nameof(fields));
 		}
@@ -109,10 +109,10 @@ namespace EdjCase.ICP.ClientGenerator
 
 	internal class VariantSourceCodeType : SourceCodeType
 	{
-		public List<(ValueName Tag, SourceCodeType? Type)> Options { get; }
+		public List<(ResolvedName Tag, SourceCodeType? Type)> Options { get; }
 		public override bool IsPredefinedType { get; } = false;
 
-		public VariantSourceCodeType(List<(ValueName Tag, SourceCodeType? Type)> options)
+		public VariantSourceCodeType(List<(ResolvedName Tag, SourceCodeType? Type)> options)
 		{
 			this.Options = options ?? throw new ArgumentNullException(nameof(options));
 		}
@@ -129,14 +129,14 @@ namespace EdjCase.ICP.ClientGenerator
 
 		public class Func
 		{
-			public List<(ValueName Name, SourceCodeType Type)> ArgTypes { get; internal set; }
-			public List<(ValueName Name, SourceCodeType Type)> ReturnTypes { get; internal set; }
+			public List<(ResolvedName Name, SourceCodeType Type)> ArgTypes { get; internal set; }
+			public List<(ResolvedName Name, SourceCodeType Type)> ReturnTypes { get; internal set; }
 			public bool IsOneway { get; set; }
 			public bool IsQuery { get; set; }
 
 			public Func(
-				List<(ValueName Name, SourceCodeType Type)> argTypes,
-				List<(ValueName Name, SourceCodeType Type)> returnTypes,
+				List<(ResolvedName Name, SourceCodeType Type)> argTypes,
+				List<(ResolvedName Name, SourceCodeType Type)> returnTypes,
 				bool isOneway,
 				bool isQuery
 			)

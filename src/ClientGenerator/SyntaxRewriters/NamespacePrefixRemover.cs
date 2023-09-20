@@ -173,10 +173,6 @@ namespace EdjCase.ICP.ClientGenerator.SyntaxRewriters
 
 				_ => false// Catch all do nothing
 			};
-			if (node.ToString().Contains("Tasks.Task"))
-			{
-				int a = 1;
-			}
 			if (shouldStrip)
 			{
 				return this.StripNamespace(node);

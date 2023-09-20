@@ -53,7 +53,7 @@ namespace Sample.Shared.Governance.Models
 		public OptionalValue<DissolveState> DissolveState { get; set; }
 
 		[CandidName("followees")]
-		public List<Neuron.FolloweesItem> Followees { get; set; }
+		public List<(int, Followees)> Followees { get; set; }
 
 		[CandidName("neuron_fees_e8s")]
 		public ulong NeuronFeesE8s { get; set; }
@@ -67,7 +67,7 @@ namespace Sample.Shared.Governance.Models
 		[CandidName("spawn_at_timestamp_seconds")]
 		public OptionalValue<ulong> SpawnAtTimestampSeconds { get; set; }
 
-		public Neuron(OptionalValue<NeuronId> id, OptionalValue<ulong> stakedMaturityE8sEquivalent, OptionalValue<Principal> controller, List<BallotInfo> recentBallots, bool kycVerified, bool notForProfit, ulong maturityE8sEquivalent, ulong cachedNeuronStakeE8s, ulong createdTimestampSeconds, OptionalValue<bool> autoStakeMaturity, ulong agingSinceTimestampSeconds, List<Principal> hotKeys, List<byte> account, OptionalValue<ulong> joinedCommunityFundTimestampSeconds, OptionalValue<DissolveState> dissolveState, List<Neuron.FolloweesItem> followees, ulong neuronFeesE8s, OptionalValue<NeuronStakeTransfer> transfer, OptionalValue<KnownNeuronData> knownNeuronData, OptionalValue<ulong> spawnAtTimestampSeconds)
+		public Neuron(OptionalValue<NeuronId> id, OptionalValue<ulong> stakedMaturityE8sEquivalent, OptionalValue<Principal> controller, List<BallotInfo> recentBallots, bool kycVerified, bool notForProfit, ulong maturityE8sEquivalent, ulong cachedNeuronStakeE8s, ulong createdTimestampSeconds, OptionalValue<bool> autoStakeMaturity, ulong agingSinceTimestampSeconds, List<Principal> hotKeys, List<byte> account, OptionalValue<ulong> joinedCommunityFundTimestampSeconds, OptionalValue<DissolveState> dissolveState, List<(int, Followees)> followees, ulong neuronFeesE8s, OptionalValue<NeuronStakeTransfer> transfer, OptionalValue<KnownNeuronData> knownNeuronData, OptionalValue<ulong> spawnAtTimestampSeconds)
 		{
 			this.Id = id;
 			this.StakedMaturityE8sEquivalent = stakedMaturityE8sEquivalent;
@@ -93,25 +93,6 @@ namespace Sample.Shared.Governance.Models
 
 		public Neuron()
 		{
-		}
-
-		public class FolloweesItem
-		{
-			[CandidTag(0U)]
-			public int F0 { get; set; }
-
-			[CandidTag(1U)]
-			public Followees F1 { get; set; }
-
-			public FolloweesItem(int f0, Followees f1)
-			{
-				this.F0 = f0;
-				this.F1 = f1;
-			}
-
-			public FolloweesItem()
-			{
-			}
 		}
 	}
 }

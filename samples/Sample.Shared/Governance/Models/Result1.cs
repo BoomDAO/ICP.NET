@@ -4,48 +4,48 @@ using System;
 
 namespace Sample.Shared.Governance.Models
 {
-	[Variant(typeof(Result_1Tag))]
-	public class Result_1
+	[Variant(typeof(Result1Tag))]
+	public class Result1
 	{
 		[VariantTagProperty()]
-		public Result_1Tag Tag { get; set; }
+		public Result1Tag Tag { get; set; }
 
 		[VariantValueProperty()]
 		public object? Value { get; set; }
 
-		public Result_1(Result_1Tag tag, object? value)
+		public Result1(Result1Tag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
 		}
 
-		protected Result_1()
+		protected Result1()
 		{
 		}
 
-		public static Result_1 Error(GovernanceError info)
+		public static Result1 Error(GovernanceError info)
 		{
-			return new Result_1(Result_1Tag.Error, info);
+			return new Result1(Result1Tag.Error, info);
 		}
 
-		public static Result_1 NeuronId(NeuronId info)
+		public static Result1 NeuronId(NeuronId info)
 		{
-			return new Result_1(Result_1Tag.NeuronId, info);
+			return new Result1(Result1Tag.NeuronId, info);
 		}
 
 		public GovernanceError AsError()
 		{
-			this.ValidateTag(Result_1Tag.Error);
+			this.ValidateTag(Result1Tag.Error);
 			return (GovernanceError)this.Value!;
 		}
 
 		public NeuronId AsNeuronId()
 		{
-			this.ValidateTag(Result_1Tag.NeuronId);
+			this.ValidateTag(Result1Tag.NeuronId);
 			return (NeuronId)this.Value!;
 		}
 
-		private void ValidateTag(Result_1Tag tag)
+		private void ValidateTag(Result1Tag tag)
 		{
 			if (!this.Tag.Equals(tag))
 			{
@@ -54,7 +54,7 @@ namespace Sample.Shared.Governance.Models
 		}
 	}
 
-	public enum Result_1Tag
+	public enum Result1Tag
 	{
 		[VariantOptionType(typeof(GovernanceError))]
 		Error,

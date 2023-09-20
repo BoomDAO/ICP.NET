@@ -62,7 +62,7 @@ namespace EdjCase.ICP.ClientGenerator
 					bool clientFeatureNullable = GetOptional<bool?>(client, "feature-nullable") ?? featureNullable ?? true;
 					bool clientKeepCandidCase = GetOptional<bool?>(client, "keep-candid-case") ?? keepCandidCase ?? false;
 					TomlTable? typeTable = GetOptional<TomlTable?>(client, "types");
-					Dictionary<string, ITypeOptions> types = BuildTypes(typeTable);
+					Dictionary<string, NamedTypeOptions> types = BuildTypes(typeTable);
 
 					return new ClientGenerationOptions(
 						name,
@@ -81,9 +81,9 @@ namespace EdjCase.ICP.ClientGenerator
 				.ToList();
 		}
 
-		private static Dictionary<string, ITypeOptions> BuildTypes(TomlTable? typeTable)
+		private static Dictionary<string, NamedTypeOptions> BuildTypes(TomlTable? typeTable)
 		{
-			Dictionary<string, ITypeOptions> types = new();
+			Dictionary<string, NamedTypeOptions> types = new();
 			if (typeTable != null)
 			{
 				foreach ((string key, object value) in typeTable)
@@ -92,53 +92,53 @@ namespace EdjCase.ICP.ClientGenerator
 					{
 						throw new Exception($"Options for type '{key}' cannot be parsed");
 					}
-					string typeType = GetRequired<string>(t, "type");
-					string? typeName = GetOptional<string>(t, "name");
-					ITypeOptions typeOptions;
-					switch (typeType.ToLower())
-					{
-						case "record":
-							{
-								TomlTable? fieldTypeTable = GetOptional<TomlTable>(t, "fields");
-								Dictionary<string, ITypeOptions> fields = BuildTypes(fieldTypeTable);
-								RecordRepresentation? representation = GetEnumOptional<RecordRepresentation>(t, "representation");
-								typeOptions = new RecordTypeOptions
-								{
-									//NameOverride = typeName, // TODO
-									Representation = representation,
-									Fields = fields
-								};
-								break;
-							}
-						case "vec":
-							{
-								VectorRepresentation? representation = GetEnumOptional<VectorRepresentation>(t, "representation");
-								typeOptions = new VectorTypeOptions
-								{
-									//NameOverride = typeName, // TODO
-									Representation = representation,
-									InnerType = null // TODO
-								};
-								break;
-							}
-						case "variant":
-							{
-								TomlTable? optionTypeTable = GetOptional<TomlTable>(t, "options");
-								Dictionary<string, ITypeOptions> options = BuildTypes(optionTypeTable);
-								typeOptions = new VariantTypeOptions
-								{
-									//NameOverride = typeName, // TODO
-									Options = options
-								};
-								break;
-							}
-						default:
-							throw new Exception($"Type '{typeType.ToLower()}' is invalid");
-					}
-					types.Add(key, typeOptions);
+					string? name = GetOptional<string>(t, "name");
+					ITypeOptions? typeOptions = BuildTypeOptions(t);
+					types.Add(key, new NamedTypeOptions(name, typeOptions));
 				}
 			}
 			return types;
+		}
+
+		private static ITypeOptions? BuildTypeOptions(TomlTable t)
+		{
+			string? typeType = GetOptional<string>(t, "type");
+			if (string.IsNullOrWhiteSpace(typeType))
+			{
+				return null;
+			}
+			switch (typeType.ToLower())
+			{
+				case "record":
+					{
+						TomlTable? fieldTypeTable = GetOptional<TomlTable>(t, "fields");
+						Dictionary<string, NamedTypeOptions> fields = BuildTypes(fieldTypeTable);
+						RecordRepresentation? representation = GetEnumOptional<RecordRepresentation>(t, "representation");
+						return new RecordTypeOptions(
+							representation: representation,
+							fields: fields
+						);
+					}
+				case "vec":
+					{
+						ITypeOptions? elementType = GetOptional<ITypeOptions>(t, "elementType");
+						VectorRepresentation? representation = GetEnumOptional<VectorRepresentation>(t, "representation");
+						return new VectorTypeOptions(
+							representation: representation,
+							elementType: elementType
+						);
+					}
+				case "variant":
+					{
+						TomlTable? optionTypeTable = GetOptional<TomlTable>(t, "options");
+						Dictionary<string, NamedTypeOptions> options = BuildTypes(optionTypeTable);
+						return new VariantTypeOptions(
+							options: options
+						);
+					}
+				default:
+					throw new Exception($"Type '{typeType.ToLower()}' is invalid");
+			}
 		}
 
 		private static T GetRequired<T>(TomlTable table, string key, string? prefix = null)

@@ -4,48 +4,48 @@ using System;
 
 namespace Sample.Shared.Governance.Models
 {
-	[Variant(typeof(Result_3Tag))]
-	public class Result_3
+	[Variant(typeof(Result3Tag))]
+	public class Result3
 	{
 		[VariantTagProperty()]
-		public Result_3Tag Tag { get; set; }
+		public Result3Tag Tag { get; set; }
 
 		[VariantValueProperty()]
 		public object? Value { get; set; }
 
-		public Result_3(Result_3Tag tag, object? value)
+		public Result3(Result3Tag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
 		}
 
-		protected Result_3()
+		protected Result3()
 		{
 		}
 
-		public static Result_3 Ok(GovernanceCachedMetrics info)
+		public static Result3 Ok(GovernanceCachedMetrics info)
 		{
-			return new Result_3(Result_3Tag.Ok, info);
+			return new Result3(Result3Tag.Ok, info);
 		}
 
-		public static Result_3 Err(GovernanceError info)
+		public static Result3 Err(GovernanceError info)
 		{
-			return new Result_3(Result_3Tag.Err, info);
+			return new Result3(Result3Tag.Err, info);
 		}
 
 		public GovernanceCachedMetrics AsOk()
 		{
-			this.ValidateTag(Result_3Tag.Ok);
+			this.ValidateTag(Result3Tag.Ok);
 			return (GovernanceCachedMetrics)this.Value!;
 		}
 
 		public GovernanceError AsErr()
 		{
-			this.ValidateTag(Result_3Tag.Err);
+			this.ValidateTag(Result3Tag.Err);
 			return (GovernanceError)this.Value!;
 		}
 
-		private void ValidateTag(Result_3Tag tag)
+		private void ValidateTag(Result3Tag tag)
 		{
 			if (!this.Tag.Equals(tag))
 			{
@@ -54,7 +54,7 @@ namespace Sample.Shared.Governance.Models
 		}
 	}
 
-	public enum Result_3Tag
+	public enum Result3Tag
 	{
 		[VariantOptionType(typeof(GovernanceCachedMetrics))]
 		Ok,
