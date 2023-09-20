@@ -78,7 +78,7 @@ namespace EdjCase.ICP.ClientGenerator
 				.Select(t =>
 				{
 					NamedTypeOptions? typeOptions = options.Types.GetValueOrDefault(t.Key.ToString());
-					ResolvedName typeName = nameHelper.ResolveName(t.Key.ToString(), isTypeName: true, typeOptions?.NameOverride);
+					ResolvedName typeName = nameHelper.ResolveName(t.Key.ToString(), typeOptions?.NameOverride);
 					SourceCodeType sourceCodeType = ResolveSourceCodeType(
 						t.Value,
 						nameHelper,
@@ -225,41 +225,17 @@ namespace EdjCase.ICP.ClientGenerator
 						RecordTypeOptions? rTypeOptions = GetTypeOptions<RecordTypeOptions>();
 						// Check if tuple (tag ids are 0...N)
 
-						RecordRepresentation representation;
-						if ((rTypeOptions?.Representation) != null)
-						{
-							representation = rTypeOptions!.Representation.Value;
-						}
-						else
-						{
-							bool isTuple = o.Fields.Any()
-								&& o.Fields
-									.Select(f => f.Key.Id)
-									.OrderBy(f => f)
-									.SequenceEqual(Enumerable.Range(0, o.Fields.Count).Select(i => (uint)i))
-								// Only be a tuple if it doesnt reference itself
-								&& !o.Fields.Any(f => f.Value is CandidReferenceType r && r.Id == o.RecursiveId);
+						bool isTuple = o.Fields.Any()
+							&& o.Fields
+								.Select(f => f.Key.Id)
+								.OrderBy(f => f)
+								.SequenceEqual(Enumerable.Range(0, o.Fields.Count).Select(i => (uint)i))
+							// Only be a tuple if it doesnt reference itself
+							&& !o.Fields.Any(f => f.Value is CandidReferenceType r && r.Id == o.RecursiveId);
 
-							representation = isTuple ? RecordRepresentation.Tuple : RecordRepresentation.CustomType;
-						}
-
-						switch (representation)
+						if(isTuple )
 						{
-							case RecordRepresentation.CustomType:
-								List<(ResolvedName Key, SourceCodeType Type)> fields = o.Fields
-									.Select(f =>
-									{
-										CandidType fCandidType = f.Value;
-										NamedTypeOptions? fieldTypeOptions = f.Key.Name == null ? null : rTypeOptions?.Fields.GetValueOrDefault(f.Key.Name);
-										SourceCodeType fType = ResolveSourceCodeType(fCandidType, nameHelper, fieldTypeOptions?.TypeOptions);
-										ResolvedName fieldName = nameHelper.ResolveName(f.Key, isTypeName: false, fieldTypeOptions?.NameOverride);
-										return (fieldName, fType);
-									})
-									.Where(f => f.Item2 != null)
-									.ToList()!;
-								return new RecordSourceCodeType(fields);
-							case RecordRepresentation.Tuple:
-								List<SourceCodeType> tupleFields = o.Fields
+							List<SourceCodeType> tupleFields = o.Fields
 									.Select(f =>
 									{
 										NamedTypeOptions? fieldTypeOptions = rTypeOptions?.Fields.GetValueOrDefault(f.Key.ToString());
@@ -271,11 +247,20 @@ namespace EdjCase.ICP.ClientGenerator
 									})
 									.Where(f => f != null)
 									.ToList()!;
-								return new TupleSourceCodeType(tupleFields);
-
-							default:
-								throw new NotImplementedException();
+							return new TupleSourceCodeType(tupleFields);
 						}
+						List<(ResolvedName Key, SourceCodeType Type)> fields = o.Fields
+								.Select(f =>
+								{
+									CandidType fCandidType = f.Value;
+									NamedTypeOptions? fieldTypeOptions = f.Key.Name == null ? null : rTypeOptions?.Fields.GetValueOrDefault(f.Key.Name);
+									SourceCodeType fType = ResolveSourceCodeType(fCandidType, nameHelper, fieldTypeOptions?.TypeOptions);
+									ResolvedName fieldName = nameHelper.ResolveName(f.Key, fieldTypeOptions?.NameOverride);
+									return (fieldName, fType);
+								})
+								.Where(f => f.Item2 != null)
+								.ToList()!;
+						return new RecordSourceCodeType(fields);
 					}
 				case CandidVariantType va:
 					{
@@ -288,7 +273,7 @@ namespace EdjCase.ICP.ClientGenerator
 								SourceCodeType? sourceCodeType = f.Value == CandidType.Null()
 									? null
 									: ResolveSourceCodeType(f.Value, nameHelper, innerTypeOptions?.TypeOptions);
-								ResolvedName optionName = nameHelper.ResolveName(f.Key, isTypeName: false, innerTypeOptions?.NameOverride);
+								ResolvedName optionName = nameHelper.ResolveName(f.Key, innerTypeOptions?.NameOverride);
 								return (optionName, sourceCodeType);
 							})
 							.ToList();
@@ -304,7 +289,7 @@ namespace EdjCase.ICP.ClientGenerator
 			List<(string CsharpName, string CandidName, ServiceSourceCodeType.Func FuncInfo)> methods = s.Methods
 				.Select(m =>
 				{
-					ResolvedName valueName = nameHelper.ResolveName(m.Key.ToString(), isTypeName: false);
+					ResolvedName valueName = nameHelper.ResolveName(m.Key.ToString());
 					return (valueName.Name, valueName.CandidTag.Name!, ResolveFunc(m.Value, nameHelper));
 				})
 				.ToList();
@@ -326,7 +311,7 @@ namespace EdjCase.ICP.ClientGenerator
 
 			(ResolvedName Name, SourceCodeType Type) ResolveXType((CandidId? Name, CandidType Type) a, int i)
 			{
-				ResolvedName name = nameHelper.ResolveName(a.Name?.ToString() ?? "arg" + i, isTypeName: false);
+				ResolvedName name = nameHelper.ResolveName(a.Name?.ToString() ?? "arg" + i);
 				SourceCodeType type = ResolveSourceCodeType(a.Type, nameHelper, null);
 				return (name, type);
 			}

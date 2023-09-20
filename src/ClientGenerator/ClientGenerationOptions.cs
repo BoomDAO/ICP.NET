@@ -157,40 +157,18 @@ namespace EdjCase.ICP.ClientGenerator
 		/// <inheritdoc />
 		public CandidTypeCode Type { get; } = CandidTypeCode.Record;
 		/// <summary>
-		/// Optional. The representation the record should take in the generated code
-		/// </summary>
-		public RecordRepresentation? Representation { get; }
-		/// <summary>
 		/// Optional. The type options for each of the records fields
 		/// </summary>
 		public Dictionary<string, NamedTypeOptions> Fields { get; }
 
-		/// <param name="representation">Optional. The representation the record should take in the generated code</param>
 		/// <param name="fields">Optional. The type options for each of the records fields</param>
 		public RecordTypeOptions(
-			RecordRepresentation? representation = null,
 			Dictionary<string, NamedTypeOptions>? fields = null
 		)
 		{
-			this.Representation = representation;
 			this.Fields = fields ?? new Dictionary<string, NamedTypeOptions>();
 		}
 
-	}
-
-	/// <summary>
-	/// C# type representations a record can be
-	/// </summary>
-	public enum RecordRepresentation
-	{
-		/// <summary>
-		/// Create a custom class type
-		/// </summary>
-		CustomType,
-		/// <summary>
-		/// Have each of the record fields in one tuple
-		/// </summary>
-		Tuple
 	}
 
 	/// <summary>

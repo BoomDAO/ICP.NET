@@ -113,9 +113,7 @@ namespace EdjCase.ICP.ClientGenerator
 					{
 						TomlTable? fieldTypeTable = GetOptional<TomlTable>(t, "fields");
 						Dictionary<string, NamedTypeOptions> fields = BuildTypes(fieldTypeTable);
-						RecordRepresentation? representation = GetEnumOptional<RecordRepresentation>(t, "representation");
 						return new RecordTypeOptions(
-							representation: representation,
 							fields: fields
 						);
 					}

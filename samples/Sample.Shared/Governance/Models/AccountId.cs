@@ -5,11 +5,11 @@ namespace Sample.Shared.Governance.Models
 	public class AccountId
 	{
 		[CandidName("hash")]
-		public byte[] Hash { get; set; }
+		public byte[] Hazh { get; set; }
 
-		public AccountId(byte[] hash)
+		public AccountId(byte[] hazh)
 		{
-			this.Hash = hash;
+			this.Hazh = hazh;
 		}
 
 		public AccountId()

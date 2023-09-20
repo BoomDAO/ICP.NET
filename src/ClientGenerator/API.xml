@@ -144,34 +144,13 @@
         <member name="P:EdjCase.ICP.ClientGenerator.RecordTypeOptions.Type">
             <inheritdoc />
         </member>
-        <member name="P:EdjCase.ICP.ClientGenerator.RecordTypeOptions.Representation">
-            <summary>
-            Optional. The representation the record should take in the generated code
-            </summary>
-        </member>
         <member name="P:EdjCase.ICP.ClientGenerator.RecordTypeOptions.Fields">
             <summary>
             Optional. The type options for each of the records fields
             </summary>
         </member>
-        <member name="M:EdjCase.ICP.ClientGenerator.RecordTypeOptions.#ctor(System.Nullable{EdjCase.ICP.ClientGenerator.RecordRepresentation},System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.ClientGenerator.NamedTypeOptions})">
-            <param name="representation">Optional. The representation the record should take in the generated code</param>
+        <member name="M:EdjCase.ICP.ClientGenerator.RecordTypeOptions.#ctor(System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.ClientGenerator.NamedTypeOptions})">
             <param name="fields">Optional. The type options for each of the records fields</param>
-        </member>
-        <member name="T:EdjCase.ICP.ClientGenerator.RecordRepresentation">
-            <summary>
-            C# type representations a record can be
-            </summary>
-        </member>
-        <member name="F:EdjCase.ICP.ClientGenerator.RecordRepresentation.CustomType">
-            <summary>
-            Create a custom class type
-            </summary>
-        </member>
-        <member name="F:EdjCase.ICP.ClientGenerator.RecordRepresentation.Tuple">
-            <summary>
-            Have each of the record fields in one tuple
-            </summary>
         </member>
         <member name="T:EdjCase.ICP.ClientGenerator.VectorTypeOptions">
             <summary>

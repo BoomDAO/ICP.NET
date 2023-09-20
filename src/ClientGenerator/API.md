@@ -34,13 +34,9 @@
   - [#ctor(nameOverride,typeOptions)](#M-EdjCase-ICP-ClientGenerator-NamedTypeOptions-#ctor-System-String,EdjCase-ICP-ClientGenerator-ITypeOptions- 'EdjCase.ICP.ClientGenerator.NamedTypeOptions.#ctor(System.String,EdjCase.ICP.ClientGenerator.ITypeOptions)')
   - [NameOverride](#P-EdjCase-ICP-ClientGenerator-NamedTypeOptions-NameOverride 'EdjCase.ICP.ClientGenerator.NamedTypeOptions.NameOverride')
   - [TypeOptions](#P-EdjCase-ICP-ClientGenerator-NamedTypeOptions-TypeOptions 'EdjCase.ICP.ClientGenerator.NamedTypeOptions.TypeOptions')
-- [RecordRepresentation](#T-EdjCase-ICP-ClientGenerator-RecordRepresentation 'EdjCase.ICP.ClientGenerator.RecordRepresentation')
-  - [CustomType](#F-EdjCase-ICP-ClientGenerator-RecordRepresentation-CustomType 'EdjCase.ICP.ClientGenerator.RecordRepresentation.CustomType')
-  - [Tuple](#F-EdjCase-ICP-ClientGenerator-RecordRepresentation-Tuple 'EdjCase.ICP.ClientGenerator.RecordRepresentation.Tuple')
 - [RecordTypeOptions](#T-EdjCase-ICP-ClientGenerator-RecordTypeOptions 'EdjCase.ICP.ClientGenerator.RecordTypeOptions')
-  - [#ctor(representation,fields)](#M-EdjCase-ICP-ClientGenerator-RecordTypeOptions-#ctor-System-Nullable{EdjCase-ICP-ClientGenerator-RecordRepresentation},System-Collections-Generic-Dictionary{System-String,EdjCase-ICP-ClientGenerator-NamedTypeOptions}- 'EdjCase.ICP.ClientGenerator.RecordTypeOptions.#ctor(System.Nullable{EdjCase.ICP.ClientGenerator.RecordRepresentation},System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.ClientGenerator.NamedTypeOptions})')
+  - [#ctor(fields)](#M-EdjCase-ICP-ClientGenerator-RecordTypeOptions-#ctor-System-Collections-Generic-Dictionary{System-String,EdjCase-ICP-ClientGenerator-NamedTypeOptions}- 'EdjCase.ICP.ClientGenerator.RecordTypeOptions.#ctor(System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.ClientGenerator.NamedTypeOptions})')
   - [Fields](#P-EdjCase-ICP-ClientGenerator-RecordTypeOptions-Fields 'EdjCase.ICP.ClientGenerator.RecordTypeOptions.Fields')
-  - [Representation](#P-EdjCase-ICP-ClientGenerator-RecordTypeOptions-Representation 'EdjCase.ICP.ClientGenerator.RecordTypeOptions.Representation')
   - [Type](#P-EdjCase-ICP-ClientGenerator-RecordTypeOptions-Type 'EdjCase.ICP.ClientGenerator.RecordTypeOptions.Type')
 - [VariantTypeOptions](#T-EdjCase-ICP-ClientGenerator-VariantTypeOptions 'EdjCase.ICP.ClientGenerator.VariantTypeOptions')
   - [#ctor(options)](#M-EdjCase-ICP-ClientGenerator-VariantTypeOptions-#ctor-System-Collections-Generic-Dictionary{System-String,EdjCase-ICP-ClientGenerator-NamedTypeOptions}- 'EdjCase.ICP.ClientGenerator.VariantTypeOptions.#ctor(System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.ClientGenerator.NamedTypeOptions})')
@@ -365,31 +361,6 @@ Optional. The C# type name to use instead of the default
 
 Optional. The field or option type information
 
-<a name='T-EdjCase-ICP-ClientGenerator-RecordRepresentation'></a>
-## RecordRepresentation `type`
-
-##### Namespace
-
-EdjCase.ICP.ClientGenerator
-
-##### Summary
-
-C# type representations a record can be
-
-<a name='F-EdjCase-ICP-ClientGenerator-RecordRepresentation-CustomType'></a>
-### CustomType `constants`
-
-##### Summary
-
-Create a custom class type
-
-<a name='F-EdjCase-ICP-ClientGenerator-RecordRepresentation-Tuple'></a>
-### Tuple `constants`
-
-##### Summary
-
-Have each of the record fields in one tuple
-
 <a name='T-EdjCase-ICP-ClientGenerator-RecordTypeOptions'></a>
 ## RecordTypeOptions `type`
 
@@ -401,14 +372,13 @@ EdjCase.ICP.ClientGenerator
 
 Type generation options for record candid types
 
-<a name='M-EdjCase-ICP-ClientGenerator-RecordTypeOptions-#ctor-System-Nullable{EdjCase-ICP-ClientGenerator-RecordRepresentation},System-Collections-Generic-Dictionary{System-String,EdjCase-ICP-ClientGenerator-NamedTypeOptions}-'></a>
-### #ctor(representation,fields) `constructor`
+<a name='M-EdjCase-ICP-ClientGenerator-RecordTypeOptions-#ctor-System-Collections-Generic-Dictionary{System-String,EdjCase-ICP-ClientGenerator-NamedTypeOptions}-'></a>
+### #ctor(fields) `constructor`
 
 ##### Parameters
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| representation | [System.Nullable{EdjCase.ICP.ClientGenerator.RecordRepresentation}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Nullable 'System.Nullable{EdjCase.ICP.ClientGenerator.RecordRepresentation}') | Optional. The representation the record should take in the generated code |
 | fields | [System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.ClientGenerator.NamedTypeOptions}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.Dictionary 'System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.ClientGenerator.NamedTypeOptions}') | Optional. The type options for each of the records fields |
 
 <a name='P-EdjCase-ICP-ClientGenerator-RecordTypeOptions-Fields'></a>
@@ -417,13 +387,6 @@ Type generation options for record candid types
 ##### Summary
 
 Optional. The type options for each of the records fields
-
-<a name='P-EdjCase-ICP-ClientGenerator-RecordTypeOptions-Representation'></a>
-### Representation `property`
-
-##### Summary
-
-Optional. The representation the record should take in the generated code
 
 <a name='P-EdjCase-ICP-ClientGenerator-RecordTypeOptions-Type'></a>
 ### Type `property`

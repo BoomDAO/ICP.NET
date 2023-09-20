@@ -30,6 +30,7 @@ type = "record"
 name = "AccountId"
 [clients.types.AccountIdentifier.fields.hash]
 type = "vec"
+name = "Hazh"
 representation = "Array"
 [clients.types.Governance]
 type = "record"
