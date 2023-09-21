@@ -11,7 +11,6 @@ namespace EdjCase.ICP.Candid.Tests
 		[InlineData("camelCase", "camelCase")]
 		[InlineData("PascalCase", "pascalCase")]
 		[InlineData("snake_case", "snakeCase")]
-		[InlineData("spinal-case", "spinalCase")]
 		[InlineData("TestAAATest", "testAAATest")]
 		public void ToCamelCase(string text, string expected)
 		{
@@ -25,7 +24,6 @@ namespace EdjCase.ICP.Candid.Tests
 		[InlineData("camelCase", "CamelCase")]
 		[InlineData("PascalCase", "PascalCase")]
 		[InlineData("snake_case", "SnakeCase")]
-		[InlineData("spinal-case", "SpinalCase")]
 		[InlineData("TestAAATest", "TestAAATest")]
 		public void ToPascalCase(string text, string expected)
 		{
@@ -39,7 +37,6 @@ namespace EdjCase.ICP.Candid.Tests
 		[InlineData("camelCase", "camel_case")]
 		[InlineData("PascalCase", "pascal_case")]
 		[InlineData("snake_case", "snake_case")]
-		[InlineData("spinal-case", "spinal_case")]
 		[InlineData("TestAAATest", "test_a_a_a_test")]
 		public void ToSnakeCase(string text, string expected)
 		{

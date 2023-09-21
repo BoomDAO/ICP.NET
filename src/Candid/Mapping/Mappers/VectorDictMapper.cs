@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace EdjCase.ICP.Candid.Mapping.Mappers
 {
@@ -30,33 +31,31 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 		public object Map(CandidValue value, CandidConverter converter)
 		{
 			CandidVector vector = value.AsVector();
-			return vector.Values
-				.Select(v =>
-				{
-					return v.AsRecord<(object, object)>(r =>
-					{
-						object key = converter.ToObject(this.KeyType, r.Fields[0]);
-						object value = converter.ToObject(this.ValueType, r.Fields[1]);
-						return (key, value);
-					});
-				})
-				.ToDictionary(v => v.Item1, v => v.Item2);
+			IDictionary obj = (IDictionary)Activator.CreateInstance(this.Type);
+
+			foreach(CandidValue element in vector.Values)
+			{
+				CandidRecord r = element.AsRecord();
+				object k = converter.ToObject(this.KeyType, r.Fields[0]);
+				object v = converter.ToObject(this.ValueType, r.Fields[1]);
+				obj.Add(k, v);
+			}
+			return obj;
 		}
 
 		public CandidValue Map(object obj, CandidConverter converter)
 		{
-			CandidValue[] values = ((Dictionary<object, object>)obj)
-				.Select(d =>
+			List<CandidValue> values = new ();
+			foreach (DictionaryEntry value in (IDictionary)obj)
+			{
+				Dictionary<CandidTag, CandidValue> fields = new()
 				{
-					Dictionary<CandidTag, CandidValue> fields = new()
-					{
-						[0] = converter.FromObject(d.Key),
-						[1] = converter.FromObject(d.Value)
-					};
-					return new CandidRecord(fields);
-				})
-				.ToArray();
-			return new CandidVector(values);
+					[0] = converter.FromObject(value.Key),
+					[1] = converter.FromObject(value.Value)
+				};
+				values.Add(new CandidRecord(fields));
+			}
+			return new CandidVector(values.ToArray());
 		}
 
 		public CandidType? GetMappedCandidType(Type type)

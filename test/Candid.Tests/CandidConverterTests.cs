@@ -54,6 +54,32 @@ namespace EdjCase.ICP.Candid.Tests
 
 			this.Test(values, expected, Enumerable.SequenceEqual);
 		}
+		[Fact]
+		public void Vector_From_Dict()
+		{
+			var values = new Dictionary<string, UnboundedUInt>
+			{
+				["1"] = 1,
+				["2"] = 2,
+				["3"] = 3
+			};
+			CandidValue[] elements = values
+				.Select(v => new CandidRecord(new Dictionary<CandidTag, CandidValue>
+				{
+					[0] = CandidValue.Text(v.Key),
+					[1] = CandidValue.Nat(v.Value)
+				}))
+				.ToArray();
+			CandidValue expectedValue = new CandidVector(elements);
+			CandidType expectedType = new CandidVectorType(new CandidRecordType(new Dictionary<CandidTag, CandidType>
+			{
+				[0] = CandidType.Text(),
+				[1] = CandidType.Nat()
+			}));
+			CandidTypedValue expected = CandidTypedValue.FromValueAndType(expectedValue, expectedType);
+
+			this.Test(values, expected, Enumerable.SequenceEqual);
+		}
 
 		public class RecordClass
 		{
