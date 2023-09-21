@@ -903,6 +903,31 @@
             Optional. A specific error id for the reject
             </summary>
         </member>
+        <member name="T:EdjCase.ICP.Agent.Responses.NodeSignature">
+            <summary>
+            Signature data from a replica node
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Responses.NodeSignature.Timestamp">
+            <summary>
+            Timestamp when the signature was created
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Responses.NodeSignature.Signature">
+            <summary>
+            The signature bytes
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Responses.NodeSignature.Identity">
+            <summary>
+            The identity of the signer
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Responses.NodeSignature.#ctor(EdjCase.ICP.Candid.Models.ICTimestamp,System.Byte[],EdjCase.ICP.Candid.Models.Principal)">
+            <param name="timestamp">Timestamp when the signature was created</param>
+            <param name="signature">The signature bytes</param>
+            <param name="identity">The identity of the signer</param>
+        </member>
         <member name="T:EdjCase.ICP.Agent.Responses.QueryResponse">
             <summary>
             A model representing the response data in the form of a variant
@@ -912,6 +937,11 @@
             <summary>
             The type of response returned. Can be used to call the right method
             to extract the variant data
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Responses.QueryResponse.Signatures">
+            <summary>
+            Signatures from the replica node
             </summary>
         </member>
         <member name="M:EdjCase.ICP.Agent.Responses.QueryResponse.AsReplied">

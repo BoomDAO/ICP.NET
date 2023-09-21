@@ -187,6 +187,11 @@
   - [Int](#F-EdjCase-ICP-Agent-Standards-ICRC1-Models-MetaDataValueTag-Int 'EdjCase.ICP.Agent.Standards.ICRC1.Models.MetaDataValueTag.Int')
   - [Nat](#F-EdjCase-ICP-Agent-Standards-ICRC1-Models-MetaDataValueTag-Nat 'EdjCase.ICP.Agent.Standards.ICRC1.Models.MetaDataValueTag.Nat')
   - [Text](#F-EdjCase-ICP-Agent-Standards-ICRC1-Models-MetaDataValueTag-Text 'EdjCase.ICP.Agent.Standards.ICRC1.Models.MetaDataValueTag.Text')
+- [NodeSignature](#T-EdjCase-ICP-Agent-Responses-NodeSignature 'EdjCase.ICP.Agent.Responses.NodeSignature')
+  - [#ctor(timestamp,signature,identity)](#M-EdjCase-ICP-Agent-Responses-NodeSignature-#ctor-EdjCase-ICP-Candid-Models-ICTimestamp,System-Byte[],EdjCase-ICP-Candid-Models-Principal- 'EdjCase.ICP.Agent.Responses.NodeSignature.#ctor(EdjCase.ICP.Candid.Models.ICTimestamp,System.Byte[],EdjCase.ICP.Candid.Models.Principal)')
+  - [Identity](#P-EdjCase-ICP-Agent-Responses-NodeSignature-Identity 'EdjCase.ICP.Agent.Responses.NodeSignature.Identity')
+  - [Signature](#P-EdjCase-ICP-Agent-Responses-NodeSignature-Signature 'EdjCase.ICP.Agent.Responses.NodeSignature.Signature')
+  - [Timestamp](#P-EdjCase-ICP-Agent-Responses-NodeSignature-Timestamp 'EdjCase.ICP.Agent.Responses.NodeSignature.Timestamp')
 - [QueryRejectInfo](#T-EdjCase-ICP-Agent-Responses-QueryRejectInfo 'EdjCase.ICP.Agent.Responses.QueryRejectInfo')
   - [Code](#P-EdjCase-ICP-Agent-Responses-QueryRejectInfo-Code 'EdjCase.ICP.Agent.Responses.QueryRejectInfo.Code')
   - [ErrorCode](#P-EdjCase-ICP-Agent-Responses-QueryRejectInfo-ErrorCode 'EdjCase.ICP.Agent.Responses.QueryRejectInfo.ErrorCode')
@@ -206,6 +211,7 @@
   - [Sender](#P-EdjCase-ICP-Agent-Requests-QueryRequest-Sender 'EdjCase.ICP.Agent.Requests.QueryRequest.Sender')
   - [BuildHashableItem()](#M-EdjCase-ICP-Agent-Requests-QueryRequest-BuildHashableItem 'EdjCase.ICP.Agent.Requests.QueryRequest.BuildHashableItem')
 - [QueryResponse](#T-EdjCase-ICP-Agent-Responses-QueryResponse 'EdjCase.ICP.Agent.Responses.QueryResponse')
+  - [Signatures](#P-EdjCase-ICP-Agent-Responses-QueryResponse-Signatures 'EdjCase.ICP.Agent.Responses.QueryResponse.Signatures')
   - [Type](#P-EdjCase-ICP-Agent-Responses-QueryResponse-Type 'EdjCase.ICP.Agent.Responses.QueryResponse.Type')
   - [AsRejected()](#M-EdjCase-ICP-Agent-Responses-QueryResponse-AsRejected 'EdjCase.ICP.Agent.Responses.QueryResponse.AsRejected')
   - [AsReplied()](#M-EdjCase-ICP-Agent-Responses-QueryResponse-AsReplied 'EdjCase.ICP.Agent.Responses.QueryResponse.AsReplied')
@@ -2483,6 +2489,49 @@ Nat value
 
 Text value
 
+<a name='T-EdjCase-ICP-Agent-Responses-NodeSignature'></a>
+## NodeSignature `type`
+
+##### Namespace
+
+EdjCase.ICP.Agent.Responses
+
+##### Summary
+
+Signature data from a replica node
+
+<a name='M-EdjCase-ICP-Agent-Responses-NodeSignature-#ctor-EdjCase-ICP-Candid-Models-ICTimestamp,System-Byte[],EdjCase-ICP-Candid-Models-Principal-'></a>
+### #ctor(timestamp,signature,identity) `constructor`
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| timestamp | [EdjCase.ICP.Candid.Models.ICTimestamp](#T-EdjCase-ICP-Candid-Models-ICTimestamp 'EdjCase.ICP.Candid.Models.ICTimestamp') | Timestamp when the signature was created |
+| signature | [System.Byte[]](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Byte[] 'System.Byte[]') | The signature bytes |
+| identity | [EdjCase.ICP.Candid.Models.Principal](#T-EdjCase-ICP-Candid-Models-Principal 'EdjCase.ICP.Candid.Models.Principal') | The identity of the signer |
+
+<a name='P-EdjCase-ICP-Agent-Responses-NodeSignature-Identity'></a>
+### Identity `property`
+
+##### Summary
+
+The identity of the signer
+
+<a name='P-EdjCase-ICP-Agent-Responses-NodeSignature-Signature'></a>
+### Signature `property`
+
+##### Summary
+
+The signature bytes
+
+<a name='P-EdjCase-ICP-Agent-Responses-NodeSignature-Timestamp'></a>
+### Timestamp `property`
+
+##### Summary
+
+Timestamp when the signature was created
+
 <a name='T-EdjCase-ICP-Agent-Responses-QueryRejectInfo'></a>
 ## QueryRejectInfo `type`
 
@@ -2644,6 +2693,13 @@ EdjCase.ICP.Agent.Responses
 ##### Summary
 
 A model representing the response data in the form of a variant
+
+<a name='P-EdjCase-ICP-Agent-Responses-QueryResponse-Signatures'></a>
+### Signatures `property`
+
+##### Summary
+
+Signatures from the replica node
 
 <a name='P-EdjCase-ICP-Agent-Responses-QueryResponse-Type'></a>
 ### Type `property`
