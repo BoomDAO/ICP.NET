@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Tomlyn.Model;
 using Microsoft.CodeAnalysis.Elfie.Serialization;
 using System.Xml.Linq;
+using System.Collections.Generic;
 
 namespace EdjCase.ICP.ClientGenerator
 {
@@ -110,56 +111,28 @@ file-path = ""../MyService.did""
 			try
 			{
 				string filePath = Path.Combine(options.Directory ?? "", CONFIG_FILE_NAME);
-				if (!File.Exists(filePath))
+				List<ClientGenerationOptions> clientOptionList = TomlConfigParser.Parse(filePath);
+				foreach (ClientGenerationOptions clientOptions in clientOptionList)
 				{
-					throw new InvalidOperationException($"Configuration file '{CONFIG_FILE_NAME}' not found in the directory. Run `candid-client-generator init`.");
-				}
-				string configToml = File.ReadAllText(filePath);
-				TomlTable config = Tomlyn.Toml.ToModel(configToml);
-
-				string baseNamespace = GetRequired<string>(config, "namespace");
-				string? baseUrl = GetOptional<string?>(config, "url");
-				bool? noFolders = GetOptional<bool?>(config, "no-folders");
-				Uri? boundryNodeUrl = baseUrl == null ? null : new Uri(baseUrl);
-				string outputDirectory = Path.GetRelativePath("./", GetOptional<string?>(config, "output-directory") ?? "./");
-				bool? featureNullable = GetOptional<bool?>(config, "feature-nullable");
-				bool? keepCandidCase = GetOptional<bool?>(config, "keep-candid-case");
-
-				TomlTableArray clients = config["clients"].Cast<TomlTableArray>();
-
-				foreach (TomlTable client in clients)
-				{
-					string name = GetRequired<string>(client, "name");
-					string type = GetRequired<string>(client, "type");
-					string @namespace = baseNamespace + "." + name;
-					string clientOutputDirectory = GetOptional<string?>(client, "output-directory") ?? Path.Combine(outputDirectory, name);
-					string clientNamespace = GetOptional<string?>(client, "namespace") ?? @namespace;
-					bool clientNoFolders = GetOptional<bool?>(client, "no-folders") ?? noFolders ?? false;
-					bool clientFeatureNullable = GetOptional<bool?>(client, "feature-nullable") ?? featureNullable ?? true;
-					bool clientKeepCandidCase = GetOptional<bool?>(client, "keep-candid-case") ?? keepCandidCase ?? false;
-					ClientGenerationOptions clientOptions = new(name, clientNamespace, clientNoFolders, clientFeatureNullable, clientKeepCandidCase);
 					ClientSyntax source;
-					switch (type)
+					if (clientOptions.GetDefinitionFromCansiter)
 					{
-						case "file":
-							string candidFilePath = GetRequired<string>(client, "file-path");
-							string dir = new FileInfo(filePath).Directory!.FullName;
-							candidFilePath = Path.GetRelativePath("./", Path.Combine(dir, candidFilePath));
-							Console.WriteLine($"Reading text from {candidFilePath}");
-							string fileText = File.ReadAllText(candidFilePath);
-							// Use file name for client name
-							source = ClientCodeGenerator.GenerateClientFromFile(fileText, clientOptions);
-							break;
-						case "canister":
-							string canisterIdString = GetRequired<string>(client, "canister-id");
-							Principal canisterId = Principal.FromText(canisterIdString);
-							Console.WriteLine($"Fetching definition from canister {canisterId}");
-							source = await ClientCodeGenerator.GenerateClientFromCanisterAsync(canisterId, clientOptions, boundryNodeUrl);
-							break;
-						default:
-							throw new InvalidOperationException($"Failed to parse the `candid-client.toml` config. Invalid client type '{type}'");
+						string canisterIdString = clientOptions.FilePathOrCanisterId;
+						Principal canisterId = Principal.FromText(canisterIdString);
+						Console.WriteLine($"Fetching definition from canister {canisterId}");
+						source = await ClientCodeGenerator.GenerateClientFromCanisterAsync(canisterId, clientOptions);
 					}
-					WriteClient(source, clientOutputDirectory, clientNoFolders);
+					else
+					{
+						string candidFilePath = clientOptions.FilePathOrCanisterId;
+						string dir = new FileInfo(filePath).Directory!.FullName;
+						candidFilePath = Path.GetRelativePath("./", Path.Combine(dir, candidFilePath));
+						Console.WriteLine($"Reading text from {candidFilePath}");
+						string fileText = File.ReadAllText(candidFilePath);
+						// Use file name for client name
+						source = ClientCodeGenerator.GenerateClientFromFile(fileText, clientOptions);
+					}
+					WriteClient(source, clientOptions);
 				}
 				return 0;
 			}
@@ -170,38 +143,22 @@ file-path = ""../MyService.did""
 			}
 		}
 
-		private static T GetRequired<T>(TomlTable table, string key, string? prefix = null)
+		private static void WriteClient(ClientSyntax result, ClientGenerationOptions options)
 		{
-			if (table.ContainsKey(key))
+			if (options.PurgeOutputDirectory && Directory.Exists(options.OutputDirectory))
 			{
-				return table[key].Cast<T>();
+				Console.WriteLine($"Purging output directory: {options.OutputDirectory}");
+				Directory.Delete(options.OutputDirectory, true);
 			}
-			if (prefix != null)
-			{
-				key = prefix + "." + key;
-			}
-			throw new InvalidOperationException($"Failed to parse the `candid-client.toml` config. Missing required field: '{key}'");
-		}
 
-		private static T? GetOptional<T>(TomlTable table, string key)
-		{
-			if (table.ContainsKey(key))
-			{
-				return table[key].Cast<T>();
-			}
-			return default;
-		}
-
-		private static void WriteClient(ClientSyntax result, string outputDirectory, bool noFolders)
-		{
-			Console.WriteLine($"Writing client file to: {outputDirectory}\\{result.Name}.cs");
+			Console.WriteLine($"Writing client file to: {options.OutputDirectory}\\{result.Name}.cs");
 			WriteFile(null, result.Name, result.ClientFile);
 
 
-			Console.WriteLine($"Writing data model files to directory: {outputDirectory}\\Models\\");
+			Console.WriteLine($"Writing data model files to directory: {options.OutputDirectory}\\Models\\");
 			foreach ((string name, CompilationUnitSyntax sourceCode) in result.TypeFiles)
 			{
-				WriteFile(noFolders ? null : "Models", name, sourceCode);
+				WriteFile(options.NoFolders ? null : "Models", name, sourceCode);
 			}
 			Console.WriteLine("Client successfully generated!");
 			Console.WriteLine();
@@ -218,8 +175,8 @@ file-path = ""../MyService.did""
 					.Split(invalidFileNameChars, StringSplitOptions.RemoveEmptyEntries);
 				fileName = string.Join("_", split).TrimEnd('.');
 				string directory = subDirectory == null
-					? outputDirectory
-					: Path.Combine(outputDirectory, subDirectory);
+					? options.OutputDirectory
+					: Path.Combine(options.OutputDirectory, subDirectory);
 				Directory.CreateDirectory(directory);
 				string filePath = Path.Combine(directory, fileName + ".cs");
 

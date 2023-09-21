@@ -11,7 +11,7 @@ namespace Sample.Shared.Governance.Models
 		public Result7Tag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public System.Object? Value { get; set; }
+		public object? Value { get; set; }
 
 		public Result7(Result7Tag tag, object? value)
 		{
@@ -28,7 +28,7 @@ namespace Sample.Shared.Governance.Models
 			return new Result7(Result7Tag.Committed, info);
 		}
 
-		public static Result7 Aborted(Result7.AbortedRecord info)
+		public static Result7 Aborted(Result7.AbortedInfo info)
 		{
 			return new Result7(Result7Tag.Aborted, info);
 		}
@@ -39,10 +39,10 @@ namespace Sample.Shared.Governance.Models
 			return (Committed)this.Value!;
 		}
 
-		public Result7.AbortedRecord AsAborted()
+		public Result7.AbortedInfo AsAborted()
 		{
 			this.ValidateTag(Result7Tag.Aborted);
-			return (Result7.AbortedRecord)this.Value!;
+			return (Result7.AbortedInfo)this.Value!;
 		}
 
 		private void ValidateTag(Result7Tag tag)
@@ -53,9 +53,9 @@ namespace Sample.Shared.Governance.Models
 			}
 		}
 
-		public class AbortedRecord
+		public class AbortedInfo
 		{
-			public AbortedRecord()
+			public AbortedInfo()
 			{
 			}
 		}
@@ -65,7 +65,7 @@ namespace Sample.Shared.Governance.Models
 	{
 		[VariantOptionType(typeof(Committed))]
 		Committed,
-		[VariantOptionType(typeof(Result7.AbortedRecord))]
+		[VariantOptionType(typeof(Result7.AbortedInfo))]
 		Aborted
 	}
 }

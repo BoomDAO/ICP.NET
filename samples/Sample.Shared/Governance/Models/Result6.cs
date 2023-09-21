@@ -11,7 +11,7 @@ namespace Sample.Shared.Governance.Models
 		public Result6Tag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public System.Object? Value { get; set; }
+		public object? Value { get; set; }
 
 		public Result6(Result6Tag tag, object? value)
 		{

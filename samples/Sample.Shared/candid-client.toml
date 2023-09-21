@@ -9,11 +9,6 @@ type = "file"
 file-path = "ServiceDefinitions/Dex.did"
 
 [[clients]]
-name = "Governance"
-type = "canister"
-canister-id = "rrkah-fqaaa-aaaaa-aaaaq-cai"
-
-[[clients]]
 name = "ICRC1Ledger"
 type = "canister"
 canister-id = "mxzaz-hqaaa-aaaar-qaada-cai"
@@ -25,3 +20,21 @@ file-path = "ServiceDefinitions/AddressBook.did"
 output-directory = "C:/Git/ICP.NET/samples/Sample.Shared/Address" # override
 no-folders = true
 keep-candid-case = true
+
+[[clients]]
+name = "Governance"
+type = "canister"
+canister-id = "rrkah-fqaaa-aaaaa-aaaaq-cai"
+[clients.types.AccountIdentifier]
+type = "record"
+name = "AccountId"
+[clients.types.AccountIdentifier.fields.hash]
+type = "vec"
+name = "Hazh"
+representation = "Array"
+[clients.types.Governance]
+type = "record"
+[clients.types.Governance.fields.default_followees]
+type = "vec"
+representation = "Dictionary"
+

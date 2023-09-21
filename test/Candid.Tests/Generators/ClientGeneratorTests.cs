@@ -38,9 +38,27 @@ namespace EdjCase.ICP.Candid.Tests.Generators
 			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, false, false, false);
 		}
 
-		private void GenerateClientInternal(CandidServiceDescription serviceFile, string baseNamespace, string serviceName, bool noFolders, bool featureNullable, bool keepCandidCase)
+		private void GenerateClientInternal(
+			CandidServiceDescription serviceFile,
+			string baseNamespace,
+			string serviceName,
+			bool noFolders,
+			bool featureNullable,
+			bool keepCandidCase
+		)
 		{
-			ClientGenerationOptions options = new(serviceName, baseNamespace, noFolders, featureNullable, keepCandidCase);
+			ClientGenerationOptions options = new(
+				serviceName,
+				baseNamespace,
+				false,
+				"",
+				"./",
+				noFolders,
+				featureNullable, 
+				keepCandidCase,
+				boundryNodeUrl: null,
+				types: null
+			);
 
 			ClientSyntax syntax = ClientCodeGenerator.GenerateClient(serviceFile, options);
 

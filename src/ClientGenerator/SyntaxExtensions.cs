@@ -17,14 +17,6 @@ namespace EdjCase.ICP.ClientGenerator
 			return SyntaxFactory.Identifier(name);
 		}
 
-		public static TypeSyntax ToTypeSyntax(this TypeName type)
-		{
-			return ToTypeSyntax(type.GetNamespacedName());
-		}
-		public static TypeSyntax ToTypeSyntax(this string type)
-		{
-			return SyntaxFactory.ParseTypeName(type);
-		}
 		public static BaseParameterSyntax WithType<T>(this BaseParameterSyntax paramSyntax)
 		{
 			return paramSyntax.WithType(FromType(typeof(T)));

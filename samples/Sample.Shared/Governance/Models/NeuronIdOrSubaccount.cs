@@ -12,7 +12,7 @@ namespace Sample.Shared.Governance.Models
 		public NeuronIdOrSubaccountTag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public System.Object? Value { get; set; }
+		public object? Value { get; set; }
 
 		public NeuronIdOrSubaccount(NeuronIdOrSubaccountTag tag, object? value)
 		{

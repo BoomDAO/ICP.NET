@@ -1,6 +1,7 @@
 ﻿using EdjCase.ICP.Agent.Agents;
 using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid;
+using System.Threading.Tasks;
 using Test;
 using EdjCase.ICP.Agent.Responses;
 
@@ -12,16 +13,16 @@ namespace Test
 
 		public Principal CanisterId { get; }
 
-		public CandidConverter Converter { get; }
+		public CandidConverter? Converter { get; }
 
-		public DuplicatePropertyNamesApiClient(IAgent agent, Principal canisterId, CandidConverter converter = default)
+		public DuplicatePropertyNamesApiClient(IAgent agent, Principal canisterId, CandidConverter? converter = default)
 		{
 			this.Agent = agent;
 			this.CanisterId = canisterId;
 			this.Converter = converter;
 		}
 
-		public async System.Threading.Tasks.Task<Models.Result> a()
+		public async Task<Models.Result> A()
 		{
 			CandidArg arg = CandidArg.FromCandid();
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "a", arg);
@@ -33,18 +34,22 @@ namespace Test
 
 Type File: 'Result'
 
+using EdjCase.ICP.Candid.Mapping;
+
 namespace Test.Models
 {
 	public class Result
 	{
-		public ulong a { get; set; }
+		[CandidName("a")]
+		public ulong A { get; set; }
 
-		public ulong _a { get; set; }
+		[CandidName("_a")]
+		public ulong _A { get; set; }
 
 		public Result(ulong a, ulong _a)
 		{
-			this.a = a;
-			this._a = _a;
+			this.A = a;
+			this._A = _a;
 		}
 
 		public Result()

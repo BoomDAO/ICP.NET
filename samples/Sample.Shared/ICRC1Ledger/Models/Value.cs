@@ -5,7 +5,7 @@ using Duration = System.UInt64;
 using Tokens = EdjCase.ICP.Candid.Models.UnboundedUInt;
 using TxIndex = EdjCase.ICP.Candid.Models.UnboundedUInt;
 using QueryArchiveFn = EdjCase.ICP.Candid.Models.Values.CandidFunc;
-using Map = System.Collections.Generic.List<Sample.Shared.ICRC1Ledger.Models.MapItem>;
+using Map = System.Collections.Generic.List<(System.String, Sample.Shared.ICRC1Ledger.Models.Value)>;
 using Block = Sample.Shared.ICRC1Ledger.Models.Value;
 using QueryBlockArchiveFn = EdjCase.ICP.Candid.Models.Values.CandidFunc;
 using EdjCase.ICP.Candid.Mapping;
@@ -23,7 +23,7 @@ namespace Sample.Shared.ICRC1Ledger.Models
 		public ValueTag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public System.Object? ValueValue { get; set; }
+		public object? ValueValue { get; set; }
 
 		public Value(ValueTag tag, object? valueValue)
 		{

@@ -1,6 +1,7 @@
 ﻿using EdjCase.ICP.Agent.Agents;
 using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid;
+using System.Threading.Tasks;
 using Test;
 using System.Collections.Generic;
 using EdjCase.ICP.Agent.Responses;
@@ -13,30 +14,30 @@ namespace Test
 
 		public Principal CanisterId { get; }
 
-		public EdjCase.ICP.Candid.CandidConverter? Converter { get; }
+		public CandidConverter Converter { get; }
 
-		public GovernanceApiClient(IAgent agent, Principal canisterId, CandidConverter? converter = default)
+		public GovernanceApiClient(IAgent agent, Principal canisterId, CandidConverter converter = default)
 		{
 			this.Agent = agent;
 			this.CanisterId = canisterId;
 			this.Converter = converter;
 		}
 
-		public async System.Threading.Tasks.Task<Models.Result> ClaimGtcNeurons(Principal arg0, List<Models.NeuronId> arg1)
+		public async Task<Result> ClaimGtcNeurons(Principal arg0, List<NeuronId> arg1)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0), CandidTypedValue.FromObject(arg1));
 			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "claim_gtc_neurons", arg);
-			return reply.ToObjects<Models.Result>(this.Converter);
+			return reply.ToObjects<Result>(this.Converter);
 		}
 
-		public async System.Threading.Tasks.Task<Models.ClaimOrRefreshNeuronFromAccountResponse> ClaimOrRefreshNeuronFromAccount(Models.ClaimOrRefreshNeuronFromAccount arg0)
+		public async Task<ClaimOrRefreshNeuronFromAccountResponse> ClaimOrRefreshNeuronFromAccount(ClaimOrRefreshNeuronFromAccount arg0)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
 			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "claim_or_refresh_neuron_from_account", arg);
-			return reply.ToObjects<Models.ClaimOrRefreshNeuronFromAccountResponse>(this.Converter);
+			return reply.ToObjects<ClaimOrRefreshNeuronFromAccountResponse>(this.Converter);
 		}
 
-		public async System.Threading.Tasks.Task<string> GetBuildMetadata()
+		public async Task<string> GetBuildMetadata()
 		{
 			CandidArg arg = CandidArg.FromCandid();
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_build_metadata", arg);
@@ -44,38 +45,38 @@ namespace Test
 			return reply.ToObjects<string>(this.Converter);
 		}
 
-		public async System.Threading.Tasks.Task<Models.Result_2> GetFullNeuron(ulong arg0)
+		public async Task<Result2> GetFullNeuron(ulong arg0)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_full_neuron", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<Models.Result_2>(this.Converter);
+			return reply.ToObjects<Result2>(this.Converter);
 		}
 
-		public async System.Threading.Tasks.Task<Models.Result_2> GetFullNeuronByIdOrSubaccount(Models.NeuronIdOrSubaccount arg0)
+		public async Task<Result2> GetFullNeuronByIdOrSubaccount(NeuronIdOrSubaccount arg0)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_full_neuron_by_id_or_subaccount", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<Models.Result_2>(this.Converter);
+			return reply.ToObjects<Result2>(this.Converter);
 		}
 
-		public async System.Threading.Tasks.Task<Models.Result_3> GetMonthlyNodeProviderRewards()
+		public async Task<Result3> GetMonthlyNodeProviderRewards()
 		{
 			CandidArg arg = CandidArg.FromCandid();
 			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "get_monthly_node_provider_rewards", arg);
-			return reply.ToObjects<Models.Result_3>(this.Converter);
+			return reply.ToObjects<Result3>(this.Converter);
 		}
 
-		public async System.Threading.Tasks.Task<Models.NetworkEconomics> GetNetworkEconomicsParameters()
+		public async Task<NetworkEconomics> GetNetworkEconomicsParameters()
 		{
 			CandidArg arg = CandidArg.FromCandid();
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_network_economics_parameters", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<Models.NetworkEconomics>(this.Converter);
+			return reply.ToObjects<NetworkEconomics>(this.Converter);
 		}
 
-		public async System.Threading.Tasks.Task<List<ulong>> GetNeuronIds()
+		public async Task<List<ulong>> GetNeuronIds()
 		{
 			CandidArg arg = CandidArg.FromCandid();
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_neuron_ids", arg);
@@ -83,97 +84,97 @@ namespace Test
 			return reply.ToObjects<List<ulong>>(this.Converter);
 		}
 
-		public async System.Threading.Tasks.Task<Models.Result_4> GetNeuronInfo(ulong arg0)
+		public async Task<Result4> GetNeuronInfo(ulong arg0)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_neuron_info", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<Models.Result_4>(this.Converter);
+			return reply.ToObjects<Result4>(this.Converter);
 		}
 
-		public async System.Threading.Tasks.Task<Models.Result_4> GetNeuronInfoByIdOrSubaccount(Models.NeuronIdOrSubaccount arg0)
+		public async Task<Result4> GetNeuronInfoByIdOrSubaccount(NeuronIdOrSubaccount arg0)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_neuron_info_by_id_or_subaccount", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<Models.Result_4>(this.Converter);
+			return reply.ToObjects<Result4>(this.Converter);
 		}
 
-		public async System.Threading.Tasks.Task<Models.Result_5> GetNodeProviderByCaller(NullValue arg0)
+		public async Task<Result5> GetNodeProviderByCaller(NullValue arg0)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_node_provider_by_caller", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<Models.Result_5>(this.Converter);
+			return reply.ToObjects<Result5>(this.Converter);
 		}
 
-		public async System.Threading.Tasks.Task<List<Models.ProposalInfo>> GetPendingProposals()
+		public async Task<List<ProposalInfo>> GetPendingProposals()
 		{
 			CandidArg arg = CandidArg.FromCandid();
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_pending_proposals", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<List<Models.ProposalInfo>>(this.Converter);
+			return reply.ToObjects<List<ProposalInfo>>(this.Converter);
 		}
 
-		public async System.Threading.Tasks.Task<OptionalValue<Models.ProposalInfo>> GetProposalInfo(ulong arg0)
+		public async Task<OptionalValue<ProposalInfo>> GetProposalInfo(ulong arg0)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_proposal_info", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<OptionalValue<Models.ProposalInfo>>(this.Converter);
+			return reply.ToObjects<OptionalValue<ProposalInfo>>(this.Converter);
 		}
 
-		public async System.Threading.Tasks.Task<Models.ListKnownNeuronsResponse> ListKnownNeurons()
+		public async Task<ListKnownNeuronsResponse> ListKnownNeurons()
 		{
 			CandidArg arg = CandidArg.FromCandid();
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "list_known_neurons", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<Models.ListKnownNeuronsResponse>(this.Converter);
+			return reply.ToObjects<ListKnownNeuronsResponse>(this.Converter);
 		}
 
-		public async System.Threading.Tasks.Task<Models.ListNeuronsResponse> ListNeurons(Models.ListNeurons arg0)
+		public async Task<ListNeuronsResponse> ListNeurons(ListNeurons arg0)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "list_neurons", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<Models.ListNeuronsResponse>(this.Converter);
+			return reply.ToObjects<ListNeuronsResponse>(this.Converter);
 		}
 
-		public async System.Threading.Tasks.Task<Models.ListNodeProvidersResponse> ListNodeProviders()
+		public async Task<ListNodeProvidersResponse> ListNodeProviders()
 		{
 			CandidArg arg = CandidArg.FromCandid();
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "list_node_providers", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<Models.ListNodeProvidersResponse>(this.Converter);
+			return reply.ToObjects<ListNodeProvidersResponse>(this.Converter);
 		}
 
-		public async System.Threading.Tasks.Task<Models.ListProposalInfoResponse> ListProposals(Models.ListProposalInfo arg0)
+		public async Task<ListProposalInfoResponse> ListProposals(ListProposalInfo arg0)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "list_proposals", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<Models.ListProposalInfoResponse>(this.Converter);
+			return reply.ToObjects<ListProposalInfoResponse>(this.Converter);
 		}
 
-		public async System.Threading.Tasks.Task<Models.ManageNeuronResponse> ManageNeuron(Models.ManageNeuron arg0)
+		public async Task<ManageNeuronResponse> ManageNeuron(ManageNeuron arg0)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
 			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "manage_neuron", arg);
-			return reply.ToObjects<Models.ManageNeuronResponse>(this.Converter);
+			return reply.ToObjects<ManageNeuronResponse>(this.Converter);
 		}
 
-		public async System.Threading.Tasks.Task<Models.Result> TransferGtcNeuron(Models.NeuronId arg0, Models.NeuronId arg1)
+		public async Task<Result> TransferGtcNeuron(NeuronId arg0, NeuronId arg1)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0), CandidTypedValue.FromObject(arg1));
 			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "transfer_gtc_neuron", arg);
-			return reply.ToObjects<Models.Result>(this.Converter);
+			return reply.ToObjects<Result>(this.Converter);
 		}
 
-		public async System.Threading.Tasks.Task<Models.Result> UpdateNodeProvider(Models.UpdateNodeProvider arg0)
+		public async Task<Result> UpdateNodeProvider(UpdateNodeProvider arg0)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
 			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "update_node_provider", arg);
-			return reply.ToObjects<Models.Result>(this.Converter);
+			return reply.ToObjects<Result>(this.Converter);
 		}
 	}
 }
@@ -183,7 +184,7 @@ Type File: 'AccountIdentifier'
 using EdjCase.ICP.Candid.Mapping;
 using System.Collections.Generic;
 
-namespace Test.Models
+namespace Test
 {
 	public class AccountIdentifier
 	{
@@ -204,10 +205,10 @@ namespace Test.Models
 Type File: 'Action'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
+using Test;
 using System;
 
-namespace Test.Models
+namespace Test
 {
 	[Variant(typeof(ActionTag))]
 	public class Action
@@ -216,9 +217,9 @@ namespace Test.Models
 		public ActionTag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public System.Object? Value { get; set; }
+		public object Value { get; set; }
 
-		public Action(ActionTag tag, object? value)
+		public Action(ActionTag tag, object value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -377,7 +378,7 @@ Type File: 'AddHotKey'
 using EdjCase.ICP.Candid.Mapping;
 using EdjCase.ICP.Candid.Models;
 
-namespace Test.Models
+namespace Test
 {
 	public class AddHotKey
 	{
@@ -398,10 +399,10 @@ namespace Test.Models
 Type File: 'AddOrRemoveNodeProvider'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
 using EdjCase.ICP.Candid.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class AddOrRemoveNodeProvider
 	{
@@ -423,7 +424,7 @@ Type File: 'Amount'
 
 using EdjCase.ICP.Candid.Mapping;
 
-namespace Test.Models
+namespace Test
 {
 	public class Amount
 	{
@@ -444,10 +445,10 @@ namespace Test.Models
 Type File: 'ApproveGenesisKyc'
 
 using EdjCase.ICP.Candid.Mapping;
-using EdjCase.ICP.Candid.Models;
 using System.Collections.Generic;
+using EdjCase.ICP.Candid.Models;
 
-namespace Test.Models
+namespace Test
 {
 	public class ApproveGenesisKyc
 	{
@@ -469,7 +470,7 @@ Type File: 'Ballot'
 
 using EdjCase.ICP.Candid.Mapping;
 
-namespace Test.Models
+namespace Test
 {
 	public class Ballot
 	{
@@ -494,10 +495,10 @@ namespace Test.Models
 Type File: 'BallotInfo'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
 using EdjCase.ICP.Candid.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class BallotInfo
 	{
@@ -522,10 +523,10 @@ namespace Test.Models
 Type File: 'By'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
+using Test;
 using System;
 
-namespace Test.Models
+namespace Test
 {
 	[Variant(typeof(ByTag))]
 	public class By
@@ -534,9 +535,9 @@ namespace Test.Models
 		public ByTag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public System.Object? Value { get; set; }
+		public object Value { get; set; }
 
-		public By(ByTag tag, object? value)
+		public By(ByTag tag, object value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -609,10 +610,10 @@ namespace Test.Models
 Type File: 'Change'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
+using Test;
 using System;
 
-namespace Test.Models
+namespace Test
 {
 	[Variant(typeof(ChangeTag))]
 	public class Change
@@ -621,9 +622,9 @@ namespace Test.Models
 		public ChangeTag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public System.Object? Value { get; set; }
+		public object Value { get; set; }
 
-		public Change(ChangeTag tag, object? value)
+		public Change(ChangeTag tag, object value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -676,10 +677,10 @@ namespace Test.Models
 Type File: 'ClaimOrRefresh'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
 using EdjCase.ICP.Candid.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class ClaimOrRefresh
 	{
@@ -702,7 +703,7 @@ Type File: 'ClaimOrRefreshNeuronFromAccount'
 using EdjCase.ICP.Candid.Mapping;
 using EdjCase.ICP.Candid.Models;
 
-namespace Test.Models
+namespace Test
 {
 	public class ClaimOrRefreshNeuronFromAccount
 	{
@@ -727,17 +728,17 @@ namespace Test.Models
 Type File: 'ClaimOrRefreshNeuronFromAccountResponse'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
 using EdjCase.ICP.Candid.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class ClaimOrRefreshNeuronFromAccountResponse
 	{
 		[CandidName("result")]
-		public OptionalValue<Result_1> Result { get; set; }
+		public OptionalValue<Result1> Result { get; set; }
 
-		public ClaimOrRefreshNeuronFromAccountResponse(OptionalValue<Result_1> result)
+		public ClaimOrRefreshNeuronFromAccountResponse(OptionalValue<Result1> result)
 		{
 			this.Result = result;
 		}
@@ -751,10 +752,10 @@ namespace Test.Models
 Type File: 'ClaimOrRefreshResponse'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
 using EdjCase.ICP.Candid.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class ClaimOrRefreshResponse
 	{
@@ -775,10 +776,10 @@ namespace Test.Models
 Type File: 'Command'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
+using Test;
 using System;
 
-namespace Test.Models
+namespace Test
 {
 	[Variant(typeof(CommandTag))]
 	public class Command
@@ -787,9 +788,9 @@ namespace Test.Models
 		public CommandTag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public System.Object? Value { get; set; }
+		public object Value { get; set; }
 
-		public Command(CommandTag tag, object? value)
+		public Command(CommandTag tag, object value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -956,166 +957,166 @@ namespace Test.Models
 	}
 }
 
-Type File: 'Command_1'
+Type File: 'Command1'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
+using Test;
 using System;
 
-namespace Test.Models
+namespace Test
 {
-	[Variant(typeof(Command_1Tag))]
-	public class Command_1
+	[Variant(typeof(Command1Tag))]
+	public class Command1
 	{
 		[VariantTagProperty()]
-		public Command_1Tag Tag { get; set; }
+		public Command1Tag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public System.Object? Value { get; set; }
+		public object Value { get; set; }
 
-		public Command_1(Command_1Tag tag, object? value)
+		public Command1(Command1Tag tag, object value)
 		{
 			this.Tag = tag;
 			this.Value = value;
 		}
 
-		protected Command_1()
+		protected Command1()
 		{
 		}
 
-		public static Command_1 Error(GovernanceError info)
+		public static Command1 Error(GovernanceError info)
 		{
-			return new Command_1(Command_1Tag.Error, info);
+			return new Command1(Command1Tag.Error, info);
 		}
 
-		public static Command_1 Spawn(SpawnResponse info)
+		public static Command1 Spawn(SpawnResponse info)
 		{
-			return new Command_1(Command_1Tag.Spawn, info);
+			return new Command1(Command1Tag.Spawn, info);
 		}
 
-		public static Command_1 Split(SpawnResponse info)
+		public static Command1 Split(SpawnResponse info)
 		{
-			return new Command_1(Command_1Tag.Split, info);
+			return new Command1(Command1Tag.Split, info);
 		}
 
-		public static Command_1 Follow(Command_1.FollowInfo info)
+		public static Command1 Follow(Command1.FollowInfo info)
 		{
-			return new Command_1(Command_1Tag.Follow, info);
+			return new Command1(Command1Tag.Follow, info);
 		}
 
-		public static Command_1 ClaimOrRefresh(ClaimOrRefreshResponse info)
+		public static Command1 ClaimOrRefresh(ClaimOrRefreshResponse info)
 		{
-			return new Command_1(Command_1Tag.ClaimOrRefresh, info);
+			return new Command1(Command1Tag.ClaimOrRefresh, info);
 		}
 
-		public static Command_1 Configure(Command_1.ConfigureInfo info)
+		public static Command1 Configure(Command1.ConfigureInfo info)
 		{
-			return new Command_1(Command_1Tag.Configure, info);
+			return new Command1(Command1Tag.Configure, info);
 		}
 
-		public static Command_1 RegisterVote(Command_1.RegisterVoteInfo info)
+		public static Command1 RegisterVote(Command1.RegisterVoteInfo info)
 		{
-			return new Command_1(Command_1Tag.RegisterVote, info);
+			return new Command1(Command1Tag.RegisterVote, info);
 		}
 
-		public static Command_1 Merge(Command_1.MergeInfo info)
+		public static Command1 Merge(Command1.MergeInfo info)
 		{
-			return new Command_1(Command_1Tag.Merge, info);
+			return new Command1(Command1Tag.Merge, info);
 		}
 
-		public static Command_1 DisburseToNeuron(SpawnResponse info)
+		public static Command1 DisburseToNeuron(SpawnResponse info)
 		{
-			return new Command_1(Command_1Tag.DisburseToNeuron, info);
+			return new Command1(Command1Tag.DisburseToNeuron, info);
 		}
 
-		public static Command_1 MakeProposal(MakeProposalResponse info)
+		public static Command1 MakeProposal(MakeProposalResponse info)
 		{
-			return new Command_1(Command_1Tag.MakeProposal, info);
+			return new Command1(Command1Tag.MakeProposal, info);
 		}
 
-		public static Command_1 MergeMaturity(MergeMaturityResponse info)
+		public static Command1 MergeMaturity(MergeMaturityResponse info)
 		{
-			return new Command_1(Command_1Tag.MergeMaturity, info);
+			return new Command1(Command1Tag.MergeMaturity, info);
 		}
 
-		public static Command_1 Disburse(DisburseResponse info)
+		public static Command1 Disburse(DisburseResponse info)
 		{
-			return new Command_1(Command_1Tag.Disburse, info);
+			return new Command1(Command1Tag.Disburse, info);
 		}
 
 		public GovernanceError AsError()
 		{
-			this.ValidateTag(Command_1Tag.Error);
+			this.ValidateTag(Command1Tag.Error);
 			return (GovernanceError)this.Value!;
 		}
 
 		public SpawnResponse AsSpawn()
 		{
-			this.ValidateTag(Command_1Tag.Spawn);
+			this.ValidateTag(Command1Tag.Spawn);
 			return (SpawnResponse)this.Value!;
 		}
 
 		public SpawnResponse AsSplit()
 		{
-			this.ValidateTag(Command_1Tag.Split);
+			this.ValidateTag(Command1Tag.Split);
 			return (SpawnResponse)this.Value!;
 		}
 
-		public Command_1.FollowInfo AsFollow()
+		public Command1.FollowInfo AsFollow()
 		{
-			this.ValidateTag(Command_1Tag.Follow);
-			return (Command_1.FollowInfo)this.Value!;
+			this.ValidateTag(Command1Tag.Follow);
+			return (Command1.FollowInfo)this.Value!;
 		}
 
 		public ClaimOrRefreshResponse AsClaimOrRefresh()
 		{
-			this.ValidateTag(Command_1Tag.ClaimOrRefresh);
+			this.ValidateTag(Command1Tag.ClaimOrRefresh);
 			return (ClaimOrRefreshResponse)this.Value!;
 		}
 
-		public Command_1.ConfigureInfo AsConfigure()
+		public Command1.ConfigureInfo AsConfigure()
 		{
-			this.ValidateTag(Command_1Tag.Configure);
-			return (Command_1.ConfigureInfo)this.Value!;
+			this.ValidateTag(Command1Tag.Configure);
+			return (Command1.ConfigureInfo)this.Value!;
 		}
 
-		public Command_1.RegisterVoteInfo AsRegisterVote()
+		public Command1.RegisterVoteInfo AsRegisterVote()
 		{
-			this.ValidateTag(Command_1Tag.RegisterVote);
-			return (Command_1.RegisterVoteInfo)this.Value!;
+			this.ValidateTag(Command1Tag.RegisterVote);
+			return (Command1.RegisterVoteInfo)this.Value!;
 		}
 
-		public Command_1.MergeInfo AsMerge()
+		public Command1.MergeInfo AsMerge()
 		{
-			this.ValidateTag(Command_1Tag.Merge);
-			return (Command_1.MergeInfo)this.Value!;
+			this.ValidateTag(Command1Tag.Merge);
+			return (Command1.MergeInfo)this.Value!;
 		}
 
 		public SpawnResponse AsDisburseToNeuron()
 		{
-			this.ValidateTag(Command_1Tag.DisburseToNeuron);
+			this.ValidateTag(Command1Tag.DisburseToNeuron);
 			return (SpawnResponse)this.Value!;
 		}
 
 		public MakeProposalResponse AsMakeProposal()
 		{
-			this.ValidateTag(Command_1Tag.MakeProposal);
+			this.ValidateTag(Command1Tag.MakeProposal);
 			return (MakeProposalResponse)this.Value!;
 		}
 
 		public MergeMaturityResponse AsMergeMaturity()
 		{
-			this.ValidateTag(Command_1Tag.MergeMaturity);
+			this.ValidateTag(Command1Tag.MergeMaturity);
 			return (MergeMaturityResponse)this.Value!;
 		}
 
 		public DisburseResponse AsDisburse()
 		{
-			this.ValidateTag(Command_1Tag.Disburse);
+			this.ValidateTag(Command1Tag.Disburse);
 			return (DisburseResponse)this.Value!;
 		}
 
-		private void ValidateTag(Command_1Tag tag)
+		private void ValidateTag(Command1Tag tag)
 		{
 			if (!this.Tag.Equals(tag))
 			{
@@ -1152,7 +1153,7 @@ namespace Test.Models
 		}
 	}
 
-	public enum Command_1Tag
+	public enum Command1Tag
 	{
 		[VariantOptionType(typeof(GovernanceError))]
 		Error,
@@ -1160,15 +1161,15 @@ namespace Test.Models
 		Spawn,
 		[VariantOptionType(typeof(SpawnResponse))]
 		Split,
-		[VariantOptionType(typeof(Command_1.FollowInfo))]
+		[VariantOptionType(typeof(Command1.FollowInfo))]
 		Follow,
 		[VariantOptionType(typeof(ClaimOrRefreshResponse))]
 		ClaimOrRefresh,
-		[VariantOptionType(typeof(Command_1.ConfigureInfo))]
+		[VariantOptionType(typeof(Command1.ConfigureInfo))]
 		Configure,
-		[VariantOptionType(typeof(Command_1.RegisterVoteInfo))]
+		[VariantOptionType(typeof(Command1.RegisterVoteInfo))]
 		RegisterVote,
-		[VariantOptionType(typeof(Command_1.MergeInfo))]
+		[VariantOptionType(typeof(Command1.MergeInfo))]
 		Merge,
 		[VariantOptionType(typeof(SpawnResponse))]
 		DisburseToNeuron,
@@ -1181,122 +1182,122 @@ namespace Test.Models
 	}
 }
 
-Type File: 'Command_2'
+Type File: 'Command2'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
+using Test;
 using System;
 
-namespace Test.Models
+namespace Test
 {
-	[Variant(typeof(Command_2Tag))]
-	public class Command_2
+	[Variant(typeof(Command2Tag))]
+	public class Command2
 	{
 		[VariantTagProperty()]
-		public Command_2Tag Tag { get; set; }
+		public Command2Tag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public System.Object? Value { get; set; }
+		public object Value { get; set; }
 
-		public Command_2(Command_2Tag tag, object? value)
+		public Command2(Command2Tag tag, object value)
 		{
 			this.Tag = tag;
 			this.Value = value;
 		}
 
-		protected Command_2()
+		protected Command2()
 		{
 		}
 
-		public static Command_2 Spawn(Spawn info)
+		public static Command2 Spawn(Spawn info)
 		{
-			return new Command_2(Command_2Tag.Spawn, info);
+			return new Command2(Command2Tag.Spawn, info);
 		}
 
-		public static Command_2 Split(Split info)
+		public static Command2 Split(Split info)
 		{
-			return new Command_2(Command_2Tag.Split, info);
+			return new Command2(Command2Tag.Split, info);
 		}
 
-		public static Command_2 Configure(Configure info)
+		public static Command2 Configure(Configure info)
 		{
-			return new Command_2(Command_2Tag.Configure, info);
+			return new Command2(Command2Tag.Configure, info);
 		}
 
-		public static Command_2 Merge(Merge info)
+		public static Command2 Merge(Merge info)
 		{
-			return new Command_2(Command_2Tag.Merge, info);
+			return new Command2(Command2Tag.Merge, info);
 		}
 
-		public static Command_2 DisburseToNeuron(DisburseToNeuron info)
+		public static Command2 DisburseToNeuron(DisburseToNeuron info)
 		{
-			return new Command_2(Command_2Tag.DisburseToNeuron, info);
+			return new Command2(Command2Tag.DisburseToNeuron, info);
 		}
 
-		public static Command_2 ClaimOrRefreshNeuron(ClaimOrRefresh info)
+		public static Command2 ClaimOrRefreshNeuron(ClaimOrRefresh info)
 		{
-			return new Command_2(Command_2Tag.ClaimOrRefreshNeuron, info);
+			return new Command2(Command2Tag.ClaimOrRefreshNeuron, info);
 		}
 
-		public static Command_2 MergeMaturity(MergeMaturity info)
+		public static Command2 MergeMaturity(MergeMaturity info)
 		{
-			return new Command_2(Command_2Tag.MergeMaturity, info);
+			return new Command2(Command2Tag.MergeMaturity, info);
 		}
 
-		public static Command_2 Disburse(Disburse info)
+		public static Command2 Disburse(Disburse info)
 		{
-			return new Command_2(Command_2Tag.Disburse, info);
+			return new Command2(Command2Tag.Disburse, info);
 		}
 
 		public Spawn AsSpawn()
 		{
-			this.ValidateTag(Command_2Tag.Spawn);
+			this.ValidateTag(Command2Tag.Spawn);
 			return (Spawn)this.Value!;
 		}
 
 		public Split AsSplit()
 		{
-			this.ValidateTag(Command_2Tag.Split);
+			this.ValidateTag(Command2Tag.Split);
 			return (Split)this.Value!;
 		}
 
 		public Configure AsConfigure()
 		{
-			this.ValidateTag(Command_2Tag.Configure);
+			this.ValidateTag(Command2Tag.Configure);
 			return (Configure)this.Value!;
 		}
 
 		public Merge AsMerge()
 		{
-			this.ValidateTag(Command_2Tag.Merge);
+			this.ValidateTag(Command2Tag.Merge);
 			return (Merge)this.Value!;
 		}
 
 		public DisburseToNeuron AsDisburseToNeuron()
 		{
-			this.ValidateTag(Command_2Tag.DisburseToNeuron);
+			this.ValidateTag(Command2Tag.DisburseToNeuron);
 			return (DisburseToNeuron)this.Value!;
 		}
 
 		public ClaimOrRefresh AsClaimOrRefreshNeuron()
 		{
-			this.ValidateTag(Command_2Tag.ClaimOrRefreshNeuron);
+			this.ValidateTag(Command2Tag.ClaimOrRefreshNeuron);
 			return (ClaimOrRefresh)this.Value!;
 		}
 
 		public MergeMaturity AsMergeMaturity()
 		{
-			this.ValidateTag(Command_2Tag.MergeMaturity);
+			this.ValidateTag(Command2Tag.MergeMaturity);
 			return (MergeMaturity)this.Value!;
 		}
 
 		public Disburse AsDisburse()
 		{
-			this.ValidateTag(Command_2Tag.Disburse);
+			this.ValidateTag(Command2Tag.Disburse);
 			return (Disburse)this.Value!;
 		}
 
-		private void ValidateTag(Command_2Tag tag)
+		private void ValidateTag(Command2Tag tag)
 		{
 			if (!this.Tag.Equals(tag))
 			{
@@ -1305,7 +1306,7 @@ namespace Test.Models
 		}
 	}
 
-	public enum Command_2Tag
+	public enum Command2Tag
 	{
 		[VariantOptionType(typeof(Spawn))]
 		Spawn,
@@ -1329,10 +1330,10 @@ namespace Test.Models
 Type File: 'Configure'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
 using EdjCase.ICP.Candid.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class Configure
 	{
@@ -1353,10 +1354,10 @@ namespace Test.Models
 Type File: 'Disburse'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
 using EdjCase.ICP.Candid.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class Disburse
 	{
@@ -1382,7 +1383,7 @@ Type File: 'DisburseResponse'
 
 using EdjCase.ICP.Candid.Mapping;
 
-namespace Test.Models
+namespace Test
 {
 	public class DisburseResponse
 	{
@@ -1405,7 +1406,7 @@ Type File: 'DisburseToNeuron'
 using EdjCase.ICP.Candid.Mapping;
 using EdjCase.ICP.Candid.Models;
 
-namespace Test.Models
+namespace Test
 {
 	public class DisburseToNeuron
 	{
@@ -1442,10 +1443,10 @@ namespace Test.Models
 Type File: 'DissolveState'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
+using Test;
 using System;
 
-namespace Test.Models
+namespace Test
 {
 	[Variant(typeof(DissolveStateTag))]
 	public class DissolveState
@@ -1454,9 +1455,9 @@ namespace Test.Models
 		public DissolveStateTag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public System.Object? Value { get; set; }
+		public object Value { get; set; }
 
-		public DissolveState(DissolveStateTag tag, object? value)
+		public DissolveState(DissolveStateTag tag, object value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -1511,7 +1512,7 @@ Type File: 'ExecuteNnsFunction'
 using EdjCase.ICP.Candid.Mapping;
 using System.Collections.Generic;
 
-namespace Test.Models
+namespace Test
 {
 	public class ExecuteNnsFunction
 	{
@@ -1536,10 +1537,10 @@ namespace Test.Models
 Type File: 'Follow'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
 using System.Collections.Generic;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class Follow
 	{
@@ -1564,10 +1565,10 @@ namespace Test.Models
 Type File: 'Followees'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
 using System.Collections.Generic;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class Followees
 	{
@@ -1588,16 +1589,16 @@ namespace Test.Models
 Type File: 'Governance'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
 using System.Collections.Generic;
+using Test;
 using EdjCase.ICP.Candid.Models;
 
-namespace Test.Models
+namespace Test
 {
 	public class Governance
 	{
 		[CandidName("default_followees")]
-		public List<Governance.DefaultFolloweesItem> DefaultFollowees { get; set; }
+		public List<(int, Followees)> DefaultFollowees { get; set; }
 
 		[CandidName("wait_for_quiet_threshold_seconds")]
 		public ulong WaitForQuietThresholdSeconds { get; set; }
@@ -1621,18 +1622,18 @@ namespace Test.Models
 		public ulong ShortVotingPeriodSeconds { get; set; }
 
 		[CandidName("proposals")]
-		public List<Governance.ProposalsItem> Proposals { get; set; }
+		public List<(ulong, ProposalData)> Proposals { get; set; }
 
 		[CandidName("in_flight_commands")]
-		public List<Governance.InFlightCommandsItem> InFlightCommands { get; set; }
+		public List<(ulong, NeuronInFlightCommand)> InFlightCommands { get; set; }
 
 		[CandidName("neurons")]
-		public List<Governance.NeuronsItem> Neurons { get; set; }
+		public List<(ulong, Neuron)> Neurons { get; set; }
 
 		[CandidName("genesis_timestamp_seconds")]
 		public ulong GenesisTimestampSeconds { get; set; }
 
-		public Governance(List<Governance.DefaultFolloweesItem> defaultFollowees, ulong waitForQuietThresholdSeconds, OptionalValue<GovernanceCachedMetrics> metrics, List<NodeProvider> nodeProviders, OptionalValue<NetworkEconomics> economics, OptionalValue<RewardEvent> latestRewardEvent, List<NeuronStakeTransfer> toClaimTransfers, ulong shortVotingPeriodSeconds, List<Governance.ProposalsItem> proposals, List<Governance.InFlightCommandsItem> inFlightCommands, List<Governance.NeuronsItem> neurons, ulong genesisTimestampSeconds)
+		public Governance(List<(int, Followees)> defaultFollowees, ulong waitForQuietThresholdSeconds, OptionalValue<GovernanceCachedMetrics> metrics, List<NodeProvider> nodeProviders, OptionalValue<NetworkEconomics> economics, OptionalValue<RewardEvent> latestRewardEvent, List<NeuronStakeTransfer> toClaimTransfers, ulong shortVotingPeriodSeconds, List<(ulong, ProposalData)> proposals, List<(ulong, NeuronInFlightCommand)> inFlightCommands, List<(ulong, Neuron)> neurons, ulong genesisTimestampSeconds)
 		{
 			this.DefaultFollowees = defaultFollowees;
 			this.WaitForQuietThresholdSeconds = waitForQuietThresholdSeconds;
@@ -1651,97 +1652,20 @@ namespace Test.Models
 		public Governance()
 		{
 		}
-
-		public class DefaultFolloweesItem
-		{
-			[CandidTag(0U)]
-			public int F0 { get; set; }
-
-			[CandidTag(1U)]
-			public Followees F1 { get; set; }
-
-			public DefaultFolloweesItem(int f0, Followees f1)
-			{
-				this.F0 = f0;
-				this.F1 = f1;
-			}
-
-			public DefaultFolloweesItem()
-			{
-			}
-		}
-
-		public class ProposalsItem
-		{
-			[CandidTag(0U)]
-			public ulong F0 { get; set; }
-
-			[CandidTag(1U)]
-			public ProposalData F1 { get; set; }
-
-			public ProposalsItem(ulong f0, ProposalData f1)
-			{
-				this.F0 = f0;
-				this.F1 = f1;
-			}
-
-			public ProposalsItem()
-			{
-			}
-		}
-
-		public class InFlightCommandsItem
-		{
-			[CandidTag(0U)]
-			public ulong F0 { get; set; }
-
-			[CandidTag(1U)]
-			public NeuronInFlightCommand F1 { get; set; }
-
-			public InFlightCommandsItem(ulong f0, NeuronInFlightCommand f1)
-			{
-				this.F0 = f0;
-				this.F1 = f1;
-			}
-
-			public InFlightCommandsItem()
-			{
-			}
-		}
-
-		public class NeuronsItem
-		{
-			[CandidTag(0U)]
-			public ulong F0 { get; set; }
-
-			[CandidTag(1U)]
-			public Neuron F1 { get; set; }
-
-			public NeuronsItem(ulong f0, Neuron f1)
-			{
-				this.F0 = f0;
-				this.F1 = f1;
-			}
-
-			public NeuronsItem()
-			{
-			}
-		}
 	}
 }
 
 Type File: 'GovernanceCachedMetrics'
 
 using EdjCase.ICP.Candid.Mapping;
-using System;
 using System.Collections.Generic;
 
-namespace Test.Models
+namespace Test
 {
 	public class GovernanceCachedMetrics
 	{
 		[CandidName("not_dissolving_neurons_e8s_buckets")]
-		public List<ValueTuple<ulong, double>> NotDissolvingNeuronsE8sBuckets { get; set; }
+		public List<(ulong, double)> NotDissolvingNeuronsE8sBuckets { get; set; }
 
 		[CandidName("garbage_collectable_neurons_count")]
 		public ulong GarbageCollectableNeuronsCount { get; set; }
@@ -1750,7 +1674,7 @@ namespace Test.Models
 		public ulong NeuronsWithInvalidStakeCount { get; set; }
 
 		[CandidName("not_dissolving_neurons_count_buckets")]
-		public List<ValueTuple<ulong, ulong>> NotDissolvingNeuronsCountBuckets { get; set; }
+		public List<(ulong, ulong)> NotDissolvingNeuronsCountBuckets { get; set; }
 
 		[CandidName("total_supply_icp")]
 		public ulong TotalSupplyIcp { get; set; }
@@ -1774,13 +1698,13 @@ namespace Test.Models
 		public ulong NeuronsWithLessThan6MonthsDissolveDelayE8s { get; set; }
 
 		[CandidName("dissolving_neurons_count_buckets")]
-		public List<ValueTuple<ulong, ulong>> DissolvingNeuronsCountBuckets { get; set; }
+		public List<(ulong, ulong)> DissolvingNeuronsCountBuckets { get; set; }
 
 		[CandidName("dissolving_neurons_count")]
 		public ulong DissolvingNeuronsCount { get; set; }
 
 		[CandidName("dissolving_neurons_e8s_buckets")]
-		public List<ValueTuple<ulong, double>> DissolvingNeuronsE8sBuckets { get; set; }
+		public List<(ulong, double)> DissolvingNeuronsE8sBuckets { get; set; }
 
 		[CandidName("community_fund_total_staked_e8s")]
 		public ulong CommunityFundTotalStakedE8s { get; set; }
@@ -1788,7 +1712,7 @@ namespace Test.Models
 		[CandidName("timestamp_seconds")]
 		public ulong TimestampSeconds { get; set; }
 
-		public GovernanceCachedMetrics(List<ValueTuple<ulong, double>> notDissolvingNeuronsE8sBuckets, ulong garbageCollectableNeuronsCount, ulong neuronsWithInvalidStakeCount, List<ValueTuple<ulong, ulong>> notDissolvingNeuronsCountBuckets, ulong totalSupplyIcp, ulong neuronsWithLessThan6MonthsDissolveDelayCount, ulong dissolvedNeuronsCount, ulong totalStakedE8s, ulong notDissolvingNeuronsCount, ulong dissolvedNeuronsE8s, ulong neuronsWithLessThan6MonthsDissolveDelayE8s, List<ValueTuple<ulong, ulong>> dissolvingNeuronsCountBuckets, ulong dissolvingNeuronsCount, List<ValueTuple<ulong, double>> dissolvingNeuronsE8sBuckets, ulong communityFundTotalStakedE8s, ulong timestampSeconds)
+		public GovernanceCachedMetrics(List<(ulong, double)> notDissolvingNeuronsE8sBuckets, ulong garbageCollectableNeuronsCount, ulong neuronsWithInvalidStakeCount, List<(ulong, ulong)> notDissolvingNeuronsCountBuckets, ulong totalSupplyIcp, ulong neuronsWithLessThan6MonthsDissolveDelayCount, ulong dissolvedNeuronsCount, ulong totalStakedE8s, ulong notDissolvingNeuronsCount, ulong dissolvedNeuronsE8s, ulong neuronsWithLessThan6MonthsDissolveDelayE8s, List<(ulong, ulong)> dissolvingNeuronsCountBuckets, ulong dissolvingNeuronsCount, List<(ulong, double)> dissolvingNeuronsE8sBuckets, ulong communityFundTotalStakedE8s, ulong timestampSeconds)
 		{
 			this.NotDissolvingNeuronsE8sBuckets = notDissolvingNeuronsE8sBuckets;
 			this.GarbageCollectableNeuronsCount = garbageCollectableNeuronsCount;
@@ -1818,7 +1742,7 @@ Type File: 'GovernanceError'
 
 using EdjCase.ICP.Candid.Mapping;
 
-namespace Test.Models
+namespace Test
 {
 	public class GovernanceError
 	{
@@ -1844,7 +1768,7 @@ Type File: 'IncreaseDissolveDelay'
 
 using EdjCase.ICP.Candid.Mapping;
 
-namespace Test.Models
+namespace Test
 {
 	public class IncreaseDissolveDelay
 	{
@@ -1865,10 +1789,10 @@ namespace Test.Models
 Type File: 'KnownNeuron'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
 using EdjCase.ICP.Candid.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class KnownNeuron
 	{
@@ -1895,7 +1819,7 @@ Type File: 'KnownNeuronData'
 using EdjCase.ICP.Candid.Mapping;
 using EdjCase.ICP.Candid.Models;
 
-namespace Test.Models
+namespace Test
 {
 	public class KnownNeuronData
 	{
@@ -1920,10 +1844,10 @@ namespace Test.Models
 Type File: 'ListKnownNeuronsResponse'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
 using System.Collections.Generic;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class ListKnownNeuronsResponse
 	{
@@ -1946,7 +1870,7 @@ Type File: 'ListNeurons'
 using EdjCase.ICP.Candid.Mapping;
 using System.Collections.Generic;
 
-namespace Test.Models
+namespace Test
 {
 	public class ListNeurons
 	{
@@ -1971,20 +1895,20 @@ namespace Test.Models
 Type File: 'ListNeuronsResponse'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
 using System.Collections.Generic;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class ListNeuronsResponse
 	{
 		[CandidName("neuron_infos")]
-		public List<ListNeuronsResponse.NeuronInfosItem> NeuronInfos { get; set; }
+		public List<(ulong, NeuronInfo)> NeuronInfos { get; set; }
 
 		[CandidName("full_neurons")]
 		public List<Neuron> FullNeurons { get; set; }
 
-		public ListNeuronsResponse(List<ListNeuronsResponse.NeuronInfosItem> neuronInfos, List<Neuron> fullNeurons)
+		public ListNeuronsResponse(List<(ulong, NeuronInfo)> neuronInfos, List<Neuron> fullNeurons)
 		{
 			this.NeuronInfos = neuronInfos;
 			this.FullNeurons = fullNeurons;
@@ -1993,35 +1917,16 @@ namespace Test.Models
 		public ListNeuronsResponse()
 		{
 		}
-
-		public class NeuronInfosItem
-		{
-			[CandidTag(0U)]
-			public ulong F0 { get; set; }
-
-			[CandidTag(1U)]
-			public NeuronInfo F1 { get; set; }
-
-			public NeuronInfosItem(ulong f0, NeuronInfo f1)
-			{
-				this.F0 = f0;
-				this.F1 = f1;
-			}
-
-			public NeuronInfosItem()
-			{
-			}
-		}
 	}
 }
 
 Type File: 'ListNodeProvidersResponse'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
 using System.Collections.Generic;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class ListNodeProvidersResponse
 	{
@@ -2043,10 +1948,10 @@ Type File: 'ListProposalInfo'
 
 using EdjCase.ICP.Candid.Mapping;
 using System.Collections.Generic;
-using Test.Models;
 using EdjCase.ICP.Candid.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class ListProposalInfo
 	{
@@ -2083,10 +1988,10 @@ namespace Test.Models
 Type File: 'ListProposalInfoResponse'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
 using System.Collections.Generic;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class ListProposalInfoResponse
 	{
@@ -2107,10 +2012,10 @@ namespace Test.Models
 Type File: 'MakeProposalResponse'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
 using EdjCase.ICP.Candid.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class MakeProposalResponse
 	{
@@ -2131,10 +2036,10 @@ namespace Test.Models
 Type File: 'ManageNeuron'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
 using EdjCase.ICP.Candid.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class ManageNeuron
 	{
@@ -2163,17 +2068,17 @@ namespace Test.Models
 Type File: 'ManageNeuronResponse'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
 using EdjCase.ICP.Candid.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class ManageNeuronResponse
 	{
 		[CandidName("command")]
-		public OptionalValue<Command_1> Command { get; set; }
+		public OptionalValue<Command1> Command { get; set; }
 
-		public ManageNeuronResponse(OptionalValue<Command_1> command)
+		public ManageNeuronResponse(OptionalValue<Command1> command)
 		{
 			this.Command = command;
 		}
@@ -2187,10 +2092,10 @@ namespace Test.Models
 Type File: 'Merge'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
 using EdjCase.ICP.Candid.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class Merge
 	{
@@ -2212,7 +2117,7 @@ Type File: 'MergeMaturity'
 
 using EdjCase.ICP.Candid.Mapping;
 
-namespace Test.Models
+namespace Test
 {
 	public class MergeMaturity
 	{
@@ -2234,7 +2139,7 @@ Type File: 'MergeMaturityResponse'
 
 using EdjCase.ICP.Candid.Mapping;
 
-namespace Test.Models
+namespace Test
 {
 	public class MergeMaturityResponse
 	{
@@ -2260,7 +2165,7 @@ Type File: 'Motion'
 
 using EdjCase.ICP.Candid.Mapping;
 
-namespace Test.Models
+namespace Test
 {
 	public class Motion
 	{
@@ -2282,7 +2187,7 @@ Type File: 'NetworkEconomics'
 
 using EdjCase.ICP.Candid.Mapping;
 
-namespace Test.Models
+namespace Test
 {
 	public class NetworkEconomics
 	{
@@ -2331,11 +2236,11 @@ namespace Test.Models
 Type File: 'Neuron'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
 using EdjCase.ICP.Candid.Models;
+using Test;
 using System.Collections.Generic;
 
-namespace Test.Models
+namespace Test
 {
 	public class Neuron
 	{
@@ -2379,7 +2284,7 @@ namespace Test.Models
 		public OptionalValue<DissolveState> DissolveState { get; set; }
 
 		[CandidName("followees")]
-		public List<Neuron.FolloweesItem> Followees { get; set; }
+		public List<(int, Followees)> Followees { get; set; }
 
 		[CandidName("neuron_fees_e8s")]
 		public ulong NeuronFeesE8s { get; set; }
@@ -2390,7 +2295,7 @@ namespace Test.Models
 		[CandidName("known_neuron_data")]
 		public OptionalValue<KnownNeuronData> KnownNeuronData { get; set; }
 
-		public Neuron(OptionalValue<NeuronId> id, OptionalValue<Principal> controller, List<BallotInfo> recentBallots, bool kycVerified, bool notForProfit, ulong maturityE8sEquivalent, ulong cachedNeuronStakeE8s, ulong createdTimestampSeconds, ulong agingSinceTimestampSeconds, List<Principal> hotKeys, List<byte> account, OptionalValue<ulong> joinedCommunityFundTimestampSeconds, OptionalValue<DissolveState> dissolveState, List<Neuron.FolloweesItem> followees, ulong neuronFeesE8s, OptionalValue<NeuronStakeTransfer> transfer, OptionalValue<KnownNeuronData> knownNeuronData)
+		public Neuron(OptionalValue<NeuronId> id, OptionalValue<Principal> controller, List<BallotInfo> recentBallots, bool kycVerified, bool notForProfit, ulong maturityE8sEquivalent, ulong cachedNeuronStakeE8s, ulong createdTimestampSeconds, ulong agingSinceTimestampSeconds, List<Principal> hotKeys, List<byte> account, OptionalValue<ulong> joinedCommunityFundTimestampSeconds, OptionalValue<DissolveState> dissolveState, List<(int, Followees)> followees, ulong neuronFeesE8s, OptionalValue<NeuronStakeTransfer> transfer, OptionalValue<KnownNeuronData> knownNeuronData)
 		{
 			this.Id = id;
 			this.Controller = controller;
@@ -2414,25 +2319,6 @@ namespace Test.Models
 		public Neuron()
 		{
 		}
-
-		public class FolloweesItem
-		{
-			[CandidTag(0U)]
-			public int F0 { get; set; }
-
-			[CandidTag(1U)]
-			public Followees F1 { get; set; }
-
-			public FolloweesItem(int f0, Followees f1)
-			{
-				this.F0 = f0;
-				this.F1 = f1;
-			}
-
-			public FolloweesItem()
-			{
-			}
-		}
 	}
 }
 
@@ -2440,7 +2326,7 @@ Type File: 'NeuronId'
 
 using EdjCase.ICP.Candid.Mapping;
 
-namespace Test.Models
+namespace Test
 {
 	public class NeuronId
 	{
@@ -2461,11 +2347,11 @@ namespace Test.Models
 Type File: 'NeuronIdOrSubaccount'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
+using Test;
 using System.Collections.Generic;
 using System;
 
-namespace Test.Models
+namespace Test
 {
 	[Variant(typeof(NeuronIdOrSubaccountTag))]
 	public class NeuronIdOrSubaccount
@@ -2474,9 +2360,9 @@ namespace Test.Models
 		public NeuronIdOrSubaccountTag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public System.Object? Value { get; set; }
+		public object Value { get; set; }
 
-		public NeuronIdOrSubaccount(NeuronIdOrSubaccountTag tag, object? value)
+		public NeuronIdOrSubaccount(NeuronIdOrSubaccountTag tag, object value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -2529,20 +2415,20 @@ namespace Test.Models
 Type File: 'NeuronInFlightCommand'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
 using EdjCase.ICP.Candid.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class NeuronInFlightCommand
 	{
 		[CandidName("command")]
-		public OptionalValue<Command_2> Command { get; set; }
+		public OptionalValue<Command2> Command { get; set; }
 
 		[CandidName("timestamp")]
 		public ulong Timestamp { get; set; }
 
-		public NeuronInFlightCommand(OptionalValue<Command_2> command, ulong timestamp)
+		public NeuronInFlightCommand(OptionalValue<Command2> command, ulong timestamp)
 		{
 			this.Command = command;
 			this.Timestamp = timestamp;
@@ -2557,11 +2443,11 @@ namespace Test.Models
 Type File: 'NeuronInfo'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
 using System.Collections.Generic;
+using Test;
 using EdjCase.ICP.Candid.Models;
 
-namespace Test.Models
+namespace Test
 {
 	public class NeuronInfo
 	{
@@ -2621,7 +2507,7 @@ using EdjCase.ICP.Candid.Mapping;
 using System.Collections.Generic;
 using EdjCase.ICP.Candid.Models;
 
-namespace Test.Models
+namespace Test
 {
 	public class NeuronStakeTransfer
 	{
@@ -2667,9 +2553,9 @@ Type File: 'NodeProvider'
 
 using EdjCase.ICP.Candid.Mapping;
 using EdjCase.ICP.Candid.Models;
-using Test.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class NodeProvider
 	{
@@ -2694,10 +2580,10 @@ namespace Test.Models
 Type File: 'Operation'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
+using Test;
 using System;
 
-namespace Test.Models
+namespace Test
 {
 	[Variant(typeof(OperationTag))]
 	public class Operation
@@ -2706,9 +2592,9 @@ namespace Test.Models
 		public OperationTag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public System.Object? Value { get; set; }
+		public object Value { get; set; }
 
-		public Operation(OperationTag tag, object? value)
+		public Operation(OperationTag tag, object value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -2848,9 +2734,9 @@ Type File: 'Proposal'
 
 using EdjCase.ICP.Candid.Mapping;
 using EdjCase.ICP.Candid.Models;
-using Test.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class Proposal
 	{
@@ -2883,11 +2769,11 @@ namespace Test.Models
 Type File: 'ProposalData'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
 using EdjCase.ICP.Candid.Models;
+using Test;
 using System.Collections.Generic;
 
-namespace Test.Models
+namespace Test
 {
 	public class ProposalData
 	{
@@ -2898,7 +2784,7 @@ namespace Test.Models
 		public OptionalValue<GovernanceError> FailureReason { get; set; }
 
 		[CandidName("ballots")]
-		public List<ProposalData.BallotsItem> Ballots { get; set; }
+		public List<(ulong, Ballot)> Ballots { get; set; }
 
 		[CandidName("proposal_timestamp_seconds")]
 		public ulong ProposalTimestampSeconds { get; set; }
@@ -2930,7 +2816,7 @@ namespace Test.Models
 		[CandidName("executed_timestamp_seconds")]
 		public ulong ExecutedTimestampSeconds { get; set; }
 
-		public ProposalData(OptionalValue<NeuronId> id, OptionalValue<GovernanceError> failureReason, List<ProposalData.BallotsItem> ballots, ulong proposalTimestampSeconds, ulong rewardEventRound, ulong failedTimestampSeconds, ulong rejectCostE8s, OptionalValue<Tally> latestTally, ulong decidedTimestampSeconds, OptionalValue<Proposal> proposal, OptionalValue<NeuronId> proposer, OptionalValue<WaitForQuietState> waitForQuietState, ulong executedTimestampSeconds)
+		public ProposalData(OptionalValue<NeuronId> id, OptionalValue<GovernanceError> failureReason, List<(ulong, Ballot)> ballots, ulong proposalTimestampSeconds, ulong rewardEventRound, ulong failedTimestampSeconds, ulong rejectCostE8s, OptionalValue<Tally> latestTally, ulong decidedTimestampSeconds, OptionalValue<Proposal> proposal, OptionalValue<NeuronId> proposer, OptionalValue<WaitForQuietState> waitForQuietState, ulong executedTimestampSeconds)
 		{
 			this.Id = id;
 			this.FailureReason = failureReason;
@@ -2950,36 +2836,17 @@ namespace Test.Models
 		public ProposalData()
 		{
 		}
-
-		public class BallotsItem
-		{
-			[CandidTag(0U)]
-			public ulong F0 { get; set; }
-
-			[CandidTag(1U)]
-			public Ballot F1 { get; set; }
-
-			public BallotsItem(ulong f0, Ballot f1)
-			{
-				this.F0 = f0;
-				this.F1 = f1;
-			}
-
-			public BallotsItem()
-			{
-			}
-		}
 	}
 }
 
 Type File: 'ProposalInfo'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
 using EdjCase.ICP.Candid.Models;
+using Test;
 using System.Collections.Generic;
 
-namespace Test.Models
+namespace Test
 {
 	public class ProposalInfo
 	{
@@ -2996,7 +2863,7 @@ namespace Test.Models
 		public OptionalValue<GovernanceError> FailureReason { get; set; }
 
 		[CandidName("ballots")]
-		public List<ProposalInfo.BallotsItem> Ballots { get; set; }
+		public List<(ulong, Ballot)> Ballots { get; set; }
 
 		[CandidName("proposal_timestamp_seconds")]
 		public ulong ProposalTimestampSeconds { get; set; }
@@ -3031,7 +2898,7 @@ namespace Test.Models
 		[CandidName("executed_timestamp_seconds")]
 		public ulong ExecutedTimestampSeconds { get; set; }
 
-		public ProposalInfo(OptionalValue<NeuronId> id, int status, int topic, OptionalValue<GovernanceError> failureReason, List<ProposalInfo.BallotsItem> ballots, ulong proposalTimestampSeconds, ulong rewardEventRound, OptionalValue<ulong> deadlineTimestampSeconds, ulong failedTimestampSeconds, ulong rejectCostE8s, OptionalValue<Tally> latestTally, int rewardStatus, ulong decidedTimestampSeconds, OptionalValue<Proposal> proposal, OptionalValue<NeuronId> proposer, ulong executedTimestampSeconds)
+		public ProposalInfo(OptionalValue<NeuronId> id, int status, int topic, OptionalValue<GovernanceError> failureReason, List<(ulong, Ballot)> ballots, ulong proposalTimestampSeconds, ulong rewardEventRound, OptionalValue<ulong> deadlineTimestampSeconds, ulong failedTimestampSeconds, ulong rejectCostE8s, OptionalValue<Tally> latestTally, int rewardStatus, ulong decidedTimestampSeconds, OptionalValue<Proposal> proposal, OptionalValue<NeuronId> proposer, ulong executedTimestampSeconds)
 		{
 			this.Id = id;
 			this.Status = status;
@@ -3054,35 +2921,16 @@ namespace Test.Models
 		public ProposalInfo()
 		{
 		}
-
-		public class BallotsItem
-		{
-			[CandidTag(0U)]
-			public ulong F0 { get; set; }
-
-			[CandidTag(1U)]
-			public Ballot F1 { get; set; }
-
-			public BallotsItem(ulong f0, Ballot f1)
-			{
-				this.F0 = f0;
-				this.F1 = f1;
-			}
-
-			public BallotsItem()
-			{
-			}
-		}
 	}
 }
 
 Type File: 'RegisterVote'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
 using EdjCase.ICP.Candid.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class RegisterVote
 	{
@@ -3109,7 +2957,7 @@ Type File: 'RemoveHotKey'
 using EdjCase.ICP.Candid.Mapping;
 using EdjCase.ICP.Candid.Models;
 
-namespace Test.Models
+namespace Test
 {
 	public class RemoveHotKey
 	{
@@ -3130,10 +2978,10 @@ namespace Test.Models
 Type File: 'Result'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
+using Test;
 using System;
 
-namespace Test.Models
+namespace Test
 {
 	[Variant(typeof(ResultTag))]
 	public class Result
@@ -3142,9 +2990,9 @@ namespace Test.Models
 		public ResultTag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public System.Object? Value { get; set; }
+		public object Value { get; set; }
 
-		public Result(ResultTag tag, object? value)
+		public Result(ResultTag tag, object value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -3187,56 +3035,56 @@ namespace Test.Models
 	}
 }
 
-Type File: 'Result_1'
+Type File: 'Result1'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
+using Test;
 using System;
 
-namespace Test.Models
+namespace Test
 {
-	[Variant(typeof(Result_1Tag))]
-	public class Result_1
+	[Variant(typeof(Result1Tag))]
+	public class Result1
 	{
 		[VariantTagProperty()]
-		public Result_1Tag Tag { get; set; }
+		public Result1Tag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public System.Object? Value { get; set; }
+		public object Value { get; set; }
 
-		public Result_1(Result_1Tag tag, object? value)
+		public Result1(Result1Tag tag, object value)
 		{
 			this.Tag = tag;
 			this.Value = value;
 		}
 
-		protected Result_1()
+		protected Result1()
 		{
 		}
 
-		public static Result_1 Error(GovernanceError info)
+		public static Result1 Error(GovernanceError info)
 		{
-			return new Result_1(Result_1Tag.Error, info);
+			return new Result1(Result1Tag.Error, info);
 		}
 
-		public static Result_1 NeuronId(NeuronId info)
+		public static Result1 NeuronId(NeuronId info)
 		{
-			return new Result_1(Result_1Tag.NeuronId, info);
+			return new Result1(Result1Tag.NeuronId, info);
 		}
 
 		public GovernanceError AsError()
 		{
-			this.ValidateTag(Result_1Tag.Error);
+			this.ValidateTag(Result1Tag.Error);
 			return (GovernanceError)this.Value!;
 		}
 
 		public NeuronId AsNeuronId()
 		{
-			this.ValidateTag(Result_1Tag.NeuronId);
+			this.ValidateTag(Result1Tag.NeuronId);
 			return (NeuronId)this.Value!;
 		}
 
-		private void ValidateTag(Result_1Tag tag)
+		private void ValidateTag(Result1Tag tag)
 		{
 			if (!this.Tag.Equals(tag))
 			{
@@ -3245,7 +3093,7 @@ namespace Test.Models
 		}
 	}
 
-	public enum Result_1Tag
+	public enum Result1Tag
 	{
 		[VariantOptionType(typeof(GovernanceError))]
 		Error,
@@ -3254,56 +3102,56 @@ namespace Test.Models
 	}
 }
 
-Type File: 'Result_2'
+Type File: 'Result2'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
+using Test;
 using System;
 
-namespace Test.Models
+namespace Test
 {
-	[Variant(typeof(Result_2Tag))]
-	public class Result_2
+	[Variant(typeof(Result2Tag))]
+	public class Result2
 	{
 		[VariantTagProperty()]
-		public Result_2Tag Tag { get; set; }
+		public Result2Tag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public System.Object? Value { get; set; }
+		public object Value { get; set; }
 
-		public Result_2(Result_2Tag tag, object? value)
+		public Result2(Result2Tag tag, object value)
 		{
 			this.Tag = tag;
 			this.Value = value;
 		}
 
-		protected Result_2()
+		protected Result2()
 		{
 		}
 
-		public static Result_2 Ok(Neuron info)
+		public static Result2 Ok(Neuron info)
 		{
-			return new Result_2(Result_2Tag.Ok, info);
+			return new Result2(Result2Tag.Ok, info);
 		}
 
-		public static Result_2 Err(GovernanceError info)
+		public static Result2 Err(GovernanceError info)
 		{
-			return new Result_2(Result_2Tag.Err, info);
+			return new Result2(Result2Tag.Err, info);
 		}
 
 		public Neuron AsOk()
 		{
-			this.ValidateTag(Result_2Tag.Ok);
+			this.ValidateTag(Result2Tag.Ok);
 			return (Neuron)this.Value!;
 		}
 
 		public GovernanceError AsErr()
 		{
-			this.ValidateTag(Result_2Tag.Err);
+			this.ValidateTag(Result2Tag.Err);
 			return (GovernanceError)this.Value!;
 		}
 
-		private void ValidateTag(Result_2Tag tag)
+		private void ValidateTag(Result2Tag tag)
 		{
 			if (!this.Tag.Equals(tag))
 			{
@@ -3312,7 +3160,7 @@ namespace Test.Models
 		}
 	}
 
-	public enum Result_2Tag
+	public enum Result2Tag
 	{
 		[VariantOptionType(typeof(Neuron))]
 		Ok,
@@ -3321,56 +3169,56 @@ namespace Test.Models
 	}
 }
 
-Type File: 'Result_3'
+Type File: 'Result3'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
+using Test;
 using System;
 
-namespace Test.Models
+namespace Test
 {
-	[Variant(typeof(Result_3Tag))]
-	public class Result_3
+	[Variant(typeof(Result3Tag))]
+	public class Result3
 	{
 		[VariantTagProperty()]
-		public Result_3Tag Tag { get; set; }
+		public Result3Tag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public System.Object? Value { get; set; }
+		public object Value { get; set; }
 
-		public Result_3(Result_3Tag tag, object? value)
+		public Result3(Result3Tag tag, object value)
 		{
 			this.Tag = tag;
 			this.Value = value;
 		}
 
-		protected Result_3()
+		protected Result3()
 		{
 		}
 
-		public static Result_3 Ok(RewardNodeProviders info)
+		public static Result3 Ok(RewardNodeProviders info)
 		{
-			return new Result_3(Result_3Tag.Ok, info);
+			return new Result3(Result3Tag.Ok, info);
 		}
 
-		public static Result_3 Err(GovernanceError info)
+		public static Result3 Err(GovernanceError info)
 		{
-			return new Result_3(Result_3Tag.Err, info);
+			return new Result3(Result3Tag.Err, info);
 		}
 
 		public RewardNodeProviders AsOk()
 		{
-			this.ValidateTag(Result_3Tag.Ok);
+			this.ValidateTag(Result3Tag.Ok);
 			return (RewardNodeProviders)this.Value!;
 		}
 
 		public GovernanceError AsErr()
 		{
-			this.ValidateTag(Result_3Tag.Err);
+			this.ValidateTag(Result3Tag.Err);
 			return (GovernanceError)this.Value!;
 		}
 
-		private void ValidateTag(Result_3Tag tag)
+		private void ValidateTag(Result3Tag tag)
 		{
 			if (!this.Tag.Equals(tag))
 			{
@@ -3379,7 +3227,7 @@ namespace Test.Models
 		}
 	}
 
-	public enum Result_3Tag
+	public enum Result3Tag
 	{
 		[VariantOptionType(typeof(RewardNodeProviders))]
 		Ok,
@@ -3388,56 +3236,56 @@ namespace Test.Models
 	}
 }
 
-Type File: 'Result_4'
+Type File: 'Result4'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
+using Test;
 using System;
 
-namespace Test.Models
+namespace Test
 {
-	[Variant(typeof(Result_4Tag))]
-	public class Result_4
+	[Variant(typeof(Result4Tag))]
+	public class Result4
 	{
 		[VariantTagProperty()]
-		public Result_4Tag Tag { get; set; }
+		public Result4Tag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public System.Object? Value { get; set; }
+		public object Value { get; set; }
 
-		public Result_4(Result_4Tag tag, object? value)
+		public Result4(Result4Tag tag, object value)
 		{
 			this.Tag = tag;
 			this.Value = value;
 		}
 
-		protected Result_4()
+		protected Result4()
 		{
 		}
 
-		public static Result_4 Ok(NeuronInfo info)
+		public static Result4 Ok(NeuronInfo info)
 		{
-			return new Result_4(Result_4Tag.Ok, info);
+			return new Result4(Result4Tag.Ok, info);
 		}
 
-		public static Result_4 Err(GovernanceError info)
+		public static Result4 Err(GovernanceError info)
 		{
-			return new Result_4(Result_4Tag.Err, info);
+			return new Result4(Result4Tag.Err, info);
 		}
 
 		public NeuronInfo AsOk()
 		{
-			this.ValidateTag(Result_4Tag.Ok);
+			this.ValidateTag(Result4Tag.Ok);
 			return (NeuronInfo)this.Value!;
 		}
 
 		public GovernanceError AsErr()
 		{
-			this.ValidateTag(Result_4Tag.Err);
+			this.ValidateTag(Result4Tag.Err);
 			return (GovernanceError)this.Value!;
 		}
 
-		private void ValidateTag(Result_4Tag tag)
+		private void ValidateTag(Result4Tag tag)
 		{
 			if (!this.Tag.Equals(tag))
 			{
@@ -3446,7 +3294,7 @@ namespace Test.Models
 		}
 	}
 
-	public enum Result_4Tag
+	public enum Result4Tag
 	{
 		[VariantOptionType(typeof(NeuronInfo))]
 		Ok,
@@ -3455,56 +3303,56 @@ namespace Test.Models
 	}
 }
 
-Type File: 'Result_5'
+Type File: 'Result5'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
+using Test;
 using System;
 
-namespace Test.Models
+namespace Test
 {
-	[Variant(typeof(Result_5Tag))]
-	public class Result_5
+	[Variant(typeof(Result5Tag))]
+	public class Result5
 	{
 		[VariantTagProperty()]
-		public Result_5Tag Tag { get; set; }
+		public Result5Tag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public System.Object? Value { get; set; }
+		public object Value { get; set; }
 
-		public Result_5(Result_5Tag tag, object? value)
+		public Result5(Result5Tag tag, object value)
 		{
 			this.Tag = tag;
 			this.Value = value;
 		}
 
-		protected Result_5()
+		protected Result5()
 		{
 		}
 
-		public static Result_5 Ok(NodeProvider info)
+		public static Result5 Ok(NodeProvider info)
 		{
-			return new Result_5(Result_5Tag.Ok, info);
+			return new Result5(Result5Tag.Ok, info);
 		}
 
-		public static Result_5 Err(GovernanceError info)
+		public static Result5 Err(GovernanceError info)
 		{
-			return new Result_5(Result_5Tag.Err, info);
+			return new Result5(Result5Tag.Err, info);
 		}
 
 		public NodeProvider AsOk()
 		{
-			this.ValidateTag(Result_5Tag.Ok);
+			this.ValidateTag(Result5Tag.Ok);
 			return (NodeProvider)this.Value!;
 		}
 
 		public GovernanceError AsErr()
 		{
-			this.ValidateTag(Result_5Tag.Err);
+			this.ValidateTag(Result5Tag.Err);
 			return (GovernanceError)this.Value!;
 		}
 
-		private void ValidateTag(Result_5Tag tag)
+		private void ValidateTag(Result5Tag tag)
 		{
 			if (!this.Tag.Equals(tag))
 			{
@@ -3513,7 +3361,7 @@ namespace Test.Models
 		}
 	}
 
-	public enum Result_5Tag
+	public enum Result5Tag
 	{
 		[VariantOptionType(typeof(NodeProvider))]
 		Ok,
@@ -3525,10 +3373,10 @@ namespace Test.Models
 Type File: 'RewardEvent'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
 using System.Collections.Generic;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class RewardEvent
 	{
@@ -3561,10 +3409,10 @@ namespace Test.Models
 Type File: 'RewardMode'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
+using Test;
 using System;
 
-namespace Test.Models
+namespace Test
 {
 	[Variant(typeof(RewardModeTag))]
 	public class RewardMode
@@ -3573,9 +3421,9 @@ namespace Test.Models
 		public RewardModeTag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public System.Object? Value { get; set; }
+		public object Value { get; set; }
 
-		public RewardMode(RewardModeTag tag, object? value)
+		public RewardMode(RewardModeTag tag, object value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -3628,10 +3476,10 @@ namespace Test.Models
 Type File: 'RewardNodeProvider'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
 using EdjCase.ICP.Candid.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class RewardNodeProvider
 	{
@@ -3661,10 +3509,10 @@ Type File: 'RewardNodeProviders'
 
 using EdjCase.ICP.Candid.Mapping;
 using EdjCase.ICP.Candid.Models;
-using Test.Models;
 using System.Collections.Generic;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class RewardNodeProviders
 	{
@@ -3689,10 +3537,10 @@ namespace Test.Models
 Type File: 'RewardToAccount'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
 using EdjCase.ICP.Candid.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class RewardToAccount
 	{
@@ -3714,7 +3562,7 @@ Type File: 'RewardToNeuron'
 
 using EdjCase.ICP.Candid.Mapping;
 
-namespace Test.Models
+namespace Test
 {
 	public class RewardToNeuron
 	{
@@ -3735,42 +3583,23 @@ namespace Test.Models
 Type File: 'SetDefaultFollowees'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
 using System.Collections.Generic;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class SetDefaultFollowees
 	{
 		[CandidName("default_followees")]
-		public List<SetDefaultFollowees.DefaultFolloweesItem> DefaultFollowees { get; set; }
+		public List<(int, Followees)> DefaultFollowees { get; set; }
 
-		public SetDefaultFollowees(List<SetDefaultFollowees.DefaultFolloweesItem> defaultFollowees)
+		public SetDefaultFollowees(List<(int, Followees)> defaultFollowees)
 		{
 			this.DefaultFollowees = defaultFollowees;
 		}
 
 		public SetDefaultFollowees()
 		{
-		}
-
-		public class DefaultFolloweesItem
-		{
-			[CandidTag(0U)]
-			public int F0 { get; set; }
-
-			[CandidTag(1U)]
-			public Followees F1 { get; set; }
-
-			public DefaultFolloweesItem(int f0, Followees f1)
-			{
-				this.F0 = f0;
-				this.F1 = f1;
-			}
-
-			public DefaultFolloweesItem()
-			{
-			}
 		}
 	}
 }
@@ -3779,7 +3608,7 @@ Type File: 'SetDissolveTimestamp'
 
 using EdjCase.ICP.Candid.Mapping;
 
-namespace Test.Models
+namespace Test
 {
 	public class SetDissolveTimestamp
 	{
@@ -3802,7 +3631,7 @@ Type File: 'Spawn'
 using EdjCase.ICP.Candid.Mapping;
 using EdjCase.ICP.Candid.Models;
 
-namespace Test.Models
+namespace Test
 {
 	public class Spawn
 	{
@@ -3831,10 +3660,10 @@ namespace Test.Models
 Type File: 'SpawnResponse'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
 using EdjCase.ICP.Candid.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class SpawnResponse
 	{
@@ -3856,7 +3685,7 @@ Type File: 'Split'
 
 using EdjCase.ICP.Candid.Mapping;
 
-namespace Test.Models
+namespace Test
 {
 	public class Split
 	{
@@ -3878,7 +3707,7 @@ Type File: 'Tally'
 
 using EdjCase.ICP.Candid.Mapping;
 
-namespace Test.Models
+namespace Test
 {
 	public class Tally
 	{
@@ -3911,10 +3740,10 @@ namespace Test.Models
 Type File: 'UpdateNodeProvider'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
 using EdjCase.ICP.Candid.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class UpdateNodeProvider
 	{
@@ -3936,7 +3765,7 @@ Type File: 'WaitForQuietState'
 
 using EdjCase.ICP.Candid.Mapping;
 
-namespace Test.Models
+namespace Test
 {
 	public class WaitForQuietState
 	{

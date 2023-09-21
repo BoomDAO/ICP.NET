@@ -10,14 +10,13 @@
             or from a canister id
             </summary>
         </member>
-        <member name="M:EdjCase.ICP.ClientGenerator.ClientCodeGenerator.GenerateClientFromCanisterAsync(EdjCase.ICP.Candid.Models.Principal,EdjCase.ICP.ClientGenerator.ClientGenerationOptions,System.Uri)">
+        <member name="M:EdjCase.ICP.ClientGenerator.ClientCodeGenerator.GenerateClientFromCanisterAsync(EdjCase.ICP.Candid.Models.Principal,EdjCase.ICP.ClientGenerator.ClientGenerationOptions)">
             <summary>
             Creates client source code for a canister based on its id. This only works if 
             the canister has the `candid:service` meta data available in its public state
             </summary>
             <param name="canisterId">The canister to get the definition from</param>
             <param name="options">The options for client generation</param>
-            <param name="httpBoundryNodeUrl">Optional. The http boundry node url to use, otherwise uses the default</param>
         </member>
         <member name="M:EdjCase.ICP.ClientGenerator.ClientCodeGenerator.GenerateClientFromFile(System.String,EdjCase.ICP.ClientGenerator.ClientGenerationOptions)">
             <summary>
@@ -43,9 +42,29 @@
             The name of the client class and file to use
             </summary>
         </member>
+        <member name="P:EdjCase.ICP.ClientGenerator.ClientGenerationOptions.GetDefinitionFromCansiter">
+            <summary>
+            If true, will treat `FilePathOrCanisterId` as a canister id and get the definition from the canister. Otherwise will treat it as a file path and get the definition from the file
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.ClientGenerator.ClientGenerationOptions.FilePathOrCanisterId">
+            <summary>
+            The file path to a local *.did file to get definition from or the canister id, depending on `GetDefinitionFromCansiter` value
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.ClientGenerator.ClientGenerationOptions.PurgeOutputDirectory">
+            <summary>
+            If true, removes all files in the output directory before regeneration, otherwise does nothing. Defaults to true
+            </summary>
+        </member>
         <member name="P:EdjCase.ICP.ClientGenerator.ClientGenerationOptions.Namespace">
             <summary>
             The base namespace to use in the generated files
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.ClientGenerator.ClientGenerationOptions.OutputDirectory">
+            <summary>
+            If true, there will be no folders, all files will be in the same directory
             </summary>
         </member>
         <member name="P:EdjCase.ICP.ClientGenerator.ClientGenerationOptions.NoFolders">
@@ -64,12 +83,132 @@
             Otherwise they will be converted to something prettier
             </summary>
         </member>
-        <member name="M:EdjCase.ICP.ClientGenerator.ClientGenerationOptions.#ctor(System.String,System.String,System.Boolean,System.Boolean,System.Boolean)">
+        <member name="P:EdjCase.ICP.ClientGenerator.ClientGenerationOptions.BoundryNodeUrl">
+            <summary>
+            Optional. The url of the boundry node for the internet computer. Defaults to ic0.app
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.ClientGenerator.ClientGenerationOptions.Types">
+            <summary>
+            Optional. Specifies options for each candid type in the definition.
+            Only supports named types, no anonymous types
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.ClientGenerator.ClientGenerationOptions.#ctor(System.String,System.String,System.Boolean,System.String,System.String,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Uri,System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.ClientGenerator.NamedTypeOptions})">
             <param name="name">The name of the client class and file to use</param>
             <param name="namespace">The base namespace to use in the generated files</param>
+            <param name="getDefinitionFromCanister">If true, will treat <paramref name="filePathOrCandidId"/> as a canister id and get the definition from the canister. Otherwise will treat it as a file path and get the definition from the file</param>
+            <param name="filePathOrCandidId">The file path to a local *.did file to get definition from or the canister id, depending on <paramref name="getDefinitionFromCanister"/> value</param>
+            <param name="outputDirectory">The output directory to generate the client files</param>
+            <param name="purgeOutputDirectory">If true, removes all files in the output directory before regeneration. Defaults to true</param>
             <param name="noFolders">If true, there will be no folders, all files will be in the same directory</param>
             <param name="featureNullable">If true, the nullable C# feature will be used</param>
             <param name="keepCandidCase">If true, the names of properties and methods will keep the raw candid name. Otherwise they will be converted to something prettier</param>
+            <param name="boundryNodeUrl">Optional. The url of the boundry node for the internet computer. Defaults to ic0.app</param>
+            <param name="types">Optional. Specifies options for each candid type in the definition</param>
+        </member>
+        <member name="T:EdjCase.ICP.ClientGenerator.ITypeOptions">
+            <summary>
+            Interface to specify generation options for specific types in the candid
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.ClientGenerator.ITypeOptions.Type">
+            <summary>
+            The candid type of the implementation class
+            </summary>
+        </member>
+        <member name="T:EdjCase.ICP.ClientGenerator.NamedTypeOptions">
+            <summary>
+            Type options for a record field or variant option
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.ClientGenerator.NamedTypeOptions.NameOverride">
+            <summary>
+            Optional. The C# type name to use instead of the default
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.ClientGenerator.NamedTypeOptions.TypeOptions">
+            <summary>
+            Optional. The field or option type information
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.ClientGenerator.NamedTypeOptions.#ctor(System.String,EdjCase.ICP.ClientGenerator.ITypeOptions)">
+            <param name="nameOverride">Optional. The C# type name to use instead of the default</param>
+            <param name="typeOptions">Optional. The field or option type information</param>
+        </member>
+        <member name="T:EdjCase.ICP.ClientGenerator.RecordTypeOptions">
+            <summary>
+            Type generation options for record candid types
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.ClientGenerator.RecordTypeOptions.Type">
+            <inheritdoc />
+        </member>
+        <member name="P:EdjCase.ICP.ClientGenerator.RecordTypeOptions.Fields">
+            <summary>
+            Optional. The type options for each of the records fields
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.ClientGenerator.RecordTypeOptions.#ctor(System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.ClientGenerator.NamedTypeOptions})">
+            <param name="fields">Optional. The type options for each of the records fields</param>
+        </member>
+        <member name="T:EdjCase.ICP.ClientGenerator.VectorTypeOptions">
+            <summary>
+            Type generation options for vec candid types
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.ClientGenerator.VectorTypeOptions.Type">
+            <inheritdoc />
+        </member>
+        <member name="P:EdjCase.ICP.ClientGenerator.VectorTypeOptions.Representation">
+            <summary>
+            Optional. The representation the vec should take in the generated code
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.ClientGenerator.VectorTypeOptions.ElementType">
+            <summary>
+            Optional. The type options for the element type in the vec
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.ClientGenerator.VectorTypeOptions.#ctor(System.Nullable{EdjCase.ICP.ClientGenerator.VectorRepresentation},EdjCase.ICP.ClientGenerator.ITypeOptions)">
+            <param name="representation">Optional. The representation the vec should take in the generated code</param>
+            <param name="elementType">Optional. The type options for the element type in the vec</param>
+        </member>
+        <member name="T:EdjCase.ICP.ClientGenerator.VectorRepresentation">
+            <summary>
+            C# type representations for the vec type
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.ClientGenerator.VectorRepresentation.List">
+            <summary>
+            Vector will be a List
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.ClientGenerator.VectorRepresentation.Array">
+            <summary>
+            Vector will be an array
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.ClientGenerator.VectorRepresentation.Dictionary">
+            <summary>
+            Vector will be a dictionary, only if the element type is a record with 2 fields
+            </summary>
+        </member>
+        <member name="T:EdjCase.ICP.ClientGenerator.VariantTypeOptions">
+            <summary>
+            Type generation options for variant candid types
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.ClientGenerator.VariantTypeOptions.Type">
+            <inheritdoc />
+        </member>
+        <member name="P:EdjCase.ICP.ClientGenerator.VariantTypeOptions.Options">
+            <summary>
+            Optional. The type options for each of the variant options
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.ClientGenerator.VariantTypeOptions.#ctor(System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.ClientGenerator.NamedTypeOptions})">
+            <param name="options">Optional. The type options for each of the variant options</param>
         </member>
         <member name="T:EdjCase.ICP.ClientGenerator.ClientSyntax">
             <summary>

@@ -1,15 +1,15 @@
 using EdjCase.ICP.Candid.Mapping;
-using Sample.Shared.Governance.Models;
 using EdjCase.ICP.Candid.Models;
+using Sample.Shared.Governance.Models;
 
 namespace Sample.Shared.Governance.Models
 {
 	public class RewardToAccount
 	{
 		[CandidName("to_account")]
-		public OptionalValue<AccountIdentifier> ToAccount { get; set; }
+		public OptionalValue<AccountId> ToAccount { get; set; }
 
-		public RewardToAccount(OptionalValue<AccountIdentifier> toAccount)
+		public RewardToAccount(OptionalValue<AccountId> toAccount)
 		{
 			this.ToAccount = toAccount;
 		}

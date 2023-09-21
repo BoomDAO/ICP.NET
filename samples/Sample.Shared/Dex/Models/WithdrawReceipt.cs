@@ -14,7 +14,7 @@ namespace Sample.Shared.Dex.Models
 		public WithdrawReceiptTag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public System.Object? Value { get; set; }
+		public object? Value { get; set; }
 
 		public WithdrawReceipt(WithdrawReceiptTag tag, object? value)
 		{

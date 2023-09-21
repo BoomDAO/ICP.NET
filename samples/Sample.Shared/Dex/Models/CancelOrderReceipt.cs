@@ -13,7 +13,7 @@ namespace Sample.Shared.Dex.Models
 		public CancelOrderReceiptTag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public System.Object? Value { get; set; }
+		public object? Value { get; set; }
 
 		public CancelOrderReceipt(CancelOrderReceiptTag tag, object? value)
 		{

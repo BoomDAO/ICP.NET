@@ -10,9 +10,9 @@ namespace Sample.Shared.Governance.Models
 		public OptionalValue<Principal> Id { get; set; }
 
 		[CandidName("reward_account")]
-		public OptionalValue<AccountIdentifier> RewardAccount { get; set; }
+		public OptionalValue<AccountId> RewardAccount { get; set; }
 
-		public NodeProvider(OptionalValue<Principal> id, OptionalValue<AccountIdentifier> rewardAccount)
+		public NodeProvider(OptionalValue<Principal> id, OptionalValue<AccountId> rewardAccount)
 		{
 			this.Id = id;
 			this.RewardAccount = rewardAccount;

@@ -11,7 +11,7 @@ namespace Sample.Shared.Governance.Models
 		public ByTag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public System.Object? Value { get; set; }
+		public object? Value { get; set; }
 
 		public By(ByTag tag, object? value)
 		{

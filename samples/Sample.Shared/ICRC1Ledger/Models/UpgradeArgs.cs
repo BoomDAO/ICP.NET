@@ -5,20 +5,20 @@ using Duration = System.UInt64;
 using Tokens = EdjCase.ICP.Candid.Models.UnboundedUInt;
 using TxIndex = EdjCase.ICP.Candid.Models.UnboundedUInt;
 using QueryArchiveFn = EdjCase.ICP.Candid.Models.Values.CandidFunc;
-using Map = System.Collections.Generic.List<Sample.Shared.ICRC1Ledger.Models.MapItem>;
+using Map = System.Collections.Generic.List<(System.String, Sample.Shared.ICRC1Ledger.Models.Value)>;
 using Block = Sample.Shared.ICRC1Ledger.Models.Value;
 using QueryBlockArchiveFn = EdjCase.ICP.Candid.Models.Values.CandidFunc;
 using EdjCase.ICP.Candid.Mapping;
-using Sample.Shared.ICRC1Ledger.Models;
-using System.Collections.Generic;
 using EdjCase.ICP.Candid.Models;
+using System.Collections.Generic;
+using Sample.Shared.ICRC1Ledger.Models;
 
 namespace Sample.Shared.ICRC1Ledger.Models
 {
 	public class UpgradeArgs
 	{
 		[CandidName("metadata")]
-		public OptionalValue<List<UpgradeArgs.MetadataItemItem>> Metadata { get; set; }
+		public OptionalValue<List<(string, MetadataValue)>> Metadata { get; set; }
 
 		[CandidName("token_symbol")]
 		public OptionalValue<string> TokenSymbol { get; set; }
@@ -32,36 +32,21 @@ namespace Sample.Shared.ICRC1Ledger.Models
 		[CandidName("change_fee_collector")]
 		public OptionalValue<ChangeFeeCollector> ChangeFeeCollector { get; set; }
 
-		public UpgradeArgs(OptionalValue<List<UpgradeArgs.MetadataItemItem>> metadata, OptionalValue<string> tokenSymbol, OptionalValue<string> tokenName, OptionalValue<ulong> transferFee, OptionalValue<ChangeFeeCollector> changeFeeCollector)
+		[CandidName("max_memo_length")]
+		public OptionalValue<ushort> MaxMemoLength { get; set; }
+
+		public UpgradeArgs(OptionalValue<List<(string, MetadataValue)>> metadata, OptionalValue<string> tokenSymbol, OptionalValue<string> tokenName, OptionalValue<ulong> transferFee, OptionalValue<ChangeFeeCollector> changeFeeCollector, OptionalValue<ushort> maxMemoLength)
 		{
 			this.Metadata = metadata;
 			this.TokenSymbol = tokenSymbol;
 			this.TokenName = tokenName;
 			this.TransferFee = transferFee;
 			this.ChangeFeeCollector = changeFeeCollector;
+			this.MaxMemoLength = maxMemoLength;
 		}
 
 		public UpgradeArgs()
 		{
-		}
-
-		public class MetadataItemItem
-		{
-			[CandidTag(0U)]
-			public string F0 { get; set; }
-
-			[CandidTag(1U)]
-			public MetadataValue F1 { get; set; }
-
-			public MetadataItemItem(string f0, MetadataValue f1)
-			{
-				this.F0 = f0;
-				this.F1 = f1;
-			}
-
-			public MetadataItemItem()
-			{
-			}
 		}
 	}
 }

@@ -1,15 +1,15 @@
 using EdjCase.ICP.Candid.Mapping;
-using Sample.Shared.Governance.Models;
 using EdjCase.ICP.Candid.Models;
+using Sample.Shared.Governance.Models;
 
 namespace Sample.Shared.Governance.Models
 {
 	public class ClaimOrRefreshNeuronFromAccountResponse
 	{
 		[CandidName("result")]
-		public OptionalValue<Result_1> Result { get; set; }
+		public OptionalValue<Result1> Result { get; set; }
 
-		public ClaimOrRefreshNeuronFromAccountResponse(OptionalValue<Result_1> result)
+		public ClaimOrRefreshNeuronFromAccountResponse(OptionalValue<Result1> result)
 		{
 			this.Result = result;
 		}

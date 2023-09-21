@@ -1,8 +1,8 @@
 ﻿using EdjCase.ICP.Agent.Agents;
 using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid;
+using System.Threading.Tasks;
 using System.Collections.Generic;
-using System;
 using EdjCase.ICP.Agent.Responses;
 
 namespace Test
@@ -13,29 +13,29 @@ namespace Test
 
 		public Principal CanisterId { get; }
 
-		public EdjCase.ICP.Candid.CandidConverter? Converter { get; }
+		public CandidConverter Converter { get; }
 
-		public AnonymousTuplesApiClient(IAgent agent, Principal canisterId, CandidConverter? converter = default)
+		public AnonymousTuplesApiClient(IAgent agent, Principal canisterId, CandidConverter converter = default)
 		{
 			this.Agent = agent;
 			this.CanisterId = canisterId;
 			this.Converter = converter;
 		}
 
-		public async System.Threading.Tasks.Task<List<ValueTuple<UnboundedUInt, List<Principal>>>> A()
+		public async Task<List<(UnboundedUInt, List<Principal>)>> A()
 		{
 			CandidArg arg = CandidArg.FromCandid();
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "a", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<List<ValueTuple<UnboundedUInt, List<Principal>>>>(this.Converter);
+			return reply.ToObjects<List<(UnboundedUInt, List<Principal>)>>(this.Converter);
 		}
 
-		public async System.Threading.Tasks.Task<List<ValueTuple<string, string>>> B()
+		public async Task<List<(string, string)>> B()
 		{
 			CandidArg arg = CandidArg.FromCandid();
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "b", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<List<ValueTuple<string, string>>>(this.Converter);
+			return reply.ToObjects<List<(string, string)>>(this.Converter);
 		}
 	}
 }
