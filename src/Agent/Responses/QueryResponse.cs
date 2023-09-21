@@ -2,7 +2,9 @@ using EdjCase.ICP.Agent.Models;
 using EdjCase.ICP.Candid.Encodings;
 using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid.Utilities;
+using Org.BouncyCastle.Asn1.Ocsp;
 using System;
+using System.Collections.Generic;
 using System.Formats.Cbor;
 using System.Linq;
 using System.Xml.Linq;
@@ -19,11 +21,16 @@ namespace EdjCase.ICP.Agent.Responses
 		/// to extract the variant data
 		/// </summary>
 		public QueryResponseType Type { get; }
+		/// <summary>
+		/// Signatures from the replica node
+		/// </summary>
+		public List<NodeSignature> Signatures { get; }
 		private readonly object value;
 
-		private QueryResponse(QueryResponseType type, object value)
+		private QueryResponse(QueryResponseType type, List<NodeSignature> signatures, object value)
 		{
 			this.Type = type;
+			this.Signatures = signatures;
 			this.value = value;
 		}
 
@@ -49,6 +56,7 @@ namespace EdjCase.ICP.Agent.Responses
 			return (QueryRejectInfo)this.value;
 		}
 
+
 		private void ThrowIfWrongType(QueryResponseType type)
 		{
 			if (this.Type != type)
@@ -73,14 +81,14 @@ namespace EdjCase.ICP.Agent.Responses
 			return this.AsReplied();
 		}
 
-		internal static QueryResponse Rejected(RejectCode code, string? message, string? errorCode)
+		internal static QueryResponse Rejected(RejectCode code, List<NodeSignature> signatures, string? message, string? errorCode)
 		{
-			return new QueryResponse(QueryResponseType.Rejected, new QueryRejectInfo(code, message, errorCode));
+			return new QueryResponse(QueryResponseType.Rejected, signatures, new QueryRejectInfo(code, message, errorCode));
 		}
 
-		internal static QueryResponse Replied(CandidArg reply)
+		internal static QueryResponse Replied(CandidArg reply, List<NodeSignature> signatures)
 		{
-			return new QueryResponse(QueryResponseType.Replied, reply);
+			return new QueryResponse(QueryResponseType.Replied, signatures, reply);
 		}
 
 		internal static QueryResponse ReadCbor(CborReader reader)
@@ -90,6 +98,7 @@ namespace EdjCase.ICP.Agent.Responses
 			UnboundedUInt? rejectCode = null;
 			string? rejectMessage = null;
 			string? errorCode = null;
+			List<NodeSignature> signatures = new ();
 
 			if (reader.ReadTag() != CborTag.SelfDescribeCbor)
 			{
@@ -120,17 +129,7 @@ namespace EdjCase.ICP.Agent.Responses
 						reader.ReadEndMap();
 						break;
 					case "reject_code":
-						CborReaderState state = reader.PeekState();
-						switch (state)
-						{
-							case CborReaderState.UnsignedInteger:
-								rejectCode = reader.ReadUInt64();
-								break;
-							default:
-								byte[] codeBytes = reader.ReadByteString().ToArray();
-								rejectCode = LEB128.DecodeUnsigned(codeBytes);
-								break;
-						}
+						rejectCode = CborUtil.ReadNat(reader);
 						break;
 					case "reject_message":
 						rejectMessage = reader.ReadTextString();
@@ -138,8 +137,22 @@ namespace EdjCase.ICP.Agent.Responses
 					case "error_code":
 						errorCode = reader.ReadTextString();
 						break;
+					case "signatures":
+						reader.ReadStartArray();
+						while (reader.PeekState() != CborReaderState.EndArray)
+						{
+							signatures.Add(NodeSignature.ReadCbor(reader));
+						}
+						reader.ReadEndArray();
+						break;
 					default:
+#if DEBUG
 						throw new NotImplementedException($"Cannot deserialize query response. Unknown field '{name}'");
+#else
+						reader.SkipValue();
+						break;
+#endif
+
 				}
 			}
 			reader.ReadEndMap();
@@ -160,14 +173,14 @@ namespace EdjCase.ICP.Agent.Responses
 					string argHex = ByteUtil.ToHexString(replyArg!);
 #endif
 					var arg = CandidArg.FromBytes(replyArg!);
-					return QueryResponse.Replied(arg);
+					return QueryResponse.Replied(arg, signatures);
 				case "rejected":
 					if (rejectCode == null)
 					{
 						throw new CborContentException("Missing field: reject_code");
 					}
 					RejectCode code = (RejectCode)(ulong)rejectCode!;
-					return QueryResponse.Rejected(code, rejectMessage, errorCode);
+					return QueryResponse.Rejected(code, signatures, rejectMessage, errorCode);
 				default:
 					throw new NotImplementedException($"Cannot deserialize query response with status '{status}'");
 			}
