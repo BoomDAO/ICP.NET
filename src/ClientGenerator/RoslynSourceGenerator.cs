@@ -64,7 +64,8 @@ namespace EdjCase.ICP.ClientGenerator
 		private static CompilationUnitSyntax PostProcessSourceCode(
 			string modelNamespace,
 			Dictionary<string, TypeName> aliases,
-			params MemberDeclarationSyntax[] members)
+			params MemberDeclarationSyntax[] members
+		)
 		{
 			// Generate namespace with class in it
 			NamespaceDeclarationSyntax @namespace = SyntaxFactory
@@ -76,28 +77,28 @@ namespace EdjCase.ICP.ClientGenerator
 				.CompilationUnit()
 				.WithMembers(SyntaxFactory.SingletonList<MemberDeclarationSyntax>(@namespace));
 
-
-
 			// Moves all namespaces to usings from the Type declarations
-
 			var namespaceRemover = new NamespacePrefixRemover(modelNamespace);
 			compilationUnit = (CompilationUnitSyntax)namespaceRemover.Visit(compilationUnit)!;
 
+			IEnumerable<(string Key, string Value)> usedAliases = aliases
+				.Where(a => namespaceRemover.UniqueTypes.Contains(a.Key))
+				.Select(x => (x.Key, x.Value.BuildName(true, true)));
 
 			compilationUnit = compilationUnit
-				// Add alias using statements
-				.AddUsings(aliases
-						.Select(a => SyntaxFactory.UsingDirective(
-							alias: SyntaxFactory.NameEquals(a.Key),
-							name: SyntaxFactory.IdentifierName(a.Value.GetNamespacedName())
-						))
-						.ToArray()
-				)
 				// Add namespaces used in files after cleanup
 				.AddUsings(
 					namespaceRemover.UniqueNamespaces
 					.Select(n => SyntaxFactory.UsingDirective(SyntaxFactory.IdentifierName(n)))
 					.ToArray()
+				)
+				// Add alias using statements
+				.AddUsings(usedAliases
+						.Select(a => SyntaxFactory.UsingDirective(
+							alias: SyntaxFactory.NameEquals(a.Key),
+							name: SyntaxFactory.IdentifierName(a.Value)
+						))
+						.ToArray()
 				)
 				// Format
 				.NormalizeWhitespace();

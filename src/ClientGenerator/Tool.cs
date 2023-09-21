@@ -145,7 +145,7 @@ file-path = ""../MyService.did""
 
 		private static void WriteClient(ClientSyntax result, ClientGenerationOptions options)
 		{
-			if (options.PurgeOutputDirectory)
+			if (options.PurgeOutputDirectory && Directory.Exists(options.OutputDirectory))
 			{
 				Console.WriteLine($"Purging output directory: {options.OutputDirectory}");
 				Directory.Delete(options.OutputDirectory, true);

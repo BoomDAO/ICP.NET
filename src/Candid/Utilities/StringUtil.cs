@@ -58,10 +58,6 @@ namespace EdjCase.ICP.Candid.Models.Values
 			{
 				return SplitOn('_');
 			}
-			if (value.Contains('-'))
-			{
-				return SplitOn('-');
-			}
 
 			var tokens = new List<string>();
 			int lastIndex = 0;

@@ -93,17 +93,15 @@ namespace EdjCase.ICP.ClientGenerator
 				: options.Namespace + ".Models";
 			HashSet<string> aliases = declaredTypes
 				.Where(t => t.Value.Type.IsPredefinedType)
-				.Select(t => t.Value.Name)
+				.Select(t => t.Key)
 				.ToHashSet();
-			Dictionary<string, string> typeNames = declaredTypes
-				.ToDictionary(t => t.Key, t => t.Value.Name);
 
 			var typeResolver = new RoslynTypeResolver(
 				modelNamespace,
 				aliases,
 				options.FeatureNullable,
 				nameHelper,
-				typeNames
+				declaredTypes
 			);
 			Dictionary<string, ResolvedType> resolvedTypes = declaredTypes
 				.ToDictionary(
@@ -112,21 +110,36 @@ namespace EdjCase.ICP.ClientGenerator
 				);
 
 			var typeFiles = new List<(string FileName, CompilationUnitSyntax Source)>();
+
+
 			Dictionary<string, TypeName> aliasTypes = aliases
-				.ToDictionary(t => t, t => resolvedTypes[t].Name);
+				.ToDictionary(
+					t => declaredTypes[t].Name,
+					t => resolvedTypes[t].Name
+				);
 			foreach ((string id, ResolvedType typeInfo) in resolvedTypes)
 			{
-				CompilationUnitSyntax? sourceCode = RoslynSourceGenerator.GenerateTypeSourceCode(typeInfo, typeResolver.ModelNamespace, aliasTypes);
+				CompilationUnitSyntax? sourceCode = RoslynSourceGenerator.GenerateTypeSourceCode(
+					typeInfo,
+					typeResolver.ModelNamespace,
+					aliasTypes
+				);
 				if (sourceCode != null)
 				{
-					typeFiles.Add((typeInfo.Name.GetName(), sourceCode));
+					typeFiles.Add((typeInfo.Name.BuildName(false), sourceCode));
 				}
 			}
 
 			string clientName = options.Name + "ApiClient";
-			TypeName clientTypeName = new SimpleTypeName(clientName, options.Namespace, prefix: null);
+			TypeName clientTypeName = new SimpleTypeName(clientName, options.Namespace);
 			ServiceSourceCodeType serviceSourceType = ResolveService(service.Service, nameHelper);
-			CompilationUnitSyntax clientSource = RoslynSourceGenerator.GenerateClientSourceCode(clientTypeName, options.Namespace, serviceSourceType, typeResolver, aliasTypes);
+			CompilationUnitSyntax clientSource = RoslynSourceGenerator.GenerateClientSourceCode(
+				clientTypeName,
+				options.Namespace,
+				serviceSourceType,
+				typeResolver,
+				aliasTypes
+			);
 
 			// TODO? global using only supported in C# 10+
 			return new ClientSyntax(clientName, clientSource, typeFiles);

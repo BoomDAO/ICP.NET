@@ -15,11 +15,29 @@ namespace EdjCase.ICP.ClientGenerator
 
 		public ResolvedType(
 			TypeName type,
-			params MemberDeclarationSyntax[]? typeSyntax
+			MemberDeclarationSyntax[]? typeSyntax = null
 		)
 		{
 			this.Name = type;
 			this.GeneratedSyntax = typeSyntax;
+		}
+	}
+
+	internal class AttributeInfo
+	{
+		public TypeName Type { get; }
+		public object[]? Args { get; }
+
+		public AttributeInfo(TypeName type, params object[]? args)
+		{
+			this.Type = type ?? throw new ArgumentNullException(nameof(type));
+			this.Args = args;
+		}
+
+		public static AttributeInfo FromType<T>(params object[]? args)
+		{
+			TypeName type = SimpleTypeName.FromType<T>();
+			return new AttributeInfo(type, args);
 		}
 	}
 }

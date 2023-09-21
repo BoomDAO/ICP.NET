@@ -8,25 +8,86 @@ using System.Text;
 
 namespace EdjCase.ICP.ClientGenerator
 {
+	internal class AliasedTypeName : TypeName
+	{
+		public TypeName Aliased { get; set; }
+		public TypeName NotAliased { get; set; }
+
+		public AliasedTypeName(TypeName aliased, TypeName notAliased)
+		{
+			this.Aliased = aliased ?? throw new ArgumentNullException(nameof(aliased));
+			this.NotAliased = notAliased ?? throw new ArgumentNullException(nameof(notAliased));
+		}
+		public override string BuildName(bool includeNamespace, bool resolveAliases)
+		{
+			if (resolveAliases)
+			{
+				return this.NotAliased.BuildName(includeNamespace, true);
+			}
+			return this.Aliased.BuildName(includeNamespace, false);
+		}
+
+		public override TypeSyntax ToTypeSyntax(bool resolveAliases)
+		{
+			if (resolveAliases)
+			{
+				return this.NotAliased.ToTypeSyntax(false);
+			}
+			return this.Aliased.ToTypeSyntax(false);
+		}
+	}
+	internal class NestedTypeName : TypeName
+	{
+		public TypeName ParentType { get; }
+		public string Name { get; }
+		public NestedTypeName(TypeName parentType, string name)
+		{
+			this.ParentType = parentType ?? throw new ArgumentNullException(nameof(parentType));
+			this.Name = name ?? throw new ArgumentNullException(nameof(name));
+		}
+
+		public override string BuildName(bool includeNamespace, bool resolveAliases)
+		{
+			if (!includeNamespace)
+			{
+				return this.Name;
+			}
+			return this.ParentType.BuildName(true, resolveAliases) + "." + this.Name;
+		}
+
+		public override TypeSyntax ToTypeSyntax(bool resolveAliases)
+		{
+			string typeName = this.BuildName(includeNamespace: true, resolveAliases);
+			return SyntaxFactory.IdentifierName(typeName);
+		}
+	}
+
 	internal class SimpleTypeName : TypeName
 	{
 		public string Name { get; }
+		public string? Namespace { get; }
 
-		public SimpleTypeName(string name, string? @namespace, string? prefix)
-			: base(@namespace, prefix)
+		public SimpleTypeName(string name, string? @namespace)
 		{
 			this.Name = name;
+			this.Namespace = @namespace;
 		}
 
-		protected override string BuildName(Func<TypeName, string> buildInnerName)
+		public override string BuildName(bool includeNamespace, bool resolveAliases)
 		{
-			return this.Name;
+			if (!includeNamespace || this.Namespace == null)
+			{
+				return this.Name;
+			}
+			return this.Namespace + "." + this.Name;
 		}
 
-		public override TypeSyntax ToTypeSyntax()
+		public override TypeSyntax ToTypeSyntax(bool resolveAliases)
 		{
-			return SyntaxFactory.IdentifierName(this.GetNamespacedName());
+			string typeName = this.BuildName(includeNamespace: true, resolveAliases);
+			return SyntaxFactory.IdentifierName(typeName);
 		}
+
 		public static TypeName FromType<T>(bool isNullable = false)
 		{
 			return FromType(typeof(T), isNullable);
@@ -34,12 +95,16 @@ namespace EdjCase.ICP.ClientGenerator
 
 		public static TypeName FromType(Type type, bool isNullable = false)
 		{
-			if (type.IsGenericType)
+			TypeName typeName;
+			if (type.IsNested)
 			{
-				// TODO?
-				throw new NotImplementedException();
+				TypeName parentType = FromType(type.DeclaringType!);
+				typeName = new NestedTypeName(parentType, type.Name);
 			}
-			var typeName = new SimpleTypeName(type.Name, type.Namespace, prefix: null); // TODO prefix
+			else
+			{
+				typeName = new SimpleTypeName(type.Name, type.Namespace);
+			}
 			if (isNullable)
 			{
 				// Wrap in nullable type
@@ -52,12 +117,12 @@ namespace EdjCase.ICP.ClientGenerator
 	internal class ListTypeName : TypeName
 	{
 		public TypeName InnerType { get; set; }
-		public ListTypeName(TypeName innerType) : base("System.Collections.Generic", null)
+		public ListTypeName(TypeName innerType)
 		{
 			this.InnerType = innerType;
 		}
 
-		public override TypeSyntax ToTypeSyntax()
+		public override TypeSyntax ToTypeSyntax(bool resolveAliases)
 		{
 			return SyntaxFactory.GenericName(
 					SyntaxFactory.Identifier("System.Collections.Generic.List")
@@ -65,15 +130,15 @@ namespace EdjCase.ICP.ClientGenerator
 				.WithTypeArgumentList(
 					SyntaxFactory.TypeArgumentList(
 						SyntaxFactory.SingletonSeparatedList(
-							this.InnerType.ToTypeSyntax()
+							this.InnerType.ToTypeSyntax(resolveAliases)
 						)
 					)
 				);
 		}
 
-		protected override string BuildName(Func<TypeName, string> buildInnerName)
+		public override string BuildName(bool includeNamespace, bool resolveAliases)
 		{
-			return $"List<{buildInnerName(this.InnerType)}>";
+			return $"System.Collections.Generic.List<{this.InnerType.BuildName(includeNamespace, resolveAliases)}>";
 		}
 	}
 
@@ -81,13 +146,13 @@ namespace EdjCase.ICP.ClientGenerator
 	{
 		public TypeName KeyType { get; set; }
 		public TypeName ValueType { get; set; }
-		public DictionaryTypeName(TypeName keyType, TypeName valueType) : base("System.Collections.Generic", null)
+		public DictionaryTypeName(TypeName keyType, TypeName valueType)
 		{
 			this.KeyType = keyType;
 			this.ValueType = valueType;
 		}
 
-		public override TypeSyntax ToTypeSyntax()
+		public override TypeSyntax ToTypeSyntax(bool resolveAliases)
 		{
 			return SyntaxFactory.GenericName(
 					SyntaxFactory.Identifier("System.Collections.Generic.Dictionary")
@@ -96,29 +161,31 @@ namespace EdjCase.ICP.ClientGenerator
 					SyntaxFactory.TypeArgumentList(
 						SyntaxFactory.SeparatedList(
 							new[] {
-								this.KeyType.ToTypeSyntax(),
-								this.ValueType.ToTypeSyntax()
+								this.KeyType.ToTypeSyntax(resolveAliases),
+								this.ValueType.ToTypeSyntax(resolveAliases)
 							}
 						)
 					)
 				);
 		}
 
-		protected override string BuildName(Func<TypeName, string> buildInnerName)
+		public override string BuildName(bool includeNamespace, bool resolveAliases)
 		{
-			return $"Dictionary<{buildInnerName(this.KeyType)}, {buildInnerName(this.ValueType)}>";
+			string key = this.KeyType.BuildName(includeNamespace, resolveAliases);
+			string value = this.ValueType.BuildName(includeNamespace, resolveAliases);
+			return $"System.Collections.Generic.Dictionary<{key}, {value}>";
 		}
 	}
 
 	internal class OptionalValueTypeName : TypeName
 	{
 		public TypeName InnerType { get; set; }
-		public OptionalValueTypeName(TypeName innerType) : base(typeof(OptionalValue<>).Namespace, null)
+		public OptionalValueTypeName(TypeName innerType)
 		{
 			this.InnerType = innerType;
 		}
 
-		public override TypeSyntax ToTypeSyntax()
+		public override TypeSyntax ToTypeSyntax(bool resolveAliases)
 		{
 			return SyntaxFactory.GenericName(
 					SyntaxFactory.Identifier(typeof(OptionalValue<>).Namespace + ".OptionalValue")
@@ -126,34 +193,34 @@ namespace EdjCase.ICP.ClientGenerator
 				.WithTypeArgumentList(
 					SyntaxFactory.TypeArgumentList(
 						SyntaxFactory.SingletonSeparatedList(
-							this.InnerType.ToTypeSyntax()
+							this.InnerType.ToTypeSyntax(resolveAliases)
 						)
 					)
 				);
 		}
 
-		protected override string BuildName(Func<TypeName, string> buildInnerName)
+		public override string BuildName(bool includeNamespace, bool resolveAliases)
 		{
-			return $"OptionalValue<{buildInnerName(this.InnerType)}>";
+			return $"{typeof(OptionalValue<>).Namespace}.OptionalValue<{this.InnerType.BuildName(includeNamespace, resolveAliases)}>";
 		}
 	}
 
 	internal class NullableTypeName : TypeName
 	{
 		public TypeName InnerType { get; set; }
-		public NullableTypeName(TypeName innerType) : base(null, null)
+		public NullableTypeName(TypeName innerType)
 		{
 			this.InnerType = innerType;
 		}
 
-		public override TypeSyntax ToTypeSyntax()
+		public override TypeSyntax ToTypeSyntax(bool resolveAliases)
 		{
-			return SyntaxFactory.NullableType(this.InnerType.ToTypeSyntax());
+			return SyntaxFactory.NullableType(this.InnerType.ToTypeSyntax(resolveAliases));
 		}
 
-		protected override string BuildName(Func<TypeName, string> buildInnerName)
+		public override string BuildName(bool includeNamespace, bool resolveAliases)
 		{
-			return buildInnerName(this.InnerType) + "?";
+			return this.InnerType.BuildName(includeNamespace, resolveAliases) + "?";
 		}
 	}
 
@@ -162,22 +229,26 @@ namespace EdjCase.ICP.ClientGenerator
 		public List<TypeName> ElementTypeNameList { get; }
 
 		public TupleTypeName(List<TypeName> elementTypeNameList)
-			: base(null, prefix: null)
 		{
 			this.ElementTypeNameList = elementTypeNameList;
 		}
-		protected override string BuildName(Func<TypeName, string> buildInnerName)
+		public override string BuildName(bool includeNamespace, bool resolveAliases)
 		{
-			string elements = string.Join(", ", this.ElementTypeNameList.Select(buildInnerName));
+			string elements = string.Join(", ", this.ElementTypeNameList.Select(e => e.BuildName(includeNamespace, resolveAliases)));
+			if (resolveAliases)
+			{
+				// Alias statements don't like (..,..) syntax
+				return $"System.ValueTuple<{elements}>";
+			}
 			return $"({elements})";
 		}
 
-		public override TypeSyntax ToTypeSyntax()
+		public override TypeSyntax ToTypeSyntax(bool resolveAliases)
 		{
 			return SyntaxFactory.TupleType(
 				SyntaxFactory.SeparatedList(
 					this.ElementTypeNameList
-					.Select(e => SyntaxFactory.TupleElement(e.ToTypeSyntax()))
+					.Select(e => SyntaxFactory.TupleElement(e.ToTypeSyntax(resolveAliases)))
 				)
 			);
 		}
@@ -188,27 +259,26 @@ namespace EdjCase.ICP.ClientGenerator
 		public TypeName? ElementTypeName { get; }
 
 		public ArrayTypeName(TypeName? elementTypeName)
-			: base(elementTypeName == null ? "System" : null, prefix: null)
 		{
 			this.ElementTypeName = elementTypeName;
 		}
 
-		protected override string BuildName(Func<TypeName, string> buildInnerName)
+		public override string BuildName(bool includeNamespace, bool resolveAliases)
 		{
-			if(this.ElementTypeName == null)
+			if (this.ElementTypeName == null)
 			{
-				return "Array";
+				return "System.Array";
 			}
-			return buildInnerName(this.ElementTypeName) + "[]";
+			return this.ElementTypeName.BuildName(includeNamespace, resolveAliases) + "[]";
 		}
 
-		public override TypeSyntax ToTypeSyntax()
+		public override TypeSyntax ToTypeSyntax(bool resolveAliases)
 		{
 			if (this.ElementTypeName == null)
 			{
 				return SyntaxFactory.IdentifierName("System.Array");
 			}
-			return SyntaxFactory.ArrayType(this.ElementTypeName.ToTypeSyntax())
+			return SyntaxFactory.ArrayType(this.ElementTypeName.ToTypeSyntax(resolveAliases))
 				.WithRankSpecifiers(
 					SyntaxFactory.SingletonList<ArrayRankSpecifierSyntax>(
 						SyntaxFactory.ArrayRankSpecifier(
@@ -223,79 +293,13 @@ namespace EdjCase.ICP.ClientGenerator
 
 	internal abstract class TypeName
 	{
-		private string? @namespace { get; }
-		private string? prefix { get; } // used for parent classes
-		private string? nameCache { get; set; }
-		private string? namespacedNameCache { get; set; }
+		public abstract string BuildName(bool includeNamespace, bool resolveAliases = false);
+		public abstract TypeSyntax ToTypeSyntax(bool resolveAliases = false);
 
-		public TypeName(string? @namespace, string? prefix)
-		{
-			this.@namespace = @namespace;
-			this.prefix = prefix;
-		}
-
-		protected abstract string BuildName(Func<TypeName, string> buildInnerName);
-		public abstract TypeSyntax ToTypeSyntax();
-
-		public bool HasPrefix => this.prefix != null;
-
-		public string GetName()
-		{
-			return this.GetName(false);
-		}
-
-		public string GetNamespacedName()
-		{
-			return this.GetName(true);
-		}
-
-		internal string GetName(bool includeNamespaces)
-		{
-			if (includeNamespaces)
-			{
-				if (this.namespacedNameCache != null)
-				{
-					return this.namespacedNameCache;
-				}
-			}
-			else
-			{
-				if (this.nameCache != null)
-				{
-					return this.nameCache;
-				}
-			}
-			StringBuilder builder = new StringBuilder();
-			if (includeNamespaces)
-			{
-				if (this.@namespace != null)
-				{
-					builder.Append(this.@namespace);
-					builder.Append('.');
-				}
-				if (this.prefix != null)
-				{
-					builder.Append(this.prefix);
-					builder.Append('.');
-				}
-			}
-			string name = this.BuildName(innerType => innerType.GetName(includeNamespaces));
-			builder.Append(name);
-			string value = builder.ToString();
-			if (includeNamespaces)
-			{
-				this.namespacedNameCache = value;
-			}
-			else
-			{
-				this.nameCache = value;
-			}
-			return value;
-		}
 
 		public override string ToString()
 		{
-			return this.GetNamespacedName();
+			return this.BuildName(true, false);
 		}
 	}
 

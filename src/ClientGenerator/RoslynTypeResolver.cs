@@ -25,21 +25,21 @@ namespace EdjCase.ICP.ClientGenerator
 		public HashSet<string> Aliases { get; }
 		public bool FeatureNullable { get; }
 		public NameHelper NameHelper { get; }
-		public Dictionary<string, string> TypeNames { get; }
+		public Dictionary<string, (string Name, SourceCodeType Type)> DeclaredTypes { get; }
 
 		public RoslynTypeResolver(
 			string modelNamespace,
 			HashSet<string> aliases,
 			bool featureNullable,
 			NameHelper nameHelper,
-			Dictionary<string, string> typeNames
+			Dictionary<string, (string Name, SourceCodeType Type)> declaredTypes
 		)
 		{
 			this.ModelNamespace = modelNamespace;
 			this.Aliases = aliases;
 			this.FeatureNullable = featureNullable;
 			this.NameHelper = nameHelper;
-			this.TypeNames = typeNames;
+			this.DeclaredTypes = declaredTypes;
 		}
 
 		public ResolvedType ResolveTypeDeclaration(
@@ -84,8 +84,7 @@ namespace EdjCase.ICP.ClientGenerator
 					{
 						var cType = new SimpleTypeName(
 							c.Type.Name,
-							c.Type.Namespace,
-							prefix: null
+							c.Type.Namespace
 						);
 						return new ResolvedType(cType);
 					}
@@ -99,11 +98,10 @@ namespace EdjCase.ICP.ClientGenerator
 				case DictionarySourceCodeType d:
 					{
 						ResolvedType resolvedKeyType = this.ResolveType(d.KeyType, nameContext + "Key", parentType);
-						ResolvedType resolvedValueType = this.ResolveType(d.KeyType, nameContext + "Value", parentType);
+						ResolvedType resolvedValueType = this.ResolveType(d.ValueType, nameContext + "Value", parentType);
 						MemberDeclarationSyntax[] generatedSyntax = (resolvedKeyType.GeneratedSyntax ?? Array.Empty<MemberDeclarationSyntax>())
 							.Concat(resolvedValueType.GeneratedSyntax ?? Array.Empty<MemberDeclarationSyntax>())
-							.ToArray();
-
+							.ToArray();;
 						var name = new DictionaryTypeName(resolvedKeyType.Name, resolvedValueType.Name);
 						return new ResolvedType(name, generatedSyntax);
 					}
@@ -142,14 +140,19 @@ namespace EdjCase.ICP.ClientGenerator
 				case ReferenceSourceCodeType re:
 					{
 						bool isAlias = this.Aliases.Contains(re.Id.Value);
-						string name = this.TypeNames[re.Id.Value];
+						(string name, SourceCodeType sourceCodeType) = this.DeclaredTypes[re.Id.Value];
 
 						string? @namespace = isAlias ? null : this.ModelNamespace;
-						return new ResolvedType(new SimpleTypeName(
+						TypeName typeName = new SimpleTypeName(
 							name,
-							@namespace,
-							prefix: null
-						));
+							@namespace
+						);
+						if (isAlias)
+						{
+							ResolvedType notAliased = this.ResolveType(sourceCodeType, nameContext, parentType);
+							typeName = new AliasedTypeName(typeName, notAliased.Name);
+						}
+						return new ResolvedType(typeName);
 
 					}
 				case VariantSourceCodeType v:
@@ -158,15 +161,15 @@ namespace EdjCase.ICP.ClientGenerator
 						(ClassDeclarationSyntax? classSyntax, EnumDeclarationSyntax enumSyntax) = this.GenerateVariant(variantName, v, parentType);
 						if (classSyntax != null)
 						{
-							return new ResolvedType(variantName, classSyntax, enumSyntax);
+							return new ResolvedType(variantName, new MemberDeclarationSyntax[] { classSyntax, enumSyntax });
 						}
-						return new ResolvedType(variantName, enumSyntax);
+						return new ResolvedType(variantName, new MemberDeclarationSyntax []{ enumSyntax });
 					}
 				case RecordSourceCodeType r:
 					{
 						TypeName recordName = this.BuildType(nameContext, parentType);
 						ClassDeclarationSyntax classSyntax = this.GenerateRecord(recordName, r);
-						return new ResolvedType(recordName, classSyntax);
+						return new ResolvedType(recordName, new MemberDeclarationSyntax[] { classSyntax });
 					}
 				default:
 					throw new NotImplementedException();
@@ -260,13 +263,13 @@ namespace EdjCase.ICP.ClientGenerator
 			{
 				// If there are no types, just create an enum value
 
-				TypeName enumTypeName = this.BuildType(variantTypeName.GetName(), parentType);
+				TypeName enumTypeName = this.BuildType(variantTypeName.BuildName(false), parentType);
 				EnumDeclarationSyntax enumSyntax = this.GenerateEnum(enumTypeName, enumOptions);
 				return (null, enumSyntax);
 			}
 			else
 			{
-				TypeName enumTypeName = this.BuildType(variantTypeName.GetName() + "Tag", parentType);
+				TypeName enumTypeName = this.BuildType(variantTypeName.BuildName(false) + "Tag", parentType);
 
 
 				List<MethodDeclarationSyntax> methods = new();
@@ -288,8 +291,13 @@ namespace EdjCase.ICP.ClientGenerator
 				);
 
 				// TODO auto change the property values of all class types if it matches the name
-				string tagName = variantTypeName.GetName() == "Tag" ? "TagValue" : "Tag";
-				string valueName = variantTypeName.GetName() == "Value" ? "ValueValue" : "Value";
+				bool containsClashingTag = variantTypeName.BuildName(false) == "Tag"
+					|| variant.Options.Any(o => o.Tag.Name == "Tag");
+				string tagName = containsClashingTag ? "Tag_" : "Tag";
+
+				bool containsClashingValue = variantTypeName.BuildName(false) == "Value"
+					|| variant.Options.Any(o => o.Tag.Name == "Value");
+				string valueName = containsClashingValue ? "Value_" : "Value";
 
 				// 'As{X}' methods (if has option type)
 				methods.AddRange(
@@ -349,19 +357,12 @@ namespace EdjCase.ICP.ClientGenerator
 		private TypeName BuildType(string name, TypeName? parentType)
 		{
 			string @namespace;
-			string? prefix = null;
 			if (parentType == null)
 			{
 				@namespace = this.ModelNamespace;
+				return new SimpleTypeName(name, @namespace);
 			}
-			else
-			{
-				@namespace = parentType.GetNamespacedName();
-				int lastDotIndex = @namespace.LastIndexOf('.');
-				prefix = @namespace[(lastDotIndex + 1)..];
-				@namespace = @namespace[..lastDotIndex];
-			}
-			return new SimpleTypeName(name, @namespace, prefix);
+			return new NestedTypeName(parentType, name);
 		}
 
 		private MethodDeclarationSyntax GenerateVariantValidateTypeMethod(
@@ -559,7 +560,7 @@ namespace EdjCase.ICP.ClientGenerator
 			{
 				creationParameters.Add((optionType.Name, optionValueParamName));
 			}
-			string methodName = optionTypeName.Name == variantTypeName.GetName()
+			string methodName = optionTypeName.Name == variantTypeName.BuildName(false)
 				? optionTypeName.Name + "_" // Escape colliding names
 				: optionTypeName.Name;
 			return this.GenerateMethod(
@@ -618,7 +619,7 @@ namespace EdjCase.ICP.ClientGenerator
 				.Select((f, i) =>
 				{
 					ResolvedName propertyName = f.Tag;
-					if (propertyName.Name == recordTypeName.GetName())
+					if (propertyName.Name == recordTypeName.BuildName(false))
 					{
 						// Cant match the class name
 						propertyName = new ResolvedName(
@@ -626,25 +627,19 @@ namespace EdjCase.ICP.ClientGenerator
 							candidTag: propertyName.CandidTag
 						);
 					}
-					AttributeInfo[]? attributes = null;
+					List<AttributeInfo> attributes = new List<AttributeInfo>();
 					if (propertyName.CandidTag.Name == null)
 					{
 						// [CandidTag({candidTag})]
 						// Indicate there is no associated name, just an id
 						// Usually with tuples like 'record { text; nat; }'
-						attributes = new[]
-						{
-							AttributeInfo.FromType<CandidTagAttribute>(propertyName.CandidTag)
-						};
+						attributes.Add(AttributeInfo.FromType<CandidTagAttribute>(propertyName.CandidTag));
 					}
 					else if (propertyName.CandidTag != propertyName.Name)
 					{
 						// [CandidName("{fieldCandidName}")]
 						// Only add attribute if the name is different
-						attributes = new[]
-						{
-							AttributeInfo.FromType<CandidNameAttribute>(propertyName.CandidTag.Name!)
-						};
+						attributes.Add(AttributeInfo.FromType<CandidNameAttribute>(propertyName.CandidTag.Name!));
 					}
 
 
@@ -654,7 +649,7 @@ namespace EdjCase.ICP.ClientGenerator
 						type: f.Type.Name,
 						access: AccessType.Public,
 						hasSetter: true,
-						attributes
+						attributes.ToArray()
 					);
 				})
 				.ToList();
@@ -765,7 +760,7 @@ namespace EdjCase.ICP.ClientGenerator
 				.Select(i => SyntaxFactory.Token(SyntaxKind.CommaToken));
 
 			// public enum {enumName}
-			return SyntaxFactory.EnumDeclaration(enumName.GetName())
+			return SyntaxFactory.EnumDeclaration(enumName.BuildName(false))
 				.WithModifiers(
 					// public
 					SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.PublicKeyword))
@@ -809,7 +804,7 @@ namespace EdjCase.ICP.ClientGenerator
 				.Select(a => SyntaxFactory.AttributeArgument(a))
 				?? Array.Empty<AttributeArgumentSyntax>();
 
-			string typeName = attribute.Type.GetNamespacedName();
+			string typeName = attribute.Type.BuildName(true);
 			typeName = typeName[..^"Attribute".Length]; // Remove suffix
 			return SyntaxFactory.AttributeList(
 				SyntaxFactory.SingletonSeparatedList(
@@ -838,7 +833,7 @@ namespace EdjCase.ICP.ClientGenerator
 				ResolvedType resolvedType = typeResolver.ResolveType(type.Type, nameContext, parentType: clientName);
 				return (type.Name, resolvedType);
 			}
-			
+
 			List<(ResolvedName Name, ResolvedType Type)> resolvedArgTypes = info.ArgTypes
 				.Select(ResolveType)
 				.ToList();
@@ -1250,7 +1245,7 @@ namespace EdjCase.ICP.ClientGenerator
 
 			ConstructorDeclarationSyntax constructor = SyntaxFactory
 				.ConstructorDeclaration(
-					SyntaxFactory.Identifier(name.GetName())
+					SyntaxFactory.Identifier(name.BuildName(false))
 				)
 				.WithParameterList(
 					SyntaxFactory.ParameterList(
@@ -1468,7 +1463,7 @@ namespace EdjCase.ICP.ClientGenerator
 				));
 			}
 
-			ClassDeclarationSyntax classSyntax = SyntaxFactory.ClassDeclaration(name.GetName())
+			ClassDeclarationSyntax classSyntax = SyntaxFactory.ClassDeclaration(name.BuildName(false))
 				.WithModifiers(SyntaxFactory.TokenList(
 					// Make class public
 					SyntaxFactory.Token(SyntaxKind.PublicKeyword)
@@ -1545,22 +1540,5 @@ namespace EdjCase.ICP.ClientGenerator
 
 		}
 
-		private class AttributeInfo
-		{
-			public TypeName Type { get; }
-			public object[]? Args { get; }
-
-			public AttributeInfo(TypeName type, params object[]? args)
-			{
-				this.Type = type ?? throw new ArgumentNullException(nameof(type));
-				this.Args = args;
-			}
-
-			public static AttributeInfo FromType<T>(params object[]? args)
-			{
-				TypeName type = SimpleTypeName.FromType<T>();
-				return new AttributeInfo(type, args);
-			}
-		}
 	}
 }

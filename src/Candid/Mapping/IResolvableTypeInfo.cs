@@ -300,6 +300,14 @@ namespace EdjCase.ICP.Candid.Mapping
 						}
 					);
 				}
+				if (genericTypeDefinition == typeof(Dictionary<,>))
+				{
+					return BuildDictVector(
+						objType,
+						objType.GenericTypeArguments[0],
+						objType.GenericTypeArguments[1]
+					);
+				}
 			}
 
 			if (objType == typeof(NullValue))
@@ -378,6 +386,32 @@ namespace EdjCase.ICP.Candid.Mapping
 					innerType,
 					toEnumerableFunc,
 					fromEnumerableFunc
+				);
+				return (mapper, type);
+			});
+		}
+		private static IResolvableTypeInfo BuildDictVector(
+			Type objType,
+			Type keyType,
+			Type valueType
+		)
+		{
+			return new ComplexTypeInfo(objType, new List<Type> { keyType, valueType }, (resolvedMappings) =>
+			{
+				CandidType keyCandidType = resolvedMappings[keyType];
+				CandidType valueCandidType = resolvedMappings[valueType];
+				Dictionary<CandidTag, CandidType> fields  = new()
+				{
+					[0] = keyCandidType,
+					[1] = valueCandidType
+				};
+				var type = new CandidVectorType(new CandidRecordType(fields));
+
+				var mapper = new VectorDictMapper(
+					type,
+					objType,
+					keyType,
+					valueType
 				);
 				return (mapper, type);
 			});

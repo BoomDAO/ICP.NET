@@ -8,6 +8,7 @@ namespace EdjCase.ICP.ClientGenerator
 	internal abstract class SourceCodeType
 	{
 		public abstract bool IsPredefinedType { get; }
+
 	}
 
 	internal class NonGenericSourceCodeType : SourceCodeType
@@ -80,6 +81,8 @@ namespace EdjCase.ICP.ClientGenerator
 		{
 			this.Id = id ?? throw new ArgumentNullException(nameof(id));
 		}
+
+
 	}
 
 	internal class TupleSourceCodeType : SourceCodeType

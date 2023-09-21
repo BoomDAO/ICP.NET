@@ -14,11 +14,13 @@ namespace EdjCase.ICP.ClientGenerator.SyntaxRewriters
 	internal class NamespacePrefixRemover : CSharpSyntaxRewriter
 	{
 		public HashSet<string> UniqueNamespaces { get; }
+		public HashSet<string> UniqueTypes { get; }
 		public string ModelNamespace { get; }
 
 		public NamespacePrefixRemover(string modelNamespace)
 		{
 			this.UniqueNamespaces = new();
+			this.UniqueTypes = new();
 			this.ModelNamespace = modelNamespace;
 		}
 
@@ -102,6 +104,7 @@ namespace EdjCase.ICP.ClientGenerator.SyntaxRewriters
 			{
 				this.UniqueNamespaces.Add(@namespace.ToString());
 			}
+			this.UniqueTypes.Add(type);
 			return type;
 		}
 
