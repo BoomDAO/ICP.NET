@@ -108,19 +108,6 @@ namespace EdjCase.ICP.ClientGenerator
 		}
 	}
 
-	/// <summary>
-	/// Interface to specify generation options for specific types in the candid
-	/// </summary>
-	public interface ITypeOptions
-	{
-		//public  string? NameOverride { get; init; } // TODO
-
-		/// <summary>
-		/// The candid type of the implementation class
-		/// </summary>
-		public CandidTypeCode Type { get; }
-
-	}
 
 	/// <summary>
 	/// Type options for a record field or variant option
@@ -146,6 +133,20 @@ namespace EdjCase.ICP.ClientGenerator
 			this.NameOverride = nameOverride;
 			this.TypeOptions = typeOptions;
 		}
+	}
+
+	/// <summary>
+	/// Interface to specify generation options for specific types in the candid
+	/// </summary>
+	public interface ITypeOptions
+	{
+		//public  string? NameOverride { get; init; } // TODO
+
+		/// <summary>
+		/// The candid type of the implementation class
+		/// </summary>
+		public CandidTypeCode Type { get; }
+
 	}
 
 	/// <summary>

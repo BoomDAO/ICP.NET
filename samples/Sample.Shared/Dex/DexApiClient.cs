@@ -1,5 +1,3 @@
-using Token = EdjCase.ICP.Candid.Models.Principal;
-using OrderId = System.UInt32;
 using EdjCase.ICP.Agent.Agents;
 using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid;
@@ -7,6 +5,8 @@ using System.Threading.Tasks;
 using Sample.Shared.Dex;
 using System.Collections.Generic;
 using EdjCase.ICP.Agent.Responses;
+using Token = EdjCase.ICP.Candid.Models.Principal;
+using OrderId = System.UInt32;
 
 namespace Sample.Shared.Dex
 {

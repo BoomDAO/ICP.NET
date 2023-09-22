@@ -1,5 +1,3 @@
-using Token = EdjCase.ICP.Candid.Models.Principal;
-using OrderId = System.UInt32;
 using EdjCase.ICP.Candid.Mapping;
 using Sample.Shared.Dex.Models;
 using EdjCase.ICP.Candid.Models;

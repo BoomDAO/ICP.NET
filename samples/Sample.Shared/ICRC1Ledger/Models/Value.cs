@@ -1,18 +1,9 @@
-using BlockIndex = EdjCase.ICP.Candid.Models.UnboundedUInt;
-using Subaccount = System.Collections.Generic.List<System.Byte>;
-using Timestamp = System.UInt64;
-using Duration = System.UInt64;
-using Tokens = EdjCase.ICP.Candid.Models.UnboundedUInt;
-using TxIndex = EdjCase.ICP.Candid.Models.UnboundedUInt;
-using QueryArchiveFn = EdjCase.ICP.Candid.Models.Values.CandidFunc;
-using Map = System.Collections.Generic.List<(System.String, Sample.Shared.ICRC1Ledger.Models.Value)>;
-using Block = Sample.Shared.ICRC1Ledger.Models.Value;
-using QueryBlockArchiveFn = EdjCase.ICP.Candid.Models.Values.CandidFunc;
 using EdjCase.ICP.Candid.Mapping;
 using Sample.Shared.ICRC1Ledger.Models;
 using System.Collections.Generic;
 using EdjCase.ICP.Candid.Models;
 using System;
+using Map = System.Collections.Generic.List<System.ValueTuple<System.String, Sample.Shared.ICRC1Ledger.Models.Value>>;
 
 namespace Sample.Shared.ICRC1Ledger.Models
 {
@@ -23,12 +14,12 @@ namespace Sample.Shared.ICRC1Ledger.Models
 		public ValueTag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public object? ValueValue { get; set; }
+		public object? Value_ { get; set; }
 
-		public Value(ValueTag tag, object? valueValue)
+		public Value(ValueTag tag, object? value)
 		{
 			this.Tag = tag;
-			this.ValueValue = valueValue;
+			this.Value_ = value;
 		}
 
 		protected Value()
@@ -73,43 +64,43 @@ namespace Sample.Shared.ICRC1Ledger.Models
 		public List<byte> AsBlob()
 		{
 			this.ValidateTag(ValueTag.Blob);
-			return (List<byte>)this.ValueValue!;
+			return (List<byte>)this.Value_!;
 		}
 
 		public string AsText()
 		{
 			this.ValidateTag(ValueTag.Text);
-			return (string)this.ValueValue!;
+			return (string)this.Value_!;
 		}
 
 		public UnboundedUInt AsNat()
 		{
 			this.ValidateTag(ValueTag.Nat);
-			return (UnboundedUInt)this.ValueValue!;
+			return (UnboundedUInt)this.Value_!;
 		}
 
 		public ulong AsNat64()
 		{
 			this.ValidateTag(ValueTag.Nat64);
-			return (ulong)this.ValueValue!;
+			return (ulong)this.Value_!;
 		}
 
 		public UnboundedInt AsInt()
 		{
 			this.ValidateTag(ValueTag.Int);
-			return (UnboundedInt)this.ValueValue!;
+			return (UnboundedInt)this.Value_!;
 		}
 
 		public List<Value> AsArray()
 		{
 			this.ValidateTag(ValueTag.Array);
-			return (List<Value>)this.ValueValue!;
+			return (List<Value>)this.Value_!;
 		}
 
 		public Map AsMap()
 		{
 			this.ValidateTag(ValueTag.Map);
-			return (Map)this.ValueValue!;
+			return (Map)this.Value_!;
 		}
 
 		private void ValidateTag(ValueTag tag)
