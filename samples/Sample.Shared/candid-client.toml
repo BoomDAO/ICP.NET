@@ -17,7 +17,7 @@ canister-id = "mxzaz-hqaaa-aaaar-qaada-cai"
 name = "AddressBook"
 type = "file"
 file-path = "ServiceDefinitions/AddressBook.did"
-output-directory = "C:/Git/ICP.NET/samples/Sample.Shared/Address" # override
+output-directory = "Address" # override
 no-folders = true
 keep-candid-case = true
 
@@ -37,4 +37,3 @@ type = "record"
 [clients.types.Governance.fields.default_followees]
 type = "vec"
 representation = "Dictionary"
-
