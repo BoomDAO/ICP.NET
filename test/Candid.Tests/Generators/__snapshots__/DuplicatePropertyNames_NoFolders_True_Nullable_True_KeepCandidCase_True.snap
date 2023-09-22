@@ -22,7 +22,7 @@ namespace Test
 			this.Converter = converter;
 		}
 
-		public async Task<Result> A()
+		public async Task<Result> a()
 		{
 			CandidArg arg = CandidArg.FromCandid();
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "a", arg);
@@ -34,22 +34,18 @@ namespace Test
 
 Type File: 'Result'
 
-using EdjCase.ICP.Candid.Mapping;
-
 namespace Test
 {
 	public class Result
 	{
-		[CandidName("a")]
-		public ulong A { get; set; }
+		public ulong a { get; set; }
 
-		[CandidName("_a")]
-		public ulong _A { get; set; }
+		public ulong _a { get; set; }
 
 		public Result(ulong a, ulong _a)
 		{
-			this.A = a;
-			this._A = _a;
+			this.a = a;
+			this._a = _a;
 		}
 
 		public Result()

@@ -13,21 +13,21 @@ namespace Test
 
 		public Principal CanisterId { get; }
 
-		public CandidConverter Converter { get; }
+		public CandidConverter? Converter { get; }
 
-		public DuplicatePropertyNamesApiClient(IAgent agent, Principal canisterId, CandidConverter converter = default)
+		public DuplicatePropertyNamesApiClient(IAgent agent, Principal canisterId, CandidConverter? converter = default)
 		{
 			this.Agent = agent;
 			this.CanisterId = canisterId;
 			this.Converter = converter;
 		}
 
-		public async Task<Result> A()
+		public async Task<Models.Result> A()
 		{
 			CandidArg arg = CandidArg.FromCandid();
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "a", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<Result>(this.Converter);
+			return reply.ToObjects<Models.Result>(this.Converter);
 		}
 	}
 }
@@ -36,7 +36,7 @@ Type File: 'Result'
 
 using EdjCase.ICP.Candid.Mapping;
 
-namespace Test
+namespace Test.Models
 {
 	public class Result
 	{

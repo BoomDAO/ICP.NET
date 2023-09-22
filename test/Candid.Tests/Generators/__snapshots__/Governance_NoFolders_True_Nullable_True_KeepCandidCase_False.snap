@@ -14,9 +14,9 @@ namespace Test
 
 		public Principal CanisterId { get; }
 
-		public CandidConverter Converter { get; }
+		public CandidConverter? Converter { get; }
 
-		public GovernanceApiClient(IAgent agent, Principal canisterId, CandidConverter converter = default)
+		public GovernanceApiClient(IAgent agent, Principal canisterId, CandidConverter? converter = default)
 		{
 			this.Agent = agent;
 			this.CanisterId = canisterId;
@@ -217,9 +217,9 @@ namespace Test
 		public ActionTag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public object Value { get; set; }
+		public object? Value { get; set; }
 
-		public Action(ActionTag tag, object value)
+		public Action(ActionTag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -535,9 +535,9 @@ namespace Test
 		public ByTag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public object Value { get; set; }
+		public object? Value { get; set; }
 
-		public By(ByTag tag, object value)
+		public By(ByTag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -622,9 +622,9 @@ namespace Test
 		public ChangeTag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public object Value { get; set; }
+		public object? Value { get; set; }
 
-		public Change(ChangeTag tag, object value)
+		public Change(ChangeTag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -788,9 +788,9 @@ namespace Test
 		public CommandTag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public object Value { get; set; }
+		public object? Value { get; set; }
 
-		public Command(CommandTag tag, object value)
+		public Command(CommandTag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -972,9 +972,9 @@ namespace Test
 		public Command1Tag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public object Value { get; set; }
+		public object? Value { get; set; }
 
-		public Command1(Command1Tag tag, object value)
+		public Command1(Command1Tag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -1197,9 +1197,9 @@ namespace Test
 		public Command2Tag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public object Value { get; set; }
+		public object? Value { get; set; }
 
-		public Command2(Command2Tag tag, object value)
+		public Command2(Command2Tag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -1455,9 +1455,9 @@ namespace Test
 		public DissolveStateTag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public object Value { get; set; }
+		public object? Value { get; set; }
 
-		public DissolveState(DissolveStateTag tag, object value)
+		public DissolveState(DissolveStateTag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -2360,9 +2360,9 @@ namespace Test
 		public NeuronIdOrSubaccountTag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public object Value { get; set; }
+		public object? Value { get; set; }
 
-		public NeuronIdOrSubaccount(NeuronIdOrSubaccountTag tag, object value)
+		public NeuronIdOrSubaccount(NeuronIdOrSubaccountTag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -2592,9 +2592,9 @@ namespace Test
 		public OperationTag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public object Value { get; set; }
+		public object? Value { get; set; }
 
-		public Operation(OperationTag tag, object value)
+		public Operation(OperationTag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -2990,9 +2990,9 @@ namespace Test
 		public ResultTag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public object Value { get; set; }
+		public object? Value { get; set; }
 
-		public Result(ResultTag tag, object value)
+		public Result(ResultTag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -3050,9 +3050,9 @@ namespace Test
 		public Result1Tag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public object Value { get; set; }
+		public object? Value { get; set; }
 
-		public Result1(Result1Tag tag, object value)
+		public Result1(Result1Tag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -3117,9 +3117,9 @@ namespace Test
 		public Result2Tag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public object Value { get; set; }
+		public object? Value { get; set; }
 
-		public Result2(Result2Tag tag, object value)
+		public Result2(Result2Tag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -3184,9 +3184,9 @@ namespace Test
 		public Result3Tag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public object Value { get; set; }
+		public object? Value { get; set; }
 
-		public Result3(Result3Tag tag, object value)
+		public Result3(Result3Tag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -3251,9 +3251,9 @@ namespace Test
 		public Result4Tag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public object Value { get; set; }
+		public object? Value { get; set; }
 
-		public Result4(Result4Tag tag, object value)
+		public Result4(Result4Tag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -3318,9 +3318,9 @@ namespace Test
 		public Result5Tag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public object Value { get; set; }
+		public object? Value { get; set; }
 
-		public Result5(Result5Tag tag, object value)
+		public Result5(Result5Tag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -3421,9 +3421,9 @@ namespace Test
 		public RewardModeTag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public object Value { get; set; }
+		public object? Value { get; set; }
 
-		public RewardMode(RewardModeTag tag, object value)
+		public RewardMode(RewardModeTag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;

@@ -70,7 +70,7 @@ namespace EdjCase.ICP.ClientGenerator
 			ClientGenerationOptions options
 		)
 		{
-			var nameHelper = new NameHelper();
+			var nameHelper = new NameHelper(options.KeepCandidCase);
 			// Mapping of A => Type
 			// where candid is: type A = Type;
 			Dictionary<string, (string Name, SourceCodeType Type)> declaredTypes = service.DeclaredTypes

@@ -48,14 +48,15 @@ namespace EdjCase.ICP.Candid.Tests.Generators
 		)
 		{
 			ClientGenerationOptions options = new(
-				serviceName,
-				baseNamespace,
-				false,
-				"",
-				"./",
-				noFolders,
-				featureNullable, 
-				keepCandidCase,
+				name: serviceName,
+				@namespace: baseNamespace,
+				getDefinitionFromCanister: false,
+				filePathOrCandidId: "",
+				outputDirectory: "./",
+				purgeOutputDirectory: true,
+				noFolders: noFolders,
+				featureNullable: featureNullable, 
+				keepCandidCase: keepCandidCase,
 				boundryNodeUrl: null,
 				types: null
 			);

@@ -13,16 +13,16 @@ namespace Test
 
 		public Principal CanisterId { get; }
 
-		public CandidConverter? Converter { get; }
+		public CandidConverter Converter { get; }
 
-		public AnonymousTuplesApiClient(IAgent agent, Principal canisterId, CandidConverter? converter = default)
+		public AnonymousTuplesApiClient(IAgent agent, Principal canisterId, CandidConverter converter = default)
 		{
 			this.Agent = agent;
 			this.CanisterId = canisterId;
 			this.Converter = converter;
 		}
 
-		public async Task<List<(UnboundedUInt, List<Principal>)>> A()
+		public async Task<List<(UnboundedUInt, List<Principal>)>> a()
 		{
 			CandidArg arg = CandidArg.FromCandid();
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "a", arg);
@@ -30,7 +30,7 @@ namespace Test
 			return reply.ToObjects<List<(UnboundedUInt, List<Principal>)>>(this.Converter);
 		}
 
-		public async Task<List<(string, string)>> B()
+		public async Task<List<(string, string)>> b()
 		{
 			CandidArg arg = CandidArg.FromCandid();
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "b", arg);
