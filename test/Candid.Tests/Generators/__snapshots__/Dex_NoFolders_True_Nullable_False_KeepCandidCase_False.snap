@@ -25,11 +25,11 @@ namespace Test
 			this.Converter = converter;
 		}
 
-		public async Task<Models.CancelOrderReceipt> CancelOrder(OrderId arg0)
+		public async Task<CancelOrderReceipt> CancelOrder(OrderId arg0)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
 			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "cancelOrder", arg);
-			return reply.ToObjects<Models.CancelOrderReceipt>(this.Converter);
+			return reply.ToObjects<CancelOrderReceipt>(this.Converter);
 		}
 
 		public async Task Clear()
@@ -44,19 +44,19 @@ namespace Test
 			await this.Agent.CallAsync(this.CanisterId, "credit", arg);
 		}
 
-		public async Task<Models.DepositReceipt> Deposit(Token arg0)
+		public async Task<DepositReceipt> Deposit(Token arg0)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
 			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "deposit", arg);
-			return reply.ToObjects<Models.DepositReceipt>(this.Converter);
+			return reply.ToObjects<DepositReceipt>(this.Converter);
 		}
 
-		public async Task<List<Models.Balance>> GetAllBalances()
+		public async Task<List<Balance>> GetAllBalances()
 		{
 			CandidArg arg = CandidArg.FromCandid();
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "getAllBalances", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<List<Models.Balance>>(this.Converter);
+			return reply.ToObjects<List<Balance>>(this.Converter);
 		}
 
 		public async Task<UnboundedUInt> GetBalance(Token arg0)
@@ -67,12 +67,12 @@ namespace Test
 			return reply.ToObjects<UnboundedUInt>(this.Converter);
 		}
 
-		public async Task<List<Models.Balance>> GetBalances()
+		public async Task<List<Balance>> GetBalances()
 		{
 			CandidArg arg = CandidArg.FromCandid();
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "getBalances", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<List<Models.Balance>>(this.Converter);
+			return reply.ToObjects<List<Balance>>(this.Converter);
 		}
 
 		public async Task<List<byte>> GetDepositAddress()
@@ -82,18 +82,18 @@ namespace Test
 			return reply.ToObjects<List<byte>>(this.Converter);
 		}
 
-		public async Task<OptionalValue<Models.Order>> GetOrder(OrderId arg0)
+		public async Task<OptionalValue<Order>> GetOrder(OrderId arg0)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
 			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "getOrder", arg);
-			return reply.ToObjects<OptionalValue<Models.Order>>(this.Converter);
+			return reply.ToObjects<OptionalValue<Order>>(this.Converter);
 		}
 
-		public async Task<List<Models.Order>> GetOrders()
+		public async Task<List<Order>> GetOrders()
 		{
 			CandidArg arg = CandidArg.FromCandid();
 			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "getOrders", arg);
-			return reply.ToObjects<List<Models.Order>>(this.Converter);
+			return reply.ToObjects<List<Order>>(this.Converter);
 		}
 
 		public async Task<string> GetSymbol(Token arg0)
@@ -103,11 +103,11 @@ namespace Test
 			return reply.ToObjects<string>(this.Converter);
 		}
 
-		public async Task<Models.OrderPlacementReceipt> PlaceOrder(Token arg0, UnboundedUInt arg1, Token arg2, UnboundedUInt arg3)
+		public async Task<OrderPlacementReceipt> PlaceOrder(Token arg0, UnboundedUInt arg1, Token arg2, UnboundedUInt arg3)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0), CandidTypedValue.FromObject(arg1), CandidTypedValue.FromObject(arg2), CandidTypedValue.FromObject(arg3));
 			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "placeOrder", arg);
-			return reply.ToObjects<Models.OrderPlacementReceipt>(this.Converter);
+			return reply.ToObjects<OrderPlacementReceipt>(this.Converter);
 		}
 
 		public async Task<Principal> Whoami()
@@ -118,11 +118,11 @@ namespace Test
 			return reply.ToObjects<Principal>(this.Converter);
 		}
 
-		public async Task<Models.WithdrawReceipt> Withdraw(Token arg0, UnboundedUInt arg1, Principal arg2)
+		public async Task<WithdrawReceipt> Withdraw(Token arg0, UnboundedUInt arg1, Principal arg2)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0), CandidTypedValue.FromObject(arg1), CandidTypedValue.FromObject(arg2));
 			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "withdraw", arg);
-			return reply.ToObjects<Models.WithdrawReceipt>(this.Converter);
+			return reply.ToObjects<WithdrawReceipt>(this.Converter);
 		}
 	}
 }
@@ -130,11 +130,11 @@ namespace Test
 Type File: 'WithdrawReceipt'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
+using Test;
 using EdjCase.ICP.Candid.Models;
 using System;
 
-namespace Test.Models
+namespace Test
 {
 	[Variant(typeof(WithdrawReceiptTag))]
 	public class WithdrawReceipt
@@ -197,7 +197,7 @@ namespace Test.Models
 
 Type File: 'WithdrawErr'
 
-namespace Test.Models
+namespace Test
 {
 	public enum WithdrawErr
 	{
@@ -209,11 +209,11 @@ namespace Test.Models
 Type File: 'OrderPlacementReceipt'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
+using Test;
 using EdjCase.ICP.Candid.Models;
 using System;
 
-namespace Test.Models
+namespace Test
 {
 	[Variant(typeof(OrderPlacementReceiptTag))]
 	public class OrderPlacementReceipt
@@ -276,7 +276,7 @@ namespace Test.Models
 
 Type File: 'OrderPlacementErr'
 
-namespace Test.Models
+namespace Test
 {
 	public enum OrderPlacementErr
 	{
@@ -292,7 +292,7 @@ using EdjCase.ICP.Candid.Models;
 using Token = EdjCase.ICP.Candid.Models.Principal;
 using OrderId = System.UInt32;
 
-namespace Test.Models
+namespace Test
 {
 	public class Order
 	{
@@ -333,11 +333,11 @@ namespace Test.Models
 Type File: 'DepositReceipt'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
+using Test;
 using EdjCase.ICP.Candid.Models;
 using System;
 
-namespace Test.Models
+namespace Test
 {
 	[Variant(typeof(DepositReceiptTag))]
 	public class DepositReceipt
@@ -400,7 +400,7 @@ namespace Test.Models
 
 Type File: 'DepositErr'
 
-namespace Test.Models
+namespace Test
 {
 	public enum DepositErr
 	{
@@ -412,11 +412,11 @@ namespace Test.Models
 Type File: 'CancelOrderReceipt'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
+using Test;
 using System;
 using OrderId = System.UInt32;
 
-namespace Test.Models
+namespace Test
 {
 	[Variant(typeof(CancelOrderReceiptTag))]
 	public class CancelOrderReceipt
@@ -479,7 +479,7 @@ namespace Test.Models
 
 Type File: 'CancelOrderErr'
 
-namespace Test.Models
+namespace Test
 {
 	public enum CancelOrderErr
 	{
@@ -494,7 +494,7 @@ using EdjCase.ICP.Candid.Mapping;
 using EdjCase.ICP.Candid.Models;
 using Token = EdjCase.ICP.Candid.Models.Principal;
 
-namespace Test.Models
+namespace Test
 {
 	public class Balance
 	{

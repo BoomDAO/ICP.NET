@@ -45,13 +45,19 @@ namespace EdjCase.ICP.ClientGenerator
 
 	internal class NameHelper
 	{
+		public bool KeepCandidCase { get; }
+		public NameHelper(bool keepCandidCase)
+		{
+			this.KeepCandidCase = keepCandidCase;
+		}
+
 		public ResolvedName ResolveName(CandidTag tag, string? nameOverride = null)
 		{
 			string stringValue;
 			if (nameOverride != null)
 			{
 				stringValue = nameOverride;
-			}			
+			}
 			else
 			{
 				if (tag.Name != null)
@@ -67,25 +73,28 @@ namespace EdjCase.ICP.ClientGenerator
 				{
 					stringValue = tag.Id.ToString();
 				}
-				if (char.IsNumber(stringValue[0]))
-				{
-					// If Its a number, prefix it
-					stringValue = "F" + stringValue;
-				}
 			}
-			string resolvedNameString = StringUtil.ToPascalCase(stringValue);
-			resolvedNameString = Escape(resolvedNameString);
-			var resolvedName =  new ResolvedName(resolvedNameString, tag);
-			return resolvedName;
+			if (char.IsNumber(stringValue[0]))
+			{
+				// If Its a number, prefix it
+				stringValue = "F" + stringValue;
+			}
+			stringValue = this.KeepCandidCase ? stringValue : StringUtil.ToPascalCase(stringValue);
+			if (IsKeyword(stringValue))
+			{
+				// Add @ before reserved words
+				stringValue = "@" + stringValue;
+			}
+			if (stringValue.StartsWith("set_") || stringValue.StartsWith("get_"))
+			{
+				// Add _ before getters/setters words
+				stringValue = "_" + stringValue;
+			}
+			return new ResolvedName(stringValue, tag);
 		}
 
 		private static string Escape(string value)
 		{
-			if (IsKeyword(value))
-			{
-				// Add @ before reserved words
-				return "@" + value;
-			}
 			return value;
 		}
 

@@ -70,7 +70,7 @@ namespace EdjCase.ICP.ClientGenerator
 			ClientGenerationOptions options
 		)
 		{
-			var nameHelper = new NameHelper();
+			var nameHelper = new NameHelper(options.KeepCandidCase);
 			// Mapping of A => Type
 			// where candid is: type A = Type;
 			Dictionary<string, (string Name, SourceCodeType Type)> declaredTypes = service.DeclaredTypes
@@ -205,19 +205,24 @@ namespace EdjCase.ICP.ClientGenerator
 							nameHelper,
 							innerTypeOptions
 						);
-						switch (vTypeOptions?.Representation ?? VectorRepresentation.List)
+						bool isDictionaryCompatible = innerType is TupleSourceCodeType t && t.Fields.Count == 2;
+						VectorRepresentation defaultRepresentation = isDictionaryCompatible
+							? VectorRepresentation.Dictionary
+							: VectorRepresentation.List;
+						switch (vTypeOptions?.Representation ?? defaultRepresentation)
 						{
 							case VectorRepresentation.Array:
 								return new ArraySourceCodeType(innerType);
 							case VectorRepresentation.List:
 								return new ListSourceCodeType(innerType);
 							case VectorRepresentation.Dictionary:
-								if (innerType is not TupleSourceCodeType t || t.Fields.Count != 2)
+								if (!isDictionaryCompatible)
 								{
 									throw new Exception("List to dictionary conversion is only compatible with `vec record { a; b }` candid types");
 								}
-								SourceCodeType keyType = t.Fields[0];
-								SourceCodeType valueType = t.Fields[1];
+								TupleSourceCodeType tuple = (TupleSourceCodeType)innerType;
+								SourceCodeType keyType = tuple.Fields[0];
+								SourceCodeType valueType = tuple.Fields[1];
 								return new DictionarySourceCodeType(keyType, valueType);
 							default:
 								throw new NotImplementedException();

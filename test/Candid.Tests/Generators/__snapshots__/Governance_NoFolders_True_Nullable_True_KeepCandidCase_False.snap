@@ -14,9 +14,9 @@ namespace Test
 
 		public Principal CanisterId { get; }
 
-		public CandidConverter Converter { get; }
+		public CandidConverter? Converter { get; }
 
-		public GovernanceApiClient(IAgent agent, Principal canisterId, CandidConverter converter = default)
+		public GovernanceApiClient(IAgent agent, Principal canisterId, CandidConverter? converter = default)
 		{
 			this.Agent = agent;
 			this.CanisterId = canisterId;
@@ -217,9 +217,9 @@ namespace Test
 		public ActionTag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public object Value { get; set; }
+		public object? Value { get; set; }
 
-		public Action(ActionTag tag, object value)
+		public Action(ActionTag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -535,9 +535,9 @@ namespace Test
 		public ByTag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public object Value { get; set; }
+		public object? Value { get; set; }
 
-		public By(ByTag tag, object value)
+		public By(ByTag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -622,9 +622,9 @@ namespace Test
 		public ChangeTag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public object Value { get; set; }
+		public object? Value { get; set; }
 
-		public Change(ChangeTag tag, object value)
+		public Change(ChangeTag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -788,9 +788,9 @@ namespace Test
 		public CommandTag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public object Value { get; set; }
+		public object? Value { get; set; }
 
-		public Command(CommandTag tag, object value)
+		public Command(CommandTag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -972,9 +972,9 @@ namespace Test
 		public Command1Tag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public object Value { get; set; }
+		public object? Value { get; set; }
 
-		public Command1(Command1Tag tag, object value)
+		public Command1(Command1Tag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -1197,9 +1197,9 @@ namespace Test
 		public Command2Tag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public object Value { get; set; }
+		public object? Value { get; set; }
 
-		public Command2(Command2Tag tag, object value)
+		public Command2(Command2Tag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -1455,9 +1455,9 @@ namespace Test
 		public DissolveStateTag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public object Value { get; set; }
+		public object? Value { get; set; }
 
-		public DissolveState(DissolveStateTag tag, object value)
+		public DissolveState(DissolveStateTag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -1598,7 +1598,7 @@ namespace Test
 	public class Governance
 	{
 		[CandidName("default_followees")]
-		public List<(int, Followees)> DefaultFollowees { get; set; }
+		public Dictionary<int, Followees> DefaultFollowees { get; set; }
 
 		[CandidName("wait_for_quiet_threshold_seconds")]
 		public ulong WaitForQuietThresholdSeconds { get; set; }
@@ -1622,18 +1622,18 @@ namespace Test
 		public ulong ShortVotingPeriodSeconds { get; set; }
 
 		[CandidName("proposals")]
-		public List<(ulong, ProposalData)> Proposals { get; set; }
+		public Dictionary<ulong, ProposalData> Proposals { get; set; }
 
 		[CandidName("in_flight_commands")]
-		public List<(ulong, NeuronInFlightCommand)> InFlightCommands { get; set; }
+		public Dictionary<ulong, NeuronInFlightCommand> InFlightCommands { get; set; }
 
 		[CandidName("neurons")]
-		public List<(ulong, Neuron)> Neurons { get; set; }
+		public Dictionary<ulong, Neuron> Neurons { get; set; }
 
 		[CandidName("genesis_timestamp_seconds")]
 		public ulong GenesisTimestampSeconds { get; set; }
 
-		public Governance(List<(int, Followees)> defaultFollowees, ulong waitForQuietThresholdSeconds, OptionalValue<GovernanceCachedMetrics> metrics, List<NodeProvider> nodeProviders, OptionalValue<NetworkEconomics> economics, OptionalValue<RewardEvent> latestRewardEvent, List<NeuronStakeTransfer> toClaimTransfers, ulong shortVotingPeriodSeconds, List<(ulong, ProposalData)> proposals, List<(ulong, NeuronInFlightCommand)> inFlightCommands, List<(ulong, Neuron)> neurons, ulong genesisTimestampSeconds)
+		public Governance(Dictionary<int, Followees> defaultFollowees, ulong waitForQuietThresholdSeconds, OptionalValue<GovernanceCachedMetrics> metrics, List<NodeProvider> nodeProviders, OptionalValue<NetworkEconomics> economics, OptionalValue<RewardEvent> latestRewardEvent, List<NeuronStakeTransfer> toClaimTransfers, ulong shortVotingPeriodSeconds, Dictionary<ulong, ProposalData> proposals, Dictionary<ulong, NeuronInFlightCommand> inFlightCommands, Dictionary<ulong, Neuron> neurons, ulong genesisTimestampSeconds)
 		{
 			this.DefaultFollowees = defaultFollowees;
 			this.WaitForQuietThresholdSeconds = waitForQuietThresholdSeconds;
@@ -1665,7 +1665,7 @@ namespace Test
 	public class GovernanceCachedMetrics
 	{
 		[CandidName("not_dissolving_neurons_e8s_buckets")]
-		public List<(ulong, double)> NotDissolvingNeuronsE8sBuckets { get; set; }
+		public Dictionary<ulong, double> NotDissolvingNeuronsE8sBuckets { get; set; }
 
 		[CandidName("garbage_collectable_neurons_count")]
 		public ulong GarbageCollectableNeuronsCount { get; set; }
@@ -1674,7 +1674,7 @@ namespace Test
 		public ulong NeuronsWithInvalidStakeCount { get; set; }
 
 		[CandidName("not_dissolving_neurons_count_buckets")]
-		public List<(ulong, ulong)> NotDissolvingNeuronsCountBuckets { get; set; }
+		public Dictionary<ulong, ulong> NotDissolvingNeuronsCountBuckets { get; set; }
 
 		[CandidName("total_supply_icp")]
 		public ulong TotalSupplyIcp { get; set; }
@@ -1698,13 +1698,13 @@ namespace Test
 		public ulong NeuronsWithLessThan6MonthsDissolveDelayE8s { get; set; }
 
 		[CandidName("dissolving_neurons_count_buckets")]
-		public List<(ulong, ulong)> DissolvingNeuronsCountBuckets { get; set; }
+		public Dictionary<ulong, ulong> DissolvingNeuronsCountBuckets { get; set; }
 
 		[CandidName("dissolving_neurons_count")]
 		public ulong DissolvingNeuronsCount { get; set; }
 
 		[CandidName("dissolving_neurons_e8s_buckets")]
-		public List<(ulong, double)> DissolvingNeuronsE8sBuckets { get; set; }
+		public Dictionary<ulong, double> DissolvingNeuronsE8sBuckets { get; set; }
 
 		[CandidName("community_fund_total_staked_e8s")]
 		public ulong CommunityFundTotalStakedE8s { get; set; }
@@ -1712,7 +1712,7 @@ namespace Test
 		[CandidName("timestamp_seconds")]
 		public ulong TimestampSeconds { get; set; }
 
-		public GovernanceCachedMetrics(List<(ulong, double)> notDissolvingNeuronsE8sBuckets, ulong garbageCollectableNeuronsCount, ulong neuronsWithInvalidStakeCount, List<(ulong, ulong)> notDissolvingNeuronsCountBuckets, ulong totalSupplyIcp, ulong neuronsWithLessThan6MonthsDissolveDelayCount, ulong dissolvedNeuronsCount, ulong totalStakedE8s, ulong notDissolvingNeuronsCount, ulong dissolvedNeuronsE8s, ulong neuronsWithLessThan6MonthsDissolveDelayE8s, List<(ulong, ulong)> dissolvingNeuronsCountBuckets, ulong dissolvingNeuronsCount, List<(ulong, double)> dissolvingNeuronsE8sBuckets, ulong communityFundTotalStakedE8s, ulong timestampSeconds)
+		public GovernanceCachedMetrics(Dictionary<ulong, double> notDissolvingNeuronsE8sBuckets, ulong garbageCollectableNeuronsCount, ulong neuronsWithInvalidStakeCount, Dictionary<ulong, ulong> notDissolvingNeuronsCountBuckets, ulong totalSupplyIcp, ulong neuronsWithLessThan6MonthsDissolveDelayCount, ulong dissolvedNeuronsCount, ulong totalStakedE8s, ulong notDissolvingNeuronsCount, ulong dissolvedNeuronsE8s, ulong neuronsWithLessThan6MonthsDissolveDelayE8s, Dictionary<ulong, ulong> dissolvingNeuronsCountBuckets, ulong dissolvingNeuronsCount, Dictionary<ulong, double> dissolvingNeuronsE8sBuckets, ulong communityFundTotalStakedE8s, ulong timestampSeconds)
 		{
 			this.NotDissolvingNeuronsE8sBuckets = notDissolvingNeuronsE8sBuckets;
 			this.GarbageCollectableNeuronsCount = garbageCollectableNeuronsCount;
@@ -1903,12 +1903,12 @@ namespace Test
 	public class ListNeuronsResponse
 	{
 		[CandidName("neuron_infos")]
-		public List<(ulong, NeuronInfo)> NeuronInfos { get; set; }
+		public Dictionary<ulong, NeuronInfo> NeuronInfos { get; set; }
 
 		[CandidName("full_neurons")]
 		public List<Neuron> FullNeurons { get; set; }
 
-		public ListNeuronsResponse(List<(ulong, NeuronInfo)> neuronInfos, List<Neuron> fullNeurons)
+		public ListNeuronsResponse(Dictionary<ulong, NeuronInfo> neuronInfos, List<Neuron> fullNeurons)
 		{
 			this.NeuronInfos = neuronInfos;
 			this.FullNeurons = fullNeurons;
@@ -2284,7 +2284,7 @@ namespace Test
 		public OptionalValue<DissolveState> DissolveState { get; set; }
 
 		[CandidName("followees")]
-		public List<(int, Followees)> Followees { get; set; }
+		public Dictionary<int, Followees> Followees { get; set; }
 
 		[CandidName("neuron_fees_e8s")]
 		public ulong NeuronFeesE8s { get; set; }
@@ -2295,7 +2295,7 @@ namespace Test
 		[CandidName("known_neuron_data")]
 		public OptionalValue<KnownNeuronData> KnownNeuronData { get; set; }
 
-		public Neuron(OptionalValue<NeuronId> id, OptionalValue<Principal> controller, List<BallotInfo> recentBallots, bool kycVerified, bool notForProfit, ulong maturityE8sEquivalent, ulong cachedNeuronStakeE8s, ulong createdTimestampSeconds, ulong agingSinceTimestampSeconds, List<Principal> hotKeys, List<byte> account, OptionalValue<ulong> joinedCommunityFundTimestampSeconds, OptionalValue<DissolveState> dissolveState, List<(int, Followees)> followees, ulong neuronFeesE8s, OptionalValue<NeuronStakeTransfer> transfer, OptionalValue<KnownNeuronData> knownNeuronData)
+		public Neuron(OptionalValue<NeuronId> id, OptionalValue<Principal> controller, List<BallotInfo> recentBallots, bool kycVerified, bool notForProfit, ulong maturityE8sEquivalent, ulong cachedNeuronStakeE8s, ulong createdTimestampSeconds, ulong agingSinceTimestampSeconds, List<Principal> hotKeys, List<byte> account, OptionalValue<ulong> joinedCommunityFundTimestampSeconds, OptionalValue<DissolveState> dissolveState, Dictionary<int, Followees> followees, ulong neuronFeesE8s, OptionalValue<NeuronStakeTransfer> transfer, OptionalValue<KnownNeuronData> knownNeuronData)
 		{
 			this.Id = id;
 			this.Controller = controller;
@@ -2360,9 +2360,9 @@ namespace Test
 		public NeuronIdOrSubaccountTag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public object Value { get; set; }
+		public object? Value { get; set; }
 
-		public NeuronIdOrSubaccount(NeuronIdOrSubaccountTag tag, object value)
+		public NeuronIdOrSubaccount(NeuronIdOrSubaccountTag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -2592,9 +2592,9 @@ namespace Test
 		public OperationTag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public object Value { get; set; }
+		public object? Value { get; set; }
 
-		public Operation(OperationTag tag, object value)
+		public Operation(OperationTag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -2784,7 +2784,7 @@ namespace Test
 		public OptionalValue<GovernanceError> FailureReason { get; set; }
 
 		[CandidName("ballots")]
-		public List<(ulong, Ballot)> Ballots { get; set; }
+		public Dictionary<ulong, Ballot> Ballots { get; set; }
 
 		[CandidName("proposal_timestamp_seconds")]
 		public ulong ProposalTimestampSeconds { get; set; }
@@ -2816,7 +2816,7 @@ namespace Test
 		[CandidName("executed_timestamp_seconds")]
 		public ulong ExecutedTimestampSeconds { get; set; }
 
-		public ProposalData(OptionalValue<NeuronId> id, OptionalValue<GovernanceError> failureReason, List<(ulong, Ballot)> ballots, ulong proposalTimestampSeconds, ulong rewardEventRound, ulong failedTimestampSeconds, ulong rejectCostE8s, OptionalValue<Tally> latestTally, ulong decidedTimestampSeconds, OptionalValue<Proposal> proposal, OptionalValue<NeuronId> proposer, OptionalValue<WaitForQuietState> waitForQuietState, ulong executedTimestampSeconds)
+		public ProposalData(OptionalValue<NeuronId> id, OptionalValue<GovernanceError> failureReason, Dictionary<ulong, Ballot> ballots, ulong proposalTimestampSeconds, ulong rewardEventRound, ulong failedTimestampSeconds, ulong rejectCostE8s, OptionalValue<Tally> latestTally, ulong decidedTimestampSeconds, OptionalValue<Proposal> proposal, OptionalValue<NeuronId> proposer, OptionalValue<WaitForQuietState> waitForQuietState, ulong executedTimestampSeconds)
 		{
 			this.Id = id;
 			this.FailureReason = failureReason;
@@ -2863,7 +2863,7 @@ namespace Test
 		public OptionalValue<GovernanceError> FailureReason { get; set; }
 
 		[CandidName("ballots")]
-		public List<(ulong, Ballot)> Ballots { get; set; }
+		public Dictionary<ulong, Ballot> Ballots { get; set; }
 
 		[CandidName("proposal_timestamp_seconds")]
 		public ulong ProposalTimestampSeconds { get; set; }
@@ -2898,7 +2898,7 @@ namespace Test
 		[CandidName("executed_timestamp_seconds")]
 		public ulong ExecutedTimestampSeconds { get; set; }
 
-		public ProposalInfo(OptionalValue<NeuronId> id, int status, int topic, OptionalValue<GovernanceError> failureReason, List<(ulong, Ballot)> ballots, ulong proposalTimestampSeconds, ulong rewardEventRound, OptionalValue<ulong> deadlineTimestampSeconds, ulong failedTimestampSeconds, ulong rejectCostE8s, OptionalValue<Tally> latestTally, int rewardStatus, ulong decidedTimestampSeconds, OptionalValue<Proposal> proposal, OptionalValue<NeuronId> proposer, ulong executedTimestampSeconds)
+		public ProposalInfo(OptionalValue<NeuronId> id, int status, int topic, OptionalValue<GovernanceError> failureReason, Dictionary<ulong, Ballot> ballots, ulong proposalTimestampSeconds, ulong rewardEventRound, OptionalValue<ulong> deadlineTimestampSeconds, ulong failedTimestampSeconds, ulong rejectCostE8s, OptionalValue<Tally> latestTally, int rewardStatus, ulong decidedTimestampSeconds, OptionalValue<Proposal> proposal, OptionalValue<NeuronId> proposer, ulong executedTimestampSeconds)
 		{
 			this.Id = id;
 			this.Status = status;
@@ -2990,9 +2990,9 @@ namespace Test
 		public ResultTag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public object Value { get; set; }
+		public object? Value { get; set; }
 
-		public Result(ResultTag tag, object value)
+		public Result(ResultTag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -3050,9 +3050,9 @@ namespace Test
 		public Result1Tag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public object Value { get; set; }
+		public object? Value { get; set; }
 
-		public Result1(Result1Tag tag, object value)
+		public Result1(Result1Tag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -3117,9 +3117,9 @@ namespace Test
 		public Result2Tag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public object Value { get; set; }
+		public object? Value { get; set; }
 
-		public Result2(Result2Tag tag, object value)
+		public Result2(Result2Tag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -3184,9 +3184,9 @@ namespace Test
 		public Result3Tag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public object Value { get; set; }
+		public object? Value { get; set; }
 
-		public Result3(Result3Tag tag, object value)
+		public Result3(Result3Tag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -3251,9 +3251,9 @@ namespace Test
 		public Result4Tag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public object Value { get; set; }
+		public object? Value { get; set; }
 
-		public Result4(Result4Tag tag, object value)
+		public Result4(Result4Tag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -3318,9 +3318,9 @@ namespace Test
 		public Result5Tag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public object Value { get; set; }
+		public object? Value { get; set; }
 
-		public Result5(Result5Tag tag, object value)
+		public Result5(Result5Tag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -3421,9 +3421,9 @@ namespace Test
 		public RewardModeTag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public object Value { get; set; }
+		public object? Value { get; set; }
 
-		public RewardMode(RewardModeTag tag, object value)
+		public RewardMode(RewardModeTag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -3591,9 +3591,9 @@ namespace Test
 	public class SetDefaultFollowees
 	{
 		[CandidName("default_followees")]
-		public List<(int, Followees)> DefaultFollowees { get; set; }
+		public Dictionary<int, Followees> DefaultFollowees { get; set; }
 
-		public SetDefaultFollowees(List<(int, Followees)> defaultFollowees)
+		public SetDefaultFollowees(Dictionary<int, Followees> defaultFollowees)
 		{
 			this.DefaultFollowees = defaultFollowees;
 		}

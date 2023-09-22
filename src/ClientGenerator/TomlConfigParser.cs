@@ -7,11 +7,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Tomlyn.Model;
 
 namespace EdjCase.ICP.ClientGenerator
 {
-
 	internal static class TomlConfigParser
 	{
 		public static List<ClientGenerationOptions> Parse(string filePath)
@@ -23,14 +23,12 @@ namespace EdjCase.ICP.ClientGenerator
 			string configToml = File.ReadAllText(filePath);
 			TomlTable config = Tomlyn.Toml.ToModel(configToml);
 
-			string baseNamespace = GetRequired<string>(config, "namespace");
-			string? baseUrl = GetOptional<string?>(config, "url");
-			bool? purgeDirectory = GetOptional<bool?>(config, "purge-directory");
-			bool? noFolders = GetOptional<bool?>(config, "no-folders");
-			Uri? boundryNodeUrl = baseUrl == null ? null : new Uri(baseUrl);
-			string outputDirectory = Path.GetRelativePath("./", GetOptional<string?>(config, "output-directory") ?? "./");
-			bool? featureNullable = GetOptional<bool?>(config, "feature-nullable");
-			bool? keepCandidCase = GetOptional<bool?>(config, "keep-candid-case");
+			CommonOptions globalOptions = ParseCommonOptions(config);
+			if (string.IsNullOrWhiteSpace(globalOptions.Namespace))
+			{
+				throw new InvalidOperationException($"Failed to parse the `candid-client.toml` config. Missing required global field: 'namespace'");
+			}
+
 
 			TomlTableArray clients = config["clients"].Cast<TomlTableArray>();
 
@@ -54,31 +52,71 @@ namespace EdjCase.ICP.ClientGenerator
 						default:
 							throw new NotImplementedException();
 					}
-					string @namespace = baseNamespace + "." + name;
-					string clientOutputDirectory = GetOptional<string?>(client, "output-directory") ?? Path.Combine(outputDirectory, name);
-					string clientNamespace = GetOptional<string?>(client, "namespace") ?? @namespace;
-					bool clientPurgeOutputDirectory = GetOptional<bool?>(client, "purge-directory") ?? purgeDirectory ?? true;
-					bool clientNoFolders = GetOptional<bool?>(client, "no-folders") ?? noFolders ?? false;
-					bool clientFeatureNullable = GetOptional<bool?>(client, "feature-nullable") ?? featureNullable ?? true;
-					bool clientKeepCandidCase = GetOptional<bool?>(client, "keep-candid-case") ?? keepCandidCase ?? false;
-					TomlTable? typeTable = GetOptional<TomlTable?>(client, "types");
-					Dictionary<string, NamedTypeOptions> types = BuildTypes(typeTable);
 
+					CommonOptions clientOptions = ParseCommonOptions(client, (globalOptions, name));
 					return new ClientGenerationOptions(
 						name,
-						clientNamespace,
-						getDefinitionFromCanister,
-						filePathOrCandidId,
-						clientOutputDirectory,
-						clientPurgeOutputDirectory,
-						clientNoFolders,
-						clientFeatureNullable,
-						clientKeepCandidCase,
-						boundryNodeUrl,
-						types
+						@namespace: clientOptions.Namespace!,
+						getDefinitionFromCanister: getDefinitionFromCanister,
+						filePathOrCandidId: filePathOrCandidId,
+						outputDirectory: clientOptions.OutputDirectory ?? "./",
+						purgeOutputDirectory: clientOptions.PurgeDirectory ?? true,
+						noFolders: clientOptions.NoFolders  ?? false,
+						featureNullable: clientOptions.FeatureNullable ?? true,
+						keepCandidCase: clientOptions.KeepCandidCase ?? false,
+						boundryNodeUrl: clientOptions.BaseUrl,
+						types: clientOptions.Types
 					);
 				})
 				.ToList();
+		}
+
+		private static CommonOptions ParseCommonOptions(TomlTable config, (CommonOptions Options, string ClientName)? parent = null)
+		{
+			
+			string? @namespace = GetOptional<string?>(config, "namespace") ?? (parent == null ? null : parent.Value.Options.Namespace + "." + parent.Value.ClientName);
+			string? baseUrl = GetOptional<string?>(config, "url");
+			Uri? boundryNodeUrl = baseUrl == null ? parent?.Options.BaseUrl : new Uri(baseUrl);
+			bool? purgeDirectory = GetOptional<bool?>(config, "purge-directory") ?? parent?.Options.PurgeDirectory;
+			bool? noFolders = GetOptional<bool?>(config, "no-folders") ?? parent?.Options.NoFolders;
+			string? outputDirectory = GetOptional<string?>(config, "output-directory") ?? (parent == null ? null : Path.Combine(parent.Value.Options.OutputDirectory ?? "./", parent.Value.ClientName));
+			bool? featureNullable = GetOptional<bool?>(config, "feature-nullable") ?? parent?.Options.FeatureNullable;
+			bool? keepCandidCase = GetOptional<bool?>(config, "keep-candid-case") ?? parent?.Options.KeepCandidCase;
+			TomlTable? typeTable = GetOptional<TomlTable?>(config, "types");
+			Dictionary<string, NamedTypeOptions> types = BuildTypes(typeTable);
+			if (parent?.Options.Types != null)
+			{
+				foreach ((string key, NamedTypeOptions value) in parent.Value.Options.Types)
+				{
+					if (!parent.Value.Options.Types.ContainsKey(key))
+					{
+						parent.Value.Options.Types.Add(key, value);
+					}
+					else
+					{
+						parent.Value.Options.Types[key] = MergeOptions(value, parent.Value.Options.Types[key]);
+					}
+				}
+			}
+
+			return new CommonOptions(
+				@namespace,
+				boundryNodeUrl,
+				purgeDirectory,
+				noFolders,
+				outputDirectory,
+				featureNullable,
+				keepCandidCase,
+				types
+			);
+		}
+
+		private static NamedTypeOptions MergeOptions(NamedTypeOptions? primary, NamedTypeOptions? secondary)
+		{
+			return new NamedTypeOptions(
+				nameOverride: primary?.NameOverride ?? secondary?.NameOverride,
+				typeOptions: primary?.TypeOptions ?? secondary?.TypeOptions // TODO merge vs override?
+			);
 		}
 
 		private static Dictionary<string, NamedTypeOptions> BuildTypes(TomlTable? typeTable)
@@ -179,5 +217,38 @@ namespace EdjCase.ICP.ClientGenerator
 			return (TEnum)Enum.Parse(typeof(TEnum), stringValue);
 		}
 
+	}
+
+	internal class CommonOptions
+	{
+		public string? Namespace { get; }
+		public Uri? BaseUrl { get; }
+		public bool? PurgeDirectory { get; }
+		public bool? NoFolders { get; }
+		public string? OutputDirectory { get; }
+		public bool? FeatureNullable { get; }
+		public bool? KeepCandidCase { get; }
+		public Dictionary<string, NamedTypeOptions> Types { get; }
+
+		public CommonOptions(
+			string? @namespace,
+			Uri? baseUrl,
+			bool? purgeDirectory,
+			bool? noFolders,
+			string? outputDirectory,
+			bool? featureNullable,
+			bool? keepCandidCase,
+			Dictionary<string, NamedTypeOptions>? types
+		)
+		{
+			this.Namespace = @namespace;
+			this.BaseUrl = baseUrl;
+			this.PurgeDirectory = purgeDirectory;
+			this.NoFolders = noFolders;
+			this.OutputDirectory = outputDirectory;
+			this.FeatureNullable = featureNullable;
+			this.KeepCandidCase = keepCandidCase;
+			this.Types = types ?? new Dictionary<string, NamedTypeOptions>();
+		}
 	}
 }

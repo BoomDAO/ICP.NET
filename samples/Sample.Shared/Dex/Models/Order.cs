@@ -1,7 +1,7 @@
-using Token = EdjCase.ICP.Candid.Models.Principal;
-using OrderId = System.UInt32;
 using EdjCase.ICP.Candid.Mapping;
 using EdjCase.ICP.Candid.Models;
+using Token = EdjCase.ICP.Candid.Models.Principal;
+using OrderId = System.UInt32;
 
 namespace Sample.Shared.Dex.Models
 {

@@ -13,16 +13,16 @@ namespace Test
 
 		public Principal CanisterId { get; }
 
-		public CandidConverter? Converter { get; }
+		public CandidConverter Converter { get; }
 
-		public DuplicatePropertyNamesApiClient(IAgent agent, Principal canisterId, CandidConverter? converter = default)
+		public DuplicatePropertyNamesApiClient(IAgent agent, Principal canisterId, CandidConverter converter = default)
 		{
 			this.Agent = agent;
 			this.CanisterId = canisterId;
 			this.Converter = converter;
 		}
 
-		public async Task<Models.Result> A()
+		public async Task<Models.Result> a()
 		{
 			CandidArg arg = CandidArg.FromCandid();
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "a", arg);
@@ -34,22 +34,18 @@ namespace Test
 
 Type File: 'Result'
 
-using EdjCase.ICP.Candid.Mapping;
-
 namespace Test.Models
 {
 	public class Result
 	{
-		[CandidName("a")]
-		public ulong A { get; set; }
+		public ulong a { get; set; }
 
-		[CandidName("_a")]
-		public ulong _A { get; set; }
+		public ulong _a { get; set; }
 
 		public Result(ulong a, ulong _a)
 		{
-			this.A = a;
-			this._A = _a;
+			this.a = a;
+			this._a = _a;
 		}
 
 		public Result()

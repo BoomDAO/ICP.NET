@@ -13,29 +13,29 @@ namespace Test
 
 		public Principal CanisterId { get; }
 
-		public CandidConverter Converter { get; }
+		public CandidConverter? Converter { get; }
 
-		public AnonymousTuplesApiClient(IAgent agent, Principal canisterId, CandidConverter converter = default)
+		public AnonymousTuplesApiClient(IAgent agent, Principal canisterId, CandidConverter? converter = default)
 		{
 			this.Agent = agent;
 			this.CanisterId = canisterId;
 			this.Converter = converter;
 		}
 
-		public async Task<List<(UnboundedUInt, List<Principal>)>> A()
+		public async Task<Dictionary<UnboundedUInt, List<Principal>>> A()
 		{
 			CandidArg arg = CandidArg.FromCandid();
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "a", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<List<(UnboundedUInt, List<Principal>)>>(this.Converter);
+			return reply.ToObjects<Dictionary<UnboundedUInt, List<Principal>>>(this.Converter);
 		}
 
-		public async Task<List<(string, string)>> B()
+		public async Task<Dictionary<string, string>> B()
 		{
 			CandidArg arg = CandidArg.FromCandid();
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "b", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<List<(string, string)>>(this.Converter);
+			return reply.ToObjects<Dictionary<string, string>>(this.Converter);
 		}
 	}
 }

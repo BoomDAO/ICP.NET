@@ -1,14 +1,14 @@
 using EdjCase.ICP.Candid.Mapping;
 using System.Collections.Generic;
-using EdjCase.ICP.Candid.Models;
 using Sample.Shared.Governance.Models;
+using EdjCase.ICP.Candid.Models;
 
 namespace Sample.Shared.Governance.Models
 {
 	public class Governance
 	{
 		[CandidName("default_followees")]
-		public Dictionary<int, int> DefaultFollowees { get; set; }
+		public Dictionary<int, Followees> DefaultFollowees { get; set; }
 
 		[CandidName("making_sns_proposal")]
 		public OptionalValue<MakingSnsProposal> MakingSnsProposal { get; set; }
@@ -64,7 +64,7 @@ namespace Sample.Shared.Governance.Models
 		[CandidName("genesis_timestamp_seconds")]
 		public ulong GenesisTimestampSeconds { get; set; }
 
-		public Governance(Dictionary<int, int> defaultFollowees, OptionalValue<MakingSnsProposal> makingSnsProposal, OptionalValue<MostRecentMonthlyNodeProviderRewards> mostRecentMonthlyNodeProviderRewards, OptionalValue<ulong> maturityModulationLastUpdatedAtTimestampSeconds, ulong waitForQuietThresholdSeconds, OptionalValue<GovernanceCachedMetrics> metrics, OptionalValue<ulong> neuronManagementVotingPeriodSeconds, List<NodeProvider> nodeProviders, OptionalValue<int> cachedDailyMaturityModulationBasisPoints, OptionalValue<NetworkEconomics> economics, OptionalValue<bool> spawningNeurons, OptionalValue<RewardEvent> latestRewardEvent, List<NeuronStakeTransfer> toClaimTransfers, ulong shortVotingPeriodSeconds, OptionalValue<Migrations> migrations, List<(ulong, ProposalData)> proposals, List<(ulong, NeuronInFlightCommand)> inFlightCommands, List<(ulong, Neuron)> neurons, ulong genesisTimestampSeconds)
+		public Governance(Dictionary<int, Followees> defaultFollowees, OptionalValue<MakingSnsProposal> makingSnsProposal, OptionalValue<MostRecentMonthlyNodeProviderRewards> mostRecentMonthlyNodeProviderRewards, OptionalValue<ulong> maturityModulationLastUpdatedAtTimestampSeconds, ulong waitForQuietThresholdSeconds, OptionalValue<GovernanceCachedMetrics> metrics, OptionalValue<ulong> neuronManagementVotingPeriodSeconds, List<NodeProvider> nodeProviders, OptionalValue<int> cachedDailyMaturityModulationBasisPoints, OptionalValue<NetworkEconomics> economics, OptionalValue<bool> spawningNeurons, OptionalValue<RewardEvent> latestRewardEvent, List<NeuronStakeTransfer> toClaimTransfers, ulong shortVotingPeriodSeconds, OptionalValue<Migrations> migrations, List<(ulong, ProposalData)> proposals, List<(ulong, NeuronInFlightCommand)> inFlightCommands, List<(ulong, Neuron)> neurons, ulong genesisTimestampSeconds)
 		{
 			this.DefaultFollowees = defaultFollowees;
 			this.MakingSnsProposal = makingSnsProposal;

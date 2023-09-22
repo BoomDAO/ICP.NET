@@ -13,9 +13,9 @@ namespace Test
 
 		public Principal CanisterId { get; }
 
-		public CandidConverter Converter { get; }
+		public CandidConverter? Converter { get; }
 
-		public DuplicatePropertyNamesApiClient(IAgent agent, Principal canisterId, CandidConverter converter = default)
+		public DuplicatePropertyNamesApiClient(IAgent agent, Principal canisterId, CandidConverter? converter = default)
 		{
 			this.Agent = agent;
 			this.CanisterId = canisterId;
