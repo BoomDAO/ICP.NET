@@ -1547,7 +1547,7 @@ namespace Test
 {
 	public class Governance
 	{
-		public Dictionary<int, Followees> default_followees { get; set; }
+		public List<(int, Followees)> default_followees { get; set; }
 
 		public ulong wait_for_quiet_threshold_seconds { get; set; }
 
@@ -1563,15 +1563,15 @@ namespace Test
 
 		public ulong short_voting_period_seconds { get; set; }
 
-		public Dictionary<ulong, ProposalData> proposals { get; set; }
+		public List<(ulong, ProposalData)> proposals { get; set; }
 
-		public Dictionary<ulong, NeuronInFlightCommand> in_flight_commands { get; set; }
+		public List<(ulong, NeuronInFlightCommand)> in_flight_commands { get; set; }
 
-		public Dictionary<ulong, Neuron> neurons { get; set; }
+		public List<(ulong, Neuron)> neurons { get; set; }
 
 		public ulong genesis_timestamp_seconds { get; set; }
 
-		public Governance(Dictionary<int, Followees> defaultFollowees, ulong waitForQuietThresholdSeconds, OptionalValue<GovernanceCachedMetrics> metrics, List<NodeProvider> nodeProviders, OptionalValue<NetworkEconomics> economics, OptionalValue<RewardEvent> latestRewardEvent, List<NeuronStakeTransfer> toClaimTransfers, ulong shortVotingPeriodSeconds, Dictionary<ulong, ProposalData> proposals, Dictionary<ulong, NeuronInFlightCommand> inFlightCommands, Dictionary<ulong, Neuron> neurons, ulong genesisTimestampSeconds)
+		public Governance(List<(int, Followees)> defaultFollowees, ulong waitForQuietThresholdSeconds, OptionalValue<GovernanceCachedMetrics> metrics, List<NodeProvider> nodeProviders, OptionalValue<NetworkEconomics> economics, OptionalValue<RewardEvent> latestRewardEvent, List<NeuronStakeTransfer> toClaimTransfers, ulong shortVotingPeriodSeconds, List<(ulong, ProposalData)> proposals, List<(ulong, NeuronInFlightCommand)> inFlightCommands, List<(ulong, Neuron)> neurons, ulong genesisTimestampSeconds)
 		{
 			this.default_followees = defaultFollowees;
 			this.wait_for_quiet_threshold_seconds = waitForQuietThresholdSeconds;
@@ -1601,13 +1601,13 @@ namespace Test
 {
 	public class GovernanceCachedMetrics
 	{
-		public Dictionary<ulong, double> not_dissolving_neurons_e8s_buckets { get; set; }
+		public List<(ulong, double)> not_dissolving_neurons_e8s_buckets { get; set; }
 
 		public ulong garbage_collectable_neurons_count { get; set; }
 
 		public ulong neurons_with_invalid_stake_count { get; set; }
 
-		public Dictionary<ulong, ulong> not_dissolving_neurons_count_buckets { get; set; }
+		public List<(ulong, ulong)> not_dissolving_neurons_count_buckets { get; set; }
 
 		public ulong total_supply_icp { get; set; }
 
@@ -1623,17 +1623,17 @@ namespace Test
 
 		public ulong neurons_with_less_than_6_months_dissolve_delay_e8s { get; set; }
 
-		public Dictionary<ulong, ulong> dissolving_neurons_count_buckets { get; set; }
+		public List<(ulong, ulong)> dissolving_neurons_count_buckets { get; set; }
 
 		public ulong dissolving_neurons_count { get; set; }
 
-		public Dictionary<ulong, double> dissolving_neurons_e8s_buckets { get; set; }
+		public List<(ulong, double)> dissolving_neurons_e8s_buckets { get; set; }
 
 		public ulong community_fund_total_staked_e8s { get; set; }
 
 		public ulong timestamp_seconds { get; set; }
 
-		public GovernanceCachedMetrics(Dictionary<ulong, double> notDissolvingNeuronsE8sBuckets, ulong garbageCollectableNeuronsCount, ulong neuronsWithInvalidStakeCount, Dictionary<ulong, ulong> notDissolvingNeuronsCountBuckets, ulong totalSupplyIcp, ulong neuronsWithLessThan6MonthsDissolveDelayCount, ulong dissolvedNeuronsCount, ulong totalStakedE8s, ulong notDissolvingNeuronsCount, ulong dissolvedNeuronsE8s, ulong neuronsWithLessThan6MonthsDissolveDelayE8s, Dictionary<ulong, ulong> dissolvingNeuronsCountBuckets, ulong dissolvingNeuronsCount, Dictionary<ulong, double> dissolvingNeuronsE8sBuckets, ulong communityFundTotalStakedE8s, ulong timestampSeconds)
+		public GovernanceCachedMetrics(List<(ulong, double)> notDissolvingNeuronsE8sBuckets, ulong garbageCollectableNeuronsCount, ulong neuronsWithInvalidStakeCount, List<(ulong, ulong)> notDissolvingNeuronsCountBuckets, ulong totalSupplyIcp, ulong neuronsWithLessThan6MonthsDissolveDelayCount, ulong dissolvedNeuronsCount, ulong totalStakedE8s, ulong notDissolvingNeuronsCount, ulong dissolvedNeuronsE8s, ulong neuronsWithLessThan6MonthsDissolveDelayE8s, List<(ulong, ulong)> dissolvingNeuronsCountBuckets, ulong dissolvingNeuronsCount, List<(ulong, double)> dissolvingNeuronsE8sBuckets, ulong communityFundTotalStakedE8s, ulong timestampSeconds)
 		{
 			this.not_dissolving_neurons_e8s_buckets = notDissolvingNeuronsE8sBuckets;
 			this.garbage_collectable_neurons_count = garbageCollectableNeuronsCount;
@@ -1804,11 +1804,11 @@ namespace Test
 {
 	public class ListNeuronsResponse
 	{
-		public Dictionary<ulong, NeuronInfo> neuron_infos { get; set; }
+		public List<(ulong, NeuronInfo)> neuron_infos { get; set; }
 
 		public List<Neuron> full_neurons { get; set; }
 
-		public ListNeuronsResponse(Dictionary<ulong, NeuronInfo> neuronInfos, List<Neuron> fullNeurons)
+		public ListNeuronsResponse(List<(ulong, NeuronInfo)> neuronInfos, List<Neuron> fullNeurons)
 		{
 			this.neuron_infos = neuronInfos;
 			this.full_neurons = fullNeurons;
@@ -2129,7 +2129,7 @@ namespace Test
 
 		public OptionalValue<DissolveState> dissolve_state { get; set; }
 
-		public Dictionary<int, Followees> followees { get; set; }
+		public List<(int, Followees)> followees { get; set; }
 
 		public ulong neuron_fees_e8s { get; set; }
 
@@ -2137,7 +2137,7 @@ namespace Test
 
 		public OptionalValue<KnownNeuronData> known_neuron_data { get; set; }
 
-		public Neuron(OptionalValue<NeuronId> id, OptionalValue<Principal> controller, List<BallotInfo> recentBallots, bool kycVerified, bool notForProfit, ulong maturityE8sEquivalent, ulong cachedNeuronStakeE8s, ulong createdTimestampSeconds, ulong agingSinceTimestampSeconds, List<Principal> hotKeys, List<byte> account, OptionalValue<ulong> joinedCommunityFundTimestampSeconds, OptionalValue<DissolveState> dissolveState, Dictionary<int, Followees> followees, ulong neuronFeesE8s, OptionalValue<NeuronStakeTransfer> transfer, OptionalValue<KnownNeuronData> knownNeuronData)
+		public Neuron(OptionalValue<NeuronId> id, OptionalValue<Principal> controller, List<BallotInfo> recentBallots, bool kycVerified, bool notForProfit, ulong maturityE8sEquivalent, ulong cachedNeuronStakeE8s, ulong createdTimestampSeconds, ulong agingSinceTimestampSeconds, List<Principal> hotKeys, List<byte> account, OptionalValue<ulong> joinedCommunityFundTimestampSeconds, OptionalValue<DissolveState> dissolveState, List<(int, Followees)> followees, ulong neuronFeesE8s, OptionalValue<NeuronStakeTransfer> transfer, OptionalValue<KnownNeuronData> knownNeuronData)
 		{
 			this.id = id;
 			this.controller = controller;
@@ -2589,7 +2589,7 @@ namespace Test
 
 		public OptionalValue<GovernanceError> failure_reason { get; set; }
 
-		public Dictionary<ulong, Ballot> ballots { get; set; }
+		public List<(ulong, Ballot)> ballots { get; set; }
 
 		public ulong proposal_timestamp_seconds { get; set; }
 
@@ -2611,7 +2611,7 @@ namespace Test
 
 		public ulong executed_timestamp_seconds { get; set; }
 
-		public ProposalData(OptionalValue<NeuronId> id, OptionalValue<GovernanceError> failureReason, Dictionary<ulong, Ballot> ballots, ulong proposalTimestampSeconds, ulong rewardEventRound, ulong failedTimestampSeconds, ulong rejectCostE8s, OptionalValue<Tally> latestTally, ulong decidedTimestampSeconds, OptionalValue<Proposal> proposal, OptionalValue<NeuronId> proposer, OptionalValue<WaitForQuietState> waitForQuietState, ulong executedTimestampSeconds)
+		public ProposalData(OptionalValue<NeuronId> id, OptionalValue<GovernanceError> failureReason, List<(ulong, Ballot)> ballots, ulong proposalTimestampSeconds, ulong rewardEventRound, ulong failedTimestampSeconds, ulong rejectCostE8s, OptionalValue<Tally> latestTally, ulong decidedTimestampSeconds, OptionalValue<Proposal> proposal, OptionalValue<NeuronId> proposer, OptionalValue<WaitForQuietState> waitForQuietState, ulong executedTimestampSeconds)
 		{
 			this.id = id;
 			this.failure_reason = failureReason;
@@ -2652,7 +2652,7 @@ namespace Test
 
 		public OptionalValue<GovernanceError> failure_reason { get; set; }
 
-		public Dictionary<ulong, Ballot> ballots { get; set; }
+		public List<(ulong, Ballot)> ballots { get; set; }
 
 		public ulong proposal_timestamp_seconds { get; set; }
 
@@ -2676,7 +2676,7 @@ namespace Test
 
 		public ulong executed_timestamp_seconds { get; set; }
 
-		public ProposalInfo(OptionalValue<NeuronId> id, int status, int topic, OptionalValue<GovernanceError> failureReason, Dictionary<ulong, Ballot> ballots, ulong proposalTimestampSeconds, ulong rewardEventRound, OptionalValue<ulong> deadlineTimestampSeconds, ulong failedTimestampSeconds, ulong rejectCostE8s, OptionalValue<Tally> latestTally, int rewardStatus, ulong decidedTimestampSeconds, OptionalValue<Proposal> proposal, OptionalValue<NeuronId> proposer, ulong executedTimestampSeconds)
+		public ProposalInfo(OptionalValue<NeuronId> id, int status, int topic, OptionalValue<GovernanceError> failureReason, List<(ulong, Ballot)> ballots, ulong proposalTimestampSeconds, ulong rewardEventRound, OptionalValue<ulong> deadlineTimestampSeconds, ulong failedTimestampSeconds, ulong rejectCostE8s, OptionalValue<Tally> latestTally, int rewardStatus, ulong decidedTimestampSeconds, OptionalValue<Proposal> proposal, OptionalValue<NeuronId> proposer, ulong executedTimestampSeconds)
 		{
 			this.id = id;
 			this.status = status;
@@ -3345,9 +3345,9 @@ namespace Test
 {
 	public class SetDefaultFollowees
 	{
-		public Dictionary<int, Followees> default_followees { get; set; }
+		public List<(int, Followees)> default_followees { get; set; }
 
-		public SetDefaultFollowees(Dictionary<int, Followees> defaultFollowees)
+		public SetDefaultFollowees(List<(int, Followees)> defaultFollowees)
 		{
 			this.default_followees = defaultFollowees;
 		}
