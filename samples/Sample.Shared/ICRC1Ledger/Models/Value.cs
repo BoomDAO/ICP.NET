@@ -3,7 +3,7 @@ using Sample.Shared.ICRC1Ledger.Models;
 using System.Collections.Generic;
 using EdjCase.ICP.Candid.Models;
 using System;
-using Map = System.Collections.Generic.List<System.ValueTuple<System.String, Sample.Shared.ICRC1Ledger.Models.Value>>;
+using Map = System.Collections.Generic.Dictionary<System.String, Sample.Shared.ICRC1Ledger.Models.Value>;
 
 namespace Sample.Shared.ICRC1Ledger.Models
 {

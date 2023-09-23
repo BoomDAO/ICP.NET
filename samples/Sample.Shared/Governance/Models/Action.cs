@@ -23,9 +23,9 @@ namespace Sample.Shared.Governance.Models
 		{
 		}
 
-		public static Action RegisterKnownNeuron(KnownNeuron info)
+		public static Action RegisterNeuron(KnownNeuron info)
 		{
-			return new Action(ActionTag.RegisterKnownNeuron, info);
+			return new Action(ActionTag.RegisterNeuron, info);
 		}
 
 		public static Action ManageNeuron(ManageNeuron info)
@@ -88,9 +88,9 @@ namespace Sample.Shared.Governance.Models
 			return new Action(ActionTag.Motion, info);
 		}
 
-		public KnownNeuron AsRegisterKnownNeuron()
+		public KnownNeuron AsRegisterNeuron()
 		{
-			this.ValidateTag(ActionTag.RegisterKnownNeuron);
+			this.ValidateTag(ActionTag.RegisterNeuron);
 			return (KnownNeuron)this.Value!;
 		}
 
@@ -177,8 +177,9 @@ namespace Sample.Shared.Governance.Models
 
 	public enum ActionTag
 	{
+		[CandidName("RegisterKnownNeuron")]
 		[VariantOptionType(typeof(KnownNeuron))]
-		RegisterKnownNeuron,
+		RegisterNeuron,
 		[VariantOptionType(typeof(ManageNeuron))]
 		ManageNeuron,
 		[VariantOptionType(typeof(CreateServiceNervousSystem))]

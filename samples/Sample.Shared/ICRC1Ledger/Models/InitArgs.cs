@@ -23,15 +23,15 @@ namespace Sample.Shared.ICRC1Ledger.Models
 		public string TokenName { get; set; }
 
 		[CandidName("metadata")]
-		public List<(string, MetadataValue)> Metadata { get; set; }
+		public Dictionary<string, MetadataValue> Metadata { get; set; }
 
 		[CandidName("initial_balances")]
-		public List<(Account, ulong)> InitialBalances { get; set; }
+		public Dictionary<Account, ulong> InitialBalances { get; set; }
 
 		[CandidName("archive_options")]
 		public InitArgs.ArchiveOptionsInfo ArchiveOptions { get; set; }
 
-		public InitArgs(Account mintingAccount, OptionalValue<Account> feeCollectorAccount, ulong transferFee, string tokenSymbol, string tokenName, List<(string, MetadataValue)> metadata, List<(Account, ulong)> initialBalances, InitArgs.ArchiveOptionsInfo archiveOptions)
+		public InitArgs(Account mintingAccount, OptionalValue<Account> feeCollectorAccount, ulong transferFee, string tokenSymbol, string tokenName, Dictionary<string, MetadataValue> metadata, Dictionary<Account, ulong> initialBalances, InitArgs.ArchiveOptionsInfo archiveOptions)
 		{
 			this.MintingAccount = mintingAccount;
 			this.FeeCollectorAccount = feeCollectorAccount;
