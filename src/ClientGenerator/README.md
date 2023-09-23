@@ -24,23 +24,19 @@ Creates `candid-client.toml` file to update in specified directory
 Example:
 
 ```
-namespace = "My.Namespace" # Base namespace used for generated files
-output-directory = "./Clients" # Directory to put clients. Each client will get its own sub folder based on its name. If not specified, will use current directory
-no-folders = false # If true, will put all the files in a single directory
+namespace = "My.Namespace"
+output-directory = "./Clients"
+no-folders = false
 
 [[clients]]
-name = "Dex" # Used for the name of the folder and client class
-type = "file" # Create client based on service definition file
-file-path = "./ServiceDefinitionFiles/Dex.did" # Service definition file path
-output-directory = "./Clients/D" # Override base output directory, but this specifies the subfolder
-no-folders = false # If true, will put all the files in a single directory
+name = "Dex"
+type = "file"
+file-path = "./ServiceDefinitionFiles/Dex.did"
 
-
-# Can specify multiple clients by defining another
 [[clients]]
 name = "Governance"
-type = "canister" # Create client based on canister
-canister-id = "rrkah-fqaaa-aaaaa-aaaaq-cai" # Canister to create client for
+type = "canister"
+canister-id = "rrkah-fqaaa-aaaaa-aaaaq-cai"
 ```
 
 ### Generate clients
@@ -80,8 +76,78 @@ candid-client-generator gen ./
 - `feature-nullable` - (Bool) Optional. Sets whether to use the C# nullable feature when generating the client (like `object?`). Defaults to true. Overrides the top level `feature-nullable`
 - `keep-candid-case` - (Bool) Optional. If true, the names of properties and methods will keep the raw candid name. Otherwise they will be converted to something prettier. Defaults to false. Overrides the top level `keep-candid-case`
 
+#### Type Customization:
+
+##### All Types
+
+`[clients.types.{CandidTypeId}]`
+
+`{CandidTypeId}` is any named type in the candid definition
+
+- `name` - Optional. (Text) Overrides the name of the C# type/alias generated
+
+---
+
+##### Record Types Options
+
+- `[clients.types.{CandidTypeId}.fields.{CandidFieldId}]`
+
+  `{CandidFieldId}` is a record field in the record type `{CandidTypeId}`
+
+  Uses the same options as the top level `[clients.types.{CandidTypeId}]` section
+
+---
+
+##### Variant Types Options
+
+- `[clients.types.{CandidTypeId}.fields.{CandidOptionId}]`
+
+  `{CandidOptionId}` is a variant option in the variant type `{CandidTypeId}`
+
+  Uses the same options as the top level `[clients.types.{CandidTypeId}]` section
+
+---
+
+##### Vec Types Options
+
+- `representation` - Optional (Text) Sets what C# type should be generated. (Defaults to Dictionary if possible, otherwise a List)
+
+  - `Array` - Uses a C# array
+  - `List` - Uses a C# `List<T>`
+  - `Dictionary` - Uses a C# `Dictionary<TKey, TValue>`. Only works if the `vec` contains a `record` with 2 unamed fields (tuple). The first will be the key, the second will be the value
+
+- `[clients.types.{CandidTypeId}.innerType]`
+
+  Uses the same options as the top level `[clients.types.{CandidTypeId}]` section, but `name` is not supported
+
+##### Opt Types Options
+
+- `[clients.types.{CandidTypeId}.innerType]`
+
+  Uses the same options as the top level `[clients.types.{CandidTypeId}]` section, but `name` is not supported
+
+##### Type Customization Example:
+
+```
+[clients]
+...
+
+[clients.types.AccountIdentifier]
+name = "AccountId"
+[clients.types.AccountIdentifier.fields.hash]
+name = "Hash"
+representation = "Array"
+
+[clients.types.Action.fields.RegisterKnownNeuron]
+name = "RegisterNeuron" # Rename RegisterKnownNeuron -> RegisterNeuron
+[clients.types.Action.fields.RegisterKnownNeuron.fields.id] # Update the type's field `id`
+name = "ID" # Rename id -> ID
+[clients.types.Action.fields.RegisterKnownNeuron.fields.id.innerType.fields.id] # Update the opt's inner record type's field `id`
+name = "ID" # Rename id -> ID
+```
 
 # Custom Client Generators via Code
+
 Due to the complexity of different use cases, custom tweaks to the output of the client generators might be helpful. This process
 can be handled with calling the `ClientCodeGenerator` manually and using the .NET `CSharpSyntaxRewriter` (tutorial can be found [HERE](https://joshvarty.com/2014/08/15/learn-roslyn-now-part-5-csharpsyntaxrewriter/))
 

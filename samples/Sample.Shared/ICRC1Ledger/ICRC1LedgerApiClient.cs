@@ -49,12 +49,12 @@ namespace Sample.Shared.ICRC1Ledger
 			return reply.ToObjects<byte>(this.Converter);
 		}
 
-		public async Task<List<(string, Models.MetadataValue)>> Icrc1Metadata()
+		public async Task<Dictionary<string, Models.MetadataValue>> Icrc1Metadata()
 		{
 			CandidArg arg = CandidArg.FromCandid();
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "icrc1_metadata", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<List<(string, Models.MetadataValue)>>(this.Converter);
+			return reply.ToObjects<Dictionary<string, Models.MetadataValue>>(this.Converter);
 		}
 
 		public async Task<Tokens> Icrc1TotalSupply()

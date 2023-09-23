@@ -80,21 +80,22 @@ namespace EdjCase.ICP.ClientGenerator
 				stringValue = "F" + stringValue;
 			}
 			stringValue = this.KeepCandidCase ? stringValue : StringUtil.ToPascalCase(stringValue);
-			if (IsKeyword(stringValue))
-			{
-				// Add @ before reserved words
-				stringValue = "@" + stringValue;
-			}
-			if (stringValue.StartsWith("set_") || stringValue.StartsWith("get_"))
-			{
-				// Add _ before getters/setters words
-				stringValue = "_" + stringValue;
-			}
+			stringValue = Escape(stringValue);
 			return new ResolvedName(stringValue, tag);
 		}
 
 		private static string Escape(string value)
 		{
+			if (IsKeyword(value))
+			{
+				// Add @ before reserved words
+				value = "@" + value;
+			}
+			if (value.StartsWith("set_") || value.StartsWith("get_"))
+			{
+				// Add _ before getters/setters words
+				value = "_" + value;
+			}
 			return value;
 		}
 

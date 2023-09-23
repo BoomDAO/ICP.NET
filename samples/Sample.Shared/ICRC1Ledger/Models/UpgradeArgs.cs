@@ -8,7 +8,7 @@ namespace Sample.Shared.ICRC1Ledger.Models
 	public class UpgradeArgs
 	{
 		[CandidName("metadata")]
-		public OptionalValue<List<(string, MetadataValue)>> Metadata { get; set; }
+		public OptionalValue<Dictionary<string, MetadataValue>> Metadata { get; set; }
 
 		[CandidName("token_symbol")]
 		public OptionalValue<string> TokenSymbol { get; set; }
@@ -25,7 +25,7 @@ namespace Sample.Shared.ICRC1Ledger.Models
 		[CandidName("max_memo_length")]
 		public OptionalValue<ushort> MaxMemoLength { get; set; }
 
-		public UpgradeArgs(OptionalValue<List<(string, MetadataValue)>> metadata, OptionalValue<string> tokenSymbol, OptionalValue<string> tokenName, OptionalValue<ulong> transferFee, OptionalValue<ChangeFeeCollector> changeFeeCollector, OptionalValue<ushort> maxMemoLength)
+		public UpgradeArgs(OptionalValue<Dictionary<string, MetadataValue>> metadata, OptionalValue<string> tokenSymbol, OptionalValue<string> tokenName, OptionalValue<ulong> transferFee, OptionalValue<ChangeFeeCollector> changeFeeCollector, OptionalValue<ushort> maxMemoLength)
 		{
 			this.Metadata = metadata;
 			this.TokenSymbol = tokenSymbol;

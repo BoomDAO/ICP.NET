@@ -121,13 +121,13 @@ namespace EdjCase.ICP.ClientGenerator
 		/// <summary>
 		/// Optional. The field or option type information
 		/// </summary>
-		public ITypeOptions? TypeOptions { get; }
+		public TypeOptions? TypeOptions { get; }
 
 		/// <param name="nameOverride">Optional. The C# type name to use instead of the default</param>
 		/// <param name="typeOptions">Optional. The field or option type information</param>
 		public NamedTypeOptions(
 			string? nameOverride = null,
-			ITypeOptions? typeOptions = null
+			TypeOptions? typeOptions = null
 		)
 		{
 			this.NameOverride = nameOverride;
@@ -138,105 +138,53 @@ namespace EdjCase.ICP.ClientGenerator
 	/// <summary>
 	/// Interface to specify generation options for specific types in the candid
 	/// </summary>
-	public interface ITypeOptions
+	public class TypeOptions
 	{
-		//public  string? NameOverride { get; init; } // TODO
-
 		/// <summary>
-		/// The candid type of the implementation class
-		/// </summary>
-		public CandidTypeCode Type { get; }
-
-	}
-
-	/// <summary>
-	/// Type generation options for record candid types
-	/// </summary>
-	public class RecordTypeOptions : ITypeOptions
-	{
-
-		/// <inheritdoc />
-		public CandidTypeCode Type { get; } = CandidTypeCode.Record;
-		/// <summary>
-		/// Optional. The type options for each of the records fields
+		/// Optional. The type options for each of the records fields or variant options
 		/// </summary>
 		public Dictionary<string, NamedTypeOptions> Fields { get; }
+		/// <summary>
+		/// Optional. The type options for the sub type of a vec or opt
+		/// </summary>
+		public TypeOptions? InnerType { get; }
+		/// <summary>
+		/// Optional. How the type should be represented in C#
+		/// </summary>
+		public TypeRepresentation? Representation { get; }
 
-		/// <param name="fields">Optional. The type options for each of the records fields</param>
-		public RecordTypeOptions(
-			Dictionary<string, NamedTypeOptions>? fields = null
+		/// <param name="fields">Optional. The type options for each of the records fields or variant options</param>
+		/// <param name="innerType">Optional. The type options for the sub type of a vec or opt</param>
+		/// <param name="representation">Optional. How the type should be represented in C#</param>
+		/// <exception cref="ArgumentNullException"></exception>
+		public TypeOptions(
+			Dictionary<string, NamedTypeOptions>? fields,
+			TypeOptions? innerType,
+			TypeRepresentation? representation
 		)
 		{
 			this.Fields = fields ?? new Dictionary<string, NamedTypeOptions>();
-		}
-
-	}
-
-	/// <summary>
-	/// Type generation options for vec candid types
-	/// </summary>
-	public class VectorTypeOptions : ITypeOptions
-	{
-		/// <inheritdoc />
-		public CandidTypeCode Type { get; } = CandidTypeCode.Vector;
-		/// <summary>
-		/// Optional. The representation the vec should take in the generated code
-		/// </summary>
-		public VectorRepresentation? Representation { get; }
-		/// <summary>
-		/// Optional. The type options for the element type in the vec
-		/// </summary>
-		public ITypeOptions? ElementType { get; }
-
-		/// <param name="representation">Optional. The representation the vec should take in the generated code</param>
-		/// <param name="elementType">Optional. The type options for the element type in the vec</param>
-		public VectorTypeOptions(
-			VectorRepresentation? representation = null,
-			ITypeOptions? elementType = null
-		)
-		{
+			this.InnerType = innerType;
 			this.Representation = representation;
-			this.ElementType = elementType;
 		}
 	}
 
 	/// <summary>
 	/// C# type representations for the vec type
 	/// </summary>
-	public enum VectorRepresentation
+	public enum TypeRepresentation
 	{
 		/// <summary>
-		/// Vector will be a List
+		/// List
 		/// </summary>
 		List,
 		/// <summary>
-		/// Vector will be an array
+		/// Array
 		/// </summary>
 		Array,
 		/// <summary>
-		/// Vector will be a dictionary, only if the element type is a record with 2 fields
+		/// Dictionary
 		/// </summary>
 		Dictionary
-	}
-
-	/// <summary>
-	/// Type generation options for variant candid types
-	/// </summary>
-	public class VariantTypeOptions : ITypeOptions
-	{
-		/// <inheritdoc />
-		public CandidTypeCode Type { get; } = CandidTypeCode.Vector;
-		/// <summary>
-		/// Optional. The type options for each of the variant options
-		/// </summary>
-		public Dictionary<string, NamedTypeOptions> Options { get; }
-
-		/// <param name="options">Optional. The type options for each of the variant options</param>
-		public VariantTypeOptions(
-			Dictionary<string, NamedTypeOptions>? options = null
-		)
-		{
-			this.Options = options ?? new Dictionary<string, NamedTypeOptions>();
-		}
 	}
 }

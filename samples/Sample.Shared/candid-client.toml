@@ -25,15 +25,18 @@ keep-candid-case = true
 name = "Governance"
 type = "canister"
 canister-id = "rrkah-fqaaa-aaaaa-aaaaq-cai"
-[clients.types.AccountIdentifier]
-type = "record"
+[clients.types.AccountIdentifier] 
 name = "AccountId"
-[clients.types.AccountIdentifier.fields.hash]
-type = "vec"
-name = "Hazh"
+[clients.types.AccountIdentifier.fields.hash] 
 representation = "Array"
-[clients.types.Governance]
-type = "record"
-[clients.types.Governance.fields.default_followees]
-type = "vec"
-representation = "Dictionary"
+ 
+[clients.types.Governance.fields.default_followees] 
+representation = "List"
+
+
+[clients.types.Action.fields.RegisterKnownNeuron]
+name = "RegisterNeuron" # Rename RegisterKnownNeuron -> RegisterNeuron
+[clients.types.Action.fields.RegisterKnownNeuron.fields.id]
+name = "ID"
+[clients.types.Action.fields.RegisterKnownNeuron.fields.id.innerType.fields.id]
+name = "ID"

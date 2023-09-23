@@ -17,7 +17,7 @@ namespace Sample.Shared.Governance.Models
 		public List<CfParticipant> CfParticipants { get; set; }
 
 		[CandidName("ballots")]
-		public List<(ulong, Ballot)> Ballots { get; set; }
+		public Dictionary<ulong, Ballot> Ballots { get; set; }
 
 		[CandidName("proposal_timestamp_seconds")]
 		public ulong ProposalTimestampSeconds { get; set; }
@@ -58,7 +58,7 @@ namespace Sample.Shared.Governance.Models
 		[CandidName("original_total_community_fund_maturity_e8s_equivalent")]
 		public OptionalValue<ulong> OriginalTotalCommunityFundMaturityE8sEquivalent { get; set; }
 
-		public ProposalData(OptionalValue<NeuronId> id, OptionalValue<GovernanceError> failureReason, List<CfParticipant> cfParticipants, List<(ulong, Ballot)> ballots, ulong proposalTimestampSeconds, ulong rewardEventRound, ulong failedTimestampSeconds, ulong rejectCostE8s, OptionalValue<DerivedProposalInformation> derivedProposalInformation, OptionalValue<Tally> latestTally, OptionalValue<int> snsTokenSwapLifecycle, ulong decidedTimestampSeconds, OptionalValue<Proposal> proposal, OptionalValue<NeuronId> proposer, OptionalValue<WaitForQuietState> waitForQuietState, ulong executedTimestampSeconds, OptionalValue<ulong> originalTotalCommunityFundMaturityE8sEquivalent)
+		public ProposalData(OptionalValue<NeuronId> id, OptionalValue<GovernanceError> failureReason, List<CfParticipant> cfParticipants, Dictionary<ulong, Ballot> ballots, ulong proposalTimestampSeconds, ulong rewardEventRound, ulong failedTimestampSeconds, ulong rejectCostE8s, OptionalValue<DerivedProposalInformation> derivedProposalInformation, OptionalValue<Tally> latestTally, OptionalValue<int> snsTokenSwapLifecycle, ulong decidedTimestampSeconds, OptionalValue<Proposal> proposal, OptionalValue<NeuronId> proposer, OptionalValue<WaitForQuietState> waitForQuietState, ulong executedTimestampSeconds, OptionalValue<ulong> originalTotalCommunityFundMaturityE8sEquivalent)
 		{
 			this.Id = id;
 			this.FailureReason = failureReason;

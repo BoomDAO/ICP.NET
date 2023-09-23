@@ -131,50 +131,24 @@ namespace EdjCase.ICP.ClientGenerator
 						throw new Exception($"Options for type '{key}' cannot be parsed");
 					}
 					string? name = GetOptional<string>(t, "name");
-					ITypeOptions? typeOptions = BuildTypeOptions(t);
+					TypeOptions? typeOptions = BuildTypeOptions(t);
 					types.Add(key, new NamedTypeOptions(name, typeOptions));
 				}
 			}
 			return types;
 		}
 
-		private static ITypeOptions? BuildTypeOptions(TomlTable t)
+		private static TypeOptions BuildTypeOptions(TomlTable t)
 		{
-			string? typeType = GetOptional<string>(t, "type");
-			if (string.IsNullOrWhiteSpace(typeType))
-			{
-				return null;
-			}
-			switch (typeType.ToLower())
-			{
-				case "record":
-					{
-						TomlTable? fieldTypeTable = GetOptional<TomlTable>(t, "fields");
-						Dictionary<string, NamedTypeOptions> fields = BuildTypes(fieldTypeTable);
-						return new RecordTypeOptions(
-							fields: fields
-						);
-					}
-				case "vec":
-					{
-						ITypeOptions? elementType = GetOptional<ITypeOptions>(t, "elementType");
-						VectorRepresentation? representation = GetEnumOptional<VectorRepresentation>(t, "representation");
-						return new VectorTypeOptions(
-							representation: representation,
-							elementType: elementType
-						);
-					}
-				case "variant":
-					{
-						TomlTable? optionTypeTable = GetOptional<TomlTable>(t, "options");
-						Dictionary<string, NamedTypeOptions> options = BuildTypes(optionTypeTable);
-						return new VariantTypeOptions(
-							options: options
-						);
-					}
-				default:
-					throw new Exception($"Type '{typeType.ToLower()}' is invalid");
-			}
+			TypeRepresentation? representation = GetEnumOptional<TypeRepresentation>(t, "representation");
+
+			TomlTable? optionTypeTable = GetOptional<TomlTable?>(t, "fields");
+			Dictionary<string, NamedTypeOptions> options = BuildTypes(optionTypeTable);
+
+			TomlTable? innerTypeTable = GetOptional<TomlTable?>(t, "innerType");
+			TypeOptions? innerType = innerTypeTable == null ? null : BuildTypeOptions(innerTypeTable);
+
+			return new TypeOptions(options, innerType, representation);
 		}
 
 		private static T GetRequired<T>(TomlTable table, string key, string? prefix = null)

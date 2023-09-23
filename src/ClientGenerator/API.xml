@@ -122,93 +122,55 @@
             Optional. The field or option type information
             </summary>
         </member>
-        <member name="M:EdjCase.ICP.ClientGenerator.NamedTypeOptions.#ctor(System.String,EdjCase.ICP.ClientGenerator.ITypeOptions)">
+        <member name="M:EdjCase.ICP.ClientGenerator.NamedTypeOptions.#ctor(System.String,EdjCase.ICP.ClientGenerator.TypeOptions)">
             <param name="nameOverride">Optional. The C# type name to use instead of the default</param>
             <param name="typeOptions">Optional. The field or option type information</param>
         </member>
-        <member name="T:EdjCase.ICP.ClientGenerator.ITypeOptions">
+        <member name="T:EdjCase.ICP.ClientGenerator.TypeOptions">
             <summary>
             Interface to specify generation options for specific types in the candid
             </summary>
         </member>
-        <member name="P:EdjCase.ICP.ClientGenerator.ITypeOptions.Type">
+        <member name="P:EdjCase.ICP.ClientGenerator.TypeOptions.Fields">
             <summary>
-            The candid type of the implementation class
+            Optional. The type options for each of the records fields or variant options
             </summary>
         </member>
-        <member name="T:EdjCase.ICP.ClientGenerator.RecordTypeOptions">
+        <member name="P:EdjCase.ICP.ClientGenerator.TypeOptions.InnerType">
             <summary>
-            Type generation options for record candid types
+            Optional. The type options for the sub type of a vec or opt
             </summary>
         </member>
-        <member name="P:EdjCase.ICP.ClientGenerator.RecordTypeOptions.Type">
-            <inheritdoc />
-        </member>
-        <member name="P:EdjCase.ICP.ClientGenerator.RecordTypeOptions.Fields">
+        <member name="P:EdjCase.ICP.ClientGenerator.TypeOptions.Representation">
             <summary>
-            Optional. The type options for each of the records fields
+            Optional. How the type should be represented in C#
             </summary>
         </member>
-        <member name="M:EdjCase.ICP.ClientGenerator.RecordTypeOptions.#ctor(System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.ClientGenerator.NamedTypeOptions})">
-            <param name="fields">Optional. The type options for each of the records fields</param>
+        <member name="M:EdjCase.ICP.ClientGenerator.TypeOptions.#ctor(System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.ClientGenerator.NamedTypeOptions},EdjCase.ICP.ClientGenerator.TypeOptions,System.Nullable{EdjCase.ICP.ClientGenerator.TypeRepresentation})">
+            <param name="fields">Optional. The type options for each of the records fields or variant options</param>
+            <param name="innerType">Optional. The type options for the sub type of a vec or opt</param>
+            <param name="representation">Optional. How the type should be represented in C#</param>
+            <exception cref="T:System.ArgumentNullException"></exception>
         </member>
-        <member name="T:EdjCase.ICP.ClientGenerator.VectorTypeOptions">
-            <summary>
-            Type generation options for vec candid types
-            </summary>
-        </member>
-        <member name="P:EdjCase.ICP.ClientGenerator.VectorTypeOptions.Type">
-            <inheritdoc />
-        </member>
-        <member name="P:EdjCase.ICP.ClientGenerator.VectorTypeOptions.Representation">
-            <summary>
-            Optional. The representation the vec should take in the generated code
-            </summary>
-        </member>
-        <member name="P:EdjCase.ICP.ClientGenerator.VectorTypeOptions.ElementType">
-            <summary>
-            Optional. The type options for the element type in the vec
-            </summary>
-        </member>
-        <member name="M:EdjCase.ICP.ClientGenerator.VectorTypeOptions.#ctor(System.Nullable{EdjCase.ICP.ClientGenerator.VectorRepresentation},EdjCase.ICP.ClientGenerator.ITypeOptions)">
-            <param name="representation">Optional. The representation the vec should take in the generated code</param>
-            <param name="elementType">Optional. The type options for the element type in the vec</param>
-        </member>
-        <member name="T:EdjCase.ICP.ClientGenerator.VectorRepresentation">
+        <member name="T:EdjCase.ICP.ClientGenerator.TypeRepresentation">
             <summary>
             C# type representations for the vec type
             </summary>
         </member>
-        <member name="F:EdjCase.ICP.ClientGenerator.VectorRepresentation.List">
+        <member name="F:EdjCase.ICP.ClientGenerator.TypeRepresentation.List">
             <summary>
-            Vector will be a List
+            List
             </summary>
         </member>
-        <member name="F:EdjCase.ICP.ClientGenerator.VectorRepresentation.Array">
+        <member name="F:EdjCase.ICP.ClientGenerator.TypeRepresentation.Array">
             <summary>
-            Vector will be an array
+            Array
             </summary>
         </member>
-        <member name="F:EdjCase.ICP.ClientGenerator.VectorRepresentation.Dictionary">
+        <member name="F:EdjCase.ICP.ClientGenerator.TypeRepresentation.Dictionary">
             <summary>
-            Vector will be a dictionary, only if the element type is a record with 2 fields
+            Dictionary
             </summary>
-        </member>
-        <member name="T:EdjCase.ICP.ClientGenerator.VariantTypeOptions">
-            <summary>
-            Type generation options for variant candid types
-            </summary>
-        </member>
-        <member name="P:EdjCase.ICP.ClientGenerator.VariantTypeOptions.Type">
-            <inheritdoc />
-        </member>
-        <member name="P:EdjCase.ICP.ClientGenerator.VariantTypeOptions.Options">
-            <summary>
-            Optional. The type options for each of the variant options
-            </summary>
-        </member>
-        <member name="M:EdjCase.ICP.ClientGenerator.VariantTypeOptions.#ctor(System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.ClientGenerator.NamedTypeOptions})">
-            <param name="options">Optional. The type options for each of the variant options</param>
         </member>
         <member name="T:EdjCase.ICP.ClientGenerator.ClientSyntax">
             <summary>
