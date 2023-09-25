@@ -3,11 +3,11 @@ using Sample.Shared.ICRC1Ledger.Models;
 using System.Collections.Generic;
 using EdjCase.ICP.Candid.Models;
 using System;
-using Map = System.Collections.Generic.List<System.ValueTuple<System.String, Sample.Shared.ICRC1Ledger.Models.Value>>;
+using Map = System.Collections.Generic.Dictionary<System.String, Sample.Shared.ICRC1Ledger.Models.Value>;
 
 namespace Sample.Shared.ICRC1Ledger.Models
 {
-	[Variant(typeof(ValueTag))]
+	[Variant()]
 	public class Value
 	{
 		[VariantTagProperty()]
@@ -114,19 +114,12 @@ namespace Sample.Shared.ICRC1Ledger.Models
 
 	public enum ValueTag
 	{
-		[VariantOptionType(typeof(List<byte>))]
 		Blob,
-		[VariantOptionType(typeof(string))]
 		Text,
-		[VariantOptionType(typeof(UnboundedUInt))]
 		Nat,
-		[VariantOptionType(typeof(ulong))]
 		Nat64,
-		[VariantOptionType(typeof(UnboundedInt))]
 		Int,
-		[VariantOptionType(typeof(List<Value>))]
 		Array,
-		[VariantOptionType(typeof(Map))]
 		Map
 	}
 }

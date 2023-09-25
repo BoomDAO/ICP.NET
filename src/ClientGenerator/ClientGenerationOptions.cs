@@ -48,6 +48,10 @@ namespace EdjCase.ICP.ClientGenerator
 		/// </summary>
 		public bool FeatureNullable { get; }
 		/// <summary>
+		/// If true, variant classes will be generated with properties instead of methods
+		/// </summary>
+		public bool VariantsUseProperties { get; }
+		/// <summary>
 		/// If true, the names of properties and methods will keep the raw candid name.
 		/// Otherwise they will be converted to something prettier
 		/// </summary>
@@ -72,6 +76,7 @@ namespace EdjCase.ICP.ClientGenerator
 		/// <param name="purgeOutputDirectory">If true, removes all files in the output directory before regeneration. Defaults to true</param>
 		/// <param name="noFolders">If true, there will be no folders, all files will be in the same directory</param>
 		/// <param name="featureNullable">If true, the nullable C# feature will be used</param>
+		/// <param name="variantsUseProperties">If true, variant classes will be generated with properties instead of methods</param>
 		/// <param name="keepCandidCase">If true, the names of properties and methods will keep the raw candid name. Otherwise they will be converted to something prettier</param>
 		/// <param name="boundryNodeUrl">Optional. The url of the boundry node for the internet computer. Defaults to ic0.app</param>
 		/// <param name="types">Optional. Specifies options for each candid type in the definition</param>
@@ -84,6 +89,7 @@ namespace EdjCase.ICP.ClientGenerator
 			bool purgeOutputDirectory = true,
 			bool noFolders = false,
 			bool featureNullable = false,
+			bool variantsUseProperties = false,
 			bool keepCandidCase = false,
 			Uri? boundryNodeUrl = null,
 			Dictionary<string, NamedTypeOptions>? types = null
@@ -102,6 +108,7 @@ namespace EdjCase.ICP.ClientGenerator
 			this.PurgeOutputDirectory = purgeOutputDirectory;
 			this.NoFolders = noFolders;
 			this.FeatureNullable = featureNullable;
+			this.VariantsUseProperties = variantsUseProperties;
 			this.KeepCandidCase = keepCandidCase;
 			this.BoundryNodeUrl = boundryNodeUrl;
 			this.Types = types ?? new Dictionary<string, NamedTypeOptions>();
@@ -121,13 +128,13 @@ namespace EdjCase.ICP.ClientGenerator
 		/// <summary>
 		/// Optional. The field or option type information
 		/// </summary>
-		public ITypeOptions? TypeOptions { get; }
+		public TypeOptions? TypeOptions { get; }
 
 		/// <param name="nameOverride">Optional. The C# type name to use instead of the default</param>
 		/// <param name="typeOptions">Optional. The field or option type information</param>
 		public NamedTypeOptions(
 			string? nameOverride = null,
-			ITypeOptions? typeOptions = null
+			TypeOptions? typeOptions = null
 		)
 		{
 			this.NameOverride = nameOverride;
@@ -138,105 +145,34 @@ namespace EdjCase.ICP.ClientGenerator
 	/// <summary>
 	/// Interface to specify generation options for specific types in the candid
 	/// </summary>
-	public interface ITypeOptions
+	public class TypeOptions
 	{
-		//public  string? NameOverride { get; init; } // TODO
-
 		/// <summary>
-		/// The candid type of the implementation class
-		/// </summary>
-		public CandidTypeCode Type { get; }
-
-	}
-
-	/// <summary>
-	/// Type generation options for record candid types
-	/// </summary>
-	public class RecordTypeOptions : ITypeOptions
-	{
-
-		/// <inheritdoc />
-		public CandidTypeCode Type { get; } = CandidTypeCode.Record;
-		/// <summary>
-		/// Optional. The type options for each of the records fields
+		/// Optional. The type options for each of the records fields or variant options
 		/// </summary>
 		public Dictionary<string, NamedTypeOptions> Fields { get; }
+		/// <summary>
+		/// Optional. The type options for the sub type of a vec or opt
+		/// </summary>
+		public TypeOptions? InnerType { get; }
+		/// <summary>
+		/// Optional. How the type should be represented in C#
+		/// </summary>
+		public string? Representation { get; }
 
-		/// <param name="fields">Optional. The type options for each of the records fields</param>
-		public RecordTypeOptions(
-			Dictionary<string, NamedTypeOptions>? fields = null
+		/// <param name="fields">Optional. The type options for each of the records fields or variant options</param>
+		/// <param name="innerType">Optional. The type options for the sub type of a vec or opt</param>
+		/// <param name="representation">Optional. How the type should be represented in C#</param>
+		/// <exception cref="ArgumentNullException"></exception>
+		public TypeOptions(
+			Dictionary<string, NamedTypeOptions>? fields,
+			TypeOptions? innerType,
+			string? representation
 		)
 		{
 			this.Fields = fields ?? new Dictionary<string, NamedTypeOptions>();
-		}
-
-	}
-
-	/// <summary>
-	/// Type generation options for vec candid types
-	/// </summary>
-	public class VectorTypeOptions : ITypeOptions
-	{
-		/// <inheritdoc />
-		public CandidTypeCode Type { get; } = CandidTypeCode.Vector;
-		/// <summary>
-		/// Optional. The representation the vec should take in the generated code
-		/// </summary>
-		public VectorRepresentation? Representation { get; }
-		/// <summary>
-		/// Optional. The type options for the element type in the vec
-		/// </summary>
-		public ITypeOptions? ElementType { get; }
-
-		/// <param name="representation">Optional. The representation the vec should take in the generated code</param>
-		/// <param name="elementType">Optional. The type options for the element type in the vec</param>
-		public VectorTypeOptions(
-			VectorRepresentation? representation = null,
-			ITypeOptions? elementType = null
-		)
-		{
+			this.InnerType = innerType;
 			this.Representation = representation;
-			this.ElementType = elementType;
-		}
-	}
-
-	/// <summary>
-	/// C# type representations for the vec type
-	/// </summary>
-	public enum VectorRepresentation
-	{
-		/// <summary>
-		/// Vector will be a List
-		/// </summary>
-		List,
-		/// <summary>
-		/// Vector will be an array
-		/// </summary>
-		Array,
-		/// <summary>
-		/// Vector will be a dictionary, only if the element type is a record with 2 fields
-		/// </summary>
-		Dictionary
-	}
-
-	/// <summary>
-	/// Type generation options for variant candid types
-	/// </summary>
-	public class VariantTypeOptions : ITypeOptions
-	{
-		/// <inheritdoc />
-		public CandidTypeCode Type { get; } = CandidTypeCode.Vector;
-		/// <summary>
-		/// Optional. The type options for each of the variant options
-		/// </summary>
-		public Dictionary<string, NamedTypeOptions> Options { get; }
-
-		/// <param name="options">Optional. The type options for each of the variant options</param>
-		public VariantTypeOptions(
-			Dictionary<string, NamedTypeOptions>? options = null
-		)
-		{
-			this.Options = options ?? new Dictionary<string, NamedTypeOptions>();
 		}
 	}
 }

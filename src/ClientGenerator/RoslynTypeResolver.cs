@@ -14,6 +14,8 @@ using System.Threading.Tasks;
 using EdjCase.ICP.Candid;
 using System.Xml.Linq;
 using System.Reflection;
+using Org.BouncyCastle.Asn1.Cms;
+using EdjCase.ICP.Agent.Models;
 
 namespace EdjCase.ICP.ClientGenerator
 {
@@ -24,6 +26,7 @@ namespace EdjCase.ICP.ClientGenerator
 		public string ModelNamespace { get; }
 		public HashSet<string> Aliases { get; }
 		public bool FeatureNullable { get; }
+		public bool VariantsUseProperties { get; }
 		public NameHelper NameHelper { get; }
 		public Dictionary<string, (string Name, SourceCodeType Type)> DeclaredTypes { get; }
 
@@ -31,6 +34,7 @@ namespace EdjCase.ICP.ClientGenerator
 			string modelNamespace,
 			HashSet<string> aliases,
 			bool featureNullable,
+			bool variantsUseProperties,
 			NameHelper nameHelper,
 			Dictionary<string, (string Name, SourceCodeType Type)> declaredTypes
 		)
@@ -38,6 +42,7 @@ namespace EdjCase.ICP.ClientGenerator
 			this.ModelNamespace = modelNamespace;
 			this.Aliases = aliases;
 			this.FeatureNullable = featureNullable;
+			this.VariantsUseProperties = variantsUseProperties;
 			this.NameHelper = nameHelper;
 			this.DeclaredTypes = declaredTypes;
 		}
@@ -101,7 +106,7 @@ namespace EdjCase.ICP.ClientGenerator
 						ResolvedType resolvedValueType = this.ResolveType(d.ValueType, nameContext + "Value", parentType);
 						MemberDeclarationSyntax[] generatedSyntax = (resolvedKeyType.GeneratedSyntax ?? Array.Empty<MemberDeclarationSyntax>())
 							.Concat(resolvedValueType.GeneratedSyntax ?? Array.Empty<MemberDeclarationSyntax>())
-							.ToArray();;
+							.ToArray(); ;
 						var name = new DictionaryTypeName(resolvedKeyType.Name, resolvedValueType.Name);
 						return new ResolvedType(name, generatedSyntax);
 					}
@@ -158,12 +163,12 @@ namespace EdjCase.ICP.ClientGenerator
 				case VariantSourceCodeType v:
 					{
 						TypeName variantName = this.BuildType(nameContext, parentType);
-						(ClassDeclarationSyntax? classSyntax, EnumDeclarationSyntax enumSyntax) = this.GenerateVariant(variantName, v, parentType);
-						if (classSyntax != null)
+						(ClassDeclarationSyntax? ClassSyntax, EnumDeclarationSyntax EnumSyntax) result = this.GenerateVariant(variantName, v, parentType);
+						if (result.ClassSyntax != null)
 						{
-							return new ResolvedType(variantName, new MemberDeclarationSyntax[] { classSyntax, enumSyntax });
+							return new ResolvedType(variantName, new MemberDeclarationSyntax[] { result.ClassSyntax, result.EnumSyntax });
 						}
-						return new ResolvedType(variantName, new MemberDeclarationSyntax []{ enumSyntax });
+						return new ResolvedType(variantName, new MemberDeclarationSyntax[] { result.EnumSyntax });
 					}
 				case RecordSourceCodeType r:
 					{
@@ -254,7 +259,6 @@ namespace EdjCase.ICP.ClientGenerator
 				.Select(ResolveOption)
 				.ToList();
 
-
 			List<(ResolvedName Name, TypeName? Type)> enumOptions = resolvedOptions
 				.Select(o => (o.Name, o.Type?.Name))
 				.ToList();
@@ -271,25 +275,6 @@ namespace EdjCase.ICP.ClientGenerator
 			{
 				TypeName enumTypeName = this.BuildType(variantTypeName.BuildName(false) + "Tag", parentType);
 
-
-				List<MethodDeclarationSyntax> methods = new();
-
-
-				// Creation methods
-				// public static {VariantType} {OptionName}({VariantOptionType} value)
-				// or if there is no type:
-				// public static {VariantType} {OptionName}()
-				methods.AddRange(
-					resolvedOptions
-						.Select(o => this.GenerateVariantOptionCreationMethod(
-							variantTypeName,
-							enumTypeName,
-							o.Name,
-							o.Type,
-							"info"
-						))
-				);
-
 				// TODO auto change the property values of all class types if it matches the name
 				bool containsClashingTag = variantTypeName.BuildName(false) == "Tag"
 					|| variant.Options.Any(o => o.Tag.Name == "Tag");
@@ -299,49 +284,59 @@ namespace EdjCase.ICP.ClientGenerator
 					|| variant.Options.Any(o => o.Tag.Name == "Value");
 				string valueName = containsClashingValue ? "Value_" : "Value";
 
-				// 'As{X}' methods (if has option type)
-				methods.AddRange(
-					resolvedOptions
-					.Where(r => r.Type != null)
-					.Select(o => this.GenerateVariantOptionAsMethod(enumTypeName, o.Name, o.Type!, valueName))
-				);
-
-
-				bool anyOptionsWithType = resolvedOptions.Any(o => o.Type != null);
-				if (anyOptionsWithType)
-				{
-					// If there are any types, then create the helper method 'ValidateType' that
-					// they all use
-					methods.Add(this.GenerateVariantValidateTypeMethod(enumTypeName, tagName));
-				}
 				List<ClassProperty> properties = new()
-			{
-				new ClassProperty(
-					tagName,
-					enumTypeName,
-					access: AccessType.Public,
-					hasSetter: true,
-					AttributeInfo.FromType<VariantTagPropertyAttribute>()
-				),
-				new ClassProperty(
-					valueName,
-					SimpleTypeName.FromType<object>(isNullable: this.FeatureNullable),
-					access: AccessType.Public,
-					hasSetter: true,
-					AttributeInfo.FromType<VariantValuePropertyAttribute>()
-				)
-			};
+				{
+					new ClassProperty(
+						tagName,
+						enumTypeName,
+						access: AccessType.Public,
+						hasSetter: true,
+						AttributeInfo.FromType<VariantTagPropertyAttribute>()
+					),
+					new ClassProperty(
+						valueName,
+						SimpleTypeName.FromType<object>(isNullable: this.FeatureNullable),
+						access: AccessType.Public,
+						hasSetter: true,
+						AttributeInfo.FromType<VariantValuePropertyAttribute>()
+					)
+				};
+				List<MethodDeclarationSyntax> methods;
+				List<PropertyDeclarationSyntax>? customProperties;
+				if (!this.VariantsUseProperties)
+				{
+					methods = this.GenerateVariantMethods(
+						variantTypeName,
+						enumTypeName,
+						valueName,
+						tagName,
+						resolvedOptions
+					);
+					customProperties = null;
+				}
+				else
+				{
+					methods = new List<MethodDeclarationSyntax>();
+
+					customProperties = this.GenerateVariantProperties(
+						variantTypeName,
+						enumTypeName,
+						valueName,
+						tagName,
+						resolvedOptions
+					);
+				}
 
 				List<AttributeListSyntax> attributes = new()
-			{
-				// [Variant(typeof({enumType})]
-				this.GenerateAttribute(AttributeInfo.FromType<VariantAttribute>(enumTypeName))
-			};
-
+				{
+					// [Variant]
+					this.GenerateAttribute(AttributeInfo.FromType<VariantAttribute>())
+				};
 				ClassDeclarationSyntax classSyntax = this.GenerateClass(
 					name: variantTypeName,
 					properties: properties,
 					optionalProperties: null,
+					customProperties: customProperties,
 					methods: methods,
 					attributes: attributes,
 					emptyConstructorAccess: AccessType.Protected,
@@ -352,6 +347,178 @@ namespace EdjCase.ICP.ClientGenerator
 				EnumDeclarationSyntax enumSyntax = this.GenerateEnum(enumTypeName, enumOptions);
 				return (classSyntax, enumSyntax);
 			}
+		}
+
+		private List<PropertyDeclarationSyntax> GenerateVariantProperties(
+			TypeName variantTypeName,
+			TypeName enumTypeName,
+			string valueName,
+			string tagName,
+			List<(ResolvedName Name, ResolvedType? Type)> resolvedOptions
+		)
+		{
+			// Properties with types
+			// public {OptionType}? {OptionName} {
+			//   get => this.Tag == {EnumName}.{OptionName} ? ({OptionType})this.Value : default;
+			//   set => (this.Tag, this.Value) = ({EnumName}.{OptionName}, value);
+			// }
+			return resolvedOptions
+				.Where(o => o.Type != null)
+				.Select(o =>
+				{
+					List<AccessorDeclarationSyntax> accessors = new()
+					{
+						// Add getter
+						SyntaxFactory
+							.AccessorDeclaration(SyntaxKind.GetAccessorDeclaration)
+							.WithExpressionBody(SyntaxFactory.ArrowExpressionClause(
+								SyntaxFactory.ConditionalExpression(
+									// this.Tag == {EnumName}.{OptionName}
+									SyntaxFactory.BinaryExpression(
+										SyntaxKind.EqualsExpression,
+										SyntaxFactory.MemberAccessExpression(
+											SyntaxKind.SimpleMemberAccessExpression,
+											SyntaxFactory.ThisExpression(),
+											SyntaxFactory.IdentifierName(tagName)
+										),
+										SyntaxFactory.MemberAccessExpression(
+											SyntaxKind.SimpleMemberAccessExpression,
+											enumTypeName.ToTypeSyntax(),
+											SyntaxFactory.IdentifierName(o.Name.Name)
+										)
+									),
+									// ({OptionType}) this.Value!
+									SyntaxFactory.CastExpression(
+										o.Type!.Name.ToTypeSyntax(),
+										SyntaxFactory.PostfixUnaryExpression(
+											SyntaxKind.SuppressNullableWarningExpression,
+											SyntaxFactory.MemberAccessExpression(
+												SyntaxKind.SimpleMemberAccessExpression,
+												SyntaxFactory.ThisExpression(),
+												SyntaxFactory.IdentifierName(valueName)
+											)
+										)
+										
+									),
+									// default
+									SyntaxFactory.LiteralExpression(
+										SyntaxKind.DefaultLiteralExpression,
+										SyntaxFactory.Token(SyntaxKind.DefaultKeyword)
+									)
+								)
+							))
+							.WithSemicolonToken(
+								SyntaxFactory.Token(SyntaxKind.SemicolonToken)
+							),
+						// Add setter
+						SyntaxFactory
+							.AccessorDeclaration(SyntaxKind.SetAccessorDeclaration)
+							.WithExpressionBody(SyntaxFactory.ArrowExpressionClause(
+								SyntaxFactory.AssignmentExpression(
+									SyntaxKind.SimpleAssignmentExpression,
+									SyntaxFactory.TupleExpression(
+										SyntaxFactory.SeparatedList<ArgumentSyntax>(
+											new SyntaxNodeOrToken[]{
+												SyntaxFactory.Argument(
+													SyntaxFactory.MemberAccessExpression(
+														SyntaxKind.SimpleMemberAccessExpression,
+														SyntaxFactory.ThisExpression(),
+														SyntaxFactory.IdentifierName(tagName)
+													)
+												),
+												SyntaxFactory.Token(SyntaxKind.CommaToken),
+												SyntaxFactory.Argument(
+													SyntaxFactory.MemberAccessExpression(
+														SyntaxKind.SimpleMemberAccessExpression,
+														SyntaxFactory.ThisExpression(),
+														SyntaxFactory.IdentifierName(valueName)
+													)
+												)
+											}
+										)
+									),
+									SyntaxFactory.TupleExpression(
+										SyntaxFactory.SeparatedList<ArgumentSyntax>(
+											new SyntaxNodeOrToken[]{
+												SyntaxFactory.Argument(
+													SyntaxFactory.MemberAccessExpression(
+														SyntaxKind.SimpleMemberAccessExpression,
+														enumTypeName.ToTypeSyntax(),
+														SyntaxFactory.IdentifierName(o.Name.Name)
+													)
+												),
+												SyntaxFactory.Token(SyntaxKind.CommaToken),
+												SyntaxFactory.Argument(
+													SyntaxFactory.IdentifierName("value")
+												)
+											}
+										)
+									)
+								)
+							))
+							.WithSemicolonToken(
+								SyntaxFactory.Token(SyntaxKind.SemicolonToken)
+							)
+					};
+					TypeName fixedTypeName = this.FeatureNullable
+						? new NullableTypeName(o.Type.Name)
+						: o.Type.Name;
+					return SyntaxFactory.PropertyDeclaration(
+						fixedTypeName.ToTypeSyntax(),
+						o.Name.Name
+					)
+					.WithModifiers(
+						SyntaxFactory.TokenList(
+							SyntaxFactory.Token(SyntaxKind.PublicKeyword)
+						)
+					)
+					.WithAccessorList(SyntaxFactory.AccessorList(
+						SyntaxFactory.List(accessors)
+					));
+				})
+				.ToList();
+
+		}
+
+		private List<MethodDeclarationSyntax> GenerateVariantMethods(
+			TypeName variantTypeName,
+			TypeName enumTypeName,
+			string valueName,
+			string tagName,
+			List<(ResolvedName Name, ResolvedType? Type)> resolvedOptions
+		)
+		{
+			// Creation methods
+			// public static {VariantType} {OptionName}({VariantOptionType} value)
+			// or if there is no type:
+			// public static {VariantType} {OptionName}()
+			List<MethodDeclarationSyntax> methods = resolvedOptions
+				.Select(o => this.GenerateVariantOptionCreationMethod(
+					variantTypeName,
+					enumTypeName,
+					o.Name,
+					o.Type,
+					"info"
+				))
+				.ToList();
+
+
+			// 'As{X}' methods (if has option type)
+			methods.AddRange(
+				resolvedOptions
+				.Where(r => r.Type != null)
+				.Select(o => this.GenerateVariantOptionAsMethod(enumTypeName, o.Name, o.Type!, valueName))
+			);
+
+
+			bool anyOptionsWithType = resolvedOptions.Any(o => o.Type != null);
+			if (anyOptionsWithType)
+			{
+				// If there are any types, then create the helper method 'ValidateType' that
+				// they all use
+				methods.Add(this.GenerateVariantValidateTypeMethod(enumTypeName, tagName));
+			}
+			return methods;
 		}
 
 		private TypeName BuildType(string name, TypeName? parentType)
@@ -531,6 +698,7 @@ namespace EdjCase.ICP.ClientGenerator
 					)
 				)
 			);
+
 			return this.GenerateMethod(
 				body: body,
 				access: AccessType.Public,
@@ -738,15 +906,6 @@ namespace EdjCase.ICP.ClientGenerator
 						attributeList.Add(this.GenerateAttribute(
 							new AttributeInfo(SimpleTypeName.FromType<CandidNameAttribute>(), v.Name.CandidTag.Name!)
 						));
-					}
-
-					if (v.Type != null)
-					{
-						// [VariantOptionType(typeof({type}))]
-						attributeList.Add(this.GenerateAttribute(
-							new AttributeInfo(SimpleTypeName.FromType<VariantOptionTypeAttribute>(), v.Type)
-						));
-
 					}
 					return SyntaxFactory
 						// {optionName},
@@ -1410,6 +1569,7 @@ namespace EdjCase.ICP.ClientGenerator
 			List<ClassProperty> properties,
 			List<ClassProperty>? optionalProperties = null,
 			List<MethodDeclarationSyntax>? methods = null,
+			List<PropertyDeclarationSyntax>? customProperties = null,
 			List<TypeName>? implementTypes = null,
 			List<AttributeListSyntax>? attributes = null,
 			AccessType? emptyConstructorAccess = null,
@@ -1448,11 +1608,16 @@ namespace EdjCase.ICP.ClientGenerator
 				.Concat(optionalProperties ?? new List<ClassProperty>())
 				.Select(this.GenerateProperty)
 				.Where(p => p != null)!;
+			if (customProperties != null)
+			{
+				properySyntaxList = properySyntaxList.Concat(customProperties);
+			}
 			if (properties.Any())
 			{
 				// Only create constructor if there are properties
 				constructors.Add(this.GenerateConstructor(name, AccessType.Public, properties, optionalProperties));
 			}
+
 			if (emptyConstructorAccess != null)
 			{
 				// Empty Constrcutor for reflection

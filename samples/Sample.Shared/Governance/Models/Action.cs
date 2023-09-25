@@ -4,7 +4,7 @@ using System;
 
 namespace Sample.Shared.Governance.Models
 {
-	[Variant(typeof(ActionTag))]
+	[Variant()]
 	public class Action
 	{
 		[VariantTagProperty()]
@@ -23,9 +23,9 @@ namespace Sample.Shared.Governance.Models
 		{
 		}
 
-		public static Action RegisterKnownNeuron(KnownNeuron info)
+		public static Action RegisterNeuron(KnownNeuron info)
 		{
-			return new Action(ActionTag.RegisterKnownNeuron, info);
+			return new Action(ActionTag.RegisterNeuron, info);
 		}
 
 		public static Action ManageNeuron(ManageNeuron info)
@@ -88,9 +88,9 @@ namespace Sample.Shared.Governance.Models
 			return new Action(ActionTag.Motion, info);
 		}
 
-		public KnownNeuron AsRegisterKnownNeuron()
+		public KnownNeuron AsRegisterNeuron()
 		{
-			this.ValidateTag(ActionTag.RegisterKnownNeuron);
+			this.ValidateTag(ActionTag.RegisterNeuron);
 			return (KnownNeuron)this.Value!;
 		}
 
@@ -177,31 +177,19 @@ namespace Sample.Shared.Governance.Models
 
 	public enum ActionTag
 	{
-		[VariantOptionType(typeof(KnownNeuron))]
-		RegisterKnownNeuron,
-		[VariantOptionType(typeof(ManageNeuron))]
+		[CandidName("RegisterKnownNeuron")]
+		RegisterNeuron,
 		ManageNeuron,
-		[VariantOptionType(typeof(CreateServiceNervousSystem))]
 		CreateServiceNervousSystem,
-		[VariantOptionType(typeof(ExecuteNnsFunction))]
 		ExecuteNnsFunction,
-		[VariantOptionType(typeof(RewardNodeProvider))]
 		RewardNodeProvider,
-		[VariantOptionType(typeof(OpenSnsTokenSwap))]
 		OpenSnsTokenSwap,
-		[VariantOptionType(typeof(SetSnsTokenSwapOpenTimeWindow))]
 		SetSnsTokenSwapOpenTimeWindow,
-		[VariantOptionType(typeof(SetDefaultFollowees))]
 		SetDefaultFollowees,
-		[VariantOptionType(typeof(RewardNodeProviders))]
 		RewardNodeProviders,
-		[VariantOptionType(typeof(NetworkEconomics))]
 		ManageNetworkEconomics,
-		[VariantOptionType(typeof(ApproveGenesisKyc))]
 		ApproveGenesisKyc,
-		[VariantOptionType(typeof(AddOrRemoveNodeProvider))]
 		AddOrRemoveNodeProvider,
-		[VariantOptionType(typeof(Motion))]
 		Motion
 	}
 }

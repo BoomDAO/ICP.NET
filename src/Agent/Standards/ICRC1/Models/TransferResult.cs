@@ -8,7 +8,7 @@ namespace EdjCase.ICP.Agent.Standards.ICRC1.Models
 	/// <summary>
 	/// Represents the result of a transfer operation, which can either be Ok with a value or Err with an error object
 	/// </summary>
-	[Variant(typeof(TransferResultTag))]
+	[Variant]
 	public class TransferResult
 	{
 		/// <summary>
@@ -96,12 +96,10 @@ namespace EdjCase.ICP.Agent.Standards.ICRC1.Models
 		/// <summary>
 		/// Indicates a successful transfer operation with the associated UnboundedUInt value
 		/// </summary>
-		[VariantOptionType(typeof(UnboundedUInt))]
 		Ok,
 		/// <summary>
 		/// Indicates a failed transfer operation with the associated TransferError object containing information about the error
 		/// </summary>
-		[VariantOptionType(typeof(TransferError))]
 		Err
 	}
 

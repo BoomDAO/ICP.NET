@@ -8,7 +8,7 @@
   - [GenerateClientFromCanisterAsync(canisterId,options)](#M-EdjCase-ICP-ClientGenerator-ClientCodeGenerator-GenerateClientFromCanisterAsync-EdjCase-ICP-Candid-Models-Principal,EdjCase-ICP-ClientGenerator-ClientGenerationOptions- 'EdjCase.ICP.ClientGenerator.ClientCodeGenerator.GenerateClientFromCanisterAsync(EdjCase.ICP.Candid.Models.Principal,EdjCase.ICP.ClientGenerator.ClientGenerationOptions)')
   - [GenerateClientFromFile(fileText,options)](#M-EdjCase-ICP-ClientGenerator-ClientCodeGenerator-GenerateClientFromFile-System-String,EdjCase-ICP-ClientGenerator-ClientGenerationOptions- 'EdjCase.ICP.ClientGenerator.ClientCodeGenerator.GenerateClientFromFile(System.String,EdjCase.ICP.ClientGenerator.ClientGenerationOptions)')
 - [ClientGenerationOptions](#T-EdjCase-ICP-ClientGenerator-ClientGenerationOptions 'EdjCase.ICP.ClientGenerator.ClientGenerationOptions')
-  - [#ctor(name,namespace,getDefinitionFromCanister,filePathOrCandidId,outputDirectory,purgeOutputDirectory,noFolders,featureNullable,keepCandidCase,boundryNodeUrl,types)](#M-EdjCase-ICP-ClientGenerator-ClientGenerationOptions-#ctor-System-String,System-String,System-Boolean,System-String,System-String,System-Boolean,System-Boolean,System-Boolean,System-Boolean,System-Uri,System-Collections-Generic-Dictionary{System-String,EdjCase-ICP-ClientGenerator-NamedTypeOptions}- 'EdjCase.ICP.ClientGenerator.ClientGenerationOptions.#ctor(System.String,System.String,System.Boolean,System.String,System.String,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Uri,System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.ClientGenerator.NamedTypeOptions})')
+  - [#ctor(name,namespace,getDefinitionFromCanister,filePathOrCandidId,outputDirectory,purgeOutputDirectory,noFolders,featureNullable,variantsUseProperties,keepCandidCase,boundryNodeUrl,types)](#M-EdjCase-ICP-ClientGenerator-ClientGenerationOptions-#ctor-System-String,System-String,System-Boolean,System-String,System-String,System-Boolean,System-Boolean,System-Boolean,System-Boolean,System-Boolean,System-Uri,System-Collections-Generic-Dictionary{System-String,EdjCase-ICP-ClientGenerator-NamedTypeOptions}- 'EdjCase.ICP.ClientGenerator.ClientGenerationOptions.#ctor(System.String,System.String,System.Boolean,System.String,System.String,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Uri,System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.ClientGenerator.NamedTypeOptions})')
   - [BoundryNodeUrl](#P-EdjCase-ICP-ClientGenerator-ClientGenerationOptions-BoundryNodeUrl 'EdjCase.ICP.ClientGenerator.ClientGenerationOptions.BoundryNodeUrl')
   - [FeatureNullable](#P-EdjCase-ICP-ClientGenerator-ClientGenerationOptions-FeatureNullable 'EdjCase.ICP.ClientGenerator.ClientGenerationOptions.FeatureNullable')
   - [FilePathOrCanisterId](#P-EdjCase-ICP-ClientGenerator-ClientGenerationOptions-FilePathOrCanisterId 'EdjCase.ICP.ClientGenerator.ClientGenerationOptions.FilePathOrCanisterId')
@@ -20,6 +20,7 @@
   - [OutputDirectory](#P-EdjCase-ICP-ClientGenerator-ClientGenerationOptions-OutputDirectory 'EdjCase.ICP.ClientGenerator.ClientGenerationOptions.OutputDirectory')
   - [PurgeOutputDirectory](#P-EdjCase-ICP-ClientGenerator-ClientGenerationOptions-PurgeOutputDirectory 'EdjCase.ICP.ClientGenerator.ClientGenerationOptions.PurgeOutputDirectory')
   - [Types](#P-EdjCase-ICP-ClientGenerator-ClientGenerationOptions-Types 'EdjCase.ICP.ClientGenerator.ClientGenerationOptions.Types')
+  - [VariantsUseProperties](#P-EdjCase-ICP-ClientGenerator-ClientGenerationOptions-VariantsUseProperties 'EdjCase.ICP.ClientGenerator.ClientGenerationOptions.VariantsUseProperties')
 - [ClientSyntax](#T-EdjCase-ICP-ClientGenerator-ClientSyntax 'EdjCase.ICP.ClientGenerator.ClientSyntax')
   - [#ctor(name,clientFile,typeFiles)](#M-EdjCase-ICP-ClientGenerator-ClientSyntax-#ctor-System-String,Microsoft-CodeAnalysis-CSharp-Syntax-CompilationUnitSyntax,System-Collections-Generic-List{System-ValueTuple{System-String,Microsoft-CodeAnalysis-CSharp-Syntax-CompilationUnitSyntax}}- 'EdjCase.ICP.ClientGenerator.ClientSyntax.#ctor(System.String,Microsoft.CodeAnalysis.CSharp.Syntax.CompilationUnitSyntax,System.Collections.Generic.List{System.ValueTuple{System.String,Microsoft.CodeAnalysis.CSharp.Syntax.CompilationUnitSyntax}})')
   - [ClientFile](#P-EdjCase-ICP-ClientGenerator-ClientSyntax-ClientFile 'EdjCase.ICP.ClientGenerator.ClientSyntax.ClientFile')
@@ -28,29 +29,15 @@
   - [GenerateFileContents()](#M-EdjCase-ICP-ClientGenerator-ClientSyntax-GenerateFileContents 'EdjCase.ICP.ClientGenerator.ClientSyntax.GenerateFileContents')
   - [GenerateFileContents(syntax)](#M-EdjCase-ICP-ClientGenerator-ClientSyntax-GenerateFileContents-Microsoft-CodeAnalysis-CSharp-Syntax-CompilationUnitSyntax- 'EdjCase.ICP.ClientGenerator.ClientSyntax.GenerateFileContents(Microsoft.CodeAnalysis.CSharp.Syntax.CompilationUnitSyntax)')
   - [Rewrite(rewriter)](#M-EdjCase-ICP-ClientGenerator-ClientSyntax-Rewrite-Microsoft-CodeAnalysis-CSharp-CSharpSyntaxRewriter- 'EdjCase.ICP.ClientGenerator.ClientSyntax.Rewrite(Microsoft.CodeAnalysis.CSharp.CSharpSyntaxRewriter)')
-- [ITypeOptions](#T-EdjCase-ICP-ClientGenerator-ITypeOptions 'EdjCase.ICP.ClientGenerator.ITypeOptions')
-  - [Type](#P-EdjCase-ICP-ClientGenerator-ITypeOptions-Type 'EdjCase.ICP.ClientGenerator.ITypeOptions.Type')
 - [NamedTypeOptions](#T-EdjCase-ICP-ClientGenerator-NamedTypeOptions 'EdjCase.ICP.ClientGenerator.NamedTypeOptions')
-  - [#ctor(nameOverride,typeOptions)](#M-EdjCase-ICP-ClientGenerator-NamedTypeOptions-#ctor-System-String,EdjCase-ICP-ClientGenerator-ITypeOptions- 'EdjCase.ICP.ClientGenerator.NamedTypeOptions.#ctor(System.String,EdjCase.ICP.ClientGenerator.ITypeOptions)')
+  - [#ctor(nameOverride,typeOptions)](#M-EdjCase-ICP-ClientGenerator-NamedTypeOptions-#ctor-System-String,EdjCase-ICP-ClientGenerator-TypeOptions- 'EdjCase.ICP.ClientGenerator.NamedTypeOptions.#ctor(System.String,EdjCase.ICP.ClientGenerator.TypeOptions)')
   - [NameOverride](#P-EdjCase-ICP-ClientGenerator-NamedTypeOptions-NameOverride 'EdjCase.ICP.ClientGenerator.NamedTypeOptions.NameOverride')
   - [TypeOptions](#P-EdjCase-ICP-ClientGenerator-NamedTypeOptions-TypeOptions 'EdjCase.ICP.ClientGenerator.NamedTypeOptions.TypeOptions')
-- [RecordTypeOptions](#T-EdjCase-ICP-ClientGenerator-RecordTypeOptions 'EdjCase.ICP.ClientGenerator.RecordTypeOptions')
-  - [#ctor(fields)](#M-EdjCase-ICP-ClientGenerator-RecordTypeOptions-#ctor-System-Collections-Generic-Dictionary{System-String,EdjCase-ICP-ClientGenerator-NamedTypeOptions}- 'EdjCase.ICP.ClientGenerator.RecordTypeOptions.#ctor(System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.ClientGenerator.NamedTypeOptions})')
-  - [Fields](#P-EdjCase-ICP-ClientGenerator-RecordTypeOptions-Fields 'EdjCase.ICP.ClientGenerator.RecordTypeOptions.Fields')
-  - [Type](#P-EdjCase-ICP-ClientGenerator-RecordTypeOptions-Type 'EdjCase.ICP.ClientGenerator.RecordTypeOptions.Type')
-- [VariantTypeOptions](#T-EdjCase-ICP-ClientGenerator-VariantTypeOptions 'EdjCase.ICP.ClientGenerator.VariantTypeOptions')
-  - [#ctor(options)](#M-EdjCase-ICP-ClientGenerator-VariantTypeOptions-#ctor-System-Collections-Generic-Dictionary{System-String,EdjCase-ICP-ClientGenerator-NamedTypeOptions}- 'EdjCase.ICP.ClientGenerator.VariantTypeOptions.#ctor(System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.ClientGenerator.NamedTypeOptions})')
-  - [Options](#P-EdjCase-ICP-ClientGenerator-VariantTypeOptions-Options 'EdjCase.ICP.ClientGenerator.VariantTypeOptions.Options')
-  - [Type](#P-EdjCase-ICP-ClientGenerator-VariantTypeOptions-Type 'EdjCase.ICP.ClientGenerator.VariantTypeOptions.Type')
-- [VectorRepresentation](#T-EdjCase-ICP-ClientGenerator-VectorRepresentation 'EdjCase.ICP.ClientGenerator.VectorRepresentation')
-  - [Array](#F-EdjCase-ICP-ClientGenerator-VectorRepresentation-Array 'EdjCase.ICP.ClientGenerator.VectorRepresentation.Array')
-  - [Dictionary](#F-EdjCase-ICP-ClientGenerator-VectorRepresentation-Dictionary 'EdjCase.ICP.ClientGenerator.VectorRepresentation.Dictionary')
-  - [List](#F-EdjCase-ICP-ClientGenerator-VectorRepresentation-List 'EdjCase.ICP.ClientGenerator.VectorRepresentation.List')
-- [VectorTypeOptions](#T-EdjCase-ICP-ClientGenerator-VectorTypeOptions 'EdjCase.ICP.ClientGenerator.VectorTypeOptions')
-  - [#ctor(representation,elementType)](#M-EdjCase-ICP-ClientGenerator-VectorTypeOptions-#ctor-System-Nullable{EdjCase-ICP-ClientGenerator-VectorRepresentation},EdjCase-ICP-ClientGenerator-ITypeOptions- 'EdjCase.ICP.ClientGenerator.VectorTypeOptions.#ctor(System.Nullable{EdjCase.ICP.ClientGenerator.VectorRepresentation},EdjCase.ICP.ClientGenerator.ITypeOptions)')
-  - [ElementType](#P-EdjCase-ICP-ClientGenerator-VectorTypeOptions-ElementType 'EdjCase.ICP.ClientGenerator.VectorTypeOptions.ElementType')
-  - [Representation](#P-EdjCase-ICP-ClientGenerator-VectorTypeOptions-Representation 'EdjCase.ICP.ClientGenerator.VectorTypeOptions.Representation')
-  - [Type](#P-EdjCase-ICP-ClientGenerator-VectorTypeOptions-Type 'EdjCase.ICP.ClientGenerator.VectorTypeOptions.Type')
+- [TypeOptions](#T-EdjCase-ICP-ClientGenerator-TypeOptions 'EdjCase.ICP.ClientGenerator.TypeOptions')
+  - [#ctor(fields,innerType,representation)](#M-EdjCase-ICP-ClientGenerator-TypeOptions-#ctor-System-Collections-Generic-Dictionary{System-String,EdjCase-ICP-ClientGenerator-NamedTypeOptions},EdjCase-ICP-ClientGenerator-TypeOptions,System-String- 'EdjCase.ICP.ClientGenerator.TypeOptions.#ctor(System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.ClientGenerator.NamedTypeOptions},EdjCase.ICP.ClientGenerator.TypeOptions,System.String)')
+  - [Fields](#P-EdjCase-ICP-ClientGenerator-TypeOptions-Fields 'EdjCase.ICP.ClientGenerator.TypeOptions.Fields')
+  - [InnerType](#P-EdjCase-ICP-ClientGenerator-TypeOptions-InnerType 'EdjCase.ICP.ClientGenerator.TypeOptions.InnerType')
+  - [Representation](#P-EdjCase-ICP-ClientGenerator-TypeOptions-Representation 'EdjCase.ICP.ClientGenerator.TypeOptions.Representation')
 
 <a name='T-EdjCase-ICP-ClientGenerator-ClientCodeGenerator'></a>
 ## ClientCodeGenerator `type`
@@ -118,8 +105,8 @@ EdjCase.ICP.ClientGenerator
 
 Options for generating a client
 
-<a name='M-EdjCase-ICP-ClientGenerator-ClientGenerationOptions-#ctor-System-String,System-String,System-Boolean,System-String,System-String,System-Boolean,System-Boolean,System-Boolean,System-Boolean,System-Uri,System-Collections-Generic-Dictionary{System-String,EdjCase-ICP-ClientGenerator-NamedTypeOptions}-'></a>
-### #ctor(name,namespace,getDefinitionFromCanister,filePathOrCandidId,outputDirectory,purgeOutputDirectory,noFolders,featureNullable,keepCandidCase,boundryNodeUrl,types) `constructor`
+<a name='M-EdjCase-ICP-ClientGenerator-ClientGenerationOptions-#ctor-System-String,System-String,System-Boolean,System-String,System-String,System-Boolean,System-Boolean,System-Boolean,System-Boolean,System-Boolean,System-Uri,System-Collections-Generic-Dictionary{System-String,EdjCase-ICP-ClientGenerator-NamedTypeOptions}-'></a>
+### #ctor(name,namespace,getDefinitionFromCanister,filePathOrCandidId,outputDirectory,purgeOutputDirectory,noFolders,featureNullable,variantsUseProperties,keepCandidCase,boundryNodeUrl,types) `constructor`
 
 ##### Parameters
 
@@ -133,6 +120,7 @@ Options for generating a client
 | purgeOutputDirectory | [System.Boolean](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Boolean 'System.Boolean') | If true, removes all files in the output directory before regeneration. Defaults to true |
 | noFolders | [System.Boolean](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Boolean 'System.Boolean') | If true, there will be no folders, all files will be in the same directory |
 | featureNullable | [System.Boolean](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Boolean 'System.Boolean') | If true, the nullable C# feature will be used |
+| variantsUseProperties | [System.Boolean](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Boolean 'System.Boolean') | If true, variant classes will be generated with properties instead of methods |
 | keepCandidCase | [System.Boolean](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Boolean 'System.Boolean') | If true, the names of properties and methods will keep the raw candid name. Otherwise they will be converted to something prettier |
 | boundryNodeUrl | [System.Uri](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Uri 'System.Uri') | Optional. The url of the boundry node for the internet computer. Defaults to ic0.app |
 | types | [System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.ClientGenerator.NamedTypeOptions}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.Dictionary 'System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.ClientGenerator.NamedTypeOptions}') | Optional. Specifies options for each candid type in the definition |
@@ -215,6 +203,13 @@ If true, removes all files in the output directory before regeneration, otherwis
 
 Optional. Specifies options for each candid type in the definition.
 Only supports named types, no anonymous types
+
+<a name='P-EdjCase-ICP-ClientGenerator-ClientGenerationOptions-VariantsUseProperties'></a>
+### VariantsUseProperties `property`
+
+##### Summary
+
+If true, variant classes will be generated with properties instead of methods
 
 <a name='T-EdjCase-ICP-ClientGenerator-ClientSyntax'></a>
 ## ClientSyntax `type`
@@ -308,24 +303,6 @@ Updated client syntax
 | ---- | ---- | ----------- |
 | rewriter | [Microsoft.CodeAnalysis.CSharp.CSharpSyntaxRewriter](#T-Microsoft-CodeAnalysis-CSharp-CSharpSyntaxRewriter 'Microsoft.CodeAnalysis.CSharp.CSharpSyntaxRewriter') | A \`CSharpSyntaxRewriter\` to rewrite the csharp syntax |
 
-<a name='T-EdjCase-ICP-ClientGenerator-ITypeOptions'></a>
-## ITypeOptions `type`
-
-##### Namespace
-
-EdjCase.ICP.ClientGenerator
-
-##### Summary
-
-Interface to specify generation options for specific types in the candid
-
-<a name='P-EdjCase-ICP-ClientGenerator-ITypeOptions-Type'></a>
-### Type `property`
-
-##### Summary
-
-The candid type of the implementation class
-
 <a name='T-EdjCase-ICP-ClientGenerator-NamedTypeOptions'></a>
 ## NamedTypeOptions `type`
 
@@ -337,7 +314,7 @@ EdjCase.ICP.ClientGenerator
 
 Type options for a record field or variant option
 
-<a name='M-EdjCase-ICP-ClientGenerator-NamedTypeOptions-#ctor-System-String,EdjCase-ICP-ClientGenerator-ITypeOptions-'></a>
+<a name='M-EdjCase-ICP-ClientGenerator-NamedTypeOptions-#ctor-System-String,EdjCase-ICP-ClientGenerator-TypeOptions-'></a>
 ### #ctor(nameOverride,typeOptions) `constructor`
 
 ##### Parameters
@@ -345,7 +322,7 @@ Type options for a record field or variant option
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | nameOverride | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | Optional. The C# type name to use instead of the default |
-| typeOptions | [EdjCase.ICP.ClientGenerator.ITypeOptions](#T-EdjCase-ICP-ClientGenerator-ITypeOptions 'EdjCase.ICP.ClientGenerator.ITypeOptions') | Optional. The field or option type information |
+| typeOptions | [EdjCase.ICP.ClientGenerator.TypeOptions](#T-EdjCase-ICP-ClientGenerator-TypeOptions 'EdjCase.ICP.ClientGenerator.TypeOptions') | Optional. The field or option type information |
 
 <a name='P-EdjCase-ICP-ClientGenerator-NamedTypeOptions-NameOverride'></a>
 ### NameOverride `property`
@@ -361,8 +338,8 @@ Optional. The C# type name to use instead of the default
 
 Optional. The field or option type information
 
-<a name='T-EdjCase-ICP-ClientGenerator-RecordTypeOptions'></a>
-## RecordTypeOptions `type`
+<a name='T-EdjCase-ICP-ClientGenerator-TypeOptions'></a>
+## TypeOptions `type`
 
 ##### Namespace
 
@@ -370,135 +347,42 @@ EdjCase.ICP.ClientGenerator
 
 ##### Summary
 
-Type generation options for record candid types
+Interface to specify generation options for specific types in the candid
 
-<a name='M-EdjCase-ICP-ClientGenerator-RecordTypeOptions-#ctor-System-Collections-Generic-Dictionary{System-String,EdjCase-ICP-ClientGenerator-NamedTypeOptions}-'></a>
-### #ctor(fields) `constructor`
+<a name='M-EdjCase-ICP-ClientGenerator-TypeOptions-#ctor-System-Collections-Generic-Dictionary{System-String,EdjCase-ICP-ClientGenerator-NamedTypeOptions},EdjCase-ICP-ClientGenerator-TypeOptions,System-String-'></a>
+### #ctor(fields,innerType,representation) `constructor`
 
 ##### Parameters
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| fields | [System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.ClientGenerator.NamedTypeOptions}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.Dictionary 'System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.ClientGenerator.NamedTypeOptions}') | Optional. The type options for each of the records fields |
+| fields | [System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.ClientGenerator.NamedTypeOptions}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.Dictionary 'System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.ClientGenerator.NamedTypeOptions}') | Optional. The type options for each of the records fields or variant options |
+| innerType | [EdjCase.ICP.ClientGenerator.TypeOptions](#T-EdjCase-ICP-ClientGenerator-TypeOptions 'EdjCase.ICP.ClientGenerator.TypeOptions') | Optional. The type options for the sub type of a vec or opt |
+| representation | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | Optional. How the type should be represented in C# |
 
-<a name='P-EdjCase-ICP-ClientGenerator-RecordTypeOptions-Fields'></a>
+##### Exceptions
+
+| Name | Description |
+| ---- | ----------- |
+| [System.ArgumentNullException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.ArgumentNullException 'System.ArgumentNullException') |  |
+
+<a name='P-EdjCase-ICP-ClientGenerator-TypeOptions-Fields'></a>
 ### Fields `property`
 
 ##### Summary
 
-Optional. The type options for each of the records fields
+Optional. The type options for each of the records fields or variant options
 
-<a name='P-EdjCase-ICP-ClientGenerator-RecordTypeOptions-Type'></a>
-### Type `property`
-
-##### Summary
-
-*Inherit from parent.*
-
-<a name='T-EdjCase-ICP-ClientGenerator-VariantTypeOptions'></a>
-## VariantTypeOptions `type`
-
-##### Namespace
-
-EdjCase.ICP.ClientGenerator
+<a name='P-EdjCase-ICP-ClientGenerator-TypeOptions-InnerType'></a>
+### InnerType `property`
 
 ##### Summary
 
-Type generation options for variant candid types
+Optional. The type options for the sub type of a vec or opt
 
-<a name='M-EdjCase-ICP-ClientGenerator-VariantTypeOptions-#ctor-System-Collections-Generic-Dictionary{System-String,EdjCase-ICP-ClientGenerator-NamedTypeOptions}-'></a>
-### #ctor(options) `constructor`
-
-##### Parameters
-
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| options | [System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.ClientGenerator.NamedTypeOptions}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.Dictionary 'System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.ClientGenerator.NamedTypeOptions}') | Optional. The type options for each of the variant options |
-
-<a name='P-EdjCase-ICP-ClientGenerator-VariantTypeOptions-Options'></a>
-### Options `property`
-
-##### Summary
-
-Optional. The type options for each of the variant options
-
-<a name='P-EdjCase-ICP-ClientGenerator-VariantTypeOptions-Type'></a>
-### Type `property`
-
-##### Summary
-
-*Inherit from parent.*
-
-<a name='T-EdjCase-ICP-ClientGenerator-VectorRepresentation'></a>
-## VectorRepresentation `type`
-
-##### Namespace
-
-EdjCase.ICP.ClientGenerator
-
-##### Summary
-
-C# type representations for the vec type
-
-<a name='F-EdjCase-ICP-ClientGenerator-VectorRepresentation-Array'></a>
-### Array `constants`
-
-##### Summary
-
-Vector will be an array
-
-<a name='F-EdjCase-ICP-ClientGenerator-VectorRepresentation-Dictionary'></a>
-### Dictionary `constants`
-
-##### Summary
-
-Vector will be a dictionary, only if the element type is a record with 2 fields
-
-<a name='F-EdjCase-ICP-ClientGenerator-VectorRepresentation-List'></a>
-### List `constants`
-
-##### Summary
-
-Vector will be a List
-
-<a name='T-EdjCase-ICP-ClientGenerator-VectorTypeOptions'></a>
-## VectorTypeOptions `type`
-
-##### Namespace
-
-EdjCase.ICP.ClientGenerator
-
-##### Summary
-
-Type generation options for vec candid types
-
-<a name='M-EdjCase-ICP-ClientGenerator-VectorTypeOptions-#ctor-System-Nullable{EdjCase-ICP-ClientGenerator-VectorRepresentation},EdjCase-ICP-ClientGenerator-ITypeOptions-'></a>
-### #ctor(representation,elementType) `constructor`
-
-##### Parameters
-
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| representation | [System.Nullable{EdjCase.ICP.ClientGenerator.VectorRepresentation}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Nullable 'System.Nullable{EdjCase.ICP.ClientGenerator.VectorRepresentation}') | Optional. The representation the vec should take in the generated code |
-| elementType | [EdjCase.ICP.ClientGenerator.ITypeOptions](#T-EdjCase-ICP-ClientGenerator-ITypeOptions 'EdjCase.ICP.ClientGenerator.ITypeOptions') | Optional. The type options for the element type in the vec |
-
-<a name='P-EdjCase-ICP-ClientGenerator-VectorTypeOptions-ElementType'></a>
-### ElementType `property`
-
-##### Summary
-
-Optional. The type options for the element type in the vec
-
-<a name='P-EdjCase-ICP-ClientGenerator-VectorTypeOptions-Representation'></a>
+<a name='P-EdjCase-ICP-ClientGenerator-TypeOptions-Representation'></a>
 ### Representation `property`
 
 ##### Summary
 
-Optional. The representation the vec should take in the generated code
-
-<a name='P-EdjCase-ICP-ClientGenerator-VectorTypeOptions-Type'></a>
-### Type `property`
-
-##### Summary
-
-*Inherit from parent.*
+Optional. How the type should be represented in C#

@@ -4,7 +4,7 @@ using System;
 
 namespace Sample.Shared.Governance.Models
 {
-	[Variant(typeof(ProgressTag))]
+	[Variant()]
 	public class Progress
 	{
 		[VariantTagProperty()]
@@ -45,7 +45,6 @@ namespace Sample.Shared.Governance.Models
 
 	public enum ProgressTag
 	{
-		[VariantOptionType(typeof(NeuronId))]
 		LastNeuronId
 	}
 }

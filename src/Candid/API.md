@@ -683,11 +683,10 @@
 - [UnboundedUIntExtensions](#T-EdjCase-ICP-Candid-Models-UnboundedUIntExtensions 'EdjCase.ICP.Candid.Models.UnboundedUIntExtensions')
   - [ToUnbounded(value)](#M-EdjCase-ICP-Candid-Models-UnboundedUIntExtensions-ToUnbounded-System-UInt64- 'EdjCase.ICP.Candid.Models.UnboundedUIntExtensions.ToUnbounded(System.UInt64)')
 - [VariantAttribute](#T-EdjCase-ICP-Candid-Mapping-VariantAttribute 'EdjCase.ICP.Candid.Mapping.VariantAttribute')
-  - [#ctor(enumType)](#M-EdjCase-ICP-Candid-Mapping-VariantAttribute-#ctor-System-Type- 'EdjCase.ICP.Candid.Mapping.VariantAttribute.#ctor(System.Type)')
-  - [TagType](#P-EdjCase-ICP-Candid-Mapping-VariantAttribute-TagType 'EdjCase.ICP.Candid.Mapping.VariantAttribute.TagType')
-- [VariantOptionTypeAttribute](#T-EdjCase-ICP-Candid-Mapping-VariantOptionTypeAttribute 'EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute')
-  - [#ctor(optionType)](#M-EdjCase-ICP-Candid-Mapping-VariantOptionTypeAttribute-#ctor-System-Type- 'EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute.#ctor(System.Type)')
-  - [OptionType](#P-EdjCase-ICP-Candid-Mapping-VariantOptionTypeAttribute-OptionType 'EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute.OptionType')
+- [VariantOptionAttribute](#T-EdjCase-ICP-Candid-Mapping-VariantOptionAttribute 'EdjCase.ICP.Candid.Mapping.VariantOptionAttribute')
+  - [#ctor(tag)](#M-EdjCase-ICP-Candid-Mapping-VariantOptionAttribute-#ctor-EdjCase-ICP-Candid-Models-CandidTag- 'EdjCase.ICP.Candid.Mapping.VariantOptionAttribute.#ctor(EdjCase.ICP.Candid.Models.CandidTag)')
+  - [#ctor(tag)](#M-EdjCase-ICP-Candid-Mapping-VariantOptionAttribute-#ctor-System-String- 'EdjCase.ICP.Candid.Mapping.VariantOptionAttribute.#ctor(System.String)')
+  - [Tag](#P-EdjCase-ICP-Candid-Mapping-VariantOptionAttribute-Tag 'EdjCase.ICP.Candid.Mapping.VariantOptionAttribute.Tag')
 - [VariantTagPropertyAttribute](#T-EdjCase-ICP-Candid-Mapping-VariantTagPropertyAttribute 'EdjCase.ICP.Candid.Mapping.VariantTagPropertyAttribute')
 - [VariantValuePropertyAttribute](#T-EdjCase-ICP-Candid-Mapping-VariantValuePropertyAttribute 'EdjCase.ICP.Candid.Mapping.VariantValuePropertyAttribute')
 
@@ -9195,30 +9194,8 @@ An attribute to put on a class to identify it as a variant type for serializatio
 Requires the use of \`VariantTagPropertyAttribute\`, \`VariantOptionTypeAttribute\` and
 \`VariantValuePropertyAttribute\` attributes if used
 
-<a name='M-EdjCase-ICP-Candid-Mapping-VariantAttribute-#ctor-System-Type-'></a>
-### #ctor(enumType) `constructor`
-
-##### Parameters
-
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| enumType | [System.Type](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Type 'System.Type') | The enum type to use for specifying the tags of the variant |
-
-##### Exceptions
-
-| Name | Description |
-| ---- | ----------- |
-| [System.ArgumentException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.ArgumentException 'System.ArgumentException') | Throws if the type is not an enum |
-
-<a name='P-EdjCase-ICP-Candid-Mapping-VariantAttribute-TagType'></a>
-### TagType `property`
-
-##### Summary
-
-The enum type to use for specifying the tags of the variant
-
-<a name='T-EdjCase-ICP-Candid-Mapping-VariantOptionTypeAttribute'></a>
-## VariantOptionTypeAttribute `type`
+<a name='T-EdjCase-ICP-Candid-Mapping-VariantOptionAttribute'></a>
+## VariantOptionAttribute `type`
 
 ##### Namespace
 
@@ -9229,17 +9206,26 @@ EdjCase.ICP.Candid.Mapping
 An attribute to put on an enum option to specify if the tag has an attached
 value in the variant, otherwise the attached type will be null
 
-<a name='M-EdjCase-ICP-Candid-Mapping-VariantOptionTypeAttribute-#ctor-System-Type-'></a>
-### #ctor(optionType) `constructor`
+<a name='M-EdjCase-ICP-Candid-Mapping-VariantOptionAttribute-#ctor-EdjCase-ICP-Candid-Models-CandidTag-'></a>
+### #ctor(tag) `constructor`
 
 ##### Parameters
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| optionType | [System.Type](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Type 'System.Type') | The type of the variant option value to use |
+| tag | [EdjCase.ICP.Candid.Models.CandidTag](#T-EdjCase-ICP-Candid-Models-CandidTag 'EdjCase.ICP.Candid.Models.CandidTag') | The tag of the variant option |
 
-<a name='P-EdjCase-ICP-Candid-Mapping-VariantOptionTypeAttribute-OptionType'></a>
-### OptionType `property`
+<a name='M-EdjCase-ICP-Candid-Mapping-VariantOptionAttribute-#ctor-System-String-'></a>
+### #ctor(tag) `constructor`
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| tag | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The tag of the variant option |
+
+<a name='P-EdjCase-ICP-Candid-Mapping-VariantOptionAttribute-Tag'></a>
+### Tag `property`
 
 ##### Summary
 

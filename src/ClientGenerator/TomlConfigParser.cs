@@ -63,6 +63,7 @@ namespace EdjCase.ICP.ClientGenerator
 						purgeOutputDirectory: clientOptions.PurgeDirectory ?? true,
 						noFolders: clientOptions.NoFolders  ?? false,
 						featureNullable: clientOptions.FeatureNullable ?? true,
+						variantsUseProperties: clientOptions.VariantsUseProperties ?? false,
 						keepCandidCase: clientOptions.KeepCandidCase ?? false,
 						boundryNodeUrl: clientOptions.BaseUrl,
 						types: clientOptions.Types
@@ -81,6 +82,7 @@ namespace EdjCase.ICP.ClientGenerator
 			bool? noFolders = GetOptional<bool?>(config, "no-folders") ?? parent?.Options.NoFolders;
 			string? outputDirectory = GetOptional<string?>(config, "output-directory") ?? (parent == null ? null : Path.Combine(parent.Value.Options.OutputDirectory ?? "./", parent.Value.ClientName));
 			bool? featureNullable = GetOptional<bool?>(config, "feature-nullable") ?? parent?.Options.FeatureNullable;
+			bool? variantsUseProperties = GetOptional<bool?>(config, "variants-use-properties") ?? parent?.Options.VariantsUseProperties;
 			bool? keepCandidCase = GetOptional<bool?>(config, "keep-candid-case") ?? parent?.Options.KeepCandidCase;
 			TomlTable? typeTable = GetOptional<TomlTable?>(config, "types");
 			Dictionary<string, NamedTypeOptions> types = BuildTypes(typeTable);
@@ -106,6 +108,7 @@ namespace EdjCase.ICP.ClientGenerator
 				noFolders,
 				outputDirectory,
 				featureNullable,
+				variantsUseProperties,
 				keepCandidCase,
 				types
 			);
@@ -131,50 +134,24 @@ namespace EdjCase.ICP.ClientGenerator
 						throw new Exception($"Options for type '{key}' cannot be parsed");
 					}
 					string? name = GetOptional<string>(t, "name");
-					ITypeOptions? typeOptions = BuildTypeOptions(t);
+					TypeOptions? typeOptions = BuildTypeOptions(t);
 					types.Add(key, new NamedTypeOptions(name, typeOptions));
 				}
 			}
 			return types;
 		}
 
-		private static ITypeOptions? BuildTypeOptions(TomlTable t)
+		private static TypeOptions BuildTypeOptions(TomlTable t)
 		{
-			string? typeType = GetOptional<string>(t, "type");
-			if (string.IsNullOrWhiteSpace(typeType))
-			{
-				return null;
-			}
-			switch (typeType.ToLower())
-			{
-				case "record":
-					{
-						TomlTable? fieldTypeTable = GetOptional<TomlTable>(t, "fields");
-						Dictionary<string, NamedTypeOptions> fields = BuildTypes(fieldTypeTable);
-						return new RecordTypeOptions(
-							fields: fields
-						);
-					}
-				case "vec":
-					{
-						ITypeOptions? elementType = GetOptional<ITypeOptions>(t, "elementType");
-						VectorRepresentation? representation = GetEnumOptional<VectorRepresentation>(t, "representation");
-						return new VectorTypeOptions(
-							representation: representation,
-							elementType: elementType
-						);
-					}
-				case "variant":
-					{
-						TomlTable? optionTypeTable = GetOptional<TomlTable>(t, "options");
-						Dictionary<string, NamedTypeOptions> options = BuildTypes(optionTypeTable);
-						return new VariantTypeOptions(
-							options: options
-						);
-					}
-				default:
-					throw new Exception($"Type '{typeType.ToLower()}' is invalid");
-			}
+			string? representation = GetOptional<string?>(t, "representation");
+
+			TomlTable? optionTypeTable = GetOptional<TomlTable?>(t, "fields");
+			Dictionary<string, NamedTypeOptions> options = BuildTypes(optionTypeTable);
+
+			TomlTable? innerTypeTable = GetOptional<TomlTable?>(t, "innerType");
+			TypeOptions? innerType = innerTypeTable == null ? null : BuildTypeOptions(innerTypeTable);
+
+			return new TypeOptions(options, innerType, representation);
 		}
 
 		private static T GetRequired<T>(TomlTable table, string key, string? prefix = null)
@@ -199,24 +176,6 @@ namespace EdjCase.ICP.ClientGenerator
 			return default;
 		}
 
-		private static TEnum GetEnumRequired<TEnum>(TomlTable table, string key)
-			where TEnum : struct
-		{
-			string stringValue = GetRequired<string>(table, key);
-			return (TEnum)Enum.Parse(typeof(TEnum), stringValue);
-		}
-
-		private static TEnum? GetEnumOptional<TEnum>(TomlTable table, string key)
-			where TEnum : struct
-		{
-			string? stringValue = GetOptional<string>(table, key);
-			if (stringValue == null)
-			{
-				return null;
-			}
-			return (TEnum)Enum.Parse(typeof(TEnum), stringValue);
-		}
-
 	}
 
 	internal class CommonOptions
@@ -227,6 +186,7 @@ namespace EdjCase.ICP.ClientGenerator
 		public bool? NoFolders { get; }
 		public string? OutputDirectory { get; }
 		public bool? FeatureNullable { get; }
+		public bool? VariantsUseProperties { get; }
 		public bool? KeepCandidCase { get; }
 		public Dictionary<string, NamedTypeOptions> Types { get; }
 
@@ -237,6 +197,7 @@ namespace EdjCase.ICP.ClientGenerator
 			bool? noFolders,
 			string? outputDirectory,
 			bool? featureNullable,
+			bool? variantsUseProperties,
 			bool? keepCandidCase,
 			Dictionary<string, NamedTypeOptions>? types
 		)
@@ -247,6 +208,7 @@ namespace EdjCase.ICP.ClientGenerator
 			this.NoFolders = noFolders;
 			this.OutputDirectory = outputDirectory;
 			this.FeatureNullable = featureNullable;
+			this.VariantsUseProperties = variantsUseProperties;
 			this.KeepCandidCase = keepCandidCase;
 			this.Types = types ?? new Dictionary<string, NamedTypeOptions>();
 		}

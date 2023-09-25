@@ -7,9 +7,9 @@ namespace Sample.Shared.Governance.Models
 	public class SetDefaultFollowees
 	{
 		[CandidName("default_followees")]
-		public List<(int, Followees)> DefaultFollowees { get; set; }
+		public Dictionary<int, Followees> DefaultFollowees { get; set; }
 
-		public SetDefaultFollowees(List<(int, Followees)> defaultFollowees)
+		public SetDefaultFollowees(Dictionary<int, Followees> defaultFollowees)
 		{
 			this.DefaultFollowees = defaultFollowees;
 		}

@@ -4,6 +4,8 @@ using EdjCase.ICP.Candid.Models.Types;
 using EdjCase.ICP.Candid.Models.Values;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Org.BouncyCastle.Crypto.Agreement;
+using Org.BouncyCastle.Ocsp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -100,6 +102,7 @@ namespace EdjCase.ICP.ClientGenerator
 				modelNamespace,
 				aliases,
 				options.FeatureNullable,
+				options.VariantsUseProperties,
 				nameHelper,
 				declaredTypes
 			);
@@ -148,18 +151,8 @@ namespace EdjCase.ICP.ClientGenerator
 		private static SourceCodeType ResolveSourceCodeType(
 			CandidType type,
 			NameHelper nameHelper,
-			ITypeOptions? typeOptions)
+			TypeOptions? typeOptions)
 		{
-			T? GetTypeOptions<T>()
-				where T : class, ITypeOptions
-			{
-				if (typeOptions != null
-					&& typeOptions is not T)
-				{
-					throw new Exception($"Type is '{typeOptions.GetType()}' but type options assume '{typeof(T)}'. Fix config");
-				}
-				return typeOptions as T;
-			}
 
 			switch (type)
 			{
@@ -198,24 +191,24 @@ namespace EdjCase.ICP.ClientGenerator
 					}
 				case CandidVectorType v:
 					{
-						VectorTypeOptions? vTypeOptions = GetTypeOptions<VectorTypeOptions>();
-						ITypeOptions? innerTypeOptions = vTypeOptions?.ElementType;
+						TypeOptions? innerTypeOptions = typeOptions?.InnerType;
 						SourceCodeType innerType = ResolveSourceCodeType(
 							v.InnerType,
 							nameHelper,
 							innerTypeOptions
 						);
 						bool isDictionaryCompatible = innerType is TupleSourceCodeType t && t.Fields.Count == 2;
-						VectorRepresentation defaultRepresentation = isDictionaryCompatible
-							? VectorRepresentation.Dictionary
-							: VectorRepresentation.List;
-						switch (vTypeOptions?.Representation ?? defaultRepresentation)
+						string defaultRepresentation = isDictionaryCompatible
+							? "dictionary"
+							: "list";
+						string rep = typeOptions?.Representation ?? defaultRepresentation;
+						switch (rep.ToLower())
 						{
-							case VectorRepresentation.Array:
+							case "array":
 								return new ArraySourceCodeType(innerType);
-							case VectorRepresentation.List:
+							case "list":
 								return new ListSourceCodeType(innerType);
-							case VectorRepresentation.Dictionary:
+							case "dictionary":
 								if (!isDictionaryCompatible)
 								{
 									throw new Exception("List to dictionary conversion is only compatible with `vec record { a; b }` candid types");
@@ -225,7 +218,7 @@ namespace EdjCase.ICP.ClientGenerator
 								SourceCodeType valueType = tuple.Fields[1];
 								return new DictionarySourceCodeType(keyType, valueType);
 							default:
-								throw new NotImplementedException();
+								throw new Exception($"Vec types do not support representation: '{rep}'");
 						}
 					}
 				case CandidOptionalType o:
@@ -240,7 +233,6 @@ namespace EdjCase.ICP.ClientGenerator
 					}
 				case CandidRecordType o:
 					{
-						RecordTypeOptions? rTypeOptions = GetTypeOptions<RecordTypeOptions>();
 						// Check if tuple (tag ids are 0...N)
 
 						bool isTuple = o.Fields.Any()
@@ -251,12 +243,12 @@ namespace EdjCase.ICP.ClientGenerator
 							// Only be a tuple if it doesnt reference itself
 							&& !o.Fields.Any(f => f.Value is CandidReferenceType r && r.Id == o.RecursiveId);
 
-						if(isTuple )
+						if(isTuple)
 						{
 							List<SourceCodeType> tupleFields = o.Fields
 									.Select(f =>
 									{
-										NamedTypeOptions? fieldTypeOptions = rTypeOptions?.Fields.GetValueOrDefault(f.Key.ToString());
+										NamedTypeOptions? fieldTypeOptions = typeOptions?.Fields.GetValueOrDefault(f.Key.ToString());
 										return ResolveSourceCodeType(
 											f.Value,
 											nameHelper,
@@ -271,7 +263,7 @@ namespace EdjCase.ICP.ClientGenerator
 								.Select(f =>
 								{
 									CandidType fCandidType = f.Value;
-									NamedTypeOptions? fieldTypeOptions = f.Key.Name == null ? null : rTypeOptions?.Fields.GetValueOrDefault(f.Key.Name);
+									NamedTypeOptions? fieldTypeOptions = f.Key.Name == null ? null : typeOptions?.Fields.GetValueOrDefault(f.Key.Name);
 									SourceCodeType fType = ResolveSourceCodeType(fCandidType, nameHelper, fieldTypeOptions?.TypeOptions);
 									ResolvedName fieldName = nameHelper.ResolveName(f.Key, fieldTypeOptions?.NameOverride);
 									return (fieldName, fType);
@@ -282,11 +274,10 @@ namespace EdjCase.ICP.ClientGenerator
 					}
 				case CandidVariantType va:
 					{
-						VariantTypeOptions? variantTypeOptions = GetTypeOptions<VariantTypeOptions>();
 						List<(ResolvedName Key, SourceCodeType? Type)> fields = va.Options
 							.Select(f =>
 							{
-								NamedTypeOptions? innerTypeOptions = f.Key.Name == null ? null : variantTypeOptions?.Options.GetValueOrDefault(f.Key.Name);
+								NamedTypeOptions? innerTypeOptions = f.Key.Name == null ? null : typeOptions?.Fields.GetValueOrDefault(f.Key.Name);
 								// If type is null, then just be a typeless variant
 								SourceCodeType? sourceCodeType = f.Value == CandidType.Null()
 									? null

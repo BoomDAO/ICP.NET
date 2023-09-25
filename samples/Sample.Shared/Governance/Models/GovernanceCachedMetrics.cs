@@ -9,7 +9,7 @@ namespace Sample.Shared.Governance.Models
 		public ulong TotalMaturityE8sEquivalent { get; set; }
 
 		[CandidName("not_dissolving_neurons_e8s_buckets")]
-		public List<(ulong, double)> NotDissolvingNeuronsE8sBuckets { get; set; }
+		public Dictionary<ulong, double> NotDissolvingNeuronsE8sBuckets { get; set; }
 
 		[CandidName("dissolving_neurons_staked_maturity_e8s_equivalent_sum")]
 		public ulong DissolvingNeuronsStakedMaturityE8sEquivalentSum { get; set; }
@@ -18,13 +18,13 @@ namespace Sample.Shared.Governance.Models
 		public ulong GarbageCollectableNeuronsCount { get; set; }
 
 		[CandidName("dissolving_neurons_staked_maturity_e8s_equivalent_buckets")]
-		public List<(ulong, double)> DissolvingNeuronsStakedMaturityE8sEquivalentBuckets { get; set; }
+		public Dictionary<ulong, double> DissolvingNeuronsStakedMaturityE8sEquivalentBuckets { get; set; }
 
 		[CandidName("neurons_with_invalid_stake_count")]
 		public ulong NeuronsWithInvalidStakeCount { get; set; }
 
 		[CandidName("not_dissolving_neurons_count_buckets")]
-		public List<(ulong, ulong)> NotDissolvingNeuronsCountBuckets { get; set; }
+		public Dictionary<ulong, ulong> NotDissolvingNeuronsCountBuckets { get; set; }
 
 		[CandidName("total_supply_icp")]
 		public ulong TotalSupplyIcp { get; set; }
@@ -63,16 +63,16 @@ namespace Sample.Shared.Governance.Models
 		public ulong NeuronsWithLessThan6MonthsDissolveDelayE8s { get; set; }
 
 		[CandidName("not_dissolving_neurons_staked_maturity_e8s_equivalent_buckets")]
-		public List<(ulong, double)> NotDissolvingNeuronsStakedMaturityE8sEquivalentBuckets { get; set; }
+		public Dictionary<ulong, double> NotDissolvingNeuronsStakedMaturityE8sEquivalentBuckets { get; set; }
 
 		[CandidName("dissolving_neurons_count_buckets")]
-		public List<(ulong, ulong)> DissolvingNeuronsCountBuckets { get; set; }
+		public Dictionary<ulong, ulong> DissolvingNeuronsCountBuckets { get; set; }
 
 		[CandidName("dissolving_neurons_count")]
 		public ulong DissolvingNeuronsCount { get; set; }
 
 		[CandidName("dissolving_neurons_e8s_buckets")]
-		public List<(ulong, double)> DissolvingNeuronsE8sBuckets { get; set; }
+		public Dictionary<ulong, double> DissolvingNeuronsE8sBuckets { get; set; }
 
 		[CandidName("community_fund_total_staked_e8s")]
 		public ulong CommunityFundTotalStakedE8s { get; set; }
@@ -80,7 +80,7 @@ namespace Sample.Shared.Governance.Models
 		[CandidName("timestamp_seconds")]
 		public ulong TimestampSeconds { get; set; }
 
-		public GovernanceCachedMetrics(ulong totalMaturityE8sEquivalent, List<(ulong, double)> notDissolvingNeuronsE8sBuckets, ulong dissolvingNeuronsStakedMaturityE8sEquivalentSum, ulong garbageCollectableNeuronsCount, List<(ulong, double)> dissolvingNeuronsStakedMaturityE8sEquivalentBuckets, ulong neuronsWithInvalidStakeCount, List<(ulong, ulong)> notDissolvingNeuronsCountBuckets, ulong totalSupplyIcp, ulong neuronsWithLessThan6MonthsDissolveDelayCount, ulong dissolvedNeuronsCount, ulong communityFundTotalMaturityE8sEquivalent, ulong totalStakedE8s, ulong notDissolvingNeuronsCount, ulong totalLockedE8s, ulong neuronsFundTotalActiveNeurons, ulong totalStakedMaturityE8sEquivalent, ulong notDissolvingNeuronsStakedMaturityE8sEquivalentSum, ulong dissolvedNeuronsE8s, ulong neuronsWithLessThan6MonthsDissolveDelayE8s, List<(ulong, double)> notDissolvingNeuronsStakedMaturityE8sEquivalentBuckets, List<(ulong, ulong)> dissolvingNeuronsCountBuckets, ulong dissolvingNeuronsCount, List<(ulong, double)> dissolvingNeuronsE8sBuckets, ulong communityFundTotalStakedE8s, ulong timestampSeconds)
+		public GovernanceCachedMetrics(ulong totalMaturityE8sEquivalent, Dictionary<ulong, double> notDissolvingNeuronsE8sBuckets, ulong dissolvingNeuronsStakedMaturityE8sEquivalentSum, ulong garbageCollectableNeuronsCount, Dictionary<ulong, double> dissolvingNeuronsStakedMaturityE8sEquivalentBuckets, ulong neuronsWithInvalidStakeCount, Dictionary<ulong, ulong> notDissolvingNeuronsCountBuckets, ulong totalSupplyIcp, ulong neuronsWithLessThan6MonthsDissolveDelayCount, ulong dissolvedNeuronsCount, ulong communityFundTotalMaturityE8sEquivalent, ulong totalStakedE8s, ulong notDissolvingNeuronsCount, ulong totalLockedE8s, ulong neuronsFundTotalActiveNeurons, ulong totalStakedMaturityE8sEquivalent, ulong notDissolvingNeuronsStakedMaturityE8sEquivalentSum, ulong dissolvedNeuronsE8s, ulong neuronsWithLessThan6MonthsDissolveDelayE8s, Dictionary<ulong, double> notDissolvingNeuronsStakedMaturityE8sEquivalentBuckets, Dictionary<ulong, ulong> dissolvingNeuronsCountBuckets, ulong dissolvingNeuronsCount, Dictionary<ulong, double> dissolvingNeuronsE8sBuckets, ulong communityFundTotalStakedE8s, ulong timestampSeconds)
 		{
 			this.TotalMaturityE8sEquivalent = totalMaturityE8sEquivalent;
 			this.NotDissolvingNeuronsE8sBuckets = notDissolvingNeuronsE8sBuckets;

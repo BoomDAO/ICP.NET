@@ -4,7 +4,7 @@ using System;
 
 namespace Sample.Shared.Governance.Models
 {
-	[Variant(typeof(RewardModeTag))]
+	[Variant()]
 	public class RewardMode
 	{
 		[VariantTagProperty()]
@@ -56,9 +56,7 @@ namespace Sample.Shared.Governance.Models
 
 	public enum RewardModeTag
 	{
-		[VariantOptionType(typeof(RewardToNeuron))]
 		RewardToNeuron,
-		[VariantOptionType(typeof(RewardToAccount))]
 		RewardToAccount
 	}
 }

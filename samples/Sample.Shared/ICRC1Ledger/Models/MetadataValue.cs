@@ -6,7 +6,7 @@ using System;
 
 namespace Sample.Shared.ICRC1Ledger.Models
 {
-	[Variant(typeof(MetadataValueTag))]
+	[Variant()]
 	public class MetadataValue
 	{
 		[VariantTagProperty()]
@@ -80,13 +80,9 @@ namespace Sample.Shared.ICRC1Ledger.Models
 
 	public enum MetadataValueTag
 	{
-		[VariantOptionType(typeof(UnboundedUInt))]
 		Nat,
-		[VariantOptionType(typeof(UnboundedInt))]
 		Int,
-		[VariantOptionType(typeof(string))]
 		Text,
-		[VariantOptionType(typeof(List<byte>))]
 		Blob
 	}
 }
