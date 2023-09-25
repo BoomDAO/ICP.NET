@@ -6,6 +6,7 @@ using EdjCase.ICP.Candid.Utilities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Reflection;
 
@@ -322,6 +323,10 @@ namespace EdjCase.ICP.Candid.Mapping
 			{
 				return BuildStruct(CandidType.Empty(), new EmptyValue(), CandidValue.Empty);
 			}
+			if(objType == typeof(SimpleVariant))
+			{
+				return BuildSimpleVariant();
+			}
 
 			// Variants are objects with a [Variant] on the class
 			VariantAttribute? variantAttribute = objType.GetCustomAttribute<VariantAttribute>();
@@ -333,6 +338,11 @@ namespace EdjCase.ICP.Candid.Mapping
 
 			// Assume anything else is a record
 			return BuildRecord(objType);
+		}
+
+		private static IResolvableTypeInfo BuildSimpleVariant()
+		{
+			return new SimpleVariantMapper(candidType, options);
 		}
 
 		private static IResolvableTypeInfo BuildStruct<T>(CandidType candidType, T value, Func<CandidValue> valueGetter)

@@ -113,11 +113,13 @@ namespace EdjCase.ICP.ClientGenerator
 	internal class VariantSourceCodeType : SourceCodeType
 	{
 		public List<(ResolvedName Tag, SourceCodeType? Type)> Options { get; }
+		public bool Typed { get; }
 		public override bool IsPredefinedType { get; } = false;
 
-		public VariantSourceCodeType(List<(ResolvedName Tag, SourceCodeType? Type)> options)
+		public VariantSourceCodeType(List<(ResolvedName Tag, SourceCodeType? Type)> options, bool typed)
 		{
 			this.Options = options ?? throw new ArgumentNullException(nameof(options));
+			this.Typed = typed;
 		}
 	}
 

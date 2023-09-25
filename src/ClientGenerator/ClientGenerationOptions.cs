@@ -185,6 +185,8 @@ namespace EdjCase.ICP.ClientGenerator
 		/// <summary>
 		/// Dictionary
 		/// </summary>
-		Dictionary
+		Dictionary,
+		TypedVariant,
+		SimpleVariant
 	}
 }
