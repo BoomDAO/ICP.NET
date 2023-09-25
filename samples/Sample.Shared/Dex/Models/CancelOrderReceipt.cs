@@ -5,7 +5,7 @@ using OrderId = System.UInt32;
 
 namespace Sample.Shared.Dex.Models
 {
-	[Variant(typeof(CancelOrderReceiptTag))]
+	[Variant()]
 	public class CancelOrderReceipt
 	{
 		[VariantTagProperty()]
@@ -57,9 +57,7 @@ namespace Sample.Shared.Dex.Models
 
 	public enum CancelOrderReceiptTag
 	{
-		[VariantOptionType(typeof(CancelOrderErr))]
 		Err,
-		[VariantOptionType(typeof(OrderId))]
 		Ok
 	}
 }

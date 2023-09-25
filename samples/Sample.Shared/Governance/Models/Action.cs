@@ -4,7 +4,7 @@ using System;
 
 namespace Sample.Shared.Governance.Models
 {
-	[Variant(typeof(ActionTag))]
+	[Variant()]
 	public class Action
 	{
 		[VariantTagProperty()]
@@ -178,31 +178,18 @@ namespace Sample.Shared.Governance.Models
 	public enum ActionTag
 	{
 		[CandidName("RegisterKnownNeuron")]
-		[VariantOptionType(typeof(KnownNeuron))]
 		RegisterNeuron,
-		[VariantOptionType(typeof(ManageNeuron))]
 		ManageNeuron,
-		[VariantOptionType(typeof(CreateServiceNervousSystem))]
 		CreateServiceNervousSystem,
-		[VariantOptionType(typeof(ExecuteNnsFunction))]
 		ExecuteNnsFunction,
-		[VariantOptionType(typeof(RewardNodeProvider))]
 		RewardNodeProvider,
-		[VariantOptionType(typeof(OpenSnsTokenSwap))]
 		OpenSnsTokenSwap,
-		[VariantOptionType(typeof(SetSnsTokenSwapOpenTimeWindow))]
 		SetSnsTokenSwapOpenTimeWindow,
-		[VariantOptionType(typeof(SetDefaultFollowees))]
 		SetDefaultFollowees,
-		[VariantOptionType(typeof(RewardNodeProviders))]
 		RewardNodeProviders,
-		[VariantOptionType(typeof(NetworkEconomics))]
 		ManageNetworkEconomics,
-		[VariantOptionType(typeof(ApproveGenesisKyc))]
 		ApproveGenesisKyc,
-		[VariantOptionType(typeof(AddOrRemoveNodeProvider))]
 		AddOrRemoveNodeProvider,
-		[VariantOptionType(typeof(Motion))]
 		Motion
 	}
 }

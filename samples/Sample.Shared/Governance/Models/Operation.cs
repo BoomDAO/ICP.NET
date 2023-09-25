@@ -4,7 +4,7 @@ using System;
 
 namespace Sample.Shared.Governance.Models
 {
-	[Variant(typeof(OperationTag))]
+	[Variant()]
 	public class Operation
 	{
 		[VariantTagProperty()]
@@ -161,23 +161,14 @@ namespace Sample.Shared.Governance.Models
 
 	public enum OperationTag
 	{
-		[VariantOptionType(typeof(RemoveHotKey))]
 		RemoveHotKey,
-		[VariantOptionType(typeof(AddHotKey))]
 		AddHotKey,
-		[VariantOptionType(typeof(ChangeAutoStakeMaturity))]
 		ChangeAutoStakeMaturity,
-		[VariantOptionType(typeof(Operation.StopDissolvingInfo))]
 		StopDissolving,
-		[VariantOptionType(typeof(Operation.StartDissolvingInfo))]
 		StartDissolving,
-		[VariantOptionType(typeof(IncreaseDissolveDelay))]
 		IncreaseDissolveDelay,
-		[VariantOptionType(typeof(Operation.JoinCommunityFundInfo))]
 		JoinCommunityFund,
-		[VariantOptionType(typeof(Operation.LeaveCommunityFundInfo))]
 		LeaveCommunityFund,
-		[VariantOptionType(typeof(SetDissolveTimestamp))]
 		SetDissolveTimestamp
 	}
 }

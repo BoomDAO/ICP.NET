@@ -208,7 +208,7 @@ using System;
 
 namespace Test
 {
-	[Variant(typeof(ActionTag))]
+	[Variant()]
 	public class Action
 	{
 		[VariantTagProperty()]
@@ -348,25 +348,15 @@ namespace Test
 
 	public enum ActionTag
 	{
-		[VariantOptionType(typeof(KnownNeuron))]
 		RegisterKnownNeuron,
-		[VariantOptionType(typeof(ManageNeuron))]
 		ManageNeuron,
-		[VariantOptionType(typeof(ExecuteNnsFunction))]
 		ExecuteNnsFunction,
-		[VariantOptionType(typeof(RewardNodeProvider))]
 		RewardNodeProvider,
-		[VariantOptionType(typeof(SetDefaultFollowees))]
 		SetDefaultFollowees,
-		[VariantOptionType(typeof(RewardNodeProviders))]
 		RewardNodeProviders,
-		[VariantOptionType(typeof(NetworkEconomics))]
 		ManageNetworkEconomics,
-		[VariantOptionType(typeof(ApproveGenesisKyc))]
 		ApproveGenesisKyc,
-		[VariantOptionType(typeof(AddOrRemoveNodeProvider))]
 		AddOrRemoveNodeProvider,
-		[VariantOptionType(typeof(Motion))]
 		Motion
 	}
 }
@@ -510,7 +500,7 @@ using System;
 
 namespace Test
 {
-	[Variant(typeof(ByTag))]
+	[Variant()]
 	public class By
 	{
 		[VariantTagProperty()]
@@ -580,11 +570,8 @@ namespace Test
 
 	public enum ByTag
 	{
-		[VariantOptionType(typeof(By.NeuronIdOrSubaccountInfo))]
 		NeuronIdOrSubaccount,
-		[VariantOptionType(typeof(ClaimOrRefreshNeuronFromAccount))]
 		MemoAndController,
-		[VariantOptionType(typeof(ulong))]
 		Memo
 	}
 }
@@ -597,7 +584,7 @@ using System;
 
 namespace Test
 {
-	[Variant(typeof(ChangeTag))]
+	[Variant()]
 	public class Change
 	{
 		[VariantTagProperty()]
@@ -649,9 +636,7 @@ namespace Test
 
 	public enum ChangeTag
 	{
-		[VariantOptionType(typeof(NodeProvider))]
 		ToRemove,
-		[VariantOptionType(typeof(NodeProvider))]
 		ToAdd
 	}
 }
@@ -754,7 +739,7 @@ using System;
 
 namespace Test
 {
-	[Variant(typeof(CommandTag))]
+	[Variant()]
 	public class Command
 	{
 		[VariantTagProperty()]
@@ -905,27 +890,16 @@ namespace Test
 
 	public enum CommandTag
 	{
-		[VariantOptionType(typeof(Spawn))]
 		Spawn,
-		[VariantOptionType(typeof(Split))]
 		Split,
-		[VariantOptionType(typeof(Follow))]
 		Follow,
-		[VariantOptionType(typeof(ClaimOrRefresh))]
 		ClaimOrRefresh,
-		[VariantOptionType(typeof(Configure))]
 		Configure,
-		[VariantOptionType(typeof(RegisterVote))]
 		RegisterVote,
-		[VariantOptionType(typeof(Merge))]
 		Merge,
-		[VariantOptionType(typeof(DisburseToNeuron))]
 		DisburseToNeuron,
-		[VariantOptionType(typeof(Proposal))]
 		MakeProposal,
-		[VariantOptionType(typeof(MergeMaturity))]
 		MergeMaturity,
-		[VariantOptionType(typeof(Disburse))]
 		Disburse
 	}
 }
@@ -938,7 +912,7 @@ using System;
 
 namespace Test
 {
-	[Variant(typeof(Command_1Tag))]
+	[Variant()]
 	public class Command_1
 	{
 		[VariantTagProperty()]
@@ -1128,29 +1102,17 @@ namespace Test
 
 	public enum Command_1Tag
 	{
-		[VariantOptionType(typeof(GovernanceError))]
 		Error,
-		[VariantOptionType(typeof(SpawnResponse))]
 		Spawn,
-		[VariantOptionType(typeof(SpawnResponse))]
 		Split,
-		[VariantOptionType(typeof(Command_1.FollowInfo))]
 		Follow,
-		[VariantOptionType(typeof(ClaimOrRefreshResponse))]
 		ClaimOrRefresh,
-		[VariantOptionType(typeof(Command_1.ConfigureInfo))]
 		Configure,
-		[VariantOptionType(typeof(Command_1.RegisterVoteInfo))]
 		RegisterVote,
-		[VariantOptionType(typeof(Command_1.MergeInfo))]
 		Merge,
-		[VariantOptionType(typeof(SpawnResponse))]
 		DisburseToNeuron,
-		[VariantOptionType(typeof(MakeProposalResponse))]
 		MakeProposal,
-		[VariantOptionType(typeof(MergeMaturityResponse))]
 		MergeMaturity,
-		[VariantOptionType(typeof(DisburseResponse))]
 		Disburse
 	}
 }
@@ -1163,7 +1125,7 @@ using System;
 
 namespace Test
 {
-	[Variant(typeof(Command_2Tag))]
+	[Variant()]
 	public class Command_2
 	{
 		[VariantTagProperty()]
@@ -1281,21 +1243,13 @@ namespace Test
 
 	public enum Command_2Tag
 	{
-		[VariantOptionType(typeof(Spawn))]
 		Spawn,
-		[VariantOptionType(typeof(Split))]
 		Split,
-		[VariantOptionType(typeof(Configure))]
 		Configure,
-		[VariantOptionType(typeof(Merge))]
 		Merge,
-		[VariantOptionType(typeof(DisburseToNeuron))]
 		DisburseToNeuron,
-		[VariantOptionType(typeof(ClaimOrRefresh))]
 		ClaimOrRefreshNeuron,
-		[VariantOptionType(typeof(MergeMaturity))]
 		MergeMaturity,
-		[VariantOptionType(typeof(Disburse))]
 		Disburse
 	}
 }
@@ -1407,7 +1361,7 @@ using System;
 
 namespace Test
 {
-	[Variant(typeof(DissolveStateTag))]
+	[Variant()]
 	public class DissolveState
 	{
 		[VariantTagProperty()]
@@ -1459,9 +1413,7 @@ namespace Test
 
 	public enum DissolveStateTag
 	{
-		[VariantOptionType(typeof(ulong))]
 		DissolveDelaySeconds,
-		[VariantOptionType(typeof(ulong))]
 		WhenDissolvedTimestampSeconds
 	}
 }
@@ -2192,7 +2144,7 @@ using System;
 
 namespace Test
 {
-	[Variant(typeof(NeuronIdOrSubaccountTag))]
+	[Variant()]
 	public class NeuronIdOrSubaccount
 	{
 		[VariantTagProperty()]
@@ -2244,9 +2196,7 @@ namespace Test
 
 	public enum NeuronIdOrSubaccountTag
 	{
-		[VariantOptionType(typeof(List<byte>))]
 		Subaccount,
-		[VariantOptionType(typeof(NeuronId))]
 		NeuronId
 	}
 }
@@ -2399,7 +2349,7 @@ using System;
 
 namespace Test
 {
-	[Variant(typeof(OperationTag))]
+	[Variant()]
 	public class Operation
 	{
 		[VariantTagProperty()]
@@ -2527,19 +2477,12 @@ namespace Test
 
 	public enum OperationTag
 	{
-		[VariantOptionType(typeof(RemoveHotKey))]
 		RemoveHotKey,
-		[VariantOptionType(typeof(AddHotKey))]
 		AddHotKey,
-		[VariantOptionType(typeof(Operation.StopDissolvingInfo))]
 		StopDissolving,
-		[VariantOptionType(typeof(Operation.StartDissolvingInfo))]
 		StartDissolving,
-		[VariantOptionType(typeof(IncreaseDissolveDelay))]
 		IncreaseDissolveDelay,
-		[VariantOptionType(typeof(Operation.JoinCommunityFundInfo))]
 		JoinCommunityFund,
-		[VariantOptionType(typeof(SetDissolveTimestamp))]
 		SetDissolveTimestamp
 	}
 }
@@ -2756,7 +2699,7 @@ using System;
 
 namespace Test
 {
-	[Variant(typeof(ResultTag))]
+	[Variant()]
 	public class Result
 	{
 		[VariantTagProperty()]
@@ -2803,7 +2746,6 @@ namespace Test
 	public enum ResultTag
 	{
 		Ok,
-		[VariantOptionType(typeof(GovernanceError))]
 		Err
 	}
 }
@@ -2816,7 +2758,7 @@ using System;
 
 namespace Test
 {
-	[Variant(typeof(Result_1Tag))]
+	[Variant()]
 	public class Result_1
 	{
 		[VariantTagProperty()]
@@ -2868,9 +2810,7 @@ namespace Test
 
 	public enum Result_1Tag
 	{
-		[VariantOptionType(typeof(GovernanceError))]
 		Error,
-		[VariantOptionType(typeof(NeuronId))]
 		NeuronId
 	}
 }
@@ -2883,7 +2823,7 @@ using System;
 
 namespace Test
 {
-	[Variant(typeof(Result_2Tag))]
+	[Variant()]
 	public class Result_2
 	{
 		[VariantTagProperty()]
@@ -2935,9 +2875,7 @@ namespace Test
 
 	public enum Result_2Tag
 	{
-		[VariantOptionType(typeof(Neuron))]
 		Ok,
-		[VariantOptionType(typeof(GovernanceError))]
 		Err
 	}
 }
@@ -2950,7 +2888,7 @@ using System;
 
 namespace Test
 {
-	[Variant(typeof(Result_3Tag))]
+	[Variant()]
 	public class Result_3
 	{
 		[VariantTagProperty()]
@@ -3002,9 +2940,7 @@ namespace Test
 
 	public enum Result_3Tag
 	{
-		[VariantOptionType(typeof(RewardNodeProviders))]
 		Ok,
-		[VariantOptionType(typeof(GovernanceError))]
 		Err
 	}
 }
@@ -3017,7 +2953,7 @@ using System;
 
 namespace Test
 {
-	[Variant(typeof(Result_4Tag))]
+	[Variant()]
 	public class Result_4
 	{
 		[VariantTagProperty()]
@@ -3069,9 +3005,7 @@ namespace Test
 
 	public enum Result_4Tag
 	{
-		[VariantOptionType(typeof(NeuronInfo))]
 		Ok,
-		[VariantOptionType(typeof(GovernanceError))]
 		Err
 	}
 }
@@ -3084,7 +3018,7 @@ using System;
 
 namespace Test
 {
-	[Variant(typeof(Result_5Tag))]
+	[Variant()]
 	public class Result_5
 	{
 		[VariantTagProperty()]
@@ -3136,9 +3070,7 @@ namespace Test
 
 	public enum Result_5Tag
 	{
-		[VariantOptionType(typeof(NodeProvider))]
 		Ok,
-		[VariantOptionType(typeof(GovernanceError))]
 		Err
 	}
 }
@@ -3182,7 +3114,7 @@ using System;
 
 namespace Test
 {
-	[Variant(typeof(RewardModeTag))]
+	[Variant()]
 	public class RewardMode
 	{
 		[VariantTagProperty()]
@@ -3234,9 +3166,7 @@ namespace Test
 
 	public enum RewardModeTag
 	{
-		[VariantOptionType(typeof(RewardToNeuron))]
 		RewardToNeuron,
-		[VariantOptionType(typeof(RewardToAccount))]
 		RewardToAccount
 	}
 }

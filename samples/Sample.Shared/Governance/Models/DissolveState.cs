@@ -4,7 +4,7 @@ using System;
 
 namespace Sample.Shared.Governance.Models
 {
-	[Variant(typeof(DissolveStateTag))]
+	[Variant()]
 	public class DissolveState
 	{
 		[VariantTagProperty()]
@@ -56,9 +56,7 @@ namespace Sample.Shared.Governance.Models
 
 	public enum DissolveStateTag
 	{
-		[VariantOptionType(typeof(ulong))]
 		DissolveDelaySeconds,
-		[VariantOptionType(typeof(ulong))]
 		WhenDissolvedTimestampSeconds
 	}
 }

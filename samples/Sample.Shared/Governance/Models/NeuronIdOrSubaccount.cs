@@ -5,7 +5,7 @@ using System;
 
 namespace Sample.Shared.Governance.Models
 {
-	[Variant(typeof(NeuronIdOrSubaccountTag))]
+	[Variant()]
 	public class NeuronIdOrSubaccount
 	{
 		[VariantTagProperty()]
@@ -57,9 +57,7 @@ namespace Sample.Shared.Governance.Models
 
 	public enum NeuronIdOrSubaccountTag
 	{
-		[VariantOptionType(typeof(List<byte>))]
 		Subaccount,
-		[VariantOptionType(typeof(NeuronId))]
 		NeuronId
 	}
 }

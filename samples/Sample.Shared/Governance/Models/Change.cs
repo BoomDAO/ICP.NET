@@ -4,7 +4,7 @@ using System;
 
 namespace Sample.Shared.Governance.Models
 {
-	[Variant(typeof(ChangeTag))]
+	[Variant()]
 	public class Change
 	{
 		[VariantTagProperty()]
@@ -56,9 +56,7 @@ namespace Sample.Shared.Governance.Models
 
 	public enum ChangeTag
 	{
-		[VariantOptionType(typeof(NodeProvider))]
 		ToRemove,
-		[VariantOptionType(typeof(NodeProvider))]
 		ToAdd
 	}
 }

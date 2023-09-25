@@ -160,17 +160,12 @@ namespace EdjCase.ICP.ClientGenerator
 				case VariantSourceCodeType v:
 					{
 						TypeName variantName = this.BuildType(nameContext, parentType);
-						(ClassDeclarationSyntax? ClassSyntax, EnumDeclarationSyntax EnumSyntax)? result = this.GenerateVariant(variantName, v, parentType);
-						if (result == null)
+						(ClassDeclarationSyntax? ClassSyntax, EnumDeclarationSyntax EnumSyntax) result = this.GenerateVariant(variantName, v, parentType);
+						if (result.ClassSyntax != null)
 						{
-							// If null, then its a simple variant
-							return new ResolvedType(SimpleTypeName.FromType<SimpleVariant>());
+							return new ResolvedType(variantName, new MemberDeclarationSyntax[] { result.ClassSyntax, result.EnumSyntax });
 						}
-						if (result.Value.ClassSyntax != null)
-						{
-							return new ResolvedType(variantName, new MemberDeclarationSyntax[] { result.Value.ClassSyntax, result.Value.EnumSyntax });
-						}
-						return new ResolvedType(variantName, new MemberDeclarationSyntax[] { result.Value.EnumSyntax });
+						return new ResolvedType(variantName, new MemberDeclarationSyntax[] { result.EnumSyntax });
 					}
 				case RecordSourceCodeType r:
 					{
@@ -233,7 +228,7 @@ namespace EdjCase.ICP.ClientGenerator
 		}
 
 
-		internal (ClassDeclarationSyntax? Class, EnumDeclarationSyntax Type)? GenerateVariant(
+		internal (ClassDeclarationSyntax? Class, EnumDeclarationSyntax Type) GenerateVariant(
 			TypeName variantTypeName,
 			VariantSourceCodeType variant,
 			TypeName? parentType
@@ -261,11 +256,7 @@ namespace EdjCase.ICP.ClientGenerator
 				.Select(ResolveOption)
 				.ToList();
 
-			if (variant.Typed)
-			{
-				return this.GenerateTypedVariant(variant, variantTypeName, parentType, resolvedOptions);
-			}
-			return null;
+			return this.GenerateTypedVariant(variant, variantTypeName, parentType, resolvedOptions);
 		}
 
 
@@ -355,8 +346,8 @@ namespace EdjCase.ICP.ClientGenerator
 
 				List<AttributeListSyntax> attributes = new()
 				{
-					// [Variant(typeof({enumType})]
-					this.GenerateAttribute(AttributeInfo.FromType<VariantAttribute>(enumTypeName))
+					// [Variant]
+					this.GenerateAttribute(AttributeInfo.FromType<VariantAttribute>())
 				};
 				ClassDeclarationSyntax classSyntax = this.GenerateClass(
 					name: variantTypeName,
@@ -551,6 +542,7 @@ namespace EdjCase.ICP.ClientGenerator
 					)
 				)
 			);
+
 			return this.GenerateMethod(
 				body: body,
 				access: AccessType.Public,
@@ -758,15 +750,6 @@ namespace EdjCase.ICP.ClientGenerator
 						attributeList.Add(this.GenerateAttribute(
 							new AttributeInfo(SimpleTypeName.FromType<CandidNameAttribute>(), v.Name.CandidTag.Name!)
 						));
-					}
-
-					if (v.Type != null)
-					{
-						// [VariantOptionType(typeof({type}))]
-						attributeList.Add(this.GenerateAttribute(
-							new AttributeInfo(SimpleTypeName.FromType<VariantOptionTypeAttribute>(), v.Type)
-						));
-
 					}
 					return SyntaxFactory
 						// {optionName},

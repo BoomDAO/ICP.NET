@@ -136,7 +136,7 @@ using System;
 
 namespace Test.Models
 {
-	[Variant(typeof(WithdrawReceiptTag))]
+	[Variant()]
 	public class WithdrawReceipt
 	{
 		[VariantTagProperty()]
@@ -188,9 +188,7 @@ namespace Test.Models
 
 	public enum WithdrawReceiptTag
 	{
-		[VariantOptionType(typeof(WithdrawErr))]
 		Err,
-		[VariantOptionType(typeof(UnboundedUInt))]
 		Ok
 	}
 }
@@ -215,7 +213,7 @@ using System;
 
 namespace Test.Models
 {
-	[Variant(typeof(OrderPlacementReceiptTag))]
+	[Variant()]
 	public class OrderPlacementReceipt
 	{
 		[VariantTagProperty()]
@@ -267,9 +265,7 @@ namespace Test.Models
 
 	public enum OrderPlacementReceiptTag
 	{
-		[VariantOptionType(typeof(OrderPlacementErr))]
 		Err,
-		[VariantOptionType(typeof(OptionalValue<Order>))]
 		Ok
 	}
 }
@@ -339,7 +335,7 @@ using System;
 
 namespace Test.Models
 {
-	[Variant(typeof(DepositReceiptTag))]
+	[Variant()]
 	public class DepositReceipt
 	{
 		[VariantTagProperty()]
@@ -391,9 +387,7 @@ namespace Test.Models
 
 	public enum DepositReceiptTag
 	{
-		[VariantOptionType(typeof(DepositErr))]
 		Err,
-		[VariantOptionType(typeof(UnboundedUInt))]
 		Ok
 	}
 }
@@ -418,7 +412,7 @@ using OrderId = System.UInt32;
 
 namespace Test.Models
 {
-	[Variant(typeof(CancelOrderReceiptTag))]
+	[Variant()]
 	public class CancelOrderReceipt
 	{
 		[VariantTagProperty()]
@@ -470,9 +464,7 @@ namespace Test.Models
 
 	public enum CancelOrderReceiptTag
 	{
-		[VariantOptionType(typeof(CancelOrderErr))]
 		Err,
-		[VariantOptionType(typeof(OrderId))]
 		Ok
 	}
 }

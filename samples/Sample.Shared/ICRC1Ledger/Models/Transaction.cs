@@ -1,128 +1,42 @@
 using EdjCase.ICP.Candid.Mapping;
 using EdjCase.ICP.Candid.Models;
 using Sample.Shared.ICRC1Ledger.Models;
-using System.Collections.Generic;
 using Timestamp = System.UInt64;
 
 namespace Sample.Shared.ICRC1Ledger.Models
 {
 	public class Transaction
 	{
+		[CandidName("burn")]
+		public OptionalValue<Burn> Burn { get; set; }
+
 		[CandidName("kind")]
 		public string Kind { get; set; }
 
 		[CandidName("mint")]
-		public OptionalValue<Transaction.MintValue> Mint { get; set; }
+		public OptionalValue<Mint> Mint { get; set; }
 
-		[CandidName("burn")]
-		public OptionalValue<Transaction.BurnValue> Burn { get; set; }
-
-		[CandidName("transfer")]
-		public OptionalValue<Transaction.TransferValue> Transfer { get; set; }
+		[CandidName("approve")]
+		public OptionalValue<Approve> Approve { get; set; }
 
 		[CandidName("timestamp")]
-		public ulong Timestamp { get; set; }
+		public Timestamp Timestamp { get; set; }
 
-		public Transaction(string kind, OptionalValue<Transaction.MintValue> mint, OptionalValue<Transaction.BurnValue> burn, OptionalValue<Transaction.TransferValue> transfer, ulong timestamp)
+		[CandidName("transfer")]
+		public OptionalValue<Transfer> Transfer { get; set; }
+
+		public Transaction(OptionalValue<Burn> burn, string kind, OptionalValue<Mint> mint, OptionalValue<Approve> approve, Timestamp timestamp, OptionalValue<Transfer> transfer)
 		{
+			this.Burn = burn;
 			this.Kind = kind;
 			this.Mint = mint;
-			this.Burn = burn;
-			this.Transfer = transfer;
+			this.Approve = approve;
 			this.Timestamp = timestamp;
+			this.Transfer = transfer;
 		}
 
 		public Transaction()
 		{
-		}
-
-		public class MintValue
-		{
-			[CandidName("amount")]
-			public UnboundedUInt Amount { get; set; }
-
-			[CandidName("to")]
-			public Account To { get; set; }
-
-			[CandidName("memo")]
-			public OptionalValue<List<byte>> Memo { get; set; }
-
-			[CandidName("created_at_time")]
-			public OptionalValue<ulong> CreatedAtTime { get; set; }
-
-			public MintValue(UnboundedUInt amount, Account to, OptionalValue<List<byte>> memo, OptionalValue<ulong> createdAtTime)
-			{
-				this.Amount = amount;
-				this.To = to;
-				this.Memo = memo;
-				this.CreatedAtTime = createdAtTime;
-			}
-
-			public MintValue()
-			{
-			}
-		}
-
-		public class BurnValue
-		{
-			[CandidName("amount")]
-			public UnboundedUInt Amount { get; set; }
-
-			[CandidName("from")]
-			public Account From { get; set; }
-
-			[CandidName("memo")]
-			public OptionalValue<List<byte>> Memo { get; set; }
-
-			[CandidName("created_at_time")]
-			public OptionalValue<ulong> CreatedAtTime { get; set; }
-
-			public BurnValue(UnboundedUInt amount, Account from, OptionalValue<List<byte>> memo, OptionalValue<ulong> createdAtTime)
-			{
-				this.Amount = amount;
-				this.From = from;
-				this.Memo = memo;
-				this.CreatedAtTime = createdAtTime;
-			}
-
-			public BurnValue()
-			{
-			}
-		}
-
-		public class TransferValue
-		{
-			[CandidName("amount")]
-			public UnboundedUInt Amount { get; set; }
-
-			[CandidName("from")]
-			public Account From { get; set; }
-
-			[CandidName("to")]
-			public Account To { get; set; }
-
-			[CandidName("memo")]
-			public OptionalValue<List<byte>> Memo { get; set; }
-
-			[CandidName("created_at_time")]
-			public OptionalValue<ulong> CreatedAtTime { get; set; }
-
-			[CandidName("fee")]
-			public OptionalValue<UnboundedUInt> Fee { get; set; }
-
-			public TransferValue(UnboundedUInt amount, Account from, Account to, OptionalValue<List<byte>> memo, OptionalValue<ulong> createdAtTime, OptionalValue<UnboundedUInt> fee)
-			{
-				this.Amount = amount;
-				this.From = from;
-				this.To = to;
-				this.Memo = memo;
-				this.CreatedAtTime = createdAtTime;
-				this.Fee = fee;
-			}
-
-			public TransferValue()
-			{
-			}
 		}
 	}
 }

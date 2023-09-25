@@ -5,7 +5,7 @@ using System;
 
 namespace Sample.Shared.Dex.Models
 {
-	[Variant(typeof(OrderPlacementReceiptTag))]
+	[Variant()]
 	public class OrderPlacementReceipt
 	{
 		[VariantTagProperty()]
@@ -57,9 +57,7 @@ namespace Sample.Shared.Dex.Models
 
 	public enum OrderPlacementReceiptTag
 	{
-		[VariantOptionType(typeof(OrderPlacementErr))]
 		Err,
-		[VariantOptionType(typeof(OptionalValue<Order>))]
 		Ok
 	}
 }

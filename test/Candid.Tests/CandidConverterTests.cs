@@ -136,7 +136,7 @@ namespace EdjCase.ICP.Candid.Tests
 
 
 
-		[Variant(typeof(VariantValueClassType))]
+		[Variant]
 		public class VariantValueClass
 		{
 			[VariantTagProperty]
@@ -144,6 +144,15 @@ namespace EdjCase.ICP.Candid.Tests
 			[VariantValueProperty]
 			public object? Value { get; set; }
 
+
+			public int AsV3()
+			{
+				return (int)this.Value!;
+			}
+			public OptionalValue<string> AsV4()
+			{
+				return (OptionalValue<string>)this.Value!;
+			}
 		}
 
 		public enum VariantValueClassType
@@ -151,13 +160,10 @@ namespace EdjCase.ICP.Candid.Tests
 			[CandidName("v1")]
 			V1,
 			[CandidName("v2")]
-			[VariantOptionType(typeof(string))]
 			V2,
 			[CandidName("v3")]
-			[VariantOptionType(typeof(int))]
 			V3,
 			[CandidName("v4")]
-			[VariantOptionType(typeof(OptionalValue<string>))]
 			V4
 		}
 
