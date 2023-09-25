@@ -1,6 +1,5 @@
 using EdjCase.ICP.Candid.Mapping;
 using Sample.Shared.Governance.Models;
-using System;
 
 namespace Sample.Shared.Governance.Models
 {
@@ -13,6 +12,24 @@ namespace Sample.Shared.Governance.Models
 		[VariantValueProperty()]
 		public object? Value { get; set; }
 
+		public NeuronId? Spawn { get => this.Tag == Command2Tag.Spawn ? (NeuronId)this.Value : default; set => (this.Tag, this.Value) = (Command2Tag.Spawn, value); }
+
+		public Split? Split { get => this.Tag == Command2Tag.Split ? (Split)this.Value : default; set => (this.Tag, this.Value) = (Command2Tag.Split, value); }
+
+		public Configure? Configure { get => this.Tag == Command2Tag.Configure ? (Configure)this.Value : default; set => (this.Tag, this.Value) = (Command2Tag.Configure, value); }
+
+		public Merge? Merge { get => this.Tag == Command2Tag.Merge ? (Merge)this.Value : default; set => (this.Tag, this.Value) = (Command2Tag.Merge, value); }
+
+		public DisburseToNeuron? DisburseToNeuron { get => this.Tag == Command2Tag.DisburseToNeuron ? (DisburseToNeuron)this.Value : default; set => (this.Tag, this.Value) = (Command2Tag.DisburseToNeuron, value); }
+
+		public Command2.SyncCommandInfo? SyncCommand { get => this.Tag == Command2Tag.SyncCommand ? (Command2.SyncCommandInfo)this.Value : default; set => (this.Tag, this.Value) = (Command2Tag.SyncCommand, value); }
+
+		public ClaimOrRefresh? ClaimOrRefreshNeuron { get => this.Tag == Command2Tag.ClaimOrRefreshNeuron ? (ClaimOrRefresh)this.Value : default; set => (this.Tag, this.Value) = (Command2Tag.ClaimOrRefreshNeuron, value); }
+
+		public MergeMaturity? MergeMaturity { get => this.Tag == Command2Tag.MergeMaturity ? (MergeMaturity)this.Value : default; set => (this.Tag, this.Value) = (Command2Tag.MergeMaturity, value); }
+
+		public Disburse? Disburse { get => this.Tag == Command2Tag.Disburse ? (Disburse)this.Value : default; set => (this.Tag, this.Value) = (Command2Tag.Disburse, value); }
+
 		public Command2(Command2Tag tag, object? value)
 		{
 			this.Tag = tag;
@@ -21,113 +38,6 @@ namespace Sample.Shared.Governance.Models
 
 		protected Command2()
 		{
-		}
-
-		public static Command2 Spawn(NeuronId info)
-		{
-			return new Command2(Command2Tag.Spawn, info);
-		}
-
-		public static Command2 Split(Split info)
-		{
-			return new Command2(Command2Tag.Split, info);
-		}
-
-		public static Command2 Configure(Configure info)
-		{
-			return new Command2(Command2Tag.Configure, info);
-		}
-
-		public static Command2 Merge(Merge info)
-		{
-			return new Command2(Command2Tag.Merge, info);
-		}
-
-		public static Command2 DisburseToNeuron(DisburseToNeuron info)
-		{
-			return new Command2(Command2Tag.DisburseToNeuron, info);
-		}
-
-		public static Command2 SyncCommand(Command2.SyncCommandInfo info)
-		{
-			return new Command2(Command2Tag.SyncCommand, info);
-		}
-
-		public static Command2 ClaimOrRefreshNeuron(ClaimOrRefresh info)
-		{
-			return new Command2(Command2Tag.ClaimOrRefreshNeuron, info);
-		}
-
-		public static Command2 MergeMaturity(MergeMaturity info)
-		{
-			return new Command2(Command2Tag.MergeMaturity, info);
-		}
-
-		public static Command2 Disburse(Disburse info)
-		{
-			return new Command2(Command2Tag.Disburse, info);
-		}
-
-		public NeuronId AsSpawn()
-		{
-			this.ValidateTag(Command2Tag.Spawn);
-			return (NeuronId)this.Value!;
-		}
-
-		public Split AsSplit()
-		{
-			this.ValidateTag(Command2Tag.Split);
-			return (Split)this.Value!;
-		}
-
-		public Configure AsConfigure()
-		{
-			this.ValidateTag(Command2Tag.Configure);
-			return (Configure)this.Value!;
-		}
-
-		public Merge AsMerge()
-		{
-			this.ValidateTag(Command2Tag.Merge);
-			return (Merge)this.Value!;
-		}
-
-		public DisburseToNeuron AsDisburseToNeuron()
-		{
-			this.ValidateTag(Command2Tag.DisburseToNeuron);
-			return (DisburseToNeuron)this.Value!;
-		}
-
-		public Command2.SyncCommandInfo AsSyncCommand()
-		{
-			this.ValidateTag(Command2Tag.SyncCommand);
-			return (Command2.SyncCommandInfo)this.Value!;
-		}
-
-		public ClaimOrRefresh AsClaimOrRefreshNeuron()
-		{
-			this.ValidateTag(Command2Tag.ClaimOrRefreshNeuron);
-			return (ClaimOrRefresh)this.Value!;
-		}
-
-		public MergeMaturity AsMergeMaturity()
-		{
-			this.ValidateTag(Command2Tag.MergeMaturity);
-			return (MergeMaturity)this.Value!;
-		}
-
-		public Disburse AsDisburse()
-		{
-			this.ValidateTag(Command2Tag.Disburse);
-			return (Disburse)this.Value!;
-		}
-
-		private void ValidateTag(Command2Tag tag)
-		{
-			if (!this.Tag.Equals(tag))
-			{
-				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
-			}
 		}
 
 		public class SyncCommandInfo

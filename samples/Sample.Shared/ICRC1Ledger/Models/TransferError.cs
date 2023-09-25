@@ -1,6 +1,5 @@
 using EdjCase.ICP.Candid.Mapping;
 using Sample.Shared.ICRC1Ledger.Models;
-using System;
 using EdjCase.ICP.Candid.Models;
 using BlockIndex = EdjCase.ICP.Candid.Models.UnboundedUInt;
 using Timestamp = System.UInt64;
@@ -17,6 +16,18 @@ namespace Sample.Shared.ICRC1Ledger.Models
 		[VariantValueProperty()]
 		public object? Value { get; set; }
 
+		public TransferError.BadFeeInfo? BadFee { get => this.Tag == TransferErrorTag.BadFee ? (TransferError.BadFeeInfo)this.Value : default; set => (this.Tag, this.Value) = (TransferErrorTag.BadFee, value); }
+
+		public TransferError.BadBurnInfo? BadBurn { get => this.Tag == TransferErrorTag.BadBurn ? (TransferError.BadBurnInfo)this.Value : default; set => (this.Tag, this.Value) = (TransferErrorTag.BadBurn, value); }
+
+		public TransferError.InsufficientFundsInfo? InsufficientFunds { get => this.Tag == TransferErrorTag.InsufficientFunds ? (TransferError.InsufficientFundsInfo)this.Value : default; set => (this.Tag, this.Value) = (TransferErrorTag.InsufficientFunds, value); }
+
+		public TransferError.CreatedInFutureInfo? CreatedInFuture { get => this.Tag == TransferErrorTag.CreatedInFuture ? (TransferError.CreatedInFutureInfo)this.Value : default; set => (this.Tag, this.Value) = (TransferErrorTag.CreatedInFuture, value); }
+
+		public TransferError.DuplicateInfo? Duplicate { get => this.Tag == TransferErrorTag.Duplicate ? (TransferError.DuplicateInfo)this.Value : default; set => (this.Tag, this.Value) = (TransferErrorTag.Duplicate, value); }
+
+		public TransferError.GenericErrorInfo? GenericError { get => this.Tag == TransferErrorTag.GenericError ? (TransferError.GenericErrorInfo)this.Value : default; set => (this.Tag, this.Value) = (TransferErrorTag.GenericError, value); }
+
 		public TransferError(TransferErrorTag tag, object? value)
 		{
 			this.Tag = tag;
@@ -25,90 +36,6 @@ namespace Sample.Shared.ICRC1Ledger.Models
 
 		protected TransferError()
 		{
-		}
-
-		public static TransferError BadFee(TransferError.BadFeeInfo info)
-		{
-			return new TransferError(TransferErrorTag.BadFee, info);
-		}
-
-		public static TransferError BadBurn(TransferError.BadBurnInfo info)
-		{
-			return new TransferError(TransferErrorTag.BadBurn, info);
-		}
-
-		public static TransferError InsufficientFunds(TransferError.InsufficientFundsInfo info)
-		{
-			return new TransferError(TransferErrorTag.InsufficientFunds, info);
-		}
-
-		public static TransferError TooOld()
-		{
-			return new TransferError(TransferErrorTag.TooOld, null);
-		}
-
-		public static TransferError CreatedInFuture(TransferError.CreatedInFutureInfo info)
-		{
-			return new TransferError(TransferErrorTag.CreatedInFuture, info);
-		}
-
-		public static TransferError TemporarilyUnavailable()
-		{
-			return new TransferError(TransferErrorTag.TemporarilyUnavailable, null);
-		}
-
-		public static TransferError Duplicate(TransferError.DuplicateInfo info)
-		{
-			return new TransferError(TransferErrorTag.Duplicate, info);
-		}
-
-		public static TransferError GenericError(TransferError.GenericErrorInfo info)
-		{
-			return new TransferError(TransferErrorTag.GenericError, info);
-		}
-
-		public TransferError.BadFeeInfo AsBadFee()
-		{
-			this.ValidateTag(TransferErrorTag.BadFee);
-			return (TransferError.BadFeeInfo)this.Value!;
-		}
-
-		public TransferError.BadBurnInfo AsBadBurn()
-		{
-			this.ValidateTag(TransferErrorTag.BadBurn);
-			return (TransferError.BadBurnInfo)this.Value!;
-		}
-
-		public TransferError.InsufficientFundsInfo AsInsufficientFunds()
-		{
-			this.ValidateTag(TransferErrorTag.InsufficientFunds);
-			return (TransferError.InsufficientFundsInfo)this.Value!;
-		}
-
-		public TransferError.CreatedInFutureInfo AsCreatedInFuture()
-		{
-			this.ValidateTag(TransferErrorTag.CreatedInFuture);
-			return (TransferError.CreatedInFutureInfo)this.Value!;
-		}
-
-		public TransferError.DuplicateInfo AsDuplicate()
-		{
-			this.ValidateTag(TransferErrorTag.Duplicate);
-			return (TransferError.DuplicateInfo)this.Value!;
-		}
-
-		public TransferError.GenericErrorInfo AsGenericError()
-		{
-			this.ValidateTag(TransferErrorTag.GenericError);
-			return (TransferError.GenericErrorInfo)this.Value!;
-		}
-
-		private void ValidateTag(TransferErrorTag tag)
-		{
-			if (!this.Tag.Equals(tag))
-			{
-				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
-			}
 		}
 
 		public class BadFeeInfo

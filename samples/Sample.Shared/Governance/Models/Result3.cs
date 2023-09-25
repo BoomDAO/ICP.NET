@@ -1,6 +1,5 @@
 using EdjCase.ICP.Candid.Mapping;
 using Sample.Shared.Governance.Models;
-using System;
 
 namespace Sample.Shared.Governance.Models
 {
@@ -13,6 +12,10 @@ namespace Sample.Shared.Governance.Models
 		[VariantValueProperty()]
 		public object? Value { get; set; }
 
+		public GovernanceCachedMetrics? Ok { get => this.Tag == Result3Tag.Ok ? (GovernanceCachedMetrics)this.Value : default; set => (this.Tag, this.Value) = (Result3Tag.Ok, value); }
+
+		public GovernanceError? Err { get => this.Tag == Result3Tag.Err ? (GovernanceError)this.Value : default; set => (this.Tag, this.Value) = (Result3Tag.Err, value); }
+
 		public Result3(Result3Tag tag, object? value)
 		{
 			this.Tag = tag;
@@ -21,36 +24,6 @@ namespace Sample.Shared.Governance.Models
 
 		protected Result3()
 		{
-		}
-
-		public static Result3 Ok(GovernanceCachedMetrics info)
-		{
-			return new Result3(Result3Tag.Ok, info);
-		}
-
-		public static Result3 Err(GovernanceError info)
-		{
-			return new Result3(Result3Tag.Err, info);
-		}
-
-		public GovernanceCachedMetrics AsOk()
-		{
-			this.ValidateTag(Result3Tag.Ok);
-			return (GovernanceCachedMetrics)this.Value!;
-		}
-
-		public GovernanceError AsErr()
-		{
-			this.ValidateTag(Result3Tag.Err);
-			return (GovernanceError)this.Value!;
-		}
-
-		private void ValidateTag(Result3Tag tag)
-		{
-			if (!this.Tag.Equals(tag))
-			{
-				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
-			}
 		}
 	}
 

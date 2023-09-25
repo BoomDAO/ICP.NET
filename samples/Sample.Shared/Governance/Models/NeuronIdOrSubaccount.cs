@@ -1,7 +1,6 @@
 using EdjCase.ICP.Candid.Mapping;
 using Sample.Shared.Governance.Models;
 using System.Collections.Generic;
-using System;
 
 namespace Sample.Shared.Governance.Models
 {
@@ -14,6 +13,10 @@ namespace Sample.Shared.Governance.Models
 		[VariantValueProperty()]
 		public object? Value { get; set; }
 
+		public List<byte>? Subaccount { get => this.Tag == NeuronIdOrSubaccountTag.Subaccount ? (List<byte>)this.Value : default; set => (this.Tag, this.Value) = (NeuronIdOrSubaccountTag.Subaccount, value); }
+
+		public NeuronId? NeuronId { get => this.Tag == NeuronIdOrSubaccountTag.NeuronId ? (NeuronId)this.Value : default; set => (this.Tag, this.Value) = (NeuronIdOrSubaccountTag.NeuronId, value); }
+
 		public NeuronIdOrSubaccount(NeuronIdOrSubaccountTag tag, object? value)
 		{
 			this.Tag = tag;
@@ -22,36 +25,6 @@ namespace Sample.Shared.Governance.Models
 
 		protected NeuronIdOrSubaccount()
 		{
-		}
-
-		public static NeuronIdOrSubaccount Subaccount(List<byte> info)
-		{
-			return new NeuronIdOrSubaccount(NeuronIdOrSubaccountTag.Subaccount, info);
-		}
-
-		public static NeuronIdOrSubaccount NeuronId(NeuronId info)
-		{
-			return new NeuronIdOrSubaccount(NeuronIdOrSubaccountTag.NeuronId, info);
-		}
-
-		public List<byte> AsSubaccount()
-		{
-			this.ValidateTag(NeuronIdOrSubaccountTag.Subaccount);
-			return (List<byte>)this.Value!;
-		}
-
-		public NeuronId AsNeuronId()
-		{
-			this.ValidateTag(NeuronIdOrSubaccountTag.NeuronId);
-			return (NeuronId)this.Value!;
-		}
-
-		private void ValidateTag(NeuronIdOrSubaccountTag tag)
-		{
-			if (!this.Tag.Equals(tag))
-			{
-				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
-			}
 		}
 	}
 

@@ -1,6 +1,5 @@
 using EdjCase.ICP.Candid.Mapping;
 using Sample.Shared.Governance.Models;
-using System;
 
 namespace Sample.Shared.Governance.Models
 {
@@ -13,6 +12,10 @@ namespace Sample.Shared.Governance.Models
 		[VariantValueProperty()]
 		public object? Value { get; set; }
 
+		public RewardToNeuron? RewardToNeuron { get => this.Tag == RewardModeTag.RewardToNeuron ? (RewardToNeuron)this.Value : default; set => (this.Tag, this.Value) = (RewardModeTag.RewardToNeuron, value); }
+
+		public RewardToAccount? RewardToAccount { get => this.Tag == RewardModeTag.RewardToAccount ? (RewardToAccount)this.Value : default; set => (this.Tag, this.Value) = (RewardModeTag.RewardToAccount, value); }
+
 		public RewardMode(RewardModeTag tag, object? value)
 		{
 			this.Tag = tag;
@@ -21,36 +24,6 @@ namespace Sample.Shared.Governance.Models
 
 		protected RewardMode()
 		{
-		}
-
-		public static RewardMode RewardToNeuron(RewardToNeuron info)
-		{
-			return new RewardMode(RewardModeTag.RewardToNeuron, info);
-		}
-
-		public static RewardMode RewardToAccount(RewardToAccount info)
-		{
-			return new RewardMode(RewardModeTag.RewardToAccount, info);
-		}
-
-		public RewardToNeuron AsRewardToNeuron()
-		{
-			this.ValidateTag(RewardModeTag.RewardToNeuron);
-			return (RewardToNeuron)this.Value!;
-		}
-
-		public RewardToAccount AsRewardToAccount()
-		{
-			this.ValidateTag(RewardModeTag.RewardToAccount);
-			return (RewardToAccount)this.Value!;
-		}
-
-		private void ValidateTag(RewardModeTag tag)
-		{
-			if (!this.Tag.Equals(tag))
-			{
-				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
-			}
 		}
 	}
 

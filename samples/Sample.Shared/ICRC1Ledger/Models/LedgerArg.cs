@@ -1,7 +1,6 @@
 using EdjCase.ICP.Candid.Mapping;
 using Sample.Shared.ICRC1Ledger.Models;
 using EdjCase.ICP.Candid.Models;
-using System;
 
 namespace Sample.Shared.ICRC1Ledger.Models
 {
@@ -14,6 +13,10 @@ namespace Sample.Shared.ICRC1Ledger.Models
 		[VariantValueProperty()]
 		public object? Value { get; set; }
 
+		public InitArgs? Init { get => this.Tag == LedgerArgTag.Init ? (InitArgs)this.Value : default; set => (this.Tag, this.Value) = (LedgerArgTag.Init, value); }
+
+		public OptionalValue<UpgradeArgs>? Upgrade { get => this.Tag == LedgerArgTag.Upgrade ? (OptionalValue<UpgradeArgs>)this.Value : default; set => (this.Tag, this.Value) = (LedgerArgTag.Upgrade, value); }
+
 		public LedgerArg(LedgerArgTag tag, object? value)
 		{
 			this.Tag = tag;
@@ -22,36 +25,6 @@ namespace Sample.Shared.ICRC1Ledger.Models
 
 		protected LedgerArg()
 		{
-		}
-
-		public static LedgerArg Init(InitArgs info)
-		{
-			return new LedgerArg(LedgerArgTag.Init, info);
-		}
-
-		public static LedgerArg Upgrade(OptionalValue<UpgradeArgs> info)
-		{
-			return new LedgerArg(LedgerArgTag.Upgrade, info);
-		}
-
-		public InitArgs AsInit()
-		{
-			this.ValidateTag(LedgerArgTag.Init);
-			return (InitArgs)this.Value!;
-		}
-
-		public OptionalValue<UpgradeArgs> AsUpgrade()
-		{
-			this.ValidateTag(LedgerArgTag.Upgrade);
-			return (OptionalValue<UpgradeArgs>)this.Value!;
-		}
-
-		private void ValidateTag(LedgerArgTag tag)
-		{
-			if (!this.Tag.Equals(tag))
-			{
-				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
-			}
 		}
 	}
 
