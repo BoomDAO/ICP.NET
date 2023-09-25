@@ -7,7 +7,7 @@ using Map = System.Collections.Generic.Dictionary<System.String, Sample.Shared.I
 
 namespace Sample.Shared.ICRC1Ledger.Models
 {
-	[Variant(typeof(ValueTag))]
+	[Variant()]
 	public class Value
 	{
 		[VariantTagProperty()]
@@ -114,19 +114,12 @@ namespace Sample.Shared.ICRC1Ledger.Models
 
 	public enum ValueTag
 	{
-		[VariantOptionType(typeof(List<byte>))]
 		Blob,
-		[VariantOptionType(typeof(string))]
 		Text,
-		[VariantOptionType(typeof(UnboundedUInt))]
 		Nat,
-		[VariantOptionType(typeof(ulong))]
 		Nat64,
-		[VariantOptionType(typeof(UnboundedInt))]
 		Int,
-		[VariantOptionType(typeof(List<Value>))]
 		Array,
-		[VariantOptionType(typeof(Map))]
 		Map
 	}
 }

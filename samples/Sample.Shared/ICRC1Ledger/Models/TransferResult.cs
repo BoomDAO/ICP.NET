@@ -5,7 +5,7 @@ using BlockIndex = EdjCase.ICP.Candid.Models.UnboundedUInt;
 
 namespace Sample.Shared.ICRC1Ledger.Models
 {
-	[Variant(typeof(TransferResultTag))]
+	[Variant()]
 	public class TransferResult
 	{
 		[VariantTagProperty()]
@@ -57,9 +57,7 @@ namespace Sample.Shared.ICRC1Ledger.Models
 
 	public enum TransferResultTag
 	{
-		[VariantOptionType(typeof(BlockIndex))]
 		Ok,
-		[VariantOptionType(typeof(TransferError))]
 		Err
 	}
 }

@@ -4,7 +4,7 @@ using System;
 
 namespace Sample.Shared.ICRC1Ledger.Models
 {
-	[Variant(typeof(ChangeFeeCollectorTag))]
+	[Variant()]
 	public class ChangeFeeCollector
 	{
 		[VariantTagProperty()]
@@ -51,7 +51,6 @@ namespace Sample.Shared.ICRC1Ledger.Models
 	public enum ChangeFeeCollectorTag
 	{
 		Unset,
-		[VariantOptionType(typeof(Account))]
 		SetTo
 	}
 }

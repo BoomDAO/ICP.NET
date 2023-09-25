@@ -3,11 +3,12 @@ using Sample.Shared.ICRC1Ledger.Models;
 using System;
 using EdjCase.ICP.Candid.Models;
 using BlockIndex = EdjCase.ICP.Candid.Models.UnboundedUInt;
+using Timestamp = System.UInt64;
 using Tokens = EdjCase.ICP.Candid.Models.UnboundedUInt;
 
 namespace Sample.Shared.ICRC1Ledger.Models
 {
-	[Variant(typeof(TransferErrorTag))]
+	[Variant()]
 	public class TransferError
 	{
 		[VariantTagProperty()]
@@ -158,9 +159,9 @@ namespace Sample.Shared.ICRC1Ledger.Models
 		public class CreatedInFutureInfo
 		{
 			[CandidName("ledger_time")]
-			public ulong LedgerTime { get; set; }
+			public Timestamp LedgerTime { get; set; }
 
-			public CreatedInFutureInfo(ulong ledgerTime)
+			public CreatedInFutureInfo(Timestamp ledgerTime)
 			{
 				this.LedgerTime = ledgerTime;
 			}
@@ -207,19 +208,13 @@ namespace Sample.Shared.ICRC1Ledger.Models
 
 	public enum TransferErrorTag
 	{
-		[VariantOptionType(typeof(TransferError.BadFeeInfo))]
 		BadFee,
-		[VariantOptionType(typeof(TransferError.BadBurnInfo))]
 		BadBurn,
-		[VariantOptionType(typeof(TransferError.InsufficientFundsInfo))]
 		InsufficientFunds,
 		TooOld,
-		[VariantOptionType(typeof(TransferError.CreatedInFutureInfo))]
 		CreatedInFuture,
 		TemporarilyUnavailable,
-		[VariantOptionType(typeof(TransferError.DuplicateInfo))]
 		Duplicate,
-		[VariantOptionType(typeof(TransferError.GenericErrorInfo))]
 		GenericError
 	}
 }

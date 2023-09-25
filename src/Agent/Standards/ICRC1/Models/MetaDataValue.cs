@@ -37,7 +37,7 @@ namespace EdjCase.ICP.Agent.Standards.ICRC1.Models
 	/// <summary>
 	/// A model representing the metadata value from an icrc1 token
 	/// </summary>
-	[Variant(typeof(MetaDataValueTag))]
+	[Variant]
 	public class MetaDataValue
 	{
 		/// <summary>
@@ -163,22 +163,18 @@ namespace EdjCase.ICP.Agent.Standards.ICRC1.Models
 		/// <summary>
 		/// Nat value
 		/// </summary>
-		[VariantOptionType(typeof(UnboundedUInt))]
 		Nat,
 		/// <summary>
 		/// Int value
 		/// </summary>
-		[VariantOptionType(typeof(UnboundedInt))]
 		Int,
 		/// <summary>
 		/// Text value
 		/// </summary>
-		[VariantOptionType(typeof(string))]
 		Text,
 		/// <summary>
 		/// Blob value
 		/// </summary>
-		[VariantOptionType(typeof(byte[]))]
 		Blob,
 	}
 }

@@ -5,7 +5,7 @@ using System;
 
 namespace Sample.Shared.Dex.Models
 {
-	[Variant(typeof(WithdrawReceiptTag))]
+	[Variant()]
 	public class WithdrawReceipt
 	{
 		[VariantTagProperty()]
@@ -57,9 +57,7 @@ namespace Sample.Shared.Dex.Models
 
 	public enum WithdrawReceiptTag
 	{
-		[VariantOptionType(typeof(WithdrawErr))]
 		Err,
-		[VariantOptionType(typeof(UnboundedUInt))]
 		Ok
 	}
 }

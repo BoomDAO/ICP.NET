@@ -5,7 +5,7 @@ using System;
 
 namespace Sample.Shared.ICRC1Ledger.Models
 {
-	[Variant(typeof(LedgerArgTag))]
+	[Variant()]
 	public class LedgerArg
 	{
 		[VariantTagProperty()]
@@ -57,9 +57,7 @@ namespace Sample.Shared.ICRC1Ledger.Models
 
 	public enum LedgerArgTag
 	{
-		[VariantOptionType(typeof(InitArgs))]
 		Init,
-		[VariantOptionType(typeof(OptionalValue<UpgradeArgs>))]
 		Upgrade
 	}
 }

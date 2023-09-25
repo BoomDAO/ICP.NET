@@ -63,21 +63,6 @@ namespace EdjCase.ICP.Candid.Mapping
 	[AttributeUsage(AttributeTargets.Class)]
 	public class VariantAttribute : Attribute
 	{
-		/// <summary>
-		/// The enum type to use for specifying the tags of the variant
-		/// </summary>
-		public Type TagType { get; }
-
-		/// <param name="enumType">The enum type to use for specifying the tags of the variant</param>
-		/// <exception cref="ArgumentException">Throws if the type is not an enum</exception>
-		public VariantAttribute(Type enumType)
-		{
-			if (!enumType.IsEnum)
-			{
-				throw new ArgumentException("Type must be an enum");
-			}
-			this.TagType = enumType;
-		}
 	}
 
 	/// <summary>
@@ -102,18 +87,18 @@ namespace EdjCase.ICP.Candid.Mapping
 	/// An attribute to put on an enum option to specify if the tag has an attached
 	/// value in the variant, otherwise the attached type will be null
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Field)]
-	public class VariantOptionTypeAttribute : Attribute
+	[AttributeUsage(AttributeTargets.Method)]
+	public class VariantOptionAttribute : Attribute
 	{
 		/// <summary>
 		/// The type of the variant option value to use
 		/// </summary>
-		public Type OptionType { get; }
+		public CandidTag Tag { get; }
 
-		/// <param name="optionType">The type of the variant option value to use</param>
-		public VariantOptionTypeAttribute(Type optionType)
+		/// <param name="tag">The tag of the variant option</param>
+		public VariantOptionAttribute(CandidTag tag)
 		{
-			this.OptionType = optionType;
+			this.Tag = tag;
 		}
 	}
 }

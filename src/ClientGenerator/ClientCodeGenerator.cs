@@ -272,19 +272,6 @@ namespace EdjCase.ICP.ClientGenerator
 					}
 				case CandidVariantType va:
 					{
-						TypeRepresentation rep = typeOptions?.Representation ?? TypeRepresentation.TypedVariant;
-						bool typed;
-						switch (rep)
-						{
-							case TypeRepresentation.TypedVariant:
-								typed = true;
-								break;
-							case TypeRepresentation.SimpleVariant:
-								typed = false;
-								break;
-							default:
-								throw new Exception($"Variant types do not support representation: '{rep}'");
-						}
 						List<(ResolvedName Key, SourceCodeType? Type)> fields = va.Options
 							.Select(f =>
 							{
@@ -297,7 +284,7 @@ namespace EdjCase.ICP.ClientGenerator
 								return (optionName, sourceCodeType);
 							})
 							.ToList();
-						return new VariantSourceCodeType(fields, typed);
+						return new VariantSourceCodeType(fields);
 					}
 				default:
 					throw new NotImplementedException();

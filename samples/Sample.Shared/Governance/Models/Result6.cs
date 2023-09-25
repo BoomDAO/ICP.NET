@@ -4,7 +4,7 @@ using System;
 
 namespace Sample.Shared.Governance.Models
 {
-	[Variant(typeof(Result6Tag))]
+	[Variant()]
 	public class Result6
 	{
 		[VariantTagProperty()]
@@ -56,9 +56,7 @@ namespace Sample.Shared.Governance.Models
 
 	public enum Result6Tag
 	{
-		[VariantOptionType(typeof(NodeProvider))]
 		Ok,
-		[VariantOptionType(typeof(GovernanceError))]
 		Err
 	}
 }

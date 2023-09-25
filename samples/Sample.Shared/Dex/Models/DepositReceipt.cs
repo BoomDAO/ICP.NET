@@ -5,7 +5,7 @@ using System;
 
 namespace Sample.Shared.Dex.Models
 {
-	[Variant(typeof(DepositReceiptTag))]
+	[Variant()]
 	public class DepositReceipt
 	{
 		[VariantTagProperty()]
@@ -57,9 +57,7 @@ namespace Sample.Shared.Dex.Models
 
 	public enum DepositReceiptTag
 	{
-		[VariantOptionType(typeof(DepositErr))]
 		Err,
-		[VariantOptionType(typeof(UnboundedUInt))]
 		Ok
 	}
 }

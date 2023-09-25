@@ -2,10 +2,9 @@ using EdjCase.ICP.Agent.Agents;
 using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid;
 using System.Threading.Tasks;
+using Sample.Shared.ICRC1Ledger;
 using EdjCase.ICP.Agent.Responses;
 using System.Collections.Generic;
-using Sample.Shared.ICRC1Ledger;
-using EdjCase.ICP.Candid.Mapping;
 using Tokens = EdjCase.ICP.Candid.Models.UnboundedUInt;
 
 namespace Sample.Shared.ICRC1Ledger
@@ -23,6 +22,30 @@ namespace Sample.Shared.ICRC1Ledger
 			this.Agent = agent;
 			this.CanisterId = canisterId;
 			this.Converter = converter;
+		}
+
+		public async Task<Models.GetTransactionsResponse> GetTransactions(Models.GetTransactionsRequest arg0)
+		{
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_transactions", arg);
+			CandidArg reply = response.ThrowOrGetReply();
+			return reply.ToObjects<Models.GetTransactionsResponse>(this.Converter);
+		}
+
+		public async Task<Models.GetBlocksResponse> GetBlocks(Models.GetBlocksArgs arg0)
+		{
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_blocks", arg);
+			CandidArg reply = response.ThrowOrGetReply();
+			return reply.ToObjects<Models.GetBlocksResponse>(this.Converter);
+		}
+
+		public async Task<Models.DataCertificate> GetDataCertificate()
+		{
+			CandidArg arg = CandidArg.FromCandid();
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_data_certificate", arg);
+			CandidArg reply = response.ThrowOrGetReply();
+			return reply.ToObjects<Models.DataCertificate>(this.Converter);
 		}
 
 		public async Task<string> Icrc1Name()
@@ -96,55 +119,34 @@ namespace Sample.Shared.ICRC1Ledger
 			return reply.ToObjects<Models.TransferResult>(this.Converter);
 		}
 
-		public async Task<List<ICRC1LedgerApiClient.Icrc1SupportedStandardsArg0Item>> Icrc1SupportedStandards()
+		public async Task<List<Models.StandardRecord>> Icrc1SupportedStandards()
 		{
 			CandidArg arg = CandidArg.FromCandid();
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "icrc1_supported_standards", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<List<ICRC1LedgerApiClient.Icrc1SupportedStandardsArg0Item>>(this.Converter);
+			return reply.ToObjects<List<Models.StandardRecord>>(this.Converter);
 		}
 
-		public async Task<Models.GetTransactionsResponse> GetTransactions(Models.GetTransactionsRequest arg0)
+		public async Task<Models.ApproveResult> Icrc2Approve(Models.ApproveArgs arg0)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
-			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_transactions", arg);
-			CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<Models.GetTransactionsResponse>(this.Converter);
+			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "icrc2_approve", arg);
+			return reply.ToObjects<Models.ApproveResult>(this.Converter);
 		}
 
-		public async Task<Models.GetBlocksResponse> GetBlocks(Models.GetBlocksArgs arg0)
+		public async Task<Models.Allowance> Icrc2Allowance(Models.AllowanceArgs arg0)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
-			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_blocks", arg);
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "icrc2_allowance", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<Models.GetBlocksResponse>(this.Converter);
+			return reply.ToObjects<Models.Allowance>(this.Converter);
 		}
 
-		public async Task<Models.DataCertificate> GetDataCertificate()
+		public async Task<Models.TransferFromResult> Icrc2TransferFrom(Models.TransferFromArgs arg0)
 		{
-			CandidArg arg = CandidArg.FromCandid();
-			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_data_certificate", arg);
-			CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<Models.DataCertificate>(this.Converter);
-		}
-
-		public class Icrc1SupportedStandardsArg0Item
-		{
-			[CandidName("name")]
-			public string Name { get; set; }
-
-			[CandidName("url")]
-			public string Url { get; set; }
-
-			public Icrc1SupportedStandardsArg0Item(string name, string url)
-			{
-				this.Name = name;
-				this.Url = url;
-			}
-
-			public Icrc1SupportedStandardsArg0Item()
-			{
-			}
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "icrc2_transfer_from", arg);
+			return reply.ToObjects<Models.TransferFromResult>(this.Converter);
 		}
 	}
 }

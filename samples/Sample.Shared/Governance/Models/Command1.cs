@@ -4,7 +4,7 @@ using System;
 
 namespace Sample.Shared.Governance.Models
 {
-	[Variant(typeof(Command1Tag))]
+	[Variant()]
 	public class Command1
 	{
 		[VariantTagProperty()]
@@ -198,31 +198,18 @@ namespace Sample.Shared.Governance.Models
 
 	public enum Command1Tag
 	{
-		[VariantOptionType(typeof(GovernanceError))]
 		Error,
-		[VariantOptionType(typeof(SpawnResponse))]
 		Spawn,
-		[VariantOptionType(typeof(SpawnResponse))]
 		Split,
-		[VariantOptionType(typeof(Command1.FollowInfo))]
 		Follow,
-		[VariantOptionType(typeof(ClaimOrRefreshResponse))]
 		ClaimOrRefresh,
-		[VariantOptionType(typeof(Command1.ConfigureInfo))]
 		Configure,
-		[VariantOptionType(typeof(Command1.RegisterVoteInfo))]
 		RegisterVote,
-		[VariantOptionType(typeof(MergeResponse))]
 		Merge,
-		[VariantOptionType(typeof(SpawnResponse))]
 		DisburseToNeuron,
-		[VariantOptionType(typeof(MakeProposalResponse))]
 		MakeProposal,
-		[VariantOptionType(typeof(StakeMaturityResponse))]
 		StakeMaturity,
-		[VariantOptionType(typeof(MergeMaturityResponse))]
 		MergeMaturity,
-		[VariantOptionType(typeof(DisburseResponse))]
 		Disburse
 	}
 }
