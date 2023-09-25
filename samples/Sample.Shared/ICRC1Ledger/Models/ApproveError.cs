@@ -1,6 +1,5 @@
 using EdjCase.ICP.Candid.Mapping;
 using Sample.Shared.ICRC1Ledger.Models;
-using System;
 using EdjCase.ICP.Candid.Models;
 using BlockIndex = EdjCase.ICP.Candid.Models.UnboundedUInt;
 using Timestamp = System.UInt64;
@@ -16,6 +15,20 @@ namespace Sample.Shared.ICRC1Ledger.Models
 		[VariantValueProperty()]
 		public object? Value { get; set; }
 
+		public ApproveError.GenericErrorInfo? GenericError { get => this.Tag == ApproveErrorTag.GenericError ? (ApproveError.GenericErrorInfo)this.Value : default; set => (this.Tag, this.Value) = (ApproveErrorTag.GenericError, value); }
+
+		public ApproveError.DuplicateInfo? Duplicate { get => this.Tag == ApproveErrorTag.Duplicate ? (ApproveError.DuplicateInfo)this.Value : default; set => (this.Tag, this.Value) = (ApproveErrorTag.Duplicate, value); }
+
+		public ApproveError.BadFeeInfo? BadFee { get => this.Tag == ApproveErrorTag.BadFee ? (ApproveError.BadFeeInfo)this.Value : default; set => (this.Tag, this.Value) = (ApproveErrorTag.BadFee, value); }
+
+		public ApproveError.AllowanceChangedInfo? AllowanceChanged { get => this.Tag == ApproveErrorTag.AllowanceChanged ? (ApproveError.AllowanceChangedInfo)this.Value : default; set => (this.Tag, this.Value) = (ApproveErrorTag.AllowanceChanged, value); }
+
+		public ApproveError.CreatedInFutureInfo? CreatedInFuture { get => this.Tag == ApproveErrorTag.CreatedInFuture ? (ApproveError.CreatedInFutureInfo)this.Value : default; set => (this.Tag, this.Value) = (ApproveErrorTag.CreatedInFuture, value); }
+
+		public ApproveError.ExpiredInfo? Expired { get => this.Tag == ApproveErrorTag.Expired ? (ApproveError.ExpiredInfo)this.Value : default; set => (this.Tag, this.Value) = (ApproveErrorTag.Expired, value); }
+
+		public ApproveError.InsufficientFundsInfo? InsufficientFunds { get => this.Tag == ApproveErrorTag.InsufficientFunds ? (ApproveError.InsufficientFundsInfo)this.Value : default; set => (this.Tag, this.Value) = (ApproveErrorTag.InsufficientFunds, value); }
+
 		public ApproveError(ApproveErrorTag tag, object? value)
 		{
 			this.Tag = tag;
@@ -24,101 +37,6 @@ namespace Sample.Shared.ICRC1Ledger.Models
 
 		protected ApproveError()
 		{
-		}
-
-		public static ApproveError GenericError(ApproveError.GenericErrorInfo info)
-		{
-			return new ApproveError(ApproveErrorTag.GenericError, info);
-		}
-
-		public static ApproveError TemporarilyUnavailable()
-		{
-			return new ApproveError(ApproveErrorTag.TemporarilyUnavailable, null);
-		}
-
-		public static ApproveError Duplicate(ApproveError.DuplicateInfo info)
-		{
-			return new ApproveError(ApproveErrorTag.Duplicate, info);
-		}
-
-		public static ApproveError BadFee(ApproveError.BadFeeInfo info)
-		{
-			return new ApproveError(ApproveErrorTag.BadFee, info);
-		}
-
-		public static ApproveError AllowanceChanged(ApproveError.AllowanceChangedInfo info)
-		{
-			return new ApproveError(ApproveErrorTag.AllowanceChanged, info);
-		}
-
-		public static ApproveError CreatedInFuture(ApproveError.CreatedInFutureInfo info)
-		{
-			return new ApproveError(ApproveErrorTag.CreatedInFuture, info);
-		}
-
-		public static ApproveError TooOld()
-		{
-			return new ApproveError(ApproveErrorTag.TooOld, null);
-		}
-
-		public static ApproveError Expired(ApproveError.ExpiredInfo info)
-		{
-			return new ApproveError(ApproveErrorTag.Expired, info);
-		}
-
-		public static ApproveError InsufficientFunds(ApproveError.InsufficientFundsInfo info)
-		{
-			return new ApproveError(ApproveErrorTag.InsufficientFunds, info);
-		}
-
-		public ApproveError.GenericErrorInfo AsGenericError()
-		{
-			this.ValidateTag(ApproveErrorTag.GenericError);
-			return (ApproveError.GenericErrorInfo)this.Value!;
-		}
-
-		public ApproveError.DuplicateInfo AsDuplicate()
-		{
-			this.ValidateTag(ApproveErrorTag.Duplicate);
-			return (ApproveError.DuplicateInfo)this.Value!;
-		}
-
-		public ApproveError.BadFeeInfo AsBadFee()
-		{
-			this.ValidateTag(ApproveErrorTag.BadFee);
-			return (ApproveError.BadFeeInfo)this.Value!;
-		}
-
-		public ApproveError.AllowanceChangedInfo AsAllowanceChanged()
-		{
-			this.ValidateTag(ApproveErrorTag.AllowanceChanged);
-			return (ApproveError.AllowanceChangedInfo)this.Value!;
-		}
-
-		public ApproveError.CreatedInFutureInfo AsCreatedInFuture()
-		{
-			this.ValidateTag(ApproveErrorTag.CreatedInFuture);
-			return (ApproveError.CreatedInFutureInfo)this.Value!;
-		}
-
-		public ApproveError.ExpiredInfo AsExpired()
-		{
-			this.ValidateTag(ApproveErrorTag.Expired);
-			return (ApproveError.ExpiredInfo)this.Value!;
-		}
-
-		public ApproveError.InsufficientFundsInfo AsInsufficientFunds()
-		{
-			this.ValidateTag(ApproveErrorTag.InsufficientFunds);
-			return (ApproveError.InsufficientFundsInfo)this.Value!;
-		}
-
-		private void ValidateTag(ApproveErrorTag tag)
-		{
-			if (!this.Tag.Equals(tag))
-			{
-				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
-			}
 		}
 
 		public class GenericErrorInfo

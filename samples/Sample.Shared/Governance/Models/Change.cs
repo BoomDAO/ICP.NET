@@ -1,6 +1,5 @@
 using EdjCase.ICP.Candid.Mapping;
 using Sample.Shared.Governance.Models;
-using System;
 
 namespace Sample.Shared.Governance.Models
 {
@@ -13,6 +12,10 @@ namespace Sample.Shared.Governance.Models
 		[VariantValueProperty()]
 		public object? Value { get; set; }
 
+		public NodeProvider? ToRemove { get => this.Tag == ChangeTag.ToRemove ? (NodeProvider)this.Value : default; set => (this.Tag, this.Value) = (ChangeTag.ToRemove, value); }
+
+		public NodeProvider? ToAdd { get => this.Tag == ChangeTag.ToAdd ? (NodeProvider)this.Value : default; set => (this.Tag, this.Value) = (ChangeTag.ToAdd, value); }
+
 		public Change(ChangeTag tag, object? value)
 		{
 			this.Tag = tag;
@@ -21,36 +24,6 @@ namespace Sample.Shared.Governance.Models
 
 		protected Change()
 		{
-		}
-
-		public static Change ToRemove(NodeProvider info)
-		{
-			return new Change(ChangeTag.ToRemove, info);
-		}
-
-		public static Change ToAdd(NodeProvider info)
-		{
-			return new Change(ChangeTag.ToAdd, info);
-		}
-
-		public NodeProvider AsToRemove()
-		{
-			this.ValidateTag(ChangeTag.ToRemove);
-			return (NodeProvider)this.Value!;
-		}
-
-		public NodeProvider AsToAdd()
-		{
-			this.ValidateTag(ChangeTag.ToAdd);
-			return (NodeProvider)this.Value!;
-		}
-
-		private void ValidateTag(ChangeTag tag)
-		{
-			if (!this.Tag.Equals(tag))
-			{
-				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
-			}
 		}
 	}
 

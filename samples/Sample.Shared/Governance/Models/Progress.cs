@@ -1,6 +1,5 @@
 using EdjCase.ICP.Candid.Mapping;
 using Sample.Shared.Governance.Models;
-using System;
 
 namespace Sample.Shared.Governance.Models
 {
@@ -13,6 +12,8 @@ namespace Sample.Shared.Governance.Models
 		[VariantValueProperty()]
 		public object? Value { get; set; }
 
+		public NeuronId? LastNeuronId { get => this.Tag == ProgressTag.LastNeuronId ? (NeuronId)this.Value : default; set => (this.Tag, this.Value) = (ProgressTag.LastNeuronId, value); }
+
 		public Progress(ProgressTag tag, object? value)
 		{
 			this.Tag = tag;
@@ -21,25 +22,6 @@ namespace Sample.Shared.Governance.Models
 
 		protected Progress()
 		{
-		}
-
-		public static Progress LastNeuronId(NeuronId info)
-		{
-			return new Progress(ProgressTag.LastNeuronId, info);
-		}
-
-		public NeuronId AsLastNeuronId()
-		{
-			this.ValidateTag(ProgressTag.LastNeuronId);
-			return (NeuronId)this.Value!;
-		}
-
-		private void ValidateTag(ProgressTag tag)
-		{
-			if (!this.Tag.Equals(tag))
-			{
-				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
-			}
 		}
 	}
 

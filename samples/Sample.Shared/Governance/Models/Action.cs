@@ -1,6 +1,5 @@
 using EdjCase.ICP.Candid.Mapping;
 using Sample.Shared.Governance.Models;
-using System;
 
 namespace Sample.Shared.Governance.Models
 {
@@ -13,6 +12,32 @@ namespace Sample.Shared.Governance.Models
 		[VariantValueProperty()]
 		public object? Value { get; set; }
 
+		public KnownNeuron? RegisterNeuron { get => this.Tag == ActionTag.RegisterNeuron ? (KnownNeuron)this.Value : default; set => (this.Tag, this.Value) = (ActionTag.RegisterNeuron, value); }
+
+		public ManageNeuron? ManageNeuron { get => this.Tag == ActionTag.ManageNeuron ? (ManageNeuron)this.Value : default; set => (this.Tag, this.Value) = (ActionTag.ManageNeuron, value); }
+
+		public CreateServiceNervousSystem? CreateServiceNervousSystem { get => this.Tag == ActionTag.CreateServiceNervousSystem ? (CreateServiceNervousSystem)this.Value : default; set => (this.Tag, this.Value) = (ActionTag.CreateServiceNervousSystem, value); }
+
+		public ExecuteNnsFunction? ExecuteNnsFunction { get => this.Tag == ActionTag.ExecuteNnsFunction ? (ExecuteNnsFunction)this.Value : default; set => (this.Tag, this.Value) = (ActionTag.ExecuteNnsFunction, value); }
+
+		public RewardNodeProvider? RewardNodeProvider { get => this.Tag == ActionTag.RewardNodeProvider ? (RewardNodeProvider)this.Value : default; set => (this.Tag, this.Value) = (ActionTag.RewardNodeProvider, value); }
+
+		public OpenSnsTokenSwap? OpenSnsTokenSwap { get => this.Tag == ActionTag.OpenSnsTokenSwap ? (OpenSnsTokenSwap)this.Value : default; set => (this.Tag, this.Value) = (ActionTag.OpenSnsTokenSwap, value); }
+
+		public SetSnsTokenSwapOpenTimeWindow? SetSnsTokenSwapOpenTimeWindow { get => this.Tag == ActionTag.SetSnsTokenSwapOpenTimeWindow ? (SetSnsTokenSwapOpenTimeWindow)this.Value : default; set => (this.Tag, this.Value) = (ActionTag.SetSnsTokenSwapOpenTimeWindow, value); }
+
+		public SetDefaultFollowees? SetDefaultFollowees { get => this.Tag == ActionTag.SetDefaultFollowees ? (SetDefaultFollowees)this.Value : default; set => (this.Tag, this.Value) = (ActionTag.SetDefaultFollowees, value); }
+
+		public RewardNodeProviders? RewardNodeProviders { get => this.Tag == ActionTag.RewardNodeProviders ? (RewardNodeProviders)this.Value : default; set => (this.Tag, this.Value) = (ActionTag.RewardNodeProviders, value); }
+
+		public NetworkEconomics? ManageNetworkEconomics { get => this.Tag == ActionTag.ManageNetworkEconomics ? (NetworkEconomics)this.Value : default; set => (this.Tag, this.Value) = (ActionTag.ManageNetworkEconomics, value); }
+
+		public ApproveGenesisKyc? ApproveGenesisKyc { get => this.Tag == ActionTag.ApproveGenesisKyc ? (ApproveGenesisKyc)this.Value : default; set => (this.Tag, this.Value) = (ActionTag.ApproveGenesisKyc, value); }
+
+		public AddOrRemoveNodeProvider? AddOrRemoveNodeProvider { get => this.Tag == ActionTag.AddOrRemoveNodeProvider ? (AddOrRemoveNodeProvider)this.Value : default; set => (this.Tag, this.Value) = (ActionTag.AddOrRemoveNodeProvider, value); }
+
+		public Motion? Motion { get => this.Tag == ActionTag.Motion ? (Motion)this.Value : default; set => (this.Tag, this.Value) = (ActionTag.Motion, value); }
+
 		public Action(ActionTag tag, object? value)
 		{
 			this.Tag = tag;
@@ -21,157 +46,6 @@ namespace Sample.Shared.Governance.Models
 
 		protected Action()
 		{
-		}
-
-		public static Action RegisterNeuron(KnownNeuron info)
-		{
-			return new Action(ActionTag.RegisterNeuron, info);
-		}
-
-		public static Action ManageNeuron(ManageNeuron info)
-		{
-			return new Action(ActionTag.ManageNeuron, info);
-		}
-
-		public static Action CreateServiceNervousSystem(CreateServiceNervousSystem info)
-		{
-			return new Action(ActionTag.CreateServiceNervousSystem, info);
-		}
-
-		public static Action ExecuteNnsFunction(ExecuteNnsFunction info)
-		{
-			return new Action(ActionTag.ExecuteNnsFunction, info);
-		}
-
-		public static Action RewardNodeProvider(RewardNodeProvider info)
-		{
-			return new Action(ActionTag.RewardNodeProvider, info);
-		}
-
-		public static Action OpenSnsTokenSwap(OpenSnsTokenSwap info)
-		{
-			return new Action(ActionTag.OpenSnsTokenSwap, info);
-		}
-
-		public static Action SetSnsTokenSwapOpenTimeWindow(SetSnsTokenSwapOpenTimeWindow info)
-		{
-			return new Action(ActionTag.SetSnsTokenSwapOpenTimeWindow, info);
-		}
-
-		public static Action SetDefaultFollowees(SetDefaultFollowees info)
-		{
-			return new Action(ActionTag.SetDefaultFollowees, info);
-		}
-
-		public static Action RewardNodeProviders(RewardNodeProviders info)
-		{
-			return new Action(ActionTag.RewardNodeProviders, info);
-		}
-
-		public static Action ManageNetworkEconomics(NetworkEconomics info)
-		{
-			return new Action(ActionTag.ManageNetworkEconomics, info);
-		}
-
-		public static Action ApproveGenesisKyc(ApproveGenesisKyc info)
-		{
-			return new Action(ActionTag.ApproveGenesisKyc, info);
-		}
-
-		public static Action AddOrRemoveNodeProvider(AddOrRemoveNodeProvider info)
-		{
-			return new Action(ActionTag.AddOrRemoveNodeProvider, info);
-		}
-
-		public static Action Motion(Motion info)
-		{
-			return new Action(ActionTag.Motion, info);
-		}
-
-		public KnownNeuron AsRegisterNeuron()
-		{
-			this.ValidateTag(ActionTag.RegisterNeuron);
-			return (KnownNeuron)this.Value!;
-		}
-
-		public ManageNeuron AsManageNeuron()
-		{
-			this.ValidateTag(ActionTag.ManageNeuron);
-			return (ManageNeuron)this.Value!;
-		}
-
-		public CreateServiceNervousSystem AsCreateServiceNervousSystem()
-		{
-			this.ValidateTag(ActionTag.CreateServiceNervousSystem);
-			return (CreateServiceNervousSystem)this.Value!;
-		}
-
-		public ExecuteNnsFunction AsExecuteNnsFunction()
-		{
-			this.ValidateTag(ActionTag.ExecuteNnsFunction);
-			return (ExecuteNnsFunction)this.Value!;
-		}
-
-		public RewardNodeProvider AsRewardNodeProvider()
-		{
-			this.ValidateTag(ActionTag.RewardNodeProvider);
-			return (RewardNodeProvider)this.Value!;
-		}
-
-		public OpenSnsTokenSwap AsOpenSnsTokenSwap()
-		{
-			this.ValidateTag(ActionTag.OpenSnsTokenSwap);
-			return (OpenSnsTokenSwap)this.Value!;
-		}
-
-		public SetSnsTokenSwapOpenTimeWindow AsSetSnsTokenSwapOpenTimeWindow()
-		{
-			this.ValidateTag(ActionTag.SetSnsTokenSwapOpenTimeWindow);
-			return (SetSnsTokenSwapOpenTimeWindow)this.Value!;
-		}
-
-		public SetDefaultFollowees AsSetDefaultFollowees()
-		{
-			this.ValidateTag(ActionTag.SetDefaultFollowees);
-			return (SetDefaultFollowees)this.Value!;
-		}
-
-		public RewardNodeProviders AsRewardNodeProviders()
-		{
-			this.ValidateTag(ActionTag.RewardNodeProviders);
-			return (RewardNodeProviders)this.Value!;
-		}
-
-		public NetworkEconomics AsManageNetworkEconomics()
-		{
-			this.ValidateTag(ActionTag.ManageNetworkEconomics);
-			return (NetworkEconomics)this.Value!;
-		}
-
-		public ApproveGenesisKyc AsApproveGenesisKyc()
-		{
-			this.ValidateTag(ActionTag.ApproveGenesisKyc);
-			return (ApproveGenesisKyc)this.Value!;
-		}
-
-		public AddOrRemoveNodeProvider AsAddOrRemoveNodeProvider()
-		{
-			this.ValidateTag(ActionTag.AddOrRemoveNodeProvider);
-			return (AddOrRemoveNodeProvider)this.Value!;
-		}
-
-		public Motion AsMotion()
-		{
-			this.ValidateTag(ActionTag.Motion);
-			return (Motion)this.Value!;
-		}
-
-		private void ValidateTag(ActionTag tag)
-		{
-			if (!this.Tag.Equals(tag))
-			{
-				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
-			}
 		}
 	}
 

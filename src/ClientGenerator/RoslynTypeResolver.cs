@@ -399,7 +399,10 @@ namespace EdjCase.ICP.ClientGenerator
 										SyntaxFactory.Token(SyntaxKind.DefaultKeyword)
 									)
 								)
-							)),
+							))
+							.WithSemicolonToken(
+								SyntaxFactory.Token(SyntaxKind.SemicolonToken)
+							),
 						// Add setter
 						SyntaxFactory
 							.AccessorDeclaration(SyntaxKind.SetAccessorDeclaration)
@@ -446,10 +449,21 @@ namespace EdjCase.ICP.ClientGenerator
 									)
 								)
 							))
+							.WithSemicolonToken(
+								SyntaxFactory.Token(SyntaxKind.SemicolonToken)
+							)
 					};
+					TypeName fixedTypeName = this.FeatureNullable
+						? new NullableTypeName(o.Type.Name)
+						: o.Type.Name;
 					return SyntaxFactory.PropertyDeclaration(
-						o.Type!.Name.ToTypeSyntax(),
+						fixedTypeName.ToTypeSyntax(),
 						o.Name.Name
+					)
+					.WithModifiers(
+						SyntaxFactory.TokenList(
+							SyntaxFactory.Token(SyntaxKind.PublicKeyword)
+						)
 					)
 					.WithAccessorList(SyntaxFactory.AccessorList(
 						SyntaxFactory.List(accessors)

@@ -1,6 +1,5 @@
 using EdjCase.ICP.Candid.Mapping;
 using Sample.Shared.Governance.Models;
-using System;
 
 namespace Sample.Shared.Governance.Models
 {
@@ -13,6 +12,10 @@ namespace Sample.Shared.Governance.Models
 		[VariantValueProperty()]
 		public object? Value { get; set; }
 
+		public NodeProvider? Ok { get => this.Tag == Result6Tag.Ok ? (NodeProvider)this.Value : default; set => (this.Tag, this.Value) = (Result6Tag.Ok, value); }
+
+		public GovernanceError? Err { get => this.Tag == Result6Tag.Err ? (GovernanceError)this.Value : default; set => (this.Tag, this.Value) = (Result6Tag.Err, value); }
+
 		public Result6(Result6Tag tag, object? value)
 		{
 			this.Tag = tag;
@@ -21,36 +24,6 @@ namespace Sample.Shared.Governance.Models
 
 		protected Result6()
 		{
-		}
-
-		public static Result6 Ok(NodeProvider info)
-		{
-			return new Result6(Result6Tag.Ok, info);
-		}
-
-		public static Result6 Err(GovernanceError info)
-		{
-			return new Result6(Result6Tag.Err, info);
-		}
-
-		public NodeProvider AsOk()
-		{
-			this.ValidateTag(Result6Tag.Ok);
-			return (NodeProvider)this.Value!;
-		}
-
-		public GovernanceError AsErr()
-		{
-			this.ValidateTag(Result6Tag.Err);
-			return (GovernanceError)this.Value!;
-		}
-
-		private void ValidateTag(Result6Tag tag)
-		{
-			if (!this.Tag.Equals(tag))
-			{
-				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
-			}
 		}
 	}
 

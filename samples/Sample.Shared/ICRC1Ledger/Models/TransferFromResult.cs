@@ -1,6 +1,5 @@
 using EdjCase.ICP.Candid.Mapping;
 using Sample.Shared.ICRC1Ledger.Models;
-using System;
 using BlockIndex = EdjCase.ICP.Candid.Models.UnboundedUInt;
 
 namespace Sample.Shared.ICRC1Ledger.Models
@@ -14,6 +13,10 @@ namespace Sample.Shared.ICRC1Ledger.Models
 		[VariantValueProperty()]
 		public object? Value { get; set; }
 
+		public BlockIndex? Ok { get => this.Tag == TransferFromResultTag.Ok ? (BlockIndex)this.Value : default; set => (this.Tag, this.Value) = (TransferFromResultTag.Ok, value); }
+
+		public TransferFromError? Err { get => this.Tag == TransferFromResultTag.Err ? (TransferFromError)this.Value : default; set => (this.Tag, this.Value) = (TransferFromResultTag.Err, value); }
+
 		public TransferFromResult(TransferFromResultTag tag, object? value)
 		{
 			this.Tag = tag;
@@ -22,36 +25,6 @@ namespace Sample.Shared.ICRC1Ledger.Models
 
 		protected TransferFromResult()
 		{
-		}
-
-		public static TransferFromResult Ok(BlockIndex info)
-		{
-			return new TransferFromResult(TransferFromResultTag.Ok, info);
-		}
-
-		public static TransferFromResult Err(TransferFromError info)
-		{
-			return new TransferFromResult(TransferFromResultTag.Err, info);
-		}
-
-		public BlockIndex AsOk()
-		{
-			this.ValidateTag(TransferFromResultTag.Ok);
-			return (BlockIndex)this.Value!;
-		}
-
-		public TransferFromError AsErr()
-		{
-			this.ValidateTag(TransferFromResultTag.Err);
-			return (TransferFromError)this.Value!;
-		}
-
-		private void ValidateTag(TransferFromResultTag tag)
-		{
-			if (!this.Tag.Equals(tag))
-			{
-				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
-			}
 		}
 	}
 
