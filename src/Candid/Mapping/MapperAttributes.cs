@@ -87,7 +87,7 @@ namespace EdjCase.ICP.Candid.Mapping
 	/// An attribute to put on an enum option to specify if the tag has an attached
 	/// value in the variant, otherwise the attached type will be null
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Method)]
+	[AttributeUsage(AttributeTargets.Method | AttributeTargets.Property)]
 	public class VariantOptionAttribute : Attribute
 	{
 		/// <summary>
@@ -99,6 +99,12 @@ namespace EdjCase.ICP.Candid.Mapping
 		public VariantOptionAttribute(CandidTag tag)
 		{
 			this.Tag = tag;
+		}
+
+		/// <param name="tag">The tag of the variant option</param>
+		public VariantOptionAttribute(string tag) : this(CandidTag.FromName(tag))
+		{
+
 		}
 	}
 }

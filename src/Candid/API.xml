@@ -491,6 +491,9 @@
         <member name="M:EdjCase.ICP.Candid.Mapping.VariantOptionAttribute.#ctor(EdjCase.ICP.Candid.Models.CandidTag)">
             <param name="tag">The tag of the variant option</param>
         </member>
+        <member name="M:EdjCase.ICP.Candid.Mapping.VariantOptionAttribute.#ctor(System.String)">
+            <param name="tag">The tag of the variant option</param>
+        </member>
         <member name="T:EdjCase.ICP.Candid.Models.CandidArg">
             <summary>
             A model representing a candid arg. Used as the list of arguments for a function

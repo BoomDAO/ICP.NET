@@ -449,13 +449,22 @@ namespace EdjCase.ICP.Candid.Mapping
 			{
 				throw new InvalidOperationException($"Variant type '{objType.FullName}' must include a property named '{defaultTypePropertyName}' or have the '{typeof(VariantTagPropertyAttribute).FullName}' attribute on a property");
 			}
+			const string defaultValuePropertyName = "Value";
+			PropertyInfo? valueProperty = properties
+				.FirstOrDefault(p => p.GetCustomAttribute<VariantValuePropertyAttribute>() != null)
+				?? properties.FirstOrDefault(p => p.Name == defaultValuePropertyName);
+			if (valueProperty == null)
+			{
+				throw new InvalidOperationException($"Variant type '{objType.FullName}' must include a property named '{defaultValuePropertyName}' or have the '{typeof(VariantValuePropertyAttribute).FullName}' attribute on a property");
+			}
 			object? variant = Activator.CreateInstance(objType, nonPublic: true);
 
 			if (!variantTagProperty.PropertyType.IsEnum)
 			{
 				throw new Exception($"Variant tag type must be an enum of all the variant options, not type '{variantTagProperty.PropertyType}'");
 			}
-			Dictionary<CandidTag, Enum> tagEnumValues = variantTagProperty.PropertyType
+			Type variantEnumType = variantTagProperty.PropertyType;
+			Dictionary<CandidTag, Enum> tagEnumValues = variantEnumType
 				.GetEnumValues()
 				.Cast<Enum>()
 				.ToDictionary(
@@ -474,7 +483,7 @@ namespace EdjCase.ICP.Candid.Mapping
 				}
 				else if (classMethod.Name.StartsWith("As"))
 				{
-					tag = classMethod.Name.Substring(2);
+					tag = classMethod.Name[2..]; // Remove As prefix
 				}
 				else
 				{
@@ -482,6 +491,43 @@ namespace EdjCase.ICP.Candid.Mapping
 				}
 				
 				optionTypes.Add(tag, classMethod.ReturnType);
+			}
+			foreach(PropertyInfo property in properties)
+			{
+				if(property == variantTagProperty || property == valueProperty)
+				{
+					// Skip tag and value properties
+					continue;
+				}
+				CandidTag tag;
+				var optionAttribute = property.GetCustomAttribute<VariantOptionAttribute>();
+				if (optionAttribute != null)
+				{
+					// If property has the attribute
+					tag = optionAttribute.Tag;
+				}
+				else if (variantEnumType.IsEnumDefined(property.Name))
+				{
+					// If property is the same name as the enum value
+					tag = property.Name;
+				}
+				else
+				{
+					continue;
+				}
+				if (!optionTypes.TryGetValue(tag, out Type optionType))
+				{
+					// Add if not already added by a method
+					optionTypes.Add(tag, property.PropertyType);
+				}
+				else
+				{
+					if (optionType != property.PropertyType)
+					{
+						throw new Exception($"Conflict: Variant '{objType.FullName}' defines a property '{property.Name}' and a method with different types for an option");
+					}
+					// Method and Property, skip adding...
+				}
 			}
 
 			Dictionary<CandidTag, VariantMapper.Option> options = tagEnumValues
@@ -503,14 +549,6 @@ namespace EdjCase.ICP.Candid.Mapping
 				.Distinct()
 				.ToList();
 
-			const string defaultValuePropertyName = "Value";
-			PropertyInfo? valueProperty = properties
-				.FirstOrDefault(p => p.GetCustomAttribute<VariantValuePropertyAttribute>() != null)
-				?? properties.FirstOrDefault(p => p.Name == defaultValuePropertyName);
-			if (valueProperty == null)
-			{
-				throw new InvalidOperationException($"Variant type '{objType.FullName}' must include a property named '{defaultValuePropertyName}' or have the '{typeof(VariantValuePropertyAttribute).FullName}' attribute on a property");
-			}
 			return new ComplexTypeInfo(objType, dependencies, (resolvedDependencies) =>
 			{
 				Dictionary<CandidTag, CandidType> optionCandidTypes = options
