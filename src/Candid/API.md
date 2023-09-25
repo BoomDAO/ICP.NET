@@ -685,6 +685,7 @@
 - [VariantAttribute](#T-EdjCase-ICP-Candid-Mapping-VariantAttribute 'EdjCase.ICP.Candid.Mapping.VariantAttribute')
 - [VariantOptionAttribute](#T-EdjCase-ICP-Candid-Mapping-VariantOptionAttribute 'EdjCase.ICP.Candid.Mapping.VariantOptionAttribute')
   - [#ctor(tag)](#M-EdjCase-ICP-Candid-Mapping-VariantOptionAttribute-#ctor-EdjCase-ICP-Candid-Models-CandidTag- 'EdjCase.ICP.Candid.Mapping.VariantOptionAttribute.#ctor(EdjCase.ICP.Candid.Models.CandidTag)')
+  - [#ctor(tag)](#M-EdjCase-ICP-Candid-Mapping-VariantOptionAttribute-#ctor-System-String- 'EdjCase.ICP.Candid.Mapping.VariantOptionAttribute.#ctor(System.String)')
   - [Tag](#P-EdjCase-ICP-Candid-Mapping-VariantOptionAttribute-Tag 'EdjCase.ICP.Candid.Mapping.VariantOptionAttribute.Tag')
 - [VariantTagPropertyAttribute](#T-EdjCase-ICP-Candid-Mapping-VariantTagPropertyAttribute 'EdjCase.ICP.Candid.Mapping.VariantTagPropertyAttribute')
 - [VariantValuePropertyAttribute](#T-EdjCase-ICP-Candid-Mapping-VariantValuePropertyAttribute 'EdjCase.ICP.Candid.Mapping.VariantValuePropertyAttribute')
@@ -9213,6 +9214,15 @@ value in the variant, otherwise the attached type will be null
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | tag | [EdjCase.ICP.Candid.Models.CandidTag](#T-EdjCase-ICP-Candid-Models-CandidTag 'EdjCase.ICP.Candid.Models.CandidTag') | The tag of the variant option |
+
+<a name='M-EdjCase-ICP-Candid-Mapping-VariantOptionAttribute-#ctor-System-String-'></a>
+### #ctor(tag) `constructor`
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| tag | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The tag of the variant option |
 
 <a name='P-EdjCase-ICP-Candid-Mapping-VariantOptionAttribute-Tag'></a>
 ### Tag `property`
