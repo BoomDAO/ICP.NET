@@ -1,7 +1,6 @@
 using EdjCase.ICP.Candid.Mapping;
 using Sample.Shared.Dex.Models;
 using EdjCase.ICP.Candid.Models;
-using System;
 
 namespace Sample.Shared.Dex.Models
 {
@@ -14,6 +13,10 @@ namespace Sample.Shared.Dex.Models
 		[VariantValueProperty()]
 		public object? Value { get; set; }
 
+		public WithdrawErr? Err { get => this.Tag == WithdrawReceiptTag.Err ? (WithdrawErr)this.Value! : default; set => (this.Tag, this.Value) = (WithdrawReceiptTag.Err, value); }
+
+		public UnboundedUInt? Ok { get => this.Tag == WithdrawReceiptTag.Ok ? (UnboundedUInt)this.Value! : default; set => (this.Tag, this.Value) = (WithdrawReceiptTag.Ok, value); }
+
 		public WithdrawReceipt(WithdrawReceiptTag tag, object? value)
 		{
 			this.Tag = tag;
@@ -22,36 +25,6 @@ namespace Sample.Shared.Dex.Models
 
 		protected WithdrawReceipt()
 		{
-		}
-
-		public static WithdrawReceipt Err(WithdrawErr info)
-		{
-			return new WithdrawReceipt(WithdrawReceiptTag.Err, info);
-		}
-
-		public static WithdrawReceipt Ok(UnboundedUInt info)
-		{
-			return new WithdrawReceipt(WithdrawReceiptTag.Ok, info);
-		}
-
-		public WithdrawErr AsErr()
-		{
-			this.ValidateTag(WithdrawReceiptTag.Err);
-			return (WithdrawErr)this.Value!;
-		}
-
-		public UnboundedUInt AsOk()
-		{
-			this.ValidateTag(WithdrawReceiptTag.Ok);
-			return (UnboundedUInt)this.Value!;
-		}
-
-		private void ValidateTag(WithdrawReceiptTag tag)
-		{
-			if (!this.Tag.Equals(tag))
-			{
-				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
-			}
 		}
 	}
 

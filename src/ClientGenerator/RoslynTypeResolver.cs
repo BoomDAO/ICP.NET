@@ -387,14 +387,18 @@ namespace EdjCase.ICP.ClientGenerator
 											SyntaxFactory.IdentifierName(o.Name.Name)
 										)
 									),
-									// ({OptionType}) this.Value
+									// ({OptionType}) this.Value!
 									SyntaxFactory.CastExpression(
 										o.Type!.Name.ToTypeSyntax(),
-										SyntaxFactory.MemberAccessExpression(
-											SyntaxKind.SimpleMemberAccessExpression,
-											SyntaxFactory.ThisExpression(),
-											SyntaxFactory.IdentifierName(valueName)
+										SyntaxFactory.PostfixUnaryExpression(
+											SyntaxKind.SuppressNullableWarningExpression,
+											SyntaxFactory.MemberAccessExpression(
+												SyntaxKind.SimpleMemberAccessExpression,
+												SyntaxFactory.ThisExpression(),
+												SyntaxFactory.IdentifierName(valueName)
+											)
 										)
+										
 									),
 									// default
 									SyntaxFactory.LiteralExpression(
