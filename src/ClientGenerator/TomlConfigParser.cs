@@ -173,13 +173,6 @@ namespace EdjCase.ICP.ClientGenerator
 			return default;
 		}
 
-		private static TEnum GetEnumRequired<TEnum>(TomlTable table, string key)
-			where TEnum : struct
-		{
-			string stringValue = GetRequired<string>(table, key);
-			return (TEnum)Enum.Parse(typeof(TEnum), stringValue);
-		}
-
 		private static TEnum? GetEnumOptional<TEnum>(TomlTable table, string key)
 			where TEnum : struct
 		{
