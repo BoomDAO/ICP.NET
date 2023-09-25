@@ -1,5 +1,6 @@
 using EdjCase.ICP.Candid.Mapping;
 using Sample.Shared.ICRC1Ledger.Models;
+using System;
 using EdjCase.ICP.Candid.Models;
 using BlockIndex = EdjCase.ICP.Candid.Models.UnboundedUInt;
 using Timestamp = System.UInt64;
@@ -16,20 +17,6 @@ namespace Sample.Shared.ICRC1Ledger.Models
 		[VariantValueProperty()]
 		public object? Value { get; set; }
 
-		public TransferFromError.BadFeeInfo? BadFee { get => this.Tag == TransferFromErrorTag.BadFee ? (TransferFromError.BadFeeInfo)this.Value : default; set => (this.Tag, this.Value) = (TransferFromErrorTag.BadFee, value); }
-
-		public TransferFromError.BadBurnInfo? BadBurn { get => this.Tag == TransferFromErrorTag.BadBurn ? (TransferFromError.BadBurnInfo)this.Value : default; set => (this.Tag, this.Value) = (TransferFromErrorTag.BadBurn, value); }
-
-		public TransferFromError.InsufficientFundsInfo? InsufficientFunds { get => this.Tag == TransferFromErrorTag.InsufficientFunds ? (TransferFromError.InsufficientFundsInfo)this.Value : default; set => (this.Tag, this.Value) = (TransferFromErrorTag.InsufficientFunds, value); }
-
-		public TransferFromError.InsufficientAllowanceInfo? InsufficientAllowance { get => this.Tag == TransferFromErrorTag.InsufficientAllowance ? (TransferFromError.InsufficientAllowanceInfo)this.Value : default; set => (this.Tag, this.Value) = (TransferFromErrorTag.InsufficientAllowance, value); }
-
-		public TransferFromError.CreatedInFutureInfo? CreatedInFuture { get => this.Tag == TransferFromErrorTag.CreatedInFuture ? (TransferFromError.CreatedInFutureInfo)this.Value : default; set => (this.Tag, this.Value) = (TransferFromErrorTag.CreatedInFuture, value); }
-
-		public TransferFromError.DuplicateInfo? Duplicate { get => this.Tag == TransferFromErrorTag.Duplicate ? (TransferFromError.DuplicateInfo)this.Value : default; set => (this.Tag, this.Value) = (TransferFromErrorTag.Duplicate, value); }
-
-		public TransferFromError.GenericErrorInfo? GenericError { get => this.Tag == TransferFromErrorTag.GenericError ? (TransferFromError.GenericErrorInfo)this.Value : default; set => (this.Tag, this.Value) = (TransferFromErrorTag.GenericError, value); }
-
 		public TransferFromError(TransferFromErrorTag tag, object? value)
 		{
 			this.Tag = tag;
@@ -38,6 +25,101 @@ namespace Sample.Shared.ICRC1Ledger.Models
 
 		protected TransferFromError()
 		{
+		}
+
+		public static TransferFromError BadFee(TransferFromError.BadFeeInfo info)
+		{
+			return new TransferFromError(TransferFromErrorTag.BadFee, info);
+		}
+
+		public static TransferFromError BadBurn(TransferFromError.BadBurnInfo info)
+		{
+			return new TransferFromError(TransferFromErrorTag.BadBurn, info);
+		}
+
+		public static TransferFromError InsufficientFunds(TransferFromError.InsufficientFundsInfo info)
+		{
+			return new TransferFromError(TransferFromErrorTag.InsufficientFunds, info);
+		}
+
+		public static TransferFromError InsufficientAllowance(TransferFromError.InsufficientAllowanceInfo info)
+		{
+			return new TransferFromError(TransferFromErrorTag.InsufficientAllowance, info);
+		}
+
+		public static TransferFromError TooOld()
+		{
+			return new TransferFromError(TransferFromErrorTag.TooOld, null);
+		}
+
+		public static TransferFromError CreatedInFuture(TransferFromError.CreatedInFutureInfo info)
+		{
+			return new TransferFromError(TransferFromErrorTag.CreatedInFuture, info);
+		}
+
+		public static TransferFromError Duplicate(TransferFromError.DuplicateInfo info)
+		{
+			return new TransferFromError(TransferFromErrorTag.Duplicate, info);
+		}
+
+		public static TransferFromError TemporarilyUnavailable()
+		{
+			return new TransferFromError(TransferFromErrorTag.TemporarilyUnavailable, null);
+		}
+
+		public static TransferFromError GenericError(TransferFromError.GenericErrorInfo info)
+		{
+			return new TransferFromError(TransferFromErrorTag.GenericError, info);
+		}
+
+		public TransferFromError.BadFeeInfo AsBadFee()
+		{
+			this.ValidateTag(TransferFromErrorTag.BadFee);
+			return (TransferFromError.BadFeeInfo)this.Value!;
+		}
+
+		public TransferFromError.BadBurnInfo AsBadBurn()
+		{
+			this.ValidateTag(TransferFromErrorTag.BadBurn);
+			return (TransferFromError.BadBurnInfo)this.Value!;
+		}
+
+		public TransferFromError.InsufficientFundsInfo AsInsufficientFunds()
+		{
+			this.ValidateTag(TransferFromErrorTag.InsufficientFunds);
+			return (TransferFromError.InsufficientFundsInfo)this.Value!;
+		}
+
+		public TransferFromError.InsufficientAllowanceInfo AsInsufficientAllowance()
+		{
+			this.ValidateTag(TransferFromErrorTag.InsufficientAllowance);
+			return (TransferFromError.InsufficientAllowanceInfo)this.Value!;
+		}
+
+		public TransferFromError.CreatedInFutureInfo AsCreatedInFuture()
+		{
+			this.ValidateTag(TransferFromErrorTag.CreatedInFuture);
+			return (TransferFromError.CreatedInFutureInfo)this.Value!;
+		}
+
+		public TransferFromError.DuplicateInfo AsDuplicate()
+		{
+			this.ValidateTag(TransferFromErrorTag.Duplicate);
+			return (TransferFromError.DuplicateInfo)this.Value!;
+		}
+
+		public TransferFromError.GenericErrorInfo AsGenericError()
+		{
+			this.ValidateTag(TransferFromErrorTag.GenericError);
+			return (TransferFromError.GenericErrorInfo)this.Value!;
+		}
+
+		private void ValidateTag(TransferFromErrorTag tag)
+		{
+			if (!this.Tag.Equals(tag))
+			{
+				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
+			}
 		}
 
 		public class BadFeeInfo

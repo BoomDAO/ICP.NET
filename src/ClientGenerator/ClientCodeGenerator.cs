@@ -5,6 +5,7 @@ using EdjCase.ICP.Candid.Models.Values;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Org.BouncyCastle.Crypto.Agreement;
+using Org.BouncyCastle.Ocsp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -101,6 +102,7 @@ namespace EdjCase.ICP.ClientGenerator
 				modelNamespace,
 				aliases,
 				options.FeatureNullable,
+				options.VariantsUseProperties,
 				nameHelper,
 				declaredTypes
 			);
@@ -196,17 +198,17 @@ namespace EdjCase.ICP.ClientGenerator
 							innerTypeOptions
 						);
 						bool isDictionaryCompatible = innerType is TupleSourceCodeType t && t.Fields.Count == 2;
-						TypeRepresentation defaultRepresentation = isDictionaryCompatible
-							? TypeRepresentation.Dictionary
-							: TypeRepresentation.List;
-						TypeRepresentation rep = typeOptions?.Representation ?? defaultRepresentation;
-						switch (rep)
+						string defaultRepresentation = isDictionaryCompatible
+							? "dictionary"
+							: "list";
+						string rep = typeOptions?.Representation ?? defaultRepresentation;
+						switch (rep.ToLower())
 						{
-							case TypeRepresentation.Array:
+							case "array":
 								return new ArraySourceCodeType(innerType);
-							case TypeRepresentation.List:
+							case "list":
 								return new ListSourceCodeType(innerType);
-							case TypeRepresentation.Dictionary:
+							case "dictionary":
 								if (!isDictionaryCompatible)
 								{
 									throw new Exception("List to dictionary conversion is only compatible with `vec record { a; b }` candid types");

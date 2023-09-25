@@ -2,6 +2,7 @@ using EdjCase.ICP.Candid.Mapping;
 using Sample.Shared.ICRC1Ledger.Models;
 using EdjCase.ICP.Candid.Models;
 using System.Collections.Generic;
+using System;
 
 namespace Sample.Shared.ICRC1Ledger.Models
 {
@@ -14,14 +15,6 @@ namespace Sample.Shared.ICRC1Ledger.Models
 		[VariantValueProperty()]
 		public object? Value { get; set; }
 
-		public UnboundedUInt? Nat { get => this.Tag == MetadataValueTag.Nat ? (UnboundedUInt)this.Value : default; set => (this.Tag, this.Value) = (MetadataValueTag.Nat, value); }
-
-		public UnboundedInt? Int { get => this.Tag == MetadataValueTag.Int ? (UnboundedInt)this.Value : default; set => (this.Tag, this.Value) = (MetadataValueTag.Int, value); }
-
-		public string? Text { get => this.Tag == MetadataValueTag.Text ? (string)this.Value : default; set => (this.Tag, this.Value) = (MetadataValueTag.Text, value); }
-
-		public List<byte>? Blob { get => this.Tag == MetadataValueTag.Blob ? (List<byte>)this.Value : default; set => (this.Tag, this.Value) = (MetadataValueTag.Blob, value); }
-
 		public MetadataValue(MetadataValueTag tag, object? value)
 		{
 			this.Tag = tag;
@@ -30,6 +23,58 @@ namespace Sample.Shared.ICRC1Ledger.Models
 
 		protected MetadataValue()
 		{
+		}
+
+		public static MetadataValue Nat(UnboundedUInt info)
+		{
+			return new MetadataValue(MetadataValueTag.Nat, info);
+		}
+
+		public static MetadataValue Int(UnboundedInt info)
+		{
+			return new MetadataValue(MetadataValueTag.Int, info);
+		}
+
+		public static MetadataValue Text(string info)
+		{
+			return new MetadataValue(MetadataValueTag.Text, info);
+		}
+
+		public static MetadataValue Blob(List<byte> info)
+		{
+			return new MetadataValue(MetadataValueTag.Blob, info);
+		}
+
+		public UnboundedUInt AsNat()
+		{
+			this.ValidateTag(MetadataValueTag.Nat);
+			return (UnboundedUInt)this.Value!;
+		}
+
+		public UnboundedInt AsInt()
+		{
+			this.ValidateTag(MetadataValueTag.Int);
+			return (UnboundedInt)this.Value!;
+		}
+
+		public string AsText()
+		{
+			this.ValidateTag(MetadataValueTag.Text);
+			return (string)this.Value!;
+		}
+
+		public List<byte> AsBlob()
+		{
+			this.ValidateTag(MetadataValueTag.Blob);
+			return (List<byte>)this.Value!;
+		}
+
+		private void ValidateTag(MetadataValueTag tag)
+		{
+			if (!this.Tag.Equals(tag))
+			{
+				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
+			}
 		}
 	}
 

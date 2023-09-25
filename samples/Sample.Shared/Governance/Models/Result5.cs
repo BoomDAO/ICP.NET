@@ -1,5 +1,6 @@
 using EdjCase.ICP.Candid.Mapping;
 using Sample.Shared.Governance.Models;
+using System;
 
 namespace Sample.Shared.Governance.Models
 {
@@ -12,10 +13,6 @@ namespace Sample.Shared.Governance.Models
 		[VariantValueProperty()]
 		public object? Value { get; set; }
 
-		public NeuronInfo? Ok { get => this.Tag == Result5Tag.Ok ? (NeuronInfo)this.Value : default; set => (this.Tag, this.Value) = (Result5Tag.Ok, value); }
-
-		public GovernanceError? Err { get => this.Tag == Result5Tag.Err ? (GovernanceError)this.Value : default; set => (this.Tag, this.Value) = (Result5Tag.Err, value); }
-
 		public Result5(Result5Tag tag, object? value)
 		{
 			this.Tag = tag;
@@ -24,6 +21,36 @@ namespace Sample.Shared.Governance.Models
 
 		protected Result5()
 		{
+		}
+
+		public static Result5 Ok(NeuronInfo info)
+		{
+			return new Result5(Result5Tag.Ok, info);
+		}
+
+		public static Result5 Err(GovernanceError info)
+		{
+			return new Result5(Result5Tag.Err, info);
+		}
+
+		public NeuronInfo AsOk()
+		{
+			this.ValidateTag(Result5Tag.Ok);
+			return (NeuronInfo)this.Value!;
+		}
+
+		public GovernanceError AsErr()
+		{
+			this.ValidateTag(Result5Tag.Err);
+			return (GovernanceError)this.Value!;
+		}
+
+		private void ValidateTag(Result5Tag tag)
+		{
+			if (!this.Tag.Equals(tag))
+			{
+				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
+			}
 		}
 	}
 

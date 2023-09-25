@@ -115,7 +115,9 @@ namespace EdjCase.ICP.ClientGenerator
 		public List<(ResolvedName Tag, SourceCodeType? Type)> Options { get; }
 		public override bool IsPredefinedType { get; } = false;
 
-		public VariantSourceCodeType(List<(ResolvedName Tag, SourceCodeType? Type)> options)
+		public VariantSourceCodeType(
+			List<(ResolvedName Tag, SourceCodeType? Type)> options
+		)
 		{
 			this.Options = options ?? throw new ArgumentNullException(nameof(options));
 		}

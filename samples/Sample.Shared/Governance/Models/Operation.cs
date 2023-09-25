@@ -1,5 +1,6 @@
 using EdjCase.ICP.Candid.Mapping;
 using Sample.Shared.Governance.Models;
+using System;
 
 namespace Sample.Shared.Governance.Models
 {
@@ -12,24 +13,6 @@ namespace Sample.Shared.Governance.Models
 		[VariantValueProperty()]
 		public object? Value { get; set; }
 
-		public RemoveHotKey? RemoveHotKey { get => this.Tag == OperationTag.RemoveHotKey ? (RemoveHotKey)this.Value : default; set => (this.Tag, this.Value) = (OperationTag.RemoveHotKey, value); }
-
-		public AddHotKey? AddHotKey { get => this.Tag == OperationTag.AddHotKey ? (AddHotKey)this.Value : default; set => (this.Tag, this.Value) = (OperationTag.AddHotKey, value); }
-
-		public ChangeAutoStakeMaturity? ChangeAutoStakeMaturity { get => this.Tag == OperationTag.ChangeAutoStakeMaturity ? (ChangeAutoStakeMaturity)this.Value : default; set => (this.Tag, this.Value) = (OperationTag.ChangeAutoStakeMaturity, value); }
-
-		public Operation.StopDissolvingInfo? StopDissolving { get => this.Tag == OperationTag.StopDissolving ? (Operation.StopDissolvingInfo)this.Value : default; set => (this.Tag, this.Value) = (OperationTag.StopDissolving, value); }
-
-		public Operation.StartDissolvingInfo? StartDissolving { get => this.Tag == OperationTag.StartDissolving ? (Operation.StartDissolvingInfo)this.Value : default; set => (this.Tag, this.Value) = (OperationTag.StartDissolving, value); }
-
-		public IncreaseDissolveDelay? IncreaseDissolveDelay { get => this.Tag == OperationTag.IncreaseDissolveDelay ? (IncreaseDissolveDelay)this.Value : default; set => (this.Tag, this.Value) = (OperationTag.IncreaseDissolveDelay, value); }
-
-		public Operation.JoinCommunityFundInfo? JoinCommunityFund { get => this.Tag == OperationTag.JoinCommunityFund ? (Operation.JoinCommunityFundInfo)this.Value : default; set => (this.Tag, this.Value) = (OperationTag.JoinCommunityFund, value); }
-
-		public Operation.LeaveCommunityFundInfo? LeaveCommunityFund { get => this.Tag == OperationTag.LeaveCommunityFund ? (Operation.LeaveCommunityFundInfo)this.Value : default; set => (this.Tag, this.Value) = (OperationTag.LeaveCommunityFund, value); }
-
-		public SetDissolveTimestamp? SetDissolveTimestamp { get => this.Tag == OperationTag.SetDissolveTimestamp ? (SetDissolveTimestamp)this.Value : default; set => (this.Tag, this.Value) = (OperationTag.SetDissolveTimestamp, value); }
-
 		public Operation(OperationTag tag, object? value)
 		{
 			this.Tag = tag;
@@ -38,6 +21,113 @@ namespace Sample.Shared.Governance.Models
 
 		protected Operation()
 		{
+		}
+
+		public static Operation RemoveHotKey(RemoveHotKey info)
+		{
+			return new Operation(OperationTag.RemoveHotKey, info);
+		}
+
+		public static Operation AddHotKey(AddHotKey info)
+		{
+			return new Operation(OperationTag.AddHotKey, info);
+		}
+
+		public static Operation ChangeAutoStakeMaturity(ChangeAutoStakeMaturity info)
+		{
+			return new Operation(OperationTag.ChangeAutoStakeMaturity, info);
+		}
+
+		public static Operation StopDissolving(Operation.StopDissolvingInfo info)
+		{
+			return new Operation(OperationTag.StopDissolving, info);
+		}
+
+		public static Operation StartDissolving(Operation.StartDissolvingInfo info)
+		{
+			return new Operation(OperationTag.StartDissolving, info);
+		}
+
+		public static Operation IncreaseDissolveDelay(IncreaseDissolveDelay info)
+		{
+			return new Operation(OperationTag.IncreaseDissolveDelay, info);
+		}
+
+		public static Operation JoinCommunityFund(Operation.JoinCommunityFundInfo info)
+		{
+			return new Operation(OperationTag.JoinCommunityFund, info);
+		}
+
+		public static Operation LeaveCommunityFund(Operation.LeaveCommunityFundInfo info)
+		{
+			return new Operation(OperationTag.LeaveCommunityFund, info);
+		}
+
+		public static Operation SetDissolveTimestamp(SetDissolveTimestamp info)
+		{
+			return new Operation(OperationTag.SetDissolveTimestamp, info);
+		}
+
+		public RemoveHotKey AsRemoveHotKey()
+		{
+			this.ValidateTag(OperationTag.RemoveHotKey);
+			return (RemoveHotKey)this.Value!;
+		}
+
+		public AddHotKey AsAddHotKey()
+		{
+			this.ValidateTag(OperationTag.AddHotKey);
+			return (AddHotKey)this.Value!;
+		}
+
+		public ChangeAutoStakeMaturity AsChangeAutoStakeMaturity()
+		{
+			this.ValidateTag(OperationTag.ChangeAutoStakeMaturity);
+			return (ChangeAutoStakeMaturity)this.Value!;
+		}
+
+		public Operation.StopDissolvingInfo AsStopDissolving()
+		{
+			this.ValidateTag(OperationTag.StopDissolving);
+			return (Operation.StopDissolvingInfo)this.Value!;
+		}
+
+		public Operation.StartDissolvingInfo AsStartDissolving()
+		{
+			this.ValidateTag(OperationTag.StartDissolving);
+			return (Operation.StartDissolvingInfo)this.Value!;
+		}
+
+		public IncreaseDissolveDelay AsIncreaseDissolveDelay()
+		{
+			this.ValidateTag(OperationTag.IncreaseDissolveDelay);
+			return (IncreaseDissolveDelay)this.Value!;
+		}
+
+		public Operation.JoinCommunityFundInfo AsJoinCommunityFund()
+		{
+			this.ValidateTag(OperationTag.JoinCommunityFund);
+			return (Operation.JoinCommunityFundInfo)this.Value!;
+		}
+
+		public Operation.LeaveCommunityFundInfo AsLeaveCommunityFund()
+		{
+			this.ValidateTag(OperationTag.LeaveCommunityFund);
+			return (Operation.LeaveCommunityFundInfo)this.Value!;
+		}
+
+		public SetDissolveTimestamp AsSetDissolveTimestamp()
+		{
+			this.ValidateTag(OperationTag.SetDissolveTimestamp);
+			return (SetDissolveTimestamp)this.Value!;
+		}
+
+		private void ValidateTag(OperationTag tag)
+		{
+			if (!this.Tag.Equals(tag))
+			{
+				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
+			}
 		}
 
 		public class StopDissolvingInfo
