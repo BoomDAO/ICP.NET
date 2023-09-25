@@ -1,5 +1,6 @@
 using EdjCase.ICP.Candid.Mapping;
 using Sample.Shared.ICRC1Ledger.Models;
+using System;
 
 namespace Sample.Shared.ICRC1Ledger.Models
 {
@@ -12,8 +13,6 @@ namespace Sample.Shared.ICRC1Ledger.Models
 		[VariantValueProperty()]
 		public object? Value { get; set; }
 
-		public Account? SetTo { get => this.Tag == ChangeFeeCollectorTag.SetTo ? (Account)this.Value : default; set => (this.Tag, this.Value) = (ChangeFeeCollectorTag.SetTo, value); }
-
 		public ChangeFeeCollector(ChangeFeeCollectorTag tag, object? value)
 		{
 			this.Tag = tag;
@@ -22,6 +21,30 @@ namespace Sample.Shared.ICRC1Ledger.Models
 
 		protected ChangeFeeCollector()
 		{
+		}
+
+		public static ChangeFeeCollector Unset()
+		{
+			return new ChangeFeeCollector(ChangeFeeCollectorTag.Unset, null);
+		}
+
+		public static ChangeFeeCollector SetTo(Account info)
+		{
+			return new ChangeFeeCollector(ChangeFeeCollectorTag.SetTo, info);
+		}
+
+		public Account AsSetTo()
+		{
+			this.ValidateTag(ChangeFeeCollectorTag.SetTo);
+			return (Account)this.Value!;
+		}
+
+		private void ValidateTag(ChangeFeeCollectorTag tag)
+		{
+			if (!this.Tag.Equals(tag))
+			{
+				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
+			}
 		}
 	}
 

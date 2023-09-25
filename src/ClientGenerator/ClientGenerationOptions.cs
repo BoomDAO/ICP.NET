@@ -48,6 +48,10 @@ namespace EdjCase.ICP.ClientGenerator
 		/// </summary>
 		public bool FeatureNullable { get; }
 		/// <summary>
+		/// If true, variant classes will be generated with properties instead of methods
+		/// </summary>
+		public bool VariantsUseProperties { get; }
+		/// <summary>
 		/// If true, the names of properties and methods will keep the raw candid name.
 		/// Otherwise they will be converted to something prettier
 		/// </summary>
@@ -72,6 +76,7 @@ namespace EdjCase.ICP.ClientGenerator
 		/// <param name="purgeOutputDirectory">If true, removes all files in the output directory before regeneration. Defaults to true</param>
 		/// <param name="noFolders">If true, there will be no folders, all files will be in the same directory</param>
 		/// <param name="featureNullable">If true, the nullable C# feature will be used</param>
+		/// <param name="variantsUseProperties">If true, variant classes will be generated with properties instead of methods</param>
 		/// <param name="keepCandidCase">If true, the names of properties and methods will keep the raw candid name. Otherwise they will be converted to something prettier</param>
 		/// <param name="boundryNodeUrl">Optional. The url of the boundry node for the internet computer. Defaults to ic0.app</param>
 		/// <param name="types">Optional. Specifies options for each candid type in the definition</param>
@@ -84,6 +89,7 @@ namespace EdjCase.ICP.ClientGenerator
 			bool purgeOutputDirectory = true,
 			bool noFolders = false,
 			bool featureNullable = false,
+			bool variantsUseProperties = false,
 			bool keepCandidCase = false,
 			Uri? boundryNodeUrl = null,
 			Dictionary<string, NamedTypeOptions>? types = null
@@ -102,6 +108,7 @@ namespace EdjCase.ICP.ClientGenerator
 			this.PurgeOutputDirectory = purgeOutputDirectory;
 			this.NoFolders = noFolders;
 			this.FeatureNullable = featureNullable;
+			this.VariantsUseProperties = variantsUseProperties;
 			this.KeepCandidCase = keepCandidCase;
 			this.BoundryNodeUrl = boundryNodeUrl;
 			this.Types = types ?? new Dictionary<string, NamedTypeOptions>();
@@ -151,7 +158,7 @@ namespace EdjCase.ICP.ClientGenerator
 		/// <summary>
 		/// Optional. How the type should be represented in C#
 		/// </summary>
-		public TypeRepresentation? Representation { get; }
+		public string? Representation { get; }
 
 		/// <param name="fields">Optional. The type options for each of the records fields or variant options</param>
 		/// <param name="innerType">Optional. The type options for the sub type of a vec or opt</param>
@@ -160,31 +167,12 @@ namespace EdjCase.ICP.ClientGenerator
 		public TypeOptions(
 			Dictionary<string, NamedTypeOptions>? fields,
 			TypeOptions? innerType,
-			TypeRepresentation? representation
+			string? representation
 		)
 		{
 			this.Fields = fields ?? new Dictionary<string, NamedTypeOptions>();
 			this.InnerType = innerType;
 			this.Representation = representation;
 		}
-	}
-
-	/// <summary>
-	/// C# type representations for the vec type
-	/// </summary>
-	public enum TypeRepresentation
-	{
-		/// <summary>
-		/// List
-		/// </summary>
-		List,
-		/// <summary>
-		/// Array
-		/// </summary>
-		Array,
-		/// <summary>
-		/// Dictionary
-		/// </summary>
-		Dictionary
 	}
 }

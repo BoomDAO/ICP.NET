@@ -100,6 +100,11 @@ candid-client-generator gen ./
 
 ##### Variant Types Options
 
+- `representation` - Optional (Text) Sets what C# type should be generated. (Defaults to Dictionary if possible, otherwise a List)
+
+  - `ClassWithMethods` - (Default) Uses a C# class with method accessors
+  - `ClassWithProperties` - Uses a C# class with property accessors
+
 - `[clients.types.{CandidTypeId}.fields.{CandidOptionId}]`
 
   `{CandidOptionId}` is a variant option in the variant type `{CandidTypeId}`
@@ -113,8 +118,8 @@ candid-client-generator gen ./
 - `representation` - Optional (Text) Sets what C# type should be generated. (Defaults to Dictionary if possible, otherwise a List)
 
   - `Array` - Uses a C# array
-  - `List` - Uses a C# `List<T>`
-  - `Dictionary` - Uses a C# `Dictionary<TKey, TValue>`. Only works if the `vec` contains a `record` with 2 unamed fields (tuple). The first will be the key, the second will be the value
+  - `Dictionary` - (Default if applicable) Uses a C# `Dictionary<TKey, TValue>`. Only works if the `vec` contains a `record` with 2 unamed fields (tuple). The first will be the key, the second will be the value
+  - `List` - (Default if not Dictionary) Uses a C# `List<T>`
 
 - `[clients.types.{CandidTypeId}.innerType]`
 

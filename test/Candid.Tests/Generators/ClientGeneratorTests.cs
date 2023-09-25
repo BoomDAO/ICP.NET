@@ -28,14 +28,22 @@ namespace EdjCase.ICP.Candid.Tests.Generators
 			string fileText = GetFileText(serviceName + ".did");
 			string baseNamespace = "Test";
 			CandidServiceDescription serviceFile = CandidServiceDescription.Parse(fileText);
-			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, true, true, true);
-			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, true, true, false);
-			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, true, false, false);
-			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, true, false, true);
-			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, false, true, true);
-			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, false, true, false);
-			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, false, false, true);
-			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, false, false, false);
+			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, true, true, true, false);
+			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, true, true, false, false);
+			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, true, false, false, false);
+			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, true, false, true, false);
+			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, false, true, true, false);
+			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, false, true, false, false);
+			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, false, false, true, false);
+			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, false, false, false, false);
+			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, true, true, true, true);
+			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, true, true, false, true);
+			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, true, false, false, true);
+			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, true, false, true, true);
+			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, false, true, true, true);
+			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, false, true, false, true);
+			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, false, false, true, true);
+			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, false, false, false, true);
 		}
 
 		private void GenerateClientInternal(
@@ -44,7 +52,8 @@ namespace EdjCase.ICP.Candid.Tests.Generators
 			string serviceName,
 			bool noFolders,
 			bool featureNullable,
-			bool keepCandidCase
+			bool keepCandidCase,
+			bool variantsUseProperties
 		)
 		{
 			ClientGenerationOptions options = new(
@@ -56,6 +65,7 @@ namespace EdjCase.ICP.Candid.Tests.Generators
 				purgeOutputDirectory: true,
 				noFolders: noFolders,
 				featureNullable: featureNullable, 
+				variantsUseProperties: variantsUseProperties,
 				keepCandidCase: keepCandidCase,
 				boundryNodeUrl: null,
 				types: null
@@ -81,7 +91,7 @@ namespace EdjCase.ICP.Candid.Tests.Generators
 				//trees.Add(SyntaxFactory.SyntaxTree(f.Syntax));
 			}
 
-			Snapshot.Match(clientCode, $"{serviceName}_NoFolders_{noFolders}_Nullable_{featureNullable}_KeepCandidCase_{keepCandidCase}");
+			Snapshot.Match(clientCode, $"{serviceName}_NoFolders_{noFolders}_Nullable_{featureNullable}_KeepCandidCase_{keepCandidCase}_VariantsUseProperties_{variantsUseProperties}");
 
 			//TODO
 			//CSharpCompilation compilation = CSharpCompilation

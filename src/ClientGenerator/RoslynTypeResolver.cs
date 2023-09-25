@@ -26,6 +26,7 @@ namespace EdjCase.ICP.ClientGenerator
 		public string ModelNamespace { get; }
 		public HashSet<string> Aliases { get; }
 		public bool FeatureNullable { get; }
+		public bool VariantsUseProperties { get; }
 		public NameHelper NameHelper { get; }
 		public Dictionary<string, (string Name, SourceCodeType Type)> DeclaredTypes { get; }
 
@@ -33,6 +34,7 @@ namespace EdjCase.ICP.ClientGenerator
 			string modelNamespace,
 			HashSet<string> aliases,
 			bool featureNullable,
+			bool variantsUseProperties,
 			NameHelper nameHelper,
 			Dictionary<string, (string Name, SourceCodeType Type)> declaredTypes
 		)
@@ -40,6 +42,7 @@ namespace EdjCase.ICP.ClientGenerator
 			this.ModelNamespace = modelNamespace;
 			this.Aliases = aliases;
 			this.FeatureNullable = featureNullable;
+			this.VariantsUseProperties = variantsUseProperties;
 			this.NameHelper = nameHelper;
 			this.DeclaredTypes = declaredTypes;
 		}
@@ -300,7 +303,7 @@ namespace EdjCase.ICP.ClientGenerator
 				};
 				List<MethodDeclarationSyntax> methods;
 				List<PropertyDeclarationSyntax>? customProperties;
-				if (false) // TODO
+				if (!this.VariantsUseProperties)
 				{
 					methods = this.GenerateVariantMethods(
 						variantTypeName,

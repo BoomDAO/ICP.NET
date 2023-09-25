@@ -1,5 +1,6 @@
 using EdjCase.ICP.Candid.Mapping;
 using Sample.Shared.ICRC1Ledger.Models;
+using System;
 using BlockIndex = EdjCase.ICP.Candid.Models.UnboundedUInt;
 
 namespace Sample.Shared.ICRC1Ledger.Models
@@ -13,10 +14,6 @@ namespace Sample.Shared.ICRC1Ledger.Models
 		[VariantValueProperty()]
 		public object? Value { get; set; }
 
-		public BlockIndex? Ok { get => this.Tag == ApproveResultTag.Ok ? (BlockIndex)this.Value : default; set => (this.Tag, this.Value) = (ApproveResultTag.Ok, value); }
-
-		public ApproveError? Err { get => this.Tag == ApproveResultTag.Err ? (ApproveError)this.Value : default; set => (this.Tag, this.Value) = (ApproveResultTag.Err, value); }
-
 		public ApproveResult(ApproveResultTag tag, object? value)
 		{
 			this.Tag = tag;
@@ -25,6 +22,36 @@ namespace Sample.Shared.ICRC1Ledger.Models
 
 		protected ApproveResult()
 		{
+		}
+
+		public static ApproveResult Ok(BlockIndex info)
+		{
+			return new ApproveResult(ApproveResultTag.Ok, info);
+		}
+
+		public static ApproveResult Err(ApproveError info)
+		{
+			return new ApproveResult(ApproveResultTag.Err, info);
+		}
+
+		public BlockIndex AsOk()
+		{
+			this.ValidateTag(ApproveResultTag.Ok);
+			return (BlockIndex)this.Value!;
+		}
+
+		public ApproveError AsErr()
+		{
+			this.ValidateTag(ApproveResultTag.Err);
+			return (ApproveError)this.Value!;
+		}
+
+		private void ValidateTag(ApproveResultTag tag)
+		{
+			if (!this.Tag.Equals(tag))
+			{
+				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
+			}
 		}
 	}
 

@@ -2,6 +2,7 @@ using EdjCase.ICP.Candid.Mapping;
 using Sample.Shared.ICRC1Ledger.Models;
 using System.Collections.Generic;
 using EdjCase.ICP.Candid.Models;
+using System;
 using Map = System.Collections.Generic.Dictionary<System.String, Sample.Shared.ICRC1Ledger.Models.Value>;
 
 namespace Sample.Shared.ICRC1Ledger.Models
@@ -15,20 +16,6 @@ namespace Sample.Shared.ICRC1Ledger.Models
 		[VariantValueProperty()]
 		public object? Value_ { get; set; }
 
-		public List<byte>? Blob { get => this.Tag == ValueTag.Blob ? (List<byte>)this.Value_ : default; set => (this.Tag, this.Value_) = (ValueTag.Blob, value); }
-
-		public string? Text { get => this.Tag == ValueTag.Text ? (string)this.Value_ : default; set => (this.Tag, this.Value_) = (ValueTag.Text, value); }
-
-		public UnboundedUInt? Nat { get => this.Tag == ValueTag.Nat ? (UnboundedUInt)this.Value_ : default; set => (this.Tag, this.Value_) = (ValueTag.Nat, value); }
-
-		public ulong? Nat64 { get => this.Tag == ValueTag.Nat64 ? (ulong)this.Value_ : default; set => (this.Tag, this.Value_) = (ValueTag.Nat64, value); }
-
-		public UnboundedInt? Int { get => this.Tag == ValueTag.Int ? (UnboundedInt)this.Value_ : default; set => (this.Tag, this.Value_) = (ValueTag.Int, value); }
-
-		public List<Value>? Array { get => this.Tag == ValueTag.Array ? (List<Value>)this.Value_ : default; set => (this.Tag, this.Value_) = (ValueTag.Array, value); }
-
-		public Map? Map { get => this.Tag == ValueTag.Map ? (Map)this.Value_ : default; set => (this.Tag, this.Value_) = (ValueTag.Map, value); }
-
 		public Value(ValueTag tag, object? value)
 		{
 			this.Tag = tag;
@@ -37,6 +24,91 @@ namespace Sample.Shared.ICRC1Ledger.Models
 
 		protected Value()
 		{
+		}
+
+		public static Value Blob(List<byte> info)
+		{
+			return new Value(ValueTag.Blob, info);
+		}
+
+		public static Value Text(string info)
+		{
+			return new Value(ValueTag.Text, info);
+		}
+
+		public static Value Nat(UnboundedUInt info)
+		{
+			return new Value(ValueTag.Nat, info);
+		}
+
+		public static Value Nat64(ulong info)
+		{
+			return new Value(ValueTag.Nat64, info);
+		}
+
+		public static Value Int(UnboundedInt info)
+		{
+			return new Value(ValueTag.Int, info);
+		}
+
+		public static Value Array(List<Value> info)
+		{
+			return new Value(ValueTag.Array, info);
+		}
+
+		public static Value Map(Map info)
+		{
+			return new Value(ValueTag.Map, info);
+		}
+
+		public List<byte> AsBlob()
+		{
+			this.ValidateTag(ValueTag.Blob);
+			return (List<byte>)this.Value_!;
+		}
+
+		public string AsText()
+		{
+			this.ValidateTag(ValueTag.Text);
+			return (string)this.Value_!;
+		}
+
+		public UnboundedUInt AsNat()
+		{
+			this.ValidateTag(ValueTag.Nat);
+			return (UnboundedUInt)this.Value_!;
+		}
+
+		public ulong AsNat64()
+		{
+			this.ValidateTag(ValueTag.Nat64);
+			return (ulong)this.Value_!;
+		}
+
+		public UnboundedInt AsInt()
+		{
+			this.ValidateTag(ValueTag.Int);
+			return (UnboundedInt)this.Value_!;
+		}
+
+		public List<Value> AsArray()
+		{
+			this.ValidateTag(ValueTag.Array);
+			return (List<Value>)this.Value_!;
+		}
+
+		public Map AsMap()
+		{
+			this.ValidateTag(ValueTag.Map);
+			return (Map)this.Value_!;
+		}
+
+		private void ValidateTag(ValueTag tag)
+		{
+			if (!this.Tag.Equals(tag))
+			{
+				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
+			}
 		}
 	}
 

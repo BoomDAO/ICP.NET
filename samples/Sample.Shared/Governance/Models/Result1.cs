@@ -1,5 +1,6 @@
 using EdjCase.ICP.Candid.Mapping;
 using Sample.Shared.Governance.Models;
+using System;
 
 namespace Sample.Shared.Governance.Models
 {
@@ -12,10 +13,6 @@ namespace Sample.Shared.Governance.Models
 		[VariantValueProperty()]
 		public object? Value { get; set; }
 
-		public GovernanceError? Error { get => this.Tag == Result1Tag.Error ? (GovernanceError)this.Value : default; set => (this.Tag, this.Value) = (Result1Tag.Error, value); }
-
-		public NeuronId? NeuronId { get => this.Tag == Result1Tag.NeuronId ? (NeuronId)this.Value : default; set => (this.Tag, this.Value) = (Result1Tag.NeuronId, value); }
-
 		public Result1(Result1Tag tag, object? value)
 		{
 			this.Tag = tag;
@@ -24,6 +21,36 @@ namespace Sample.Shared.Governance.Models
 
 		protected Result1()
 		{
+		}
+
+		public static Result1 Error(GovernanceError info)
+		{
+			return new Result1(Result1Tag.Error, info);
+		}
+
+		public static Result1 NeuronId(NeuronId info)
+		{
+			return new Result1(Result1Tag.NeuronId, info);
+		}
+
+		public GovernanceError AsError()
+		{
+			this.ValidateTag(Result1Tag.Error);
+			return (GovernanceError)this.Value!;
+		}
+
+		public NeuronId AsNeuronId()
+		{
+			this.ValidateTag(Result1Tag.NeuronId);
+			return (NeuronId)this.Value!;
+		}
+
+		private void ValidateTag(Result1Tag tag)
+		{
+			if (!this.Tag.Equals(tag))
+			{
+				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
+			}
 		}
 	}
 

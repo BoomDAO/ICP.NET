@@ -1,6 +1,7 @@
 using EdjCase.ICP.Candid.Mapping;
 using Sample.Shared.Dex.Models;
 using EdjCase.ICP.Candid.Models;
+using System;
 
 namespace Sample.Shared.Dex.Models
 {
@@ -13,10 +14,6 @@ namespace Sample.Shared.Dex.Models
 		[VariantValueProperty()]
 		public object? Value { get; set; }
 
-		public OrderPlacementErr? Err { get => this.Tag == OrderPlacementReceiptTag.Err ? (OrderPlacementErr)this.Value : default; set => (this.Tag, this.Value) = (OrderPlacementReceiptTag.Err, value); }
-
-		public OptionalValue<Order>? Ok { get => this.Tag == OrderPlacementReceiptTag.Ok ? (OptionalValue<Order>)this.Value : default; set => (this.Tag, this.Value) = (OrderPlacementReceiptTag.Ok, value); }
-
 		public OrderPlacementReceipt(OrderPlacementReceiptTag tag, object? value)
 		{
 			this.Tag = tag;
@@ -25,6 +22,36 @@ namespace Sample.Shared.Dex.Models
 
 		protected OrderPlacementReceipt()
 		{
+		}
+
+		public static OrderPlacementReceipt Err(OrderPlacementErr info)
+		{
+			return new OrderPlacementReceipt(OrderPlacementReceiptTag.Err, info);
+		}
+
+		public static OrderPlacementReceipt Ok(OptionalValue<Order> info)
+		{
+			return new OrderPlacementReceipt(OrderPlacementReceiptTag.Ok, info);
+		}
+
+		public OrderPlacementErr AsErr()
+		{
+			this.ValidateTag(OrderPlacementReceiptTag.Err);
+			return (OrderPlacementErr)this.Value!;
+		}
+
+		public OptionalValue<Order> AsOk()
+		{
+			this.ValidateTag(OrderPlacementReceiptTag.Ok);
+			return (OptionalValue<Order>)this.Value!;
+		}
+
+		private void ValidateTag(OrderPlacementReceiptTag tag)
+		{
+			if (!this.Tag.Equals(tag))
+			{
+				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
+			}
 		}
 	}
 
