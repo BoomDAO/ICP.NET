@@ -1,11 +1,10 @@
 using EdjCase.ICP.Candid.Mapping;
 using Sample.Shared.Dex.Models;
 using EdjCase.ICP.Candid.Models;
-using System;
 
 namespace Sample.Shared.Dex.Models
 {
-	[Variant(typeof(DepositReceiptTag))]
+	[Variant()]
 	public class DepositReceipt
 	{
 		[VariantTagProperty()]
@@ -13,6 +12,10 @@ namespace Sample.Shared.Dex.Models
 
 		[VariantValueProperty()]
 		public object? Value { get; set; }
+
+		public DepositErr? Err { get => this.Tag == DepositReceiptTag.Err ? (DepositErr)this.Value! : default; set => (this.Tag, this.Value) = (DepositReceiptTag.Err, value); }
+
+		public UnboundedUInt? Ok { get => this.Tag == DepositReceiptTag.Ok ? (UnboundedUInt)this.Value! : default; set => (this.Tag, this.Value) = (DepositReceiptTag.Ok, value); }
 
 		public DepositReceipt(DepositReceiptTag tag, object? value)
 		{
@@ -23,43 +26,11 @@ namespace Sample.Shared.Dex.Models
 		protected DepositReceipt()
 		{
 		}
-
-		public static DepositReceipt Err(DepositErr info)
-		{
-			return new DepositReceipt(DepositReceiptTag.Err, info);
-		}
-
-		public static DepositReceipt Ok(UnboundedUInt info)
-		{
-			return new DepositReceipt(DepositReceiptTag.Ok, info);
-		}
-
-		public DepositErr AsErr()
-		{
-			this.ValidateTag(DepositReceiptTag.Err);
-			return (DepositErr)this.Value!;
-		}
-
-		public UnboundedUInt AsOk()
-		{
-			this.ValidateTag(DepositReceiptTag.Ok);
-			return (UnboundedUInt)this.Value!;
-		}
-
-		private void ValidateTag(DepositReceiptTag tag)
-		{
-			if (!this.Tag.Equals(tag))
-			{
-				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
-			}
-		}
 	}
 
 	public enum DepositReceiptTag
 	{
-		[VariantOptionType(typeof(DepositErr))]
 		Err,
-		[VariantOptionType(typeof(UnboundedUInt))]
 		Ok
 	}
 }

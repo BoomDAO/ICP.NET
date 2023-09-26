@@ -8,7 +8,7 @@ namespace EdjCase.ICP.Agent.Standards.ICRC1.Models
 	/// <summary>
 	/// This class represents an error that can occur during a transfer
 	/// </summary>
-	[Variant(typeof(TransferErrorTag))]
+	[Variant]
 	public class TransferError
 	{
 		/// <summary>
@@ -327,19 +327,16 @@ namespace EdjCase.ICP.Agent.Standards.ICRC1.Models
 		/// <summary>
 		/// Indicates an error due to an incorrect fee
 		/// </summary>
-		[VariantOptionType(typeof(BadFeeError))]
 		BadFee,
 
 		/// <summary>
 		/// Indicates an error due to an incorrect burn amount
 		/// </summary>
-		[VariantOptionType(typeof(BadBurnError))]
 		BadBurn,
 
 		/// <summary>
 		/// Indicates an error due to insufficient funds for the transaction
 		/// </summary>
-		[VariantOptionType(typeof(InsufficientFundsError))]
 		InsufficientFunds,
 
 		/// <summary>
@@ -350,13 +347,11 @@ namespace EdjCase.ICP.Agent.Standards.ICRC1.Models
 		/// <summary>
 		/// Indicates an error due to a transaction being created in the future
 		/// </summary>
-		[VariantOptionType(typeof(CreatedInFutureError))]
 		CreatedInFuture,
 
 		/// <summary>
 		/// Indicates an error due to a transaction being a duplicate
 		/// </summary>
-		[VariantOptionType(typeof(DuplicateError))]
 		Duplicate,
 
 		/// <summary>
@@ -367,7 +362,6 @@ namespace EdjCase.ICP.Agent.Standards.ICRC1.Models
 		/// <summary>
 		/// Indicates a generic error that can occur during a transfer
 		/// </summary>
-		[VariantOptionType(typeof(GenericError))]
 		GenericError
 	}
 }

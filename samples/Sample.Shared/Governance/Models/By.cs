@@ -4,7 +4,7 @@ using System;
 
 namespace Sample.Shared.Governance.Models
 {
-	[Variant(typeof(ByTag))]
+	[Variant()]
 	public class By
 	{
 		[VariantTagProperty()]
@@ -74,11 +74,8 @@ namespace Sample.Shared.Governance.Models
 
 	public enum ByTag
 	{
-		[VariantOptionType(typeof(By.NeuronIdOrSubaccountInfo))]
 		NeuronIdOrSubaccount,
-		[VariantOptionType(typeof(ClaimOrRefreshNeuronFromAccount))]
 		MemoAndController,
-		[VariantOptionType(typeof(ulong))]
 		Memo
 	}
 }

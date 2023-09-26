@@ -4,7 +4,7 @@ using System;
 
 namespace Sample.Shared.Governance.Models
 {
-	[Variant(typeof(Result5Tag))]
+	[Variant()]
 	public class Result5
 	{
 		[VariantTagProperty()]
@@ -56,9 +56,7 @@ namespace Sample.Shared.Governance.Models
 
 	public enum Result5Tag
 	{
-		[VariantOptionType(typeof(NeuronInfo))]
 		Ok,
-		[VariantOptionType(typeof(GovernanceError))]
 		Err
 	}
 }

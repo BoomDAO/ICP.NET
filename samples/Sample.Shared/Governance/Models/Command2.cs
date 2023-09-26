@@ -4,7 +4,7 @@ using System;
 
 namespace Sample.Shared.Governance.Models
 {
-	[Variant(typeof(Command2Tag))]
+	[Variant()]
 	public class Command2
 	{
 		[VariantTagProperty()]
@@ -140,23 +140,14 @@ namespace Sample.Shared.Governance.Models
 
 	public enum Command2Tag
 	{
-		[VariantOptionType(typeof(NeuronId))]
 		Spawn,
-		[VariantOptionType(typeof(Split))]
 		Split,
-		[VariantOptionType(typeof(Configure))]
 		Configure,
-		[VariantOptionType(typeof(Merge))]
 		Merge,
-		[VariantOptionType(typeof(DisburseToNeuron))]
 		DisburseToNeuron,
-		[VariantOptionType(typeof(Command2.SyncCommandInfo))]
 		SyncCommand,
-		[VariantOptionType(typeof(ClaimOrRefresh))]
 		ClaimOrRefreshNeuron,
-		[VariantOptionType(typeof(MergeMaturity))]
 		MergeMaturity,
-		[VariantOptionType(typeof(Disburse))]
 		Disburse
 	}
 }

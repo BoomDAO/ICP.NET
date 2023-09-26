@@ -465,15 +465,6 @@
             `VariantValuePropertyAttribute` attributes if used
             </summary>
         </member>
-        <member name="P:EdjCase.ICP.Candid.Mapping.VariantAttribute.TagType">
-            <summary>
-            The enum type to use for specifying the tags of the variant
-            </summary>
-        </member>
-        <member name="M:EdjCase.ICP.Candid.Mapping.VariantAttribute.#ctor(System.Type)">
-            <param name="enumType">The enum type to use for specifying the tags of the variant</param>
-            <exception cref="T:System.ArgumentException">Throws if the type is not an enum</exception>
-        </member>
         <member name="T:EdjCase.ICP.Candid.Mapping.VariantTagPropertyAttribute">
             <summary>
             An attribute to put on a property/field that indicates where to hold the 
@@ -486,19 +477,22 @@
             tag value object. The type must be compatible with all value types, recommend using `object?`
             </summary>
         </member>
-        <member name="T:EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute">
+        <member name="T:EdjCase.ICP.Candid.Mapping.VariantOptionAttribute">
             <summary>
             An attribute to put on an enum option to specify if the tag has an attached
             value in the variant, otherwise the attached type will be null
             </summary>
         </member>
-        <member name="P:EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute.OptionType">
+        <member name="P:EdjCase.ICP.Candid.Mapping.VariantOptionAttribute.Tag">
             <summary>
             The type of the variant option value to use
             </summary>
         </member>
-        <member name="M:EdjCase.ICP.Candid.Mapping.VariantOptionTypeAttribute.#ctor(System.Type)">
-            <param name="optionType">The type of the variant option value to use</param>
+        <member name="M:EdjCase.ICP.Candid.Mapping.VariantOptionAttribute.#ctor(EdjCase.ICP.Candid.Models.CandidTag)">
+            <param name="tag">The tag of the variant option</param>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Mapping.VariantOptionAttribute.#ctor(System.String)">
+            <param name="tag">The tag of the variant option</param>
         </member>
         <member name="T:EdjCase.ICP.Candid.Models.CandidArg">
             <summary>
