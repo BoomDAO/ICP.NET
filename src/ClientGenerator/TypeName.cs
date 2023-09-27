@@ -4,6 +4,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 
 namespace EdjCase.ICP.ClientGenerator
@@ -226,7 +227,15 @@ namespace EdjCase.ICP.ClientGenerator
 		public TypeName InnerType { get; set; }
 		public NullableTypeName(TypeName innerType)
 		{
-			this.InnerType = innerType;
+			if (innerType is NullableTypeName n)
+			{
+				// Don't nest
+				this.InnerType = n.InnerType;
+			}
+			else
+			{
+				this.InnerType = innerType;
+			}
 		}
 
 		public override TypeSyntax ToTypeSyntax(bool featureNullable, bool useOptionalValue, bool resolveAliases)

@@ -8,6 +8,7 @@ name = "Dex"
 type = "file"
 file-path = "ServiceDefinitions/Dex.did"
 variants-use-properties = true
+use-optional-value = false
 
 [[clients]]
 name = "ICRC1Ledger"
@@ -21,7 +22,6 @@ file-path = "ServiceDefinitions/AddressBook.did"
 output-directory = "Address" # override
 no-folders = true
 keep-candid-case = true
-use-optional-value = false
 
 [[clients]]
 name = "Governance"
