@@ -446,6 +446,7 @@
   - [op_Implicit(utf8Value)](#M-EdjCase-ICP-Candid-Models-HashTree-EncodedValue-op_Implicit-System-String-~EdjCase-ICP-Candid-Models-HashTree-EncodedValue 'EdjCase.ICP.Candid.Models.HashTree.EncodedValue.op_Implicit(System.String)~EdjCase.ICP.Candid.Models.HashTree.EncodedValue')
   - [op_Inequality()](#M-EdjCase-ICP-Candid-Models-HashTree-EncodedValue-op_Inequality-EdjCase-ICP-Candid-Models-HashTree-EncodedValue,EdjCase-ICP-Candid-Models-HashTree-EncodedValue- 'EdjCase.ICP.Candid.Models.HashTree.EncodedValue.op_Inequality(EdjCase.ICP.Candid.Models.HashTree.EncodedValue,EdjCase.ICP.Candid.Models.HashTree.EncodedValue)')
 - [FuncMode](#T-EdjCase-ICP-Candid-Models-Types-FuncMode 'EdjCase.ICP.Candid.Models.Types.FuncMode')
+  - [CompositeQuery](#F-EdjCase-ICP-Candid-Models-Types-FuncMode-CompositeQuery 'EdjCase.ICP.Candid.Models.Types.FuncMode.CompositeQuery')
   - [Oneway](#F-EdjCase-ICP-Candid-Models-Types-FuncMode-Oneway 'EdjCase.ICP.Candid.Models.Types.FuncMode.Oneway')
   - [Query](#F-EdjCase-ICP-Candid-Models-Types-FuncMode-Query 'EdjCase.ICP.Candid.Models.Types.FuncMode.Query')
 - [HashTree](#T-EdjCase-ICP-Candid-Models-HashTree 'EdjCase.ICP.Candid.Models.HashTree')
@@ -6283,6 +6284,13 @@ EdjCase.ICP.Candid.Models.Types
 
 All the possible options for function modes which
 define special attributes of the function
+
+<a name='F-EdjCase-ICP-Candid-Models-Types-FuncMode-CompositeQuery'></a>
+### CompositeQuery `constants`
+
+##### Summary
+
+Mode like Query, but can call other query methods in it
 
 <a name='F-EdjCase-ICP-Candid-Models-Types-FuncMode-Oneway'></a>
 ### Oneway `constants`
