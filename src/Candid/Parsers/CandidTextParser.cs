@@ -106,6 +106,7 @@ namespace EdjCase.ICP.Candid.Parsers
 				{
 					"query" => FuncMode.Query,
 					"oneway" => FuncMode.Oneway,
+					"composite_query" => FuncMode.CompositeQuery,
 					_ => throw new CandidTextParseException($"Unexpected func mode '{rawMode}'. Valid func modes: {string.Join(", ", Enum.GetValues(typeof(FuncMode)))}")
 				};
 				modes.Add(mode);
