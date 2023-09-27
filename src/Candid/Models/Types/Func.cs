@@ -20,7 +20,11 @@ namespace EdjCase.ICP.Candid.Models.Types
 		/// Mode where the function does not update any state and returns immediately.
 		/// Is useful for faster data retrieval
 		/// </summary>
-		Query = 1 // Response
+		Query = 1,
+		/// <summary>
+		/// Mode like Query, but can call other query methods in it
+		/// </summary>
+		CompositeQuery = 3
 	}
 
 	/// <summary>
