@@ -27,7 +27,14 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 
 		public object Map(CandidValue value, CandidConverter converter)
 		{
-			return this.FromCandid(value, converter);
+			try
+			{
+				return this.FromCandid(value, converter);
+			}
+			catch (InvalidOperationException) when (value is CandidOptional o)
+			{
+				return this.FromCandid(o.Value, converter);
+			}
 		}
 
 		public CandidValue Map(object value, CandidConverter converter)

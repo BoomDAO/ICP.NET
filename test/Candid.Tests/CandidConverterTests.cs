@@ -3,6 +3,7 @@ using EdjCase.ICP.Candid.Mapping;
 using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid.Models.Types;
 using EdjCase.ICP.Candid.Models.Values;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -250,6 +251,46 @@ namespace EdjCase.ICP.Candid.Tests
 		}
 
 
+
+		[Fact]
+		public void Optional_Type_Coercion()
+		{
+			OptTypeCoercion o = new()
+			{
+				TextValue = "Text1",
+				ListOfText = new List<string?> { "Text2", null }
+			};
+
+			CandidValue oT = new CandidOptional(
+				new CandidRecord(
+					new Dictionary<CandidTag, CandidValue>
+					{
+						["TextValue"] = new CandidOptional(
+							CandidValue.Text("Text1")
+						),
+						["ListOfText"] = new CandidOptional(
+							new CandidVector(new CandidValue[] 
+							{
+								new CandidOptional(CandidValue.Text("Text2")),
+								new CandidOptional()
+							})
+						)
+					}
+				)
+			);
+
+			OptTypeCoercion actual = CandidConverter.Default.ToObject<OptTypeCoercion>(oT);
+			Assert.Equal(o.TextValue, actual.TextValue);
+			Assert.Equal(o.ListOfText, actual.ListOfText);
+
+		}
+
+		public class OptTypeCoercion
+		{
+			public string? TextValue { get; set; }
+			public List<string?>? ListOfText { get; set; }
+
+		}
 
 
 

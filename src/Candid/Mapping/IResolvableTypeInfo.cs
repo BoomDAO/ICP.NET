@@ -106,7 +106,7 @@ namespace EdjCase.ICP.Candid.Mapping
 					objType,
 					new CandidPrimitiveType(PrimitiveType.Text),
 					(o, options) => CandidValue.Text((string)o),
-					(v, options) => v.AsText()
+					(v, options) => v.AsText()!
 				);
 			}
 			if (objType == typeof(bool))
@@ -242,7 +242,7 @@ namespace EdjCase.ICP.Candid.Mapping
 					objType,
 					new CandidPrimitiveType(PrimitiveType.Principal),
 					(o, options) => CandidValue.Principal((Principal)o),
-					(v, options) => v.AsPrincipal()
+					(v, options) => v.AsPrincipal()!
 				);
 			}
 			if (objType.IsArray)
