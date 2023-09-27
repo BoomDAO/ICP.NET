@@ -27,6 +27,7 @@ namespace EdjCase.ICP.ClientGenerator
 		public HashSet<string> Aliases { get; }
 		public bool FeatureNullable { get; }
 		public bool VariantsUseProperties { get; }
+		public bool UseOptionalValue { get; }
 		public NameHelper NameHelper { get; }
 		public Dictionary<string, (string Name, SourceCodeType Type)> DeclaredTypes { get; }
 
@@ -35,6 +36,7 @@ namespace EdjCase.ICP.ClientGenerator
 			HashSet<string> aliases,
 			bool featureNullable,
 			bool variantsUseProperties,
+			bool useOptionalValue,
 			NameHelper nameHelper,
 			Dictionary<string, (string Name, SourceCodeType Type)> declaredTypes
 		)
@@ -43,6 +45,7 @@ namespace EdjCase.ICP.ClientGenerator
 			this.Aliases = aliases;
 			this.FeatureNullable = featureNullable;
 			this.VariantsUseProperties = variantsUseProperties;
+			this.UseOptionalValue = useOptionalValue;
 			this.NameHelper = nameHelper;
 			this.DeclaredTypes = declaredTypes;
 		}
@@ -89,7 +92,8 @@ namespace EdjCase.ICP.ClientGenerator
 					{
 						var cType = new SimpleTypeName(
 							c.Type.Name,
-							c.Type.Namespace
+							c.Type.Namespace,
+							isDefaultNullable: c.Type.IsClass
 						);
 						return new ResolvedType(cType);
 					}
@@ -127,8 +131,16 @@ namespace EdjCase.ICP.ClientGenerator
 				case OptionalValueSourceCodeType v:
 					{
 						ResolvedType resolvedGenericType = this.ResolveType(v.GenericType, nameContext + "Value", parentType);
-
-						var name = new OptionalValueTypeName(resolvedGenericType.Name);
+						TypeName name;
+						if (!this.UseOptionalValue)
+						{
+							// Use '?' vs 'OptionalValue<>'
+							name = new NullableTypeName(resolvedGenericType.Name);
+						}
+						else
+						{
+							name = new OptionalValueTypeName(resolvedGenericType.Name);
+						}
 						return new ResolvedType(name, resolvedGenericType.GeneratedSyntax);
 					}
 				case ArraySourceCodeType a:
@@ -150,19 +162,20 @@ namespace EdjCase.ICP.ClientGenerator
 						string? @namespace = isAlias ? null : this.ModelNamespace;
 						TypeName typeName = new SimpleTypeName(
 							name,
-							@namespace
+							@namespace,
+							true // TODO
 						);
 						if (isAlias)
 						{
-							ResolvedType notAliased = this.ResolveType(sourceCodeType, nameContext, parentType);
-							typeName = new AliasedTypeName(typeName, notAliased.Name);
+							ResolvedType notAliasedType = this.ResolveType(sourceCodeType, nameContext, parentType);
+							typeName = new AliasedTypeName(typeName, notAliasedType.Name);
 						}
 						return new ResolvedType(typeName);
 
 					}
 				case VariantSourceCodeType v:
 					{
-						TypeName variantName = this.BuildType(nameContext, parentType);
+						TypeName variantName = this.BuildType(nameContext, parentType, isDefaultNullable: true);
 						(ClassDeclarationSyntax? ClassSyntax, EnumDeclarationSyntax EnumSyntax) result = this.GenerateVariant(variantName, v, parentType);
 						if (result.ClassSyntax != null)
 						{
@@ -172,7 +185,7 @@ namespace EdjCase.ICP.ClientGenerator
 					}
 				case RecordSourceCodeType r:
 					{
-						TypeName recordName = this.BuildType(nameContext, parentType);
+						TypeName recordName = this.BuildType(nameContext, parentType, isDefaultNullable: true);
 						ClassDeclarationSyntax classSyntax = this.GenerateRecord(recordName, r);
 						return new ResolvedType(recordName, new MemberDeclarationSyntax[] { classSyntax });
 					}
@@ -267,20 +280,20 @@ namespace EdjCase.ICP.ClientGenerator
 			{
 				// If there are no types, just create an enum value
 
-				TypeName enumTypeName = this.BuildType(variantTypeName.BuildName(false), parentType);
+				TypeName enumTypeName = this.BuildType(variantTypeName.BuildName(this.FeatureNullable, this.UseOptionalValue, false), parentType, isDefaultNullable: false);
 				EnumDeclarationSyntax enumSyntax = this.GenerateEnum(enumTypeName, enumOptions);
 				return (null, enumSyntax);
 			}
 			else
 			{
-				TypeName enumTypeName = this.BuildType(variantTypeName.BuildName(false) + "Tag", parentType);
+				TypeName enumTypeName = this.BuildType(variantTypeName.BuildName(this.FeatureNullable, this.UseOptionalValue, false) + "Tag", parentType, isDefaultNullable: false);
 
 				// TODO auto change the property values of all class types if it matches the name
-				bool containsClashingTag = variantTypeName.BuildName(false) == "Tag"
+				bool containsClashingTag = variantTypeName.BuildName(this.FeatureNullable, this.UseOptionalValue, false) == "Tag"
 					|| variant.Options.Any(o => o.Tag.Name == "Tag");
 				string tagName = containsClashingTag ? "Tag_" : "Tag";
 
-				bool containsClashingValue = variantTypeName.BuildName(false) == "Value"
+				bool containsClashingValue = variantTypeName.BuildName(this.FeatureNullable, this.UseOptionalValue, false) == "Value"
 					|| variant.Options.Any(o => o.Tag.Name == "Value");
 				string valueName = containsClashingValue ? "Value_" : "Value";
 
@@ -383,13 +396,13 @@ namespace EdjCase.ICP.ClientGenerator
 										),
 										SyntaxFactory.MemberAccessExpression(
 											SyntaxKind.SimpleMemberAccessExpression,
-											enumTypeName.ToTypeSyntax(),
+											enumTypeName.ToTypeSyntax(this.FeatureNullable, this.UseOptionalValue),
 											SyntaxFactory.IdentifierName(o.Name.Name)
 										)
 									),
 									// ({OptionType}) this.Value!
 									SyntaxFactory.CastExpression(
-										o.Type!.Name.ToTypeSyntax(),
+										o.Type!.Name.ToTypeSyntax(this.FeatureNullable, this.UseOptionalValue),
 										SyntaxFactory.PostfixUnaryExpression(
 											SyntaxKind.SuppressNullableWarningExpression,
 											SyntaxFactory.MemberAccessExpression(
@@ -398,7 +411,7 @@ namespace EdjCase.ICP.ClientGenerator
 												SyntaxFactory.IdentifierName(valueName)
 											)
 										)
-										
+
 									),
 									// default
 									SyntaxFactory.LiteralExpression(
@@ -443,7 +456,7 @@ namespace EdjCase.ICP.ClientGenerator
 												SyntaxFactory.Argument(
 													SyntaxFactory.MemberAccessExpression(
 														SyntaxKind.SimpleMemberAccessExpression,
-														enumTypeName.ToTypeSyntax(),
+														enumTypeName.ToTypeSyntax(this.FeatureNullable, this.UseOptionalValue),
 														SyntaxFactory.IdentifierName(o.Name.Name)
 													)
 												),
@@ -460,11 +473,9 @@ namespace EdjCase.ICP.ClientGenerator
 								SyntaxFactory.Token(SyntaxKind.SemicolonToken)
 							)
 					};
-					TypeName fixedTypeName = this.FeatureNullable
-						? new NullableTypeName(o.Type.Name)
-						: o.Type.Name;
+					TypeName fixedTypeName = new NullableTypeName(o.Type.Name);
 					return SyntaxFactory.PropertyDeclaration(
-						fixedTypeName.ToTypeSyntax(),
+						fixedTypeName.ToTypeSyntax(this.FeatureNullable, this.UseOptionalValue),
 						o.Name.Name
 					)
 					.WithModifiers(
@@ -521,13 +532,13 @@ namespace EdjCase.ICP.ClientGenerator
 			return methods;
 		}
 
-		private TypeName BuildType(string name, TypeName? parentType)
+		private TypeName BuildType(string name, TypeName? parentType, bool isDefaultNullable)
 		{
 			string @namespace;
 			if (parentType == null)
 			{
 				@namespace = this.ModelNamespace;
-				return new SimpleTypeName(name, @namespace);
+				return new SimpleTypeName(name, @namespace, isDefaultNullable);
 			}
 			return new NestedTypeName(parentType, name);
 		}
@@ -676,7 +687,7 @@ namespace EdjCase.ICP.ClientGenerator
 								SyntaxFactory.Argument(
 									SyntaxFactory.MemberAccessExpression(
 										SyntaxKind.SimpleMemberAccessExpression,
-										enumType.ToTypeSyntax(),
+										enumType.ToTypeSyntax(this.FeatureNullable, this.UseOptionalValue),
 										SyntaxFactory.IdentifierName(optionName.Name)
 									)
 								)
@@ -686,7 +697,7 @@ namespace EdjCase.ICP.ClientGenerator
 				),
 				SyntaxFactory.ReturnStatement(
 					SyntaxFactory.CastExpression(
-						optionType.Name.ToTypeSyntax(),
+						optionType.Name.ToTypeSyntax(this.FeatureNullable, this.UseOptionalValue),
 						SyntaxFactory.PostfixUnaryExpression(
 							SyntaxKind.SuppressNullableWarningExpression,
 							SyntaxFactory.MemberAccessExpression(
@@ -728,7 +739,7 @@ namespace EdjCase.ICP.ClientGenerator
 			{
 				creationParameters.Add((optionType.Name, optionValueParamName));
 			}
-			string methodName = optionTypeName.Name == variantTypeName.BuildName(false)
+			string methodName = optionTypeName.Name == variantTypeName.BuildName(this.FeatureNullable, this.UseOptionalValue, false)
 				? optionTypeName.Name + "_" // Escape colliding names
 				: optionTypeName.Name;
 			return this.GenerateMethod(
@@ -736,7 +747,7 @@ namespace EdjCase.ICP.ClientGenerator
 				body: SyntaxFactory.Block(
 				SyntaxFactory.ReturnStatement(
 					SyntaxFactory.ObjectCreationExpression(
-						variantTypeName.ToTypeSyntax()
+						variantTypeName.ToTypeSyntax(this.FeatureNullable, this.UseOptionalValue)
 					)
 					.WithArgumentList(
 						SyntaxFactory.ArgumentList(
@@ -745,7 +756,7 @@ namespace EdjCase.ICP.ClientGenerator
 										SyntaxFactory.Argument(
 											SyntaxFactory.MemberAccessExpression(
 												SyntaxKind.SimpleMemberAccessExpression,
-												enumTypeName.ToTypeSyntax(),
+												enumTypeName.ToTypeSyntax(this.FeatureNullable, this.UseOptionalValue),
 												SyntaxFactory.IdentifierName(optionTypeName.Name)
 											)
 										),
@@ -787,7 +798,7 @@ namespace EdjCase.ICP.ClientGenerator
 				.Select((f, i) =>
 				{
 					ResolvedName propertyName = f.Tag;
-					if (propertyName.Name == recordTypeName.BuildName(false))
+					if (propertyName.Name == recordTypeName.BuildName(this.FeatureNullable, this.UseOptionalValue, false))
 					{
 						// Cant match the class name
 						propertyName = new ResolvedName(
@@ -857,7 +868,7 @@ namespace EdjCase.ICP.ClientGenerator
 
 			PropertyDeclarationSyntax propertySyntax = SyntaxFactory
 				.PropertyDeclaration(
-					property.Type.ToTypeSyntax(),
+					property.Type.ToTypeSyntax(this.FeatureNullable, this.UseOptionalValue),
 					SyntaxFactory.Identifier(property.Name)
 				)
 				.WithAccessorList(SyntaxFactory.AccessorList(
@@ -919,7 +930,7 @@ namespace EdjCase.ICP.ClientGenerator
 				.Select(i => SyntaxFactory.Token(SyntaxKind.CommaToken));
 
 			// public enum {enumName}
-			return SyntaxFactory.EnumDeclaration(enumName.BuildName(false))
+			return SyntaxFactory.EnumDeclaration(enumName.BuildName(this.FeatureNullable, this.UseOptionalValue, false))
 				.WithModifiers(
 					// public
 					SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.PublicKeyword))
@@ -956,14 +967,14 @@ namespace EdjCase.ICP.ClientGenerator
 								SyntaxKind.NumericLiteralExpression,
 								SyntaxFactory.Literal(t.Id)
 							),
-						TypeName type => SyntaxFactory.TypeOfExpression(type.ToTypeSyntax()),
+						TypeName type => SyntaxFactory.TypeOfExpression(type.ToTypeSyntax(this.FeatureNullable, this.UseOptionalValue)),
 						_ => throw new NotImplementedException()
 					};
 				})
 				.Select(a => SyntaxFactory.AttributeArgument(a))
 				?? Array.Empty<AttributeArgumentSyntax>();
 
-			string typeName = attribute.Type.BuildName(true);
+			string typeName = attribute.Type.BuildName(this.FeatureNullable, this.UseOptionalValue, true);
 			typeName = typeName[..^"Attribute".Length]; // Remove suffix
 			return SyntaxFactory.AttributeList(
 				SyntaxFactory.SingletonSeparatedList(
@@ -1158,7 +1169,7 @@ namespace EdjCase.ICP.ClientGenerator
 									SyntaxFactory.TypeArgumentList(
 										SyntaxFactory.SeparatedList(
 											returnTypes
-											.Select(t => t.Type.ToTypeSyntax())
+											.Select(t => t.Type.ToTypeSyntax(this.FeatureNullable, this.UseOptionalValue))
 										)
 									)
 								)
@@ -1404,7 +1415,7 @@ namespace EdjCase.ICP.ClientGenerator
 
 			ConstructorDeclarationSyntax constructor = SyntaxFactory
 				.ConstructorDeclaration(
-					SyntaxFactory.Identifier(name.BuildName(false))
+					SyntaxFactory.Identifier(name.BuildName(this.FeatureNullable, this.UseOptionalValue, false))
 				)
 				.WithParameterList(
 					SyntaxFactory.ParameterList(
@@ -1417,7 +1428,7 @@ namespace EdjCase.ICP.ClientGenerator
 								return SyntaxFactory.Parameter(
 									SyntaxFactory.Identifier(argName)
 								)
-								.WithType(p.Type!.ToTypeSyntax());
+								.WithType(p.Type!.ToTypeSyntax(this.FeatureNullable, this.UseOptionalValue));
 							})
 							.Concat(optionalProperties
 								.Where(p => p.Type != null)
@@ -1427,7 +1438,7 @@ namespace EdjCase.ICP.ClientGenerator
 									return SyntaxFactory.Parameter(
 										SyntaxFactory.Identifier(argName)
 									)
-									.WithType(p.Type!.ToTypeSyntax())
+									.WithType(p.Type!.ToTypeSyntax(this.FeatureNullable, this.UseOptionalValue))
 									// Add `= default` to the end
 									.WithDefault(SyntaxFactory.EqualsValueClause(
 										SyntaxFactory.LiteralExpression(
@@ -1481,7 +1492,7 @@ namespace EdjCase.ICP.ClientGenerator
 				if (returnTypes.Count == 1)
 				{
 					// Single return type
-					returnType = returnTypes[0].Type.ToTypeSyntax();
+					returnType = returnTypes[0].Type.ToTypeSyntax(this.FeatureNullable, this.UseOptionalValue);
 				}
 				else
 				{
@@ -1489,7 +1500,7 @@ namespace EdjCase.ICP.ClientGenerator
 					returnType = SyntaxFactory.TupleType(SyntaxFactory.SeparatedList(
 						returnTypes
 						.Where(t => t != null)
-						.Select(t => SyntaxFactory.TupleElement(t.Type.ToTypeSyntax(), (" " + t.Value.Name).ToSyntaxIdentifier()))
+						.Select(t => SyntaxFactory.TupleElement(t.Type.ToTypeSyntax(this.FeatureNullable, this.UseOptionalValue), (" " + t.Value.Name).ToSyntaxIdentifier()))
 					));
 				}
 			}
@@ -1556,7 +1567,7 @@ namespace EdjCase.ICP.ClientGenerator
 				{
 					return SyntaxFactory
 						.Parameter(p.Name.ToSyntaxIdentifier())
-						.WithType(p.Type.ToTypeSyntax());
+						.WithType(p.Type.ToTypeSyntax(this.FeatureNullable, this.UseOptionalValue));
 				});
 			return SyntaxFactory.MethodDeclaration(returnType, SyntaxFactory.Identifier(name))
 				.WithModifiers(SyntaxFactory.TokenList(methodModifiers))
@@ -1628,7 +1639,7 @@ namespace EdjCase.ICP.ClientGenerator
 				));
 			}
 
-			ClassDeclarationSyntax classSyntax = SyntaxFactory.ClassDeclaration(name.BuildName(false))
+			ClassDeclarationSyntax classSyntax = SyntaxFactory.ClassDeclaration(name.BuildName(this.FeatureNullable, this.UseOptionalValue, false))
 				.WithModifiers(SyntaxFactory.TokenList(
 					// Make class public
 					SyntaxFactory.Token(SyntaxKind.PublicKeyword)
@@ -1652,7 +1663,7 @@ namespace EdjCase.ICP.ClientGenerator
 						SyntaxFactory.BaseList(
 							SyntaxFactory.SeparatedList(
 								implementTypes
-									.Select(t => SyntaxFactory.SimpleBaseType(t.ToTypeSyntax()))
+									.Select(t => SyntaxFactory.SimpleBaseType(t.ToTypeSyntax(this.FeatureNullable, this.UseOptionalValue)))
 									.Cast<BaseTypeSyntax>()
 									.ToArray()
 							)

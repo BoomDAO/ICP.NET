@@ -103,6 +103,7 @@ namespace EdjCase.ICP.ClientGenerator
 				aliases,
 				options.FeatureNullable,
 				options.VariantsUseProperties,
+				options.UseOptionalValue,
 				nameHelper,
 				declaredTypes
 			);
@@ -115,10 +116,10 @@ namespace EdjCase.ICP.ClientGenerator
 			var typeFiles = new List<(string FileName, CompilationUnitSyntax Source)>();
 
 
-			Dictionary<string, TypeName> aliasTypes = aliases
+			Dictionary<string, string> aliasTypes = aliases
 				.ToDictionary(
 					t => declaredTypes[t].Name,
-					t => resolvedTypes[t].Name
+					t => resolvedTypes[t].Name.BuildName(options.FeatureNullable, options.UseOptionalValue, includeNamespace: true, resolveAliases: true)
 				);
 			foreach ((string id, ResolvedType typeInfo) in resolvedTypes)
 			{
@@ -129,12 +130,12 @@ namespace EdjCase.ICP.ClientGenerator
 				);
 				if (sourceCode != null)
 				{
-					typeFiles.Add((typeInfo.Name.BuildName(false), sourceCode));
+					typeFiles.Add((typeInfo.Name.BuildName(options.FeatureNullable, options.UseOptionalValue, false), sourceCode));
 				}
 			}
 
 			string clientName = options.Name + "ApiClient";
-			TypeName clientTypeName = new SimpleTypeName(clientName, options.Namespace);
+			TypeName clientTypeName = new SimpleTypeName(clientName, options.Namespace, isDefaultNullable: true);
 			ServiceSourceCodeType serviceSourceType = ResolveService(service.Service, nameHelper);
 			CompilationUnitSyntax clientSource = RoslynSourceGenerator.GenerateClientSourceCode(
 				clientTypeName,

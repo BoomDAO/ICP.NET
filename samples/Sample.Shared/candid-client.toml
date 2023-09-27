@@ -21,6 +21,7 @@ file-path = "ServiceDefinitions/AddressBook.did"
 output-directory = "Address" # override
 no-folders = true
 keep-candid-case = true
+use-optional-value = false
 
 [[clients]]
 name = "Governance"

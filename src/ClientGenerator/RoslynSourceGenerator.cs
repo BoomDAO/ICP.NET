@@ -35,7 +35,7 @@ namespace EdjCase.ICP.ClientGenerator
 			string modelNamespace,
 			ServiceSourceCodeType service,
 			RoslynTypeResolver typeResolver,
-			Dictionary<string, TypeName> aliases
+			Dictionary<string, string> aliases
 		)
 		{
 			// Generate client class
@@ -48,7 +48,7 @@ namespace EdjCase.ICP.ClientGenerator
 		public static CompilationUnitSyntax? GenerateTypeSourceCode(
 			ResolvedType type,
 			string modelNamespace,
-			Dictionary<string, TypeName> aliases
+			Dictionary<string, string> aliases
 		)
 		{
 			// Generate client class
@@ -63,7 +63,7 @@ namespace EdjCase.ICP.ClientGenerator
 
 		private static CompilationUnitSyntax PostProcessSourceCode(
 			string modelNamespace,
-			Dictionary<string, TypeName> aliases,
+			Dictionary<string, string> aliases,
 			params MemberDeclarationSyntax[] members
 		)
 		{
@@ -83,7 +83,7 @@ namespace EdjCase.ICP.ClientGenerator
 
 			IEnumerable<(string Key, string Value)> usedAliases = aliases
 				.Where(a => namespaceRemover.UniqueTypes.Contains(a.Key))
-				.Select(x => (x.Key, x.Value.BuildName(true, true)));
+				.Select(x => (x.Key, x.Value));
 
 			compilationUnit = compilationUnit
 				// Add namespaces used in files after cleanup
