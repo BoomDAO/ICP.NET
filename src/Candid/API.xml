@@ -1998,6 +1998,11 @@
             Is useful for faster data retrieval
             </summary>
         </member>
+        <member name="F:EdjCase.ICP.Candid.Models.Types.FuncMode.CompositeQuery">
+            <summary>
+            Mode like Query, but can call other query methods in it
+            </summary>
+        </member>
         <member name="T:EdjCase.ICP.Candid.Models.Types.CandidFuncType">
             <summary>
             A candid type model that defines a func

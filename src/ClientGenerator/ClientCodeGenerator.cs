@@ -242,7 +242,7 @@ namespace EdjCase.ICP.ClientGenerator
 				.Select(ResolveXType)
 				.ToList();
 			bool isOneway = value.Modes.Contains(FuncMode.Oneway);
-			bool isQuery = value.Modes.Contains(FuncMode.Query);
+			bool isQuery = value.Modes.Contains(FuncMode.Query) || value.Modes.Contains(FuncMode.CompositeQuery);
 			return new ServiceSourceCodeType.Func(argTypes, returnTypes, isOneway, isQuery);
 
 

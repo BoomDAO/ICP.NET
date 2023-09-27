@@ -186,6 +186,7 @@ namespace EdjCase.ICP.Candid
 			{
 				FuncMode.Oneway => "oneway",
 				FuncMode.Query => "query",
+				FuncMode.CompositeQuery => "composite_query",
 				_ => throw new NotImplementedException(),
 			};
 		}
