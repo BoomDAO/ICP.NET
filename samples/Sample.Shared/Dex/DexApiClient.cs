@@ -82,11 +82,11 @@ namespace Sample.Shared.Dex
 			return reply.ToObjects<List<byte>>(this.Converter);
 		}
 
-		public async Task<OptionalValue<Models.Order>> GetOrder(OrderId arg0)
+		public async Task<Sample.Shared.Dex.Models.Order?> GetOrder(OrderId arg0)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
 			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "getOrder", arg);
-			return reply.ToObjects<OptionalValue<Models.Order>>(this.Converter);
+			return reply.ToObjects<Sample.Shared.Dex.Models.Order?>(this.Converter);
 		}
 
 		public async Task<List<Models.Order>> GetOrders()

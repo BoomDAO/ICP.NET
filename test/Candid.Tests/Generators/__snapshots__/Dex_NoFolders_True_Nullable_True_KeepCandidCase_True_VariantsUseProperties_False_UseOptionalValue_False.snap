@@ -16,9 +16,9 @@ namespace Test
 
 		public Principal CanisterId { get; }
 
-		public CandidConverter Converter { get; }
+		public CandidConverter? Converter { get; }
 
-		public DexApiClient(IAgent agent, Principal canisterId, CandidConverter converter = default)
+		public DexApiClient(IAgent agent, Principal canisterId, CandidConverter? converter = default)
 		{
 			this.Agent = agent;
 			this.CanisterId = canisterId;
@@ -82,11 +82,11 @@ namespace Test
 			return reply.ToObjects<List<byte>>(this.Converter);
 		}
 
-		public async Task<OptionalValue<Order>> getOrder(OrderId arg0)
+		public async Task<Test.Order?> getOrder(OrderId arg0)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
 			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "getOrder", arg);
-			return reply.ToObjects<OptionalValue<Order>>(this.Converter);
+			return reply.ToObjects<Test.Order?>(this.Converter);
 		}
 
 		public async Task<List<Order>> getOrders()
@@ -132,6 +132,7 @@ Type File: 'WithdrawReceipt'
 using EdjCase.ICP.Candid.Mapping;
 using Test;
 using EdjCase.ICP.Candid.Models;
+using System;
 
 namespace Test
 {
@@ -142,13 +143,9 @@ namespace Test
 		public WithdrawReceiptTag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public object Value { get; set; }
+		public object? Value { get; set; }
 
-		public WithdrawErr Err { get => this.Tag == WithdrawReceiptTag.Err ? (WithdrawErr)this.Value! : default; set => (this.Tag, this.Value) = (WithdrawReceiptTag.Err, value); }
-
-		public UnboundedUInt Ok { get => this.Tag == WithdrawReceiptTag.Ok ? (UnboundedUInt)this.Value! : default; set => (this.Tag, this.Value) = (WithdrawReceiptTag.Ok, value); }
-
-		public WithdrawReceipt(WithdrawReceiptTag tag, object value)
+		public WithdrawReceipt(WithdrawReceiptTag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -156,6 +153,36 @@ namespace Test
 
 		protected WithdrawReceipt()
 		{
+		}
+
+		public static WithdrawReceipt Err(WithdrawErr info)
+		{
+			return new WithdrawReceipt(WithdrawReceiptTag.Err, info);
+		}
+
+		public static WithdrawReceipt Ok(UnboundedUInt info)
+		{
+			return new WithdrawReceipt(WithdrawReceiptTag.Ok, info);
+		}
+
+		public WithdrawErr AsErr()
+		{
+			this.ValidateTag(WithdrawReceiptTag.Err);
+			return (WithdrawErr)this.Value!;
+		}
+
+		public UnboundedUInt AsOk()
+		{
+			this.ValidateTag(WithdrawReceiptTag.Ok);
+			return (UnboundedUInt)this.Value!;
+		}
+
+		private void ValidateTag(WithdrawReceiptTag tag)
+		{
+			if (!this.Tag.Equals(tag))
+			{
+				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
+			}
 		}
 	}
 
@@ -181,7 +208,7 @@ Type File: 'OrderPlacementReceipt'
 
 using EdjCase.ICP.Candid.Mapping;
 using Test;
-using EdjCase.ICP.Candid.Models;
+using System;
 
 namespace Test
 {
@@ -192,13 +219,9 @@ namespace Test
 		public OrderPlacementReceiptTag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public object Value { get; set; }
+		public object? Value { get; set; }
 
-		public OrderPlacementErr Err { get => this.Tag == OrderPlacementReceiptTag.Err ? (OrderPlacementErr)this.Value! : default; set => (this.Tag, this.Value) = (OrderPlacementReceiptTag.Err, value); }
-
-		public OptionalValue<Order> Ok { get => this.Tag == OrderPlacementReceiptTag.Ok ? (OptionalValue<Order>)this.Value! : default; set => (this.Tag, this.Value) = (OrderPlacementReceiptTag.Ok, value); }
-
-		public OrderPlacementReceipt(OrderPlacementReceiptTag tag, object value)
+		public OrderPlacementReceipt(OrderPlacementReceiptTag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -206,6 +229,36 @@ namespace Test
 
 		protected OrderPlacementReceipt()
 		{
+		}
+
+		public static OrderPlacementReceipt Err(OrderPlacementErr info)
+		{
+			return new OrderPlacementReceipt(OrderPlacementReceiptTag.Err, info);
+		}
+
+		public static OrderPlacementReceipt Ok(Order? info)
+		{
+			return new OrderPlacementReceipt(OrderPlacementReceiptTag.Ok, info);
+		}
+
+		public OrderPlacementErr AsErr()
+		{
+			this.ValidateTag(OrderPlacementReceiptTag.Err);
+			return (OrderPlacementErr)this.Value!;
+		}
+
+		public Order? AsOk()
+		{
+			this.ValidateTag(OrderPlacementReceiptTag.Ok);
+			return (Order?)this.Value!;
+		}
+
+		private void ValidateTag(OrderPlacementReceiptTag tag)
+		{
+			if (!this.Tag.Equals(tag))
+			{
+				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
+			}
 		}
 	}
 
@@ -270,6 +323,7 @@ Type File: 'DepositReceipt'
 using EdjCase.ICP.Candid.Mapping;
 using Test;
 using EdjCase.ICP.Candid.Models;
+using System;
 
 namespace Test
 {
@@ -280,13 +334,9 @@ namespace Test
 		public DepositReceiptTag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public object Value { get; set; }
+		public object? Value { get; set; }
 
-		public DepositErr Err { get => this.Tag == DepositReceiptTag.Err ? (DepositErr)this.Value! : default; set => (this.Tag, this.Value) = (DepositReceiptTag.Err, value); }
-
-		public UnboundedUInt Ok { get => this.Tag == DepositReceiptTag.Ok ? (UnboundedUInt)this.Value! : default; set => (this.Tag, this.Value) = (DepositReceiptTag.Ok, value); }
-
-		public DepositReceipt(DepositReceiptTag tag, object value)
+		public DepositReceipt(DepositReceiptTag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -294,6 +344,36 @@ namespace Test
 
 		protected DepositReceipt()
 		{
+		}
+
+		public static DepositReceipt Err(DepositErr info)
+		{
+			return new DepositReceipt(DepositReceiptTag.Err, info);
+		}
+
+		public static DepositReceipt Ok(UnboundedUInt info)
+		{
+			return new DepositReceipt(DepositReceiptTag.Ok, info);
+		}
+
+		public DepositErr AsErr()
+		{
+			this.ValidateTag(DepositReceiptTag.Err);
+			return (DepositErr)this.Value!;
+		}
+
+		public UnboundedUInt AsOk()
+		{
+			this.ValidateTag(DepositReceiptTag.Ok);
+			return (UnboundedUInt)this.Value!;
+		}
+
+		private void ValidateTag(DepositReceiptTag tag)
+		{
+			if (!this.Tag.Equals(tag))
+			{
+				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
+			}
 		}
 	}
 
@@ -319,6 +399,7 @@ Type File: 'CancelOrderReceipt'
 
 using EdjCase.ICP.Candid.Mapping;
 using Test;
+using System;
 using OrderId = System.UInt32;
 
 namespace Test
@@ -330,13 +411,9 @@ namespace Test
 		public CancelOrderReceiptTag Tag { get; set; }
 
 		[VariantValueProperty()]
-		public object Value { get; set; }
+		public object? Value { get; set; }
 
-		public CancelOrderErr Err { get => this.Tag == CancelOrderReceiptTag.Err ? (CancelOrderErr)this.Value! : default; set => (this.Tag, this.Value) = (CancelOrderReceiptTag.Err, value); }
-
-		public OrderId Ok { get => this.Tag == CancelOrderReceiptTag.Ok ? (OrderId)this.Value! : default; set => (this.Tag, this.Value) = (CancelOrderReceiptTag.Ok, value); }
-
-		public CancelOrderReceipt(CancelOrderReceiptTag tag, object value)
+		public CancelOrderReceipt(CancelOrderReceiptTag tag, object? value)
 		{
 			this.Tag = tag;
 			this.Value = value;
@@ -344,6 +421,36 @@ namespace Test
 
 		protected CancelOrderReceipt()
 		{
+		}
+
+		public static CancelOrderReceipt Err(CancelOrderErr info)
+		{
+			return new CancelOrderReceipt(CancelOrderReceiptTag.Err, info);
+		}
+
+		public static CancelOrderReceipt Ok(OrderId info)
+		{
+			return new CancelOrderReceipt(CancelOrderReceiptTag.Ok, info);
+		}
+
+		public CancelOrderErr AsErr()
+		{
+			this.ValidateTag(CancelOrderReceiptTag.Err);
+			return (CancelOrderErr)this.Value!;
+		}
+
+		public OrderId AsOk()
+		{
+			this.ValidateTag(CancelOrderReceiptTag.Ok);
+			return (OrderId)this.Value!;
+		}
+
+		private void ValidateTag(CancelOrderReceiptTag tag)
+		{
+			if (!this.Tag.Equals(tag))
+			{
+				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
+			}
 		}
 	}
 

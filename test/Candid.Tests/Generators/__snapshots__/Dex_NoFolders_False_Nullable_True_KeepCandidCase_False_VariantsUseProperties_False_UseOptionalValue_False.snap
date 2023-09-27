@@ -1,0 +1,512 @@
+﻿using EdjCase.ICP.Agent.Agents;
+using EdjCase.ICP.Candid.Models;
+using EdjCase.ICP.Candid;
+using System.Threading.Tasks;
+using Test;
+using System.Collections.Generic;
+using EdjCase.ICP.Agent.Responses;
+using Token = EdjCase.ICP.Candid.Models.Principal;
+using OrderId = System.UInt32;
+
+namespace Test
+{
+	public class DexApiClient
+	{
+		public IAgent Agent { get; }
+
+		public Principal CanisterId { get; }
+
+		public CandidConverter? Converter { get; }
+
+		public DexApiClient(IAgent agent, Principal canisterId, CandidConverter? converter = default)
+		{
+			this.Agent = agent;
+			this.CanisterId = canisterId;
+			this.Converter = converter;
+		}
+
+		public async Task<Models.CancelOrderReceipt> CancelOrder(OrderId arg0)
+		{
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "cancelOrder", arg);
+			return reply.ToObjects<Models.CancelOrderReceipt>(this.Converter);
+		}
+
+		public async Task Clear()
+		{
+			CandidArg arg = CandidArg.FromCandid();
+			await this.Agent.CallAsync(this.CanisterId, "clear", arg);
+		}
+
+		public async Task Credit(Principal arg0, Token arg1, UnboundedUInt arg2)
+		{
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0), CandidTypedValue.FromObject(arg1), CandidTypedValue.FromObject(arg2));
+			await this.Agent.CallAsync(this.CanisterId, "credit", arg);
+		}
+
+		public async Task<Models.DepositReceipt> Deposit(Token arg0)
+		{
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "deposit", arg);
+			return reply.ToObjects<Models.DepositReceipt>(this.Converter);
+		}
+
+		public async Task<List<Models.Balance>> GetAllBalances()
+		{
+			CandidArg arg = CandidArg.FromCandid();
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "getAllBalances", arg);
+			CandidArg reply = response.ThrowOrGetReply();
+			return reply.ToObjects<List<Models.Balance>>(this.Converter);
+		}
+
+		public async Task<UnboundedUInt> GetBalance(Token arg0)
+		{
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "getBalance", arg);
+			CandidArg reply = response.ThrowOrGetReply();
+			return reply.ToObjects<UnboundedUInt>(this.Converter);
+		}
+
+		public async Task<List<Models.Balance>> GetBalances()
+		{
+			CandidArg arg = CandidArg.FromCandid();
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "getBalances", arg);
+			CandidArg reply = response.ThrowOrGetReply();
+			return reply.ToObjects<List<Models.Balance>>(this.Converter);
+		}
+
+		public async Task<List<byte>> GetDepositAddress()
+		{
+			CandidArg arg = CandidArg.FromCandid();
+			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "getDepositAddress", arg);
+			return reply.ToObjects<List<byte>>(this.Converter);
+		}
+
+		public async Task<Test.Models.Order?> GetOrder(OrderId arg0)
+		{
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "getOrder", arg);
+			return reply.ToObjects<Test.Models.Order?>(this.Converter);
+		}
+
+		public async Task<List<Models.Order>> GetOrders()
+		{
+			CandidArg arg = CandidArg.FromCandid();
+			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "getOrders", arg);
+			return reply.ToObjects<List<Models.Order>>(this.Converter);
+		}
+
+		public async Task<string> GetSymbol(Token arg0)
+		{
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "getSymbol", arg);
+			return reply.ToObjects<string>(this.Converter);
+		}
+
+		public async Task<Models.OrderPlacementReceipt> PlaceOrder(Token arg0, UnboundedUInt arg1, Token arg2, UnboundedUInt arg3)
+		{
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0), CandidTypedValue.FromObject(arg1), CandidTypedValue.FromObject(arg2), CandidTypedValue.FromObject(arg3));
+			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "placeOrder", arg);
+			return reply.ToObjects<Models.OrderPlacementReceipt>(this.Converter);
+		}
+
+		public async Task<Principal> Whoami()
+		{
+			CandidArg arg = CandidArg.FromCandid();
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "whoami", arg);
+			CandidArg reply = response.ThrowOrGetReply();
+			return reply.ToObjects<Principal>(this.Converter);
+		}
+
+		public async Task<Models.WithdrawReceipt> Withdraw(Token arg0, UnboundedUInt arg1, Principal arg2)
+		{
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0), CandidTypedValue.FromObject(arg1), CandidTypedValue.FromObject(arg2));
+			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "withdraw", arg);
+			return reply.ToObjects<Models.WithdrawReceipt>(this.Converter);
+		}
+	}
+}
+
+Type File: 'WithdrawReceipt'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test.Models;
+using EdjCase.ICP.Candid.Models;
+using System;
+
+namespace Test.Models
+{
+	[Variant()]
+	public class WithdrawReceipt
+	{
+		[VariantTagProperty()]
+		public WithdrawReceiptTag Tag { get; set; }
+
+		[VariantValueProperty()]
+		public object? Value { get; set; }
+
+		public WithdrawReceipt(WithdrawReceiptTag tag, object? value)
+		{
+			this.Tag = tag;
+			this.Value = value;
+		}
+
+		protected WithdrawReceipt()
+		{
+		}
+
+		public static WithdrawReceipt Err(WithdrawErr info)
+		{
+			return new WithdrawReceipt(WithdrawReceiptTag.Err, info);
+		}
+
+		public static WithdrawReceipt Ok(UnboundedUInt info)
+		{
+			return new WithdrawReceipt(WithdrawReceiptTag.Ok, info);
+		}
+
+		public WithdrawErr AsErr()
+		{
+			this.ValidateTag(WithdrawReceiptTag.Err);
+			return (WithdrawErr)this.Value!;
+		}
+
+		public UnboundedUInt AsOk()
+		{
+			this.ValidateTag(WithdrawReceiptTag.Ok);
+			return (UnboundedUInt)this.Value!;
+		}
+
+		private void ValidateTag(WithdrawReceiptTag tag)
+		{
+			if (!this.Tag.Equals(tag))
+			{
+				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
+			}
+		}
+	}
+
+	public enum WithdrawReceiptTag
+	{
+		Err,
+		Ok
+	}
+}
+
+Type File: 'WithdrawErr'
+
+namespace Test.Models
+{
+	public enum WithdrawErr
+	{
+		BalanceLow,
+		TransferFailure
+	}
+}
+
+Type File: 'OrderPlacementReceipt'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test.Models;
+using System;
+
+namespace Test.Models
+{
+	[Variant()]
+	public class OrderPlacementReceipt
+	{
+		[VariantTagProperty()]
+		public OrderPlacementReceiptTag Tag { get; set; }
+
+		[VariantValueProperty()]
+		public object? Value { get; set; }
+
+		public OrderPlacementReceipt(OrderPlacementReceiptTag tag, object? value)
+		{
+			this.Tag = tag;
+			this.Value = value;
+		}
+
+		protected OrderPlacementReceipt()
+		{
+		}
+
+		public static OrderPlacementReceipt Err(OrderPlacementErr info)
+		{
+			return new OrderPlacementReceipt(OrderPlacementReceiptTag.Err, info);
+		}
+
+		public static OrderPlacementReceipt Ok(Order? info)
+		{
+			return new OrderPlacementReceipt(OrderPlacementReceiptTag.Ok, info);
+		}
+
+		public OrderPlacementErr AsErr()
+		{
+			this.ValidateTag(OrderPlacementReceiptTag.Err);
+			return (OrderPlacementErr)this.Value!;
+		}
+
+		public Order? AsOk()
+		{
+			this.ValidateTag(OrderPlacementReceiptTag.Ok);
+			return (Order?)this.Value!;
+		}
+
+		private void ValidateTag(OrderPlacementReceiptTag tag)
+		{
+			if (!this.Tag.Equals(tag))
+			{
+				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
+			}
+		}
+	}
+
+	public enum OrderPlacementReceiptTag
+	{
+		Err,
+		Ok
+	}
+}
+
+Type File: 'OrderPlacementErr'
+
+namespace Test.Models
+{
+	public enum OrderPlacementErr
+	{
+		InvalidOrder,
+		OrderBookFull
+	}
+}
+
+Type File: 'Order'
+
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid.Models;
+using Token = EdjCase.ICP.Candid.Models.Principal;
+using OrderId = System.UInt32;
+
+namespace Test.Models
+{
+	public class Order
+	{
+		[CandidName("from")]
+		public Token From { get; set; }
+
+		[CandidName("fromAmount")]
+		public UnboundedUInt FromAmount { get; set; }
+
+		[CandidName("id")]
+		public OrderId Id { get; set; }
+
+		[CandidName("owner")]
+		public Principal Owner { get; set; }
+
+		[CandidName("to")]
+		public Token To { get; set; }
+
+		[CandidName("toAmount")]
+		public UnboundedUInt ToAmount { get; set; }
+
+		public Order(Token from, UnboundedUInt fromAmount, OrderId id, Principal owner, Token to, UnboundedUInt toAmount)
+		{
+			this.From = from;
+			this.FromAmount = fromAmount;
+			this.Id = id;
+			this.Owner = owner;
+			this.To = to;
+			this.ToAmount = toAmount;
+		}
+
+		public Order()
+		{
+		}
+	}
+}
+
+Type File: 'DepositReceipt'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test.Models;
+using EdjCase.ICP.Candid.Models;
+using System;
+
+namespace Test.Models
+{
+	[Variant()]
+	public class DepositReceipt
+	{
+		[VariantTagProperty()]
+		public DepositReceiptTag Tag { get; set; }
+
+		[VariantValueProperty()]
+		public object? Value { get; set; }
+
+		public DepositReceipt(DepositReceiptTag tag, object? value)
+		{
+			this.Tag = tag;
+			this.Value = value;
+		}
+
+		protected DepositReceipt()
+		{
+		}
+
+		public static DepositReceipt Err(DepositErr info)
+		{
+			return new DepositReceipt(DepositReceiptTag.Err, info);
+		}
+
+		public static DepositReceipt Ok(UnboundedUInt info)
+		{
+			return new DepositReceipt(DepositReceiptTag.Ok, info);
+		}
+
+		public DepositErr AsErr()
+		{
+			this.ValidateTag(DepositReceiptTag.Err);
+			return (DepositErr)this.Value!;
+		}
+
+		public UnboundedUInt AsOk()
+		{
+			this.ValidateTag(DepositReceiptTag.Ok);
+			return (UnboundedUInt)this.Value!;
+		}
+
+		private void ValidateTag(DepositReceiptTag tag)
+		{
+			if (!this.Tag.Equals(tag))
+			{
+				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
+			}
+		}
+	}
+
+	public enum DepositReceiptTag
+	{
+		Err,
+		Ok
+	}
+}
+
+Type File: 'DepositErr'
+
+namespace Test.Models
+{
+	public enum DepositErr
+	{
+		BalanceLow,
+		TransferFailure
+	}
+}
+
+Type File: 'CancelOrderReceipt'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test.Models;
+using System;
+using OrderId = System.UInt32;
+
+namespace Test.Models
+{
+	[Variant()]
+	public class CancelOrderReceipt
+	{
+		[VariantTagProperty()]
+		public CancelOrderReceiptTag Tag { get; set; }
+
+		[VariantValueProperty()]
+		public object? Value { get; set; }
+
+		public CancelOrderReceipt(CancelOrderReceiptTag tag, object? value)
+		{
+			this.Tag = tag;
+			this.Value = value;
+		}
+
+		protected CancelOrderReceipt()
+		{
+		}
+
+		public static CancelOrderReceipt Err(CancelOrderErr info)
+		{
+			return new CancelOrderReceipt(CancelOrderReceiptTag.Err, info);
+		}
+
+		public static CancelOrderReceipt Ok(OrderId info)
+		{
+			return new CancelOrderReceipt(CancelOrderReceiptTag.Ok, info);
+		}
+
+		public CancelOrderErr AsErr()
+		{
+			this.ValidateTag(CancelOrderReceiptTag.Err);
+			return (CancelOrderErr)this.Value!;
+		}
+
+		public OrderId AsOk()
+		{
+			this.ValidateTag(CancelOrderReceiptTag.Ok);
+			return (OrderId)this.Value!;
+		}
+
+		private void ValidateTag(CancelOrderReceiptTag tag)
+		{
+			if (!this.Tag.Equals(tag))
+			{
+				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
+			}
+		}
+	}
+
+	public enum CancelOrderReceiptTag
+	{
+		Err,
+		Ok
+	}
+}
+
+Type File: 'CancelOrderErr'
+
+namespace Test.Models
+{
+	public enum CancelOrderErr
+	{
+		NotAllowed,
+		NotExistingOrder
+	}
+}
+
+Type File: 'Balance'
+
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid.Models;
+using Token = EdjCase.ICP.Candid.Models.Principal;
+
+namespace Test.Models
+{
+	public class Balance
+	{
+		[CandidName("amount")]
+		public UnboundedUInt Amount { get; set; }
+
+		[CandidName("owner")]
+		public Principal Owner { get; set; }
+
+		[CandidName("token")]
+		public Token Token { get; set; }
+
+		public Balance(UnboundedUInt amount, Principal owner, Token token)
+		{
+			this.Amount = amount;
+			this.Owner = owner;
+			this.Token = token;
+		}
+
+		public Balance()
+		{
+		}
+	}
+}

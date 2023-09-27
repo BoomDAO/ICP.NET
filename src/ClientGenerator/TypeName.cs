@@ -4,12 +4,14 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 
 namespace EdjCase.ICP.ClientGenerator
 {
 	internal class AliasedTypeName : TypeName
 	{
+		public override bool IsDefaultNullable => this.NotAliased.IsDefaultNullable;
 		public TypeName Aliased { get; set; }
 		public TypeName NotAliased { get; set; }
 
@@ -18,26 +20,27 @@ namespace EdjCase.ICP.ClientGenerator
 			this.Aliased = aliased ?? throw new ArgumentNullException(nameof(aliased));
 			this.NotAliased = notAliased ?? throw new ArgumentNullException(nameof(notAliased));
 		}
-		public override string BuildName(bool includeNamespace, bool resolveAliases)
+		public override string BuildName(bool featureNullable, bool useOptionalValue, bool includeNamespace, bool resolveAliases)
 		{
 			if (resolveAliases)
 			{
-				return this.NotAliased.BuildName(includeNamespace, true);
+				return this.NotAliased.BuildName(featureNullable, useOptionalValue, includeNamespace, true);
 			}
-			return this.Aliased.BuildName(includeNamespace, false);
+			return this.Aliased.BuildName(featureNullable, useOptionalValue, includeNamespace, false);
 		}
 
-		public override TypeSyntax ToTypeSyntax(bool resolveAliases)
+		public override TypeSyntax ToTypeSyntax(bool featureNullable, bool useOptionalValue, bool resolveAliases)
 		{
 			if (resolveAliases)
 			{
-				return this.NotAliased.ToTypeSyntax(false);
+				return this.NotAliased.ToTypeSyntax(featureNullable, useOptionalValue, false);
 			}
-			return this.Aliased.ToTypeSyntax(false);
+			return this.Aliased.ToTypeSyntax(featureNullable, useOptionalValue, false);
 		}
 	}
 	internal class NestedTypeName : TypeName
 	{
+		public override bool IsDefaultNullable { get; } = true;
 		public TypeName ParentType { get; }
 		public string Name { get; }
 		public NestedTypeName(TypeName parentType, string name)
@@ -46,34 +49,36 @@ namespace EdjCase.ICP.ClientGenerator
 			this.Name = name ?? throw new ArgumentNullException(nameof(name));
 		}
 
-		public override string BuildName(bool includeNamespace, bool resolveAliases)
+		public override string BuildName(bool featureNullable, bool useOptionalValue, bool includeNamespace, bool resolveAliases)
 		{
 			if (!includeNamespace)
 			{
 				return this.Name;
 			}
-			return this.ParentType.BuildName(true, resolveAliases) + "." + this.Name;
+			return this.ParentType.BuildName(featureNullable, useOptionalValue, true, resolveAliases) + "." + this.Name;
 		}
 
-		public override TypeSyntax ToTypeSyntax(bool resolveAliases)
+		public override TypeSyntax ToTypeSyntax(bool featureNullable, bool useOptionalValue, bool resolveAliases)
 		{
-			string typeName = this.BuildName(includeNamespace: true, resolveAliases);
+			string typeName = this.BuildName(featureNullable, useOptionalValue, includeNamespace: true, resolveAliases: resolveAliases);
 			return SyntaxFactory.IdentifierName(typeName);
 		}
 	}
 
 	internal class SimpleTypeName : TypeName
 	{
+		public override bool IsDefaultNullable { get; }
 		public string Name { get; }
 		public string? Namespace { get; }
 
-		public SimpleTypeName(string name, string? @namespace)
+		public SimpleTypeName(string name, string? @namespace, bool isDefaultNullable)
 		{
 			this.Name = name;
 			this.Namespace = @namespace;
+			this.IsDefaultNullable = isDefaultNullable;
 		}
 
-		public override string BuildName(bool includeNamespace, bool resolveAliases)
+		public override string BuildName(bool featureNullable, bool useOptionalValue, bool includeNamespace, bool resolveAliases)
 		{
 			if (!includeNamespace || this.Namespace == null)
 			{
@@ -82,9 +87,9 @@ namespace EdjCase.ICP.ClientGenerator
 			return this.Namespace + "." + this.Name;
 		}
 
-		public override TypeSyntax ToTypeSyntax(bool resolveAliases)
+		public override TypeSyntax ToTypeSyntax(bool featureNullable, bool useOptionalValue, bool resolveAliases)
 		{
-			string typeName = this.BuildName(includeNamespace: true, resolveAliases);
+			string typeName = this.BuildName(featureNullable, useOptionalValue, includeNamespace: true, resolveAliases: resolveAliases);
 			return SyntaxFactory.IdentifierName(typeName);
 		}
 
@@ -103,7 +108,7 @@ namespace EdjCase.ICP.ClientGenerator
 			}
 			else
 			{
-				typeName = new SimpleTypeName(type.Name, type.Namespace);
+				typeName = new SimpleTypeName(type.Name, type.Namespace, type.IsClass);
 			}
 			if (isNullable)
 			{
@@ -116,13 +121,14 @@ namespace EdjCase.ICP.ClientGenerator
 
 	internal class ListTypeName : TypeName
 	{
+		public override bool IsDefaultNullable { get; } = true;
 		public TypeName InnerType { get; set; }
 		public ListTypeName(TypeName innerType)
 		{
 			this.InnerType = innerType;
 		}
 
-		public override TypeSyntax ToTypeSyntax(bool resolveAliases)
+		public override TypeSyntax ToTypeSyntax(bool featureNullable, bool useOptionalValue, bool resolveAliases)
 		{
 			return SyntaxFactory.GenericName(
 					SyntaxFactory.Identifier("System.Collections.Generic.List")
@@ -130,20 +136,21 @@ namespace EdjCase.ICP.ClientGenerator
 				.WithTypeArgumentList(
 					SyntaxFactory.TypeArgumentList(
 						SyntaxFactory.SingletonSeparatedList(
-							this.InnerType.ToTypeSyntax(resolveAliases)
+							this.InnerType.ToTypeSyntax(featureNullable, useOptionalValue, resolveAliases)
 						)
 					)
 				);
 		}
 
-		public override string BuildName(bool includeNamespace, bool resolveAliases)
+		public override string BuildName(bool featureNullable, bool useOptionalValue, bool includeNamespace, bool resolveAliases)
 		{
-			return $"System.Collections.Generic.List<{this.InnerType.BuildName(includeNamespace, resolveAliases)}>";
+			return $"System.Collections.Generic.List<{this.InnerType.BuildName(featureNullable, useOptionalValue, includeNamespace, resolveAliases)}>";
 		}
 	}
 
 	internal class DictionaryTypeName : TypeName
 	{
+		public override bool IsDefaultNullable { get; } = true;
 		public TypeName KeyType { get; set; }
 		public TypeName ValueType { get; set; }
 		public DictionaryTypeName(TypeName keyType, TypeName valueType)
@@ -152,7 +159,7 @@ namespace EdjCase.ICP.ClientGenerator
 			this.ValueType = valueType;
 		}
 
-		public override TypeSyntax ToTypeSyntax(bool resolveAliases)
+		public override TypeSyntax ToTypeSyntax(bool featureNullable, bool useOptionalValue, bool resolveAliases)
 		{
 			return SyntaxFactory.GenericName(
 					SyntaxFactory.Identifier("System.Collections.Generic.Dictionary")
@@ -161,80 +168,106 @@ namespace EdjCase.ICP.ClientGenerator
 					SyntaxFactory.TypeArgumentList(
 						SyntaxFactory.SeparatedList(
 							new[] {
-								this.KeyType.ToTypeSyntax(resolveAliases),
-								this.ValueType.ToTypeSyntax(resolveAliases)
+								this.KeyType.ToTypeSyntax(featureNullable, useOptionalValue, resolveAliases),
+								this.ValueType.ToTypeSyntax(featureNullable, useOptionalValue, resolveAliases)
 							}
 						)
 					)
 				);
 		}
 
-		public override string BuildName(bool includeNamespace, bool resolveAliases)
+		public override string BuildName(bool featureNullable, bool useOptionalValue, bool includeNamespace, bool resolveAliases)
 		{
-			string key = this.KeyType.BuildName(includeNamespace, resolveAliases);
-			string value = this.ValueType.BuildName(includeNamespace, resolveAliases);
+			string key = this.KeyType.BuildName(featureNullable, useOptionalValue, includeNamespace, resolveAliases);
+			string value = this.ValueType.BuildName(featureNullable, useOptionalValue, includeNamespace, resolveAliases);
 			return $"System.Collections.Generic.Dictionary<{key}, {value}>";
 		}
 	}
 
 	internal class OptionalValueTypeName : TypeName
 	{
+		public override bool IsDefaultNullable { get; } = true;
 		public TypeName InnerType { get; set; }
 		public OptionalValueTypeName(TypeName innerType)
 		{
 			this.InnerType = innerType;
 		}
 
-		public override TypeSyntax ToTypeSyntax(bool resolveAliases)
+		public override TypeSyntax ToTypeSyntax(bool featureNullable, bool useOptionalValue, bool resolveAliases)
 		{
+			if (!useOptionalValue)
+			{
+				return new NullableTypeName(this.InnerType).ToTypeSyntax(featureNullable, useOptionalValue, resolveAliases);
+			}
 			return SyntaxFactory.GenericName(
 					SyntaxFactory.Identifier(typeof(OptionalValue<>).Namespace + ".OptionalValue")
 				)
 				.WithTypeArgumentList(
 					SyntaxFactory.TypeArgumentList(
 						SyntaxFactory.SingletonSeparatedList(
-							this.InnerType.ToTypeSyntax(resolveAliases)
+							this.InnerType.ToTypeSyntax(featureNullable, useOptionalValue, resolveAliases)
 						)
 					)
 				);
 		}
 
-		public override string BuildName(bool includeNamespace, bool resolveAliases)
+		public override string BuildName(bool featureNullable, bool useOptionalValue, bool includeNamespace, bool resolveAliases)
 		{
-			return $"{typeof(OptionalValue<>).Namespace}.OptionalValue<{this.InnerType.BuildName(includeNamespace, resolveAliases)}>";
+			if (!useOptionalValue)
+			{
+				return new NullableTypeName(this.InnerType).BuildName(featureNullable, useOptionalValue, includeNamespace, resolveAliases);
+			}
+			return $"{typeof(OptionalValue<>).Namespace}.OptionalValue<{this.InnerType.BuildName(featureNullable, useOptionalValue, includeNamespace, resolveAliases)}>";
 		}
 	}
 
 	internal class NullableTypeName : TypeName
 	{
+		public override bool IsDefaultNullable => true;
 		public TypeName InnerType { get; set; }
 		public NullableTypeName(TypeName innerType)
 		{
-			this.InnerType = innerType;
+			if (innerType is NullableTypeName n)
+			{
+				// Don't nest
+				this.InnerType = n.InnerType;
+			}
+			else
+			{
+				this.InnerType = innerType;
+			}
 		}
 
-		public override TypeSyntax ToTypeSyntax(bool resolveAliases)
+		public override TypeSyntax ToTypeSyntax(bool featureNullable, bool useOptionalValue, bool resolveAliases)
 		{
-			return SyntaxFactory.NullableType(this.InnerType.ToTypeSyntax(resolveAliases));
+			TypeSyntax inner = this.InnerType.ToTypeSyntax(featureNullable, useOptionalValue, resolveAliases);
+			if (!featureNullable && this.InnerType.IsDefaultNullable)
+			{
+				// Dont wrap in nullable
+				return inner;
+			}
+			return SyntaxFactory.NullableType(this.InnerType.ToTypeSyntax(featureNullable, useOptionalValue, resolveAliases));
 		}
 
-		public override string BuildName(bool includeNamespace, bool resolveAliases)
+		public override string BuildName(bool featureNullable, bool useOptionalValue, bool includeNamespace, bool resolveAliases)
 		{
-			return this.InnerType.BuildName(includeNamespace, resolveAliases) + "?";
+			string innerName = this.InnerType.BuildName(featureNullable, useOptionalValue, includeNamespace, resolveAliases);
+			return featureNullable  ? innerName + "?" : innerName;
 		}
 	}
 
 	internal class TupleTypeName : TypeName
 	{
+		public override bool IsDefaultNullable { get; } = false;
 		public List<TypeName> ElementTypeNameList { get; }
 
 		public TupleTypeName(List<TypeName> elementTypeNameList)
 		{
 			this.ElementTypeNameList = elementTypeNameList;
 		}
-		public override string BuildName(bool includeNamespace, bool resolveAliases)
+		public override string BuildName(bool featureNullable, bool useOptionalValue, bool includeNamespace, bool resolveAliases)
 		{
-			string elements = string.Join(", ", this.ElementTypeNameList.Select(e => e.BuildName(includeNamespace, resolveAliases)));
+			string elements = string.Join(", ", this.ElementTypeNameList.Select(e => e.BuildName(featureNullable, useOptionalValue, includeNamespace, resolveAliases)));
 			if (resolveAliases)
 			{
 				// Alias statements don't like (..,..) syntax
@@ -243,12 +276,12 @@ namespace EdjCase.ICP.ClientGenerator
 			return $"({elements})";
 		}
 
-		public override TypeSyntax ToTypeSyntax(bool resolveAliases)
+		public override TypeSyntax ToTypeSyntax(bool featureNullable, bool useOptionalValue, bool resolveAliases)
 		{
 			return SyntaxFactory.TupleType(
 				SyntaxFactory.SeparatedList(
 					this.ElementTypeNameList
-					.Select(e => SyntaxFactory.TupleElement(e.ToTypeSyntax(resolveAliases)))
+					.Select(e => SyntaxFactory.TupleElement(e.ToTypeSyntax(featureNullable, useOptionalValue, resolveAliases)))
 				)
 			);
 		}
@@ -256,6 +289,7 @@ namespace EdjCase.ICP.ClientGenerator
 
 	internal class ArrayTypeName : TypeName
 	{
+		public override bool IsDefaultNullable { get; } = true;
 		public TypeName? ElementTypeName { get; }
 
 		public ArrayTypeName(TypeName? elementTypeName)
@@ -263,22 +297,22 @@ namespace EdjCase.ICP.ClientGenerator
 			this.ElementTypeName = elementTypeName;
 		}
 
-		public override string BuildName(bool includeNamespace, bool resolveAliases)
+		public override string BuildName(bool featureNullable, bool useOptionalValue, bool includeNamespace, bool resolveAliases)
 		{
 			if (this.ElementTypeName == null)
 			{
 				return "System.Array";
 			}
-			return this.ElementTypeName.BuildName(includeNamespace, resolveAliases) + "[]";
+			return this.ElementTypeName.BuildName(featureNullable, useOptionalValue, includeNamespace, resolveAliases) + "[]";
 		}
 
-		public override TypeSyntax ToTypeSyntax(bool resolveAliases)
+		public override TypeSyntax ToTypeSyntax(bool featureNullable, bool useOptionalValue, bool resolveAliases)
 		{
 			if (this.ElementTypeName == null)
 			{
 				return SyntaxFactory.IdentifierName("System.Array");
 			}
-			return SyntaxFactory.ArrayType(this.ElementTypeName.ToTypeSyntax(resolveAliases))
+			return SyntaxFactory.ArrayType(this.ElementTypeName.ToTypeSyntax(featureNullable, useOptionalValue, resolveAliases))
 				.WithRankSpecifiers(
 					SyntaxFactory.SingletonList<ArrayRankSpecifierSyntax>(
 						SyntaxFactory.ArrayRankSpecifier(
@@ -293,13 +327,13 @@ namespace EdjCase.ICP.ClientGenerator
 
 	internal abstract class TypeName
 	{
-		public abstract string BuildName(bool includeNamespace, bool resolveAliases = false);
-		public abstract TypeSyntax ToTypeSyntax(bool resolveAliases = false);
-
+		public abstract string BuildName(bool featureNullable, bool useOptionalValue, bool includeNamespace, bool resolveAliases = false);
+		public abstract TypeSyntax ToTypeSyntax(bool featureNullable, bool useOptionalValue, bool resolveAliases = false);
+		public abstract bool IsDefaultNullable { get; }
 
 		public override string ToString()
 		{
-			return this.BuildName(true, false);
+			return this.BuildName(false, true, true, false);
 		}
 	}
 

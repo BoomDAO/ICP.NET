@@ -127,7 +127,7 @@ namespace EdjCase.ICP.Candid.Models
 		}
 
 		/// <inheritdoc cref="CandidValue.AsText"/>
-		public string AsText()
+		public string? AsText()
 		{
 			return this.Value.AsText();
 		}
@@ -211,7 +211,7 @@ namespace EdjCase.ICP.Candid.Models
 		}
 
 		/// <inheritdoc cref="CandidValue.AsPrincipal"/>
-		public Principal AsPrincipal()
+		public Principal? AsPrincipal()
 		{
 			return this.Value.AsPrincipal();
 		}

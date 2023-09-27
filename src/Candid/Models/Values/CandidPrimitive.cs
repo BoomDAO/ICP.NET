@@ -111,108 +111,93 @@ namespace EdjCase.ICP.Candid.Models.Values
 		}
 
 		/// <inheritdoc />
-		public new string AsText()
+		public new string? AsText()
 		{
-			this.ValidateType(PrimitiveType.Text);
-			return (string)this.value!;
+			return this.As<string>(PrimitiveType.Text, isNullable: true);
 		}
 
 		/// <inheritdoc />
 		public new UnboundedUInt AsNat()
 		{
-			this.ValidateType(PrimitiveType.Nat);
-			return (UnboundedUInt)this.value!;
+			return this.As<UnboundedUInt>(PrimitiveType.Nat, isNullable: false)!;
 		}
 
 		/// <inheritdoc />
 		public new byte AsNat8()
 		{
-			this.ValidateType(PrimitiveType.Nat8);
-			return (byte)this.value!;
+			return this.As<byte>(PrimitiveType.Nat8, isNullable: false);
 		}
 
 		/// <inheritdoc />
 		public new ushort AsNat16()
 		{
-			this.ValidateType(PrimitiveType.Nat16);
-			return (ushort)this.value!;
+			return this.As<ushort>(PrimitiveType.Nat16, isNullable: false);
 		}
 
 		/// <inheritdoc />
 		public new uint AsNat32()
 		{
-			this.ValidateType(PrimitiveType.Nat32);
-			return (uint)this.value!;
+			return this.As<uint>(PrimitiveType.Nat32, isNullable: false);
 		}
 
 		/// <inheritdoc />
 		public new ulong AsNat64()
 		{
-			this.ValidateType(PrimitiveType.Nat64);
-			return (ulong)this.value!;
+			return this.As<ulong>(PrimitiveType.Nat64, isNullable: false);
 		}
 
 		/// <inheritdoc />
 		public new UnboundedInt AsInt()
 		{
-			this.ValidateType(PrimitiveType.Int);
-			return (UnboundedInt)this.value!;
+			return this.As<UnboundedInt>(PrimitiveType.Int, isNullable: false)!;
 		}
 
 		/// <inheritdoc />
 		public new sbyte AsInt8()
 		{
-			this.ValidateType(PrimitiveType.Int8);
-			return (sbyte)this.value!;
+			return this.As<sbyte>(PrimitiveType.Int8, isNullable: false);
 		}
 
 		/// <inheritdoc />
 		public new short AsInt16()
 		{
-			this.ValidateType(PrimitiveType.Int16);
-			return (short)this.value!;
+			return this.As<short>(PrimitiveType.Int16, isNullable: false);
 		}
 
 		/// <inheritdoc />
 		public new int AsInt32()
 		{
-			this.ValidateType(PrimitiveType.Int32);
-			return (int)this.value!;
+			return this.As<int>(PrimitiveType.Int32, isNullable: false);
 		}
 
 		/// <inheritdoc />
 		public new long AsInt64()
 		{
-			this.ValidateType(PrimitiveType.Int64);
-			return (long)this.value!;
+			return this.As<long>(PrimitiveType.Int64, isNullable: false);
 		}
 
 		/// <inheritdoc />
 		public new float AsFloat32()
 		{
-			this.ValidateType(PrimitiveType.Float32);
-			return (float)this.value!;
+			return this.As<float>(PrimitiveType.Float32, isNullable: false);
 		}
 
 		/// <inheritdoc />
 		public new double AsFloat64()
 		{
-			this.ValidateType(PrimitiveType.Float64);
-			return (double)this.value!;
+			return this.As<double>(PrimitiveType.Float64, isNullable: false);
 		}
 
 		/// <inheritdoc />
 		public new bool AsBool()
 		{
-			this.ValidateType(PrimitiveType.Bool);
-			return (bool)this.value!;
+			return this.As<bool>(PrimitiveType.Bool, isNullable: false);
 		}
 
 		/// <inheritdoc />
-		public new Principal AsPrincipal()
+		public new Principal? AsPrincipal()
 		{
-			this.ValidateType(PrimitiveType.Principal);
-			return (Principal)this.value!;
+			return this.As<Principal>(PrimitiveType.Principal, isNullable: true);
 		}
 
 
@@ -276,9 +261,9 @@ namespace EdjCase.ICP.Candid.Models.Values
 
 		private void EncodeText(IBufferWriter<byte> destination)
 		{
-			string value = this.AsText();
+			string? value = this.AsText();
 			// bytes = Length (LEB128) + text (UTF8)
-			destination.WriteUtf8LebAndValue(value);
+			destination.WriteUtf8LebAndValue(value ?? string.Empty);
 		}
 
 		private void EncodeNat(IBufferWriter<byte> destination)
@@ -359,12 +344,18 @@ namespace EdjCase.ICP.Candid.Models.Values
 
 		private void EncodePrincipal(IBufferWriter<byte> destination)
 		{
-			// TODO how to do opaque?
-			Principal principalId = this.AsPrincipal();
-
-			destination.WriteOne<byte>(1); // Encode indication that it is not an opaque reference
-			LEB128.EncodeSigned(principalId.Raw.Length, destination); // Encode byte length
-			destination.Write(principalId.Raw); // Encode bytes
+			Principal? principalId = this.AsPrincipal();
+			if (principalId == null)
+			{
+				// Opaque
+				destination.WriteOne<byte>(0);
+			}
+			else
+			{
+				destination.WriteOne<byte>(1); // Encode indication that it is not an opaque reference
+				LEB128.EncodeSigned(principalId.Raw.Length, destination); // Encode byte length
+				destination.Write(principalId.Raw); // Encode bytes
+			}
 		}
 
 		private void EncodeBool(IBufferWriter<byte> destination)
@@ -411,12 +402,17 @@ namespace EdjCase.ICP.Candid.Models.Values
 
 
 
-		private void ValidateType(PrimitiveType type)
+		private T? As<T>(PrimitiveType type, bool isNullable)
 		{
 			if (this.ValueType != type)
 			{
+				if(isNullable && this.ValueType == PrimitiveType.Null)
+				{
+					return default;
+				}
 				throw new InvalidOperationException($"Cannot convert candid type '{this.Type}' to candid type '{type}'");
 			}
+			return (T)this.value!;
 		}
 
 		/// <inheritdoc />

@@ -96,8 +96,7 @@ namespace EdjCase.ICP.Candid.Models.Values
 		/// <returns>A primitive value</returns>
 		public CandidPrimitive AsPrimitive()
 		{
-			this.ValidateType(CandidValueType.Primitive);
-			return (CandidPrimitive)this;
+			return this.As<CandidPrimitive>(CandidValueType.Primitive);
 		}
 
 		/// <summary>
@@ -107,8 +106,7 @@ namespace EdjCase.ICP.Candid.Models.Values
 		/// <returns>A vector value</returns>
 		public CandidVector AsVector()
 		{
-			this.ValidateType(CandidValueType.Vector);
-			return (CandidVector)this;
+			return this.As<CandidVector>(CandidValueType.Vector);
 		}
 
 		/// <summary>
@@ -159,8 +157,7 @@ namespace EdjCase.ICP.Candid.Models.Values
 		/// <returns>A record value</returns>
 		public CandidRecord AsRecord()
 		{
-			this.ValidateType(CandidValueType.Record);
-			return (CandidRecord)this;
+			return this.As<CandidRecord>(CandidValueType.Record);
 		}
 
 
@@ -185,8 +182,7 @@ namespace EdjCase.ICP.Candid.Models.Values
 		/// <returns>A variant value</returns>
 		public CandidVariant AsVariant()
 		{
-			this.ValidateType(CandidValueType.Variant);
-			return (CandidVariant)this;
+			return this.As<CandidVariant>(CandidValueType.Variant);
 		}
 
 		/// <summary>
@@ -210,8 +206,7 @@ namespace EdjCase.ICP.Candid.Models.Values
 		/// <returns>A func value</returns>
 		public CandidFunc AsFunc()
 		{
-			this.ValidateType(CandidValueType.Func);
-			return (CandidFunc)this;
+			return this.As<CandidFunc>(CandidValueType.Func);
 		}
 
 		/// <summary>
@@ -221,8 +216,7 @@ namespace EdjCase.ICP.Candid.Models.Values
 		/// <returns>A service value</returns>
 		public CandidService AsService()
 		{
-			this.ValidateType(CandidValueType.Service);
-			return (CandidService)this;
+			return this.As<CandidService>(CandidValueType.Service);
 		}
 
 		/// <summary>
@@ -232,13 +226,7 @@ namespace EdjCase.ICP.Candid.Models.Values
 		/// <returns>An optional value</returns>
 		public CandidOptional AsOptional()
 		{
-			if (this.IsNull())
-			{
-				// TODO is this the best way to handle this?
-				return new CandidOptional(null);
-			}
-			this.ValidateType(CandidValueType.Optional);
-			return (CandidOptional)this;
+			return this.As<CandidOptional>(CandidValueType.Optional);
 		}
 
 		/// <summary>
@@ -264,7 +252,7 @@ namespace EdjCase.ICP.Candid.Models.Values
 		/// </summary>
 		/// <exception cref="InvalidOperationException">Throws if the type is not text</exception>
 		/// <returns>A text value</returns>
-		public string AsText()
+		public string? AsText()
 		{
 			return this.AsPrimitive().AsText();
 		}
@@ -407,7 +395,7 @@ namespace EdjCase.ICP.Candid.Models.Values
 		/// </summary>
 		/// <exception cref="InvalidOperationException">Throws if the type is not a principal</exception>
 		/// <returns>A principal value</returns>
-		public Principal AsPrincipal()
+		public Principal? AsPrincipal()
 		{
 			return this.AsPrimitive().AsPrincipal();
 		}
@@ -590,12 +578,21 @@ namespace EdjCase.ICP.Candid.Models.Values
 			return new CandidPrimitive(PrimitiveType.Empty, null);
 		}
 
-		private void ValidateType(CandidValueType type)
+		private T As<T>(CandidValueType type)
+			where T : CandidValue
 		{
 			if (this.Type != type)
 			{
+				if (this.Type == CandidValueType.Optional)
+				{
+					// If opt X, coerce to just X
+					CandidOptional o = this.AsOptional();
+
+					return o.Value.As<T>(type);
+				}
 				throw new InvalidOperationException($"Cannot convert candid type '{this.Type}' to candid type '{type}'");
 			}
+			return (T)this;
 		}
 	}
 }
