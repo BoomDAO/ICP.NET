@@ -23,18 +23,18 @@ namespace Test
 			this.Converter = converter;
 		}
 
-		public async Task<Models.Result> claim_gtc_neurons(Principal arg0, List<Models.NeuronId> arg1)
+		public async Task<Result> claim_gtc_neurons(Principal arg0, List<NeuronId> arg1)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0), CandidTypedValue.FromObject(arg1));
 			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "claim_gtc_neurons", arg);
-			return reply.ToObjects<Models.Result>(this.Converter);
+			return reply.ToObjects<Result>(this.Converter);
 		}
 
-		public async Task<Models.ClaimOrRefreshNeuronFromAccountResponse> claim_or_refresh_neuron_from_account(Models.ClaimOrRefreshNeuronFromAccount arg0)
+		public async Task<ClaimOrRefreshNeuronFromAccountResponse> claim_or_refresh_neuron_from_account(ClaimOrRefreshNeuronFromAccount arg0)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
 			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "claim_or_refresh_neuron_from_account", arg);
-			return reply.ToObjects<Models.ClaimOrRefreshNeuronFromAccountResponse>(this.Converter);
+			return reply.ToObjects<ClaimOrRefreshNeuronFromAccountResponse>(this.Converter);
 		}
 
 		public async Task<string> _get_build_metadata()
@@ -45,35 +45,35 @@ namespace Test
 			return reply.ToObjects<string>(this.Converter);
 		}
 
-		public async Task<Models.Result_2> _get_full_neuron(ulong arg0)
+		public async Task<Result_2> _get_full_neuron(ulong arg0)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_full_neuron", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<Models.Result_2>(this.Converter);
+			return reply.ToObjects<Result_2>(this.Converter);
 		}
 
-		public async Task<Models.Result_2> _get_full_neuron_by_id_or_subaccount(Models.NeuronIdOrSubaccount arg0)
+		public async Task<Result_2> _get_full_neuron_by_id_or_subaccount(NeuronIdOrSubaccount arg0)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_full_neuron_by_id_or_subaccount", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<Models.Result_2>(this.Converter);
+			return reply.ToObjects<Result_2>(this.Converter);
 		}
 
-		public async Task<Models.Result_3> _get_monthly_node_provider_rewards()
+		public async Task<Result_3> _get_monthly_node_provider_rewards()
 		{
 			CandidArg arg = CandidArg.FromCandid();
 			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "get_monthly_node_provider_rewards", arg);
-			return reply.ToObjects<Models.Result_3>(this.Converter);
+			return reply.ToObjects<Result_3>(this.Converter);
 		}
 
-		public async Task<Models.NetworkEconomics> _get_network_economics_parameters()
+		public async Task<NetworkEconomics> _get_network_economics_parameters()
 		{
 			CandidArg arg = CandidArg.FromCandid();
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_network_economics_parameters", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<Models.NetworkEconomics>(this.Converter);
+			return reply.ToObjects<NetworkEconomics>(this.Converter);
 		}
 
 		public async Task<List<ulong>> _get_neuron_ids()
@@ -84,97 +84,97 @@ namespace Test
 			return reply.ToObjects<List<ulong>>(this.Converter);
 		}
 
-		public async Task<Models.Result_4> _get_neuron_info(ulong arg0)
+		public async Task<Result_4> _get_neuron_info(ulong arg0)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_neuron_info", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<Models.Result_4>(this.Converter);
+			return reply.ToObjects<Result_4>(this.Converter);
 		}
 
-		public async Task<Models.Result_4> _get_neuron_info_by_id_or_subaccount(Models.NeuronIdOrSubaccount arg0)
+		public async Task<Result_4> _get_neuron_info_by_id_or_subaccount(NeuronIdOrSubaccount arg0)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_neuron_info_by_id_or_subaccount", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<Models.Result_4>(this.Converter);
+			return reply.ToObjects<Result_4>(this.Converter);
 		}
 
-		public async Task<Models.Result_5> _get_node_provider_by_caller(NullValue arg0)
+		public async Task<Result_5> _get_node_provider_by_caller(NullValue arg0)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_node_provider_by_caller", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<Models.Result_5>(this.Converter);
+			return reply.ToObjects<Result_5>(this.Converter);
 		}
 
-		public async Task<List<Models.ProposalInfo>> _get_pending_proposals()
+		public async Task<List<ProposalInfo>> _get_pending_proposals()
 		{
 			CandidArg arg = CandidArg.FromCandid();
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_pending_proposals", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<List<Models.ProposalInfo>>(this.Converter);
+			return reply.ToObjects<List<ProposalInfo>>(this.Converter);
 		}
 
-		public async Task<OptionalValue<Models.ProposalInfo>> _get_proposal_info(ulong arg0)
+		public async Task<OptionalValue<ProposalInfo>> _get_proposal_info(ulong arg0)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_proposal_info", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<OptionalValue<Models.ProposalInfo>>(this.Converter);
+			return reply.ToObjects<OptionalValue<ProposalInfo>>(this.Converter);
 		}
 
-		public async Task<Models.ListKnownNeuronsResponse> list_known_neurons()
+		public async Task<ListKnownNeuronsResponse> list_known_neurons()
 		{
 			CandidArg arg = CandidArg.FromCandid();
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "list_known_neurons", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<Models.ListKnownNeuronsResponse>(this.Converter);
+			return reply.ToObjects<ListKnownNeuronsResponse>(this.Converter);
 		}
 
-		public async Task<Models.ListNeuronsResponse> list_neurons(Models.ListNeurons arg0)
+		public async Task<ListNeuronsResponse> list_neurons(ListNeurons arg0)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "list_neurons", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<Models.ListNeuronsResponse>(this.Converter);
+			return reply.ToObjects<ListNeuronsResponse>(this.Converter);
 		}
 
-		public async Task<Models.ListNodeProvidersResponse> list_node_providers()
+		public async Task<ListNodeProvidersResponse> list_node_providers()
 		{
 			CandidArg arg = CandidArg.FromCandid();
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "list_node_providers", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<Models.ListNodeProvidersResponse>(this.Converter);
+			return reply.ToObjects<ListNodeProvidersResponse>(this.Converter);
 		}
 
-		public async Task<Models.ListProposalInfoResponse> list_proposals(Models.ListProposalInfo arg0)
+		public async Task<ListProposalInfoResponse> list_proposals(ListProposalInfo arg0)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "list_proposals", arg);
 			CandidArg reply = response.ThrowOrGetReply();
-			return reply.ToObjects<Models.ListProposalInfoResponse>(this.Converter);
+			return reply.ToObjects<ListProposalInfoResponse>(this.Converter);
 		}
 
-		public async Task<Models.ManageNeuronResponse> manage_neuron(Models.ManageNeuron arg0)
+		public async Task<ManageNeuronResponse> manage_neuron(ManageNeuron arg0)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
 			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "manage_neuron", arg);
-			return reply.ToObjects<Models.ManageNeuronResponse>(this.Converter);
+			return reply.ToObjects<ManageNeuronResponse>(this.Converter);
 		}
 
-		public async Task<Models.Result> transfer_gtc_neuron(Models.NeuronId arg0, Models.NeuronId arg1)
+		public async Task<Result> transfer_gtc_neuron(NeuronId arg0, NeuronId arg1)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0), CandidTypedValue.FromObject(arg1));
 			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "transfer_gtc_neuron", arg);
-			return reply.ToObjects<Models.Result>(this.Converter);
+			return reply.ToObjects<Result>(this.Converter);
 		}
 
-		public async Task<Models.Result> update_node_provider(Models.UpdateNodeProvider arg0)
+		public async Task<Result> update_node_provider(UpdateNodeProvider arg0)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
 			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "update_node_provider", arg);
-			return reply.ToObjects<Models.Result>(this.Converter);
+			return reply.ToObjects<Result>(this.Converter);
 		}
 	}
 }
@@ -183,7 +183,7 @@ Type File: 'AccountIdentifier'
 
 using System.Collections.Generic;
 
-namespace Test.Models
+namespace Test
 {
 	public class AccountIdentifier
 	{
@@ -203,9 +203,9 @@ namespace Test.Models
 Type File: 'Action'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	[Variant()]
 	public class Action
@@ -266,7 +266,7 @@ Type File: 'AddHotKey'
 
 using EdjCase.ICP.Candid.Models;
 
-namespace Test.Models
+namespace Test
 {
 	public class AddHotKey
 	{
@@ -286,9 +286,9 @@ namespace Test.Models
 Type File: 'AddOrRemoveNodeProvider'
 
 using EdjCase.ICP.Candid.Models;
-using Test.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class AddOrRemoveNodeProvider
 	{
@@ -307,7 +307,7 @@ namespace Test.Models
 
 Type File: 'Amount'
 
-namespace Test.Models
+namespace Test
 {
 	public class Amount
 	{
@@ -329,7 +329,7 @@ Type File: 'ApproveGenesisKyc'
 using System.Collections.Generic;
 using EdjCase.ICP.Candid.Models;
 
-namespace Test.Models
+namespace Test
 {
 	public class ApproveGenesisKyc
 	{
@@ -348,7 +348,7 @@ namespace Test.Models
 
 Type File: 'Ballot'
 
-namespace Test.Models
+namespace Test
 {
 	public class Ballot
 	{
@@ -371,9 +371,9 @@ namespace Test.Models
 Type File: 'BallotInfo'
 
 using EdjCase.ICP.Candid.Models;
-using Test.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class BallotInfo
 	{
@@ -396,9 +396,9 @@ namespace Test.Models
 Type File: 'By'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	[Variant()]
 	public class By
@@ -413,7 +413,7 @@ namespace Test.Models
 
 		public ClaimOrRefreshNeuronFromAccount MemoAndController { get => this.Tag == ByTag.MemoAndController ? (ClaimOrRefreshNeuronFromAccount)this.Value! : default; set => (this.Tag, this.Value) = (ByTag.MemoAndController, value); }
 
-		public ulong Memo { get => this.Tag == ByTag.Memo ? (ulong)this.Value! : default; set => (this.Tag, this.Value) = (ByTag.Memo, value); }
+		public ulong? Memo { get => this.Tag == ByTag.Memo ? (ulong)this.Value! : default; set => (this.Tag, this.Value) = (ByTag.Memo, value); }
 
 		public By(ByTag tag, object value)
 		{
@@ -444,9 +444,9 @@ namespace Test.Models
 Type File: 'Change'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	[Variant()]
 	public class Change
@@ -482,9 +482,9 @@ namespace Test.Models
 Type File: 'ClaimOrRefresh'
 
 using EdjCase.ICP.Candid.Models;
-using Test.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class ClaimOrRefresh
 	{
@@ -505,7 +505,7 @@ Type File: 'ClaimOrRefreshNeuronFromAccount'
 
 using EdjCase.ICP.Candid.Models;
 
-namespace Test.Models
+namespace Test
 {
 	public class ClaimOrRefreshNeuronFromAccount
 	{
@@ -528,9 +528,9 @@ namespace Test.Models
 Type File: 'ClaimOrRefreshNeuronFromAccountResponse'
 
 using EdjCase.ICP.Candid.Models;
-using Test.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class ClaimOrRefreshNeuronFromAccountResponse
 	{
@@ -550,9 +550,9 @@ namespace Test.Models
 Type File: 'ClaimOrRefreshResponse'
 
 using EdjCase.ICP.Candid.Models;
-using Test.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class ClaimOrRefreshResponse
 	{
@@ -572,9 +572,9 @@ namespace Test.Models
 Type File: 'Command'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	[Variant()]
 	public class Command
@@ -637,9 +637,9 @@ namespace Test.Models
 Type File: 'Command_1'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	[Variant()]
 	public class Command_1
@@ -733,9 +733,9 @@ namespace Test.Models
 Type File: 'Command_2'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	[Variant()]
 	public class Command_2
@@ -789,9 +789,9 @@ namespace Test.Models
 Type File: 'Configure'
 
 using EdjCase.ICP.Candid.Models;
-using Test.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class Configure
 	{
@@ -811,9 +811,9 @@ namespace Test.Models
 Type File: 'Disburse'
 
 using EdjCase.ICP.Candid.Models;
-using Test.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class Disburse
 	{
@@ -835,7 +835,7 @@ namespace Test.Models
 
 Type File: 'DisburseResponse'
 
-namespace Test.Models
+namespace Test
 {
 	public class DisburseResponse
 	{
@@ -856,7 +856,7 @@ Type File: 'DisburseToNeuron'
 
 using EdjCase.ICP.Candid.Models;
 
-namespace Test.Models
+namespace Test
 {
 	public class DisburseToNeuron
 	{
@@ -888,9 +888,9 @@ namespace Test.Models
 Type File: 'DissolveState'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	[Variant()]
 	public class DissolveState
@@ -901,9 +901,9 @@ namespace Test.Models
 		[VariantValueProperty()]
 		public object Value { get; set; }
 
-		public ulong DissolveDelaySeconds { get => this.Tag == DissolveStateTag.DissolveDelaySeconds ? (ulong)this.Value! : default; set => (this.Tag, this.Value) = (DissolveStateTag.DissolveDelaySeconds, value); }
+		public ulong? DissolveDelaySeconds { get => this.Tag == DissolveStateTag.DissolveDelaySeconds ? (ulong)this.Value! : default; set => (this.Tag, this.Value) = (DissolveStateTag.DissolveDelaySeconds, value); }
 
-		public ulong WhenDissolvedTimestampSeconds { get => this.Tag == DissolveStateTag.WhenDissolvedTimestampSeconds ? (ulong)this.Value! : default; set => (this.Tag, this.Value) = (DissolveStateTag.WhenDissolvedTimestampSeconds, value); }
+		public ulong? WhenDissolvedTimestampSeconds { get => this.Tag == DissolveStateTag.WhenDissolvedTimestampSeconds ? (ulong)this.Value! : default; set => (this.Tag, this.Value) = (DissolveStateTag.WhenDissolvedTimestampSeconds, value); }
 
 		public DissolveState(DissolveStateTag tag, object value)
 		{
@@ -927,7 +927,7 @@ Type File: 'ExecuteNnsFunction'
 
 using System.Collections.Generic;
 
-namespace Test.Models
+namespace Test
 {
 	public class ExecuteNnsFunction
 	{
@@ -950,9 +950,9 @@ namespace Test.Models
 Type File: 'Follow'
 
 using System.Collections.Generic;
-using Test.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class Follow
 	{
@@ -975,9 +975,9 @@ namespace Test.Models
 Type File: 'Followees'
 
 using System.Collections.Generic;
-using Test.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class Followees
 	{
@@ -997,10 +997,10 @@ namespace Test.Models
 Type File: 'Governance'
 
 using System.Collections.Generic;
-using Test.Models;
+using Test;
 using EdjCase.ICP.Candid.Models;
 
-namespace Test.Models
+namespace Test
 {
 	public class Governance
 	{
@@ -1054,7 +1054,7 @@ Type File: 'GovernanceCachedMetrics'
 
 using System.Collections.Generic;
 
-namespace Test.Models
+namespace Test
 {
 	public class GovernanceCachedMetrics
 	{
@@ -1118,7 +1118,7 @@ namespace Test.Models
 
 Type File: 'GovernanceError'
 
-namespace Test.Models
+namespace Test
 {
 	public class GovernanceError
 	{
@@ -1140,7 +1140,7 @@ namespace Test.Models
 
 Type File: 'IncreaseDissolveDelay'
 
-namespace Test.Models
+namespace Test
 {
 	public class IncreaseDissolveDelay
 	{
@@ -1160,9 +1160,9 @@ namespace Test.Models
 Type File: 'KnownNeuron'
 
 using EdjCase.ICP.Candid.Models;
-using Test.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class KnownNeuron
 	{
@@ -1186,7 +1186,7 @@ Type File: 'KnownNeuronData'
 
 using EdjCase.ICP.Candid.Models;
 
-namespace Test.Models
+namespace Test
 {
 	public class KnownNeuronData
 	{
@@ -1209,9 +1209,9 @@ namespace Test.Models
 Type File: 'ListKnownNeuronsResponse'
 
 using System.Collections.Generic;
-using Test.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class ListKnownNeuronsResponse
 	{
@@ -1232,7 +1232,7 @@ Type File: 'ListNeurons'
 
 using System.Collections.Generic;
 
-namespace Test.Models
+namespace Test
 {
 	public class ListNeurons
 	{
@@ -1255,9 +1255,9 @@ namespace Test.Models
 Type File: 'ListNeuronsResponse'
 
 using System.Collections.Generic;
-using Test.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class ListNeuronsResponse
 	{
@@ -1280,9 +1280,9 @@ namespace Test.Models
 Type File: 'ListNodeProvidersResponse'
 
 using System.Collections.Generic;
-using Test.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class ListNodeProvidersResponse
 	{
@@ -1303,9 +1303,9 @@ Type File: 'ListProposalInfo'
 
 using System.Collections.Generic;
 using EdjCase.ICP.Candid.Models;
-using Test.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class ListProposalInfo
 	{
@@ -1337,9 +1337,9 @@ namespace Test.Models
 Type File: 'ListProposalInfoResponse'
 
 using System.Collections.Generic;
-using Test.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class ListProposalInfoResponse
 	{
@@ -1359,9 +1359,9 @@ namespace Test.Models
 Type File: 'MakeProposalResponse'
 
 using EdjCase.ICP.Candid.Models;
-using Test.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class MakeProposalResponse
 	{
@@ -1381,9 +1381,9 @@ namespace Test.Models
 Type File: 'ManageNeuron'
 
 using EdjCase.ICP.Candid.Models;
-using Test.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class ManageNeuron
 	{
@@ -1409,9 +1409,9 @@ namespace Test.Models
 Type File: 'ManageNeuronResponse'
 
 using EdjCase.ICP.Candid.Models;
-using Test.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class ManageNeuronResponse
 	{
@@ -1431,9 +1431,9 @@ namespace Test.Models
 Type File: 'Merge'
 
 using EdjCase.ICP.Candid.Models;
-using Test.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class Merge
 	{
@@ -1452,7 +1452,7 @@ namespace Test.Models
 
 Type File: 'MergeMaturity'
 
-namespace Test.Models
+namespace Test
 {
 	public class MergeMaturity
 	{
@@ -1471,7 +1471,7 @@ namespace Test.Models
 
 Type File: 'MergeMaturityResponse'
 
-namespace Test.Models
+namespace Test
 {
 	public class MergeMaturityResponse
 	{
@@ -1493,7 +1493,7 @@ namespace Test.Models
 
 Type File: 'Motion'
 
-namespace Test.Models
+namespace Test
 {
 	public class Motion
 	{
@@ -1512,7 +1512,7 @@ namespace Test.Models
 
 Type File: 'NetworkEconomics'
 
-namespace Test.Models
+namespace Test
 {
 	public class NetworkEconomics
 	{
@@ -1553,10 +1553,10 @@ namespace Test.Models
 Type File: 'Neuron'
 
 using EdjCase.ICP.Candid.Models;
-using Test.Models;
+using Test;
 using System.Collections.Generic;
 
-namespace Test.Models
+namespace Test
 {
 	public class Neuron
 	{
@@ -1623,7 +1623,7 @@ namespace Test.Models
 
 Type File: 'NeuronId'
 
-namespace Test.Models
+namespace Test
 {
 	public class NeuronId
 	{
@@ -1643,10 +1643,10 @@ namespace Test.Models
 Type File: 'NeuronIdOrSubaccount'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
+using Test;
 using System.Collections.Generic;
 
-namespace Test.Models
+namespace Test
 {
 	[Variant()]
 	public class NeuronIdOrSubaccount
@@ -1682,9 +1682,9 @@ namespace Test.Models
 Type File: 'NeuronInFlightCommand'
 
 using EdjCase.ICP.Candid.Models;
-using Test.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class NeuronInFlightCommand
 	{
@@ -1707,10 +1707,10 @@ namespace Test.Models
 Type File: 'NeuronInfo'
 
 using System.Collections.Generic;
-using Test.Models;
+using Test;
 using EdjCase.ICP.Candid.Models;
 
-namespace Test.Models
+namespace Test
 {
 	public class NeuronInfo
 	{
@@ -1759,7 +1759,7 @@ Type File: 'NeuronStakeTransfer'
 using System.Collections.Generic;
 using EdjCase.ICP.Candid.Models;
 
-namespace Test.Models
+namespace Test
 {
 	public class NeuronStakeTransfer
 	{
@@ -1797,9 +1797,9 @@ namespace Test.Models
 Type File: 'NodeProvider'
 
 using EdjCase.ICP.Candid.Models;
-using Test.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class NodeProvider
 	{
@@ -1822,9 +1822,9 @@ namespace Test.Models
 Type File: 'Operation'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	[Variant()]
 	public class Operation
@@ -1896,9 +1896,9 @@ namespace Test.Models
 Type File: 'Proposal'
 
 using EdjCase.ICP.Candid.Models;
-using Test.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class Proposal
 	{
@@ -1927,10 +1927,10 @@ namespace Test.Models
 Type File: 'ProposalData'
 
 using EdjCase.ICP.Candid.Models;
-using Test.Models;
+using Test;
 using System.Collections.Generic;
 
-namespace Test.Models
+namespace Test
 {
 	public class ProposalData
 	{
@@ -1986,10 +1986,10 @@ namespace Test.Models
 Type File: 'ProposalInfo'
 
 using EdjCase.ICP.Candid.Models;
-using Test.Models;
+using Test;
 using System.Collections.Generic;
 
-namespace Test.Models
+namespace Test
 {
 	public class ProposalInfo
 	{
@@ -2054,9 +2054,9 @@ namespace Test.Models
 Type File: 'RegisterVote'
 
 using EdjCase.ICP.Candid.Models;
-using Test.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class RegisterVote
 	{
@@ -2080,7 +2080,7 @@ Type File: 'RemoveHotKey'
 
 using EdjCase.ICP.Candid.Models;
 
-namespace Test.Models
+namespace Test
 {
 	public class RemoveHotKey
 	{
@@ -2100,9 +2100,9 @@ namespace Test.Models
 Type File: 'Result'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	[Variant()]
 	public class Result
@@ -2136,9 +2136,9 @@ namespace Test.Models
 Type File: 'Result_1'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	[Variant()]
 	public class Result_1
@@ -2174,9 +2174,9 @@ namespace Test.Models
 Type File: 'Result_2'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	[Variant()]
 	public class Result_2
@@ -2212,9 +2212,9 @@ namespace Test.Models
 Type File: 'Result_3'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	[Variant()]
 	public class Result_3
@@ -2250,9 +2250,9 @@ namespace Test.Models
 Type File: 'Result_4'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	[Variant()]
 	public class Result_4
@@ -2288,9 +2288,9 @@ namespace Test.Models
 Type File: 'Result_5'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	[Variant()]
 	public class Result_5
@@ -2326,9 +2326,9 @@ namespace Test.Models
 Type File: 'RewardEvent'
 
 using System.Collections.Generic;
-using Test.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class RewardEvent
 	{
@@ -2357,9 +2357,9 @@ namespace Test.Models
 Type File: 'RewardMode'
 
 using EdjCase.ICP.Candid.Mapping;
-using Test.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	[Variant()]
 	public class RewardMode
@@ -2395,9 +2395,9 @@ namespace Test.Models
 Type File: 'RewardNodeProvider'
 
 using EdjCase.ICP.Candid.Models;
-using Test.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class RewardNodeProvider
 	{
@@ -2424,9 +2424,9 @@ Type File: 'RewardNodeProviders'
 
 using EdjCase.ICP.Candid.Models;
 using System.Collections.Generic;
-using Test.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class RewardNodeProviders
 	{
@@ -2449,9 +2449,9 @@ namespace Test.Models
 Type File: 'RewardToAccount'
 
 using EdjCase.ICP.Candid.Models;
-using Test.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class RewardToAccount
 	{
@@ -2470,7 +2470,7 @@ namespace Test.Models
 
 Type File: 'RewardToNeuron'
 
-namespace Test.Models
+namespace Test
 {
 	public class RewardToNeuron
 	{
@@ -2490,9 +2490,9 @@ namespace Test.Models
 Type File: 'SetDefaultFollowees'
 
 using System.Collections.Generic;
-using Test.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class SetDefaultFollowees
 	{
@@ -2511,7 +2511,7 @@ namespace Test.Models
 
 Type File: 'SetDissolveTimestamp'
 
-namespace Test.Models
+namespace Test
 {
 	public class SetDissolveTimestamp
 	{
@@ -2532,7 +2532,7 @@ Type File: 'Spawn'
 
 using EdjCase.ICP.Candid.Models;
 
-namespace Test.Models
+namespace Test
 {
 	public class Spawn
 	{
@@ -2558,9 +2558,9 @@ namespace Test.Models
 Type File: 'SpawnResponse'
 
 using EdjCase.ICP.Candid.Models;
-using Test.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class SpawnResponse
 	{
@@ -2579,7 +2579,7 @@ namespace Test.Models
 
 Type File: 'Split'
 
-namespace Test.Models
+namespace Test
 {
 	public class Split
 	{
@@ -2598,7 +2598,7 @@ namespace Test.Models
 
 Type File: 'Tally'
 
-namespace Test.Models
+namespace Test
 {
 	public class Tally
 	{
@@ -2627,9 +2627,9 @@ namespace Test.Models
 Type File: 'UpdateNodeProvider'
 
 using EdjCase.ICP.Candid.Models;
-using Test.Models;
+using Test;
 
-namespace Test.Models
+namespace Test
 {
 	public class UpdateNodeProvider
 	{
@@ -2648,7 +2648,7 @@ namespace Test.Models
 
 Type File: 'WaitForQuietState'
 
-namespace Test.Models
+namespace Test
 {
 	public class WaitForQuietState
 	{
