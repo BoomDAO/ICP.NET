@@ -63,19 +63,15 @@ namespace EdjCase.ICP.Candid
 		public CandidTypedValue FromTypedObject<T>(T obj)
 			where T : notnull
 		{
-			CandidValue value = this.FromObjectInternal(obj, out ICandidValueMapper mapper);
-			CandidType type = mapper.GetMappedCandidType(obj.GetType()) ?? throw new InvalidOperationException("Type does not map");
+			CandidValue value = this.FromObjectInternal<T>(obj, out ICandidValueMapper mapper);
+			CandidType type = mapper.GetMappedCandidType(typeof(T)) ?? throw new InvalidOperationException("Type does not map");
 			return new CandidTypedValue(value, type);
 		}
 
 
-		private CandidValue FromObjectInternal(object obj, out ICandidValueMapper mapper)
+		private CandidValue FromObjectInternal<T>(object obj, out ICandidValueMapper mapper)
 		{
-			if (ReferenceEquals(obj, null))
-			{
-				throw new ArgumentNullException(nameof(obj));
-			}
-			mapper = this.ResolveMapper(obj.GetType());
+			mapper = this.ResolveMapper(typeof(T));
 
 			return mapper!.Map(obj, this);
 		}

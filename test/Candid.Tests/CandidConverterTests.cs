@@ -24,6 +24,7 @@ namespace EdjCase.ICP.Candid.Tests
 			this.Test(value, expected, (x, y) => x == y);
 		}
 
+
 		[Fact]
 		public void Vector_From_List()
 		{
@@ -85,7 +86,7 @@ namespace EdjCase.ICP.Candid.Tests
 		public class RecordClass
 		{
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-			public string StringField { get; set; }
+			public OptionalValue<string> StringField { get; set; }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 			public int IntField { get; set; }
 
@@ -108,21 +109,21 @@ namespace EdjCase.ICP.Candid.Tests
 		{
 			var values = new RecordClass
 			{
-				StringField = "StringValue",
+				StringField = OptionalValue<string>.WithValue("StringValue"),
 				IntField = 2
 			};
 			CandidTag stringFieldName = CandidTag.FromName("StringField");
 			CandidTag intFieldName = CandidTag.FromName("IntField");
 			var fields = new Dictionary<CandidTag, CandidValue>
 			{
-				{stringFieldName, CandidValue.Text("StringValue")},
+				{stringFieldName, new CandidOptional(CandidValue.Text("StringValue"))},
 				{intFieldName, CandidValue.Int32(2)}
 			};
 			CandidValue expectedValue = new CandidRecord(fields);
 
 			var fieldTypes = new Dictionary<CandidTag, CandidType>
 			{
-				{stringFieldName, new CandidPrimitiveType(PrimitiveType.Text)},
+				{stringFieldName, new CandidOptionalType(new CandidPrimitiveType(PrimitiveType.Text))},
 				{intFieldName, new CandidPrimitiveType(PrimitiveType.Int32)}
 			};
 			CandidType expectedType = new CandidRecordType(fieldTypes);
@@ -133,6 +134,34 @@ namespace EdjCase.ICP.Candid.Tests
 				return x.IntField == y.IntField
 					&& x.StringField == y.StringField;
 			});
+		}
+
+
+		[Fact]
+		public void Parital_Record_From_Class()
+		{
+			// Deserialize a record with a missing opt field, the value should be a 'NoValue' opt
+			CandidTag stringFieldName = CandidTag.FromName("StringField");
+			CandidTag intFieldName = CandidTag.FromName("IntField");
+			var fields = new Dictionary<CandidTag, CandidValue>
+			{
+				// Missing string field
+				{intFieldName, CandidValue.Int32(2)}
+			};
+			CandidValue value = new CandidRecord(fields);
+
+			var fieldTypes = new Dictionary<CandidTag, CandidType>
+			{
+				{stringFieldName, new CandidOptionalType(new CandidPrimitiveType(PrimitiveType.Text))},
+				{intFieldName, new CandidPrimitiveType(PrimitiveType.Int32)}
+			};
+			CandidType type = new CandidRecordType(fieldTypes);
+			CandidTypedValue typedValue = CandidTypedValue.FromValueAndType(value, type);
+
+
+			RecordClass obj = CandidConverter.Default.ToObject<RecordClass>(value);
+			Assert.NotNull(obj);
+			Assert.Equal(new OptionalValue<string>(), obj.StringField);
 		}
 
 
