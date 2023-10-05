@@ -182,8 +182,8 @@ incompatibilities.
     var bls = new WebGlBlsCrytography();
     var agent = new HttpAgent(client, bls: bls);
     ```
-    In addition, the `bls.js` file located in `{icp.net base dir}/UnityAssets/` needs to be included in the Unity project and referenced by the HTML page
+    In addition, the `noble-curves.js` file located [HERE](`https://github.com/paulmillr/noble-curves/releases/tag/1.2.0`) needs to be included in the Unity project and referenced by the HTML page
     ```html
-    <script src="{path_to_dir}/bls.js"/>
+    <script src="{path_to_dir}/noble-curves.js"/>
     ```
     That will load in the JS bls library that will be referenced by the `Bls.jslib` that is included in the ICP.NET unity package
