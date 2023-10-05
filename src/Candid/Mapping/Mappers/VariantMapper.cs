@@ -69,9 +69,13 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 
 
 			CandidValue innerValue;
-			if (optionInfo.Type != null)
+			if (innerObj == null)
 			{
-				innerValue = converter.FromObject(innerObj!);
+				innerValue = new CandidOptional(null);
+			}
+			else if (optionInfo.Type != null)
+			{
+				innerValue = converter.FromObject(innerObj);
 			}
 			else
 			{

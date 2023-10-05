@@ -3,14 +3,13 @@ using EdjCase.ICP.Candid.Models.Values;
 using EdjCase.ICP.Candid.Models;
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 
 namespace EdjCase.ICP.Candid.Mapping.Mappers
 {
 
 	internal class RecordMapper : ICandidValueMapper
 	{
-		public CandidType CandidType { get; }
+		public CandidRecordType CandidType { get; }
 		public Type Type { get; }
 		public Dictionary<CandidTag, PropertyMetaData> Properties { get; }
 
@@ -27,11 +26,23 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 			object obj = Activator.CreateInstance(this.Type);
 			foreach ((CandidTag tag, PropertyMetaData property) in this.Properties)
 			{
+				object? fieldValue;
 				if (!record.Fields.TryGetValue(tag, out CandidValue fieldCandidValue))
 				{
-					throw new Exception($"Could not map candid record to type '{this.Type}'. Record is missing field '{tag}'");
+					if (!this.CandidType.Fields.TryGetValue(tag, out CandidType fieldType))
+					{
+						// Record has property that is not in the candid type, skip
+						continue;
+					}
+					if (fieldType is not CandidOptionalType)
+					{
+						// Only throw if fieldType is not an opt value since the value is unset (null)
+						// or has an extra
+						throw new Exception($"Could not map candid record to type '{this.Type}'. Record is missing field '{tag}'");
+					}
+					// Set to optional value if not specified in record
+					fieldCandidValue = new CandidOptional(null);
 				}
-				object? fieldValue;
 				if (property.CustomMapper != null)
 				{
 					fieldValue = property.CustomMapper.Map(fieldCandidValue, converter);
@@ -52,7 +63,11 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 			{
 				object propValue = property.PropertyInfo.GetValue(value);
 				CandidValue v;
-				if (property.CustomMapper != null)
+				if (propValue == null)
+				{
+					v = new CandidOptional(null);
+				}
+				else if (property.CustomMapper != null)
 				{
 					v = property.CustomMapper.Map(propValue, converter);
 				}
