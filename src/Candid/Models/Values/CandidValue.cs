@@ -578,6 +578,22 @@ namespace EdjCase.ICP.Candid.Models.Values
 			return new CandidPrimitive(PrimitiveType.Empty, null);
 		}
 
+		internal static T DereferenceType<T>(
+			CandidType type,
+			Func<CandidId, CandidCompoundType> getReferencedType)
+			where T : CandidType
+		{
+			if (type is CandidReferenceType r)
+			{
+				type = getReferencedType(r.Id);
+			}
+			if (type is T t)
+			{
+				return t;
+			}
+			throw new Exception($"Expected type {typeof(T)} but got {type}. Candid value and type definition are incompatible.");
+		}
+
 		private T As<T>(CandidValueType type)
 			where T : CandidValue
 		{

@@ -432,6 +432,7 @@ namespace EdjCase.ICP.Candid.Tests
 			Assert.Equal(expectedArg, actualArg);
 		}
 
+
 		[Fact]
 		public void EncodeDecode_1()
 		{

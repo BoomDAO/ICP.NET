@@ -26,17 +26,13 @@ namespace EdjCase.ICP.Candid.Models.Values
 		}
 
 		/// <inheritdoc />
-		internal override void EncodeValue(CandidType type, Func<CandidId, CandidCompoundType> getReferencedType, IBufferWriter<byte> destination)
+		internal override void EncodeValue(
+			CandidType type,
+			Func<CandidId, CandidCompoundType> getReferencedType,
+			IBufferWriter<byte> destination
+		)
 		{
-			CandidOptionalType t;
-			if (type is CandidReferenceType r)
-			{
-				t = (CandidOptionalType)getReferencedType(r.Id);
-			}
-			else
-			{
-				t = (CandidOptionalType)type;
-			}
+			CandidOptionalType t = DereferenceType<CandidOptionalType>(type, getReferencedType);
 			if (this.Value.Type == CandidValueType.Primitive
 				&& this.Value.AsPrimitive().ValueType == PrimitiveType.Null)
 			{
@@ -46,6 +42,7 @@ namespace EdjCase.ICP.Candid.Models.Values
 			destination.WriteOne<byte>(1); // Encode not null
 			this.Value.EncodeValue(t.Value, getReferencedType, destination);
 		}
+
 
 		/// <inheritdoc />
 		public override int GetHashCode()

@@ -46,15 +46,7 @@ namespace EdjCase.ICP.Candid.Models.Values
 				destination.WriteOne<byte>(0);
 				return;
 			}
-			CandidFuncType t;
-			if (type is CandidReferenceType r)
-			{
-				t = (CandidFuncType)getReferencedType(r.Id);
-			}
-			else
-			{
-				t = (CandidFuncType)type;
-			}
+			CandidFuncType t = DereferenceType<CandidFuncType>(type, getReferencedType);
 			(CandidService service, string method) = this.serviceInfo!.Value;
 			destination.WriteOne<byte>(1); // Encode bit to indicate it is not opaque
 			service.EncodeValue(t, getReferencedType, destination); // Encode value

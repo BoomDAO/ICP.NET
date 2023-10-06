@@ -13,6 +13,11 @@ namespace EdjCase.ICP.Candid
 	public class CandidConverterOptions
 	{
 		/// <summary>
+		/// If true, will use treat OptionalValue types as opt in candid 
+		/// otherwise will treat all nullable/class types opt in candid
+		/// </summary>
+		public bool UseOptionalValue { get; set; } = true;
+		/// <summary>
 		/// List of custom mappers to use instead of the default mappers provided.
 		/// Order does matter, FIFO
 		/// </summary>

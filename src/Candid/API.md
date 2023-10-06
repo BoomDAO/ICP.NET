@@ -46,6 +46,7 @@
   - [ToOptionalObject\`\`1(value)](#M-EdjCase-ICP-Candid-CandidConverter-ToOptionalObject``1-EdjCase-ICP-Candid-Models-Values-CandidOptional- 'EdjCase.ICP.Candid.CandidConverter.ToOptionalObject``1(EdjCase.ICP.Candid.Models.Values.CandidOptional)')
 - [CandidConverterOptions](#T-EdjCase-ICP-Candid-CandidConverterOptions 'EdjCase.ICP.Candid.CandidConverterOptions')
   - [CustomMappers](#P-EdjCase-ICP-Candid-CandidConverterOptions-CustomMappers 'EdjCase.ICP.Candid.CandidConverterOptions.CustomMappers')
+  - [UseOptionalValue](#P-EdjCase-ICP-Candid-CandidConverterOptions-UseOptionalValue 'EdjCase.ICP.Candid.CandidConverterOptions.UseOptionalValue')
   - [AddCustomMapper(mapper)](#M-EdjCase-ICP-Candid-CandidConverterOptions-AddCustomMapper-EdjCase-ICP-Candid-Mapping-ICandidValueMapper- 'EdjCase.ICP.Candid.CandidConverterOptions.AddCustomMapper(EdjCase.ICP.Candid.Mapping.ICandidValueMapper)')
   - [AddCustomMapper\`\`1()](#M-EdjCase-ICP-Candid-CandidConverterOptions-AddCustomMapper``1 'EdjCase.ICP.Candid.CandidConverterOptions.AddCustomMapper``1')
 - [CandidDecodingException](#T-EdjCase-ICP-Candid-Exceptions-CandidDecodingException 'EdjCase.ICP.Candid.Exceptions.CandidDecodingException')
@@ -1382,6 +1383,14 @@ Options for configuring how candid is convertered
 
 List of custom mappers to use instead of the default mappers provided.
 Order does matter, FIFO
+
+<a name='P-EdjCase-ICP-Candid-CandidConverterOptions-UseOptionalValue'></a>
+### UseOptionalValue `property`
+
+##### Summary
+
+If true, will use treat OptionalValue types as opt in candid 
+otherwise will treat all nullable/class types opt in candid
 
 <a name='M-EdjCase-ICP-Candid-CandidConverterOptions-AddCustomMapper-EdjCase-ICP-Candid-Mapping-ICandidValueMapper-'></a>
 ### AddCustomMapper(mapper) `method`

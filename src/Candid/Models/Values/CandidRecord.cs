@@ -154,15 +154,7 @@ namespace EdjCase.ICP.Candid.Models.Values
 		/// <inheritdoc />
 		internal override void EncodeValue(CandidType type, Func<CandidId, CandidCompoundType> getReferencedType, IBufferWriter<byte> destination)
 		{
-			CandidRecordType t;
-			if (type is CandidReferenceType r)
-			{
-				t = (CandidRecordType)getReferencedType(r.Id);
-			}
-			else
-			{
-				t = (CandidRecordType)type;
-			}
+			CandidRecordType t = DereferenceType<CandidRecordType>(type, getReferencedType);
 			// bytes = ordered keys by hash hashes added together
 			foreach(var f in t.Fields.OrderBy(l => l.Key))
 			{
