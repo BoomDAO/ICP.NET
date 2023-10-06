@@ -152,7 +152,7 @@ namespace EdjCase.ICP.Candid
 
 			return mapper == null
 				// Create a dynamic mapper if no custom one
-				? DefaultMapperFactory.Build(type)
+				? DefaultMapperFactory.Build(type, this._options.UseOptionalValue)
 				: mapper;
 		}
 

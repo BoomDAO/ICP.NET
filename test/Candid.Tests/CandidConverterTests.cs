@@ -137,18 +137,32 @@ namespace EdjCase.ICP.Candid.Tests
 		}
 
 
+		public class RecordNullableFieldClass
+		{
+			public string? StringField { get; set; }
+			public int IntField { get; set; }
+
+			public override bool Equals(object? obj)
+			{
+				if (obj is not RecordNullableFieldClass r)
+				{
+					return false;
+				}
+				return this.StringField == r.StringField && this.IntField == r.IntField;
+			}
+
+			public override int GetHashCode()
+			{
+				return HashCode.Combine(this.StringField, this.IntField);
+			}
+		}
+
 		[Fact]
 		public void Parital_Record_From_Class()
 		{
 			// Deserialize a record with a missing opt field, the value should be a 'NoValue' opt
 			CandidTag stringFieldName = CandidTag.FromName("StringField");
 			CandidTag intFieldName = CandidTag.FromName("IntField");
-			var fields = new Dictionary<CandidTag, CandidValue>
-			{
-				// Missing string field
-				{intFieldName, CandidValue.Int32(2)}
-			};
-			CandidValue value = new CandidRecord(fields);
 
 			var fieldTypes = new Dictionary<CandidTag, CandidType>
 			{
@@ -156,12 +170,34 @@ namespace EdjCase.ICP.Candid.Tests
 				{intFieldName, new CandidPrimitiveType(PrimitiveType.Int32)}
 			};
 			CandidType type = new CandidRecordType(fieldTypes);
-			CandidTypedValue typedValue = CandidTypedValue.FromValueAndType(value, type);
 
+			CandidConverter converter = new CandidConverter(
+				new CandidConverterOptions
+				{
+					UseOptionalValue = false
+				}
+			);
+			CandidTypedValue typedValue = converter.FromTypedObject(new RecordNullableFieldClass
+			{
+				IntField = 1,
+				StringField = "Test"
+			});
+			CandidRecordType candidType = Assert.IsType<CandidRecordType>(typedValue.Type);
+			Assert.IsType<CandidOptionalType>(candidType.Fields["StringField"]);
 
-			RecordClass obj = CandidConverter.Default.ToObject<RecordClass>(value);
+			RecordNullableFieldClass obj = converter.ToObject<RecordNullableFieldClass>(typedValue.Value);
 			Assert.NotNull(obj);
-			Assert.Equal(new OptionalValue<string>(), obj.StringField);
+			Assert.Equal("Test", obj.StringField);
+
+			var fields = new Dictionary<CandidTag, CandidValue>
+			{
+				{stringFieldName, CandidValue.Null()},
+				{intFieldName, CandidValue.Int32(2)}
+			};
+			CandidValue valueWithNull = new CandidRecord(fields);
+			RecordNullableFieldClass obj2 = converter.ToObject<RecordNullableFieldClass>(valueWithNull);
+			Assert.NotNull(obj2);
+			Assert.Null(obj2.StringField);
 		}
 
 
