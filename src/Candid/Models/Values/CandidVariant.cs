@@ -36,15 +36,7 @@ namespace EdjCase.ICP.Candid.Models.Values
 		/// <inheritdoc />
 		internal override void EncodeValue(CandidType type, Func<CandidId, CandidCompoundType> getReferencedType, IBufferWriter<byte> destination)
 		{
-			CandidVariantType t;
-			if (type is CandidReferenceType r)
-			{
-				t = (CandidVariantType)getReferencedType(r.Id);
-			}
-			else
-			{
-				t = (CandidVariantType)type;
-			}
+			CandidVariantType t = DereferenceType<CandidVariantType>(type, getReferencedType);
 			// Order the options by key and get the index of the variant option
 			// This is used for encoding vs the tag value
 			uint optionIndex = 0;

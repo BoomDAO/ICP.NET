@@ -30,7 +30,8 @@ namespace EdjCase.ICP.Candid.Mapping
 		public ResolvedTypeInfo(
 			Type objType,
 			CandidType candidType,
-			ICandidValueMapper mapper)
+			ICandidValueMapper mapper
+		)
 		{
 			this.ObjType = objType;
 			this.CandidType = candidType;
@@ -66,14 +67,18 @@ namespace EdjCase.ICP.Candid.Mapping
 
 	internal static class DefaultMapperFactory
 	{
-		public static ICandidValueMapper Build(Type objType)
+		public static ICandidValueMapper Build(Type objType, bool useOptionalValue)
 		{
 			Dictionary<Type, CandidType> resolvedDependencies = new();
 
-			return ResolveDependencies(objType, resolvedDependencies);
+			return ResolveDependencies(objType, resolvedDependencies, useOptionalValue);
 		}
 
-		private static ICandidValueMapper ResolveDependencies(Type objType, Dictionary<Type, CandidType> resolvedDependencies)
+		private static ICandidValueMapper ResolveDependencies(
+			Type objType,
+			Dictionary<Type, CandidType> resolvedDependencies,
+			bool useOptionalValue
+		)
 		{
 			IResolvableTypeInfo info = BuildTypeInfo(objType);
 
@@ -89,11 +94,25 @@ namespace EdjCase.ICP.Candid.Mapping
 						// Skip already resolved dependencies
 						continue;
 					}
-					ResolveDependencies(depType, resolvedDependencies);
+					ResolveDependencies(depType, resolvedDependencies, useOptionalValue);
 				}
 			}
 
 			(ICandidValueMapper objectMapper, CandidType type) = info.Resolve(resolvedDependencies);
+			if (!useOptionalValue)
+			{
+				bool isOptionalValue = info.ObjType.IsGenericType
+					&& info.ObjType.GetGenericTypeDefinition() == typeof(OptionalValue<>);
+				if (!isOptionalValue && !info.ObjType.IsValueType)
+				{
+					// If type is nullable, not OptionalValue<T> and has the 
+					// useOptionalValue as false, then treat each nullable type
+					// as an opt in candid
+					objectMapper = new NullableValueMapper(objectMapper);
+					type = new CandidOptionalType(type);
+				}
+			}
+			
 			resolvedDependencies[objType] = type;
 			return objectMapper;
 		}

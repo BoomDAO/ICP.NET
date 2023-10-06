@@ -433,6 +433,50 @@ namespace EdjCase.ICP.Candid.Tests
 		}
 
 		[Fact]
+		public void Encode_Record_Nullable()
+		{
+			//4449444C Magic header
+			//02 2 types -- Compound Types start
+			//6E Opt #0
+			//71 text
+			//6C Record #1
+			//01 record length
+			//A1B7D99903 'nullable'
+			//00 Ref #0
+			//01 Arg count -- Arg types start
+			//01 Ref #1
+			//00 Opt does not have value
+			const string actualHex = "4449444C026E716C01A1B7D9990300010100";
+
+			var value1 = new CandidRecord(new Dictionary<CandidTag, CandidValue>
+			{
+				{
+					CandidTag.FromName("nullable"),
+					new CandidOptional(null)
+				}
+			});
+			var type = new CandidRecordType(new Dictionary<CandidTag, CandidType>
+			{
+				{
+					CandidTag.FromName("nullable"),
+					CandidType.Text()
+				}
+			});
+			var expectedArg = CandidArg.FromCandid(new List<CandidTypedValue>
+			{
+				CandidTypedValue.FromValueAndType(value1, type)
+			});
+
+			byte[] actualBytes = Convert.FromHexString(actualHex);
+			CandidArg actualArg = CandidArg.FromBytes(actualBytes);
+
+			string expectedHex = Convert.ToHexString(expectedArg.Encode());
+
+			Assert.Equal(actualHex, expectedHex);
+			Assert.Equal(expectedArg, actualArg);
+		}
+
+		[Fact]
 		public void EncodeDecode_1()
 		{
 			var content = new CandidRecord(new Dictionary<CandidTag, CandidValue>

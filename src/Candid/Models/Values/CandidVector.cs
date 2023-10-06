@@ -35,15 +35,7 @@ namespace EdjCase.ICP.Candid.Models.Values
 		/// <inheritdoc />
 		internal override void EncodeValue(CandidType type, Func<CandidId, CandidCompoundType> getReferencedType, IBufferWriter<byte> destination)
 		{
-			CandidVectorType t;
-			if (type is CandidReferenceType r)
-			{
-				t = (CandidVectorType)getReferencedType(r.Id);
-			}
-			else
-			{
-				t = (CandidVectorType)type;
-			}
+			CandidVectorType t = DereferenceType<CandidVectorType>(type, getReferencedType);
 			LEB128.EncodeSigned(this.Values.Length, destination); // Encode vector length
 			foreach (CandidValue value in this.Values)
 			{
