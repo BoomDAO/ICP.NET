@@ -67,17 +67,16 @@ namespace EdjCase.ICP.Candid.Mapping
 
 	internal static class DefaultMapperFactory
 	{
-		public static ICandidValueMapper Build(Type objType, bool useOptionalValue)
+		public static ICandidValueMapper Build(Type objType)
 		{
 			Dictionary<Type, CandidType> resolvedDependencies = new();
 
-			return ResolveDependencies(objType, resolvedDependencies, useOptionalValue);
+			return ResolveDependencies(objType, resolvedDependencies);
 		}
 
 		private static ICandidValueMapper ResolveDependencies(
 			Type objType,
-			Dictionary<Type, CandidType> resolvedDependencies,
-			bool useOptionalValue
+			Dictionary<Type, CandidType> resolvedDependencies
 		)
 		{
 			IResolvableTypeInfo info = BuildTypeInfo(objType);
@@ -94,25 +93,12 @@ namespace EdjCase.ICP.Candid.Mapping
 						// Skip already resolved dependencies
 						continue;
 					}
-					ResolveDependencies(depType, resolvedDependencies, useOptionalValue);
+					ResolveDependencies(depType, resolvedDependencies);
 				}
 			}
 
 			(ICandidValueMapper objectMapper, CandidType type) = info.Resolve(resolvedDependencies);
-			if (!useOptionalValue)
-			{
-				bool isOptionalValue = info.ObjType.IsGenericType
-					&& info.ObjType.GetGenericTypeDefinition() == typeof(OptionalValue<>);
-				if (!isOptionalValue && !info.ObjType.IsValueType)
-				{
-					// If type is nullable, not OptionalValue<T> and has the 
-					// useOptionalValue as false, then treat each nullable type
-					// as an opt in candid
-					objectMapper = new NullableValueMapper(objectMapper);
-					type = new CandidOptionalType(type);
-				}
-			}
-			
+
 			resolvedDependencies[objType] = type;
 			return objectMapper;
 		}
@@ -285,7 +271,7 @@ namespace EdjCase.ICP.Candid.Mapping
 			}
 
 			// Enum variant
-			if(objType.IsEnum)
+			if (objType.IsEnum)
 			{
 				return BuildEnumVariant(objType);
 			}
@@ -420,7 +406,7 @@ namespace EdjCase.ICP.Candid.Mapping
 			{
 				CandidType keyCandidType = resolvedMappings[keyType];
 				CandidType valueCandidType = resolvedMappings[valueType];
-				Dictionary<CandidTag, CandidType> fields  = new()
+				Dictionary<CandidTag, CandidType> fields = new()
 				{
 					[0] = keyCandidType,
 					[1] = valueCandidType
@@ -492,7 +478,7 @@ namespace EdjCase.ICP.Candid.Mapping
 				);
 
 			var optionTypes = new Dictionary<CandidTag, Type>();
-			foreach(MethodInfo classMethod in objType.GetMethods(BindingFlags.Instance | BindingFlags.Public))
+			foreach (MethodInfo classMethod in objType.GetMethods(BindingFlags.Instance | BindingFlags.Public))
 			{
 				CandidTag tag;
 				var optionAttribute = classMethod.GetCustomAttribute<VariantOptionAttribute>();
@@ -508,12 +494,12 @@ namespace EdjCase.ICP.Candid.Mapping
 				{
 					continue;
 				}
-				
+
 				optionTypes.Add(tag, classMethod.ReturnType);
 			}
-			foreach(PropertyInfo property in properties)
+			foreach (PropertyInfo property in properties)
 			{
-				if(property == variantTagProperty || property == valueProperty)
+				if (property == variantTagProperty || property == valueProperty)
 				{
 					// Skip tag and value properties
 					continue;
@@ -633,11 +619,12 @@ namespace EdjCase.ICP.Candid.Mapping
 				{
 					tag = CandidTag.FromName(property.Name);
 				}
-				PropertyMetaData propertyMetaData = new(property, CustomMapper: null); // TODO attribute custom mapper
+				CandidOptionalAttribute? optionalAttribute = property.GetCustomAttribute<CandidOptionalAttribute>();
+				bool useOptionalOverride = optionalAttribute != null;
+				PropertyMetaData propertyMetaData = new(property, useOptionalOverride);
 				propertyMetaDataMap.Add(tag, propertyMetaData);
 			}
 			List<Type> dependencies = propertyMetaDataMap
-				.Where(p => p.Value.CustomMapper == null) // Only resolve the ones that need to
 				.Select(p => p.Value.PropertyInfo.PropertyType)
 				.ToList();
 			return new ComplexTypeInfo(objType, dependencies, (resolvedMappings) =>
@@ -647,16 +634,13 @@ namespace EdjCase.ICP.Candid.Mapping
 						p => p.Key,
 						p =>
 						{
-							if (p.Value.CustomMapper != null)
+							CandidType type = resolvedMappings[p.Value.PropertyInfo.PropertyType];
+							if (p.Value.UseOptionalOverride)
 							{
-								CandidType? type = p.Value.CustomMapper!.GetMappedCandidType(p.Value.PropertyInfo.PropertyType);
-								if (type == null)
-								{
-									throw new InvalidOperationException($"Property '{p.Value.PropertyInfo.Name}' given incompatible candid value mapper");
-								}
-								return type;
+								// Property is really optional type
+								type = new CandidOptionalType(type);
 							}
-							return resolvedMappings[p.Value.PropertyInfo.PropertyType];
+							return type;
 						}
 					);
 				CandidRecordType type = new CandidRecordType(fieldTypes);
@@ -668,7 +652,7 @@ namespace EdjCase.ICP.Candid.Mapping
 	}
 	internal record PropertyMetaData(
 		PropertyInfo PropertyInfo,
-		ICandidValueMapper? CustomMapper
+		bool UseOptionalOverride
 	);
 
 

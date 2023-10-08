@@ -34,7 +34,7 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 						// Record has property that is not in the candid type, skip
 						continue;
 					}
-					if (fieldType is not CandidOptionalType)
+					if (fieldType is not CandidOptionalType && !property.UseOptionalOverride)
 					{
 						// Only throw if fieldType is not an opt value since the value is unset (null)
 						// or has an extra
@@ -43,14 +43,7 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 					// Set to optional value if not specified in record
 					fieldCandidValue = new CandidOptional(null);
 				}
-				if (property.CustomMapper != null)
-				{
-					fieldValue = property.CustomMapper.Map(fieldCandidValue, converter);
-				}
-				else
-				{
-					fieldValue = converter.ToObject(property.PropertyInfo.PropertyType, fieldCandidValue);
-				}
+				fieldValue = converter.ToObject(property.PropertyInfo.PropertyType, fieldCandidValue);
 				property.PropertyInfo.SetValue(obj, fieldValue);
 			}
 			return obj;
@@ -61,19 +54,20 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 			Dictionary<CandidTag, CandidValue> fields = new();
 			foreach ((CandidTag tag, PropertyMetaData property) in this.Properties)
 			{
-				object propValue = property.PropertyInfo.GetValue(value);
+				object? propValue = property.PropertyInfo.GetValue(value);
 				CandidValue v;
 				if (propValue == null)
 				{
 					v = new CandidOptional(null);
 				}
-				else if (property.CustomMapper != null)
-				{
-					v = property.CustomMapper.Map(propValue, converter);
-				}
 				else
 				{
 					v = converter.FromObject(propValue);
+					if (property.UseOptionalOverride)
+					{
+						// Wrap in candid optional if has override [CandidOptional]
+						v = new CandidOptional(v);
+					}
 				}
 				fields.Add(tag, v);
 			}

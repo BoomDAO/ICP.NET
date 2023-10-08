@@ -56,6 +56,16 @@ namespace EdjCase.ICP.Candid.Mapping
 	}
 
 	/// <summary>
+	/// An attribute to use the raw nullable value vs OptionalValue type
+	/// E.g. OptionalValue of string, can be a string with this attribute
+	/// </summary>
+	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
+	public class CandidOptionalAttribute : Attribute
+	{
+
+	}
+
+	/// <summary>
 	/// An attribute to put on a class to identify it as a variant type for serialization.
 	/// Requires the use of `VariantTagPropertyAttribute`, `VariantOptionTypeAttribute` and
 	/// `VariantValuePropertyAttribute` attributes if used
