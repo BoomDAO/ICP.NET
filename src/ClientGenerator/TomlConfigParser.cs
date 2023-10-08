@@ -65,7 +65,6 @@ namespace EdjCase.ICP.ClientGenerator
 						featureNullable: clientOptions.FeatureNullable ?? true,
 						variantsUseProperties: clientOptions.VariantsUseProperties ?? false,
 						keepCandidCase: clientOptions.KeepCandidCase ?? false,
-						useOptionalValue: clientOptions.UseOptionalValue ?? true,
 						boundryNodeUrl: clientOptions.BaseUrl,
 						types: clientOptions.Types
 					);

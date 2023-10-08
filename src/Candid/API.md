@@ -46,7 +46,6 @@
   - [ToOptionalObject\`\`1(value)](#M-EdjCase-ICP-Candid-CandidConverter-ToOptionalObject``1-EdjCase-ICP-Candid-Models-Values-CandidOptional- 'EdjCase.ICP.Candid.CandidConverter.ToOptionalObject``1(EdjCase.ICP.Candid.Models.Values.CandidOptional)')
 - [CandidConverterOptions](#T-EdjCase-ICP-Candid-CandidConverterOptions 'EdjCase.ICP.Candid.CandidConverterOptions')
   - [CustomMappers](#P-EdjCase-ICP-Candid-CandidConverterOptions-CustomMappers 'EdjCase.ICP.Candid.CandidConverterOptions.CustomMappers')
-  - [UseOptionalValue](#P-EdjCase-ICP-Candid-CandidConverterOptions-UseOptionalValue 'EdjCase.ICP.Candid.CandidConverterOptions.UseOptionalValue')
   - [AddCustomMapper(mapper)](#M-EdjCase-ICP-Candid-CandidConverterOptions-AddCustomMapper-EdjCase-ICP-Candid-Mapping-ICandidValueMapper- 'EdjCase.ICP.Candid.CandidConverterOptions.AddCustomMapper(EdjCase.ICP.Candid.Mapping.ICandidValueMapper)')
   - [AddCustomMapper\`\`1()](#M-EdjCase-ICP-Candid-CandidConverterOptions-AddCustomMapper``1 'EdjCase.ICP.Candid.CandidConverterOptions.AddCustomMapper``1')
 - [CandidDecodingException](#T-EdjCase-ICP-Candid-Exceptions-CandidDecodingException 'EdjCase.ICP.Candid.Exceptions.CandidDecodingException')
@@ -96,6 +95,7 @@
   - [Equals()](#M-EdjCase-ICP-Candid-Models-Values-CandidOptional-Equals-EdjCase-ICP-Candid-Models-Values-CandidValue- 'EdjCase.ICP.Candid.Models.Values.CandidOptional.Equals(EdjCase.ICP.Candid.Models.Values.CandidValue)')
   - [GetHashCode()](#M-EdjCase-ICP-Candid-Models-Values-CandidOptional-GetHashCode 'EdjCase.ICP.Candid.Models.Values.CandidOptional.GetHashCode')
   - [ToString()](#M-EdjCase-ICP-Candid-Models-Values-CandidOptional-ToString 'EdjCase.ICP.Candid.Models.Values.CandidOptional.ToString')
+- [CandidOptionalAttribute](#T-EdjCase-ICP-Candid-Mapping-CandidOptionalAttribute 'EdjCase.ICP.Candid.Mapping.CandidOptionalAttribute')
 - [CandidOptionalType](#T-EdjCase-ICP-Candid-Models-Types-CandidOptionalType 'EdjCase.ICP.Candid.Models.Types.CandidOptionalType')
   - [#ctor(value,recursiveId)](#M-EdjCase-ICP-Candid-Models-Types-CandidOptionalType-#ctor-EdjCase-ICP-Candid-Models-Types-CandidType,EdjCase-ICP-Candid-Models-CandidId- 'EdjCase.ICP.Candid.Models.Types.CandidOptionalType.#ctor(EdjCase.ICP.Candid.Models.Types.CandidType,EdjCase.ICP.Candid.Models.CandidId)')
   - [Type](#P-EdjCase-ICP-Candid-Models-Types-CandidOptionalType-Type 'EdjCase.ICP.Candid.Models.Types.CandidOptionalType.Type')
@@ -1384,14 +1384,6 @@ Options for configuring how candid is convertered
 List of custom mappers to use instead of the default mappers provided.
 Order does matter, FIFO
 
-<a name='P-EdjCase-ICP-Candid-CandidConverterOptions-UseOptionalValue'></a>
-### UseOptionalValue `property`
-
-##### Summary
-
-If true, will use treat OptionalValue types as opt in candid 
-otherwise will treat all nullable/class types opt in candid
-
 <a name='M-EdjCase-ICP-Candid-CandidConverterOptions-AddCustomMapper-EdjCase-ICP-Candid-Mapping-ICandidValueMapper-'></a>
 ### AddCustomMapper(mapper) `method`
 
@@ -1917,6 +1909,18 @@ This method has no parameters.
 ##### Parameters
 
 This method has no parameters.
+
+<a name='T-EdjCase-ICP-Candid-Mapping-CandidOptionalAttribute'></a>
+## CandidOptionalAttribute `type`
+
+##### Namespace
+
+EdjCase.ICP.Candid.Mapping
+
+##### Summary
+
+An attribute to use the raw nullable value vs OptionalValue type
+E.g. OptionalValue of string, can be a string with this attribute
 
 <a name='T-EdjCase-ICP-Candid-Models-Types-CandidOptionalType'></a>
 ## CandidOptionalType `type`

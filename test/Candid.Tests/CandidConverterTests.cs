@@ -157,48 +157,6 @@ namespace EdjCase.ICP.Candid.Tests
 			}
 		}
 
-		[Fact]
-		public void Parital_Record_From_Class()
-		{
-			// Deserialize a record with a missing opt field, the value should be a 'NoValue' opt
-			CandidTag stringFieldName = CandidTag.FromName("StringField");
-			CandidTag intFieldName = CandidTag.FromName("IntField");
-
-			var fieldTypes = new Dictionary<CandidTag, CandidType>
-			{
-				{stringFieldName, new CandidOptionalType(new CandidPrimitiveType(PrimitiveType.Text))},
-				{intFieldName, new CandidPrimitiveType(PrimitiveType.Int32)}
-			};
-			CandidType type = new CandidRecordType(fieldTypes);
-
-			CandidConverter converter = new CandidConverter(
-				new CandidConverterOptions
-				{
-					UseOptionalValue = false
-				}
-			);
-			CandidTypedValue typedValue = converter.FromTypedObject(new RecordNullableFieldClass
-			{
-				IntField = 1,
-				StringField = "Test"
-			});
-			CandidRecordType candidType = Assert.IsType<CandidRecordType>(typedValue.Type);
-			Assert.IsType<CandidOptionalType>(candidType.Fields["StringField"]);
-
-			RecordNullableFieldClass obj = converter.ToObject<RecordNullableFieldClass>(typedValue.Value);
-			Assert.NotNull(obj);
-			Assert.Equal("Test", obj.StringField);
-
-			var fields = new Dictionary<CandidTag, CandidValue>
-			{
-				{stringFieldName, CandidValue.Null()},
-				{intFieldName, CandidValue.Int32(2)}
-			};
-			CandidValue valueWithNull = new CandidRecord(fields);
-			RecordNullableFieldClass obj2 = converter.ToObject<RecordNullableFieldClass>(valueWithNull);
-			Assert.NotNull(obj2);
-			Assert.Null(obj2.StringField);
-		}
 
 
 
@@ -334,7 +292,7 @@ namespace EdjCase.ICP.Candid.Tests
 							CandidValue.Text("Text1")
 						),
 						["ListOfText"] = new CandidOptional(
-							new CandidVector(new CandidValue[] 
+							new CandidVector(new CandidValue[]
 							{
 								new CandidOptional(CandidValue.Text("Text2")),
 								new CandidOptional()
@@ -348,6 +306,49 @@ namespace EdjCase.ICP.Candid.Tests
 			Assert.Equal(o.TextValue, actual.TextValue);
 			Assert.Equal(o.ListOfText, actual.ListOfText);
 
+		}
+
+		public class OptOverride
+		{
+
+			[CandidOptional]
+			public string? OptValue { get; set; }
+			public OptionalValue<string> OptValue2 { get; set; } = OptionalValue<string>.NoValue();
+		}
+
+		[Fact]
+		public void OptionalValueOverride_Record_WithValue()
+		{
+			var raw = new OptOverride { OptValue = "Test1", OptValue2 = OptionalValue<string>.WithValue("Test2") };
+			var candidValue = new CandidRecord(new Dictionary<CandidTag, CandidValue>
+			{
+				["OptValue"] = new CandidOptional(CandidValue.Text("Test1")),
+				["OptValue2"] = new CandidOptional(CandidValue.Text("Test2")),
+			});
+			var candidType = new CandidRecordType(new Dictionary<CandidTag, CandidType>
+			{
+				["OptValue"] = new CandidOptionalType(CandidType.Text()),
+				["OptValue2"] = new CandidOptionalType(CandidType.Text()),
+			});
+			var candid = new CandidTypedValue(candidValue, candidType);
+			this.Test(raw, candid, (a, b) => a.OptValue == b.OptValue && a.OptValue2 == b.OptValue2);
+		}
+		[Fact]
+		public void OptionalValueOverride_Record_Null()
+		{
+			var raw = new OptOverride { OptValue = null, OptValue2 = OptionalValue<string>.NoValue() };
+			var candidValue = new CandidRecord(new Dictionary<CandidTag, CandidValue>
+			{
+				["OptValue"] = new CandidOptional(),
+				["OptValue2"] = new CandidOptional(),
+			});
+			var candidType = new CandidRecordType(new Dictionary<CandidTag, CandidType>
+			{
+				["OptValue"] = new CandidOptionalType(CandidType.Text()),
+				["OptValue2"] = new CandidOptionalType(CandidType.Text()),
+			});
+			var candid = new CandidTypedValue(candidValue, candidType);
+			this.Test(raw, candid, (a, b) => a.OptValue == b.OptValue && a.OptValue2 == b.OptValue2);
 		}
 
 		public class OptTypeCoercion
