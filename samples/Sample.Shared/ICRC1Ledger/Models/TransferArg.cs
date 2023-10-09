@@ -1,6 +1,6 @@
 using EdjCase.ICP.Candid.Mapping;
-using EdjCase.ICP.Candid.Models;
 using Sample.Shared.ICRC1Ledger.Models;
+using EdjCase.ICP.Candid.Models;
 using System.Collections.Generic;
 using Subaccount = System.Collections.Generic.List<System.Byte>;
 using Timestamp = System.UInt64;
@@ -11,7 +11,7 @@ namespace Sample.Shared.ICRC1Ledger.Models
 	public class TransferArg
 	{
 		[CandidName("from_subaccount")]
-		public OptionalValue<Subaccount> FromSubaccount { get; set; }
+		public TransferArg.FromSubaccountInfo FromSubaccount { get; set; }
 
 		[CandidName("to")]
 		public Account To { get; set; }
@@ -20,15 +20,15 @@ namespace Sample.Shared.ICRC1Ledger.Models
 		public Tokens Amount { get; set; }
 
 		[CandidName("fee")]
-		public OptionalValue<Tokens> Fee { get; set; }
+		public TransferArg.FeeInfo Fee { get; set; }
 
 		[CandidName("memo")]
 		public OptionalValue<List<byte>> Memo { get; set; }
 
 		[CandidName("created_at_time")]
-		public OptionalValue<Timestamp> CreatedAtTime { get; set; }
+		public TransferArg.CreatedAtTimeInfo CreatedAtTime { get; set; }
 
-		public TransferArg(OptionalValue<Subaccount> fromSubaccount, Account to, Tokens amount, OptionalValue<Tokens> fee, OptionalValue<List<byte>> memo, OptionalValue<Timestamp> createdAtTime)
+		public TransferArg(TransferArg.FromSubaccountInfo fromSubaccount, Account to, Tokens amount, TransferArg.FeeInfo fee, OptionalValue<List<byte>> memo, TransferArg.CreatedAtTimeInfo createdAtTime)
 		{
 			this.FromSubaccount = fromSubaccount;
 			this.To = to;
@@ -40,6 +40,27 @@ namespace Sample.Shared.ICRC1Ledger.Models
 
 		public TransferArg()
 		{
+		}
+
+		public class FromSubaccountInfo : OptionalValue<Subaccount>
+		{
+			protected FromSubaccountInfo()
+			{
+			}
+		}
+
+		public class FeeInfo : OptionalValue<Tokens>
+		{
+			protected FeeInfo()
+			{
+			}
+		}
+
+		public class CreatedAtTimeInfo : OptionalValue<Timestamp>
+		{
+			protected CreatedAtTimeInfo()
+			{
+			}
 		}
 	}
 }

@@ -236,6 +236,5 @@ namespace EdjCase.ICP.Candid.Models.Types
 		{
 			return new CandidOptionalType(inner);
 		}
-
 	}
 }

@@ -12,10 +12,7 @@ using EdjCase.ICP.Candid.Models.Values;
 using EdjCase.ICP.Agent.Responses;
 using System.Threading.Tasks;
 using EdjCase.ICP.Candid;
-using System.Xml.Linq;
-using System.Reflection;
 using Org.BouncyCastle.Asn1.Cms;
-using EdjCase.ICP.Agent.Models;
 
 namespace EdjCase.ICP.ClientGenerator
 {
@@ -48,6 +45,7 @@ namespace EdjCase.ICP.ClientGenerator
 		}
 
 		public ResolvedType ResolveTypeDeclaration(
+			string typeId,
 			string typeName,
 			SourceCodeType type
 		)
@@ -59,28 +57,22 @@ namespace EdjCase.ICP.ClientGenerator
 			//    type F = A<X>;
 
 
-			if (this._resolvedTypes.TryGetValue(typeName, out ResolvedType? existing))
+			if (this._resolvedTypes.TryGetValue(typeId, out ResolvedType? existing))
 			{
 				return existing;
 			}
-			ResolvedType res = this.ResolveTypeInner(type, typeName, parentType: null);
-			this._resolvedTypes[typeName] = res;
+			Stack<string> parentTypeIds = new Stack<string>();
+			parentTypeIds.Push(typeId);
+			ResolvedType res = this.ResolveType(type, typeName, parentType: null, parentTypeIds);
+			this._resolvedTypes[typeId] = res;
 			return res;
 		}
 
-		public ResolvedType ResolveType(
+		private ResolvedType ResolveType(
 			SourceCodeType type,
 			string nameContext,
-			TypeName? parentType
-		)
-		{
-			return this.ResolveTypeInner(type, nameContext, parentType);
-		}
-
-		private ResolvedType ResolveTypeInner(
-			SourceCodeType type,
-			string nameContext,
-			TypeName? parentType
+			TypeName? parentType,
+			Stack<string> parentTypeIds
 		)
 		{
 			switch (type)
@@ -96,25 +88,43 @@ namespace EdjCase.ICP.ClientGenerator
 					}
 				case ListSourceCodeType l:
 					{
-						ResolvedType resolvedGenericType = this.ResolveType(l.GenericType, nameContext + "Item", parentType);
+						if (l.IsPredefinedType)
+						{
+							ResolvedType resolvedGenericType = this.ResolveType(l.ElementType, nameContext + "Item", parentType, parentTypeIds);
 
-						var name = new ListTypeName(resolvedGenericType.Name);
-						return new ResolvedType(name, resolvedGenericType.GeneratedSyntax);
+							var name = new ListTypeName(resolvedGenericType.Name);
+							return new ResolvedType(name, resolvedGenericType.GeneratedSyntax);
+						}
+						else
+						{
+							TypeName listName = this.BuildType(nameContext, parentType, isDefaultNullable: true);
+							ClassDeclarationSyntax syntax = this.GenerateList(listName, l, parentTypeIds);
+							return new ResolvedType(listName, new MemberDeclarationSyntax[] { syntax });
+						}
 					}
 				case DictionarySourceCodeType d:
 					{
-						ResolvedType resolvedKeyType = this.ResolveType(d.KeyType, nameContext + "Key", parentType);
-						ResolvedType resolvedValueType = this.ResolveType(d.ValueType, nameContext + "Value", parentType);
-						MemberDeclarationSyntax[] generatedSyntax = (resolvedKeyType.GeneratedSyntax ?? Array.Empty<MemberDeclarationSyntax>())
-							.Concat(resolvedValueType.GeneratedSyntax ?? Array.Empty<MemberDeclarationSyntax>())
-							.ToArray(); ;
-						var name = new DictionaryTypeName(resolvedKeyType.Name, resolvedValueType.Name);
-						return new ResolvedType(name, generatedSyntax);
+						if (d.IsPredefinedType)
+						{
+							ResolvedType resolvedKeyType = this.ResolveType(d.KeyType, nameContext + "Key", parentType, parentTypeIds);
+							ResolvedType resolvedValueType = this.ResolveType(d.ValueType, nameContext + "Value", parentType, parentTypeIds);
+							MemberDeclarationSyntax[] generatedSyntax = (resolvedKeyType.GeneratedSyntax ?? Array.Empty<MemberDeclarationSyntax>())
+								.Concat(resolvedValueType.GeneratedSyntax ?? Array.Empty<MemberDeclarationSyntax>())
+								.ToArray(); ;
+							var name = new DictionaryTypeName(resolvedKeyType.Name, resolvedValueType.Name);
+							return new ResolvedType(name, generatedSyntax);
+						}
+						else
+						{
+							TypeName dictName = this.BuildType(nameContext, parentType, isDefaultNullable: true);
+							ClassDeclarationSyntax syntax = this.GenerateDictionary(dictName, d, parentTypeIds);
+							return new ResolvedType(dictName, new MemberDeclarationSyntax[] { syntax });
+						}
 					}
 				case TupleSourceCodeType t:
 					{
 						List<ResolvedType> resolvedGenericTypes = t.Fields
-							.Select((f, i) => this.ResolveType(f, nameContext + "Value_" + i, parentType))
+							.Select((f, i) => this.ResolveType(f, nameContext + "Value_" + i, parentType, parentTypeIds))
 							.ToList();
 						List<TypeName> elementTypeNames = resolvedGenericTypes
 							.Select(f => f.Name)
@@ -127,17 +137,27 @@ namespace EdjCase.ICP.ClientGenerator
 					}
 				case OptionalValueSourceCodeType v:
 					{
-						ResolvedType resolvedGenericType = this.ResolveType(v.GenericType, nameContext + "Value", parentType);
-						TypeName name = new OptionalValueTypeName(resolvedGenericType.Name);
-						return new ResolvedType(name, resolvedGenericType.GeneratedSyntax);
+						TypeName name;
+						if (v.IsPredefinedType)
+						{
+							ResolvedType resolvedGenericType = this.ResolveType(v.GenericType, nameContext + "Value", parentType, parentTypeIds);
+							name = new OptionalValueTypeName(resolvedGenericType.Name);
+							return new ResolvedType(name, resolvedGenericType.GeneratedSyntax);
+						}
+						else
+						{
+							TypeName oValueName = this.BuildType(nameContext, parentType, isDefaultNullable: true);
+							ClassDeclarationSyntax syntax = this.GenerateOptionalValue(oValueName, v, parentTypeIds);
+							return new ResolvedType(oValueName, new MemberDeclarationSyntax[] { syntax });
+						}
 					}
 				case ArraySourceCodeType a:
 					{
-						if (a.GenericType == null)
+						if (a.ElementType == null)
 						{
 							return new ResolvedType(new ArrayTypeName(null));
 						}
-						ResolvedType resolvedGenericType = this.ResolveType(a.GenericType, nameContext + "Item", parentType);
+						ResolvedType resolvedGenericType = this.ResolveType(a.ElementType, nameContext + "Item", parentType, parentTypeIds);
 
 						var name = new ArrayTypeName(resolvedGenericType.Name);
 						return new ResolvedType(name, resolvedGenericType.GeneratedSyntax);
@@ -153,18 +173,31 @@ namespace EdjCase.ICP.ClientGenerator
 							@namespace,
 							true // TODO
 						);
-						if (isAlias)
-						{
-							ResolvedType notAliasedType = this.ResolveType(sourceCodeType, nameContext, parentType);
-							typeName = new AliasedTypeName(typeName, notAliasedType.Name);
-						}
+						//if (isAlias)
+						//{
+						//	ResolvedType notAliasedType;
+						//	if (this._resolvedTypes.TryGetValue(re.Id.Value, out ResolvedType? existing))
+						//	{
+						//		notAliasedType = existing;
+						//	}
+						//	else
+						//	{
+						//		if (parentTypeIds.Contains(re.Id.Value))
+						//		{
+						//			throw new Exception("Self referencing aliases are not allowed.");
+						//		}
+						//		notAliasedType = this.ResolveType(sourceCodeType, nameContext, parentType, parentTypeIds);
+						//	}
+						//	parentTypeIds.Push(re.Id.Value);
+						//	typeName = new AliasedTypeName(typeName, notAliasedType.Name);
+						//}
 						return new ResolvedType(typeName);
 
 					}
 				case VariantSourceCodeType v:
 					{
 						TypeName variantName = this.BuildType(nameContext, parentType, isDefaultNullable: true);
-						(ClassDeclarationSyntax? ClassSyntax, EnumDeclarationSyntax EnumSyntax) result = this.GenerateVariant(variantName, v, parentType);
+						(ClassDeclarationSyntax? ClassSyntax, EnumDeclarationSyntax EnumSyntax) result = this.GenerateVariant(variantName, v, parentType, parentTypeIds);
 						if (result.ClassSyntax != null)
 						{
 							return new ResolvedType(variantName, new MemberDeclarationSyntax[] { result.ClassSyntax, result.EnumSyntax });
@@ -174,7 +207,7 @@ namespace EdjCase.ICP.ClientGenerator
 				case RecordSourceCodeType r:
 					{
 						TypeName recordName = this.BuildType(nameContext, parentType, isDefaultNullable: true);
-						ClassDeclarationSyntax classSyntax = this.GenerateRecord(recordName, r);
+						ClassDeclarationSyntax classSyntax = this.GenerateRecord(recordName, r, parentTypeIds);
 						return new ResolvedType(recordName, new MemberDeclarationSyntax[] { classSyntax });
 					}
 				default:
@@ -218,8 +251,9 @@ namespace EdjCase.ICP.ClientGenerator
 				)
 			};
 
+			Stack<string> parentTypeIds = new();
 			List<(MethodDeclarationSyntax Method, List<MemberDeclarationSyntax> SubTypes)> methods = service.Methods
-				.Select(method => this.GenerateFuncMethod(method.CsharpName, method.CandidName, method.FuncInfo, clientName, this, candidConverterProperty))
+				.Select(method => this.GenerateFuncMethod(method.CsharpName, method.CandidName, method.FuncInfo, clientName, this, candidConverterProperty, parentTypeIds))
 				.ToList();
 
 			return this.GenerateClass(
@@ -231,11 +265,102 @@ namespace EdjCase.ICP.ClientGenerator
 			);
 		}
 
+		internal ClassDeclarationSyntax GenerateOptionalValue(
+			TypeName oValueName,
+			OptionalValueSourceCodeType v,
+			Stack<string> parentTypeIds
+		)
+		{
+			string parentName = oValueName.BuildName(this.FeatureNullable, false, true);
+			ResolvedType resolvedGenericType = this.ResolveType(v.GenericType, parentName + "Value", oValueName, parentTypeIds);
+			List<ClassProperty> properties = new();
+			List<MethodDeclarationSyntax> methods = new();
+			return this.GenerateClass(
+				name: oValueName,
+				properties: properties,
+				optionalProperties: null,
+				customProperties: null,
+				methods: methods,
+				attributes: null,
+				emptyConstructorAccess: AccessType.Protected,
+				subTypes: resolvedGenericType.GeneratedSyntax?.ToList(),
+				implementTypes: new List<TypeName>
+				{
+					new OptionalValueTypeName(resolvedGenericType.Name)
+				}
+			);
+		}
+
+		internal ClassDeclarationSyntax GenerateList(
+			TypeName listName,
+			ListSourceCodeType type,
+			Stack<string> parentTypeIds
+		)
+		{
+			string parentName = listName.BuildName(this.FeatureNullable, false, true);
+			ResolvedType elementType = this.ResolveType(type.ElementType, parentName + "Element", listName, parentTypeIds);
+
+			List<ClassProperty> properties = new();
+			List<MethodDeclarationSyntax> methods = new();
+			return this.GenerateClass(
+				name: listName,
+				properties: properties,
+				optionalProperties: null,
+				customProperties: null,
+				methods: methods,
+				attributes: null,
+				emptyConstructorAccess: AccessType.Protected,
+				subTypes: elementType.GeneratedSyntax?.ToList(),
+				implementTypes: new List<TypeName>
+				{
+					new ListTypeName(elementType.Name)
+				}
+			);
+		}
+
+		internal ClassDeclarationSyntax GenerateDictionary(
+			TypeName dictName,
+			DictionarySourceCodeType type,
+			Stack<string> parentTypeIds
+		)
+		{
+			string parentName = dictName.BuildName(this.FeatureNullable, false, true);
+			ResolvedType keyType = this.ResolveType(type.KeyType, parentName + "Key", dictName, parentTypeIds);
+			ResolvedType valueType = this.ResolveType(type.ValueType, parentName + "Value", dictName, parentTypeIds);
+
+			List<ClassProperty> properties = new();
+			List<MethodDeclarationSyntax> methods = new();
+			List<MemberDeclarationSyntax> subTypes = new();
+			if (keyType.GeneratedSyntax != null)
+			{
+				subTypes.AddRange(keyType.GeneratedSyntax);
+			}
+			if (valueType.GeneratedSyntax != null)
+			{
+				subTypes.AddRange(valueType.GeneratedSyntax);
+			}
+			return this.GenerateClass(
+				name: dictName,
+				properties: properties,
+				optionalProperties: null,
+				customProperties: null,
+				methods: methods,
+				attributes: null,
+				emptyConstructorAccess: AccessType.Protected,
+				subTypes: subTypes,
+				implementTypes: new List<TypeName>
+				{
+					new DictionaryTypeName(keyType.Name, valueType.Name)
+				}
+			);
+		}
+
 
 		internal (ClassDeclarationSyntax? Class, EnumDeclarationSyntax Type) GenerateVariant(
 			TypeName variantTypeName,
 			VariantSourceCodeType variant,
-			TypeName? parentType
+			TypeName? parentType,
+			Stack<string> parentTypeIds
 		)
 		{
 			(ResolvedName Name, ResolvedType? Type) ResolveOption((ResolvedName Tag, SourceCodeType? Type) option, int i)
@@ -250,7 +375,7 @@ namespace EdjCase.ICP.ClientGenerator
 					string nameContext = option.Type.IsPredefinedType
 						? option.Tag.Name
 						: option.Tag.Name + "Info"; // If need to generate sub type, add suffix to avoid name collision
-					resolvedType = this.ResolveType(option.Type, nameContext, variantTypeName);
+					resolvedType = this.ResolveType(option.Type, nameContext, variantTypeName, parentTypeIds);
 				}
 				return (option.Tag, resolvedType);
 			}
@@ -765,14 +890,14 @@ namespace EdjCase.ICP.ClientGenerator
 			);
 		}
 
-		internal ClassDeclarationSyntax GenerateRecord(TypeName recordTypeName, RecordSourceCodeType record)
+		internal ClassDeclarationSyntax GenerateRecord(TypeName recordTypeName, RecordSourceCodeType record, Stack<string> parentTypeIds)
 		{
 			(ResolvedName Name, ResolvedType Type) ResolveField((ResolvedName Tag, SourceCodeType Type) option, int i)
 			{
 				string nameContext = option.Type.IsPredefinedType
 					? option.Tag.Name
 					: option.Tag.Name + "Info"; // If need to generate sub type, add suffix to avoid name collision
-				ResolvedType resolvedType = this.ResolveType(option.Type, nameContext, recordTypeName);
+				ResolvedType resolvedType = this.ResolveType(option.Type, nameContext, recordTypeName, parentTypeIds);
 				return (option.Tag, resolvedType);
 			}
 			List<(ResolvedName Tag, ResolvedType Type)> resolvedFields = record.Fields
@@ -982,13 +1107,14 @@ namespace EdjCase.ICP.ClientGenerator
 			ServiceSourceCodeType.Func info,
 			TypeName clientName,
 			RoslynTypeResolver typeResolver,
-			string candidConverterProperty
+			string candidConverterProperty,
+			Stack<string> parentTypeIds
 		)
 		{
 			(ResolvedName Name, ResolvedType Type) ResolveType((ResolvedName Name, SourceCodeType Type) type, int i)
 			{
 				string nameContext = StringUtil.ToPascalCase(csharpName) + StringUtil.ToPascalCase(type.Name.Name);
-				ResolvedType resolvedType = typeResolver.ResolveType(type.Type, nameContext, parentType: clientName);
+				ResolvedType resolvedType = typeResolver.ResolveType(type.Type, nameContext, parentType: clientName, parentTypeIds);
 				return (type.Name, resolvedType);
 			}
 

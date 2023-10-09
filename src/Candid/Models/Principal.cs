@@ -211,5 +211,25 @@ namespace EdjCase.ICP.Candid.Models
 		{
 			return HashCode.Combine(this.Raw);
 		}
+
+		/// <inheritdoc />
+		public static bool operator ==(Principal? v1, Principal? v2)
+		{
+			if (ReferenceEquals(v1, null))
+			{
+				return ReferenceEquals(v2, null);
+			}
+			return v1.Equals(v2);
+		}
+
+		/// <inheritdoc />
+		public static bool operator !=(Principal? v1, Principal? v2)
+		{
+			if (ReferenceEquals(v1, null))
+			{
+				return ReferenceEquals(v2, null);
+			}
+			return !v1.Equals(v2);
+		}
 	}
 }

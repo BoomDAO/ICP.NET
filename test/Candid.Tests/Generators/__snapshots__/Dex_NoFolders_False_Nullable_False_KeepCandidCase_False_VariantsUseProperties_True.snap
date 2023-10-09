@@ -341,7 +341,7 @@ namespace Test.Models
 
 		public CancelOrderErr Err { get => this.Tag == CancelOrderReceiptTag.Err ? (CancelOrderErr)this.Value! : default; set => (this.Tag, this.Value) = (CancelOrderReceiptTag.Err, value); }
 
-		public OrderId? Ok { get => this.Tag == CancelOrderReceiptTag.Ok ? (OrderId)this.Value! : default; set => (this.Tag, this.Value) = (CancelOrderReceiptTag.Ok, value); }
+		public OrderId Ok { get => this.Tag == CancelOrderReceiptTag.Ok ? (OrderId)this.Value! : default; set => (this.Tag, this.Value) = (CancelOrderReceiptTag.Ok, value); }
 
 		public CancelOrderReceipt(CancelOrderReceiptTag tag, object value)
 		{

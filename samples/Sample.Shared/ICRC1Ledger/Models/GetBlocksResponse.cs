@@ -20,12 +20,12 @@ namespace Sample.Shared.ICRC1Ledger.Models
 		public OptionalValue<List<byte>> Certificate { get; set; }
 
 		[CandidName("blocks")]
-		public List<Block> Blocks { get; set; }
+		public GetBlocksResponse.BlocksInfo Blocks { get; set; }
 
 		[CandidName("archived_blocks")]
-		public List<GetBlocksResponse.ArchivedBlocksItem> ArchivedBlocks { get; set; }
+		public GetBlocksResponse.ArchivedBlocksInfo ArchivedBlocks { get; set; }
 
-		public GetBlocksResponse(BlockIndex firstIndex, ulong chainLength, OptionalValue<List<byte>> certificate, List<Block> blocks, List<GetBlocksResponse.ArchivedBlocksItem> archivedBlocks)
+		public GetBlocksResponse(BlockIndex firstIndex, ulong chainLength, OptionalValue<List<byte>> certificate, GetBlocksResponse.BlocksInfo blocks, GetBlocksResponse.ArchivedBlocksInfo archivedBlocks)
 		{
 			this.FirstIndex = firstIndex;
 			this.ChainLength = chainLength;
@@ -38,26 +38,40 @@ namespace Sample.Shared.ICRC1Ledger.Models
 		{
 		}
 
-		public class ArchivedBlocksItem
+		public class BlocksInfo : List<Block>
 		{
-			[CandidName("start")]
-			public BlockIndex Start { get; set; }
-
-			[CandidName("length")]
-			public UnboundedUInt Length { get; set; }
-
-			[CandidName("callback")]
-			public QueryBlockArchiveFn Callback { get; set; }
-
-			public ArchivedBlocksItem(BlockIndex start, UnboundedUInt length, QueryBlockArchiveFn callback)
+			protected BlocksInfo()
 			{
-				this.Start = start;
-				this.Length = length;
-				this.Callback = callback;
+			}
+		}
+
+		public class ArchivedBlocksInfo : List<GetBlocksResponse.ArchivedBlocksInfo.ArchivedBlocksInfoElement>
+		{
+			protected ArchivedBlocksInfo()
+			{
 			}
 
-			public ArchivedBlocksItem()
+			public class ArchivedBlocksInfoElement
 			{
+				[CandidName("start")]
+				public BlockIndex Start { get; set; }
+
+				[CandidName("length")]
+				public UnboundedUInt Length { get; set; }
+
+				[CandidName("callback")]
+				public QueryBlockArchiveFn Callback { get; set; }
+
+				public ArchivedBlocksInfoElement(BlockIndex start, UnboundedUInt length, QueryBlockArchiveFn callback)
+				{
+					this.Start = start;
+					this.Length = length;
+					this.Callback = callback;
+				}
+
+				public ArchivedBlocksInfoElement()
+				{
+				}
 			}
 		}
 	}

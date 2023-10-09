@@ -2,11 +2,11 @@ using EdjCase.ICP.Candid.Mapping.Mappers;
 using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid.Models.Types;
 using EdjCase.ICP.Candid.Models.Values;
-using EdjCase.ICP.Candid.Utilities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 
@@ -288,32 +288,32 @@ namespace EdjCase.ICP.Candid.Mapping
 				{
 					return BuildTuple(objType, objType.GenericTypeArguments);
 				}
-				if (genericTypeDefinition == typeof(List<>))
-				{
-					Type innerType = objType.GenericTypeArguments[0];
-					return BuildVector(
-						objType,
-						innerType,
-						(o, options) => ((IList)o).Cast<object>(),
-						(v, options) =>
+			}
+			if (IsImplementationOfGenericType(objType, typeof(IDictionary<, >), out Type? dictInterface))
+			{
+				return BuildDictVector(
+					objType,
+					dictInterface.GenericTypeArguments[0],
+					dictInterface.GenericTypeArguments[1]
+				);
+			}
+			if (IsImplementationOfGenericType(objType, typeof(IList<>), out Type? listInterface))
+			{
+				Type innerType = listInterface.GenericTypeArguments[0];
+				return BuildVector(
+					objType,
+					innerType,
+					(o, options) => ((IList)o).Cast<object>(),
+					(v, options) =>
+					{
+						IList list = (IList)Activator.CreateInstance(objType);
+						foreach (object innerValue in v)
 						{
-							IList list = (IList)Activator.CreateInstance(objType);
-							foreach (object innerValue in v)
-							{
-								list.Add(innerValue);
-							}
-							return list;
+							list.Add(innerValue);
 						}
-					);
-				}
-				if (genericTypeDefinition == typeof(Dictionary<,>))
-				{
-					return BuildDictVector(
-						objType,
-						objType.GenericTypeArguments[0],
-						objType.GenericTypeArguments[1]
-					);
-				}
+						return list;
+					}
+				);
 			}
 
 			if (objType == typeof(NullValue))
@@ -339,6 +339,12 @@ namespace EdjCase.ICP.Candid.Mapping
 
 			// Assume anything else is a record
 			return BuildRecord(objType);
+		}
+		private static bool IsImplementationOfGenericType(Type type, Type genericInterface, [NotNullWhen(true)] out Type? @interface)
+		{
+			@interface = type.GetInterfaces()
+					   .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == genericInterface);
+			return @interface != null;
 		}
 
 		private static IResolvableTypeInfo BuildStruct<T>(CandidType candidType, T value, Func<CandidValue> valueGetter)

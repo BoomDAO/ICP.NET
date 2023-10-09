@@ -1,10 +1,10 @@
-using Dict = System.Collections.Generic.List<(System.String, EdjCase.ICP.Candid.Models.UnboundedUInt)>;
 using EdjCase.ICP.Agent.Agents;
 using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid;
 using System.Threading.Tasks;
 using Sample.Shared.AddressBook;
 using EdjCase.ICP.Agent.Responses;
+using Dict = System.Collections.Generic.Dictionary<System.String, EdjCase.ICP.Candid.Models.UnboundedUInt>;
 
 namespace Sample.Shared.AddressBook
 {
@@ -23,13 +23,13 @@ namespace Sample.Shared.AddressBook
 			this.Converter = converter;
 		}
 
-		public async Task SetAddress(string name, Address addr)
+		public async Task _set_address(string name, Address addr)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(name), CandidTypedValue.FromObject(addr));
 			await this.Agent.CallAndWaitAsync(this.CanisterId, "set_address", arg);
 		}
 
-		public async Task<OptionalValue<Address>> GetAddress(string name)
+		public async Task<OptionalValue<Address>> _get_address(string name)
 		{
 			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(name));
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_address", arg);
@@ -37,7 +37,15 @@ namespace Sample.Shared.AddressBook
 			return reply.ToObjects<OptionalValue<Address>>(this.Converter);
 		}
 
-		public async Task<Dict> GetDict()
+		public async Task<SelfRef> _get_self()
+		{
+			CandidArg arg = CandidArg.FromCandid();
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_self", arg);
+			CandidArg reply = response.ThrowOrGetReply();
+			return reply.ToObjects<SelfRef>(this.Converter);
+		}
+
+		public async Task<Dict> _get_dict()
 		{
 			CandidArg arg = CandidArg.FromCandid();
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_dict", arg);

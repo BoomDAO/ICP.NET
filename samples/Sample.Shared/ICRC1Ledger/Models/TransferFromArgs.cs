@@ -1,6 +1,6 @@
 using EdjCase.ICP.Candid.Mapping;
-using EdjCase.ICP.Candid.Models;
 using Sample.Shared.ICRC1Ledger.Models;
+using EdjCase.ICP.Candid.Models;
 using System.Collections.Generic;
 using Subaccount = System.Collections.Generic.List<System.Byte>;
 using Timestamp = System.UInt64;
@@ -11,7 +11,7 @@ namespace Sample.Shared.ICRC1Ledger.Models
 	public class TransferFromArgs
 	{
 		[CandidName("spender_subaccount")]
-		public OptionalValue<Subaccount> SpenderSubaccount { get; set; }
+		public TransferFromArgs.SpenderSubaccountInfo SpenderSubaccount { get; set; }
 
 		[CandidName("from")]
 		public Account From { get; set; }
@@ -23,15 +23,15 @@ namespace Sample.Shared.ICRC1Ledger.Models
 		public Tokens Amount { get; set; }
 
 		[CandidName("fee")]
-		public OptionalValue<Tokens> Fee { get; set; }
+		public TransferFromArgs.FeeInfo Fee { get; set; }
 
 		[CandidName("memo")]
 		public OptionalValue<List<byte>> Memo { get; set; }
 
 		[CandidName("created_at_time")]
-		public OptionalValue<Timestamp> CreatedAtTime { get; set; }
+		public TransferFromArgs.CreatedAtTimeInfo CreatedAtTime { get; set; }
 
-		public TransferFromArgs(OptionalValue<Subaccount> spenderSubaccount, Account from, Account to, Tokens amount, OptionalValue<Tokens> fee, OptionalValue<List<byte>> memo, OptionalValue<Timestamp> createdAtTime)
+		public TransferFromArgs(TransferFromArgs.SpenderSubaccountInfo spenderSubaccount, Account from, Account to, Tokens amount, TransferFromArgs.FeeInfo fee, OptionalValue<List<byte>> memo, TransferFromArgs.CreatedAtTimeInfo createdAtTime)
 		{
 			this.SpenderSubaccount = spenderSubaccount;
 			this.From = from;
@@ -44,6 +44,27 @@ namespace Sample.Shared.ICRC1Ledger.Models
 
 		public TransferFromArgs()
 		{
+		}
+
+		public class SpenderSubaccountInfo : OptionalValue<Subaccount>
+		{
+			protected SpenderSubaccountInfo()
+			{
+			}
+		}
+
+		public class FeeInfo : OptionalValue<Tokens>
+		{
+			protected FeeInfo()
+			{
+			}
+		}
+
+		public class CreatedAtTimeInfo : OptionalValue<Timestamp>
+		{
+			protected CreatedAtTimeInfo()
+			{
+			}
 		}
 	}
 }

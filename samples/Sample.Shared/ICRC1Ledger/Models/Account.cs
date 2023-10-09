@@ -1,5 +1,6 @@
 using EdjCase.ICP.Candid.Mapping;
 using EdjCase.ICP.Candid.Models;
+using Sample.Shared.ICRC1Ledger.Models;
 using Subaccount = System.Collections.Generic.List<System.Byte>;
 
 namespace Sample.Shared.ICRC1Ledger.Models
@@ -10,9 +11,9 @@ namespace Sample.Shared.ICRC1Ledger.Models
 		public Principal Owner { get; set; }
 
 		[CandidName("subaccount")]
-		public OptionalValue<Subaccount> Subaccount { get; set; }
+		public Account.SubaccountInfo Subaccount { get; set; }
 
-		public Account(Principal owner, OptionalValue<Subaccount> subaccount)
+		public Account(Principal owner, Account.SubaccountInfo subaccount)
 		{
 			this.Owner = owner;
 			this.Subaccount = subaccount;
@@ -20,6 +21,13 @@ namespace Sample.Shared.ICRC1Ledger.Models
 
 		public Account()
 		{
+		}
+
+		public class SubaccountInfo : OptionalValue<Subaccount>
+		{
+			protected SubaccountInfo()
+			{
+			}
 		}
 	}
 }

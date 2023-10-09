@@ -51,7 +51,7 @@ namespace Sample.Shared.ICRC1Ledger.Models
 			return new Value(ValueTag.Int, info);
 		}
 
-		public static Value Array(List<Value> info)
+		public static Value Array(Value.ArrayInfo info)
 		{
 			return new Value(ValueTag.Array, info);
 		}
@@ -91,10 +91,10 @@ namespace Sample.Shared.ICRC1Ledger.Models
 			return (UnboundedInt)this.Value_!;
 		}
 
-		public List<Value> AsArray()
+		public Value.ArrayInfo AsArray()
 		{
 			this.ValidateTag(ValueTag.Array);
-			return (List<Value>)this.Value_!;
+			return (Value.ArrayInfo)this.Value_!;
 		}
 
 		public Map AsMap()
@@ -108,6 +108,13 @@ namespace Sample.Shared.ICRC1Ledger.Models
 			if (!this.Tag.Equals(tag))
 			{
 				throw new InvalidOperationException($"Cannot cast '{this.Tag}' to type '{tag}'");
+			}
+		}
+
+		public class ArrayInfo : List<Value>
+		{
+			protected ArrayInfo()
+			{
 			}
 		}
 	}

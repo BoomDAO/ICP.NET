@@ -19,9 +19,9 @@ namespace Sample.Shared.ICRC1Ledger.Models
 		public TxIndex FirstIndex { get; set; }
 
 		[CandidName("archived_transactions")]
-		public List<GetTransactionsResponse.ArchivedTransactionsItem> ArchivedTransactions { get; set; }
+		public GetTransactionsResponse.ArchivedTransactionsInfo ArchivedTransactions { get; set; }
 
-		public GetTransactionsResponse(UnboundedUInt logLength, List<Transaction> transactions, TxIndex firstIndex, List<GetTransactionsResponse.ArchivedTransactionsItem> archivedTransactions)
+		public GetTransactionsResponse(UnboundedUInt logLength, List<Transaction> transactions, TxIndex firstIndex, GetTransactionsResponse.ArchivedTransactionsInfo archivedTransactions)
 		{
 			this.LogLength = logLength;
 			this.Transactions = transactions;
@@ -33,26 +33,33 @@ namespace Sample.Shared.ICRC1Ledger.Models
 		{
 		}
 
-		public class ArchivedTransactionsItem
+		public class ArchivedTransactionsInfo : List<GetTransactionsResponse.ArchivedTransactionsInfo.ArchivedTransactionsInfoElement>
 		{
-			[CandidName("start")]
-			public TxIndex Start { get; set; }
-
-			[CandidName("length")]
-			public UnboundedUInt Length { get; set; }
-
-			[CandidName("callback")]
-			public QueryArchiveFn Callback { get; set; }
-
-			public ArchivedTransactionsItem(TxIndex start, UnboundedUInt length, QueryArchiveFn callback)
+			protected ArchivedTransactionsInfo()
 			{
-				this.Start = start;
-				this.Length = length;
-				this.Callback = callback;
 			}
 
-			public ArchivedTransactionsItem()
+			public class ArchivedTransactionsInfoElement
 			{
+				[CandidName("start")]
+				public TxIndex Start { get; set; }
+
+				[CandidName("length")]
+				public UnboundedUInt Length { get; set; }
+
+				[CandidName("callback")]
+				public QueryArchiveFn Callback { get; set; }
+
+				public ArchivedTransactionsInfoElement(TxIndex start, UnboundedUInt length, QueryArchiveFn callback)
+				{
+					this.Start = start;
+					this.Length = length;
+					this.Callback = callback;
+				}
+
+				public ArchivedTransactionsInfoElement()
+				{
+				}
 			}
 		}
 	}

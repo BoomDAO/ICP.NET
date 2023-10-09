@@ -358,6 +358,64 @@ namespace EdjCase.ICP.Candid.Tests
 
 		}
 
+		public class MyList : List<string>
+		{
+
+		}
+
+		[Fact]
+		public void CustomList()
+		{
+			var raw = new MyList { "test" };
+			var candidValue = new CandidVector(new CandidValue[]
+			{
+				CandidValue.Text("test")
+			});
+			var candidType = new CandidVectorType(CandidType.Text());
+			var candid = new CandidTypedValue(candidValue, candidType);
+			this.Test(raw, candid, (a, b) => a.SequenceEqual(b));
+		}
+		public class MyDict : Dictionary<string, int>
+		{
+
+		}
+
+		[Fact]
+		public void CustomDict()
+		{
+			var raw = new MyDict { ["test"] = 1 };
+			var candidValue = new CandidVector(new CandidValue[] {
+				new CandidRecord(
+					new Dictionary<CandidTag, CandidValue>
+					{
+						[0] = CandidValue.Text("test"),
+						[1] = CandidValue.Int32(1)
+					}
+				)
+			});
+			var candidType = new CandidVectorType(new CandidRecordType(new Dictionary<CandidTag, CandidType>
+			{
+				[0] = CandidType.Text(),
+				[1] = CandidType.Int32()
+			}));
+			var candid = new CandidTypedValue(candidValue, candidType);
+			this.Test(raw, candid, (a, b) => a["test"] == a["test"]);
+		}
+
+		public class MyOptValue : OptionalValue<Principal>
+		{
+
+		}
+
+		[Fact]
+		public void CustomOptionalValue()
+		{
+			var raw = MyOptValue.WithValue(Principal.Anonymous());
+			var candidValue = new CandidOptional(CandidValue.Principal(Principal.Anonymous()));
+			var candidType = new CandidOptionalType(new CandidPrimitiveType(PrimitiveType.Principal));
+			var candid = new CandidTypedValue(candidValue, candidType);
+			this.Test(raw, candid, (a, b) => a.ValueOrDefault == b.ValueOrDefault);
+		}
 
 
 		private void Test<T>(T raw, CandidTypedValue candid, Func<T, T, bool> areEqual)

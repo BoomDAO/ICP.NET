@@ -24,25 +24,26 @@ namespace EdjCase.ICP.ClientGenerator
 
 	internal class ArraySourceCodeType : SourceCodeType
 	{
-		public SourceCodeType? GenericType { get; }
+		public SourceCodeType? ElementType { get; }
 
 		public override bool IsPredefinedType { get; } = true;
 
-		public ArraySourceCodeType(SourceCodeType? genericType)
+		public ArraySourceCodeType(SourceCodeType? elementType)
 		{
-			this.GenericType = genericType;
+			this.ElementType = elementType;
 		}
 	}
 
 	internal class ListSourceCodeType : SourceCodeType
 	{
-		public SourceCodeType GenericType { get; }
+		public SourceCodeType ElementType { get; }
 
-		public override bool IsPredefinedType { get; } = true;
+		public override bool IsPredefinedType { get; }
 
-		public ListSourceCodeType(SourceCodeType genericType)
+		public ListSourceCodeType(SourceCodeType genericType, bool usePredefined)
 		{
-			this.GenericType = genericType;
+			this.ElementType = genericType;
+			this.IsPredefinedType = usePredefined;
 		}
 	}
 
@@ -50,11 +51,12 @@ namespace EdjCase.ICP.ClientGenerator
 	{
 		public SourceCodeType GenericType { get; }
 
-		public override bool IsPredefinedType { get; } = true;
+		public override bool IsPredefinedType { get; }
 
-		public OptionalValueSourceCodeType(SourceCodeType genericType)
+		public OptionalValueSourceCodeType(SourceCodeType genericType, bool usePredefined)
 		{
 			this.GenericType = genericType;
+			this.IsPredefinedType = usePredefined;
 		}
 	}
 
@@ -63,12 +65,13 @@ namespace EdjCase.ICP.ClientGenerator
 		public SourceCodeType KeyType { get; }
 		public SourceCodeType ValueType { get; }
 
-		public override bool IsPredefinedType { get; } = true;
+		public override bool IsPredefinedType { get; }
 
-		public DictionarySourceCodeType(SourceCodeType keyType, SourceCodeType valueType)
+		public DictionarySourceCodeType(SourceCodeType keyType, SourceCodeType valueType, bool usePredefined)
 		{
 			this.KeyType = keyType;
 			this.ValueType = valueType;
+			this.IsPredefinedType= usePredefined;
 		}
 	}
 
