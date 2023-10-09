@@ -44,21 +44,33 @@ namespace Sample.Shared.ICRC1Ledger.Models
 
 		public class FromSubaccountInfo : OptionalValue<Subaccount>
 		{
-			protected FromSubaccountInfo()
+			public FromSubaccountInfo()
+			{
+			}
+
+			public FromSubaccountInfo(Subaccount value) : base(value)
 			{
 			}
 		}
 
 		public class FeeInfo : OptionalValue<Tokens>
 		{
-			protected FeeInfo()
+			public FeeInfo()
+			{
+			}
+
+			public FeeInfo(Tokens value) : base(value)
 			{
 			}
 		}
 
 		public class CreatedAtTimeInfo : OptionalValue<Timestamp>
 		{
-			protected CreatedAtTimeInfo()
+			public CreatedAtTimeInfo()
+			{
+			}
+
+			public CreatedAtTimeInfo(Timestamp value) : base(value)
 			{
 			}
 		}

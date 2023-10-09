@@ -113,7 +113,7 @@ namespace Sample.Shared.ICRC1Ledger.Models
 
 		public class ArrayInfo : List<Value>
 		{
-			protected ArrayInfo()
+			public ArrayInfo()
 			{
 			}
 		}

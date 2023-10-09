@@ -6,13 +6,17 @@ namespace Sample.Shared.AddressBook
 {
 	public class SelfRef : OptionalValue<SelfRef.SelfRefValue>
 	{
-		protected SelfRef()
+		public SelfRef()
+		{
+		}
+
+		public SelfRef(SelfRef.SelfRefValue value) : base(value)
 		{
 		}
 
 		public class SelfRefValue : List<SelfRef>
 		{
-			protected SelfRefValue()
+			public SelfRefValue()
 			{
 			}
 		}

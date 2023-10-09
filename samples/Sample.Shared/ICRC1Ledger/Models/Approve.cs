@@ -50,14 +50,22 @@ namespace Sample.Shared.ICRC1Ledger.Models
 
 		public class CreatedAtTimeInfo : OptionalValue<Timestamp>
 		{
-			protected CreatedAtTimeInfo()
+			public CreatedAtTimeInfo()
+			{
+			}
+
+			public CreatedAtTimeInfo(Timestamp value) : base(value)
 			{
 			}
 		}
 
 		public class ExpiresAtInfo : OptionalValue<Timestamp>
 		{
-			protected ExpiresAtInfo()
+			public ExpiresAtInfo()
+			{
+			}
+
+			public ExpiresAtInfo(Timestamp value) : base(value)
 			{
 			}
 		}

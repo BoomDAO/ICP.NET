@@ -35,7 +35,7 @@ namespace Sample.Shared.ICRC1Ledger.Models
 
 		public class ArchivedTransactionsInfo : List<GetTransactionsResponse.ArchivedTransactionsInfo.ArchivedTransactionsInfoElement>
 		{
-			protected ArchivedTransactionsInfo()
+			public ArchivedTransactionsInfo()
 			{
 			}
 

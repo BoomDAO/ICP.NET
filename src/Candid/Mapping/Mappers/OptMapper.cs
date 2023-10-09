@@ -17,13 +17,14 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 		private MethodInfo valueGetFunc;
 
 		public OptMapper(
+			Type type,
 			CandidType innerCandidType,
 			Type innerType
 		)
 		{
 			this.InnerCandidType = innerCandidType ?? throw new ArgumentNullException(nameof(innerCandidType));
 			this.InnerType = innerType ?? throw new ArgumentNullException(nameof(innerType));
-			this.Type = typeof(OptionalValue<>).MakeGenericType(innerType);
+			this.Type = type;
 			this.CandidType = new CandidOptionalType(this.InnerCandidType);
 			this.hasValueProp = this.Type.GetProperty(nameof(OptionalValue<object>.HasValue));
 			this.valueGetFunc = this.Type.GetMethod(nameof(OptionalValue<object>.GetValueOrThrow));

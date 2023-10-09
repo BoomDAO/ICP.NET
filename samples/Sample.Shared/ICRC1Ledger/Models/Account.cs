@@ -25,7 +25,11 @@ namespace Sample.Shared.ICRC1Ledger.Models
 
 		public class SubaccountInfo : OptionalValue<Subaccount>
 		{
-			protected SubaccountInfo()
+			public SubaccountInfo()
+			{
+			}
+
+			public SubaccountInfo(Subaccount value) : base(value)
 			{
 			}
 		}
