@@ -276,24 +276,15 @@ namespace EdjCase.ICP.Candid.Mapping
 				return BuildEnumVariant(objType);
 			}
 
-			// Generics
-			if (objType.IsGenericType)
+			if (ImplementsType(objType, typeof(OptionalValue<>), out Type? optionalType))
 			{
-				Type genericTypeDefinition = objType.GetGenericTypeDefinition();
-				if (genericTypeDefinition == typeof(OptionalValue<>))
-				{
-					return BuildOpt(objType);
-				}
-				if (objType.Name.StartsWith("ValueTuple"))
-				{
-					return BuildTuple(objType, objType.GenericTypeArguments);
-				}
-				if(genericTypeDefinition == typeof(Nullable<>))
-				{
-					return BuildNullableStruct(objType);
-				}
+				return BuildOpt(objType, optionalType.GenericTypeArguments[0]);
 			}
-			if (IsImplementationOfGenericType(objType, typeof(IDictionary<, >), out Type? dictInterface))
+			if (ImplementsType(objType, typeof(Nullable<>), out Type? nullableType))
+			{
+				return BuildNullableStruct(objType, nullableType.GenericTypeArguments[0]);
+			}
+			if (ImplementsType(objType, typeof(IDictionary<,>), out Type? dictInterface))
 			{
 				return BuildDictVector(
 					objType,
@@ -301,7 +292,7 @@ namespace EdjCase.ICP.Candid.Mapping
 					dictInterface.GenericTypeArguments[1]
 				);
 			}
-			if (IsImplementationOfGenericType(objType, typeof(IList<>), out Type? listInterface))
+			if (ImplementsType(objType, typeof(IList<>), out Type? listInterface))
 			{
 				Type innerType = listInterface.GenericTypeArguments[0];
 				return BuildVector(
@@ -318,6 +309,10 @@ namespace EdjCase.ICP.Candid.Mapping
 						return list;
 					}
 				);
+			}
+			if (objType.IsGenericType && objType.Name.StartsWith("ValueTuple"))
+			{
+				return BuildTuple(objType, objType.GenericTypeArguments);
 			}
 
 			if (objType == typeof(NullValue))
@@ -344,11 +339,39 @@ namespace EdjCase.ICP.Candid.Mapping
 			// Assume anything else is a record
 			return BuildRecord(objType);
 		}
-		private static bool IsImplementationOfGenericType(Type type, Type genericInterface, [NotNullWhen(true)] out Type? @interface)
+		private static bool ImplementsType(Type type, Type implementationType, [NotNullWhen(true)] out Type? actualType)
 		{
-			@interface = type.GetInterfaces()
-					   .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == genericInterface);
-			return @interface != null;
+			if (implementationType.IsInterface)
+			{
+				actualType = type.GetInterfaces()
+						   .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == implementationType);
+				return actualType != null;
+			}
+			else
+			{
+				if (implementationType.IsGenericTypeDefinition)
+				{
+					actualType = FindImplementationsOfGeneric(type, implementationType);
+					return actualType != null;
+				}
+				actualType = implementationType;
+				return implementationType.IsAssignableFrom(type);
+			}
+		}
+
+		static Type? FindImplementationsOfGeneric(Type type, Type genericTypeDef)
+		{
+			Type currentType = type;
+			while (currentType != null && currentType != typeof(object))
+			{
+				if (currentType.IsGenericType && currentType.GetGenericTypeDefinition() == genericTypeDef)
+				{
+					return currentType;
+				}
+
+				currentType = currentType.BaseType;
+			}
+			return null;
 		}
 
 		private static IResolvableTypeInfo BuildStruct<T>(CandidType candidType, T value, Func<CandidValue> valueGetter)
@@ -373,26 +396,22 @@ namespace EdjCase.ICP.Candid.Mapping
 			return new ResolvedTypeInfo(objType, type, mapper);
 		}
 
-		private static IResolvableTypeInfo BuildNullableStruct(Type objType)
+		private static IResolvableTypeInfo BuildNullableStruct(Type objType, Type innerType)
 		{
-			Type innerType = objType.GenericTypeArguments[0];
-
 			var dependencies = new List<Type> { innerType };
 			return new ComplexTypeInfo(objType, dependencies, (resolvedDependencies) =>
 			{
 				CandidType innerCandidType = resolvedDependencies[innerType];
-				return (new OptMapper(innerCandidType, innerType), new CandidOptionalType(innerCandidType));
+				return (new OptMapper(objType, innerCandidType, innerType), new CandidOptionalType(innerCandidType));
 			});
 		}
-		private static IResolvableTypeInfo BuildOpt(Type objType)
+		private static IResolvableTypeInfo BuildOpt(Type objType, Type innerType)
 		{
-			Type innerType = objType.GenericTypeArguments[0];
-
 			var dependencies = new List<Type> { innerType };
 			return new ComplexTypeInfo(objType, dependencies, (resolvedDependencies) =>
 			{
 				CandidType innerCandidType = resolvedDependencies[innerType];
-				return (new OptMapper(innerCandidType, innerType), new CandidOptionalType(innerCandidType));
+				return (new OptMapper(objType, innerCandidType, innerType), new CandidOptionalType(innerCandidType));
 			});
 		}
 

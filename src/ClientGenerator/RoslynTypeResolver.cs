@@ -257,6 +257,30 @@ namespace EdjCase.ICP.ClientGenerator
 			ResolvedType resolvedGenericType = this.ResolveType(v.GenericType, parentName + "Value", oValueName, parentTypeIds);
 			List<ClassProperty> properties = new();
 			List<MethodDeclarationSyntax> methods = new();
+
+			var constructorProps = new List<(string Name, TypeName Type, bool SetValue)>
+			{
+				("value", resolvedGenericType.Name, false)
+			};
+			var constructor = this.GenerateConstructor(oValueName, AccessType.Public, constructorProps)
+				.WithInitializer(SyntaxFactory.ConstructorInitializer(
+					SyntaxKind.BaseConstructorInitializer,
+					SyntaxFactory.ArgumentList(
+						SyntaxFactory.SingletonSeparatedList(
+							SyntaxFactory.Argument(
+								SyntaxFactory.IdentifierName("value")
+							)
+						)
+					)
+				));
+			List<MemberDeclarationSyntax> subTypes = new()
+			{
+				constructor
+			};
+			if(resolvedGenericType.GeneratedSyntax?.Any()== true)
+			{
+				subTypes.AddRange(resolvedGenericType.GeneratedSyntax);
+			}
 			return this.GenerateClass(
 				name: oValueName,
 				properties: properties,
@@ -264,8 +288,8 @@ namespace EdjCase.ICP.ClientGenerator
 				customProperties: null,
 				methods: methods,
 				attributes: null,
-				emptyConstructorAccess: AccessType.Protected,
-				subTypes: resolvedGenericType.GeneratedSyntax?.ToList(),
+				emptyConstructorAccess: AccessType.Public,
+				subTypes: subTypes,
 				implementTypes: new List<TypeName>
 				{
 					new OptionalValueTypeName(resolvedGenericType.Name)
@@ -291,7 +315,7 @@ namespace EdjCase.ICP.ClientGenerator
 				customProperties: null,
 				methods: methods,
 				attributes: null,
-				emptyConstructorAccess: AccessType.Protected,
+				emptyConstructorAccess: AccessType.Public,
 				subTypes: elementType.GeneratedSyntax?.ToList(),
 				implementTypes: new List<TypeName>
 				{
@@ -328,7 +352,7 @@ namespace EdjCase.ICP.ClientGenerator
 				customProperties: null,
 				methods: methods,
 				attributes: null,
-				emptyConstructorAccess: AccessType.Protected,
+				emptyConstructorAccess: AccessType.Public,
 				subTypes: subTypes,
 				implementTypes: new List<TypeName>
 				{
@@ -1529,13 +1553,13 @@ namespace EdjCase.ICP.ClientGenerator
 		private ConstructorDeclarationSyntax GenerateConstructor(
 			TypeName name,
 			AccessType access,
-			List<ClassProperty> properties,
-			List<ClassProperty>? optionalProperties = null
+			List<(string Name, TypeName Type, bool SetValue)> properties,
+			List<(string Name, TypeName Type, bool SetValue)>? optionalProperties = null
 		)
 		{
-			optionalProperties ??= new List<ClassProperty>();
-			IEnumerable<ExpressionStatementSyntax> propertyAssignments = properties
-				.Concat(optionalProperties)
+			optionalProperties ??= new List<(string Name, TypeName Type, bool SetValue)>();
+			IEnumerable<ExpressionStatementSyntax> propertyAssignments = properties.Where(p => p.SetValue)
+				.Concat(optionalProperties.Where(p => p.SetValue))
 				.Select(p =>
 				{
 					string argName = this.NameHelper.ToCamelCase(p.Name);
@@ -1564,7 +1588,6 @@ namespace EdjCase.ICP.ClientGenerator
 					SyntaxFactory.ParameterList(
 						SyntaxFactory.SeparatedList(
 							properties
-							.Where(p => p.Type != null)
 							.Select(p =>
 							{
 								string argName = this.NameHelper.ToCamelCase(p.Name);
@@ -1574,7 +1597,6 @@ namespace EdjCase.ICP.ClientGenerator
 								.WithType(p.Type!.ToTypeSyntax(this.FeatureNullable));
 							})
 							.Concat(optionalProperties
-								.Where(p => p.Type != null)
 								.Select(p =>
 								{
 									string argName = this.NameHelper.ToCamelCase(p.Name);
@@ -1777,7 +1799,15 @@ namespace EdjCase.ICP.ClientGenerator
 			if (properties.Any())
 			{
 				// Only create constructor if there are properties
-				constructors.Add(this.GenerateConstructor(name, AccessType.Public, properties, optionalProperties));
+				List<(string Name, TypeName Type, bool SetValue)> constructorProps = properties
+					.Where(p => p.Type != null)
+					.Select(p => (p.Name, p.Type!, true))
+					.ToList();
+				List<(string Name, TypeName Type, bool SetValue)>? constructorOptProps = optionalProperties?
+					.Where(p => p.Type != null)
+					.Select(p => (p.Name, p.Type!, true))
+					.ToList();
+				constructors.Add(this.GenerateConstructor(name, AccessType.Public, constructorProps, constructorOptProps));
 			}
 
 			if (emptyConstructorAccess != null)
@@ -1786,7 +1816,7 @@ namespace EdjCase.ICP.ClientGenerator
 				constructors.Add(this.GenerateConstructor(
 					name: name,
 					access: emptyConstructorAccess.Value,
-					properties: new List<ClassProperty>()
+					properties: new List<(string Name, TypeName Type, bool SetValue)>()
 				));
 			}
 

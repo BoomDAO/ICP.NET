@@ -25,7 +25,11 @@ namespace Sample.Shared.ICRC1Ledger.Models
 
 		public class ExpiresAtInfo : OptionalValue<Timestamp>
 		{
-			protected ExpiresAtInfo()
+			public ExpiresAtInfo()
+			{
+			}
+
+			public ExpiresAtInfo(Timestamp value) : base(value)
 			{
 			}
 		}

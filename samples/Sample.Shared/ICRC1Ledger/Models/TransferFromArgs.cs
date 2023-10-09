@@ -48,21 +48,33 @@ namespace Sample.Shared.ICRC1Ledger.Models
 
 		public class SpenderSubaccountInfo : OptionalValue<Subaccount>
 		{
-			protected SpenderSubaccountInfo()
+			public SpenderSubaccountInfo()
+			{
+			}
+
+			public SpenderSubaccountInfo(Subaccount value) : base(value)
 			{
 			}
 		}
 
 		public class FeeInfo : OptionalValue<Tokens>
 		{
-			protected FeeInfo()
+			public FeeInfo()
+			{
+			}
+
+			public FeeInfo(Tokens value) : base(value)
 			{
 			}
 		}
 
 		public class CreatedAtTimeInfo : OptionalValue<Timestamp>
 		{
-			protected CreatedAtTimeInfo()
+			public CreatedAtTimeInfo()
+			{
+			}
+
+			public CreatedAtTimeInfo(Timestamp value) : base(value)
 			{
 			}
 		}

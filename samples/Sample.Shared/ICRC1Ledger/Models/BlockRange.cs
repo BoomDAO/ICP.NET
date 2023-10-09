@@ -21,7 +21,7 @@ namespace Sample.Shared.ICRC1Ledger.Models
 
 		public class BlocksInfo : List<Block>
 		{
-			protected BlocksInfo()
+			public BlocksInfo()
 			{
 			}
 		}

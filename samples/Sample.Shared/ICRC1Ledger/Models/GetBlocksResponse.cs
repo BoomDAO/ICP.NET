@@ -40,14 +40,14 @@ namespace Sample.Shared.ICRC1Ledger.Models
 
 		public class BlocksInfo : List<Block>
 		{
-			protected BlocksInfo()
+			public BlocksInfo()
 			{
 			}
 		}
 
 		public class ArchivedBlocksInfo : List<GetBlocksResponse.ArchivedBlocksInfo.ArchivedBlocksInfoElement>
 		{
-			protected ArchivedBlocksInfo()
+			public ArchivedBlocksInfo()
 			{
 			}
 
