@@ -1,5 +1,6 @@
 using EdjCase.ICP.Candid.Mapping;
 using EdjCase.ICP.Candid.Models;
+using Sample.Shared.ICRC1Ledger.Models;
 using Timestamp = System.UInt64;
 
 namespace Sample.Shared.ICRC1Ledger.Models
@@ -10,9 +11,9 @@ namespace Sample.Shared.ICRC1Ledger.Models
 		public UnboundedUInt Allowance_ { get; set; }
 
 		[CandidName("expires_at")]
-		public OptionalValue<Timestamp> ExpiresAt { get; set; }
+		public Allowance.ExpiresAtInfo ExpiresAt { get; set; }
 
-		public Allowance(UnboundedUInt allowance, OptionalValue<Timestamp> expiresAt)
+		public Allowance(UnboundedUInt allowance, Allowance.ExpiresAtInfo expiresAt)
 		{
 			this.Allowance_ = allowance;
 			this.ExpiresAt = expiresAt;
@@ -20,6 +21,13 @@ namespace Sample.Shared.ICRC1Ledger.Models
 
 		public Allowance()
 		{
+		}
+
+		public class ExpiresAtInfo : OptionalValue<Timestamp>
+		{
+			protected ExpiresAtInfo()
+			{
+			}
 		}
 	}
 }

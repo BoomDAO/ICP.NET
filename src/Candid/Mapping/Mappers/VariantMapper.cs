@@ -45,7 +45,32 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 			object? variantValue;
 			if (optionInfo.Type != null)
 			{
-				variantValue = converter.ToObject(optionInfo.Type, variant.Value);
+				if (optionInfo.UseOptionalOverride && variant.Value is CandidOptional o)
+				{
+					// If UseOptionalOverride, then unwrap the inner value
+					if (o.Value.IsNull())
+					{
+						// If null, no need to convert
+						variantValue = null;
+					}
+					else
+					{
+						Type t = optionInfo.Type;
+						if (t.IsGenericType
+							&& t.GetGenericTypeDefinition() == typeof(Nullable<>))
+						{
+							// Get T of Nullable<T>
+							t = t.GetGenericArguments()[0];
+						}
+						// Use inner value
+						variantValue = converter.ToObject(t, o.Value);
+					}
+				}
+				else
+				{
+					// Treat like normal
+					variantValue = converter.ToObject(optionInfo.Type, variant.Value);
+				}
 			}
 			else
 			{
@@ -76,6 +101,11 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 			else if (optionInfo.Type != null)
 			{
 				innerValue = converter.FromObject(innerObj);
+				if (optionInfo.UseOptionalOverride)
+				{
+					// Wrap in candid optional
+					innerValue = new CandidOptional(innerValue);
+				}
 			}
 			else
 			{
@@ -93,11 +123,13 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 		{
 			public Enum EnumValue { get; }
 			public Type? Type { get; }
+			public bool UseOptionalOverride { get; }
 
-			public Option(Enum enumValue, Type? type)
+			public Option(Enum enumValue, Type? type, bool useOptionalOverride)
 			{
 				this.EnumValue = enumValue ?? throw new ArgumentNullException(nameof(enumValue));
 				this.Type = type;
+				this.UseOptionalOverride = useOptionalOverride;
 			}
 		}
 	}

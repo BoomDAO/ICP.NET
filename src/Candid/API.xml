@@ -1692,6 +1692,12 @@
         <member name="M:EdjCase.ICP.Candid.Models.Principal.GetHashCode">
             <inheritdoc />
         </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Principal.op_Equality(EdjCase.ICP.Candid.Models.Principal,EdjCase.ICP.Candid.Models.Principal)">
+            <inheritdoc />
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Principal.op_Inequality(EdjCase.ICP.Candid.Models.Principal,EdjCase.ICP.Candid.Models.Principal)">
+            <inheritdoc />
+        </member>
         <member name="T:EdjCase.ICP.Candid.Models.RequestId">
             <summary>
             A helper class to wrap around the request id byte array that identifies a request

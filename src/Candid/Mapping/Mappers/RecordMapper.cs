@@ -27,7 +27,22 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 			foreach ((CandidTag tag, PropertyMetaData property) in this.Properties)
 			{
 				object? fieldValue;
-				if (!record.Fields.TryGetValue(tag, out CandidValue fieldCandidValue))
+				if (record.Fields.TryGetValue(tag, out CandidValue fieldCandidValue))
+				{
+					if (fieldCandidValue is not CandidOptional o || !o.Value.IsNull())
+					{
+						Type t = property.PropertyInfo.PropertyType;
+						if (t.IsGenericType
+							&& t.GetGenericTypeDefinition() == typeof(Nullable<>))
+						{
+							// Get T of Nullable<T>
+							t = t.GetGenericArguments()[0];
+						}
+						fieldValue = converter.ToObject(t, fieldCandidValue);
+						property.PropertyInfo.SetValue(obj, fieldValue);
+					}
+				}
+				else
 				{
 					if (!this.CandidType.Fields.TryGetValue(tag, out CandidType fieldType))
 					{
@@ -40,11 +55,8 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 						// or has an extra
 						throw new Exception($"Could not map candid record to type '{this.Type}'. Record is missing field '{tag}'");
 					}
-					// Set to optional value if not specified in record
-					fieldCandidValue = new CandidOptional(null);
+					// Don't set if the value is unspecified
 				}
-				fieldValue = converter.ToObject(property.PropertyInfo.PropertyType, fieldCandidValue);
-				property.PropertyInfo.SetValue(obj, fieldValue);
 			}
 			return obj;
 		}

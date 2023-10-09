@@ -4,13 +4,13 @@ using System;
 
 namespace Sample.Shared.ICRC1Ledger.Models
 {
-	[Variant()]
+	[Variant]
 	public class ChangeFeeCollector
 	{
-		[VariantTagProperty()]
+		[VariantTagProperty]
 		public ChangeFeeCollectorTag Tag { get; set; }
 
-		[VariantValueProperty()]
+		[VariantValueProperty]
 		public object? Value { get; set; }
 
 		public ChangeFeeCollector(ChangeFeeCollectorTag tag, object? value)

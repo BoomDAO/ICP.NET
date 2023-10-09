@@ -7,13 +7,13 @@ using Timestamp = System.UInt64;
 
 namespace Sample.Shared.ICRC1Ledger.Models
 {
-	[Variant()]
+	[Variant]
 	public class ApproveError
 	{
-		[VariantTagProperty()]
+		[VariantTagProperty]
 		public ApproveErrorTag Tag { get; set; }
 
-		[VariantValueProperty()]
+		[VariantValueProperty]
 		public object? Value { get; set; }
 
 		public ApproveError(ApproveErrorTag tag, object? value)

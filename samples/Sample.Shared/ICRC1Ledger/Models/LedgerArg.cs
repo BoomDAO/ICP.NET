@@ -5,13 +5,13 @@ using System;
 
 namespace Sample.Shared.ICRC1Ledger.Models
 {
-	[Variant()]
+	[Variant]
 	public class LedgerArg
 	{
-		[VariantTagProperty()]
+		[VariantTagProperty]
 		public LedgerArgTag Tag { get; set; }
 
-		[VariantValueProperty()]
+		[VariantValueProperty]
 		public object? Value { get; set; }
 
 		public LedgerArg(LedgerArgTag tag, object? value)

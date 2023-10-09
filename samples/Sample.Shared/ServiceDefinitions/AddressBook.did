@@ -8,8 +8,10 @@ type Dict = vec record {
   text;
   nat;
 }
+type SelfRef = opt vec SelfRef;
 service address_book : {
   set_address: (name : text, addr : Address) -> ();
   get_address: (name : text) -> (opt Address) query;
+  get_self: () -> (SelfRef) query;
   get_dict: () -> (Dict) query;
 }

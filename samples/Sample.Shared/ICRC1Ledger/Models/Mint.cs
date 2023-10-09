@@ -15,12 +15,12 @@ namespace Sample.Shared.ICRC1Ledger.Models
 		public OptionalValue<List<byte>> Memo { get; set; }
 
 		[CandidName("created_at_time")]
-		public OptionalValue<Timestamp> CreatedAtTime { get; set; }
+		public Mint.CreatedAtTimeInfo CreatedAtTime { get; set; }
 
 		[CandidName("amount")]
 		public UnboundedUInt Amount { get; set; }
 
-		public Mint(Account to, OptionalValue<List<byte>> memo, OptionalValue<Timestamp> createdAtTime, UnboundedUInt amount)
+		public Mint(Account to, OptionalValue<List<byte>> memo, Mint.CreatedAtTimeInfo createdAtTime, UnboundedUInt amount)
 		{
 			this.To = to;
 			this.Memo = memo;
@@ -30,6 +30,13 @@ namespace Sample.Shared.ICRC1Ledger.Models
 
 		public Mint()
 		{
+		}
+
+		public class CreatedAtTimeInfo : OptionalValue<Timestamp>
+		{
+			protected CreatedAtTimeInfo()
+			{
+			}
 		}
 	}
 }

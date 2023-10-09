@@ -152,18 +152,19 @@ file-path = ""../MyService.did""
 			}
 
 			Console.WriteLine($"Writing client file to: {options.OutputDirectory}\\{result.Name}.cs");
-			WriteFile(null, result.Name, result.ClientFile);
+			WriteFile(options.OutputDirectory, null, result.Name, result.ClientFile);
 
 
 			Console.WriteLine($"Writing data model files to directory: {options.OutputDirectory}\\Models\\");
 			foreach ((string name, CompilationUnitSyntax sourceCode) in result.TypeFiles)
 			{
-				WriteFile(options.NoFolders ? null : "Models", name, sourceCode);
+				WriteFile(options.OutputDirectory, options.NoFolders ? null : "Models", name, sourceCode);
 			}
 			Console.WriteLine("Client successfully generated!");
 			Console.WriteLine();
 
 			void WriteFile(
+				string outputDirectory,
 				string? subDirectory,
 				string fileName,
 				CompilationUnitSyntax syntax
@@ -178,7 +179,7 @@ file-path = ""../MyService.did""
 					? options.OutputDirectory
 					: Path.Combine(options.OutputDirectory, subDirectory);
 				Directory.CreateDirectory(directory);
-				string filePath = Path.Combine(directory, fileName + ".cs");
+				string filePath = Path.Combine(outputDirectory, directory, fileName + ".cs");
 
 				string text = ClientSyntax.GenerateFileContents(syntax);
 

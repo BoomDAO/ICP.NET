@@ -59,7 +59,7 @@ namespace EdjCase.ICP.Candid.Mapping
 	/// An attribute to use the raw nullable value vs OptionalValue type
 	/// E.g. OptionalValue of string, can be a string with this attribute
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
+	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Method)]
 	public class CandidOptionalAttribute : Attribute
 	{
 

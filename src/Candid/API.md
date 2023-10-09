@@ -572,6 +572,8 @@
   - [ToHex()](#M-EdjCase-ICP-Candid-Models-Principal-ToHex 'EdjCase.ICP.Candid.Models.Principal.ToHex')
   - [ToString()](#M-EdjCase-ICP-Candid-Models-Principal-ToString 'EdjCase.ICP.Candid.Models.Principal.ToString')
   - [ToText()](#M-EdjCase-ICP-Candid-Models-Principal-ToText 'EdjCase.ICP.Candid.Models.Principal.ToText')
+  - [op_Equality()](#M-EdjCase-ICP-Candid-Models-Principal-op_Equality-EdjCase-ICP-Candid-Models-Principal,EdjCase-ICP-Candid-Models-Principal- 'EdjCase.ICP.Candid.Models.Principal.op_Equality(EdjCase.ICP.Candid.Models.Principal,EdjCase.ICP.Candid.Models.Principal)')
+  - [op_Inequality()](#M-EdjCase-ICP-Candid-Models-Principal-op_Inequality-EdjCase-ICP-Candid-Models-Principal,EdjCase-ICP-Candid-Models-Principal- 'EdjCase.ICP.Candid.Models.Principal.op_Inequality(EdjCase.ICP.Candid.Models.Principal,EdjCase.ICP.Candid.Models.Principal)')
 - [PrincipalType](#T-EdjCase-ICP-Candid-Models-PrincipalType 'EdjCase.ICP.Candid.Models.PrincipalType')
   - [Anonymous](#F-EdjCase-ICP-Candid-Models-PrincipalType-Anonymous 'EdjCase.ICP.Candid.Models.PrincipalType.Anonymous')
   - [Derived](#F-EdjCase-ICP-Candid-Models-PrincipalType-Derived 'EdjCase.ICP.Candid.Models.PrincipalType.Derived')
@@ -7828,6 +7830,28 @@ Converts the principal into its text format, such as "rrkah-fqaaa-aaaaa-aaaaq-ca
 ##### Returns
 
 A text version of the principal
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-Principal-op_Equality-EdjCase-ICP-Candid-Models-Principal,EdjCase-ICP-Candid-Models-Principal-'></a>
+### op_Equality() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-Principal-op_Inequality-EdjCase-ICP-Candid-Models-Principal,EdjCase-ICP-Candid-Models-Principal-'></a>
+### op_Inequality() `method`
+
+##### Summary
+
+*Inherit from parent.*
 
 ##### Parameters
 

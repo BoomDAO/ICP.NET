@@ -3,18 +3,19 @@ using Sample.Shared.Dex.Models;
 
 namespace Sample.Shared.Dex.Models
 {
-	[Variant()]
+	[Variant]
 	public class OrderPlacementReceipt
 	{
-		[VariantTagProperty()]
+		[VariantTagProperty]
 		public OrderPlacementReceiptTag Tag { get; set; }
 
-		[VariantValueProperty()]
+		[VariantValueProperty]
 		public object? Value { get; set; }
 
 		public OrderPlacementErr? Err { get => this.Tag == OrderPlacementReceiptTag.Err ? (OrderPlacementErr)this.Value! : default; set => (this.Tag, this.Value) = (OrderPlacementReceiptTag.Err, value); }
 
-		public Order? Ok { get => this.Tag == OrderPlacementReceiptTag.Ok ? (Order?)this.Value! : default; set => (this.Tag, this.Value) = (OrderPlacementReceiptTag.Ok, value); }
+		[CandidOptional]
+		public Order? Ok { get => this.Tag == OrderPlacementReceiptTag.Ok ? (Order)this.Value! : default; set => (this.Tag, this.Value) = (OrderPlacementReceiptTag.Ok, value); }
 
 		public OrderPlacementReceipt(OrderPlacementReceiptTag tag, object? value)
 		{

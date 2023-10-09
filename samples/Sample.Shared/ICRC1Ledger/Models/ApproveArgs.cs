@@ -18,7 +18,7 @@ namespace Sample.Shared.ICRC1Ledger.Models
 		public OptionalValue<List<byte>> FromSubaccount { get; set; }
 
 		[CandidName("created_at_time")]
-		public OptionalValue<Timestamp> CreatedAtTime { get; set; }
+		public ApproveArgs.CreatedAtTimeInfo CreatedAtTime { get; set; }
 
 		[CandidName("amount")]
 		public UnboundedUInt Amount { get; set; }
@@ -27,12 +27,12 @@ namespace Sample.Shared.ICRC1Ledger.Models
 		public OptionalValue<UnboundedUInt> ExpectedAllowance { get; set; }
 
 		[CandidName("expires_at")]
-		public OptionalValue<Timestamp> ExpiresAt { get; set; }
+		public ApproveArgs.ExpiresAtInfo ExpiresAt { get; set; }
 
 		[CandidName("spender")]
 		public Account Spender { get; set; }
 
-		public ApproveArgs(OptionalValue<UnboundedUInt> fee, OptionalValue<List<byte>> memo, OptionalValue<List<byte>> fromSubaccount, OptionalValue<Timestamp> createdAtTime, UnboundedUInt amount, OptionalValue<UnboundedUInt> expectedAllowance, OptionalValue<Timestamp> expiresAt, Account spender)
+		public ApproveArgs(OptionalValue<UnboundedUInt> fee, OptionalValue<List<byte>> memo, OptionalValue<List<byte>> fromSubaccount, ApproveArgs.CreatedAtTimeInfo createdAtTime, UnboundedUInt amount, OptionalValue<UnboundedUInt> expectedAllowance, ApproveArgs.ExpiresAtInfo expiresAt, Account spender)
 		{
 			this.Fee = fee;
 			this.Memo = memo;
@@ -46,6 +46,20 @@ namespace Sample.Shared.ICRC1Ledger.Models
 
 		public ApproveArgs()
 		{
+		}
+
+		public class CreatedAtTimeInfo : OptionalValue<Timestamp>
+		{
+			protected CreatedAtTimeInfo()
+			{
+			}
+		}
+
+		public class ExpiresAtInfo : OptionalValue<Timestamp>
+		{
+			protected ExpiresAtInfo()
+			{
+			}
 		}
 	}
 }

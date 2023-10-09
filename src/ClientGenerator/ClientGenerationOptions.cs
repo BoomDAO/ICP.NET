@@ -57,6 +57,12 @@ namespace EdjCase.ICP.ClientGenerator
 		/// </summary>
 		public bool KeepCandidCase { get; }
 		/// <summary>
+		/// If true, OptionalValue will be used for opt values
+		/// Otherwise will use just the nullable class values or nullable struct
+		/// Defaults to true
+		/// </summary>
+		public bool OverrideOptionalValue { get; }
+		/// <summary>
 		/// Optional. The url of the boundry node for the internet computer. Defaults to ic0.app
 		/// </summary>
 		public Uri? BoundryNodeUrl { get; }
@@ -78,6 +84,7 @@ namespace EdjCase.ICP.ClientGenerator
 		/// <param name="featureNullable">If true, the nullable C# feature will be used</param>
 		/// <param name="variantsUseProperties">If true, variant classes will be generated with properties instead of methods</param>
 		/// <param name="keepCandidCase">If true, the names of properties and methods will keep the raw candid name. Otherwise they will be converted to something prettier</param>
+		/// <param name="overrideOptionalValue">If false, OptionalValue will be used for opt values, Otherwise will use just the nullable class values or nullable struct where possible. Defaults to false</param>
 		/// <param name="boundryNodeUrl">Optional. The url of the boundry node for the internet computer. Defaults to ic0.app</param>
 		/// <param name="types">Optional. Specifies options for each candid type in the definition</param>
 		public ClientGenerationOptions(
@@ -91,6 +98,7 @@ namespace EdjCase.ICP.ClientGenerator
 			bool featureNullable = false,
 			bool variantsUseProperties = false,
 			bool keepCandidCase = false,
+			bool overrideOptionalValue = false,
 			Uri? boundryNodeUrl = null,
 			Dictionary<string, NamedTypeOptions>? types = null
 		)
@@ -110,6 +118,7 @@ namespace EdjCase.ICP.ClientGenerator
 			this.FeatureNullable = featureNullable;
 			this.VariantsUseProperties = variantsUseProperties;
 			this.KeepCandidCase = keepCandidCase;
+			this.OverrideOptionalValue = overrideOptionalValue;
 			this.BoundryNodeUrl = boundryNodeUrl;
 			this.Types = types ?? new Dictionary<string, NamedTypeOptions>();
 		}

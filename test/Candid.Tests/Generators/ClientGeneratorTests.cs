@@ -28,22 +28,38 @@ namespace EdjCase.ICP.Candid.Tests.Generators
 			string fileText = GetFileText(serviceName + ".did");
 			string baseNamespace = "Test";
 			CandidServiceDescription serviceFile = CandidServiceDescription.Parse(fileText);
-			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, true, true, true, false);
-			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, true, true, false, false);
-			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, true, false, false, false);
-			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, true, false, true, false);
-			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, false, true, true, false);
-			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, false, true, false, false);
-			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, false, false, true, false);
-			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, false, false, false, false);
-			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, true, true, true, true);
-			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, true, true, false, true);
-			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, true, false, false, true);
-			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, true, false, true, true);
-			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, false, true, true, true);
-			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, false, true, false, true);
-			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, false, false, true, true);
-			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, false, false, false, true);
+			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, true, true, true, false, true);
+			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, true, true, false, false, true);
+			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, true, false, false, false, true);
+			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, true, false, true, false, true);
+			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, false, true, true, false, true);
+			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, false, true, false, false, true);
+			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, false, false, true, false, true);
+			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, false, false, false, false, true);
+			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, true, true, true, true, true);
+			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, true, true, false, true, true);
+			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, true, false, false, true, true);
+			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, true, false, true, true, true);
+			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, false, true, true, true, true);
+			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, false, true, false, true, true);
+			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, false, false, true, true, true);
+			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, false, false, false, true, true);
+			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, true, true, true, false, false);
+			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, true, true, false, false, false);
+			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, true, false, false, false, false);
+			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, true, false, true, false, false);
+			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, false, true, true, false, false);
+			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, false, true, false, false, false);
+			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, false, false, true, false, false);
+			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, false, false, false, false, false);
+			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, true, true, true, true, false);
+			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, true, true, false, true, false);
+			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, true, false, false, true, false);
+			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, true, false, true, true, false);
+			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, false, true, true, true, false);
+			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, false, true, false, true, false);
+			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, false, false, true, true, false);
+			this.GenerateClientInternal(serviceFile, baseNamespace, serviceName, false, false, false, true, false);
 		}
 
 		private void GenerateClientInternal(
@@ -53,6 +69,7 @@ namespace EdjCase.ICP.Candid.Tests.Generators
 			bool noFolders,
 			bool featureNullable,
 			bool keepCandidCase,
+			bool overrideOptionalValue,
 			bool variantsUseProperties
 		)
 		{
@@ -67,6 +84,7 @@ namespace EdjCase.ICP.Candid.Tests.Generators
 				featureNullable: featureNullable, 
 				variantsUseProperties: variantsUseProperties,
 				keepCandidCase: keepCandidCase,
+				overrideOptionalValue: overrideOptionalValue,
 				boundryNodeUrl: null,
 				types: null
 			);
@@ -91,7 +109,7 @@ namespace EdjCase.ICP.Candid.Tests.Generators
 				//trees.Add(SyntaxFactory.SyntaxTree(f.Syntax));
 			}
 
-			Snapshot.Match(clientCode, $"{serviceName}_NoFolders_{noFolders}_Nullable_{featureNullable}_KeepCandidCase_{keepCandidCase}_VariantsUseProperties_{variantsUseProperties}");
+			Snapshot.Match(clientCode, $"{serviceName}_NoFolders_{noFolders}_Nullable_{featureNullable}_KeepCandidCase_{keepCandidCase}_VariantsUseProperties_{variantsUseProperties}_OverrideOptionalValue_{overrideOptionalValue}");
 
 			//TODO
 			//CSharpCompilation compilation = CSharpCompilation

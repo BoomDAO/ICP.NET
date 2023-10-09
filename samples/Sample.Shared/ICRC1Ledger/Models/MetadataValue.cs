@@ -6,13 +6,13 @@ using System;
 
 namespace Sample.Shared.ICRC1Ledger.Models
 {
-	[Variant()]
+	[Variant]
 	public class MetadataValue
 	{
-		[VariantTagProperty()]
+		[VariantTagProperty]
 		public MetadataValueTag Tag { get; set; }
 
-		[VariantValueProperty()]
+		[VariantValueProperty]
 		public object? Value { get; set; }
 
 		public MetadataValue(MetadataValueTag tag, object? value)

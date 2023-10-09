@@ -24,25 +24,26 @@ namespace EdjCase.ICP.ClientGenerator
 
 	internal class ArraySourceCodeType : SourceCodeType
 	{
-		public SourceCodeType? GenericType { get; }
+		public SourceCodeType? ElementType { get; }
 
 		public override bool IsPredefinedType { get; } = true;
 
-		public ArraySourceCodeType(SourceCodeType? genericType)
+		public ArraySourceCodeType(SourceCodeType? elementType)
 		{
-			this.GenericType = genericType;
+			this.ElementType = elementType;
 		}
 	}
 
 	internal class ListSourceCodeType : SourceCodeType
 	{
-		public SourceCodeType GenericType { get; }
+		public SourceCodeType ElementType { get; }
 
-		public override bool IsPredefinedType { get; } = true;
+		public override bool IsPredefinedType { get; }
 
-		public ListSourceCodeType(SourceCodeType genericType)
+		public ListSourceCodeType(SourceCodeType genericType, bool usePredefined)
 		{
-			this.GenericType = genericType;
+			this.ElementType = genericType;
+			this.IsPredefinedType = usePredefined;
 		}
 	}
 
@@ -50,11 +51,12 @@ namespace EdjCase.ICP.ClientGenerator
 	{
 		public SourceCodeType GenericType { get; }
 
-		public override bool IsPredefinedType { get; } = true;
+		public override bool IsPredefinedType { get; }
 
-		public OptionalValueSourceCodeType(SourceCodeType genericType)
+		public OptionalValueSourceCodeType(SourceCodeType genericType, bool usePredefined)
 		{
 			this.GenericType = genericType;
+			this.IsPredefinedType = usePredefined;
 		}
 	}
 
@@ -63,12 +65,13 @@ namespace EdjCase.ICP.ClientGenerator
 		public SourceCodeType KeyType { get; }
 		public SourceCodeType ValueType { get; }
 
-		public override bool IsPredefinedType { get; } = true;
+		public override bool IsPredefinedType { get; }
 
-		public DictionarySourceCodeType(SourceCodeType keyType, SourceCodeType valueType)
+		public DictionarySourceCodeType(SourceCodeType keyType, SourceCodeType valueType, bool usePredefined)
 		{
 			this.KeyType = keyType;
 			this.ValueType = valueType;
+			this.IsPredefinedType= usePredefined;
 		}
 	}
 
@@ -97,29 +100,54 @@ namespace EdjCase.ICP.ClientGenerator
 		}
 	}
 
+
 	internal class RecordSourceCodeType : SourceCodeType
 	{
-		public List<(ResolvedName Tag, SourceCodeType Type)> Fields { get; }
-
+		public List<RecordField> Fields { get; }
 
 		public override bool IsPredefinedType { get; } = false;
 
-		public RecordSourceCodeType(List<(ResolvedName Tag, SourceCodeType Type)> fields)
+		public RecordSourceCodeType(List<RecordField> fields)
 		{
 			this.Fields = fields ?? throw new ArgumentNullException(nameof(fields));
+		}
+
+		public class RecordField
+		{
+			public ResolvedName Tag { get; }
+			public SourceCodeType Type { get; }
+			public bool OptionalOverridden { get; }
+			public RecordField(ResolvedName tag, SourceCodeType type, bool optionalOverridden)
+			{
+				this.Tag = tag ?? throw new ArgumentNullException(nameof(tag));
+				this.Type = type ?? throw new ArgumentNullException(nameof(type));
+				this.OptionalOverridden = optionalOverridden;
+			}
 		}
 	}
 
 	internal class VariantSourceCodeType : SourceCodeType
 	{
-		public List<(ResolvedName Tag, SourceCodeType? Type)> Options { get; }
+		public List<VariantOption> Options { get; }
 		public override bool IsPredefinedType { get; } = false;
 
-		public VariantSourceCodeType(
-			List<(ResolvedName Tag, SourceCodeType? Type)> options
-		)
+		public VariantSourceCodeType(List<VariantOption> options)
 		{
 			this.Options = options ?? throw new ArgumentNullException(nameof(options));
+		}
+
+
+		public class VariantOption
+		{
+			public ResolvedName Tag { get; }
+			public SourceCodeType? Type { get; }
+			public bool OptionalOverridden { get; }
+			public VariantOption(ResolvedName tag, SourceCodeType? type, bool optionalOverridden)
+			{
+				this.Tag = tag ?? throw new ArgumentNullException(nameof(tag));
+				this.Type = type;
+				this.OptionalOverridden = optionalOverridden;
+			}
 		}
 	}
 
