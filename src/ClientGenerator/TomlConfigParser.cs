@@ -20,6 +20,7 @@ namespace EdjCase.ICP.ClientGenerator
 			{
 				throw new InvalidOperationException($"Configuration file '{filePath}' not found. Run `candid-client-generator init`.");
 			}
+			string directoryPath = Path.GetFullPath("../", filePath);
 			string configToml = File.ReadAllText(filePath);
 			TomlTable config = Tomlyn.Toml.ToModel(configToml);
 
@@ -59,7 +60,7 @@ namespace EdjCase.ICP.ClientGenerator
 						@namespace: clientOptions.Namespace!,
 						getDefinitionFromCanister: getDefinitionFromCanister,
 						filePathOrCandidId: filePathOrCandidId,
-						outputDirectory: clientOptions.OutputDirectory ?? "./",
+						outputDirectory: Path.GetFullPath(clientOptions.OutputDirectory ?? "./", directoryPath),
 						purgeOutputDirectory: clientOptions.PurgeDirectory ?? true,
 						noFolders: clientOptions.NoFolders  ?? false,
 						featureNullable: clientOptions.FeatureNullable ?? true,
