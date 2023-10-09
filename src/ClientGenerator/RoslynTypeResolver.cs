@@ -345,7 +345,7 @@ namespace EdjCase.ICP.ClientGenerator
 			Stack<string> parentTypeIds
 		)
 		{
-			(ResolvedName Name, ResolvedType? Type) ResolveOption((ResolvedName Tag, SourceCodeType? Type) option, int i)
+			(ResolvedName Name, ResolvedType? Type, bool OptionalOverridden) ResolveOption(VariantSourceCodeType.VariantOption option, int i)
 			{
 				ResolvedType? resolvedType;
 				if (option.Type == null)
@@ -359,11 +359,11 @@ namespace EdjCase.ICP.ClientGenerator
 						: option.Tag.Name + "Info"; // If need to generate sub type, add suffix to avoid name collision
 					resolvedType = this.ResolveType(option.Type, nameContext, variantTypeName, parentTypeIds);
 				}
-				return (option.Tag, resolvedType);
+				return (option.Tag, resolvedType, option.OptionalOverridden);
 			}
 
 
-			List<(ResolvedName Name, ResolvedType? Type)> resolvedOptions = variant.Options
+			List<(ResolvedName Name, ResolvedType? Type, bool OptionalOverridden)> resolvedOptions = variant.Options
 				.Select(ResolveOption)
 				.ToList();
 
@@ -462,7 +462,7 @@ namespace EdjCase.ICP.ClientGenerator
 			TypeName enumTypeName,
 			string valueName,
 			string tagName,
-			List<(ResolvedName Name, ResolvedType? Type)> resolvedOptions
+			List<(ResolvedName Name, ResolvedType? Type, bool OptionalOverridden)> resolvedOptions
 		)
 		{
 			// Properties with types
@@ -474,6 +474,11 @@ namespace EdjCase.ICP.ClientGenerator
 				.Where(o => o.Type != null)
 				.Select(o =>
 				{
+					List<AttributeListSyntax> attributeSyntaxList = new();
+					if (o.OptionalOverridden)
+					{
+						attributeSyntaxList.Add(this.GenerateAttribute(AttributeInfo.FromType<CandidOptionalAttribute>()));
+					}
 					List<AccessorDeclarationSyntax> accessors = new()
 					{
 						// Add getter
@@ -580,7 +585,8 @@ namespace EdjCase.ICP.ClientGenerator
 					)
 					.WithAccessorList(SyntaxFactory.AccessorList(
 						SyntaxFactory.List(accessors)
-					));
+					))
+					.WithAttributeLists(SyntaxFactory.List(attributeSyntaxList));
 				})
 				.ToList();
 
@@ -591,7 +597,7 @@ namespace EdjCase.ICP.ClientGenerator
 			TypeName enumTypeName,
 			string valueName,
 			string tagName,
-			List<(ResolvedName Name, ResolvedType? Type)> resolvedOptions
+			List<(ResolvedName Name, ResolvedType? Type, bool OptionalOverridden)> resolvedOptions
 		)
 		{
 			// Creation methods
@@ -604,7 +610,8 @@ namespace EdjCase.ICP.ClientGenerator
 					enumTypeName,
 					o.Name,
 					o.Type,
-					"info"
+					"info",
+					o.OptionalOverridden
 				))
 				.ToList();
 
@@ -613,7 +620,7 @@ namespace EdjCase.ICP.ClientGenerator
 			methods.AddRange(
 				resolvedOptions
 				.Where(r => r.Type != null)
-				.Select(o => this.GenerateVariantOptionAsMethod(enumTypeName, o.Name, o.Type!, valueName))
+				.Select(o => this.GenerateVariantOptionAsMethod(enumTypeName, o.Name, o.Type!, valueName, o.OptionalOverridden))
 			);
 
 
@@ -751,6 +758,7 @@ namespace EdjCase.ICP.ClientGenerator
 				isAsync: false,
 				returnTypes: null,
 				name: "ValidateTag",
+				attributes: null,
 				(enumTypeName, "tag")
 			);
 		}
@@ -759,7 +767,8 @@ namespace EdjCase.ICP.ClientGenerator
 			TypeName enumType,
 			ResolvedName optionName,
 			ResolvedType optionType,
-			string valueName
+			string valueName,
+			bool optionalOverridden
 		)
 		{
 			// public {VariantOptionType} As{OptionName}()
@@ -804,14 +813,27 @@ namespace EdjCase.ICP.ClientGenerator
 					)
 				)
 			);
+			TypeName returnTypeName = optionType.Name;
+			List<AttributeInfo>? attributes = null;
+			if (optionalOverridden)
+			{
+				// [CandidOptional]
+				attributes = new List<AttributeInfo>
+				{
+					AttributeInfo.FromType<CandidOptionalAttribute>()
+				};
+				// Add '?' if applicible
+				returnTypeName = new NullableTypeName(returnTypeName);
+			}
 
 			return this.GenerateMethod(
 				body: body,
 				access: AccessType.Public,
 				isStatic: false,
 				isAsync: false,
-				returnTypes: new List<TypedValueName> { new TypedValueName(optionType.Name, optionName) },
-				name: "As" + optionName.Name
+				returnTypes: new List<TypedValueName> { new TypedValueName(returnTypeName, optionName) },
+				name: "As" + optionName.Name,
+				attributes: attributes
 			);
 		}
 
@@ -820,7 +842,8 @@ namespace EdjCase.ICP.ClientGenerator
 			TypeName enumTypeName,
 			ResolvedName optionTypeName,
 			ResolvedType? optionType,
-			string optionValueParamName
+			string optionValueParamName,
+			bool optionalOverridden
 		)
 		{
 			ExpressionSyntax arg = optionType == null
@@ -832,7 +855,13 @@ namespace EdjCase.ICP.ClientGenerator
 			var creationParameters = new List<(TypeName, string)>();
 			if (optionType != null)
 			{
-				creationParameters.Add((optionType.Name, optionValueParamName));
+				TypeName t = optionType.Name;
+				if (optionalOverridden)
+				{
+					// Add '?' if applicible
+					t = new NullableTypeName(t);
+				}
+				creationParameters.Add((t, optionValueParamName));
 			}
 			string methodName = optionTypeName.Name == variantTypeName.BuildName(this.FeatureNullable, false)
 				? optionTypeName.Name + "_" // Escape colliding names
@@ -842,7 +871,7 @@ namespace EdjCase.ICP.ClientGenerator
 				body: SyntaxFactory.Block(
 				SyntaxFactory.ReturnStatement(
 					SyntaxFactory.ObjectCreationExpression(
-						variantTypeName.ToTypeSyntax(this.FeatureNullable)
+						variantTypeName.ToTypeSyntax(false)
 					)
 					.WithArgumentList(
 						SyntaxFactory.ArgumentList(
@@ -868,6 +897,7 @@ namespace EdjCase.ICP.ClientGenerator
 				isAsync: false,
 				returnTypes: new List<TypedValueName> { new TypedValueName(variantTypeName, optionTypeName) },
 				name: methodName,
+				attributes: null,
 				parameters: creationParameters?.ToArray() ?? Array.Empty<(TypeName, string)>()
 			);
 		}
@@ -1155,6 +1185,7 @@ namespace EdjCase.ICP.ClientGenerator
 				isAsync: true,
 				returnTypes: returnTypes,
 				name: csharpName,
+				attributes: null,
 				parameters: argTypes.ToArray()
 			);
 			return (method, subTypes);
@@ -1596,6 +1627,7 @@ namespace EdjCase.ICP.ClientGenerator
 			bool isAsync,
 			List<TypedValueName>? returnTypes,
 			string name,
+			List<AttributeInfo>? attributes,
 			params (TypeName Type, string Name)[] parameters)
 		{
 			TypeSyntax? returnType = null;
@@ -1681,10 +1713,17 @@ namespace EdjCase.ICP.ClientGenerator
 						.Parameter(p.Name.ToSyntaxIdentifier())
 						.WithType(p.Type.ToTypeSyntax(this.FeatureNullable));
 				});
-			return SyntaxFactory.MethodDeclaration(returnType, SyntaxFactory.Identifier(name))
+			var method = SyntaxFactory.MethodDeclaration(returnType, SyntaxFactory.Identifier(name))
 				.WithModifiers(SyntaxFactory.TokenList(methodModifiers))
 				.WithParameterList(SyntaxFactory.ParameterList(SyntaxFactory.SeparatedList(@params)))
 				.WithBody(body);
+			if(attributes?.Any() == true)
+			{
+				IEnumerable<AttributeListSyntax> attributeSyntaxList = attributes
+					.Select(this.GenerateAttribute);
+				method = method.WithAttributeLists(SyntaxFactory.List(attributeSyntaxList));
+			}
+			return method;
 		}
 
 		private ClassDeclarationSyntax GenerateClass(

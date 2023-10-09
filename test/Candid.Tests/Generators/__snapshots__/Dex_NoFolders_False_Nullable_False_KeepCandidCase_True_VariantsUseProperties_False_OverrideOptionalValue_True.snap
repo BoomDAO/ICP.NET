@@ -208,7 +208,6 @@ Type File: 'OrderPlacementReceipt'
 
 using EdjCase.ICP.Candid.Mapping;
 using Test.Models;
-using EdjCase.ICP.Candid.Models;
 using System;
 
 namespace Test.Models
@@ -237,7 +236,7 @@ namespace Test.Models
 			return new OrderPlacementReceipt(OrderPlacementReceiptTag.Err, info);
 		}
 
-		public static OrderPlacementReceipt Ok(OptionalValue<Order> info)
+		public static OrderPlacementReceipt Ok(Order info)
 		{
 			return new OrderPlacementReceipt(OrderPlacementReceiptTag.Ok, info);
 		}
@@ -248,10 +247,11 @@ namespace Test.Models
 			return (OrderPlacementErr)this.Value!;
 		}
 
-		public OptionalValue<Order> AsOk()
+		[CandidOptional]
+		public Order AsOk()
 		{
 			this.ValidateTag(OrderPlacementReceiptTag.Ok);
-			return (OptionalValue<Order>)this.Value!;
+			return (Order)this.Value!;
 		}
 
 		private void ValidateTag(OrderPlacementReceiptTag tag)

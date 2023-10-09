@@ -1,6 +1,5 @@
 using EdjCase.ICP.Candid.Mapping;
 using Sample.Shared.Dex.Models;
-using EdjCase.ICP.Candid.Models;
 
 namespace Sample.Shared.Dex.Models
 {
@@ -15,7 +14,8 @@ namespace Sample.Shared.Dex.Models
 
 		public OrderPlacementErr? Err { get => this.Tag == OrderPlacementReceiptTag.Err ? (OrderPlacementErr)this.Value! : default; set => (this.Tag, this.Value) = (OrderPlacementReceiptTag.Err, value); }
 
-		public OptionalValue<Order>? Ok { get => this.Tag == OrderPlacementReceiptTag.Ok ? (OptionalValue<Order>)this.Value! : default; set => (this.Tag, this.Value) = (OrderPlacementReceiptTag.Ok, value); }
+		[CandidOptional]
+		public Order? Ok { get => this.Tag == OrderPlacementReceiptTag.Ok ? (Order)this.Value! : default; set => (this.Tag, this.Value) = (OrderPlacementReceiptTag.Ok, value); }
 
 		public OrderPlacementReceipt(OrderPlacementReceiptTag tag, object? value)
 		{

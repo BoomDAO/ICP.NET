@@ -313,21 +313,25 @@ namespace EdjCase.ICP.Candid.Tests
 
 			[CandidOptional]
 			public string? OptValue { get; set; }
+			[CandidOptional]
+			public int? OptIntValue { get; set; }
 			public OptionalValue<string> OptValue2 { get; set; } = OptionalValue<string>.NoValue();
 		}
 
 		[Fact]
 		public void OptionalValueOverride_Record_WithValue()
 		{
-			var raw = new OptOverride { OptValue = "Test1", OptValue2 = OptionalValue<string>.WithValue("Test2") };
+			var raw = new OptOverride { OptValue = "Test1", OptIntValue = 1, OptValue2 = OptionalValue<string>.WithValue("Test2") };
 			var candidValue = new CandidRecord(new Dictionary<CandidTag, CandidValue>
 			{
 				["OptValue"] = new CandidOptional(CandidValue.Text("Test1")),
+				["OptIntValue"] = new CandidOptional(CandidValue.Int32(1)),
 				["OptValue2"] = new CandidOptional(CandidValue.Text("Test2")),
 			});
 			var candidType = new CandidRecordType(new Dictionary<CandidTag, CandidType>
 			{
 				["OptValue"] = new CandidOptionalType(CandidType.Text()),
+				["OptIntValue"] = new CandidOptionalType(CandidType.Int32()),
 				["OptValue2"] = new CandidOptionalType(CandidType.Text()),
 			});
 			var candid = new CandidTypedValue(candidValue, candidType);
@@ -336,19 +340,120 @@ namespace EdjCase.ICP.Candid.Tests
 		[Fact]
 		public void OptionalValueOverride_Record_Null()
 		{
-			var raw = new OptOverride { OptValue = null, OptValue2 = OptionalValue<string>.NoValue() };
+			var raw = new OptOverride { OptValue = null, OptIntValue = null, OptValue2 = OptionalValue<string>.NoValue() };
 			var candidValue = new CandidRecord(new Dictionary<CandidTag, CandidValue>
 			{
 				["OptValue"] = new CandidOptional(),
+				["OptIntValue"] = new CandidOptional(),
 				["OptValue2"] = new CandidOptional(),
 			});
 			var candidType = new CandidRecordType(new Dictionary<CandidTag, CandidType>
 			{
 				["OptValue"] = new CandidOptionalType(CandidType.Text()),
+				["OptIntValue"] = new CandidOptionalType(CandidType.Int32()),
 				["OptValue2"] = new CandidOptionalType(CandidType.Text()),
 			});
 			var candid = new CandidTypedValue(candidValue, candidType);
 			this.Test(raw, candid, (a, b) => a.OptValue == b.OptValue && a.OptValue2 == b.OptValue2);
+		}
+
+		[Variant]
+		public class OptOverrideVariant
+		{
+			[VariantTagProperty]
+			public TagEnum Tag { get; set; }
+
+			[VariantValueProperty]
+			public object? Value { get; set; }
+
+			[CandidOptional]
+			public string? AsString()
+			{
+				return (string)this.Value!;
+			}
+
+			[CandidOptional]
+			public int? AsInt()
+			{
+				return (int)this.Value!;
+			}
+		}
+
+		public enum TagEnum
+		{
+			String,
+			Int
+		}
+
+		[Fact]
+		public void OptionalValueOverride_Variant_WithStringValue()
+		{
+			var raw = new OptOverrideVariant
+			{
+				Tag = TagEnum.String,
+				Value = "test"
+			};
+			var candidValue = new CandidVariant("String", new CandidOptional(CandidValue.Text("test")));
+			var candidType = new CandidVariantType(new Dictionary<CandidTag, CandidType>
+			{
+				["String"] = new CandidOptionalType(CandidType.Text()),
+				["Int"] = new CandidOptionalType(CandidType.Int32()),
+			});
+			var candid = new CandidTypedValue(candidValue, candidType);
+			this.Test(raw, candid, (a, b) => a.Tag == b.Tag && a.Value!.Equals(b.Value));
+		}
+		[Fact]
+		public void OptionalValueOverride_Variant_WithNullStringValue()
+		{
+			var raw = new OptOverrideVariant
+			{
+				Tag = TagEnum.String,
+				Value = null
+			};
+			var candidValue = new CandidVariant("String", new CandidOptional());
+			var candidType = new CandidVariantType(new Dictionary<CandidTag, CandidType>
+			{
+				["String"] = new CandidOptionalType(CandidType.Text()),
+				["Int"] = new CandidOptionalType(CandidType.Int32()),
+			});
+			var candid = new CandidTypedValue(candidValue, candidType);
+			this.Test(raw, candid, (a, b) => a.Tag == b.Tag && ((string?)a.Value) == ((string?)b.Value));
+		}
+
+		[Fact]
+		public void OptionalValueOverride_Variant_WithIntValue()
+		{
+			var raw = new OptOverrideVariant
+			{
+				Tag = TagEnum.Int,
+				Value = 1
+			};
+			var candidValue = new CandidVariant("Int", new CandidOptional(CandidValue.Int32(1)));
+			var candidType = new CandidVariantType(new Dictionary<CandidTag, CandidType>
+			{
+				["String"] = new CandidOptionalType(CandidType.Text()),
+				["Int"] = new CandidOptionalType(CandidType.Int32()),
+			});
+			var candid = new CandidTypedValue(candidValue, candidType);
+			this.Test(raw, candid, (a, b) => a.Tag == b.Tag && ((int?)a.Value) == ((int?)b.Value));
+		}
+
+		[Fact]
+		public void OptionalValueOverride_Variant_WithNullIntValue()
+		{
+			var raw = new OptOverrideVariant
+			{
+				Tag = TagEnum.Int,
+				Value = null
+			};
+			var candidValue = new CandidVariant("Int", new CandidOptional());
+			var candidType = new CandidVariantType(new Dictionary<CandidTag, CandidType>
+			{
+				["String"] = new CandidOptionalType(CandidType.Text()),
+				["Int"] = new CandidOptionalType(CandidType.Int32()),
+			});
+			var candid = new CandidTypedValue(candidValue, candidType);
+			this.Test(raw, candid, (a, b) => a.Tag == b.Tag && a.Value == null && b.Value == null);
 		}
 
 		public class OptTypeCoercion

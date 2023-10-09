@@ -128,14 +128,26 @@ namespace EdjCase.ICP.ClientGenerator
 
 	internal class VariantSourceCodeType : SourceCodeType
 	{
-		public List<(ResolvedName Tag, SourceCodeType? Type)> Options { get; }
+		public List<VariantOption> Options { get; }
 		public override bool IsPredefinedType { get; } = false;
 
-		public VariantSourceCodeType(
-			List<(ResolvedName Tag, SourceCodeType? Type)> options
-		)
+		public VariantSourceCodeType(List<VariantOption> options)
 		{
 			this.Options = options ?? throw new ArgumentNullException(nameof(options));
+		}
+
+
+		public class VariantOption
+		{
+			public ResolvedName Tag { get; }
+			public SourceCodeType? Type { get; }
+			public bool OptionalOverridden { get; }
+			public VariantOption(ResolvedName tag, SourceCodeType? type, bool optionalOverridden)
+			{
+				this.Tag = tag ?? throw new ArgumentNullException(nameof(tag));
+				this.Type = type;
+				this.OptionalOverridden = optionalOverridden;
+			}
 		}
 	}
 

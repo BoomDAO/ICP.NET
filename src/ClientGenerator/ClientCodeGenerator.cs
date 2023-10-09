@@ -314,21 +314,34 @@ namespace EdjCase.ICP.ClientGenerator
 					}
 				case CandidVariantType va:
 					{
-						List<(ResolvedName Key, SourceCodeType? Type, bool HasAliasReference)> fields = va.Options
+						List<(ResolvedName Key, SourceCodeType? Type, bool HasAliasReference, bool OptionalOverridden)> fields = va.Options
 							.Select(f =>
 							{
 								NamedTypeOptions? innerTypeOptions = f.Key.Name == null ? null : typeOptions?.Fields.GetValueOrDefault(f.Key.Name);
 								// If type is null, then just be a typeless variant
 								bool innerHasAliasReference = false;
+
+								CandidType type;
+								bool optionalOverridden;
+								if (overrideOptionalValue && f.Value is CandidOptionalType o)
+								{
+									optionalOverridden = true;
+									type = o.Value;
+								}
+								else
+								{
+									optionalOverridden = false;
+									type = f.Value;
+								}
 								SourceCodeType? sourceCodeType = f.Value == CandidType.Null()
 									? null
-									: ResolveSourceCodeType(f.Value, nameHelper, innerTypeOptions?.TypeOptions, aliasedTypeIds, overrideOptionalValue, out innerHasAliasReference);
+									: ResolveSourceCodeType(type, nameHelper, innerTypeOptions?.TypeOptions, aliasedTypeIds, overrideOptionalValue, out innerHasAliasReference);
 								ResolvedName optionName = nameHelper.ResolveName(f.Key, innerTypeOptions?.NameOverride);
-								return (optionName, sourceCodeType, innerHasAliasReference);
+								return (optionName, sourceCodeType, innerHasAliasReference, optionalOverridden);
 							})
 							.ToList();
 						hasAliasReference = fields.Any(f => f.HasAliasReference);
-						return new VariantSourceCodeType(fields.Select(f => (f.Key, f.Type)).ToList());
+						return new VariantSourceCodeType(fields.Select(f => new VariantSourceCodeType.VariantOption(f.Key, f.Type, f.OptionalOverridden)).ToList());
 					}
 				default:
 					throw new NotImplementedException();

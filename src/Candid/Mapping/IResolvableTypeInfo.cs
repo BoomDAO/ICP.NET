@@ -288,6 +288,10 @@ namespace EdjCase.ICP.Candid.Mapping
 				{
 					return BuildTuple(objType, objType.GenericTypeArguments);
 				}
+				if(genericTypeDefinition == typeof(Nullable<>))
+				{
+					return BuildNullableStruct(objType);
+				}
 			}
 			if (IsImplementationOfGenericType(objType, typeof(IDictionary<, >), out Type? dictInterface))
 			{
@@ -369,6 +373,17 @@ namespace EdjCase.ICP.Candid.Mapping
 			return new ResolvedTypeInfo(objType, type, mapper);
 		}
 
+		private static IResolvableTypeInfo BuildNullableStruct(Type objType)
+		{
+			Type innerType = objType.GenericTypeArguments[0];
+
+			var dependencies = new List<Type> { innerType };
+			return new ComplexTypeInfo(objType, dependencies, (resolvedDependencies) =>
+			{
+				CandidType innerCandidType = resolvedDependencies[innerType];
+				return (new OptMapper(innerCandidType, innerType), new CandidOptionalType(innerCandidType));
+			});
+		}
 		private static IResolvableTypeInfo BuildOpt(Type objType)
 		{
 			Type innerType = objType.GenericTypeArguments[0];
@@ -468,6 +483,8 @@ namespace EdjCase.ICP.Candid.Mapping
 			{
 				throw new InvalidOperationException($"Variant type '{objType.FullName}' must include a property named '{defaultValuePropertyName}' or have the '{typeof(VariantValuePropertyAttribute).FullName}' attribute on a property");
 			}
+
+
 			object? variant = Activator.CreateInstance(objType, nonPublic: true);
 
 			if (!variantTagProperty.PropertyType.IsEnum)
@@ -483,7 +500,7 @@ namespace EdjCase.ICP.Candid.Mapping
 					t => t
 				);
 
-			var optionTypes = new Dictionary<CandidTag, Type>();
+			var optionTypes = new Dictionary<CandidTag, (Type Type, bool UseOptionalOverride)>();
 			foreach (MethodInfo classMethod in objType.GetMethods(BindingFlags.Instance | BindingFlags.Public))
 			{
 				CandidTag tag;
@@ -500,8 +517,10 @@ namespace EdjCase.ICP.Candid.Mapping
 				{
 					continue;
 				}
+				CandidOptionalAttribute? optionalAttribute = classMethod.GetCustomAttribute<CandidOptionalAttribute>();
+				bool useOptionalOverride = optionalAttribute != null;
 
-				optionTypes.Add(tag, classMethod.ReturnType);
+				optionTypes.Add(tag, (classMethod.ReturnType, useOptionalOverride));
 			}
 			foreach (PropertyInfo property in properties)
 			{
@@ -526,14 +545,16 @@ namespace EdjCase.ICP.Candid.Mapping
 				{
 					continue;
 				}
-				if (!optionTypes.TryGetValue(tag, out Type optionType))
+				CandidOptionalAttribute? optionalAttribute = property.GetCustomAttribute<CandidOptionalAttribute>();
+				bool useOptionalOverride = optionalAttribute != null;
+				if (!optionTypes.TryGetValue(tag, out (Type, bool) optionType))
 				{
 					// Add if not already added by a method
-					optionTypes.Add(tag, property.PropertyType);
+					optionTypes.Add(tag, (property.PropertyType, useOptionalOverride));
 				}
 				else
 				{
-					if (optionType != property.PropertyType)
+					if (optionType != (property.PropertyType, useOptionalOverride))
 					{
 						throw new Exception($"Conflict: Variant '{objType.FullName}' defines a property '{property.Name}' and a method with different types for an option");
 					}
@@ -547,10 +568,16 @@ namespace EdjCase.ICP.Candid.Mapping
 					CandidTag tagName = t.Key;
 					Enum tagEnum = t.Value;
 					MemberInfo enumOption = variantTagProperty.PropertyType.GetMember(tagName.Name).First();
-					Type? optionType = optionTypes.GetValueOrDefault(tagName);
+					Type? optionType = null;
+					bool useOptionalOverride = false;
+					if (optionTypes.TryGetValue(tagName, out (Type Type, bool UseOptionalOverride) o))
+					{
+						optionType = o.Type;
+						useOptionalOverride = o.UseOptionalOverride;
+					}
 					var tagAttribute = enumOption.GetCustomAttribute<CandidTagAttribute>();
 					CandidTag tag = tagAttribute?.Tag ?? tagName;
-					return (tag, new VariantMapper.Option(tagEnum, optionType));
+					return (tag, new VariantMapper.Option(tagEnum, optionType, useOptionalOverride));
 				})
 				.ToDictionary(k => k.Item1, k => k.Item2);
 
