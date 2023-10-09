@@ -65,6 +65,7 @@ namespace EdjCase.ICP.ClientGenerator
 						featureNullable: clientOptions.FeatureNullable ?? true,
 						variantsUseProperties: clientOptions.VariantsUseProperties ?? false,
 						keepCandidCase: clientOptions.KeepCandidCase ?? false,
+						overrideOptionalValue: clientOptions.OverrideOptionalValue ?? false,
 						boundryNodeUrl: clientOptions.BaseUrl,
 						types: clientOptions.Types
 					);
@@ -84,7 +85,7 @@ namespace EdjCase.ICP.ClientGenerator
 			bool? featureNullable = GetOptional<bool?>(config, "feature-nullable") ?? parent?.Options.FeatureNullable;
 			bool? variantsUseProperties = GetOptional<bool?>(config, "variants-use-properties") ?? parent?.Options.VariantsUseProperties;
 			bool? keepCandidCase = GetOptional<bool?>(config, "keep-candid-case") ?? parent?.Options.KeepCandidCase;
-			bool? useOptionalValue = GetOptional<bool?>(config, "use-optional-value") ?? parent?.Options.UseOptionalValue;
+			bool? overrideOptionalValue = GetOptional<bool?>(config, "override-optional-value") ?? parent?.Options.OverrideOptionalValue;
 			TomlTable? typeTable = GetOptional<TomlTable?>(config, "types");
 			Dictionary<string, NamedTypeOptions> types = BuildTypes(typeTable);
 			if (parent?.Options.Types != null)
@@ -111,7 +112,7 @@ namespace EdjCase.ICP.ClientGenerator
 				featureNullable,
 				variantsUseProperties,
 				keepCandidCase,
-				useOptionalValue,
+				overrideOptionalValue,
 				types
 			);
 		}
@@ -190,7 +191,7 @@ namespace EdjCase.ICP.ClientGenerator
 		public bool? FeatureNullable { get; }
 		public bool? VariantsUseProperties { get; }
 		public bool? KeepCandidCase { get; }
-		public bool? UseOptionalValue { get; }
+		public bool? OverrideOptionalValue { get; }
 		public Dictionary<string, NamedTypeOptions> Types { get; }
 
 		public CommonOptions(
@@ -214,7 +215,7 @@ namespace EdjCase.ICP.ClientGenerator
 			this.FeatureNullable = featureNullable;
 			this.VariantsUseProperties = variantsUseProperties;
 			this.KeepCandidCase = keepCandidCase;
-			this.UseOptionalValue = useOptionalValue;
+			this.OverrideOptionalValue = useOptionalValue;
 			this.Types = types ?? new Dictionary<string, NamedTypeOptions>();
 		}
 	}

@@ -8,7 +8,7 @@ name = "Dex"
 type = "file"
 file-path = "ServiceDefinitions/Dex.did"
 variants-use-properties = true
-use-optional-value = false
+override-optional-value = true
 
 [[clients]]
 name = "ICRC1Ledger"

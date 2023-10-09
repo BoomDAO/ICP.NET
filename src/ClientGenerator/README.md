@@ -63,7 +63,7 @@ candid-client-generator gen ./
 - `feature-nullable` - (Bool) Optional. Sets whether to use the C# nullable feature when generating the client (like `object?`). Defaults to true
 - `variants-use-properties` - (Bool) Optional. If true, the generated variant classes will use properties instead of methods for data access. Defaults to false
 - `keep-candid-case` - (Bool) Optional. If true, the names of properties and methods will keep the raw candid name. Otherwise they will be converted to something prettier. Defaults to false
-- `use-optional-value` - (Bool) Optional. If true, opt Candid types will be represented as OptionalValue\<T\>, otherwise will just use T?. Defaults to true. NOTE: this feature is not recommended for type and performance reasons and should be considered experimental
+- `override-optional-value` - (Bool) Optional. If false, opt Candid types will be represented as OptionalValue\<T\>, otherwise will just use T? (where possible). Defaults to false. NOTE: this feature is not recommended for type and performance reasons and should be considered experimental
 #### Client Level:
 
 - `name` - (Text) REQUIRED. The name of the sub-folder put the client files and the prefix to the client class name.
@@ -76,7 +76,7 @@ candid-client-generator gen ./
 - `no-folders` - (Bool) OPTIONAL. If true, no sub-folders will be generated for the client. All generated files will be in a flat structure. Defaults to false. Overrides the top level `no-folders`
 - `feature-nullable` - (Bool) Optional. Sets whether to use the C# nullable feature when generating the client (like `object?`). Defaults to true. Overrides the top level `feature-nullable`
 - `keep-candid-case` - (Bool) Optional. If true, the names of properties and methods will keep the raw candid name. Otherwise they will be converted to something prettier. Defaults to false. Overrides the top level `keep-candid-case`
-- `use-optional-value` - (Bool) Optional. If true, opt Candid types will be represented as OptionalValue\<T\>, otherwise will just use T?. Defaults to true. NOTE: this feature is not recommended for type and performance reasons and should be considered experimental
+- `override-optional-value` - (Bool) Optional. If false, opt Candid types will be represented as OptionalValue\<T\>, otherwise will just use T? (where possible). Defaults to false. NOTE: this feature is not recommended for type and performance reasons and should be considered experimental
 #### Type Customization:
 
 ##### All Types

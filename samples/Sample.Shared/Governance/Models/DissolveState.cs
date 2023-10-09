@@ -4,13 +4,13 @@ using System;
 
 namespace Sample.Shared.Governance.Models
 {
-	[Variant()]
+	[Variant]
 	public class DissolveState
 	{
-		[VariantTagProperty()]
+		[VariantTagProperty]
 		public DissolveStateTag Tag { get; set; }
 
-		[VariantValueProperty()]
+		[VariantValueProperty]
 		public object? Value { get; set; }
 
 		public DissolveState(DissolveStateTag tag, object? value)

@@ -8,7 +8,7 @@
   - [GenerateClientFromCanisterAsync(canisterId,options)](#M-EdjCase-ICP-ClientGenerator-ClientCodeGenerator-GenerateClientFromCanisterAsync-EdjCase-ICP-Candid-Models-Principal,EdjCase-ICP-ClientGenerator-ClientGenerationOptions- 'EdjCase.ICP.ClientGenerator.ClientCodeGenerator.GenerateClientFromCanisterAsync(EdjCase.ICP.Candid.Models.Principal,EdjCase.ICP.ClientGenerator.ClientGenerationOptions)')
   - [GenerateClientFromFile(fileText,options)](#M-EdjCase-ICP-ClientGenerator-ClientCodeGenerator-GenerateClientFromFile-System-String,EdjCase-ICP-ClientGenerator-ClientGenerationOptions- 'EdjCase.ICP.ClientGenerator.ClientCodeGenerator.GenerateClientFromFile(System.String,EdjCase.ICP.ClientGenerator.ClientGenerationOptions)')
 - [ClientGenerationOptions](#T-EdjCase-ICP-ClientGenerator-ClientGenerationOptions 'EdjCase.ICP.ClientGenerator.ClientGenerationOptions')
-  - [#ctor(name,namespace,getDefinitionFromCanister,filePathOrCandidId,outputDirectory,purgeOutputDirectory,noFolders,featureNullable,variantsUseProperties,keepCandidCase,boundryNodeUrl,types)](#M-EdjCase-ICP-ClientGenerator-ClientGenerationOptions-#ctor-System-String,System-String,System-Boolean,System-String,System-String,System-Boolean,System-Boolean,System-Boolean,System-Boolean,System-Boolean,System-Uri,System-Collections-Generic-Dictionary{System-String,EdjCase-ICP-ClientGenerator-NamedTypeOptions}- 'EdjCase.ICP.ClientGenerator.ClientGenerationOptions.#ctor(System.String,System.String,System.Boolean,System.String,System.String,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Uri,System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.ClientGenerator.NamedTypeOptions})')
+  - [#ctor(name,namespace,getDefinitionFromCanister,filePathOrCandidId,outputDirectory,purgeOutputDirectory,noFolders,featureNullable,variantsUseProperties,keepCandidCase,overrideOptionalValue,boundryNodeUrl,types)](#M-EdjCase-ICP-ClientGenerator-ClientGenerationOptions-#ctor-System-String,System-String,System-Boolean,System-String,System-String,System-Boolean,System-Boolean,System-Boolean,System-Boolean,System-Boolean,System-Boolean,System-Uri,System-Collections-Generic-Dictionary{System-String,EdjCase-ICP-ClientGenerator-NamedTypeOptions}- 'EdjCase.ICP.ClientGenerator.ClientGenerationOptions.#ctor(System.String,System.String,System.Boolean,System.String,System.String,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Uri,System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.ClientGenerator.NamedTypeOptions})')
   - [BoundryNodeUrl](#P-EdjCase-ICP-ClientGenerator-ClientGenerationOptions-BoundryNodeUrl 'EdjCase.ICP.ClientGenerator.ClientGenerationOptions.BoundryNodeUrl')
   - [FeatureNullable](#P-EdjCase-ICP-ClientGenerator-ClientGenerationOptions-FeatureNullable 'EdjCase.ICP.ClientGenerator.ClientGenerationOptions.FeatureNullable')
   - [FilePathOrCanisterId](#P-EdjCase-ICP-ClientGenerator-ClientGenerationOptions-FilePathOrCanisterId 'EdjCase.ICP.ClientGenerator.ClientGenerationOptions.FilePathOrCanisterId')
@@ -18,6 +18,7 @@
   - [Namespace](#P-EdjCase-ICP-ClientGenerator-ClientGenerationOptions-Namespace 'EdjCase.ICP.ClientGenerator.ClientGenerationOptions.Namespace')
   - [NoFolders](#P-EdjCase-ICP-ClientGenerator-ClientGenerationOptions-NoFolders 'EdjCase.ICP.ClientGenerator.ClientGenerationOptions.NoFolders')
   - [OutputDirectory](#P-EdjCase-ICP-ClientGenerator-ClientGenerationOptions-OutputDirectory 'EdjCase.ICP.ClientGenerator.ClientGenerationOptions.OutputDirectory')
+  - [OverrideOptionalValue](#P-EdjCase-ICP-ClientGenerator-ClientGenerationOptions-OverrideOptionalValue 'EdjCase.ICP.ClientGenerator.ClientGenerationOptions.OverrideOptionalValue')
   - [PurgeOutputDirectory](#P-EdjCase-ICP-ClientGenerator-ClientGenerationOptions-PurgeOutputDirectory 'EdjCase.ICP.ClientGenerator.ClientGenerationOptions.PurgeOutputDirectory')
   - [Types](#P-EdjCase-ICP-ClientGenerator-ClientGenerationOptions-Types 'EdjCase.ICP.ClientGenerator.ClientGenerationOptions.Types')
   - [VariantsUseProperties](#P-EdjCase-ICP-ClientGenerator-ClientGenerationOptions-VariantsUseProperties 'EdjCase.ICP.ClientGenerator.ClientGenerationOptions.VariantsUseProperties')
@@ -105,8 +106,8 @@ EdjCase.ICP.ClientGenerator
 
 Options for generating a client
 
-<a name='M-EdjCase-ICP-ClientGenerator-ClientGenerationOptions-#ctor-System-String,System-String,System-Boolean,System-String,System-String,System-Boolean,System-Boolean,System-Boolean,System-Boolean,System-Boolean,System-Uri,System-Collections-Generic-Dictionary{System-String,EdjCase-ICP-ClientGenerator-NamedTypeOptions}-'></a>
-### #ctor(name,namespace,getDefinitionFromCanister,filePathOrCandidId,outputDirectory,purgeOutputDirectory,noFolders,featureNullable,variantsUseProperties,keepCandidCase,boundryNodeUrl,types) `constructor`
+<a name='M-EdjCase-ICP-ClientGenerator-ClientGenerationOptions-#ctor-System-String,System-String,System-Boolean,System-String,System-String,System-Boolean,System-Boolean,System-Boolean,System-Boolean,System-Boolean,System-Boolean,System-Uri,System-Collections-Generic-Dictionary{System-String,EdjCase-ICP-ClientGenerator-NamedTypeOptions}-'></a>
+### #ctor(name,namespace,getDefinitionFromCanister,filePathOrCandidId,outputDirectory,purgeOutputDirectory,noFolders,featureNullable,variantsUseProperties,keepCandidCase,overrideOptionalValue,boundryNodeUrl,types) `constructor`
 
 ##### Parameters
 
@@ -122,6 +123,7 @@ Options for generating a client
 | featureNullable | [System.Boolean](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Boolean 'System.Boolean') | If true, the nullable C# feature will be used |
 | variantsUseProperties | [System.Boolean](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Boolean 'System.Boolean') | If true, variant classes will be generated with properties instead of methods |
 | keepCandidCase | [System.Boolean](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Boolean 'System.Boolean') | If true, the names of properties and methods will keep the raw candid name. Otherwise they will be converted to something prettier |
+| overrideOptionalValue | [System.Boolean](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Boolean 'System.Boolean') | If false, OptionalValue will be used for opt values, Otherwise will use just the nullable class values or nullable struct where possible. Defaults to false |
 | boundryNodeUrl | [System.Uri](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Uri 'System.Uri') | Optional. The url of the boundry node for the internet computer. Defaults to ic0.app |
 | types | [System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.ClientGenerator.NamedTypeOptions}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.Dictionary 'System.Collections.Generic.Dictionary{System.String,EdjCase.ICP.ClientGenerator.NamedTypeOptions}') | Optional. Specifies options for each candid type in the definition |
 
@@ -188,6 +190,15 @@ If true, there will be no folders, all files will be in the same directory
 ##### Summary
 
 If true, there will be no folders, all files will be in the same directory
+
+<a name='P-EdjCase-ICP-ClientGenerator-ClientGenerationOptions-OverrideOptionalValue'></a>
+### OverrideOptionalValue `property`
+
+##### Summary
+
+If true, OptionalValue will be used for opt values
+Otherwise will use just the nullable class values or nullable struct
+Defaults to true
 
 <a name='P-EdjCase-ICP-ClientGenerator-ClientGenerationOptions-PurgeOutputDirectory'></a>
 ### PurgeOutputDirectory `property`

@@ -4,13 +4,13 @@ using EdjCase.ICP.Candid.Models;
 
 namespace Sample.Shared.Dex.Models
 {
-	[Variant()]
+	[Variant]
 	public class WithdrawReceipt
 	{
-		[VariantTagProperty()]
+		[VariantTagProperty]
 		public WithdrawReceiptTag Tag { get; set; }
 
-		[VariantValueProperty()]
+		[VariantValueProperty]
 		public object? Value { get; set; }
 
 		public WithdrawErr? Err { get => this.Tag == WithdrawReceiptTag.Err ? (WithdrawErr)this.Value! : default; set => (this.Tag, this.Value) = (WithdrawReceiptTag.Err, value); }

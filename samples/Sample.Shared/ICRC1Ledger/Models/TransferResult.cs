@@ -5,13 +5,13 @@ using BlockIndex = EdjCase.ICP.Candid.Models.UnboundedUInt;
 
 namespace Sample.Shared.ICRC1Ledger.Models
 {
-	[Variant()]
+	[Variant]
 	public class TransferResult
 	{
-		[VariantTagProperty()]
+		[VariantTagProperty]
 		public TransferResultTag Tag { get; set; }
 
-		[VariantValueProperty()]
+		[VariantValueProperty]
 		public object? Value { get; set; }
 
 		public TransferResult(TransferResultTag tag, object? value)

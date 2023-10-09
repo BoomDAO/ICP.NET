@@ -4,13 +4,13 @@ using System;
 
 namespace Sample.Shared.Governance.Models
 {
-	[Variant()]
+	[Variant]
 	public class Result2
 	{
-		[VariantTagProperty()]
+		[VariantTagProperty]
 		public Result2Tag Tag { get; set; }
 
-		[VariantValueProperty()]
+		[VariantValueProperty]
 		public object? Value { get; set; }
 
 		public Result2(Result2Tag tag, object? value)

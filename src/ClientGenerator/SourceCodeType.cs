@@ -100,16 +100,29 @@ namespace EdjCase.ICP.ClientGenerator
 		}
 	}
 
+
 	internal class RecordSourceCodeType : SourceCodeType
 	{
-		public List<(ResolvedName Tag, SourceCodeType Type)> Fields { get; }
-
+		public List<RecordField> Fields { get; }
 
 		public override bool IsPredefinedType { get; } = false;
 
-		public RecordSourceCodeType(List<(ResolvedName Tag, SourceCodeType Type)> fields)
+		public RecordSourceCodeType(List<RecordField> fields)
 		{
 			this.Fields = fields ?? throw new ArgumentNullException(nameof(fields));
+		}
+
+		public class RecordField
+		{
+			public ResolvedName Tag { get; }
+			public SourceCodeType Type { get; }
+			public bool OptionalOverridden { get; }
+			public RecordField(ResolvedName tag, SourceCodeType type, bool optionalOverridden)
+			{
+				this.Tag = tag ?? throw new ArgumentNullException(nameof(tag));
+				this.Type = type ?? throw new ArgumentNullException(nameof(type));
+				this.OptionalOverridden = optionalOverridden;
+			}
 		}
 	}
 

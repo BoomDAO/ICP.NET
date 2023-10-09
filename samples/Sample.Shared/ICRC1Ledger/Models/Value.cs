@@ -7,13 +7,13 @@ using Map = System.Collections.Generic.Dictionary<System.String, Sample.Shared.I
 
 namespace Sample.Shared.ICRC1Ledger.Models
 {
-	[Variant()]
+	[Variant]
 	public class Value
 	{
-		[VariantTagProperty()]
+		[VariantTagProperty]
 		public ValueTag Tag { get; set; }
 
-		[VariantValueProperty()]
+		[VariantValueProperty]
 		public object? Value_ { get; set; }
 
 		public Value(ValueTag tag, object? value)

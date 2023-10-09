@@ -8,13 +8,13 @@ using Tokens = EdjCase.ICP.Candid.Models.UnboundedUInt;
 
 namespace Sample.Shared.ICRC1Ledger.Models
 {
-	[Variant()]
+	[Variant]
 	public class TransferError
 	{
-		[VariantTagProperty()]
+		[VariantTagProperty]
 		public TransferErrorTag Tag { get; set; }
 
-		[VariantValueProperty()]
+		[VariantValueProperty]
 		public object? Value { get; set; }
 
 		public TransferError(TransferErrorTag tag, object? value)

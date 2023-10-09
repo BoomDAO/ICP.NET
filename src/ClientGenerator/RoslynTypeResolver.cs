@@ -173,24 +173,6 @@ namespace EdjCase.ICP.ClientGenerator
 							@namespace,
 							true // TODO
 						);
-						//if (isAlias)
-						//{
-						//	ResolvedType notAliasedType;
-						//	if (this._resolvedTypes.TryGetValue(re.Id.Value, out ResolvedType? existing))
-						//	{
-						//		notAliasedType = existing;
-						//	}
-						//	else
-						//	{
-						//		if (parentTypeIds.Contains(re.Id.Value))
-						//		{
-						//			throw new Exception("Self referencing aliases are not allowed.");
-						//		}
-						//		notAliasedType = this.ResolveType(sourceCodeType, nameContext, parentType, parentTypeIds);
-						//	}
-						//	parentTypeIds.Push(re.Id.Value);
-						//	typeName = new AliasedTypeName(typeName, notAliasedType.Name);
-						//}
 						return new ResolvedType(typeName);
 
 					}
@@ -890,17 +872,21 @@ namespace EdjCase.ICP.ClientGenerator
 			);
 		}
 
-		internal ClassDeclarationSyntax GenerateRecord(TypeName recordTypeName, RecordSourceCodeType record, Stack<string> parentTypeIds)
+		internal ClassDeclarationSyntax GenerateRecord(
+			TypeName recordTypeName,
+			RecordSourceCodeType record,
+			Stack<string> parentTypeIds
+		)
 		{
-			(ResolvedName Name, ResolvedType Type) ResolveField((ResolvedName Tag, SourceCodeType Type) option, int i)
+			(ResolvedName Name, ResolvedType Type, bool OptionalOverridden) ResolveField(RecordSourceCodeType.RecordField option, int i)
 			{
 				string nameContext = option.Type.IsPredefinedType
 					? option.Tag.Name
 					: option.Tag.Name + "Info"; // If need to generate sub type, add suffix to avoid name collision
 				ResolvedType resolvedType = this.ResolveType(option.Type, nameContext, recordTypeName, parentTypeIds);
-				return (option.Tag, resolvedType);
+				return (option.Tag, resolvedType, option.OptionalOverridden);
 			}
-			List<(ResolvedName Tag, ResolvedType Type)> resolvedFields = record.Fields
+			List<(ResolvedName Tag, ResolvedType Type, bool OptionalOverridden)> resolvedFields = record.Fields
 				.Select(ResolveField)
 				.ToList();
 			List<MemberDeclarationSyntax> subItems = resolvedFields
@@ -933,12 +919,20 @@ namespace EdjCase.ICP.ClientGenerator
 						// Only add attribute if the name is different
 						attributes.Add(AttributeInfo.FromType<CandidNameAttribute>(propertyName.CandidTag.Name!));
 					}
+					TypeName typeName = f.Type.Name;
+					if (f.OptionalOverridden)
+					{
+						// [CandidOptional]
+						attributes.Add(AttributeInfo.FromType<CandidOptionalAttribute>());
+						// Add '?' if applicible
+						typeName = new NullableTypeName(typeName);
+					}
 
 
 					// public {fieldType} {fieldName} {{ get; set; }}
 					return new ClassProperty(
 						name: propertyName.Name,
-						type: f.Type.Name,
+						type: typeName,
 						access: AccessType.Public,
 						hasSetter: true,
 						attributes.ToArray()
@@ -1058,7 +1052,7 @@ namespace EdjCase.ICP.ClientGenerator
 
 		private AttributeListSyntax GenerateAttribute(AttributeInfo attribute)
 		{
-			IEnumerable<AttributeArgumentSyntax> arguments = attribute.Args?
+			IEnumerable<AttributeArgumentSyntax>? arguments = attribute.Args?
 				.Select<object, ExpressionSyntax>(a =>
 				{
 					return a switch
@@ -1084,19 +1078,23 @@ namespace EdjCase.ICP.ClientGenerator
 						_ => throw new NotImplementedException()
 					};
 				})
-				.Select(a => SyntaxFactory.AttributeArgument(a))
-				?? Array.Empty<AttributeArgumentSyntax>();
+				.Select(SyntaxFactory.AttributeArgument);
 
 			string typeName = attribute.Type.BuildName(this.FeatureNullable, true);
 			typeName = typeName[..^"Attribute".Length]; // Remove suffix
+			AttributeSyntax syntax = SyntaxFactory.Attribute(SyntaxFactory.IdentifierName(typeName));
+			if(arguments?.Any() == true)
+			{
+				syntax = syntax.WithArgumentList(
+					SyntaxFactory.AttributeArgumentList(
+						SyntaxFactory.SeparatedList(arguments)
+					)
+				);
+			}
+			
 			return SyntaxFactory.AttributeList(
 				SyntaxFactory.SingletonSeparatedList(
-					SyntaxFactory.Attribute(SyntaxFactory.IdentifierName(typeName))
-					.WithArgumentList(
-						SyntaxFactory.AttributeArgumentList(
-							SyntaxFactory.SeparatedList(arguments)
-						)
-					)
+					syntax
 				)
 			);
 		}

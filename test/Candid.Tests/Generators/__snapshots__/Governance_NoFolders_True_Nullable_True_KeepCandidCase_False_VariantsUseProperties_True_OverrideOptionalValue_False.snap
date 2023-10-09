@@ -1,0 +1,2935 @@
+﻿using EdjCase.ICP.Agent.Agents;
+using EdjCase.ICP.Candid.Models;
+using EdjCase.ICP.Candid;
+using System.Threading.Tasks;
+using Test;
+using System.Collections.Generic;
+using EdjCase.ICP.Agent.Responses;
+
+namespace Test
+{
+	public class GovernanceApiClient
+	{
+		public IAgent Agent { get; }
+
+		public Principal CanisterId { get; }
+
+		public CandidConverter? Converter { get; }
+
+		public GovernanceApiClient(IAgent agent, Principal canisterId, CandidConverter? converter = default)
+		{
+			this.Agent = agent;
+			this.CanisterId = canisterId;
+			this.Converter = converter;
+		}
+
+		public async Task<Result> ClaimGtcNeurons(Principal arg0, List<NeuronId> arg1)
+		{
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0), CandidTypedValue.FromObject(arg1));
+			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "claim_gtc_neurons", arg);
+			return reply.ToObjects<Result>(this.Converter);
+		}
+
+		public async Task<ClaimOrRefreshNeuronFromAccountResponse> ClaimOrRefreshNeuronFromAccount(ClaimOrRefreshNeuronFromAccount arg0)
+		{
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "claim_or_refresh_neuron_from_account", arg);
+			return reply.ToObjects<ClaimOrRefreshNeuronFromAccountResponse>(this.Converter);
+		}
+
+		public async Task<string> GetBuildMetadata()
+		{
+			CandidArg arg = CandidArg.FromCandid();
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_build_metadata", arg);
+			CandidArg reply = response.ThrowOrGetReply();
+			return reply.ToObjects<string>(this.Converter);
+		}
+
+		public async Task<Result2> GetFullNeuron(ulong arg0)
+		{
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_full_neuron", arg);
+			CandidArg reply = response.ThrowOrGetReply();
+			return reply.ToObjects<Result2>(this.Converter);
+		}
+
+		public async Task<Result2> GetFullNeuronByIdOrSubaccount(NeuronIdOrSubaccount arg0)
+		{
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_full_neuron_by_id_or_subaccount", arg);
+			CandidArg reply = response.ThrowOrGetReply();
+			return reply.ToObjects<Result2>(this.Converter);
+		}
+
+		public async Task<Result3> GetMonthlyNodeProviderRewards()
+		{
+			CandidArg arg = CandidArg.FromCandid();
+			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "get_monthly_node_provider_rewards", arg);
+			return reply.ToObjects<Result3>(this.Converter);
+		}
+
+		public async Task<NetworkEconomics> GetNetworkEconomicsParameters()
+		{
+			CandidArg arg = CandidArg.FromCandid();
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_network_economics_parameters", arg);
+			CandidArg reply = response.ThrowOrGetReply();
+			return reply.ToObjects<NetworkEconomics>(this.Converter);
+		}
+
+		public async Task<List<ulong>> GetNeuronIds()
+		{
+			CandidArg arg = CandidArg.FromCandid();
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_neuron_ids", arg);
+			CandidArg reply = response.ThrowOrGetReply();
+			return reply.ToObjects<List<ulong>>(this.Converter);
+		}
+
+		public async Task<Result4> GetNeuronInfo(ulong arg0)
+		{
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_neuron_info", arg);
+			CandidArg reply = response.ThrowOrGetReply();
+			return reply.ToObjects<Result4>(this.Converter);
+		}
+
+		public async Task<Result4> GetNeuronInfoByIdOrSubaccount(NeuronIdOrSubaccount arg0)
+		{
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_neuron_info_by_id_or_subaccount", arg);
+			CandidArg reply = response.ThrowOrGetReply();
+			return reply.ToObjects<Result4>(this.Converter);
+		}
+
+		public async Task<Result5> GetNodeProviderByCaller(NullValue arg0)
+		{
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_node_provider_by_caller", arg);
+			CandidArg reply = response.ThrowOrGetReply();
+			return reply.ToObjects<Result5>(this.Converter);
+		}
+
+		public async Task<List<ProposalInfo>> GetPendingProposals()
+		{
+			CandidArg arg = CandidArg.FromCandid();
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_pending_proposals", arg);
+			CandidArg reply = response.ThrowOrGetReply();
+			return reply.ToObjects<List<ProposalInfo>>(this.Converter);
+		}
+
+		public async Task<OptionalValue<ProposalInfo>> GetProposalInfo(ulong arg0)
+		{
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_proposal_info", arg);
+			CandidArg reply = response.ThrowOrGetReply();
+			return reply.ToObjects<OptionalValue<ProposalInfo>>(this.Converter);
+		}
+
+		public async Task<ListKnownNeuronsResponse> ListKnownNeurons()
+		{
+			CandidArg arg = CandidArg.FromCandid();
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "list_known_neurons", arg);
+			CandidArg reply = response.ThrowOrGetReply();
+			return reply.ToObjects<ListKnownNeuronsResponse>(this.Converter);
+		}
+
+		public async Task<ListNeuronsResponse> ListNeurons(ListNeurons arg0)
+		{
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "list_neurons", arg);
+			CandidArg reply = response.ThrowOrGetReply();
+			return reply.ToObjects<ListNeuronsResponse>(this.Converter);
+		}
+
+		public async Task<ListNodeProvidersResponse> ListNodeProviders()
+		{
+			CandidArg arg = CandidArg.FromCandid();
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "list_node_providers", arg);
+			CandidArg reply = response.ThrowOrGetReply();
+			return reply.ToObjects<ListNodeProvidersResponse>(this.Converter);
+		}
+
+		public async Task<ListProposalInfoResponse> ListProposals(ListProposalInfo arg0)
+		{
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "list_proposals", arg);
+			CandidArg reply = response.ThrowOrGetReply();
+			return reply.ToObjects<ListProposalInfoResponse>(this.Converter);
+		}
+
+		public async Task<ManageNeuronResponse> ManageNeuron(ManageNeuron arg0)
+		{
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "manage_neuron", arg);
+			return reply.ToObjects<ManageNeuronResponse>(this.Converter);
+		}
+
+		public async Task<Result> TransferGtcNeuron(NeuronId arg0, NeuronId arg1)
+		{
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0), CandidTypedValue.FromObject(arg1));
+			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "transfer_gtc_neuron", arg);
+			return reply.ToObjects<Result>(this.Converter);
+		}
+
+		public async Task<Result> UpdateNodeProvider(UpdateNodeProvider arg0)
+		{
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "update_node_provider", arg);
+			return reply.ToObjects<Result>(this.Converter);
+		}
+	}
+}
+
+Type File: 'AccountIdentifier'
+
+using EdjCase.ICP.Candid.Mapping;
+using System.Collections.Generic;
+
+namespace Test
+{
+	public class AccountIdentifier
+	{
+		[CandidName("hash")]
+		public List<byte> Hash { get; set; }
+
+		public AccountIdentifier(List<byte> hash)
+		{
+			this.Hash = hash;
+		}
+
+		public AccountIdentifier()
+		{
+		}
+	}
+}
+
+Type File: 'Action'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test;
+
+namespace Test
+{
+	[Variant]
+	public class Action
+	{
+		[VariantTagProperty]
+		public ActionTag Tag { get; set; }
+
+		[VariantValueProperty]
+		public object? Value { get; set; }
+
+		public KnownNeuron? RegisterKnownNeuron { get => this.Tag == ActionTag.RegisterKnownNeuron ? (KnownNeuron)this.Value! : default; set => (this.Tag, this.Value) = (ActionTag.RegisterKnownNeuron, value); }
+
+		public ManageNeuron? ManageNeuron { get => this.Tag == ActionTag.ManageNeuron ? (ManageNeuron)this.Value! : default; set => (this.Tag, this.Value) = (ActionTag.ManageNeuron, value); }
+
+		public ExecuteNnsFunction? ExecuteNnsFunction { get => this.Tag == ActionTag.ExecuteNnsFunction ? (ExecuteNnsFunction)this.Value! : default; set => (this.Tag, this.Value) = (ActionTag.ExecuteNnsFunction, value); }
+
+		public RewardNodeProvider? RewardNodeProvider { get => this.Tag == ActionTag.RewardNodeProvider ? (RewardNodeProvider)this.Value! : default; set => (this.Tag, this.Value) = (ActionTag.RewardNodeProvider, value); }
+
+		public SetDefaultFollowees? SetDefaultFollowees { get => this.Tag == ActionTag.SetDefaultFollowees ? (SetDefaultFollowees)this.Value! : default; set => (this.Tag, this.Value) = (ActionTag.SetDefaultFollowees, value); }
+
+		public RewardNodeProviders? RewardNodeProviders { get => this.Tag == ActionTag.RewardNodeProviders ? (RewardNodeProviders)this.Value! : default; set => (this.Tag, this.Value) = (ActionTag.RewardNodeProviders, value); }
+
+		public NetworkEconomics? ManageNetworkEconomics { get => this.Tag == ActionTag.ManageNetworkEconomics ? (NetworkEconomics)this.Value! : default; set => (this.Tag, this.Value) = (ActionTag.ManageNetworkEconomics, value); }
+
+		public ApproveGenesisKyc? ApproveGenesisKyc { get => this.Tag == ActionTag.ApproveGenesisKyc ? (ApproveGenesisKyc)this.Value! : default; set => (this.Tag, this.Value) = (ActionTag.ApproveGenesisKyc, value); }
+
+		public AddOrRemoveNodeProvider? AddOrRemoveNodeProvider { get => this.Tag == ActionTag.AddOrRemoveNodeProvider ? (AddOrRemoveNodeProvider)this.Value! : default; set => (this.Tag, this.Value) = (ActionTag.AddOrRemoveNodeProvider, value); }
+
+		public Motion? Motion { get => this.Tag == ActionTag.Motion ? (Motion)this.Value! : default; set => (this.Tag, this.Value) = (ActionTag.Motion, value); }
+
+		public Action(ActionTag tag, object? value)
+		{
+			this.Tag = tag;
+			this.Value = value;
+		}
+
+		protected Action()
+		{
+		}
+	}
+
+	public enum ActionTag
+	{
+		RegisterKnownNeuron,
+		ManageNeuron,
+		ExecuteNnsFunction,
+		RewardNodeProvider,
+		SetDefaultFollowees,
+		RewardNodeProviders,
+		ManageNetworkEconomics,
+		ApproveGenesisKyc,
+		AddOrRemoveNodeProvider,
+		Motion
+	}
+}
+
+Type File: 'AddHotKey'
+
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid.Models;
+
+namespace Test
+{
+	public class AddHotKey
+	{
+		[CandidName("new_hot_key")]
+		public OptionalValue<Principal> NewHotKey { get; set; }
+
+		public AddHotKey(OptionalValue<Principal> newHotKey)
+		{
+			this.NewHotKey = newHotKey;
+		}
+
+		public AddHotKey()
+		{
+		}
+	}
+}
+
+Type File: 'AddOrRemoveNodeProvider'
+
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid.Models;
+using Test;
+
+namespace Test
+{
+	public class AddOrRemoveNodeProvider
+	{
+		[CandidName("change")]
+		public OptionalValue<Change> Change { get; set; }
+
+		public AddOrRemoveNodeProvider(OptionalValue<Change> change)
+		{
+			this.Change = change;
+		}
+
+		public AddOrRemoveNodeProvider()
+		{
+		}
+	}
+}
+
+Type File: 'Amount'
+
+using EdjCase.ICP.Candid.Mapping;
+
+namespace Test
+{
+	public class Amount
+	{
+		[CandidName("e8s")]
+		public ulong E8s { get; set; }
+
+		public Amount(ulong e8s)
+		{
+			this.E8s = e8s;
+		}
+
+		public Amount()
+		{
+		}
+	}
+}
+
+Type File: 'ApproveGenesisKyc'
+
+using EdjCase.ICP.Candid.Mapping;
+using System.Collections.Generic;
+using EdjCase.ICP.Candid.Models;
+
+namespace Test
+{
+	public class ApproveGenesisKyc
+	{
+		[CandidName("principals")]
+		public List<Principal> Principals { get; set; }
+
+		public ApproveGenesisKyc(List<Principal> principals)
+		{
+			this.Principals = principals;
+		}
+
+		public ApproveGenesisKyc()
+		{
+		}
+	}
+}
+
+Type File: 'Ballot'
+
+using EdjCase.ICP.Candid.Mapping;
+
+namespace Test
+{
+	public class Ballot
+	{
+		[CandidName("vote")]
+		public int Vote { get; set; }
+
+		[CandidName("voting_power")]
+		public ulong VotingPower { get; set; }
+
+		public Ballot(int vote, ulong votingPower)
+		{
+			this.Vote = vote;
+			this.VotingPower = votingPower;
+		}
+
+		public Ballot()
+		{
+		}
+	}
+}
+
+Type File: 'BallotInfo'
+
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid.Models;
+using Test;
+
+namespace Test
+{
+	public class BallotInfo
+	{
+		[CandidName("vote")]
+		public int Vote { get; set; }
+
+		[CandidName("proposal_id")]
+		public OptionalValue<NeuronId> ProposalId { get; set; }
+
+		public BallotInfo(int vote, OptionalValue<NeuronId> proposalId)
+		{
+			this.Vote = vote;
+			this.ProposalId = proposalId;
+		}
+
+		public BallotInfo()
+		{
+		}
+	}
+}
+
+Type File: 'By'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test;
+
+namespace Test
+{
+	[Variant]
+	public class By
+	{
+		[VariantTagProperty]
+		public ByTag Tag { get; set; }
+
+		[VariantValueProperty]
+		public object? Value { get; set; }
+
+		public By.NeuronIdOrSubaccountInfo? NeuronIdOrSubaccount { get => this.Tag == ByTag.NeuronIdOrSubaccount ? (By.NeuronIdOrSubaccountInfo)this.Value! : default; set => (this.Tag, this.Value) = (ByTag.NeuronIdOrSubaccount, value); }
+
+		public ClaimOrRefreshNeuronFromAccount? MemoAndController { get => this.Tag == ByTag.MemoAndController ? (ClaimOrRefreshNeuronFromAccount)this.Value! : default; set => (this.Tag, this.Value) = (ByTag.MemoAndController, value); }
+
+		public ulong? Memo { get => this.Tag == ByTag.Memo ? (ulong)this.Value! : default; set => (this.Tag, this.Value) = (ByTag.Memo, value); }
+
+		public By(ByTag tag, object? value)
+		{
+			this.Tag = tag;
+			this.Value = value;
+		}
+
+		protected By()
+		{
+		}
+
+		public class NeuronIdOrSubaccountInfo
+		{
+			public NeuronIdOrSubaccountInfo()
+			{
+			}
+		}
+	}
+
+	public enum ByTag
+	{
+		NeuronIdOrSubaccount,
+		MemoAndController,
+		Memo
+	}
+}
+
+Type File: 'Change'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test;
+
+namespace Test
+{
+	[Variant]
+	public class Change
+	{
+		[VariantTagProperty]
+		public ChangeTag Tag { get; set; }
+
+		[VariantValueProperty]
+		public object? Value { get; set; }
+
+		public NodeProvider? ToRemove { get => this.Tag == ChangeTag.ToRemove ? (NodeProvider)this.Value! : default; set => (this.Tag, this.Value) = (ChangeTag.ToRemove, value); }
+
+		public NodeProvider? ToAdd { get => this.Tag == ChangeTag.ToAdd ? (NodeProvider)this.Value! : default; set => (this.Tag, this.Value) = (ChangeTag.ToAdd, value); }
+
+		public Change(ChangeTag tag, object? value)
+		{
+			this.Tag = tag;
+			this.Value = value;
+		}
+
+		protected Change()
+		{
+		}
+	}
+
+	public enum ChangeTag
+	{
+		ToRemove,
+		ToAdd
+	}
+}
+
+Type File: 'ClaimOrRefresh'
+
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid.Models;
+using Test;
+
+namespace Test
+{
+	public class ClaimOrRefresh
+	{
+		[CandidName("by")]
+		public OptionalValue<By> By { get; set; }
+
+		public ClaimOrRefresh(OptionalValue<By> by)
+		{
+			this.By = by;
+		}
+
+		public ClaimOrRefresh()
+		{
+		}
+	}
+}
+
+Type File: 'ClaimOrRefreshNeuronFromAccount'
+
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid.Models;
+
+namespace Test
+{
+	public class ClaimOrRefreshNeuronFromAccount
+	{
+		[CandidName("controller")]
+		public OptionalValue<Principal> Controller { get; set; }
+
+		[CandidName("memo")]
+		public ulong Memo { get; set; }
+
+		public ClaimOrRefreshNeuronFromAccount(OptionalValue<Principal> controller, ulong memo)
+		{
+			this.Controller = controller;
+			this.Memo = memo;
+		}
+
+		public ClaimOrRefreshNeuronFromAccount()
+		{
+		}
+	}
+}
+
+Type File: 'ClaimOrRefreshNeuronFromAccountResponse'
+
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid.Models;
+using Test;
+
+namespace Test
+{
+	public class ClaimOrRefreshNeuronFromAccountResponse
+	{
+		[CandidName("result")]
+		public OptionalValue<Result1> Result { get; set; }
+
+		public ClaimOrRefreshNeuronFromAccountResponse(OptionalValue<Result1> result)
+		{
+			this.Result = result;
+		}
+
+		public ClaimOrRefreshNeuronFromAccountResponse()
+		{
+		}
+	}
+}
+
+Type File: 'ClaimOrRefreshResponse'
+
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid.Models;
+using Test;
+
+namespace Test
+{
+	public class ClaimOrRefreshResponse
+	{
+		[CandidName("refreshed_neuron_id")]
+		public OptionalValue<NeuronId> RefreshedNeuronId { get; set; }
+
+		public ClaimOrRefreshResponse(OptionalValue<NeuronId> refreshedNeuronId)
+		{
+			this.RefreshedNeuronId = refreshedNeuronId;
+		}
+
+		public ClaimOrRefreshResponse()
+		{
+		}
+	}
+}
+
+Type File: 'Command'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test;
+
+namespace Test
+{
+	[Variant]
+	public class Command
+	{
+		[VariantTagProperty]
+		public CommandTag Tag { get; set; }
+
+		[VariantValueProperty]
+		public object? Value { get; set; }
+
+		public Spawn? Spawn { get => this.Tag == CommandTag.Spawn ? (Spawn)this.Value! : default; set => (this.Tag, this.Value) = (CommandTag.Spawn, value); }
+
+		public Split? Split { get => this.Tag == CommandTag.Split ? (Split)this.Value! : default; set => (this.Tag, this.Value) = (CommandTag.Split, value); }
+
+		public Follow? Follow { get => this.Tag == CommandTag.Follow ? (Follow)this.Value! : default; set => (this.Tag, this.Value) = (CommandTag.Follow, value); }
+
+		public ClaimOrRefresh? ClaimOrRefresh { get => this.Tag == CommandTag.ClaimOrRefresh ? (ClaimOrRefresh)this.Value! : default; set => (this.Tag, this.Value) = (CommandTag.ClaimOrRefresh, value); }
+
+		public Configure? Configure { get => this.Tag == CommandTag.Configure ? (Configure)this.Value! : default; set => (this.Tag, this.Value) = (CommandTag.Configure, value); }
+
+		public RegisterVote? RegisterVote { get => this.Tag == CommandTag.RegisterVote ? (RegisterVote)this.Value! : default; set => (this.Tag, this.Value) = (CommandTag.RegisterVote, value); }
+
+		public Merge? Merge { get => this.Tag == CommandTag.Merge ? (Merge)this.Value! : default; set => (this.Tag, this.Value) = (CommandTag.Merge, value); }
+
+		public DisburseToNeuron? DisburseToNeuron { get => this.Tag == CommandTag.DisburseToNeuron ? (DisburseToNeuron)this.Value! : default; set => (this.Tag, this.Value) = (CommandTag.DisburseToNeuron, value); }
+
+		public Proposal? MakeProposal { get => this.Tag == CommandTag.MakeProposal ? (Proposal)this.Value! : default; set => (this.Tag, this.Value) = (CommandTag.MakeProposal, value); }
+
+		public MergeMaturity? MergeMaturity { get => this.Tag == CommandTag.MergeMaturity ? (MergeMaturity)this.Value! : default; set => (this.Tag, this.Value) = (CommandTag.MergeMaturity, value); }
+
+		public Disburse? Disburse { get => this.Tag == CommandTag.Disburse ? (Disburse)this.Value! : default; set => (this.Tag, this.Value) = (CommandTag.Disburse, value); }
+
+		public Command(CommandTag tag, object? value)
+		{
+			this.Tag = tag;
+			this.Value = value;
+		}
+
+		protected Command()
+		{
+		}
+	}
+
+	public enum CommandTag
+	{
+		Spawn,
+		Split,
+		Follow,
+		ClaimOrRefresh,
+		Configure,
+		RegisterVote,
+		Merge,
+		DisburseToNeuron,
+		MakeProposal,
+		MergeMaturity,
+		Disburse
+	}
+}
+
+Type File: 'Command1'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test;
+
+namespace Test
+{
+	[Variant]
+	public class Command1
+	{
+		[VariantTagProperty]
+		public Command1Tag Tag { get; set; }
+
+		[VariantValueProperty]
+		public object? Value { get; set; }
+
+		public GovernanceError? Error { get => this.Tag == Command1Tag.Error ? (GovernanceError)this.Value! : default; set => (this.Tag, this.Value) = (Command1Tag.Error, value); }
+
+		public SpawnResponse? Spawn { get => this.Tag == Command1Tag.Spawn ? (SpawnResponse)this.Value! : default; set => (this.Tag, this.Value) = (Command1Tag.Spawn, value); }
+
+		public SpawnResponse? Split { get => this.Tag == Command1Tag.Split ? (SpawnResponse)this.Value! : default; set => (this.Tag, this.Value) = (Command1Tag.Split, value); }
+
+		public Command1.FollowInfo? Follow { get => this.Tag == Command1Tag.Follow ? (Command1.FollowInfo)this.Value! : default; set => (this.Tag, this.Value) = (Command1Tag.Follow, value); }
+
+		public ClaimOrRefreshResponse? ClaimOrRefresh { get => this.Tag == Command1Tag.ClaimOrRefresh ? (ClaimOrRefreshResponse)this.Value! : default; set => (this.Tag, this.Value) = (Command1Tag.ClaimOrRefresh, value); }
+
+		public Command1.ConfigureInfo? Configure { get => this.Tag == Command1Tag.Configure ? (Command1.ConfigureInfo)this.Value! : default; set => (this.Tag, this.Value) = (Command1Tag.Configure, value); }
+
+		public Command1.RegisterVoteInfo? RegisterVote { get => this.Tag == Command1Tag.RegisterVote ? (Command1.RegisterVoteInfo)this.Value! : default; set => (this.Tag, this.Value) = (Command1Tag.RegisterVote, value); }
+
+		public Command1.MergeInfo? Merge { get => this.Tag == Command1Tag.Merge ? (Command1.MergeInfo)this.Value! : default; set => (this.Tag, this.Value) = (Command1Tag.Merge, value); }
+
+		public SpawnResponse? DisburseToNeuron { get => this.Tag == Command1Tag.DisburseToNeuron ? (SpawnResponse)this.Value! : default; set => (this.Tag, this.Value) = (Command1Tag.DisburseToNeuron, value); }
+
+		public MakeProposalResponse? MakeProposal { get => this.Tag == Command1Tag.MakeProposal ? (MakeProposalResponse)this.Value! : default; set => (this.Tag, this.Value) = (Command1Tag.MakeProposal, value); }
+
+		public MergeMaturityResponse? MergeMaturity { get => this.Tag == Command1Tag.MergeMaturity ? (MergeMaturityResponse)this.Value! : default; set => (this.Tag, this.Value) = (Command1Tag.MergeMaturity, value); }
+
+		public DisburseResponse? Disburse { get => this.Tag == Command1Tag.Disburse ? (DisburseResponse)this.Value! : default; set => (this.Tag, this.Value) = (Command1Tag.Disburse, value); }
+
+		public Command1(Command1Tag tag, object? value)
+		{
+			this.Tag = tag;
+			this.Value = value;
+		}
+
+		protected Command1()
+		{
+		}
+
+		public class FollowInfo
+		{
+			public FollowInfo()
+			{
+			}
+		}
+
+		public class ConfigureInfo
+		{
+			public ConfigureInfo()
+			{
+			}
+		}
+
+		public class RegisterVoteInfo
+		{
+			public RegisterVoteInfo()
+			{
+			}
+		}
+
+		public class MergeInfo
+		{
+			public MergeInfo()
+			{
+			}
+		}
+	}
+
+	public enum Command1Tag
+	{
+		Error,
+		Spawn,
+		Split,
+		Follow,
+		ClaimOrRefresh,
+		Configure,
+		RegisterVote,
+		Merge,
+		DisburseToNeuron,
+		MakeProposal,
+		MergeMaturity,
+		Disburse
+	}
+}
+
+Type File: 'Command2'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test;
+
+namespace Test
+{
+	[Variant]
+	public class Command2
+	{
+		[VariantTagProperty]
+		public Command2Tag Tag { get; set; }
+
+		[VariantValueProperty]
+		public object? Value { get; set; }
+
+		public Spawn? Spawn { get => this.Tag == Command2Tag.Spawn ? (Spawn)this.Value! : default; set => (this.Tag, this.Value) = (Command2Tag.Spawn, value); }
+
+		public Split? Split { get => this.Tag == Command2Tag.Split ? (Split)this.Value! : default; set => (this.Tag, this.Value) = (Command2Tag.Split, value); }
+
+		public Configure? Configure { get => this.Tag == Command2Tag.Configure ? (Configure)this.Value! : default; set => (this.Tag, this.Value) = (Command2Tag.Configure, value); }
+
+		public Merge? Merge { get => this.Tag == Command2Tag.Merge ? (Merge)this.Value! : default; set => (this.Tag, this.Value) = (Command2Tag.Merge, value); }
+
+		public DisburseToNeuron? DisburseToNeuron { get => this.Tag == Command2Tag.DisburseToNeuron ? (DisburseToNeuron)this.Value! : default; set => (this.Tag, this.Value) = (Command2Tag.DisburseToNeuron, value); }
+
+		public ClaimOrRefresh? ClaimOrRefreshNeuron { get => this.Tag == Command2Tag.ClaimOrRefreshNeuron ? (ClaimOrRefresh)this.Value! : default; set => (this.Tag, this.Value) = (Command2Tag.ClaimOrRefreshNeuron, value); }
+
+		public MergeMaturity? MergeMaturity { get => this.Tag == Command2Tag.MergeMaturity ? (MergeMaturity)this.Value! : default; set => (this.Tag, this.Value) = (Command2Tag.MergeMaturity, value); }
+
+		public Disburse? Disburse { get => this.Tag == Command2Tag.Disburse ? (Disburse)this.Value! : default; set => (this.Tag, this.Value) = (Command2Tag.Disburse, value); }
+
+		public Command2(Command2Tag tag, object? value)
+		{
+			this.Tag = tag;
+			this.Value = value;
+		}
+
+		protected Command2()
+		{
+		}
+	}
+
+	public enum Command2Tag
+	{
+		Spawn,
+		Split,
+		Configure,
+		Merge,
+		DisburseToNeuron,
+		ClaimOrRefreshNeuron,
+		MergeMaturity,
+		Disburse
+	}
+}
+
+Type File: 'Configure'
+
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid.Models;
+using Test;
+
+namespace Test
+{
+	public class Configure
+	{
+		[CandidName("operation")]
+		public OptionalValue<Operation> Operation { get; set; }
+
+		public Configure(OptionalValue<Operation> operation)
+		{
+			this.Operation = operation;
+		}
+
+		public Configure()
+		{
+		}
+	}
+}
+
+Type File: 'Disburse'
+
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid.Models;
+using Test;
+
+namespace Test
+{
+	public class Disburse
+	{
+		[CandidName("to_account")]
+		public OptionalValue<AccountIdentifier> ToAccount { get; set; }
+
+		[CandidName("amount")]
+		public OptionalValue<Amount> Amount { get; set; }
+
+		public Disburse(OptionalValue<AccountIdentifier> toAccount, OptionalValue<Amount> amount)
+		{
+			this.ToAccount = toAccount;
+			this.Amount = amount;
+		}
+
+		public Disburse()
+		{
+		}
+	}
+}
+
+Type File: 'DisburseResponse'
+
+using EdjCase.ICP.Candid.Mapping;
+
+namespace Test
+{
+	public class DisburseResponse
+	{
+		[CandidName("transfer_block_height")]
+		public ulong TransferBlockHeight { get; set; }
+
+		public DisburseResponse(ulong transferBlockHeight)
+		{
+			this.TransferBlockHeight = transferBlockHeight;
+		}
+
+		public DisburseResponse()
+		{
+		}
+	}
+}
+
+Type File: 'DisburseToNeuron'
+
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid.Models;
+
+namespace Test
+{
+	public class DisburseToNeuron
+	{
+		[CandidName("dissolve_delay_seconds")]
+		public ulong DissolveDelaySeconds { get; set; }
+
+		[CandidName("kyc_verified")]
+		public bool KycVerified { get; set; }
+
+		[CandidName("amount_e8s")]
+		public ulong AmountE8s { get; set; }
+
+		[CandidName("new_controller")]
+		public OptionalValue<Principal> NewController { get; set; }
+
+		[CandidName("nonce")]
+		public ulong Nonce { get; set; }
+
+		public DisburseToNeuron(ulong dissolveDelaySeconds, bool kycVerified, ulong amountE8s, OptionalValue<Principal> newController, ulong nonce)
+		{
+			this.DissolveDelaySeconds = dissolveDelaySeconds;
+			this.KycVerified = kycVerified;
+			this.AmountE8s = amountE8s;
+			this.NewController = newController;
+			this.Nonce = nonce;
+		}
+
+		public DisburseToNeuron()
+		{
+		}
+	}
+}
+
+Type File: 'DissolveState'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test;
+
+namespace Test
+{
+	[Variant]
+	public class DissolveState
+	{
+		[VariantTagProperty]
+		public DissolveStateTag Tag { get; set; }
+
+		[VariantValueProperty]
+		public object? Value { get; set; }
+
+		public ulong? DissolveDelaySeconds { get => this.Tag == DissolveStateTag.DissolveDelaySeconds ? (ulong)this.Value! : default; set => (this.Tag, this.Value) = (DissolveStateTag.DissolveDelaySeconds, value); }
+
+		public ulong? WhenDissolvedTimestampSeconds { get => this.Tag == DissolveStateTag.WhenDissolvedTimestampSeconds ? (ulong)this.Value! : default; set => (this.Tag, this.Value) = (DissolveStateTag.WhenDissolvedTimestampSeconds, value); }
+
+		public DissolveState(DissolveStateTag tag, object? value)
+		{
+			this.Tag = tag;
+			this.Value = value;
+		}
+
+		protected DissolveState()
+		{
+		}
+	}
+
+	public enum DissolveStateTag
+	{
+		DissolveDelaySeconds,
+		WhenDissolvedTimestampSeconds
+	}
+}
+
+Type File: 'ExecuteNnsFunction'
+
+using EdjCase.ICP.Candid.Mapping;
+using System.Collections.Generic;
+
+namespace Test
+{
+	public class ExecuteNnsFunction
+	{
+		[CandidName("nns_function")]
+		public int NnsFunction { get; set; }
+
+		[CandidName("payload")]
+		public List<byte> Payload { get; set; }
+
+		public ExecuteNnsFunction(int nnsFunction, List<byte> payload)
+		{
+			this.NnsFunction = nnsFunction;
+			this.Payload = payload;
+		}
+
+		public ExecuteNnsFunction()
+		{
+		}
+	}
+}
+
+Type File: 'Follow'
+
+using EdjCase.ICP.Candid.Mapping;
+using System.Collections.Generic;
+using Test;
+
+namespace Test
+{
+	public class Follow
+	{
+		[CandidName("topic")]
+		public int Topic { get; set; }
+
+		[CandidName("followees")]
+		public List<NeuronId> Followees { get; set; }
+
+		public Follow(int topic, List<NeuronId> followees)
+		{
+			this.Topic = topic;
+			this.Followees = followees;
+		}
+
+		public Follow()
+		{
+		}
+	}
+}
+
+Type File: 'Followees'
+
+using EdjCase.ICP.Candid.Mapping;
+using System.Collections.Generic;
+using Test;
+
+namespace Test
+{
+	public class Followees
+	{
+		[CandidName("followees")]
+		public List<NeuronId> Followees_ { get; set; }
+
+		public Followees(List<NeuronId> followees)
+		{
+			this.Followees_ = followees;
+		}
+
+		public Followees()
+		{
+		}
+	}
+}
+
+Type File: 'Governance'
+
+using EdjCase.ICP.Candid.Mapping;
+using System.Collections.Generic;
+using Test;
+using EdjCase.ICP.Candid.Models;
+
+namespace Test
+{
+	public class Governance
+	{
+		[CandidName("default_followees")]
+		public Dictionary<int, Followees> DefaultFollowees { get; set; }
+
+		[CandidName("wait_for_quiet_threshold_seconds")]
+		public ulong WaitForQuietThresholdSeconds { get; set; }
+
+		[CandidName("metrics")]
+		public OptionalValue<GovernanceCachedMetrics> Metrics { get; set; }
+
+		[CandidName("node_providers")]
+		public List<NodeProvider> NodeProviders { get; set; }
+
+		[CandidName("economics")]
+		public OptionalValue<NetworkEconomics> Economics { get; set; }
+
+		[CandidName("latest_reward_event")]
+		public OptionalValue<RewardEvent> LatestRewardEvent { get; set; }
+
+		[CandidName("to_claim_transfers")]
+		public List<NeuronStakeTransfer> ToClaimTransfers { get; set; }
+
+		[CandidName("short_voting_period_seconds")]
+		public ulong ShortVotingPeriodSeconds { get; set; }
+
+		[CandidName("proposals")]
+		public Dictionary<ulong, ProposalData> Proposals { get; set; }
+
+		[CandidName("in_flight_commands")]
+		public Dictionary<ulong, NeuronInFlightCommand> InFlightCommands { get; set; }
+
+		[CandidName("neurons")]
+		public Dictionary<ulong, Neuron> Neurons { get; set; }
+
+		[CandidName("genesis_timestamp_seconds")]
+		public ulong GenesisTimestampSeconds { get; set; }
+
+		public Governance(Dictionary<int, Followees> defaultFollowees, ulong waitForQuietThresholdSeconds, OptionalValue<GovernanceCachedMetrics> metrics, List<NodeProvider> nodeProviders, OptionalValue<NetworkEconomics> economics, OptionalValue<RewardEvent> latestRewardEvent, List<NeuronStakeTransfer> toClaimTransfers, ulong shortVotingPeriodSeconds, Dictionary<ulong, ProposalData> proposals, Dictionary<ulong, NeuronInFlightCommand> inFlightCommands, Dictionary<ulong, Neuron> neurons, ulong genesisTimestampSeconds)
+		{
+			this.DefaultFollowees = defaultFollowees;
+			this.WaitForQuietThresholdSeconds = waitForQuietThresholdSeconds;
+			this.Metrics = metrics;
+			this.NodeProviders = nodeProviders;
+			this.Economics = economics;
+			this.LatestRewardEvent = latestRewardEvent;
+			this.ToClaimTransfers = toClaimTransfers;
+			this.ShortVotingPeriodSeconds = shortVotingPeriodSeconds;
+			this.Proposals = proposals;
+			this.InFlightCommands = inFlightCommands;
+			this.Neurons = neurons;
+			this.GenesisTimestampSeconds = genesisTimestampSeconds;
+		}
+
+		public Governance()
+		{
+		}
+	}
+}
+
+Type File: 'GovernanceCachedMetrics'
+
+using EdjCase.ICP.Candid.Mapping;
+using System.Collections.Generic;
+
+namespace Test
+{
+	public class GovernanceCachedMetrics
+	{
+		[CandidName("not_dissolving_neurons_e8s_buckets")]
+		public Dictionary<ulong, double> NotDissolvingNeuronsE8sBuckets { get; set; }
+
+		[CandidName("garbage_collectable_neurons_count")]
+		public ulong GarbageCollectableNeuronsCount { get; set; }
+
+		[CandidName("neurons_with_invalid_stake_count")]
+		public ulong NeuronsWithInvalidStakeCount { get; set; }
+
+		[CandidName("not_dissolving_neurons_count_buckets")]
+		public Dictionary<ulong, ulong> NotDissolvingNeuronsCountBuckets { get; set; }
+
+		[CandidName("total_supply_icp")]
+		public ulong TotalSupplyIcp { get; set; }
+
+		[CandidName("neurons_with_less_than_6_months_dissolve_delay_count")]
+		public ulong NeuronsWithLessThan6MonthsDissolveDelayCount { get; set; }
+
+		[CandidName("dissolved_neurons_count")]
+		public ulong DissolvedNeuronsCount { get; set; }
+
+		[CandidName("total_staked_e8s")]
+		public ulong TotalStakedE8s { get; set; }
+
+		[CandidName("not_dissolving_neurons_count")]
+		public ulong NotDissolvingNeuronsCount { get; set; }
+
+		[CandidName("dissolved_neurons_e8s")]
+		public ulong DissolvedNeuronsE8s { get; set; }
+
+		[CandidName("neurons_with_less_than_6_months_dissolve_delay_e8s")]
+		public ulong NeuronsWithLessThan6MonthsDissolveDelayE8s { get; set; }
+
+		[CandidName("dissolving_neurons_count_buckets")]
+		public Dictionary<ulong, ulong> DissolvingNeuronsCountBuckets { get; set; }
+
+		[CandidName("dissolving_neurons_count")]
+		public ulong DissolvingNeuronsCount { get; set; }
+
+		[CandidName("dissolving_neurons_e8s_buckets")]
+		public Dictionary<ulong, double> DissolvingNeuronsE8sBuckets { get; set; }
+
+		[CandidName("community_fund_total_staked_e8s")]
+		public ulong CommunityFundTotalStakedE8s { get; set; }
+
+		[CandidName("timestamp_seconds")]
+		public ulong TimestampSeconds { get; set; }
+
+		public GovernanceCachedMetrics(Dictionary<ulong, double> notDissolvingNeuronsE8sBuckets, ulong garbageCollectableNeuronsCount, ulong neuronsWithInvalidStakeCount, Dictionary<ulong, ulong> notDissolvingNeuronsCountBuckets, ulong totalSupplyIcp, ulong neuronsWithLessThan6MonthsDissolveDelayCount, ulong dissolvedNeuronsCount, ulong totalStakedE8s, ulong notDissolvingNeuronsCount, ulong dissolvedNeuronsE8s, ulong neuronsWithLessThan6MonthsDissolveDelayE8s, Dictionary<ulong, ulong> dissolvingNeuronsCountBuckets, ulong dissolvingNeuronsCount, Dictionary<ulong, double> dissolvingNeuronsE8sBuckets, ulong communityFundTotalStakedE8s, ulong timestampSeconds)
+		{
+			this.NotDissolvingNeuronsE8sBuckets = notDissolvingNeuronsE8sBuckets;
+			this.GarbageCollectableNeuronsCount = garbageCollectableNeuronsCount;
+			this.NeuronsWithInvalidStakeCount = neuronsWithInvalidStakeCount;
+			this.NotDissolvingNeuronsCountBuckets = notDissolvingNeuronsCountBuckets;
+			this.TotalSupplyIcp = totalSupplyIcp;
+			this.NeuronsWithLessThan6MonthsDissolveDelayCount = neuronsWithLessThan6MonthsDissolveDelayCount;
+			this.DissolvedNeuronsCount = dissolvedNeuronsCount;
+			this.TotalStakedE8s = totalStakedE8s;
+			this.NotDissolvingNeuronsCount = notDissolvingNeuronsCount;
+			this.DissolvedNeuronsE8s = dissolvedNeuronsE8s;
+			this.NeuronsWithLessThan6MonthsDissolveDelayE8s = neuronsWithLessThan6MonthsDissolveDelayE8s;
+			this.DissolvingNeuronsCountBuckets = dissolvingNeuronsCountBuckets;
+			this.DissolvingNeuronsCount = dissolvingNeuronsCount;
+			this.DissolvingNeuronsE8sBuckets = dissolvingNeuronsE8sBuckets;
+			this.CommunityFundTotalStakedE8s = communityFundTotalStakedE8s;
+			this.TimestampSeconds = timestampSeconds;
+		}
+
+		public GovernanceCachedMetrics()
+		{
+		}
+	}
+}
+
+Type File: 'GovernanceError'
+
+using EdjCase.ICP.Candid.Mapping;
+
+namespace Test
+{
+	public class GovernanceError
+	{
+		[CandidName("error_message")]
+		public string ErrorMessage { get; set; }
+
+		[CandidName("error_type")]
+		public int ErrorType { get; set; }
+
+		public GovernanceError(string errorMessage, int errorType)
+		{
+			this.ErrorMessage = errorMessage;
+			this.ErrorType = errorType;
+		}
+
+		public GovernanceError()
+		{
+		}
+	}
+}
+
+Type File: 'IncreaseDissolveDelay'
+
+using EdjCase.ICP.Candid.Mapping;
+
+namespace Test
+{
+	public class IncreaseDissolveDelay
+	{
+		[CandidName("additional_dissolve_delay_seconds")]
+		public uint AdditionalDissolveDelaySeconds { get; set; }
+
+		public IncreaseDissolveDelay(uint additionalDissolveDelaySeconds)
+		{
+			this.AdditionalDissolveDelaySeconds = additionalDissolveDelaySeconds;
+		}
+
+		public IncreaseDissolveDelay()
+		{
+		}
+	}
+}
+
+Type File: 'KnownNeuron'
+
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid.Models;
+using Test;
+
+namespace Test
+{
+	public class KnownNeuron
+	{
+		[CandidName("id")]
+		public OptionalValue<NeuronId> Id { get; set; }
+
+		[CandidName("known_neuron_data")]
+		public OptionalValue<KnownNeuronData> KnownNeuronData { get; set; }
+
+		public KnownNeuron(OptionalValue<NeuronId> id, OptionalValue<KnownNeuronData> knownNeuronData)
+		{
+			this.Id = id;
+			this.KnownNeuronData = knownNeuronData;
+		}
+
+		public KnownNeuron()
+		{
+		}
+	}
+}
+
+Type File: 'KnownNeuronData'
+
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid.Models;
+
+namespace Test
+{
+	public class KnownNeuronData
+	{
+		[CandidName("name")]
+		public string Name { get; set; }
+
+		[CandidName("description")]
+		public OptionalValue<string> Description { get; set; }
+
+		public KnownNeuronData(string name, OptionalValue<string> description)
+		{
+			this.Name = name;
+			this.Description = description;
+		}
+
+		public KnownNeuronData()
+		{
+		}
+	}
+}
+
+Type File: 'ListKnownNeuronsResponse'
+
+using EdjCase.ICP.Candid.Mapping;
+using System.Collections.Generic;
+using Test;
+
+namespace Test
+{
+	public class ListKnownNeuronsResponse
+	{
+		[CandidName("known_neurons")]
+		public List<KnownNeuron> KnownNeurons { get; set; }
+
+		public ListKnownNeuronsResponse(List<KnownNeuron> knownNeurons)
+		{
+			this.KnownNeurons = knownNeurons;
+		}
+
+		public ListKnownNeuronsResponse()
+		{
+		}
+	}
+}
+
+Type File: 'ListNeurons'
+
+using EdjCase.ICP.Candid.Mapping;
+using System.Collections.Generic;
+
+namespace Test
+{
+	public class ListNeurons
+	{
+		[CandidName("neuron_ids")]
+		public List<ulong> NeuronIds { get; set; }
+
+		[CandidName("include_neurons_readable_by_caller")]
+		public bool IncludeNeuronsReadableByCaller { get; set; }
+
+		public ListNeurons(List<ulong> neuronIds, bool includeNeuronsReadableByCaller)
+		{
+			this.NeuronIds = neuronIds;
+			this.IncludeNeuronsReadableByCaller = includeNeuronsReadableByCaller;
+		}
+
+		public ListNeurons()
+		{
+		}
+	}
+}
+
+Type File: 'ListNeuronsResponse'
+
+using EdjCase.ICP.Candid.Mapping;
+using System.Collections.Generic;
+using Test;
+
+namespace Test
+{
+	public class ListNeuronsResponse
+	{
+		[CandidName("neuron_infos")]
+		public Dictionary<ulong, NeuronInfo> NeuronInfos { get; set; }
+
+		[CandidName("full_neurons")]
+		public List<Neuron> FullNeurons { get; set; }
+
+		public ListNeuronsResponse(Dictionary<ulong, NeuronInfo> neuronInfos, List<Neuron> fullNeurons)
+		{
+			this.NeuronInfos = neuronInfos;
+			this.FullNeurons = fullNeurons;
+		}
+
+		public ListNeuronsResponse()
+		{
+		}
+	}
+}
+
+Type File: 'ListNodeProvidersResponse'
+
+using EdjCase.ICP.Candid.Mapping;
+using System.Collections.Generic;
+using Test;
+
+namespace Test
+{
+	public class ListNodeProvidersResponse
+	{
+		[CandidName("node_providers")]
+		public List<NodeProvider> NodeProviders { get; set; }
+
+		public ListNodeProvidersResponse(List<NodeProvider> nodeProviders)
+		{
+			this.NodeProviders = nodeProviders;
+		}
+
+		public ListNodeProvidersResponse()
+		{
+		}
+	}
+}
+
+Type File: 'ListProposalInfo'
+
+using EdjCase.ICP.Candid.Mapping;
+using System.Collections.Generic;
+using EdjCase.ICP.Candid.Models;
+using Test;
+
+namespace Test
+{
+	public class ListProposalInfo
+	{
+		[CandidName("include_reward_status")]
+		public List<int> IncludeRewardStatus { get; set; }
+
+		[CandidName("before_proposal")]
+		public OptionalValue<NeuronId> BeforeProposal { get; set; }
+
+		[CandidName("limit")]
+		public uint Limit { get; set; }
+
+		[CandidName("exclude_topic")]
+		public List<int> ExcludeTopic { get; set; }
+
+		[CandidName("include_status")]
+		public List<int> IncludeStatus { get; set; }
+
+		public ListProposalInfo(List<int> includeRewardStatus, OptionalValue<NeuronId> beforeProposal, uint limit, List<int> excludeTopic, List<int> includeStatus)
+		{
+			this.IncludeRewardStatus = includeRewardStatus;
+			this.BeforeProposal = beforeProposal;
+			this.Limit = limit;
+			this.ExcludeTopic = excludeTopic;
+			this.IncludeStatus = includeStatus;
+		}
+
+		public ListProposalInfo()
+		{
+		}
+	}
+}
+
+Type File: 'ListProposalInfoResponse'
+
+using EdjCase.ICP.Candid.Mapping;
+using System.Collections.Generic;
+using Test;
+
+namespace Test
+{
+	public class ListProposalInfoResponse
+	{
+		[CandidName("proposal_info")]
+		public List<ProposalInfo> ProposalInfo { get; set; }
+
+		public ListProposalInfoResponse(List<ProposalInfo> proposalInfo)
+		{
+			this.ProposalInfo = proposalInfo;
+		}
+
+		public ListProposalInfoResponse()
+		{
+		}
+	}
+}
+
+Type File: 'MakeProposalResponse'
+
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid.Models;
+using Test;
+
+namespace Test
+{
+	public class MakeProposalResponse
+	{
+		[CandidName("proposal_id")]
+		public OptionalValue<NeuronId> ProposalId { get; set; }
+
+		public MakeProposalResponse(OptionalValue<NeuronId> proposalId)
+		{
+			this.ProposalId = proposalId;
+		}
+
+		public MakeProposalResponse()
+		{
+		}
+	}
+}
+
+Type File: 'ManageNeuron'
+
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid.Models;
+using Test;
+
+namespace Test
+{
+	public class ManageNeuron
+	{
+		[CandidName("id")]
+		public OptionalValue<NeuronId> Id { get; set; }
+
+		[CandidName("command")]
+		public OptionalValue<Command> Command { get; set; }
+
+		[CandidName("neuron_id_or_subaccount")]
+		public OptionalValue<NeuronIdOrSubaccount> NeuronIdOrSubaccount { get; set; }
+
+		public ManageNeuron(OptionalValue<NeuronId> id, OptionalValue<Command> command, OptionalValue<NeuronIdOrSubaccount> neuronIdOrSubaccount)
+		{
+			this.Id = id;
+			this.Command = command;
+			this.NeuronIdOrSubaccount = neuronIdOrSubaccount;
+		}
+
+		public ManageNeuron()
+		{
+		}
+	}
+}
+
+Type File: 'ManageNeuronResponse'
+
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid.Models;
+using Test;
+
+namespace Test
+{
+	public class ManageNeuronResponse
+	{
+		[CandidName("command")]
+		public OptionalValue<Command1> Command { get; set; }
+
+		public ManageNeuronResponse(OptionalValue<Command1> command)
+		{
+			this.Command = command;
+		}
+
+		public ManageNeuronResponse()
+		{
+		}
+	}
+}
+
+Type File: 'Merge'
+
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid.Models;
+using Test;
+
+namespace Test
+{
+	public class Merge
+	{
+		[CandidName("source_neuron_id")]
+		public OptionalValue<NeuronId> SourceNeuronId { get; set; }
+
+		public Merge(OptionalValue<NeuronId> sourceNeuronId)
+		{
+			this.SourceNeuronId = sourceNeuronId;
+		}
+
+		public Merge()
+		{
+		}
+	}
+}
+
+Type File: 'MergeMaturity'
+
+using EdjCase.ICP.Candid.Mapping;
+
+namespace Test
+{
+	public class MergeMaturity
+	{
+		[CandidName("percentage_to_merge")]
+		public uint PercentageToMerge { get; set; }
+
+		public MergeMaturity(uint percentageToMerge)
+		{
+			this.PercentageToMerge = percentageToMerge;
+		}
+
+		public MergeMaturity()
+		{
+		}
+	}
+}
+
+Type File: 'MergeMaturityResponse'
+
+using EdjCase.ICP.Candid.Mapping;
+
+namespace Test
+{
+	public class MergeMaturityResponse
+	{
+		[CandidName("merged_maturity_e8s")]
+		public ulong MergedMaturityE8s { get; set; }
+
+		[CandidName("new_stake_e8s")]
+		public ulong NewStakeE8s { get; set; }
+
+		public MergeMaturityResponse(ulong mergedMaturityE8s, ulong newStakeE8s)
+		{
+			this.MergedMaturityE8s = mergedMaturityE8s;
+			this.NewStakeE8s = newStakeE8s;
+		}
+
+		public MergeMaturityResponse()
+		{
+		}
+	}
+}
+
+Type File: 'Motion'
+
+using EdjCase.ICP.Candid.Mapping;
+
+namespace Test
+{
+	public class Motion
+	{
+		[CandidName("motion_text")]
+		public string MotionText { get; set; }
+
+		public Motion(string motionText)
+		{
+			this.MotionText = motionText;
+		}
+
+		public Motion()
+		{
+		}
+	}
+}
+
+Type File: 'NetworkEconomics'
+
+using EdjCase.ICP.Candid.Mapping;
+
+namespace Test
+{
+	public class NetworkEconomics
+	{
+		[CandidName("neuron_minimum_stake_e8s")]
+		public ulong NeuronMinimumStakeE8s { get; set; }
+
+		[CandidName("max_proposals_to_keep_per_topic")]
+		public uint MaxProposalsToKeepPerTopic { get; set; }
+
+		[CandidName("neuron_management_fee_per_proposal_e8s")]
+		public ulong NeuronManagementFeePerProposalE8s { get; set; }
+
+		[CandidName("reject_cost_e8s")]
+		public ulong RejectCostE8s { get; set; }
+
+		[CandidName("transaction_fee_e8s")]
+		public ulong TransactionFeeE8s { get; set; }
+
+		[CandidName("neuron_spawn_dissolve_delay_seconds")]
+		public ulong NeuronSpawnDissolveDelaySeconds { get; set; }
+
+		[CandidName("minimum_icp_xdr_rate")]
+		public ulong MinimumIcpXdrRate { get; set; }
+
+		[CandidName("maximum_node_provider_rewards_e8s")]
+		public ulong MaximumNodeProviderRewardsE8s { get; set; }
+
+		public NetworkEconomics(ulong neuronMinimumStakeE8s, uint maxProposalsToKeepPerTopic, ulong neuronManagementFeePerProposalE8s, ulong rejectCostE8s, ulong transactionFeeE8s, ulong neuronSpawnDissolveDelaySeconds, ulong minimumIcpXdrRate, ulong maximumNodeProviderRewardsE8s)
+		{
+			this.NeuronMinimumStakeE8s = neuronMinimumStakeE8s;
+			this.MaxProposalsToKeepPerTopic = maxProposalsToKeepPerTopic;
+			this.NeuronManagementFeePerProposalE8s = neuronManagementFeePerProposalE8s;
+			this.RejectCostE8s = rejectCostE8s;
+			this.TransactionFeeE8s = transactionFeeE8s;
+			this.NeuronSpawnDissolveDelaySeconds = neuronSpawnDissolveDelaySeconds;
+			this.MinimumIcpXdrRate = minimumIcpXdrRate;
+			this.MaximumNodeProviderRewardsE8s = maximumNodeProviderRewardsE8s;
+		}
+
+		public NetworkEconomics()
+		{
+		}
+	}
+}
+
+Type File: 'Neuron'
+
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid.Models;
+using Test;
+using System.Collections.Generic;
+
+namespace Test
+{
+	public class Neuron
+	{
+		[CandidName("id")]
+		public OptionalValue<NeuronId> Id { get; set; }
+
+		[CandidName("controller")]
+		public OptionalValue<Principal> Controller { get; set; }
+
+		[CandidName("recent_ballots")]
+		public List<BallotInfo> RecentBallots { get; set; }
+
+		[CandidName("kyc_verified")]
+		public bool KycVerified { get; set; }
+
+		[CandidName("not_for_profit")]
+		public bool NotForProfit { get; set; }
+
+		[CandidName("maturity_e8s_equivalent")]
+		public ulong MaturityE8sEquivalent { get; set; }
+
+		[CandidName("cached_neuron_stake_e8s")]
+		public ulong CachedNeuronStakeE8s { get; set; }
+
+		[CandidName("created_timestamp_seconds")]
+		public ulong CreatedTimestampSeconds { get; set; }
+
+		[CandidName("aging_since_timestamp_seconds")]
+		public ulong AgingSinceTimestampSeconds { get; set; }
+
+		[CandidName("hot_keys")]
+		public List<Principal> HotKeys { get; set; }
+
+		[CandidName("account")]
+		public List<byte> Account { get; set; }
+
+		[CandidName("joined_community_fund_timestamp_seconds")]
+		public OptionalValue<ulong> JoinedCommunityFundTimestampSeconds { get; set; }
+
+		[CandidName("dissolve_state")]
+		public OptionalValue<DissolveState> DissolveState { get; set; }
+
+		[CandidName("followees")]
+		public Dictionary<int, Followees> Followees { get; set; }
+
+		[CandidName("neuron_fees_e8s")]
+		public ulong NeuronFeesE8s { get; set; }
+
+		[CandidName("transfer")]
+		public OptionalValue<NeuronStakeTransfer> Transfer { get; set; }
+
+		[CandidName("known_neuron_data")]
+		public OptionalValue<KnownNeuronData> KnownNeuronData { get; set; }
+
+		public Neuron(OptionalValue<NeuronId> id, OptionalValue<Principal> controller, List<BallotInfo> recentBallots, bool kycVerified, bool notForProfit, ulong maturityE8sEquivalent, ulong cachedNeuronStakeE8s, ulong createdTimestampSeconds, ulong agingSinceTimestampSeconds, List<Principal> hotKeys, List<byte> account, OptionalValue<ulong> joinedCommunityFundTimestampSeconds, OptionalValue<DissolveState> dissolveState, Dictionary<int, Followees> followees, ulong neuronFeesE8s, OptionalValue<NeuronStakeTransfer> transfer, OptionalValue<KnownNeuronData> knownNeuronData)
+		{
+			this.Id = id;
+			this.Controller = controller;
+			this.RecentBallots = recentBallots;
+			this.KycVerified = kycVerified;
+			this.NotForProfit = notForProfit;
+			this.MaturityE8sEquivalent = maturityE8sEquivalent;
+			this.CachedNeuronStakeE8s = cachedNeuronStakeE8s;
+			this.CreatedTimestampSeconds = createdTimestampSeconds;
+			this.AgingSinceTimestampSeconds = agingSinceTimestampSeconds;
+			this.HotKeys = hotKeys;
+			this.Account = account;
+			this.JoinedCommunityFundTimestampSeconds = joinedCommunityFundTimestampSeconds;
+			this.DissolveState = dissolveState;
+			this.Followees = followees;
+			this.NeuronFeesE8s = neuronFeesE8s;
+			this.Transfer = transfer;
+			this.KnownNeuronData = knownNeuronData;
+		}
+
+		public Neuron()
+		{
+		}
+	}
+}
+
+Type File: 'NeuronId'
+
+using EdjCase.ICP.Candid.Mapping;
+
+namespace Test
+{
+	public class NeuronId
+	{
+		[CandidName("id")]
+		public ulong Id { get; set; }
+
+		public NeuronId(ulong id)
+		{
+			this.Id = id;
+		}
+
+		public NeuronId()
+		{
+		}
+	}
+}
+
+Type File: 'NeuronIdOrSubaccount'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test;
+using System.Collections.Generic;
+
+namespace Test
+{
+	[Variant]
+	public class NeuronIdOrSubaccount
+	{
+		[VariantTagProperty]
+		public NeuronIdOrSubaccountTag Tag { get; set; }
+
+		[VariantValueProperty]
+		public object? Value { get; set; }
+
+		public List<byte>? Subaccount { get => this.Tag == NeuronIdOrSubaccountTag.Subaccount ? (List<byte>)this.Value! : default; set => (this.Tag, this.Value) = (NeuronIdOrSubaccountTag.Subaccount, value); }
+
+		public NeuronId? NeuronId { get => this.Tag == NeuronIdOrSubaccountTag.NeuronId ? (NeuronId)this.Value! : default; set => (this.Tag, this.Value) = (NeuronIdOrSubaccountTag.NeuronId, value); }
+
+		public NeuronIdOrSubaccount(NeuronIdOrSubaccountTag tag, object? value)
+		{
+			this.Tag = tag;
+			this.Value = value;
+		}
+
+		protected NeuronIdOrSubaccount()
+		{
+		}
+	}
+
+	public enum NeuronIdOrSubaccountTag
+	{
+		Subaccount,
+		NeuronId
+	}
+}
+
+Type File: 'NeuronInFlightCommand'
+
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid.Models;
+using Test;
+
+namespace Test
+{
+	public class NeuronInFlightCommand
+	{
+		[CandidName("command")]
+		public OptionalValue<Command2> Command { get; set; }
+
+		[CandidName("timestamp")]
+		public ulong Timestamp { get; set; }
+
+		public NeuronInFlightCommand(OptionalValue<Command2> command, ulong timestamp)
+		{
+			this.Command = command;
+			this.Timestamp = timestamp;
+		}
+
+		public NeuronInFlightCommand()
+		{
+		}
+	}
+}
+
+Type File: 'NeuronInfo'
+
+using EdjCase.ICP.Candid.Mapping;
+using System.Collections.Generic;
+using Test;
+using EdjCase.ICP.Candid.Models;
+
+namespace Test
+{
+	public class NeuronInfo
+	{
+		[CandidName("dissolve_delay_seconds")]
+		public ulong DissolveDelaySeconds { get; set; }
+
+		[CandidName("recent_ballots")]
+		public List<BallotInfo> RecentBallots { get; set; }
+
+		[CandidName("created_timestamp_seconds")]
+		public ulong CreatedTimestampSeconds { get; set; }
+
+		[CandidName("state")]
+		public int State { get; set; }
+
+		[CandidName("stake_e8s")]
+		public ulong StakeE8s { get; set; }
+
+		[CandidName("joined_community_fund_timestamp_seconds")]
+		public OptionalValue<ulong> JoinedCommunityFundTimestampSeconds { get; set; }
+
+		[CandidName("retrieved_at_timestamp_seconds")]
+		public ulong RetrievedAtTimestampSeconds { get; set; }
+
+		[CandidName("known_neuron_data")]
+		public OptionalValue<KnownNeuronData> KnownNeuronData { get; set; }
+
+		[CandidName("voting_power")]
+		public ulong VotingPower { get; set; }
+
+		[CandidName("age_seconds")]
+		public ulong AgeSeconds { get; set; }
+
+		public NeuronInfo(ulong dissolveDelaySeconds, List<BallotInfo> recentBallots, ulong createdTimestampSeconds, int state, ulong stakeE8s, OptionalValue<ulong> joinedCommunityFundTimestampSeconds, ulong retrievedAtTimestampSeconds, OptionalValue<KnownNeuronData> knownNeuronData, ulong votingPower, ulong ageSeconds)
+		{
+			this.DissolveDelaySeconds = dissolveDelaySeconds;
+			this.RecentBallots = recentBallots;
+			this.CreatedTimestampSeconds = createdTimestampSeconds;
+			this.State = state;
+			this.StakeE8s = stakeE8s;
+			this.JoinedCommunityFundTimestampSeconds = joinedCommunityFundTimestampSeconds;
+			this.RetrievedAtTimestampSeconds = retrievedAtTimestampSeconds;
+			this.KnownNeuronData = knownNeuronData;
+			this.VotingPower = votingPower;
+			this.AgeSeconds = ageSeconds;
+		}
+
+		public NeuronInfo()
+		{
+		}
+	}
+}
+
+Type File: 'NeuronStakeTransfer'
+
+using EdjCase.ICP.Candid.Mapping;
+using System.Collections.Generic;
+using EdjCase.ICP.Candid.Models;
+
+namespace Test
+{
+	public class NeuronStakeTransfer
+	{
+		[CandidName("to_subaccount")]
+		public List<byte> ToSubaccount { get; set; }
+
+		[CandidName("neuron_stake_e8s")]
+		public ulong NeuronStakeE8s { get; set; }
+
+		[CandidName("from")]
+		public OptionalValue<Principal> From { get; set; }
+
+		[CandidName("memo")]
+		public ulong Memo { get; set; }
+
+		[CandidName("from_subaccount")]
+		public List<byte> FromSubaccount { get; set; }
+
+		[CandidName("transfer_timestamp")]
+		public ulong TransferTimestamp { get; set; }
+
+		[CandidName("block_height")]
+		public ulong BlockHeight { get; set; }
+
+		public NeuronStakeTransfer(List<byte> toSubaccount, ulong neuronStakeE8s, OptionalValue<Principal> from, ulong memo, List<byte> fromSubaccount, ulong transferTimestamp, ulong blockHeight)
+		{
+			this.ToSubaccount = toSubaccount;
+			this.NeuronStakeE8s = neuronStakeE8s;
+			this.From = from;
+			this.Memo = memo;
+			this.FromSubaccount = fromSubaccount;
+			this.TransferTimestamp = transferTimestamp;
+			this.BlockHeight = blockHeight;
+		}
+
+		public NeuronStakeTransfer()
+		{
+		}
+	}
+}
+
+Type File: 'NodeProvider'
+
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid.Models;
+using Test;
+
+namespace Test
+{
+	public class NodeProvider
+	{
+		[CandidName("id")]
+		public OptionalValue<Principal> Id { get; set; }
+
+		[CandidName("reward_account")]
+		public OptionalValue<AccountIdentifier> RewardAccount { get; set; }
+
+		public NodeProvider(OptionalValue<Principal> id, OptionalValue<AccountIdentifier> rewardAccount)
+		{
+			this.Id = id;
+			this.RewardAccount = rewardAccount;
+		}
+
+		public NodeProvider()
+		{
+		}
+	}
+}
+
+Type File: 'Operation'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test;
+
+namespace Test
+{
+	[Variant]
+	public class Operation
+	{
+		[VariantTagProperty]
+		public OperationTag Tag { get; set; }
+
+		[VariantValueProperty]
+		public object? Value { get; set; }
+
+		public RemoveHotKey? RemoveHotKey { get => this.Tag == OperationTag.RemoveHotKey ? (RemoveHotKey)this.Value! : default; set => (this.Tag, this.Value) = (OperationTag.RemoveHotKey, value); }
+
+		public AddHotKey? AddHotKey { get => this.Tag == OperationTag.AddHotKey ? (AddHotKey)this.Value! : default; set => (this.Tag, this.Value) = (OperationTag.AddHotKey, value); }
+
+		public Operation.StopDissolvingInfo? StopDissolving { get => this.Tag == OperationTag.StopDissolving ? (Operation.StopDissolvingInfo)this.Value! : default; set => (this.Tag, this.Value) = (OperationTag.StopDissolving, value); }
+
+		public Operation.StartDissolvingInfo? StartDissolving { get => this.Tag == OperationTag.StartDissolving ? (Operation.StartDissolvingInfo)this.Value! : default; set => (this.Tag, this.Value) = (OperationTag.StartDissolving, value); }
+
+		public IncreaseDissolveDelay? IncreaseDissolveDelay { get => this.Tag == OperationTag.IncreaseDissolveDelay ? (IncreaseDissolveDelay)this.Value! : default; set => (this.Tag, this.Value) = (OperationTag.IncreaseDissolveDelay, value); }
+
+		public Operation.JoinCommunityFundInfo? JoinCommunityFund { get => this.Tag == OperationTag.JoinCommunityFund ? (Operation.JoinCommunityFundInfo)this.Value! : default; set => (this.Tag, this.Value) = (OperationTag.JoinCommunityFund, value); }
+
+		public SetDissolveTimestamp? SetDissolveTimestamp { get => this.Tag == OperationTag.SetDissolveTimestamp ? (SetDissolveTimestamp)this.Value! : default; set => (this.Tag, this.Value) = (OperationTag.SetDissolveTimestamp, value); }
+
+		public Operation(OperationTag tag, object? value)
+		{
+			this.Tag = tag;
+			this.Value = value;
+		}
+
+		protected Operation()
+		{
+		}
+
+		public class StopDissolvingInfo
+		{
+			public StopDissolvingInfo()
+			{
+			}
+		}
+
+		public class StartDissolvingInfo
+		{
+			public StartDissolvingInfo()
+			{
+			}
+		}
+
+		public class JoinCommunityFundInfo
+		{
+			public JoinCommunityFundInfo()
+			{
+			}
+		}
+	}
+
+	public enum OperationTag
+	{
+		RemoveHotKey,
+		AddHotKey,
+		StopDissolving,
+		StartDissolving,
+		IncreaseDissolveDelay,
+		JoinCommunityFund,
+		SetDissolveTimestamp
+	}
+}
+
+Type File: 'Proposal'
+
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid.Models;
+using Test;
+
+namespace Test
+{
+	public class Proposal
+	{
+		[CandidName("url")]
+		public string Url { get; set; }
+
+		[CandidName("title")]
+		public OptionalValue<string> Title { get; set; }
+
+		[CandidName("action")]
+		public OptionalValue<Action> Action { get; set; }
+
+		[CandidName("summary")]
+		public string Summary { get; set; }
+
+		public Proposal(string url, OptionalValue<string> title, OptionalValue<Action> action, string summary)
+		{
+			this.Url = url;
+			this.Title = title;
+			this.Action = action;
+			this.Summary = summary;
+		}
+
+		public Proposal()
+		{
+		}
+	}
+}
+
+Type File: 'ProposalData'
+
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid.Models;
+using Test;
+using System.Collections.Generic;
+
+namespace Test
+{
+	public class ProposalData
+	{
+		[CandidName("id")]
+		public OptionalValue<NeuronId> Id { get; set; }
+
+		[CandidName("failure_reason")]
+		public OptionalValue<GovernanceError> FailureReason { get; set; }
+
+		[CandidName("ballots")]
+		public Dictionary<ulong, Ballot> Ballots { get; set; }
+
+		[CandidName("proposal_timestamp_seconds")]
+		public ulong ProposalTimestampSeconds { get; set; }
+
+		[CandidName("reward_event_round")]
+		public ulong RewardEventRound { get; set; }
+
+		[CandidName("failed_timestamp_seconds")]
+		public ulong FailedTimestampSeconds { get; set; }
+
+		[CandidName("reject_cost_e8s")]
+		public ulong RejectCostE8s { get; set; }
+
+		[CandidName("latest_tally")]
+		public OptionalValue<Tally> LatestTally { get; set; }
+
+		[CandidName("decided_timestamp_seconds")]
+		public ulong DecidedTimestampSeconds { get; set; }
+
+		[CandidName("proposal")]
+		public OptionalValue<Proposal> Proposal { get; set; }
+
+		[CandidName("proposer")]
+		public OptionalValue<NeuronId> Proposer { get; set; }
+
+		[CandidName("wait_for_quiet_state")]
+		public OptionalValue<WaitForQuietState> WaitForQuietState { get; set; }
+
+		[CandidName("executed_timestamp_seconds")]
+		public ulong ExecutedTimestampSeconds { get; set; }
+
+		public ProposalData(OptionalValue<NeuronId> id, OptionalValue<GovernanceError> failureReason, Dictionary<ulong, Ballot> ballots, ulong proposalTimestampSeconds, ulong rewardEventRound, ulong failedTimestampSeconds, ulong rejectCostE8s, OptionalValue<Tally> latestTally, ulong decidedTimestampSeconds, OptionalValue<Proposal> proposal, OptionalValue<NeuronId> proposer, OptionalValue<WaitForQuietState> waitForQuietState, ulong executedTimestampSeconds)
+		{
+			this.Id = id;
+			this.FailureReason = failureReason;
+			this.Ballots = ballots;
+			this.ProposalTimestampSeconds = proposalTimestampSeconds;
+			this.RewardEventRound = rewardEventRound;
+			this.FailedTimestampSeconds = failedTimestampSeconds;
+			this.RejectCostE8s = rejectCostE8s;
+			this.LatestTally = latestTally;
+			this.DecidedTimestampSeconds = decidedTimestampSeconds;
+			this.Proposal = proposal;
+			this.Proposer = proposer;
+			this.WaitForQuietState = waitForQuietState;
+			this.ExecutedTimestampSeconds = executedTimestampSeconds;
+		}
+
+		public ProposalData()
+		{
+		}
+	}
+}
+
+Type File: 'ProposalInfo'
+
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid.Models;
+using Test;
+using System.Collections.Generic;
+
+namespace Test
+{
+	public class ProposalInfo
+	{
+		[CandidName("id")]
+		public OptionalValue<NeuronId> Id { get; set; }
+
+		[CandidName("status")]
+		public int Status { get; set; }
+
+		[CandidName("topic")]
+		public int Topic { get; set; }
+
+		[CandidName("failure_reason")]
+		public OptionalValue<GovernanceError> FailureReason { get; set; }
+
+		[CandidName("ballots")]
+		public Dictionary<ulong, Ballot> Ballots { get; set; }
+
+		[CandidName("proposal_timestamp_seconds")]
+		public ulong ProposalTimestampSeconds { get; set; }
+
+		[CandidName("reward_event_round")]
+		public ulong RewardEventRound { get; set; }
+
+		[CandidName("deadline_timestamp_seconds")]
+		public OptionalValue<ulong> DeadlineTimestampSeconds { get; set; }
+
+		[CandidName("failed_timestamp_seconds")]
+		public ulong FailedTimestampSeconds { get; set; }
+
+		[CandidName("reject_cost_e8s")]
+		public ulong RejectCostE8s { get; set; }
+
+		[CandidName("latest_tally")]
+		public OptionalValue<Tally> LatestTally { get; set; }
+
+		[CandidName("reward_status")]
+		public int RewardStatus { get; set; }
+
+		[CandidName("decided_timestamp_seconds")]
+		public ulong DecidedTimestampSeconds { get; set; }
+
+		[CandidName("proposal")]
+		public OptionalValue<Proposal> Proposal { get; set; }
+
+		[CandidName("proposer")]
+		public OptionalValue<NeuronId> Proposer { get; set; }
+
+		[CandidName("executed_timestamp_seconds")]
+		public ulong ExecutedTimestampSeconds { get; set; }
+
+		public ProposalInfo(OptionalValue<NeuronId> id, int status, int topic, OptionalValue<GovernanceError> failureReason, Dictionary<ulong, Ballot> ballots, ulong proposalTimestampSeconds, ulong rewardEventRound, OptionalValue<ulong> deadlineTimestampSeconds, ulong failedTimestampSeconds, ulong rejectCostE8s, OptionalValue<Tally> latestTally, int rewardStatus, ulong decidedTimestampSeconds, OptionalValue<Proposal> proposal, OptionalValue<NeuronId> proposer, ulong executedTimestampSeconds)
+		{
+			this.Id = id;
+			this.Status = status;
+			this.Topic = topic;
+			this.FailureReason = failureReason;
+			this.Ballots = ballots;
+			this.ProposalTimestampSeconds = proposalTimestampSeconds;
+			this.RewardEventRound = rewardEventRound;
+			this.DeadlineTimestampSeconds = deadlineTimestampSeconds;
+			this.FailedTimestampSeconds = failedTimestampSeconds;
+			this.RejectCostE8s = rejectCostE8s;
+			this.LatestTally = latestTally;
+			this.RewardStatus = rewardStatus;
+			this.DecidedTimestampSeconds = decidedTimestampSeconds;
+			this.Proposal = proposal;
+			this.Proposer = proposer;
+			this.ExecutedTimestampSeconds = executedTimestampSeconds;
+		}
+
+		public ProposalInfo()
+		{
+		}
+	}
+}
+
+Type File: 'RegisterVote'
+
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid.Models;
+using Test;
+
+namespace Test
+{
+	public class RegisterVote
+	{
+		[CandidName("vote")]
+		public int Vote { get; set; }
+
+		[CandidName("proposal")]
+		public OptionalValue<NeuronId> Proposal { get; set; }
+
+		public RegisterVote(int vote, OptionalValue<NeuronId> proposal)
+		{
+			this.Vote = vote;
+			this.Proposal = proposal;
+		}
+
+		public RegisterVote()
+		{
+		}
+	}
+}
+
+Type File: 'RemoveHotKey'
+
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid.Models;
+
+namespace Test
+{
+	public class RemoveHotKey
+	{
+		[CandidName("hot_key_to_remove")]
+		public OptionalValue<Principal> HotKeyToRemove { get; set; }
+
+		public RemoveHotKey(OptionalValue<Principal> hotKeyToRemove)
+		{
+			this.HotKeyToRemove = hotKeyToRemove;
+		}
+
+		public RemoveHotKey()
+		{
+		}
+	}
+}
+
+Type File: 'Result'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test;
+
+namespace Test
+{
+	[Variant]
+	public class Result
+	{
+		[VariantTagProperty]
+		public ResultTag Tag { get; set; }
+
+		[VariantValueProperty]
+		public object? Value { get; set; }
+
+		public GovernanceError? Err { get => this.Tag == ResultTag.Err ? (GovernanceError)this.Value! : default; set => (this.Tag, this.Value) = (ResultTag.Err, value); }
+
+		public Result(ResultTag tag, object? value)
+		{
+			this.Tag = tag;
+			this.Value = value;
+		}
+
+		protected Result()
+		{
+		}
+	}
+
+	public enum ResultTag
+	{
+		Ok,
+		Err
+	}
+}
+
+Type File: 'Result1'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test;
+
+namespace Test
+{
+	[Variant]
+	public class Result1
+	{
+		[VariantTagProperty]
+		public Result1Tag Tag { get; set; }
+
+		[VariantValueProperty]
+		public object? Value { get; set; }
+
+		public GovernanceError? Error { get => this.Tag == Result1Tag.Error ? (GovernanceError)this.Value! : default; set => (this.Tag, this.Value) = (Result1Tag.Error, value); }
+
+		public NeuronId? NeuronId { get => this.Tag == Result1Tag.NeuronId ? (NeuronId)this.Value! : default; set => (this.Tag, this.Value) = (Result1Tag.NeuronId, value); }
+
+		public Result1(Result1Tag tag, object? value)
+		{
+			this.Tag = tag;
+			this.Value = value;
+		}
+
+		protected Result1()
+		{
+		}
+	}
+
+	public enum Result1Tag
+	{
+		Error,
+		NeuronId
+	}
+}
+
+Type File: 'Result2'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test;
+
+namespace Test
+{
+	[Variant]
+	public class Result2
+	{
+		[VariantTagProperty]
+		public Result2Tag Tag { get; set; }
+
+		[VariantValueProperty]
+		public object? Value { get; set; }
+
+		public Neuron? Ok { get => this.Tag == Result2Tag.Ok ? (Neuron)this.Value! : default; set => (this.Tag, this.Value) = (Result2Tag.Ok, value); }
+
+		public GovernanceError? Err { get => this.Tag == Result2Tag.Err ? (GovernanceError)this.Value! : default; set => (this.Tag, this.Value) = (Result2Tag.Err, value); }
+
+		public Result2(Result2Tag tag, object? value)
+		{
+			this.Tag = tag;
+			this.Value = value;
+		}
+
+		protected Result2()
+		{
+		}
+	}
+
+	public enum Result2Tag
+	{
+		Ok,
+		Err
+	}
+}
+
+Type File: 'Result3'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test;
+
+namespace Test
+{
+	[Variant]
+	public class Result3
+	{
+		[VariantTagProperty]
+		public Result3Tag Tag { get; set; }
+
+		[VariantValueProperty]
+		public object? Value { get; set; }
+
+		public RewardNodeProviders? Ok { get => this.Tag == Result3Tag.Ok ? (RewardNodeProviders)this.Value! : default; set => (this.Tag, this.Value) = (Result3Tag.Ok, value); }
+
+		public GovernanceError? Err { get => this.Tag == Result3Tag.Err ? (GovernanceError)this.Value! : default; set => (this.Tag, this.Value) = (Result3Tag.Err, value); }
+
+		public Result3(Result3Tag tag, object? value)
+		{
+			this.Tag = tag;
+			this.Value = value;
+		}
+
+		protected Result3()
+		{
+		}
+	}
+
+	public enum Result3Tag
+	{
+		Ok,
+		Err
+	}
+}
+
+Type File: 'Result4'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test;
+
+namespace Test
+{
+	[Variant]
+	public class Result4
+	{
+		[VariantTagProperty]
+		public Result4Tag Tag { get; set; }
+
+		[VariantValueProperty]
+		public object? Value { get; set; }
+
+		public NeuronInfo? Ok { get => this.Tag == Result4Tag.Ok ? (NeuronInfo)this.Value! : default; set => (this.Tag, this.Value) = (Result4Tag.Ok, value); }
+
+		public GovernanceError? Err { get => this.Tag == Result4Tag.Err ? (GovernanceError)this.Value! : default; set => (this.Tag, this.Value) = (Result4Tag.Err, value); }
+
+		public Result4(Result4Tag tag, object? value)
+		{
+			this.Tag = tag;
+			this.Value = value;
+		}
+
+		protected Result4()
+		{
+		}
+	}
+
+	public enum Result4Tag
+	{
+		Ok,
+		Err
+	}
+}
+
+Type File: 'Result5'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test;
+
+namespace Test
+{
+	[Variant]
+	public class Result5
+	{
+		[VariantTagProperty]
+		public Result5Tag Tag { get; set; }
+
+		[VariantValueProperty]
+		public object? Value { get; set; }
+
+		public NodeProvider? Ok { get => this.Tag == Result5Tag.Ok ? (NodeProvider)this.Value! : default; set => (this.Tag, this.Value) = (Result5Tag.Ok, value); }
+
+		public GovernanceError? Err { get => this.Tag == Result5Tag.Err ? (GovernanceError)this.Value! : default; set => (this.Tag, this.Value) = (Result5Tag.Err, value); }
+
+		public Result5(Result5Tag tag, object? value)
+		{
+			this.Tag = tag;
+			this.Value = value;
+		}
+
+		protected Result5()
+		{
+		}
+	}
+
+	public enum Result5Tag
+	{
+		Ok,
+		Err
+	}
+}
+
+Type File: 'RewardEvent'
+
+using EdjCase.ICP.Candid.Mapping;
+using System.Collections.Generic;
+using Test;
+
+namespace Test
+{
+	public class RewardEvent
+	{
+		[CandidName("day_after_genesis")]
+		public ulong DayAfterGenesis { get; set; }
+
+		[CandidName("actual_timestamp_seconds")]
+		public ulong ActualTimestampSeconds { get; set; }
+
+		[CandidName("distributed_e8s_equivalent")]
+		public ulong DistributedE8sEquivalent { get; set; }
+
+		[CandidName("settled_proposals")]
+		public List<NeuronId> SettledProposals { get; set; }
+
+		public RewardEvent(ulong dayAfterGenesis, ulong actualTimestampSeconds, ulong distributedE8sEquivalent, List<NeuronId> settledProposals)
+		{
+			this.DayAfterGenesis = dayAfterGenesis;
+			this.ActualTimestampSeconds = actualTimestampSeconds;
+			this.DistributedE8sEquivalent = distributedE8sEquivalent;
+			this.SettledProposals = settledProposals;
+		}
+
+		public RewardEvent()
+		{
+		}
+	}
+}
+
+Type File: 'RewardMode'
+
+using EdjCase.ICP.Candid.Mapping;
+using Test;
+
+namespace Test
+{
+	[Variant]
+	public class RewardMode
+	{
+		[VariantTagProperty]
+		public RewardModeTag Tag { get; set; }
+
+		[VariantValueProperty]
+		public object? Value { get; set; }
+
+		public RewardToNeuron? RewardToNeuron { get => this.Tag == RewardModeTag.RewardToNeuron ? (RewardToNeuron)this.Value! : default; set => (this.Tag, this.Value) = (RewardModeTag.RewardToNeuron, value); }
+
+		public RewardToAccount? RewardToAccount { get => this.Tag == RewardModeTag.RewardToAccount ? (RewardToAccount)this.Value! : default; set => (this.Tag, this.Value) = (RewardModeTag.RewardToAccount, value); }
+
+		public RewardMode(RewardModeTag tag, object? value)
+		{
+			this.Tag = tag;
+			this.Value = value;
+		}
+
+		protected RewardMode()
+		{
+		}
+	}
+
+	public enum RewardModeTag
+	{
+		RewardToNeuron,
+		RewardToAccount
+	}
+}
+
+Type File: 'RewardNodeProvider'
+
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid.Models;
+using Test;
+
+namespace Test
+{
+	public class RewardNodeProvider
+	{
+		[CandidName("node_provider")]
+		public OptionalValue<NodeProvider> NodeProvider { get; set; }
+
+		[CandidName("reward_mode")]
+		public OptionalValue<RewardMode> RewardMode { get; set; }
+
+		[CandidName("amount_e8s")]
+		public ulong AmountE8s { get; set; }
+
+		public RewardNodeProvider(OptionalValue<NodeProvider> nodeProvider, OptionalValue<RewardMode> rewardMode, ulong amountE8s)
+		{
+			this.NodeProvider = nodeProvider;
+			this.RewardMode = rewardMode;
+			this.AmountE8s = amountE8s;
+		}
+
+		public RewardNodeProvider()
+		{
+		}
+	}
+}
+
+Type File: 'RewardNodeProviders'
+
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid.Models;
+using System.Collections.Generic;
+using Test;
+
+namespace Test
+{
+	public class RewardNodeProviders
+	{
+		[CandidName("use_registry_derived_rewards")]
+		public OptionalValue<bool> UseRegistryDerivedRewards { get; set; }
+
+		[CandidName("rewards")]
+		public List<RewardNodeProvider> Rewards { get; set; }
+
+		public RewardNodeProviders(OptionalValue<bool> useRegistryDerivedRewards, List<RewardNodeProvider> rewards)
+		{
+			this.UseRegistryDerivedRewards = useRegistryDerivedRewards;
+			this.Rewards = rewards;
+		}
+
+		public RewardNodeProviders()
+		{
+		}
+	}
+}
+
+Type File: 'RewardToAccount'
+
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid.Models;
+using Test;
+
+namespace Test
+{
+	public class RewardToAccount
+	{
+		[CandidName("to_account")]
+		public OptionalValue<AccountIdentifier> ToAccount { get; set; }
+
+		public RewardToAccount(OptionalValue<AccountIdentifier> toAccount)
+		{
+			this.ToAccount = toAccount;
+		}
+
+		public RewardToAccount()
+		{
+		}
+	}
+}
+
+Type File: 'RewardToNeuron'
+
+using EdjCase.ICP.Candid.Mapping;
+
+namespace Test
+{
+	public class RewardToNeuron
+	{
+		[CandidName("dissolve_delay_seconds")]
+		public ulong DissolveDelaySeconds { get; set; }
+
+		public RewardToNeuron(ulong dissolveDelaySeconds)
+		{
+			this.DissolveDelaySeconds = dissolveDelaySeconds;
+		}
+
+		public RewardToNeuron()
+		{
+		}
+	}
+}
+
+Type File: 'SetDefaultFollowees'
+
+using EdjCase.ICP.Candid.Mapping;
+using System.Collections.Generic;
+using Test;
+
+namespace Test
+{
+	public class SetDefaultFollowees
+	{
+		[CandidName("default_followees")]
+		public Dictionary<int, Followees> DefaultFollowees { get; set; }
+
+		public SetDefaultFollowees(Dictionary<int, Followees> defaultFollowees)
+		{
+			this.DefaultFollowees = defaultFollowees;
+		}
+
+		public SetDefaultFollowees()
+		{
+		}
+	}
+}
+
+Type File: 'SetDissolveTimestamp'
+
+using EdjCase.ICP.Candid.Mapping;
+
+namespace Test
+{
+	public class SetDissolveTimestamp
+	{
+		[CandidName("dissolve_timestamp_seconds")]
+		public ulong DissolveTimestampSeconds { get; set; }
+
+		public SetDissolveTimestamp(ulong dissolveTimestampSeconds)
+		{
+			this.DissolveTimestampSeconds = dissolveTimestampSeconds;
+		}
+
+		public SetDissolveTimestamp()
+		{
+		}
+	}
+}
+
+Type File: 'Spawn'
+
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid.Models;
+
+namespace Test
+{
+	public class Spawn
+	{
+		[CandidName("percentage_to_spawn")]
+		public OptionalValue<uint> PercentageToSpawn { get; set; }
+
+		[CandidName("new_controller")]
+		public OptionalValue<Principal> NewController { get; set; }
+
+		[CandidName("nonce")]
+		public OptionalValue<ulong> Nonce { get; set; }
+
+		public Spawn(OptionalValue<uint> percentageToSpawn, OptionalValue<Principal> newController, OptionalValue<ulong> nonce)
+		{
+			this.PercentageToSpawn = percentageToSpawn;
+			this.NewController = newController;
+			this.Nonce = nonce;
+		}
+
+		public Spawn()
+		{
+		}
+	}
+}
+
+Type File: 'SpawnResponse'
+
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid.Models;
+using Test;
+
+namespace Test
+{
+	public class SpawnResponse
+	{
+		[CandidName("created_neuron_id")]
+		public OptionalValue<NeuronId> CreatedNeuronId { get; set; }
+
+		public SpawnResponse(OptionalValue<NeuronId> createdNeuronId)
+		{
+			this.CreatedNeuronId = createdNeuronId;
+		}
+
+		public SpawnResponse()
+		{
+		}
+	}
+}
+
+Type File: 'Split'
+
+using EdjCase.ICP.Candid.Mapping;
+
+namespace Test
+{
+	public class Split
+	{
+		[CandidName("amount_e8s")]
+		public ulong AmountE8s { get; set; }
+
+		public Split(ulong amountE8s)
+		{
+			this.AmountE8s = amountE8s;
+		}
+
+		public Split()
+		{
+		}
+	}
+}
+
+Type File: 'Tally'
+
+using EdjCase.ICP.Candid.Mapping;
+
+namespace Test
+{
+	public class Tally
+	{
+		[CandidName("no")]
+		public ulong No { get; set; }
+
+		[CandidName("yes")]
+		public ulong Yes { get; set; }
+
+		[CandidName("total")]
+		public ulong Total { get; set; }
+
+		[CandidName("timestamp_seconds")]
+		public ulong TimestampSeconds { get; set; }
+
+		public Tally(ulong no, ulong yes, ulong total, ulong timestampSeconds)
+		{
+			this.No = no;
+			this.Yes = yes;
+			this.Total = total;
+			this.TimestampSeconds = timestampSeconds;
+		}
+
+		public Tally()
+		{
+		}
+	}
+}
+
+Type File: 'UpdateNodeProvider'
+
+using EdjCase.ICP.Candid.Mapping;
+using EdjCase.ICP.Candid.Models;
+using Test;
+
+namespace Test
+{
+	public class UpdateNodeProvider
+	{
+		[CandidName("reward_account")]
+		public OptionalValue<AccountIdentifier> RewardAccount { get; set; }
+
+		public UpdateNodeProvider(OptionalValue<AccountIdentifier> rewardAccount)
+		{
+			this.RewardAccount = rewardAccount;
+		}
+
+		public UpdateNodeProvider()
+		{
+		}
+	}
+}
+
+Type File: 'WaitForQuietState'
+
+using EdjCase.ICP.Candid.Mapping;
+
+namespace Test
+{
+	public class WaitForQuietState
+	{
+		[CandidName("current_deadline_timestamp_seconds")]
+		public ulong CurrentDeadlineTimestampSeconds { get; set; }
+
+		public WaitForQuietState(ulong currentDeadlineTimestampSeconds)
+		{
+			this.CurrentDeadlineTimestampSeconds = currentDeadlineTimestampSeconds;
+		}
+
+		public WaitForQuietState()
+		{
+		}
+	}
+}

@@ -5,13 +5,13 @@ using System;
 
 namespace Sample.Shared.Governance.Models
 {
-	[Variant()]
+	[Variant]
 	public class NeuronIdOrSubaccount
 	{
-		[VariantTagProperty()]
+		[VariantTagProperty]
 		public NeuronIdOrSubaccountTag Tag { get; set; }
 
-		[VariantValueProperty()]
+		[VariantValueProperty]
 		public object? Value { get; set; }
 
 		public NeuronIdOrSubaccount(NeuronIdOrSubaccountTag tag, object? value)

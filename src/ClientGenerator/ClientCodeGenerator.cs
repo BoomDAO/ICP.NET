@@ -88,6 +88,7 @@ namespace EdjCase.ICP.ClientGenerator
 						nameHelper,
 						typeOptions?.TypeOptions,
 						aliasedTypeIds,
+						options.OverrideOptionalValue,
 						out bool _
 					);
 					if (!sourceCodeType.IsPredefinedType)
@@ -140,7 +141,7 @@ namespace EdjCase.ICP.ClientGenerator
 
 			string clientName = options.Name + "ApiClient";
 			TypeName clientTypeName = new SimpleTypeName(clientName, options.Namespace, isDefaultNullable: true);
-			ServiceSourceCodeType serviceSourceType = ResolveService(service.Service, nameHelper, aliasedTypeIds);
+			ServiceSourceCodeType serviceSourceType = ResolveService(service.Service, nameHelper, aliasedTypeIds, options.OverrideOptionalValue);
 			CompilationUnitSyntax clientSource = RoslynSourceGenerator.GenerateClientSourceCode(
 				clientTypeName,
 				options.Namespace,
@@ -158,6 +159,7 @@ namespace EdjCase.ICP.ClientGenerator
 			NameHelper nameHelper,
 			TypeOptions? typeOptions,
 			HashSet<string> aliasedTypeIds,
+			bool overrideOptionalValue,
 			out bool hasAliasReference
 		)
 		{
@@ -207,6 +209,7 @@ namespace EdjCase.ICP.ClientGenerator
 							nameHelper,
 							innerTypeOptions,
 							aliasedTypeIds,
+							overrideOptionalValue,
 							out hasAliasReference
 						);
 						bool isDictionaryCompatible = innerType is TupleSourceCodeType t && t.Fields.Count == 2;
@@ -241,6 +244,7 @@ namespace EdjCase.ICP.ClientGenerator
 							nameHelper,
 							typeOptions: null,
 							aliasedTypeIds,
+							overrideOptionalValue,
 							out hasAliasReference
 						);
 
@@ -249,18 +253,31 @@ namespace EdjCase.ICP.ClientGenerator
 				case CandidRecordType o:
 					{
 
-						List<(CandidTag Key, SourceCodeType Type, bool HasAliasReference)> fields = o.Fields
+						List<(CandidTag Key, SourceCodeType Type, bool HasAliasReference, bool OptionalOverridden)> fields = o.Fields
 								.Select(f =>
 								{
 									NamedTypeOptions? fieldTypeOptions = typeOptions?.Fields.GetValueOrDefault(f.Key.ToString());
-									var type = ResolveSourceCodeType(
-										f.Value,
+									CandidType type;
+									bool optionalOverridden;
+									if (overrideOptionalValue && f.Value is CandidOptionalType o)
+									{
+										optionalOverridden = true;
+										type = o.Value;
+									}
+									else
+									{
+										optionalOverridden = false;
+										type = f.Value;
+									}
+									SourceCodeType sourceCodeType = ResolveSourceCodeType(
+										type,
 										nameHelper,
 										fieldTypeOptions?.TypeOptions,
 										aliasedTypeIds,
+										overrideOptionalValue,
 										out bool innerHasAliasReference
 									);
-									return (Id: f.Key, Type: type, HasAliasReference: innerHasAliasReference);
+									return (Id: f.Key, Type: sourceCodeType, HasAliasReference: innerHasAliasReference, OptionalOverridden: optionalOverridden);
 								})
 								.ToList();
 						hasAliasReference = fields.Any(f => f.HasAliasReference);
@@ -286,7 +303,11 @@ namespace EdjCase.ICP.ClientGenerator
 							{
 								NamedTypeOptions? fieldTypeOptions = f.Key.Name == null ? null : typeOptions?.Fields.GetValueOrDefault(f.Key.Name);
 								ResolvedName fieldName = nameHelper.ResolveName(f.Key, fieldTypeOptions?.NameOverride);
-								return (fieldName, f.Type);
+								return new RecordSourceCodeType.RecordField(
+									tag: fieldName,
+									type: f.Type,
+									optionalOverridden: f.OptionalOverridden
+								);
 							})
 							.ToList()
 						);
@@ -301,7 +322,7 @@ namespace EdjCase.ICP.ClientGenerator
 								bool innerHasAliasReference = false;
 								SourceCodeType? sourceCodeType = f.Value == CandidType.Null()
 									? null
-									: ResolveSourceCodeType(f.Value, nameHelper, innerTypeOptions?.TypeOptions, aliasedTypeIds, out innerHasAliasReference);
+									: ResolveSourceCodeType(f.Value, nameHelper, innerTypeOptions?.TypeOptions, aliasedTypeIds, overrideOptionalValue, out innerHasAliasReference);
 								ResolvedName optionName = nameHelper.ResolveName(f.Key, innerTypeOptions?.NameOverride);
 								return (optionName, sourceCodeType, innerHasAliasReference);
 							})
@@ -314,19 +335,19 @@ namespace EdjCase.ICP.ClientGenerator
 			}
 		}
 
-		internal static ServiceSourceCodeType ResolveService(CandidServiceType s, NameHelper nameHelper, HashSet<string> aliasedTypeIds)
+		internal static ServiceSourceCodeType ResolveService(CandidServiceType s, NameHelper nameHelper, HashSet<string> aliasedTypeIds, bool overrideOptionalValue)
 		{
 			List<(string CsharpName, string CandidName, ServiceSourceCodeType.Func FuncInfo)> methods = s.Methods
 				.Select(m =>
 				{
 					ResolvedName valueName = nameHelper.ResolveName(m.Key.ToString());
-					return (valueName.Name, valueName.CandidTag.Name!, ResolveFunc(m.Value, nameHelper, aliasedTypeIds));
+					return (valueName.Name, valueName.CandidTag.Name!, ResolveFunc(m.Value, nameHelper, aliasedTypeIds, overrideOptionalValue));
 				})
 				.ToList();
 			return new ServiceSourceCodeType(methods);
 		}
 
-		private static ServiceSourceCodeType.Func ResolveFunc(CandidFuncType value, NameHelper nameHelper, HashSet<string> aliasedTypeIds)
+		private static ServiceSourceCodeType.Func ResolveFunc(CandidFuncType value, NameHelper nameHelper, HashSet<string> aliasedTypeIds, bool overrideOptionalValue)
 		{
 			List<(ResolvedName Name, SourceCodeType Type)> argTypes = value.ArgTypes
 				.Select(ResolveXType)
@@ -342,7 +363,7 @@ namespace EdjCase.ICP.ClientGenerator
 			(ResolvedName Name, SourceCodeType Type) ResolveXType((CandidId? Name, CandidType Type) a, int i)
 			{
 				ResolvedName name = nameHelper.ResolveName(a.Name?.ToString() ?? "arg" + i);
-				SourceCodeType type = ResolveSourceCodeType(a.Type, nameHelper, null, aliasedTypeIds, out bool hasAliasReference);
+				SourceCodeType type = ResolveSourceCodeType(a.Type, nameHelper, null, aliasedTypeIds, overrideOptionalValue, out bool hasAliasReference);
 				return (name, type);
 			}
 		}
