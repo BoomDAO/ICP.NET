@@ -110,7 +110,9 @@ file-path = ""../MyService.did""
 		{
 			try
 			{
-				string filePath = Path.Combine(options.Directory ?? "", CONFIG_FILE_NAME);
+				string basePath = Directory.GetCurrentDirectory();
+				string fullDirectoryPath = Path.GetFullPath(options.Directory ?? ".", basePath);
+				string filePath = Path.Combine(fullDirectoryPath, CONFIG_FILE_NAME);
 				List<ClientGenerationOptions> clientOptionList = TomlConfigParser.Parse(filePath);
 				foreach (ClientGenerationOptions clientOptions in clientOptionList)
 				{
