@@ -277,7 +277,7 @@ namespace EdjCase.ICP.ClientGenerator
 			{
 				constructor
 			};
-			if(resolvedGenericType.GeneratedSyntax?.Any()== true)
+			if (resolvedGenericType.GeneratedSyntax?.Any() == true)
 			{
 				subTypes.AddRange(resolvedGenericType.GeneratedSyntax);
 			}
@@ -1137,7 +1137,7 @@ namespace EdjCase.ICP.ClientGenerator
 			string typeName = attribute.Type.BuildName(this.FeatureNullable, true);
 			typeName = typeName[..^"Attribute".Length]; // Remove suffix
 			AttributeSyntax syntax = SyntaxFactory.Attribute(SyntaxFactory.IdentifierName(typeName));
-			if(arguments?.Any() == true)
+			if (arguments?.Any() == true)
 			{
 				syntax = syntax.WithArgumentList(
 					SyntaxFactory.AttributeArgumentList(
@@ -1145,7 +1145,7 @@ namespace EdjCase.ICP.ClientGenerator
 					)
 				);
 			}
-			
+
 			return SyntaxFactory.AttributeList(
 				SyntaxFactory.SingletonSeparatedList(
 					syntax
@@ -1225,11 +1225,18 @@ namespace EdjCase.ICP.ClientGenerator
 			string candidConverterProperty
 		)
 		{
+			ArgumentSyntax converterArg = SyntaxFactory.Argument(
+				SyntaxFactory.MemberAccessExpression(
+					SyntaxKind.SimpleMemberAccessExpression,
+					SyntaxFactory.ThisExpression(),
+					SyntaxFactory.IdentifierName(candidConverterProperty)
+				)
+			);
 			// Build arguments for conversion to CandidArg
 			IEnumerable<ArgumentSyntax> fromCandidArguments = argTypes
 				.Select(t =>
 				{
-					// `CandidTypedValue.FromObject({argX});`
+					// `CandidTypedValue.FromObject({argX}, this.Converter);`
 					string argName = this.NameHelper.ToCamelCase(t.Name);
 					ExpressionSyntax expression = SyntaxFactory.InvocationExpression(
 						SyntaxFactory.MemberAccessExpression(
@@ -1240,9 +1247,10 @@ namespace EdjCase.ICP.ClientGenerator
 					)
 					.WithArgumentList(
 						SyntaxFactory.ArgumentList(
-							SyntaxFactory.SingletonSeparatedList(
-								SyntaxFactory.Argument(SyntaxFactory.IdentifierName(argName.ToSyntaxIdentifier()))
-							)
+							SyntaxFactory.SeparatedList(new[] {
+								SyntaxFactory.Argument(SyntaxFactory.IdentifierName(argName.ToSyntaxIdentifier())),
+								converterArg
+							})
 						)
 					);
 					return SyntaxFactory.Argument(expression);
@@ -1315,13 +1323,6 @@ namespace EdjCase.ICP.ClientGenerator
 			}
 			if (returnTypes.Any())
 			{
-				ArgumentSyntax converterArg = SyntaxFactory.Argument(
-					SyntaxFactory.MemberAccessExpression(
-						SyntaxKind.SimpleMemberAccessExpression,
-						SyntaxFactory.ThisExpression(),
-						SyntaxFactory.IdentifierName(candidConverterProperty)
-					)
-				);
 				statements.Add(
 					// `return reply.ToObjects<{T1}, {T2}, ...>(candidConverter);`
 					SyntaxFactory.ReturnStatement(
@@ -1739,7 +1740,7 @@ namespace EdjCase.ICP.ClientGenerator
 				.WithModifiers(SyntaxFactory.TokenList(methodModifiers))
 				.WithParameterList(SyntaxFactory.ParameterList(SyntaxFactory.SeparatedList(@params)))
 				.WithBody(body);
-			if(attributes?.Any() == true)
+			if (attributes?.Any() == true)
 			{
 				IEnumerable<AttributeListSyntax> attributeSyntaxList = attributes
 					.Select(this.GenerateAttribute);
