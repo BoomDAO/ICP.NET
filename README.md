@@ -86,6 +86,56 @@ You can specify all the models and api calls yourself, but this is a tool to aut
   ```
 - SHIP IT! 🚀
 
+# Breaking change migrations
+## 3.x.x => 4.x.x
+The big change here was around variant classes and their attributes. Before the option types were defined by the attribute on each enum member, but in 4.x.x it changed to using method return types and having not type information in attributes. Also the VariantAttribute now gets the enum type from the Tag property vs the attribute
+### Version 3
+```
+[Variant(typeof(MyVariantTag))] // Required to flag as variant and define options with enum
+public class MyVariant
+{
+    [VariantTagProperty] // Flag for tag/enum property, not required if name is `Tag`
+    public MyVariantTag Tag { get; set; }
+    [VariantValueProperty] // Flag for value property, not required if name is `Value`
+    public object? Value { get; set; }
+}
+
+public enum MyVariantTag
+{
+    [CandidName("o1")] // Used to override name for candid
+    Option1,
+    [CandidName("o2")]
+    [VariantType(typeof(string))] // Used to specify if the option has a value associated
+    Option2
+}
+```
+### Version 4
+```
+[Variant] // Required to flag as variant
+public class MyVariant
+{
+	[VariantTagProperty] // Flag for tag/enum property, not required if name is `Tag`
+	public MyVariantTag Tag { get; set; }
+	[VariantValueProperty] // Flag for value property, not required if name is `Value`
+	public object? Value { get; set; }
+
+
+	// This method is used to specify if the option has a type/value associated
+	[VariantOption("o2")] // Specify the candid tag if different than 'As{CandidTag}' like 'Option2' here
+	public string AsOption2()
+	{
+		return (string)this.Value!;
+	}
+}
+
+public enum MyVariantTag
+{
+    [CandidName("o1")] // Used to override name for candid
+    Option1,
+    [CandidName("o2")]
+    Option2
+}
+```
 # Candid Related Links
 
 - [IC Http Interface Spec](https://smartcontracts.org/docs/current/references/ic-interface-spec)
