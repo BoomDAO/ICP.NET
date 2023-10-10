@@ -94,22 +94,25 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 
 
 			CandidValue innerValue;
-			if (innerObj == null)
+			if(optionInfo.Type == null)
 			{
+				// If typeless, always set to null
+				innerValue = CandidValue.Null();
+			}
+			else if (innerObj == null)
+			{
+				// If null and has a type, should always be a null opt 
 				innerValue = new CandidOptional(null);
 			}
-			else if (optionInfo.Type != null)
+			else
 			{
+				// Convert
 				innerValue = converter.FromObject(innerObj);
 				if (optionInfo.UseOptionalOverride)
 				{
 					// Wrap in candid optional
 					innerValue = new CandidOptional(innerValue);
 				}
-			}
-			else
-			{
-				innerValue = CandidValue.Null();
 			}
 			return new CandidVariant(innerTag, innerValue);
 		}
