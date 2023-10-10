@@ -136,13 +136,21 @@ CandidTypedValue value = CandidTypedValue.FromObject(obj);
 ## Defining Variant Types
 
 ```cs
-[Variant(typeof(MyVariantTag))] // Required to flag as variant and define options with enum
+[Variant] // Required to flag as variant
 public class MyVariant
 {
-    [VariantTagProperty] // Flag for tag/enum property, not required if name is `Tag`
-    public MyVariantTag Tag { get; set; }
-    [VariantValueProperty] // Flag for value property, not required if name is `Value`
-    public object? Value { get; set; }
+	[VariantTagProperty] // Flag for tag/enum property, not required if name is `Tag`
+	public MyVariantTag Tag { get; set; }
+	[VariantValueProperty] // Flag for value property, not required if name is `Value`
+	public object? Value { get; set; }
+
+
+	// This method is used to specify if the option has a type/value associated
+	[VariantOption("o2")] // Specify the candid tag if different than 'As{CandidTag}' like 'Option2' here
+	public string AsOption2()
+	{
+		return (string)this.Value!;
+	}
 }
 
 public enum MyVariantTag
@@ -150,7 +158,6 @@ public enum MyVariantTag
     [CandidName("o1")] // Used to override name for candid
     Option1,
     [CandidName("o2")]
-    [VariantType(typeof(string))] // Used to specify if the option has a value associated
     Option2
 }
 ```
