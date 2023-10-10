@@ -25,13 +25,13 @@ namespace Sample.Shared.AddressBook
 
 		public async Task _set_address(string name, Address addr)
 		{
-			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(name), CandidTypedValue.FromObject(addr));
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(name, this.Converter), CandidTypedValue.FromObject(addr, this.Converter));
 			await this.Agent.CallAndWaitAsync(this.CanisterId, "set_address", arg);
 		}
 
 		public async Task<OptionalValue<Address>> _get_address(string name)
 		{
-			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(name));
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(name, this.Converter));
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_address", arg);
 			CandidArg reply = response.ThrowOrGetReply();
 			return reply.ToObjects<OptionalValue<Address>>(this.Converter);
