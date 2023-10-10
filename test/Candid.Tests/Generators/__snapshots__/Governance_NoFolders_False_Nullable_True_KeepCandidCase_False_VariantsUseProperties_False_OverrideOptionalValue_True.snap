@@ -25,14 +25,14 @@ namespace Test
 
 		public async Task<Models.Result> ClaimGtcNeurons(Principal arg0, List<Models.NeuronId> arg1)
 		{
-			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0), CandidTypedValue.FromObject(arg1));
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0, this.Converter), CandidTypedValue.FromObject(arg1, this.Converter));
 			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "claim_gtc_neurons", arg);
 			return reply.ToObjects<Models.Result>(this.Converter);
 		}
 
 		public async Task<Models.ClaimOrRefreshNeuronFromAccountResponse> ClaimOrRefreshNeuronFromAccount(Models.ClaimOrRefreshNeuronFromAccount arg0)
 		{
-			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0, this.Converter));
 			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "claim_or_refresh_neuron_from_account", arg);
 			return reply.ToObjects<Models.ClaimOrRefreshNeuronFromAccountResponse>(this.Converter);
 		}
@@ -47,7 +47,7 @@ namespace Test
 
 		public async Task<Models.Result2> GetFullNeuron(ulong arg0)
 		{
-			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0, this.Converter));
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_full_neuron", arg);
 			CandidArg reply = response.ThrowOrGetReply();
 			return reply.ToObjects<Models.Result2>(this.Converter);
@@ -55,7 +55,7 @@ namespace Test
 
 		public async Task<Models.Result2> GetFullNeuronByIdOrSubaccount(Models.NeuronIdOrSubaccount arg0)
 		{
-			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0, this.Converter));
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_full_neuron_by_id_or_subaccount", arg);
 			CandidArg reply = response.ThrowOrGetReply();
 			return reply.ToObjects<Models.Result2>(this.Converter);
@@ -86,7 +86,7 @@ namespace Test
 
 		public async Task<Models.Result4> GetNeuronInfo(ulong arg0)
 		{
-			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0, this.Converter));
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_neuron_info", arg);
 			CandidArg reply = response.ThrowOrGetReply();
 			return reply.ToObjects<Models.Result4>(this.Converter);
@@ -94,7 +94,7 @@ namespace Test
 
 		public async Task<Models.Result4> GetNeuronInfoByIdOrSubaccount(Models.NeuronIdOrSubaccount arg0)
 		{
-			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0, this.Converter));
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_neuron_info_by_id_or_subaccount", arg);
 			CandidArg reply = response.ThrowOrGetReply();
 			return reply.ToObjects<Models.Result4>(this.Converter);
@@ -102,7 +102,7 @@ namespace Test
 
 		public async Task<Models.Result5> GetNodeProviderByCaller(NullValue arg0)
 		{
-			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0, this.Converter));
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_node_provider_by_caller", arg);
 			CandidArg reply = response.ThrowOrGetReply();
 			return reply.ToObjects<Models.Result5>(this.Converter);
@@ -118,7 +118,7 @@ namespace Test
 
 		public async Task<OptionalValue<Models.ProposalInfo>> GetProposalInfo(ulong arg0)
 		{
-			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0, this.Converter));
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_proposal_info", arg);
 			CandidArg reply = response.ThrowOrGetReply();
 			return reply.ToObjects<OptionalValue<Models.ProposalInfo>>(this.Converter);
@@ -134,7 +134,7 @@ namespace Test
 
 		public async Task<Models.ListNeuronsResponse> ListNeurons(Models.ListNeurons arg0)
 		{
-			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0, this.Converter));
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "list_neurons", arg);
 			CandidArg reply = response.ThrowOrGetReply();
 			return reply.ToObjects<Models.ListNeuronsResponse>(this.Converter);
@@ -150,7 +150,7 @@ namespace Test
 
 		public async Task<Models.ListProposalInfoResponse> ListProposals(Models.ListProposalInfo arg0)
 		{
-			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0, this.Converter));
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "list_proposals", arg);
 			CandidArg reply = response.ThrowOrGetReply();
 			return reply.ToObjects<Models.ListProposalInfoResponse>(this.Converter);
@@ -158,21 +158,21 @@ namespace Test
 
 		public async Task<Models.ManageNeuronResponse> ManageNeuron(Models.ManageNeuron arg0)
 		{
-			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0, this.Converter));
 			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "manage_neuron", arg);
 			return reply.ToObjects<Models.ManageNeuronResponse>(this.Converter);
 		}
 
 		public async Task<Models.Result> TransferGtcNeuron(Models.NeuronId arg0, Models.NeuronId arg1)
 		{
-			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0), CandidTypedValue.FromObject(arg1));
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0, this.Converter), CandidTypedValue.FromObject(arg1, this.Converter));
 			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "transfer_gtc_neuron", arg);
 			return reply.ToObjects<Models.Result>(this.Converter);
 		}
 
 		public async Task<Models.Result> UpdateNodeProvider(Models.UpdateNodeProvider arg0)
 		{
-			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0, this.Converter));
 			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "update_node_provider", arg);
 			return reply.ToObjects<Models.Result>(this.Converter);
 		}

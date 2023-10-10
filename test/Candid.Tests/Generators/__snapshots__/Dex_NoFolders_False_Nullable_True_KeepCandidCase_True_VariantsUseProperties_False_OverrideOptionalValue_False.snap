@@ -27,7 +27,7 @@ namespace Test
 
 		public async Task<Models.CancelOrderReceipt> cancelOrder(OrderId arg0)
 		{
-			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0, this.Converter));
 			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "cancelOrder", arg);
 			return reply.ToObjects<Models.CancelOrderReceipt>(this.Converter);
 		}
@@ -40,13 +40,13 @@ namespace Test
 
 		public async Task credit(Principal arg0, Token arg1, UnboundedUInt arg2)
 		{
-			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0), CandidTypedValue.FromObject(arg1), CandidTypedValue.FromObject(arg2));
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0, this.Converter), CandidTypedValue.FromObject(arg1, this.Converter), CandidTypedValue.FromObject(arg2, this.Converter));
 			await this.Agent.CallAsync(this.CanisterId, "credit", arg);
 		}
 
 		public async Task<Models.DepositReceipt> deposit(Token arg0)
 		{
-			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0, this.Converter));
 			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "deposit", arg);
 			return reply.ToObjects<Models.DepositReceipt>(this.Converter);
 		}
@@ -61,7 +61,7 @@ namespace Test
 
 		public async Task<UnboundedUInt> getBalance(Token arg0)
 		{
-			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0, this.Converter));
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "getBalance", arg);
 			CandidArg reply = response.ThrowOrGetReply();
 			return reply.ToObjects<UnboundedUInt>(this.Converter);
@@ -84,7 +84,7 @@ namespace Test
 
 		public async Task<OptionalValue<Models.Order>> getOrder(OrderId arg0)
 		{
-			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0, this.Converter));
 			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "getOrder", arg);
 			return reply.ToObjects<OptionalValue<Models.Order>>(this.Converter);
 		}
@@ -98,14 +98,14 @@ namespace Test
 
 		public async Task<string> getSymbol(Token arg0)
 		{
-			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0, this.Converter));
 			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "getSymbol", arg);
 			return reply.ToObjects<string>(this.Converter);
 		}
 
 		public async Task<Models.OrderPlacementReceipt> placeOrder(Token arg0, UnboundedUInt arg1, Token arg2, UnboundedUInt arg3)
 		{
-			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0), CandidTypedValue.FromObject(arg1), CandidTypedValue.FromObject(arg2), CandidTypedValue.FromObject(arg3));
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0, this.Converter), CandidTypedValue.FromObject(arg1, this.Converter), CandidTypedValue.FromObject(arg2, this.Converter), CandidTypedValue.FromObject(arg3, this.Converter));
 			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "placeOrder", arg);
 			return reply.ToObjects<Models.OrderPlacementReceipt>(this.Converter);
 		}
@@ -120,7 +120,7 @@ namespace Test
 
 		public async Task<Models.WithdrawReceipt> withdraw(Token arg0, UnboundedUInt arg1, Principal arg2)
 		{
-			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0), CandidTypedValue.FromObject(arg1), CandidTypedValue.FromObject(arg2));
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0, this.Converter), CandidTypedValue.FromObject(arg1, this.Converter), CandidTypedValue.FromObject(arg2, this.Converter));
 			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "withdraw", arg);
 			return reply.ToObjects<Models.WithdrawReceipt>(this.Converter);
 		}
