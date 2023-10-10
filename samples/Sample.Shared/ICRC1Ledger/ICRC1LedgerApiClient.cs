@@ -26,7 +26,7 @@ namespace Sample.Shared.ICRC1Ledger
 
 		public async Task<Models.GetTransactionsResponse> GetTransactions(Models.GetTransactionsRequest arg0)
 		{
-			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0, this.Converter));
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_transactions", arg);
 			CandidArg reply = response.ThrowOrGetReply();
 			return reply.ToObjects<Models.GetTransactionsResponse>(this.Converter);
@@ -34,7 +34,7 @@ namespace Sample.Shared.ICRC1Ledger
 
 		public async Task<Models.GetBlocksResponse> GetBlocks(Models.GetBlocksArgs arg0)
 		{
-			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0, this.Converter));
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "get_blocks", arg);
 			CandidArg reply = response.ThrowOrGetReply();
 			return reply.ToObjects<Models.GetBlocksResponse>(this.Converter);
@@ -106,7 +106,7 @@ namespace Sample.Shared.ICRC1Ledger
 
 		public async Task<Tokens> Icrc1BalanceOf(Models.Account arg0)
 		{
-			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0, this.Converter));
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "icrc1_balance_of", arg);
 			CandidArg reply = response.ThrowOrGetReply();
 			return reply.ToObjects<Tokens>(this.Converter);
@@ -114,7 +114,7 @@ namespace Sample.Shared.ICRC1Ledger
 
 		public async Task<Models.TransferResult> Icrc1Transfer(Models.TransferArg arg0)
 		{
-			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0, this.Converter));
 			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "icrc1_transfer", arg);
 			return reply.ToObjects<Models.TransferResult>(this.Converter);
 		}
@@ -129,14 +129,14 @@ namespace Sample.Shared.ICRC1Ledger
 
 		public async Task<Models.ApproveResult> Icrc2Approve(Models.ApproveArgs arg0)
 		{
-			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0, this.Converter));
 			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "icrc2_approve", arg);
 			return reply.ToObjects<Models.ApproveResult>(this.Converter);
 		}
 
 		public async Task<Models.Allowance> Icrc2Allowance(Models.AllowanceArgs arg0)
 		{
-			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0, this.Converter));
 			QueryResponse response = await this.Agent.QueryAsync(this.CanisterId, "icrc2_allowance", arg);
 			CandidArg reply = response.ThrowOrGetReply();
 			return reply.ToObjects<Models.Allowance>(this.Converter);
@@ -144,7 +144,7 @@ namespace Sample.Shared.ICRC1Ledger
 
 		public async Task<Models.TransferFromResult> Icrc2TransferFrom(Models.TransferFromArgs arg0)
 		{
-			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0));
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(arg0, this.Converter));
 			CandidArg reply = await this.Agent.CallAndWaitAsync(this.CanisterId, "icrc2_transfer_from", arg);
 			return reply.ToObjects<Models.TransferFromResult>(this.Converter);
 		}

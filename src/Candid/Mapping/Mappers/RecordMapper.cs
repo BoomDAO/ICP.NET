@@ -29,16 +29,28 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 				object? fieldValue;
 				if (record.Fields.TryGetValue(tag, out CandidValue fieldCandidValue))
 				{
-					if (fieldCandidValue is not CandidOptional o || !o.Value.IsNull())
+					Type t = property.PropertyInfo.PropertyType;
+					if (t.IsGenericType
+						&& t.GetGenericTypeDefinition() == typeof(Nullable<>))
 					{
-						Type t = property.PropertyInfo.PropertyType;
-						if (t.IsGenericType
-							&& t.GetGenericTypeDefinition() == typeof(Nullable<>))
-						{
-							// Get T of Nullable<T>
-							t = t.GetGenericArguments()[0];
-						}
+						// Get T of Nullable<T>
+						t = t.GetGenericArguments()[0];
+					}
+					if (property.UseOptionalOverride
+						&& fieldCandidValue is CandidOptional o
+						&& o.Value.IsNull())
+					{
+						// If not using OptionalValue and the value is opt null,
+						// that is the same as setting to null, so just skip
+						fieldValue = null;
+					}
+					else
+					{
 						fieldValue = converter.ToObject(t, fieldCandidValue);
+					}
+
+					if (fieldValue != null)
+					{
 						property.PropertyInfo.SetValue(obj, fieldValue);
 					}
 				}
