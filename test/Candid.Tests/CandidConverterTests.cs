@@ -382,7 +382,8 @@ namespace EdjCase.ICP.Candid.Tests
 		public enum TagEnum
 		{
 			String,
-			Int
+			Int,
+			Null
 		}
 
 		[Fact]
@@ -398,6 +399,7 @@ namespace EdjCase.ICP.Candid.Tests
 			{
 				["String"] = new CandidOptionalType(CandidType.Text()),
 				["Int"] = new CandidOptionalType(CandidType.Int32()),
+				["Null"] = new CandidPrimitiveType(PrimitiveType.Null),
 			});
 			var candid = new CandidTypedValue(candidValue, candidType);
 			this.Test(raw, candid, (a, b) => a.Tag == b.Tag && a.Value!.Equals(b.Value));
@@ -415,6 +417,7 @@ namespace EdjCase.ICP.Candid.Tests
 			{
 				["String"] = new CandidOptionalType(CandidType.Text()),
 				["Int"] = new CandidOptionalType(CandidType.Int32()),
+				["Null"] = new CandidPrimitiveType(PrimitiveType.Null),
 			});
 			var candid = new CandidTypedValue(candidValue, candidType);
 			this.Test(raw, candid, (a, b) => a.Tag == b.Tag && ((string?)a.Value) == ((string?)b.Value));
@@ -433,6 +436,7 @@ namespace EdjCase.ICP.Candid.Tests
 			{
 				["String"] = new CandidOptionalType(CandidType.Text()),
 				["Int"] = new CandidOptionalType(CandidType.Int32()),
+				["Null"] = new CandidPrimitiveType(PrimitiveType.Null),
 			});
 			var candid = new CandidTypedValue(candidValue, candidType);
 			this.Test(raw, candid, (a, b) => a.Tag == b.Tag && ((int?)a.Value) == ((int?)b.Value));
@@ -451,6 +455,26 @@ namespace EdjCase.ICP.Candid.Tests
 			{
 				["String"] = new CandidOptionalType(CandidType.Text()),
 				["Int"] = new CandidOptionalType(CandidType.Int32()),
+				["Null"] = new CandidPrimitiveType(PrimitiveType.Null),
+			});
+			var candid = new CandidTypedValue(candidValue, candidType);
+			this.Test(raw, candid, (a, b) => a.Tag == b.Tag && a.Value == null && b.Value == null);
+		}
+
+		[Fact]
+		public void OptionalValueOverride_Variant_WithNullValue()
+		{
+			var raw = new OptOverrideVariant
+			{
+				Tag = TagEnum.Null,
+				Value = null
+			};
+			var candidValue = new CandidVariant("Null", CandidValue.Null());
+			var candidType = new CandidVariantType(new Dictionary<CandidTag, CandidType>
+			{
+				["String"] = new CandidOptionalType(CandidType.Text()),
+				["Int"] = new CandidOptionalType(CandidType.Int32()),
+				["Null"] = new CandidPrimitiveType(PrimitiveType.Null),
 			});
 			var candid = new CandidTypedValue(candidValue, candidType);
 			this.Test(raw, candid, (a, b) => a.Tag == b.Tag && a.Value == null && b.Value == null);
