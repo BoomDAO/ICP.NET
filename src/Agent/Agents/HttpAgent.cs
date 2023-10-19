@@ -89,7 +89,17 @@ namespace EdjCase.ICP.Agent.Agents
 
 				byte[] cborBytes = await httpResponse.GetContentAsync();
 				var reader = new CborReader(cborBytes);
-				CallRejectedResponse response = CallRejectedResponse.FromCbor(reader);
+				CallRejectedResponse response;
+				try
+				{
+					response = CallRejectedResponse.FromCbor(reader);
+				}
+				catch (Exception ex)
+				{
+					string message = "Unable to parse call rejected cbor response.\n" +
+						"Response bytes: " + ByteUtil.ToHexString(cborBytes);
+					throw new Exception(message, ex);
+				}
 				throw new CallRejectedException(response.Code, response.Message, response.ErrorCode);
 			}
 			return requestId;
