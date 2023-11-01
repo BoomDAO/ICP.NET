@@ -160,6 +160,7 @@ namespace EdjCase.ICP.ClientGenerator.SyntaxRewriters
 				or CastExpressionSyntax
 				or TypeArgumentListSyntax
 				or TupleTypeSyntax
+				or TupleElementSyntax
 				or ArrayTypeSyntax
 				or PredefinedTypeSyntax
 				or SimpleBaseTypeSyntax

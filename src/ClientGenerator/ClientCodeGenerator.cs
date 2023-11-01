@@ -363,19 +363,19 @@ namespace EdjCase.ICP.ClientGenerator
 		private static ServiceSourceCodeType.Func ResolveFunc(CandidFuncType value, NameHelper nameHelper, HashSet<string> aliasedTypeIds, bool overrideOptionalValue)
 		{
 			List<(ResolvedName Name, SourceCodeType Type)> argTypes = value.ArgTypes
-				.Select(ResolveXType)
+				.Select((t, i) => ResolveXType(t, i, "arg"))
 				.ToList();
 			List<(ResolvedName Name, SourceCodeType Type)> returnTypes = value.ReturnTypes
-				.Select(ResolveXType)
+				.Select((t, i) => ResolveXType(t, i, "returnArg"))
 				.ToList();
 			bool isOneway = value.Modes.Contains(FuncMode.Oneway);
 			bool isQuery = value.Modes.Contains(FuncMode.Query) || value.Modes.Contains(FuncMode.CompositeQuery);
 			return new ServiceSourceCodeType.Func(argTypes, returnTypes, isOneway, isQuery);
 
 
-			(ResolvedName Name, SourceCodeType Type) ResolveXType((CandidId? Name, CandidType Type) a, int i)
+			(ResolvedName Name, SourceCodeType Type) ResolveXType((CandidId? Name, CandidType Type) a, int i, string backupPrefix)
 			{
-				ResolvedName name = nameHelper.ResolveName(a.Name?.ToString() ?? "arg" + i);
+				ResolvedName name = nameHelper.ResolveName(a.Name?.ToString() ?? backupPrefix + i);
 				SourceCodeType type = ResolveSourceCodeType(a.Type, nameHelper, null, aliasedTypeIds, overrideOptionalValue, out bool hasAliasReference);
 				return (name, type);
 			}
