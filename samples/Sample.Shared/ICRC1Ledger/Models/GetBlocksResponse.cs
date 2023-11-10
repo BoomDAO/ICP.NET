@@ -17,7 +17,7 @@ namespace Sample.Shared.ICRC1Ledger.Models
 		public ulong ChainLength { get; set; }
 
 		[CandidName("certificate")]
-		public OptionalValue<List<byte>> Certificate { get; set; }
+		public OptionalValue<byte[]> Certificate { get; set; }
 
 		[CandidName("blocks")]
 		public GetBlocksResponse.BlocksInfo Blocks { get; set; }
@@ -25,7 +25,7 @@ namespace Sample.Shared.ICRC1Ledger.Models
 		[CandidName("archived_blocks")]
 		public GetBlocksResponse.ArchivedBlocksInfo ArchivedBlocks { get; set; }
 
-		public GetBlocksResponse(BlockIndex firstIndex, ulong chainLength, OptionalValue<List<byte>> certificate, GetBlocksResponse.BlocksInfo blocks, GetBlocksResponse.ArchivedBlocksInfo archivedBlocks)
+		public GetBlocksResponse(BlockIndex firstIndex, ulong chainLength, OptionalValue<byte[]> certificate, GetBlocksResponse.BlocksInfo blocks, GetBlocksResponse.ArchivedBlocksInfo archivedBlocks)
 		{
 			this.FirstIndex = firstIndex;
 			this.ChainLength = chainLength;

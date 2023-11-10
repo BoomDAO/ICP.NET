@@ -12,7 +12,7 @@ namespace Sample.Shared.ICRC1Ledger.Models
 		public Account From { get; set; }
 
 		[CandidName("memo")]
-		public OptionalValue<List<byte>> Memo { get; set; }
+		public OptionalValue<byte[]> Memo { get; set; }
 
 		[CandidName("created_at_time")]
 		public Burn.CreatedAtTimeInfo CreatedAtTime { get; set; }
@@ -23,7 +23,7 @@ namespace Sample.Shared.ICRC1Ledger.Models
 		[CandidName("spender")]
 		public OptionalValue<Account> Spender { get; set; }
 
-		public Burn(Account from, OptionalValue<List<byte>> memo, Burn.CreatedAtTimeInfo createdAtTime, UnboundedUInt amount, OptionalValue<Account> spender)
+		public Burn(Account from, OptionalValue<byte[]> memo, Burn.CreatedAtTimeInfo createdAtTime, UnboundedUInt amount, OptionalValue<Account> spender)
 		{
 			this.From = from;
 			this.Memo = memo;

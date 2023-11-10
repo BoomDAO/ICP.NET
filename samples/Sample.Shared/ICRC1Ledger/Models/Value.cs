@@ -26,7 +26,7 @@ namespace Sample.Shared.ICRC1Ledger.Models
 		{
 		}
 
-		public static Value Blob(List<byte> info)
+		public static Value Blob(byte[] info)
 		{
 			return new Value(ValueTag.Blob, info);
 		}
@@ -61,10 +61,10 @@ namespace Sample.Shared.ICRC1Ledger.Models
 			return new Value(ValueTag.Map, info);
 		}
 
-		public List<byte> AsBlob()
+		public byte[] AsBlob()
 		{
 			this.ValidateTag(ValueTag.Blob);
-			return (List<byte>)this.Value_!;
+			return (byte[])this.Value_!;
 		}
 
 		public string AsText()

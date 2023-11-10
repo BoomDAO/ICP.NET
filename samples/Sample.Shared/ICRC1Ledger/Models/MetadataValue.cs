@@ -40,7 +40,7 @@ namespace Sample.Shared.ICRC1Ledger.Models
 			return new MetadataValue(MetadataValueTag.Text, info);
 		}
 
-		public static MetadataValue Blob(List<byte> info)
+		public static MetadataValue Blob(byte[] info)
 		{
 			return new MetadataValue(MetadataValueTag.Blob, info);
 		}
@@ -63,10 +63,10 @@ namespace Sample.Shared.ICRC1Ledger.Models
 			return (string)this.Value!;
 		}
 
-		public List<byte> AsBlob()
+		public byte[] AsBlob()
 		{
 			this.ValidateTag(MetadataValueTag.Blob);
-			return (List<byte>)this.Value!;
+			return (byte[])this.Value!;
 		}
 
 		private void ValidateTag(MetadataValueTag tag)

@@ -1,5 +1,4 @@
 using Timestamp = System.UInt64;
-using Subaccount = System.Collections.Generic.List<byte>;
 using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid.Mapping;
 using System;
@@ -15,7 +14,7 @@ namespace EdjCase.ICP.Agent.Standards.ICRC1.Models
 		/// The subaccount from which the transfer is made, represented as an OptionalValue object
 		/// </summary>
 		[CandidName("from_subaccount")]
-		public OptionalValue<Subaccount> FromSubaccount { get; set; }
+		public OptionalValue<byte[]> FromSubaccount { get; set; }
 
 		/// <summary>
 		/// The account to which the transfer is made, represented as an Account object
