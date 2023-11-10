@@ -4,7 +4,7 @@
 ## Contents
 
 - [Account](#T-EdjCase-ICP-Agent-Standards-ICRC1-Models-Account 'EdjCase.ICP.Agent.Standards.ICRC1.Models.Account')
-  - [#ctor(owner,subaccount)](#M-EdjCase-ICP-Agent-Standards-ICRC1-Models-Account-#ctor-EdjCase-ICP-Candid-Models-Principal,EdjCase-ICP-Candid-Models-OptionalValue{System-Collections-Generic-List{System-Byte}}- 'EdjCase.ICP.Agent.Standards.ICRC1.Models.Account.#ctor(EdjCase.ICP.Candid.Models.Principal,EdjCase.ICP.Candid.Models.OptionalValue{System.Collections.Generic.List{System.Byte}})')
+  - [#ctor(owner,subaccount)](#M-EdjCase-ICP-Agent-Standards-ICRC1-Models-Account-#ctor-EdjCase-ICP-Candid-Models-Principal,EdjCase-ICP-Candid-Models-OptionalValue{System-Byte[]}- 'EdjCase.ICP.Agent.Standards.ICRC1.Models.Account.#ctor(EdjCase.ICP.Candid.Models.Principal,EdjCase.ICP.Candid.Models.OptionalValue{System.Byte[]})')
   - [Owner](#P-EdjCase-ICP-Agent-Standards-ICRC1-Models-Account-Owner 'EdjCase.ICP.Agent.Standards.ICRC1.Models.Account.Owner')
   - [Subaccount](#P-EdjCase-ICP-Agent-Standards-ICRC1-Models-Account-Subaccount 'EdjCase.ICP.Agent.Standards.ICRC1.Models.Account.Subaccount')
 - [AlgorithmIdentifier](#T-EdjCase-ICP-Agent-AlgorithmIdentifier 'EdjCase.ICP.Agent.AlgorithmIdentifier')
@@ -288,7 +288,7 @@
   - [Name](#P-EdjCase-ICP-Agent-Standards-ICRC1-Models-SupportedStandard-Name 'EdjCase.ICP.Agent.Standards.ICRC1.Models.SupportedStandard.Name')
   - [Url](#P-EdjCase-ICP-Agent-Standards-ICRC1-Models-SupportedStandard-Url 'EdjCase.ICP.Agent.Standards.ICRC1.Models.SupportedStandard.Url')
 - [TransferArgs](#T-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferArgs 'EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferArgs')
-  - [#ctor(fromSubaccount,to,amount,fee,memo,createdAtTime)](#M-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferArgs-#ctor-EdjCase-ICP-Candid-Models-OptionalValue{System-Collections-Generic-List{System-Byte}},EdjCase-ICP-Agent-Standards-ICRC1-Models-Account,EdjCase-ICP-Candid-Models-UnboundedUInt,EdjCase-ICP-Candid-Models-OptionalValue{EdjCase-ICP-Candid-Models-UnboundedUInt},EdjCase-ICP-Candid-Models-OptionalValue{System-Collections-Generic-List{System-Byte}},EdjCase-ICP-Candid-Models-OptionalValue{System-UInt64}- 'EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferArgs.#ctor(EdjCase.ICP.Candid.Models.OptionalValue{System.Collections.Generic.List{System.Byte}},EdjCase.ICP.Agent.Standards.ICRC1.Models.Account,EdjCase.ICP.Candid.Models.UnboundedUInt,EdjCase.ICP.Candid.Models.OptionalValue{EdjCase.ICP.Candid.Models.UnboundedUInt},EdjCase.ICP.Candid.Models.OptionalValue{System.Collections.Generic.List{System.Byte}},EdjCase.ICP.Candid.Models.OptionalValue{System.UInt64})')
+  - [#ctor(fromSubaccount,to,amount,fee,memo,createdAtTime)](#M-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferArgs-#ctor-EdjCase-ICP-Candid-Models-OptionalValue{System-Byte[]},EdjCase-ICP-Agent-Standards-ICRC1-Models-Account,EdjCase-ICP-Candid-Models-UnboundedUInt,EdjCase-ICP-Candid-Models-OptionalValue{EdjCase-ICP-Candid-Models-UnboundedUInt},EdjCase-ICP-Candid-Models-OptionalValue{System-Byte[]},EdjCase-ICP-Candid-Models-OptionalValue{System-UInt64}- 'EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferArgs.#ctor(EdjCase.ICP.Candid.Models.OptionalValue{System.Byte[]},EdjCase.ICP.Agent.Standards.ICRC1.Models.Account,EdjCase.ICP.Candid.Models.UnboundedUInt,EdjCase.ICP.Candid.Models.OptionalValue{EdjCase.ICP.Candid.Models.UnboundedUInt},EdjCase.ICP.Candid.Models.OptionalValue{System.Byte[]},EdjCase.ICP.Candid.Models.OptionalValue{System.UInt64})')
   - [Amount](#P-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferArgs-Amount 'EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferArgs.Amount')
   - [CreatedAtTime](#P-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferArgs-CreatedAtTime 'EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferArgs.CreatedAtTime')
   - [Fee](#P-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferArgs-Fee 'EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferArgs.Fee')
@@ -347,7 +347,7 @@ EdjCase.ICP.Agent.Standards.ICRC1.Models
 
 This class represents an ICRC1 account
 
-<a name='M-EdjCase-ICP-Agent-Standards-ICRC1-Models-Account-#ctor-EdjCase-ICP-Candid-Models-Principal,EdjCase-ICP-Candid-Models-OptionalValue{System-Collections-Generic-List{System-Byte}}-'></a>
+<a name='M-EdjCase-ICP-Agent-Standards-ICRC1-Models-Account-#ctor-EdjCase-ICP-Candid-Models-Principal,EdjCase-ICP-Candid-Models-OptionalValue{System-Byte[]}-'></a>
 ### #ctor(owner,subaccount) `constructor`
 
 ##### Summary
@@ -359,7 +359,7 @@ Primary constructor for the Account class
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | owner | [EdjCase.ICP.Candid.Models.Principal](#T-EdjCase-ICP-Candid-Models-Principal 'EdjCase.ICP.Candid.Models.Principal') | The owner of the account, represented as a Principal object |
-| subaccount | [EdjCase.ICP.Candid.Models.OptionalValue{System.Collections.Generic.List{System.Byte}}](#T-EdjCase-ICP-Candid-Models-OptionalValue{System-Collections-Generic-List{System-Byte}} 'EdjCase.ICP.Candid.Models.OptionalValue{System.Collections.Generic.List{System.Byte}}') | The subaccount of the account, represented as an OptionalValue object |
+| subaccount | [EdjCase.ICP.Candid.Models.OptionalValue{System.Byte[]}](#T-EdjCase-ICP-Candid-Models-OptionalValue{System-Byte[]} 'EdjCase.ICP.Candid.Models.OptionalValue{System.Byte[]}') | The subaccount of the account, represented as an OptionalValue object |
 
 <a name='P-EdjCase-ICP-Agent-Standards-ICRC1-Models-Account-Owner'></a>
 ### Owner `property`
@@ -3563,7 +3563,7 @@ EdjCase.ICP.Agent.Standards.ICRC1.Models
 
 This class represents the arguments for transferring an ICRC1 token
 
-<a name='M-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferArgs-#ctor-EdjCase-ICP-Candid-Models-OptionalValue{System-Collections-Generic-List{System-Byte}},EdjCase-ICP-Agent-Standards-ICRC1-Models-Account,EdjCase-ICP-Candid-Models-UnboundedUInt,EdjCase-ICP-Candid-Models-OptionalValue{EdjCase-ICP-Candid-Models-UnboundedUInt},EdjCase-ICP-Candid-Models-OptionalValue{System-Collections-Generic-List{System-Byte}},EdjCase-ICP-Candid-Models-OptionalValue{System-UInt64}-'></a>
+<a name='M-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferArgs-#ctor-EdjCase-ICP-Candid-Models-OptionalValue{System-Byte[]},EdjCase-ICP-Agent-Standards-ICRC1-Models-Account,EdjCase-ICP-Candid-Models-UnboundedUInt,EdjCase-ICP-Candid-Models-OptionalValue{EdjCase-ICP-Candid-Models-UnboundedUInt},EdjCase-ICP-Candid-Models-OptionalValue{System-Byte[]},EdjCase-ICP-Candid-Models-OptionalValue{System-UInt64}-'></a>
 ### #ctor(fromSubaccount,to,amount,fee,memo,createdAtTime) `constructor`
 
 ##### Summary
@@ -3574,11 +3574,11 @@ Primary constructor for the TransferArgs class
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| fromSubaccount | [EdjCase.ICP.Candid.Models.OptionalValue{System.Collections.Generic.List{System.Byte}}](#T-EdjCase-ICP-Candid-Models-OptionalValue{System-Collections-Generic-List{System-Byte}} 'EdjCase.ICP.Candid.Models.OptionalValue{System.Collections.Generic.List{System.Byte}}') | The subaccount from which the transfer is made, represented as an OptionalValue object |
+| fromSubaccount | [EdjCase.ICP.Candid.Models.OptionalValue{System.Byte[]}](#T-EdjCase-ICP-Candid-Models-OptionalValue{System-Byte[]} 'EdjCase.ICP.Candid.Models.OptionalValue{System.Byte[]}') | The subaccount from which the transfer is made, represented as an OptionalValue object |
 | to | [EdjCase.ICP.Agent.Standards.ICRC1.Models.Account](#T-EdjCase-ICP-Agent-Standards-ICRC1-Models-Account 'EdjCase.ICP.Agent.Standards.ICRC1.Models.Account') | The account to which the transfer is made, represented as an Account object |
 | amount | [EdjCase.ICP.Candid.Models.UnboundedUInt](#T-EdjCase-ICP-Candid-Models-UnboundedUInt 'EdjCase.ICP.Candid.Models.UnboundedUInt') | The amount of the token being transferred, represented as an UnboundedUInt object |
 | fee | [EdjCase.ICP.Candid.Models.OptionalValue{EdjCase.ICP.Candid.Models.UnboundedUInt}](#T-EdjCase-ICP-Candid-Models-OptionalValue{EdjCase-ICP-Candid-Models-UnboundedUInt} 'EdjCase.ICP.Candid.Models.OptionalValue{EdjCase.ICP.Candid.Models.UnboundedUInt}') | The fee for the transfer, represented as an OptionalValue object |
-| memo | [EdjCase.ICP.Candid.Models.OptionalValue{System.Collections.Generic.List{System.Byte}}](#T-EdjCase-ICP-Candid-Models-OptionalValue{System-Collections-Generic-List{System-Byte}} 'EdjCase.ICP.Candid.Models.OptionalValue{System.Collections.Generic.List{System.Byte}}') | The memo for the transfer, represented as an OptionalValue object |
+| memo | [EdjCase.ICP.Candid.Models.OptionalValue{System.Byte[]}](#T-EdjCase-ICP-Candid-Models-OptionalValue{System-Byte[]} 'EdjCase.ICP.Candid.Models.OptionalValue{System.Byte[]}') | The memo for the transfer, represented as an OptionalValue object |
 | createdAtTime | [EdjCase.ICP.Candid.Models.OptionalValue{System.UInt64}](#T-EdjCase-ICP-Candid-Models-OptionalValue{System-UInt64} 'EdjCase.ICP.Candid.Models.OptionalValue{System.UInt64}') | The time at which the transfer is created, represented as an OptionalValue object |
 
 <a name='P-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferArgs-Amount'></a>

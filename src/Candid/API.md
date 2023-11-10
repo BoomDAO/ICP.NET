@@ -557,6 +557,7 @@
   - [Reserved](#F-EdjCase-ICP-Candid-Models-Values-PrimitiveType-Reserved 'EdjCase.ICP.Candid.Models.Values.PrimitiveType.Reserved')
   - [Text](#F-EdjCase-ICP-Candid-Models-Values-PrimitiveType-Text 'EdjCase.ICP.Candid.Models.Values.PrimitiveType.Text')
 - [Principal](#T-EdjCase-ICP-Candid-Models-Principal 'EdjCase.ICP.Candid.Models.Principal')
+  - [accountIdPrefix](#F-EdjCase-ICP-Candid-Models-Principal-accountIdPrefix 'EdjCase.ICP.Candid.Models.Principal.accountIdPrefix')
   - [Raw](#P-EdjCase-ICP-Candid-Models-Principal-Raw 'EdjCase.ICP.Candid.Models.Principal.Raw')
   - [Type](#P-EdjCase-ICP-Candid-Models-Principal-Type 'EdjCase.ICP.Candid.Models.Principal.Type')
   - [Anonymous()](#M-EdjCase-ICP-Candid-Models-Principal-Anonymous 'EdjCase.ICP.Candid.Models.Principal.Anonymous')
@@ -570,6 +571,7 @@
   - [ManagementCanisterId()](#M-EdjCase-ICP-Candid-Models-Principal-ManagementCanisterId 'EdjCase.ICP.Candid.Models.Principal.ManagementCanisterId')
   - [SelfAuthenticating(derEncodedPublicKey)](#M-EdjCase-ICP-Candid-Models-Principal-SelfAuthenticating-System-Byte[]- 'EdjCase.ICP.Candid.Models.Principal.SelfAuthenticating(System.Byte[])')
   - [ToHex()](#M-EdjCase-ICP-Candid-Models-Principal-ToHex 'EdjCase.ICP.Candid.Models.Principal.ToHex')
+  - [ToLedgerAccount(subAccount)](#M-EdjCase-ICP-Candid-Models-Principal-ToLedgerAccount-System-Byte[]- 'EdjCase.ICP.Candid.Models.Principal.ToLedgerAccount(System.Byte[])')
   - [ToString()](#M-EdjCase-ICP-Candid-Models-Principal-ToString 'EdjCase.ICP.Candid.Models.Principal.ToString')
   - [ToText()](#M-EdjCase-ICP-Candid-Models-Principal-ToText 'EdjCase.ICP.Candid.Models.Principal.ToText')
   - [op_Equality()](#M-EdjCase-ICP-Candid-Models-Principal-op_Equality-EdjCase-ICP-Candid-Models-Principal,EdjCase-ICP-Candid-Models-Principal- 'EdjCase.ICP.Candid.Models.Principal.op_Equality(EdjCase.ICP.Candid.Models.Principal,EdjCase.ICP.Candid.Models.Principal)')
@@ -7638,6 +7640,9 @@ EdjCase.ICP.Candid.Models
 
 A model representing a principal byte value with helper functions
 
+<a name='F-EdjCase-ICP-Candid-Models-Principal-accountIdPrefix'></a>
+### accountIdPrefix `constants`
+
 <a name='P-EdjCase-ICP-Candid-Models-Principal-Raw'></a>
 ### Raw `property`
 
@@ -7808,6 +7813,42 @@ Hex value as a string
 ##### Parameters
 
 This method has no parameters.
+
+<a name='M-EdjCase-ICP-Candid-Models-Principal-ToLedgerAccount-System-Byte[]-'></a>
+### ToLedgerAccount(subAccount) `method`
+
+##### Summary
+
+Generates an account identifier from a sub-account byte array.
+
+##### Returns
+
+A byte array representing the account identifier.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| subAccount | [System.Byte[]](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Byte[] 'System.Byte[]') | Optional. The sub-account byte array, expected to be 32 bytes in length.If not specified, will not use a subaccount |
+
+##### Exceptions
+
+| Name | Description |
+| ---- | ----------- |
+| [System.ArgumentException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.ArgumentException 'System.ArgumentException') | Thrown when the sub-account byte array is not 32 bytes in length. |
+
+##### Remarks
+
+This method constructs a ledger account identifier by concatenating a fixed prefix, the principal's raw byte array,
+ and a sub-account byte array. It computes a SHA-224 hash on this concatenated byte array, then calculates a CRC-32
+ checksum of the hash. The resulting account identifier is a concatenation of the CRC-32 checksum and the SHA-224 hash.
+
+ The method expects a sub-account byte array of exactly 32 bytes in length. If the provided array does not meet this
+ requirement, an [ArgumentException](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.ArgumentException 'System.ArgumentException') is thrown.
+ 
+ The account identifier format follows the specification:
+ account_identifier(principal, subaccount_identifier) = CRC32(h) || h
+ where h = sha224("\x0Aaccount-id" || principal || subaccount_identifier).
 
 <a name='M-EdjCase-ICP-Candid-Models-Principal-ToString'></a>
 ### ToString() `method`

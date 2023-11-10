@@ -1,5 +1,6 @@
 using EdjCase.ICP.Agent;
 using EdjCase.ICP.Candid.Models;
+using EdjCase.ICP.Candid.Models.Values;
 using EdjCase.ICP.Candid.Utilities;
 using Xunit;
 
@@ -45,6 +46,19 @@ namespace EdjCase.ICP.Candid.Tests
 
 
 			Assert.Equal(publicKeyPrincipal.ToHex(), principal.ToHex());
+		}
+		[Theory]
+		[InlineData("un4fu-tqaaa-aaaab-qadjq-cai", "4A8D3F2B6E01C87D9E03B4567CF89A01D23456789ABCDEF0123456789ABCDEF0", "8C5C20C6153F7F51E20D0F0FB508515B476563A962B4A9915F4F02708AED4F82")]
+		[InlineData("aaaaa-aa", null, "2D0E897F7E862D2B57D9BC9EA5C65F9A24AC6C074575F47898314B8D6CB0929D")]
+		[InlineData("2vxsx-fae", "5A8D3F2B6E01C87D9C03B4567CF89A01D23456789ABCDEF0123456789ABCDEF0", "2A215AD241E757C707EC3163503C1D91DCB72B2415603273BD05029E42ECEA6A")]
+		[InlineData("g4gvl-fx6s5-epgv4-vhyqk-zkiny-ja4gn-zo7zf-dv3va-26u3t-ijwrx-tqe", "6A8D3F2B6E01C87D9C03B4567CF89A01D23456789ABCDEF0123456789ABCDEF0", "8365061F9C5ADA294975282C81606E87C4D2DDE0C93AA41AC2C2C784623370E6")]
+
+		public void Principal_ToLedgerAccount(string principal, string? subAccountHex, string expectedHex)
+		{
+			byte[]? subAccount = subAccountHex == null ? null : ByteUtil.FromHexString(subAccountHex);
+			byte[] actual = Principal.FromText(principal).ToLedgerAccount(subAccount);
+			string actualHex = ByteUtil.ToHexString(actual);
+			Assert.Equal(expectedHex, actualHex);
 		}
 	}
 }

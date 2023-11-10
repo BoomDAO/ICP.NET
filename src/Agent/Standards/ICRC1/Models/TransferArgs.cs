@@ -38,7 +38,7 @@ namespace EdjCase.ICP.Agent.Standards.ICRC1.Models
 		/// The memo for the transfer, represented as an OptionalValue object
 		/// </summary>
 		[CandidName("memo")]
-		public OptionalValue<Subaccount> Memo { get; set; }
+		public OptionalValue<byte[]> Memo { get; set; }
 
 		/// <summary>
 		/// The time at which the transfer is created, represented as an OptionalValue object
@@ -55,7 +55,7 @@ namespace EdjCase.ICP.Agent.Standards.ICRC1.Models
 		/// <param name="fee">The fee for the transfer, represented as an OptionalValue object</param>
 		/// <param name="memo">The memo for the transfer, represented as an OptionalValue object</param>
 		/// <param name="createdAtTime">The time at which the transfer is created, represented as an OptionalValue object</param>
-		public TransferArgs(OptionalValue<Subaccount> fromSubaccount, Account to, UnboundedUInt amount, OptionalValue<UnboundedUInt> fee, OptionalValue<Subaccount> memo, OptionalValue<Timestamp> createdAtTime)
+		public TransferArgs(OptionalValue<byte[]> fromSubaccount, Account to, UnboundedUInt amount, OptionalValue<UnboundedUInt> fee, OptionalValue<byte[]> memo, OptionalValue<Timestamp> createdAtTime)
 		{
 			this.FromSubaccount = fromSubaccount ?? throw new ArgumentNullException(nameof(fromSubaccount));
 			this.To = to ?? throw new ArgumentNullException(nameof(to));
