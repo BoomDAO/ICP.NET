@@ -12,12 +12,12 @@ namespace Sample.Shared.ICRC1Ledger.Models
 		public string Method { get; set; }
 
 		[CandidName("body")]
-		public List<byte> Body { get; set; }
+		public byte[] Body { get; set; }
 
 		[CandidName("headers")]
 		public Dictionary<string, string> Headers { get; set; }
 
-		public HttpRequest(string url, string method, List<byte> body, Dictionary<string, string> headers)
+		public HttpRequest(string url, string method, byte[] body, Dictionary<string, string> headers)
 		{
 			this.Url = url;
 			this.Method = method;

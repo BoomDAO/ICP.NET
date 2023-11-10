@@ -7,12 +7,12 @@ namespace Sample.Shared.ICRC1Ledger.Models
 	public class DataCertificate
 	{
 		[CandidName("certificate")]
-		public OptionalValue<List<byte>> Certificate { get; set; }
+		public OptionalValue<byte[]> Certificate { get; set; }
 
 		[CandidName("hash_tree")]
-		public List<byte> HashTree { get; set; }
+		public byte[] HashTree { get; set; }
 
-		public DataCertificate(OptionalValue<List<byte>> certificate, List<byte> hashTree)
+		public DataCertificate(OptionalValue<byte[]> certificate, byte[] hashTree)
 		{
 			this.Certificate = certificate;
 			this.HashTree = hashTree;

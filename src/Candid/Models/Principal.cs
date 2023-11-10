@@ -2,6 +2,7 @@ using EdjCase.ICP.Candid.Crypto;
 using EdjCase.ICP.Candid.Utilities;
 using System;
 using System.Linq;
+using System.Text;
 
 namespace EdjCase.ICP.Candid.Models
 {
@@ -45,6 +46,9 @@ namespace EdjCase.ICP.Candid.Models
 	{
 		private const byte anonymousSuffix = 4;
 		private const byte selfAuthenticatingSuffix = 2;
+		/// Byte form of prefix "\x0Aaccount-id"
+		private static readonly byte[] accountIdPrefix = { 0x0A, 0x61, 0x63, 0x63, 0x6F, 0x75, 0x6E, 0x74, 0x2D, 0x69, 0x64 };
+
 
 		/// <summary>
 		/// The kind of the principal
@@ -89,6 +93,57 @@ namespace EdjCase.ICP.Candid.Models
 		public string ToHex()
 		{
 			return ByteUtil.ToHexString(this.Raw);
+		}
+
+		/// <summary>
+		/// Generates an account identifier from a sub-account byte array.
+		/// </summary>
+		/// <remarks>
+		/// This method constructs a ledger account identifier by concatenating a fixed prefix, the principal's raw byte array,
+		/// and a sub-account byte array. It computes a SHA-224 hash on this concatenated byte array, then calculates a CRC-32
+		/// checksum of the hash. The resulting account identifier is a concatenation of the CRC-32 checksum and the SHA-224 hash.
+		///
+		/// The method expects a sub-account byte array of exactly 32 bytes in length. If the provided array does not meet this
+		/// requirement, an <see cref="ArgumentException"/> is thrown.
+		/// 
+		/// The account identifier format follows the specification:
+		/// account_identifier(principal, subaccount_identifier) = CRC32(h) || h
+		/// where h = sha224("\x0Aaccount-id" || principal || subaccount_identifier).
+		/// </remarks>
+		/// <param name="subAccount">Optional. The sub-account byte array, expected to be 32 bytes in length.If not specified, will not use a subaccount</param>
+		/// <returns>A byte array representing the account identifier.</returns>
+		/// <exception cref="ArgumentException">Thrown when the sub-account byte array is not 32 bytes in length.</exception>
+
+		public byte[] ToLedgerAccount(byte[]? subAccount)
+		{
+			if (subAccount == null)
+			{
+				// Empty byte array of 32 bytes for no subaccount
+				subAccount = new byte[32]; 
+			}
+			// Ensure the subAccount is of expected length (32 bytes)
+			if (subAccount.Length != 32)
+			{
+				throw new ArgumentException("SubAccount must be 32 bytes in length.");
+			}
+
+			// Combine the principal's raw byte array with the subAccount byte array
+			byte[] data = accountIdPrefix // "\x0Aaccount-id"
+				.Concat(this.Raw)
+				.Concat(subAccount).ToArray();
+
+			// Compute the SHA224 hash
+			SHA224 sha224 = new ();
+			byte[] hash = sha224.GenerateDigest(data);
+
+			// Compute the CRC32 checksum
+			byte[] checksum = CRC32.ComputeHash(hash);
+
+			// Combine checksum and hash
+			byte[] bytesWithChecksum = checksum.Concat(hash).ToArray();
+
+			// Convert to hex string and return
+			return bytesWithChecksum;
 		}
 
 		/// <summary>

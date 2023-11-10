@@ -1,7 +1,6 @@
 using EdjCase.ICP.Candid.Mapping;
 using EdjCase.ICP.Candid.Models;
 using System;
-using Subaccount = System.Collections.Generic.List<byte>;
 
 namespace EdjCase.ICP.Agent.Standards.ICRC1.Models
 {
@@ -20,14 +19,14 @@ namespace EdjCase.ICP.Agent.Standards.ICRC1.Models
 		/// The subaccount of the account, represented as an OptionalValue object
 		/// </summary>
 		[CandidName("subaccount")]
-		public OptionalValue<Subaccount> Subaccount { get; set; }
+		public OptionalValue<byte[]> Subaccount { get; set; }
 
 		/// <summary>
 		/// Primary constructor for the Account class
 		/// </summary>
 		/// <param name="owner">The owner of the account, represented as a Principal object</param>
 		/// <param name="subaccount">The subaccount of the account, represented as an OptionalValue object</param>
-		public Account(Principal owner, OptionalValue<Subaccount> subaccount)
+		public Account(Principal owner, OptionalValue<byte[]> subaccount)
 		{
 			this.Owner = owner ?? throw new ArgumentNullException(nameof(owner));
 			this.Subaccount = subaccount ?? throw new ArgumentNullException(nameof(subaccount));

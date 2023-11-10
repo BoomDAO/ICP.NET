@@ -12,10 +12,10 @@ namespace Sample.Shared.ICRC1Ledger.Models
 		public OptionalValue<UnboundedUInt> Fee { get; set; }
 
 		[CandidName("memo")]
-		public OptionalValue<List<byte>> Memo { get; set; }
+		public OptionalValue<byte[]> Memo { get; set; }
 
 		[CandidName("from_subaccount")]
-		public OptionalValue<List<byte>> FromSubaccount { get; set; }
+		public OptionalValue<byte[]> FromSubaccount { get; set; }
 
 		[CandidName("created_at_time")]
 		public ApproveArgs.CreatedAtTimeInfo CreatedAtTime { get; set; }
@@ -32,7 +32,7 @@ namespace Sample.Shared.ICRC1Ledger.Models
 		[CandidName("spender")]
 		public Account Spender { get; set; }
 
-		public ApproveArgs(OptionalValue<UnboundedUInt> fee, OptionalValue<List<byte>> memo, OptionalValue<List<byte>> fromSubaccount, ApproveArgs.CreatedAtTimeInfo createdAtTime, UnboundedUInt amount, OptionalValue<UnboundedUInt> expectedAllowance, ApproveArgs.ExpiresAtInfo expiresAt, Account spender)
+		public ApproveArgs(OptionalValue<UnboundedUInt> fee, OptionalValue<byte[]> memo, OptionalValue<byte[]> fromSubaccount, ApproveArgs.CreatedAtTimeInfo createdAtTime, UnboundedUInt amount, OptionalValue<UnboundedUInt> expectedAllowance, ApproveArgs.ExpiresAtInfo expiresAt, Account spender)
 		{
 			this.Fee = fee;
 			this.Memo = memo;

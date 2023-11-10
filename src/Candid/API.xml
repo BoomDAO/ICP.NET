@@ -1615,6 +1615,9 @@
             A model representing a principal byte value with helper functions
             </summary>
         </member>
+        <member name="F:EdjCase.ICP.Candid.Models.Principal.accountIdPrefix">
+            Byte form of prefix "\x0Aaccount-id"
+        </member>
         <member name="P:EdjCase.ICP.Candid.Models.Principal.Type">
             <summary>
             The kind of the principal
@@ -1639,6 +1642,26 @@
             Converts the raw principal value into a hex string in all caps with no delimiters
             </summary>
             <returns>Hex value as a string</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Principal.ToLedgerAccount(System.Byte[])">
+             <summary>
+             Generates an account identifier from a sub-account byte array.
+             </summary>
+             <remarks>
+             This method constructs a ledger account identifier by concatenating a fixed prefix, the principal's raw byte array,
+             and a sub-account byte array. It computes a SHA-224 hash on this concatenated byte array, then calculates a CRC-32
+             checksum of the hash. The resulting account identifier is a concatenation of the CRC-32 checksum and the SHA-224 hash.
+            
+             The method expects a sub-account byte array of exactly 32 bytes in length. If the provided array does not meet this
+             requirement, an <see cref="T:System.ArgumentException"/> is thrown.
+             
+             The account identifier format follows the specification:
+             account_identifier(principal, subaccount_identifier) = CRC32(h) || h
+             where h = sha224("\x0Aaccount-id" || principal || subaccount_identifier).
+             </remarks>
+             <param name="subAccount">Optional. The sub-account byte array, expected to be 32 bytes in length.If not specified, will not use a subaccount</param>
+             <returns>A byte array representing the account identifier.</returns>
+             <exception cref="T:System.ArgumentException">Thrown when the sub-account byte array is not 32 bytes in length.</exception>
         </member>
         <member name="M:EdjCase.ICP.Candid.Models.Principal.ManagementCanisterId">
             <summary>

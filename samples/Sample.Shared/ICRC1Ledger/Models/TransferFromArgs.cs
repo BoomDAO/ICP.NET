@@ -26,12 +26,12 @@ namespace Sample.Shared.ICRC1Ledger.Models
 		public TransferFromArgs.FeeInfo Fee { get; set; }
 
 		[CandidName("memo")]
-		public OptionalValue<List<byte>> Memo { get; set; }
+		public OptionalValue<byte[]> Memo { get; set; }
 
 		[CandidName("created_at_time")]
 		public TransferFromArgs.CreatedAtTimeInfo CreatedAtTime { get; set; }
 
-		public TransferFromArgs(TransferFromArgs.SpenderSubaccountInfo spenderSubaccount, Account from, Account to, Tokens amount, TransferFromArgs.FeeInfo fee, OptionalValue<List<byte>> memo, TransferFromArgs.CreatedAtTimeInfo createdAtTime)
+		public TransferFromArgs(TransferFromArgs.SpenderSubaccountInfo spenderSubaccount, Account from, Account to, Tokens amount, TransferFromArgs.FeeInfo fee, OptionalValue<byte[]> memo, TransferFromArgs.CreatedAtTimeInfo createdAtTime)
 		{
 			this.SpenderSubaccount = spenderSubaccount;
 			this.From = from;

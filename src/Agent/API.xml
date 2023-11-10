@@ -1259,7 +1259,7 @@
             The subaccount of the account, represented as an OptionalValue object
             </summary>
         </member>
-        <member name="M:EdjCase.ICP.Agent.Standards.ICRC1.Models.Account.#ctor(EdjCase.ICP.Candid.Models.Principal,EdjCase.ICP.Candid.Models.OptionalValue{System.Collections.Generic.List{System.Byte}})">
+        <member name="M:EdjCase.ICP.Agent.Standards.ICRC1.Models.Account.#ctor(EdjCase.ICP.Candid.Models.Principal,EdjCase.ICP.Candid.Models.OptionalValue{System.Byte[]})">
             <summary>
             Primary constructor for the Account class
             </summary>
@@ -1442,7 +1442,7 @@
             The time at which the transfer is created, represented as an OptionalValue object
             </summary>
         </member>
-        <member name="M:EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferArgs.#ctor(EdjCase.ICP.Candid.Models.OptionalValue{System.Collections.Generic.List{System.Byte}},EdjCase.ICP.Agent.Standards.ICRC1.Models.Account,EdjCase.ICP.Candid.Models.UnboundedUInt,EdjCase.ICP.Candid.Models.OptionalValue{EdjCase.ICP.Candid.Models.UnboundedUInt},EdjCase.ICP.Candid.Models.OptionalValue{System.Collections.Generic.List{System.Byte}},EdjCase.ICP.Candid.Models.OptionalValue{System.UInt64})">
+        <member name="M:EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferArgs.#ctor(EdjCase.ICP.Candid.Models.OptionalValue{System.Byte[]},EdjCase.ICP.Agent.Standards.ICRC1.Models.Account,EdjCase.ICP.Candid.Models.UnboundedUInt,EdjCase.ICP.Candid.Models.OptionalValue{EdjCase.ICP.Candid.Models.UnboundedUInt},EdjCase.ICP.Candid.Models.OptionalValue{System.Byte[]},EdjCase.ICP.Candid.Models.OptionalValue{System.UInt64})">
             <summary>
             Primary constructor for the TransferArgs class
             </summary>
