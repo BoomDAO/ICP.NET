@@ -19,6 +19,12 @@ namespace EdjCase.ICP.Agent.Identities
 		public SubjectPublicKeyInfo GetPublicKey();
 
 		/// <summary>
+		/// Returns the principal of the identity
+		/// </summary>
+		/// <returns>Principal of the identity</returns>
+		public Principal GetPrincipal() => this.GetPublicKey().ToPrincipal();
+
+		/// <summary>
 		/// Gets the signed delegations for the identity.
 		/// Delegations will exist if the identity is a delegated identity
 		/// instead of having the raw keys. This is used in Internet Identity

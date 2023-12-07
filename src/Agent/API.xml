@@ -484,6 +484,12 @@
             </summary>
             <returns>Public key of the identity</returns>
         </member>
+        <member name="M:EdjCase.ICP.Agent.Identities.IIdentity.GetPrincipal">
+            <summary>
+            Returns the principal of the identity
+            </summary>
+            <returns>Principal of the identity</returns>
+        </member>
         <member name="M:EdjCase.ICP.Agent.Identities.IIdentity.GetSenderDelegations">
             <summary>
             Gets the signed delegations for the identity.

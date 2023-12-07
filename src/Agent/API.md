@@ -147,6 +147,7 @@
   - [GetAsync(url)](#M-EdjCase-ICP-Agent-Agents-Http-IHttpClient-GetAsync-System-String- 'EdjCase.ICP.Agent.Agents.Http.IHttpClient.GetAsync(System.String)')
   - [PostAsync(url,cborBody)](#M-EdjCase-ICP-Agent-Agents-Http-IHttpClient-PostAsync-System-String,System-Byte[]- 'EdjCase.ICP.Agent.Agents.Http.IHttpClient.PostAsync(System.String,System.Byte[])')
 - [IIdentity](#T-EdjCase-ICP-Agent-Identities-IIdentity 'EdjCase.ICP.Agent.Identities.IIdentity')
+  - [GetPrincipal()](#M-EdjCase-ICP-Agent-Identities-IIdentity-GetPrincipal 'EdjCase.ICP.Agent.Identities.IIdentity.GetPrincipal')
   - [GetPublicKey()](#M-EdjCase-ICP-Agent-Identities-IIdentity-GetPublicKey 'EdjCase.ICP.Agent.Identities.IIdentity.GetPublicKey')
   - [GetSenderDelegations()](#M-EdjCase-ICP-Agent-Identities-IIdentity-GetSenderDelegations 'EdjCase.ICP.Agent.Identities.IIdentity.GetSenderDelegations')
   - [Sign(data)](#M-EdjCase-ICP-Agent-Identities-IIdentity-Sign-System-Byte[]- 'EdjCase.ICP.Agent.Identities.IIdentity.Sign(System.Byte[])')
@@ -1989,6 +1990,21 @@ EdjCase.ICP.Agent.Identities
 ##### Summary
 
 Identity to use for requests to Internet Computer canisters
+
+<a name='M-EdjCase-ICP-Agent-Identities-IIdentity-GetPrincipal'></a>
+### GetPrincipal() `method`
+
+##### Summary
+
+Returns the principal of the identity
+
+##### Returns
+
+Principal of the identity
+
+##### Parameters
+
+This method has no parameters.
 
 <a name='M-EdjCase-ICP-Agent-Identities-IIdentity-GetPublicKey'></a>
 ### GetPublicKey() `method`
