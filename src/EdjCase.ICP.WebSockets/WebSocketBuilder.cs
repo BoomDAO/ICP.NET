@@ -36,7 +36,7 @@ namespace EdjCase.ICP.WebSockets
 			return this;
 		}
 
-		public IWebSocket<TMessage> Build<TMessage>()
+		public IWebSocketAgent<TMessage> Build<TMessage>()
 			where TMessage : notnull
 		{
 			if (this.identity == null)
@@ -44,7 +44,7 @@ namespace EdjCase.ICP.WebSockets
 				// Generate ephemral identity if not specified
 				this.identity = Secp256k1Identity.Generate();
 			}
-			return new WebSocket<TMessage>(
+			return new WebSocketAgent<TMessage>(
 				this.canisterId,
 				this.gatewayUri,
 				this.identity,
@@ -52,12 +52,12 @@ namespace EdjCase.ICP.WebSockets
 			);
 		}
 
-		public async Task<IWebSocket<TMessage>> BuildAndConnectAsync<TMessage>(
+		public async Task<IWebSocketAgent<TMessage>> BuildAndConnectAsync<TMessage>(
 			CancellationToken? cancellationToken = null
 		)
 			where TMessage : notnull
 		{
-			IWebSocket<TMessage> ws = this.Build<TMessage>();
+			IWebSocketAgent<TMessage> ws = this.Build<TMessage>();
 			await ws.ConnectAsync(cancellationToken);
 			return ws;
 		}

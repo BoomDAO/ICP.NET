@@ -1,4 +1,5 @@
 using EdjCase.ICP.Agent.Identities;
+using EdjCase.ICP.Candid.Mapping;
 using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.WebSockets;
 using Microsoft.Extensions.Hosting;
@@ -11,17 +12,26 @@ using System.Threading.Tasks;
 
 namespace Sample.WebSockets
 {
+	public class AppMessage
+	{
+		[CandidName("text")]
+		public string Text { get; set; }
+
+		[CandidName("timestamp")]
+		public ulong Timestamp { get; set; }
+	}
+
 	public class WebSocketService : BackgroundService
 	{
-		private IWebSocket<string>? webSocket;
+		private IWebSocketAgent<AppMessage>? webSocket;
 
 		public override async Task StartAsync(CancellationToken cancellationToken)
 		{
-			Principal canisterId = Principal.Anonymous();
-			Uri gatewayUri = new Uri("wss://gateway.icws.io");
+			Principal canisterId = Principal.FromText("bkyz2-fmaaa-aaaaa-qaaaq-cai");
+			Uri gatewayUri = new Uri("ws://localhost:8080");
 			this.webSocket = await new WebSocketBuilder(canisterId, gatewayUri)
 				.WithIdentity(Secp256k1Identity.Generate())
-				.BuildAndConnectAsync<string>();
+				.BuildAndConnectAsync<AppMessage>();
 			await base.StartAsync(cancellationToken);
 		}
 
@@ -30,6 +40,7 @@ namespace Sample.WebSockets
 			while (this.webSocket?.IsConnectionEstablished == true)
 			{
 				await this.webSocket.ReceiveNextAsync(
+					this.OnOpen,
 					this.OnMessage,
 					this.OnError,
 					this.OnClose,
@@ -38,18 +49,23 @@ namespace Sample.WebSockets
 			}
 		}
 
-		private void OnMessage(string message)
+		private void OnOpen()
 		{
+			Console.WriteLine("Opened");
+		}
 
+		private void OnMessage(AppMessage message)
+		{
+			Console.WriteLine("Received message: " + message.Text);
 		}
 		private void OnError(Exception ex)
 		{
-
+			Console.WriteLine("Error: " + ex.ToString());
 		}
 
 		private void OnClose(OnCloseContext context)
 		{
-
+			Console.WriteLine("Closed");
 		}
 
 		public override async Task StopAsync(CancellationToken cancellationToken)
