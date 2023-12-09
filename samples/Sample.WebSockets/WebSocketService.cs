@@ -57,6 +57,13 @@ namespace Sample.WebSockets
 		private void OnMessage(AppMessage message)
 		{
 			Console.WriteLine("Received message: " + message.Text);
+			ICTimestamp.Now().NanoSeconds.TryToUInt64(out ulong now);
+			Console.WriteLine("Sending message:  pong");
+			this.webSocket!.SendAsync(new AppMessage
+			{
+				Text = "pong",
+				Timestamp = now
+			});
 		}
 		private void OnError(Exception ex)
 		{

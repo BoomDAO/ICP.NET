@@ -1,3 +1,4 @@
+using EdjCase.ICP.Candid.Mapping;
 using EdjCase.ICP.Candid.Models;
 using System;
 using System.Collections.Generic;
@@ -6,19 +7,29 @@ using System.Text;
 
 namespace EdjCase.ICP.WebSockets.Models
 {
+	internal class WebSocketMessageWrapper
+	{
+		[CandidName("msg")]
+		public WebSocketMessage Message { get; set; }
+	}
 	internal class WebSocketMessage
 	{
+		[CandidName("sequence_num")]
 		public ulong SequenceNumber { get; }
+		[CandidName("content")]
 		public byte[] Content { get; }
+		[CandidName("client_key")]
 		public ClientKey ClientKey { get; }
-		public ICTimestamp Timestamp { get; }
+		[CandidName("timestamp")]
+		public ulong Timestamp { get; }
+		[CandidName("is_service_message")]
 		public bool IsServiceMessage { get; }
 
 		public WebSocketMessage(
 			ulong sequenceNumber,
 			byte[] content,
 			ClientKey clientKey,
-			ICTimestamp timestamp,
+			ulong timestamp,
 			bool isServiceMessage
 		)
 		{
@@ -34,7 +45,7 @@ namespace EdjCase.ICP.WebSockets.Models
 			ulong? sequenceNumber = null;
 			byte[]? content = null;
 			ClientKey? clientKey = null;
-			ICTimestamp? timestamp = null;
+			ulong? timestamp = null;
 			bool? isServiceMessage = null;
 
 			reader.ReadStartMap();
@@ -52,7 +63,7 @@ namespace EdjCase.ICP.WebSockets.Models
 						clientKey = ClientKey.FromCbor(reader);
 						break;
 					case "timestamp":
-						timestamp = ICTimestamp.FromNanoSeconds(reader.ReadUInt64());
+						timestamp = reader.ReadUInt64();
 						break;
 					case "is_service_message":
 						isServiceMessage = reader.ReadBoolean();
@@ -84,7 +95,7 @@ namespace EdjCase.ICP.WebSockets.Models
 				sequenceNumber.Value,
 				content,
 				clientKey,
-				timestamp,
+				timestamp.Value,
 				isServiceMessage.Value
 			);
 		}

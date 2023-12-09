@@ -27,10 +27,10 @@ namespace EdjCase.ICP.WebSockets
 		private IIdentity identity { get; }
 		private CandidConverter? customConverter { get; }
 		private ClientWebSocket socket { get; }
-
-		private ulong sequenceNumber { get; set; } = 0;
 		private Principal? gatewayPrincipal { get; set; }
 		private ulong? clientNonce { get; set; }
+		private ulong outgoingSequenceNumber = 0;
+		private ulong incomingSequenceNumber = 0;
 
 		public WebSocketState State => this.socket.State;
 
@@ -63,31 +63,17 @@ namespace EdjCase.ICP.WebSockets
 			CancellationToken? cancellationToken = null
 		)
 		{
-			CandidTypedValue messageCandid = CandidTypedValue.FromObject(message, this.customConverter);
-			CandidArg arg = new(new List<CandidTypedValue>
-			{
-				// CanisterWsMessageArguments
-				messageCandid
-			});
-			byte[] messageBytes = arg.Encode();
-			//WebSocketMessage wsMessage = new(
-			//	sequenceNumber: this.sequenceNumber,
-			//	content: messageBytes,
-			//	clientKey: this.clientKey,
-			//	timestamp: ,
-			//	isServiceMessage: false
-			//);
-			//this.sequenceNumber++;
-			//RequestMessage<CallRequest> request = new();
-			//byte[] requestCbor = request.ToCbor();
-			byte[] requestCbor = new byte[0]; // TODO
+			CandidArg arg = CandidArg.FromCandid(CandidTypedValue.FromObject(
+				message,
+				this.customConverter
+			));
+			
 			try
 			{
-				await this.socket.SendAsync(
-					requestCbor,
-					WebSocketMessageType.Binary,
-					endOfMessage: true,
-					cancellationToken: cancellationToken ?? CancellationToken.None
+				await this.SendMessageToCanisterAsync(
+					arg,
+					false,
+					cancellationToken ?? CancellationToken.None
 				);
 			}
 			catch (ObjectDisposedException ex)
@@ -108,11 +94,12 @@ namespace EdjCase.ICP.WebSockets
 			CancellationToken? cancellationToken = null
 		)
 		{
+			cancellationToken ??= CancellationToken.None;
 			byte[] data;
 			bool isClosed;
 			try
 			{
-				(data, isClosed) = await this.ReceiveInternalAsync(cancellationToken);
+				(data, isClosed) = await this.ReceiveInternalAsync(cancellationToken.Value);
 			}
 			catch (Exception ex)
 			{
@@ -125,130 +112,163 @@ namespace EdjCase.ICP.WebSockets
 				return;
 			}
 
-			await this.ProcessMessageAsync(data, onOpen, onMessage, onError);
+			await this.ProcessMessageAsync(
+				data,
+				onOpen,
+				onMessage,
+				onError,
+				cancellationToken.Value
+			);
 		}
 
 		private async Task ProcessMessageAsync(
 			byte[] data,
 			Action onOpen,
 			Action<TMessage> onMessage,
-			Action<Exception> onError
+			Action<Exception> onError,
+			CancellationToken cancellationToken
 		)
 		{
-			CborReader reader = new (data);
-			switch (reader.PeekState())
+			CborReader reader = new(data);
+			if (this.gatewayPrincipal == null)
 			{
-				case CborReaderState.Tag:
-					{
-						switch (reader.ReadTag())
-						{
-							case CborTag.SelfDescribeCbor:
-								switch (reader.PeekState())
-								{
-									case CborReaderState.StartMap:
-										// Open message with gateway principal
-										reader.ReadStartMap();
-										string firstKey = reader.ReadTextString();
-										if (firstKey == "gateway_principal")
-										{
-											byte[] gatewayPrincipalBytes = reader.ReadByteString();
-											this.gatewayPrincipal = Principal.FromBytes(gatewayPrincipalBytes);
-											await this.SendOpenMessageAsync(this.gatewayPrincipal);
-											return;
-										}
-										break;
-								}
-								break;
-						}
-						break;
-					}
-				case CborReaderState.StartMap:
-					{
-						ClientIncomingMessage clientMessage;
-						try
-						{
-							clientMessage = ClientIncomingMessage.FromCbor(reader);
-						}
-						catch (Exception ex)
-						{
-							onError(new Exception("Unable to parse incoming message", ex));
-							return;
-						}
-						WebSocketMessage wsMessage;
-						try
-						{
-							CborReader wsReader = new CborReader(clientMessage.Content);
-							wsReader.ReadTag();
-							wsMessage = WebSocketMessage.FromCbor(wsReader);
-						}
-						catch (Exception ex)
-						{
-							onError(new Exception("Unable to parse websocket message", ex));
-							return;
-						}
-						
+				// First message should always be handshake
 
-						// Convert bytes to candid
-						CandidArg arg;
-						try
-						{
-							arg = CandidArg.FromBytes(wsMessage.Content);
-						}
-						catch (Exception ex)
-						{
-							onError(new Exception("Failed to parse bytes as candid", ex));
-							return;
-						}
-						if (wsMessage.IsServiceMessage)
-						{
-							await this.ProcessServiceMessageAsync(arg, onOpen);
-							return;
-						}
-						else
-						{
-							// Convert candid to message type
-							TMessage message;
-							try
-							{
-								message = arg.ToObjects<TMessage>(this.customConverter);
-							}
-							catch (Exception ex)
-							{
-								onError(new Exception("Failed to convert candid to message", ex));
-								return;
-							}
-							onMessage(message);
-							return;
-						}
-					}
-			};
-			string hex = BitConverter.ToString(data).Replace("-", "");
-			onError(new Exception("Unrecognized message format. Unable to parse. Message hex: " + hex));
+				HandshakeMessage message;
+				try
+				{
+					reader.ReadTag();
+					message = HandshakeMessage.FromCbor(reader);
+				}
+				catch (Exception ex)
+				{
+					string hex = BitConverter.ToString(data).Replace("-", "");
+					onError(new Exception("Unrecognized message format. Unable to parse handshake message. Message hex: " + hex, ex));
+					return;
+				}
+				this.gatewayPrincipal = message.GatewayPrincipal;
+
+				// Send open message to canister
+				await this.SendOpenMessageAsync(
+					this.gatewayPrincipal,
+					cancellationToken
+				);
+				return;
+			}
+
+			// Process normal messages
+			ClientIncomingMessage clientMessage;
+			try
+			{
+				clientMessage = ClientIncomingMessage.FromCbor(reader);
+			}
+			catch (Exception ex)
+			{
+				onError(new Exception("Unable to parse incoming message", ex));
+				return;
+			}
+			WebSocketMessage wsMessage;
+			try
+			{
+				CborReader wsReader = new(clientMessage.Content);
+				wsReader.ReadTag();
+				wsMessage = WebSocketMessage.FromCbor(wsReader);
+			}
+			catch (Exception ex)
+			{
+				onError(new Exception("Unable to parse websocket message", ex));
+				return;
+			}
+
+
+			// Convert bytes to candid
+			CandidArg arg;
+			try
+			{
+				arg = CandidArg.FromBytes(wsMessage.Content);
+			}
+			catch (Exception ex)
+			{
+				onError(new Exception("Failed to parse bytes as candid", ex));
+				return;
+			}
+			if (wsMessage.IsServiceMessage)
+			{
+				await this.ProcessServiceMessageAsync(arg, onOpen, cancellationToken);
+				return;
+			}
+			else
+			{
+				// Convert candid to message type
+				TMessage message;
+				try
+				{
+					message = arg.ToObjects<TMessage>(this.customConverter);
+				}
+				catch (Exception ex)
+				{
+					onError(new Exception("Failed to convert candid to message", ex));
+					return;
+				}
+				onMessage(message);
+				return;
+			}
 		}
 
-		private async Task ProcessServiceMessageAsync(CandidArg arg, Action onOpen)
+
+		private async Task ProcessServiceMessageAsync(
+			CandidArg arg,
+			Action onOpen,
+			CancellationToken cancellationToken
+		)
 		{
 			ServiceMessage serviceMessage = arg.ToObjects<ServiceMessage>();
-			switch(serviceMessage.Tag) {
+			switch (serviceMessage.Tag)
+			{
 				case ServiceMessageTag.AckMessage:
 					{
 						AckMessage message = serviceMessage.AsAckMessage();
+						await this.SendKeepAliveMessageAsync(cancellationToken);
 						break;
 					}
 				case ServiceMessageTag.OpenMessage:
 					{
 						OpenMessage message = serviceMessage.AsOpenMessage();
 						onOpen();
-						return ;
-					}
-				case ServiceMessageTag.KeepAliveMessage:
-					{
-						KeepAliveMessage message = serviceMessage.AsKeepAliveMessage();
-						break;
+						return;
 					}
 				default:
 					throw new NotImplementedException();
 			}
+		}
+
+		private async Task SendKeepAliveMessageAsync(
+			CancellationToken cancellationToken
+		)
+		{
+			CandidArg arg = new CandidArg(new List<CandidTypedValue>
+			{
+				new CandidTypedValue(
+					new CandidVariant(
+						"KeepAliveMessage",
+						new CandidRecord(new Dictionary<CandidTag, CandidValue>
+						{
+							{ "last_incoming_sequence_num", CandidValue.Nat64(this.incomingSequenceNumber - 1)}
+						})
+					),
+					new CandidVariantType(new Dictionary<CandidTag, CandidType>
+					{
+						{
+							"KeepAliveMessage",
+							new CandidRecordType(new Dictionary<CandidTag, CandidType>
+							{
+								{ "last_incoming_sequence_num", CandidType.Nat64()}
+							})
+						}
+					})
+				)
+			});
+			await this.SendMessageToCanisterAsync(arg, true, cancellationToken);
 		}
 
 		private ulong GetOrCreateClientNonce()
@@ -264,7 +284,10 @@ namespace EdjCase.ICP.WebSockets
 			return this.clientNonce.Value;
 		}
 
-		private async Task SendOpenMessageAsync(Principal gatewayPrincipal)
+		private async Task SendOpenMessageAsync(
+			Principal gatewayPrincipal,
+			CancellationToken cancellationToken
+		)
 		{
 			ulong clientNonce = this.GetOrCreateClientNonce();
 			CandidArg arg = CandidArg.FromCandid(
@@ -285,10 +308,53 @@ namespace EdjCase.ICP.WebSockets
 					)
 				)
 			);
+			await this.SendEnvelopeToCanisterAsync(
+				"ws_open",
+				arg,
+				cancellationToken
+			);
+		}
+
+		private async Task SendMessageToCanisterAsync(
+			CandidArg arg,
+			bool isServiceMessage,
+			CancellationToken cancellationToken
+		)
+		{
+			byte[] messageBytes = arg.Encode();
+
+			ICTimestamp.Now().NanoSeconds.TryToUInt64(out ulong now);
+			this.outgoingSequenceNumber++;
+			var wsMessage = new WebSocketMessageWrapper
+			{
+				Message = new WebSocketMessage(
+					sequenceNumber: this.outgoingSequenceNumber,
+					content: messageBytes,
+					clientKey: new ClientKey
+					{
+						Id = this.identity.GetPrincipal(),
+						Nonce = this.clientNonce!.Value
+					},
+					timestamp: now,
+					isServiceMessage: isServiceMessage
+				)
+			};
+			CandidArg messageArg = CandidArg.FromCandid(
+				CandidTypedValue.FromObject(wsMessage)
+			);
+			await this.SendEnvelopeToCanisterAsync("ws_message", messageArg, cancellationToken);
+		}
+
+		private async Task SendEnvelopeToCanisterAsync(
+			string methodName,
+			CandidArg arg,
+			CancellationToken cancellationToken
+		)
+		{
 			Principal sender = this.identity.GetPrincipal();
 			CallRequest request = new(
 				this.canisterId,
-				"ws_open",
+				methodName,
 				arg,
 				sender,
 				ICTimestamp.Future(TimeSpan.FromSeconds(30))
@@ -302,7 +368,12 @@ namespace EdjCase.ICP.WebSockets
 			signedContent.WriteCbor(writer);
 			writer.WriteEndMap();
 			byte[] message = writer.Encode();
-			await this.socket.SendAsync(message, WebSocketMessageType.Binary, true, CancellationToken.None);
+			await this.socket.SendAsync(
+				message,
+				WebSocketMessageType.Binary,
+				true,
+				cancellationToken
+			);
 		}
 
 		public async Task CloseAsync()
@@ -327,7 +398,7 @@ namespace EdjCase.ICP.WebSockets
 		}
 
 		private async Task<(byte[] Data, bool Closed)> ReceiveInternalAsync(
-			CancellationToken? cancellationToken = null
+			CancellationToken cancellationToken
 		)
 		{
 			ArrayPool<byte> arrayPool = ArrayPool<byte>.Shared;
@@ -340,7 +411,7 @@ namespace EdjCase.ICP.WebSockets
 					{
 						WebSocketReceiveResult result = await this.socket.ReceiveAsync(
 							new ArraySegment<byte>(buffer),
-							cancellationToken ?? CancellationToken.None
+							cancellationToken
 						);
 
 						if (result.Count > 0)
