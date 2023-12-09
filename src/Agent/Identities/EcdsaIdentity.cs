@@ -58,6 +58,7 @@ namespace EdjCase.ICP.Agent.Identities
 				new BigInteger(1, this.PrivateKey),
 				ecDomain
 			);
+			int expectedLength = (ecDomain.Curve.FieldSize + 7) >> 3;
 
 			// Initialize the signer with the private key
 			ECDsaSigner signer = new();
@@ -72,9 +73,13 @@ namespace EdjCase.ICP.Agent.Identities
 			// Concatenate the R and S components of the signature
 			byte[] rBytes = signature[0].ToByteArrayUnsigned();
 			byte[] sBytes = signature[1].ToByteArrayUnsigned();
-			byte[] result = new byte[rBytes.Length + sBytes.Length];
-			Buffer.BlockCopy(rBytes, 0, result, 0, rBytes.Length);
-			Buffer.BlockCopy(sBytes, 0, result, rBytes.Length, sBytes.Length);
+			byte[] result = new byte[expectedLength * 2];
+			
+			// Copy R and S into the result array at the correct positions
+			// Sometimes rBytes and sBytes are not consitant lengths
+			Buffer.BlockCopy(rBytes, 0, result, expectedLength - rBytes.Length, rBytes.Length);
+			Buffer.BlockCopy(sBytes, 0, result, 2 * expectedLength - sBytes.Length, sBytes.Length);
+
 
 			return result;
 		}

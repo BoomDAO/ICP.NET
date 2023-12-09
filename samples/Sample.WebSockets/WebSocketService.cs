@@ -5,6 +5,7 @@ using EdjCase.ICP.WebSockets;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.WebSockets;
 using System.Text;
@@ -24,6 +25,7 @@ namespace Sample.WebSockets
 	public class WebSocketService : BackgroundService
 	{
 		private IWebSocketAgent<AppMessage>? webSocket;
+		private Stopwatch stopwatch = Stopwatch.StartNew();
 
 		public override async Task StartAsync(CancellationToken cancellationToken)
 		{
@@ -51,14 +53,15 @@ namespace Sample.WebSockets
 
 		private void OnOpen()
 		{
-			Console.WriteLine("Opened");
+			Console.WriteLine("Opened: " + this.stopwatch.Elapsed);
+			
 		}
 
 		private void OnMessage(AppMessage message)
 		{
 			Console.WriteLine("Received message: " + message.Text);
 			ICTimestamp.Now().NanoSeconds.TryToUInt64(out ulong now);
-			Console.WriteLine("Sending message:  pong");
+			Console.WriteLine("Sending message:  pong" + this.stopwatch.Elapsed);
 			this.webSocket!.SendAsync(new AppMessage
 			{
 				Text = "pong",
@@ -72,7 +75,7 @@ namespace Sample.WebSockets
 
 		private void OnClose(OnCloseContext context)
 		{
-			Console.WriteLine("Closed");
+			Console.WriteLine("Closed" + this.stopwatch.Elapsed);
 		}
 
 		public override async Task StopAsync(CancellationToken cancellationToken)

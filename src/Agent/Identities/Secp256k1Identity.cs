@@ -15,7 +15,7 @@ using Org.BouncyCastle.OpenSsl;
 namespace EdjCase.ICP.Agent.Identities
 {
 	/// <summary>
-	/// An identity using a Ed25519 key
+	/// An identity using a Secp256k1 key
 	/// </summary>
 	public class Secp256k1Identity : EcdsaIdentity
 	{

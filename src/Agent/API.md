@@ -3039,7 +3039,7 @@ EdjCase.ICP.Agent.Identities
 
 ##### Summary
 
-An identity using a Ed25519 key
+An identity using a Secp256k1 key
 
 <a name='M-EdjCase-ICP-Agent-Identities-Secp256k1Identity-#ctor-System-Byte[],System-Byte[]-'></a>
 ### #ctor(publicKey,privateKey) `constructor`

@@ -520,7 +520,7 @@
         </member>
         <member name="T:EdjCase.ICP.Agent.Identities.Secp256k1Identity">
             <summary>
-            An identity using a Ed25519 key
+            An identity using a Secp256k1 key
             </summary>
         </member>
         <member name="M:EdjCase.ICP.Agent.Identities.Secp256k1Identity.#ctor(System.Byte[],System.Byte[])">

@@ -46,6 +46,7 @@ namespace EdjCase.ICP.WebSockets
 			this.identity = identity;
 			this.customConverter = customConverter;
 			this.socket = new ClientWebSocket();
+			this.socket.Options.KeepAliveInterval = TimeSpan.Zero;
 		}
 
 		public async Task ConnectAsync(

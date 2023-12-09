@@ -42,7 +42,7 @@ namespace EdjCase.ICP.WebSockets
 			if (this.identity == null)
 			{
 				// Generate ephemral identity if not specified
-				this.identity = Secp256k1Identity.Generate();
+				this.identity = Ed25519Identity.Generate();
 			}
 			return new WebSocketAgent<TMessage>(
 				this.canisterId,
