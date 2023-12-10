@@ -1240,7 +1240,7 @@
             <param name="treeHash">The hash of the tree that was pruned</param>
             <returns>An pruned hash tree</returns>
         </member>
-        <member name="M:EdjCase.ICP.Candid.Models.HashTree.GetValueOrDefault(EdjCase.ICP.Candid.Models.StatePathSegment)">
+        <member name="M:EdjCase.ICP.Candid.Models.HashTree.GetValueOrDefault(EdjCase.ICP.Candid.Models.StatePathSegment[])">
             <summary>
             Gets the value of the subtree specified by the path, returns null if not found
             </summary>

@@ -15,7 +15,12 @@ using System.Threading.Tasks;
 using System.Threading;
 using EdjCase.ICP.Agent.Identities;
 using EdjCase.ICP.WebSockets.Models;
-using System.Runtime.InteropServices;
+using EdjCase.ICP.BLS;
+using EdjCase.ICP.Agent;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using EdjCase.ICP.Candid.Crypto;
+using System.Security.Cryptography;
 
 namespace EdjCase.ICP.WebSockets
 {
@@ -25,25 +30,32 @@ namespace EdjCase.ICP.WebSockets
 		private Principal canisterId { get; }
 		private Uri gatewayUri { get; }
 		private IIdentity identity { get; }
+		private IBlsCryptography bls { get; }
+		private SubjectPublicKeyInfo RootPublicKey { get; }
 		private CandidConverter? customConverter { get; }
 		private ClientWebSocket socket { get; }
 		private Principal? gatewayPrincipal { get; set; }
 		private ulong? clientNonce { get; set; }
-		private ulong outgoingSequenceNumber = 0;
-		private ulong incomingSequenceNumber = 0;
+		private ulong outgoingSequenceNumber = 1;
+		private ulong incomingSequenceNumber = 1;
+		private SHA256HashFunction sha256 = SHA256HashFunction.Create();
 
 		public WebSocketState State => this.socket.State;
 
 		public WebSocketAgent(
 			Principal canisterId,
 			Uri gatewayUri,
+			SubjectPublicKeyInfo rootPublicKey,
 			IIdentity identity,
+			IBlsCryptography bls,
 			CandidConverter? customConverter = null
 		)
 		{
 			this.canisterId = canisterId;
 			this.gatewayUri = gatewayUri;
+			this.RootPublicKey = rootPublicKey;
 			this.identity = identity;
+			this.bls = bls;
 			this.customConverter = customConverter;
 			this.socket = new ClientWebSocket();
 			this.socket.Options.KeepAliveInterval = TimeSpan.Zero;
@@ -53,6 +65,11 @@ namespace EdjCase.ICP.WebSockets
 			CancellationToken? cancellationToken = null
 		)
 		{
+			// Reset session info on new connection
+			this.GetOrCreateClientNonce(forceReset: true);
+			this.incomingSequenceNumber = 1;
+			this.outgoingSequenceNumber = 1;
+			this.gatewayPrincipal = null;
 			await this.socket.ConnectAsync(
 				this.gatewayUri,
 				cancellationToken ?? CancellationToken.None
@@ -68,7 +85,7 @@ namespace EdjCase.ICP.WebSockets
 				message,
 				this.customConverter
 			));
-			
+
 			try
 			{
 				await this.SendMessageToCanisterAsync(
@@ -95,6 +112,10 @@ namespace EdjCase.ICP.WebSockets
 			CancellationToken? cancellationToken = null
 		)
 		{
+			if (this.socket.State != WebSocketState.Open)
+			{
+				throw new InvalidOperationException("Websocket is not open");
+			}
 			cancellationToken ??= CancellationToken.None;
 			byte[] data;
 			bool isClosed;
@@ -168,6 +189,12 @@ namespace EdjCase.ICP.WebSockets
 				onError(new Exception("Unable to parse incoming message", ex));
 				return;
 			}
+			if (!this.ValidateMessage(clientMessage, out string? error))
+			{
+				onError(new Exception(error));
+				await this.CloseAsync();
+				return;
+			}
 			WebSocketMessage wsMessage;
 			try
 			{
@@ -178,6 +205,25 @@ namespace EdjCase.ICP.WebSockets
 			catch (Exception ex)
 			{
 				onError(new Exception("Unable to parse websocket message", ex));
+				return;
+			}
+			if (wsMessage.SequenceNumber != this.incomingSequenceNumber)
+			{
+				onError(new Exception("Message sequence number is invalid. Closing connection"));
+				await this.CloseAsync();
+				return;
+			}
+			this.incomingSequenceNumber++;
+			if (wsMessage.ClientKey.Id != this.identity.GetPrincipal())
+			{
+				onError(new Exception("Message client principal is invalid. Closing connection"));
+				await this.CloseAsync();
+				return;
+			}
+			if (wsMessage.ClientKey.Nonce != this.clientNonce)
+			{
+				onError(new Exception("Message client nonce is invalid. Closing connection"));
+				await this.CloseAsync();
 				return;
 			}
 
@@ -216,6 +262,80 @@ namespace EdjCase.ICP.WebSockets
 			}
 		}
 
+		private bool ValidateMessage(
+			ClientIncomingMessage clientMessage,
+			[NotNullWhen(false)] out string? error
+		)
+		{
+			CborReader certReader = new(clientMessage.Cert);
+			Certificate? cert;
+			try
+			{
+				cert = Certificate.ReadCbor(certReader);
+			}
+			catch
+			{
+				cert = null;
+			}
+
+
+			if (cert == null || !cert.IsValid(this.bls, this.RootPublicKey))
+			{
+				error = "Message certificate is invalid";
+				return false;
+			}
+			HashTree? witness = cert!.Tree.GetValueOrDefault(
+				"canister",
+				this.canisterId.Raw,
+				"certified_data"
+			);
+			if (witness == null)
+			{
+				error = "Message certified data is invalid";
+				return false;
+			}
+
+			CborReader treeReader = new(clientMessage.Tree);
+			HashTree? tree;
+			try
+			{
+				treeReader.ReadTag();
+				tree = Certificate.ReadTreeCbor(treeReader);
+			}
+			catch
+			{
+				tree = null;
+			}
+
+			if (tree == null || !witness.AsLeaf().Value.SequenceEqual(tree.BuildRootHash()))
+			{
+				error = "Message tree is invalid";
+				return false;
+			}
+			HashTree? hashFromTree = tree.GetValueOrDefault("websocket", clientMessage.Key);
+			if (hashFromTree == null)
+			{
+				// Allow fallback to index path.
+				hashFromTree = tree.GetValueOrDefault("websocket");
+			}
+			if (hashFromTree == null) {
+				// The tree returned in the certification header is wrong. Return false.
+				// We don't throw here, just invalidate the request.
+				error = $"Message tree in the header. Does not contain path {clientMessage.Key}";
+				return false;
+			}
+			byte[] contentHash = this.sha256.ComputeHash(clientMessage.Content);
+			if (hashFromTree.Type != HashTreeType.Leaf
+				|| !hashFromTree.AsLeaf().Value.SequenceEqual(contentHash))
+			{
+				error = "Message content hash does not match the hash in the tree";
+				return false;
+			}
+
+
+			error = null;
+			return true;
+		}
 
 		private async Task ProcessServiceMessageAsync(
 			CandidArg arg,
@@ -229,6 +349,15 @@ namespace EdjCase.ICP.WebSockets
 				case ServiceMessageTag.AckMessage:
 					{
 						AckMessage message = serviceMessage.AsAckMessage();
+						// we throw an error only if the received sequence number is not in the queue
+						// and is greater than the last sequence number in the queue
+						if (message.LastIncomingSequenceNumber > this.outgoingSequenceNumber)
+						{
+							// TODO
+							//onError();
+							await this.socket.CloseAsync(WebSocketCloseStatus.PolicyViolation, "Ack sequence number is invalid.", cancellationToken);
+							break;
+						}
 						await this.SendKeepAliveMessageAsync(cancellationToken);
 						break;
 					}
@@ -272,9 +401,9 @@ namespace EdjCase.ICP.WebSockets
 			await this.SendMessageToCanisterAsync(arg, true, cancellationToken);
 		}
 
-		private ulong GetOrCreateClientNonce()
+		private ulong GetOrCreateClientNonce(bool forceReset = false)
 		{
-			if (this.clientNonce == null)
+			if (forceReset || this.clientNonce == null)
 			{
 				// Create random ulong
 				Random rand = new();
@@ -325,7 +454,6 @@ namespace EdjCase.ICP.WebSockets
 			byte[] messageBytes = arg.Encode();
 
 			ICTimestamp.Now().NanoSeconds.TryToUInt64(out ulong now);
-			this.outgoingSequenceNumber++;
 			var wsMessage = new WebSocketMessageWrapper
 			{
 				Message = new WebSocketMessage(
@@ -340,6 +468,7 @@ namespace EdjCase.ICP.WebSockets
 					isServiceMessage: isServiceMessage
 				)
 			};
+			this.outgoingSequenceNumber++;
 			CandidArg messageArg = CandidArg.FromCandid(
 				CandidTypedValue.FromObject(wsMessage)
 			);

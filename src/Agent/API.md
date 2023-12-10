@@ -56,8 +56,8 @@
   - [LedgerTime](#P-EdjCase-ICP-Agent-Standards-ICRC1-Models-CreatedInFutureError-LedgerTime 'EdjCase.ICP.Agent.Standards.ICRC1.Models.CreatedInFutureError.LedgerTime')
 - [DefaultHttpClient](#T-EdjCase-ICP-Agent-Agents-Http-DefaultHttpClient 'EdjCase.ICP.Agent.Agents.Http.DefaultHttpClient')
   - [#ctor(client)](#M-EdjCase-ICP-Agent-Agents-Http-DefaultHttpClient-#ctor-System-Net-Http-HttpClient- 'EdjCase.ICP.Agent.Agents.Http.DefaultHttpClient.#ctor(System.Net.Http.HttpClient)')
-  - [GetAsync()](#M-EdjCase-ICP-Agent-Agents-Http-DefaultHttpClient-GetAsync-System-String- 'EdjCase.ICP.Agent.Agents.Http.DefaultHttpClient.GetAsync(System.String)')
-  - [PostAsync()](#M-EdjCase-ICP-Agent-Agents-Http-DefaultHttpClient-PostAsync-System-String,System-Byte[]- 'EdjCase.ICP.Agent.Agents.Http.DefaultHttpClient.PostAsync(System.String,System.Byte[])')
+  - [GetAsync()](#M-EdjCase-ICP-Agent-Agents-Http-DefaultHttpClient-GetAsync-System-String,System-Nullable{System-Threading-CancellationToken}- 'EdjCase.ICP.Agent.Agents.Http.DefaultHttpClient.GetAsync(System.String,System.Nullable{System.Threading.CancellationToken})')
+  - [PostAsync()](#M-EdjCase-ICP-Agent-Agents-Http-DefaultHttpClient-PostAsync-System-String,System-Byte[],System-Nullable{System-Threading-CancellationToken}- 'EdjCase.ICP.Agent.Agents.Http.DefaultHttpClient.PostAsync(System.String,System.Byte[],System.Nullable{System.Threading.CancellationToken})')
 - [Delegation](#T-EdjCase-ICP-Agent-Models-Delegation 'EdjCase.ICP.Agent.Models.Delegation')
   - [#ctor(publicKey,expiration,targets,senders)](#M-EdjCase-ICP-Agent-Models-Delegation-#ctor-EdjCase-ICP-Agent-SubjectPublicKeyInfo,EdjCase-ICP-Candid-Models-ICTimestamp,System-Collections-Generic-List{EdjCase-ICP-Candid-Models-Principal},System-Collections-Generic-List{EdjCase-ICP-Candid-Models-Principal}- 'EdjCase.ICP.Agent.Models.Delegation.#ctor(EdjCase.ICP.Agent.SubjectPublicKeyInfo,EdjCase.ICP.Candid.Models.ICTimestamp,System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal},System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal})')
   - [Expiration](#P-EdjCase-ICP-Agent-Models-Delegation-Expiration 'EdjCase.ICP.Agent.Models.Delegation.Expiration')
@@ -108,12 +108,12 @@
   - [#ctor(identity,bls,httpClient)](#M-EdjCase-ICP-Agent-Agents-HttpAgent-#ctor-EdjCase-ICP-Agent-Agents-Http-IHttpClient,EdjCase-ICP-Agent-Identities-IIdentity,EdjCase-ICP-BLS-IBlsCryptography- 'EdjCase.ICP.Agent.Agents.HttpAgent.#ctor(EdjCase.ICP.Agent.Agents.Http.IHttpClient,EdjCase.ICP.Agent.Identities.IIdentity,EdjCase.ICP.BLS.IBlsCryptography)')
   - [#ctor(identity,bls,httpBoundryNodeUrl)](#M-EdjCase-ICP-Agent-Agents-HttpAgent-#ctor-EdjCase-ICP-Agent-Identities-IIdentity,System-Uri,EdjCase-ICP-BLS-IBlsCryptography- 'EdjCase.ICP.Agent.Agents.HttpAgent.#ctor(EdjCase.ICP.Agent.Identities.IIdentity,System.Uri,EdjCase.ICP.BLS.IBlsCryptography)')
   - [Identity](#P-EdjCase-ICP-Agent-Agents-HttpAgent-Identity 'EdjCase.ICP.Agent.Agents.HttpAgent.Identity')
-  - [CallAsync()](#M-EdjCase-ICP-Agent-Agents-HttpAgent-CallAsync-EdjCase-ICP-Candid-Models-Principal,System-String,EdjCase-ICP-Candid-Models-CandidArg,EdjCase-ICP-Candid-Models-Principal- 'EdjCase.ICP.Agent.Agents.HttpAgent.CallAsync(EdjCase.ICP.Candid.Models.Principal,System.String,EdjCase.ICP.Candid.Models.CandidArg,EdjCase.ICP.Candid.Models.Principal)')
-  - [GetReplicaStatusAsync()](#M-EdjCase-ICP-Agent-Agents-HttpAgent-GetReplicaStatusAsync 'EdjCase.ICP.Agent.Agents.HttpAgent.GetReplicaStatusAsync')
-  - [GetRequestStatusAsync()](#M-EdjCase-ICP-Agent-Agents-HttpAgent-GetRequestStatusAsync-EdjCase-ICP-Candid-Models-Principal,EdjCase-ICP-Candid-Models-RequestId- 'EdjCase.ICP.Agent.Agents.HttpAgent.GetRequestStatusAsync(EdjCase.ICP.Candid.Models.Principal,EdjCase.ICP.Candid.Models.RequestId)')
-  - [GetRootKeyAsync()](#M-EdjCase-ICP-Agent-Agents-HttpAgent-GetRootKeyAsync 'EdjCase.ICP.Agent.Agents.HttpAgent.GetRootKeyAsync')
-  - [QueryAsync()](#M-EdjCase-ICP-Agent-Agents-HttpAgent-QueryAsync-EdjCase-ICP-Candid-Models-Principal,System-String,EdjCase-ICP-Candid-Models-CandidArg- 'EdjCase.ICP.Agent.Agents.HttpAgent.QueryAsync(EdjCase.ICP.Candid.Models.Principal,System.String,EdjCase.ICP.Candid.Models.CandidArg)')
-  - [ReadStateAsync()](#M-EdjCase-ICP-Agent-Agents-HttpAgent-ReadStateAsync-EdjCase-ICP-Candid-Models-Principal,System-Collections-Generic-List{EdjCase-ICP-Candid-Models-StatePath}- 'EdjCase.ICP.Agent.Agents.HttpAgent.ReadStateAsync(EdjCase.ICP.Candid.Models.Principal,System.Collections.Generic.List{EdjCase.ICP.Candid.Models.StatePath})')
+  - [CallAsync()](#M-EdjCase-ICP-Agent-Agents-HttpAgent-CallAsync-EdjCase-ICP-Candid-Models-Principal,System-String,EdjCase-ICP-Candid-Models-CandidArg,EdjCase-ICP-Candid-Models-Principal,System-Nullable{System-Threading-CancellationToken}- 'EdjCase.ICP.Agent.Agents.HttpAgent.CallAsync(EdjCase.ICP.Candid.Models.Principal,System.String,EdjCase.ICP.Candid.Models.CandidArg,EdjCase.ICP.Candid.Models.Principal,System.Nullable{System.Threading.CancellationToken})')
+  - [GetReplicaStatusAsync()](#M-EdjCase-ICP-Agent-Agents-HttpAgent-GetReplicaStatusAsync-System-Nullable{System-Threading-CancellationToken}- 'EdjCase.ICP.Agent.Agents.HttpAgent.GetReplicaStatusAsync(System.Nullable{System.Threading.CancellationToken})')
+  - [GetRequestStatusAsync()](#M-EdjCase-ICP-Agent-Agents-HttpAgent-GetRequestStatusAsync-EdjCase-ICP-Candid-Models-Principal,EdjCase-ICP-Candid-Models-RequestId,System-Nullable{System-Threading-CancellationToken}- 'EdjCase.ICP.Agent.Agents.HttpAgent.GetRequestStatusAsync(EdjCase.ICP.Candid.Models.Principal,EdjCase.ICP.Candid.Models.RequestId,System.Nullable{System.Threading.CancellationToken})')
+  - [GetRootKeyAsync()](#M-EdjCase-ICP-Agent-Agents-HttpAgent-GetRootKeyAsync-System-Nullable{System-Threading-CancellationToken}- 'EdjCase.ICP.Agent.Agents.HttpAgent.GetRootKeyAsync(System.Nullable{System.Threading.CancellationToken})')
+  - [QueryAsync()](#M-EdjCase-ICP-Agent-Agents-HttpAgent-QueryAsync-EdjCase-ICP-Candid-Models-Principal,System-String,EdjCase-ICP-Candid-Models-CandidArg,System-Nullable{System-Threading-CancellationToken}- 'EdjCase.ICP.Agent.Agents.HttpAgent.QueryAsync(EdjCase.ICP.Candid.Models.Principal,System.String,EdjCase.ICP.Candid.Models.CandidArg,System.Nullable{System.Threading.CancellationToken})')
+  - [ReadStateAsync()](#M-EdjCase-ICP-Agent-Agents-HttpAgent-ReadStateAsync-EdjCase-ICP-Candid-Models-Principal,System-Collections-Generic-List{EdjCase-ICP-Candid-Models-StatePath},System-Nullable{System-Threading-CancellationToken}- 'EdjCase.ICP.Agent.Agents.HttpAgent.ReadStateAsync(EdjCase.ICP.Candid.Models.Principal,System.Collections.Generic.List{EdjCase.ICP.Candid.Models.StatePath},System.Nullable{System.Threading.CancellationToken})')
 - [HttpResponse](#T-EdjCase-ICP-Agent-Agents-Http-HttpResponse 'EdjCase.ICP.Agent.Agents.Http.HttpResponse')
   - [#ctor(statusCode,getContentFunc)](#M-EdjCase-ICP-Agent-Agents-Http-HttpResponse-#ctor-System-Net-HttpStatusCode,System-Func{System-Threading-Tasks-Task{System-Byte[]}}- 'EdjCase.ICP.Agent.Agents.Http.HttpResponse.#ctor(System.Net.HttpStatusCode,System.Func{System.Threading.Tasks.Task{System.Byte[]}})')
   - [StatusCode](#P-EdjCase-ICP-Agent-Agents-Http-HttpResponse-StatusCode 'EdjCase.ICP.Agent.Agents.Http.HttpResponse.StatusCode')
@@ -121,12 +121,12 @@
   - [ThrowIfErrorAsync()](#M-EdjCase-ICP-Agent-Agents-Http-HttpResponse-ThrowIfErrorAsync 'EdjCase.ICP.Agent.Agents.Http.HttpResponse.ThrowIfErrorAsync')
 - [IAgent](#T-EdjCase-ICP-Agent-Agents-IAgent 'EdjCase.ICP.Agent.Agents.IAgent')
   - [Identity](#P-EdjCase-ICP-Agent-Agents-IAgent-Identity 'EdjCase.ICP.Agent.Agents.IAgent.Identity')
-  - [CallAsync(canisterId,method,arg,effectiveCanisterId)](#M-EdjCase-ICP-Agent-Agents-IAgent-CallAsync-EdjCase-ICP-Candid-Models-Principal,System-String,EdjCase-ICP-Candid-Models-CandidArg,EdjCase-ICP-Candid-Models-Principal- 'EdjCase.ICP.Agent.Agents.IAgent.CallAsync(EdjCase.ICP.Candid.Models.Principal,System.String,EdjCase.ICP.Candid.Models.CandidArg,EdjCase.ICP.Candid.Models.Principal)')
-  - [GetReplicaStatusAsync()](#M-EdjCase-ICP-Agent-Agents-IAgent-GetReplicaStatusAsync 'EdjCase.ICP.Agent.Agents.IAgent.GetReplicaStatusAsync')
-  - [GetRequestStatusAsync(canisterId,id)](#M-EdjCase-ICP-Agent-Agents-IAgent-GetRequestStatusAsync-EdjCase-ICP-Candid-Models-Principal,EdjCase-ICP-Candid-Models-RequestId- 'EdjCase.ICP.Agent.Agents.IAgent.GetRequestStatusAsync(EdjCase.ICP.Candid.Models.Principal,EdjCase.ICP.Candid.Models.RequestId)')
-  - [GetRootKeyAsync()](#M-EdjCase-ICP-Agent-Agents-IAgent-GetRootKeyAsync 'EdjCase.ICP.Agent.Agents.IAgent.GetRootKeyAsync')
-  - [QueryAsync(canisterId,method,arg)](#M-EdjCase-ICP-Agent-Agents-IAgent-QueryAsync-EdjCase-ICP-Candid-Models-Principal,System-String,EdjCase-ICP-Candid-Models-CandidArg- 'EdjCase.ICP.Agent.Agents.IAgent.QueryAsync(EdjCase.ICP.Candid.Models.Principal,System.String,EdjCase.ICP.Candid.Models.CandidArg)')
-  - [ReadStateAsync(canisterId,paths)](#M-EdjCase-ICP-Agent-Agents-IAgent-ReadStateAsync-EdjCase-ICP-Candid-Models-Principal,System-Collections-Generic-List{EdjCase-ICP-Candid-Models-StatePath}- 'EdjCase.ICP.Agent.Agents.IAgent.ReadStateAsync(EdjCase.ICP.Candid.Models.Principal,System.Collections.Generic.List{EdjCase.ICP.Candid.Models.StatePath})')
+  - [CallAsync(canisterId,method,arg,effectiveCanisterId,cancellationToken)](#M-EdjCase-ICP-Agent-Agents-IAgent-CallAsync-EdjCase-ICP-Candid-Models-Principal,System-String,EdjCase-ICP-Candid-Models-CandidArg,EdjCase-ICP-Candid-Models-Principal,System-Nullable{System-Threading-CancellationToken}- 'EdjCase.ICP.Agent.Agents.IAgent.CallAsync(EdjCase.ICP.Candid.Models.Principal,System.String,EdjCase.ICP.Candid.Models.CandidArg,EdjCase.ICP.Candid.Models.Principal,System.Nullable{System.Threading.CancellationToken})')
+  - [GetReplicaStatusAsync()](#M-EdjCase-ICP-Agent-Agents-IAgent-GetReplicaStatusAsync-System-Nullable{System-Threading-CancellationToken}- 'EdjCase.ICP.Agent.Agents.IAgent.GetReplicaStatusAsync(System.Nullable{System.Threading.CancellationToken})')
+  - [GetRequestStatusAsync(canisterId,id,cancellationToken)](#M-EdjCase-ICP-Agent-Agents-IAgent-GetRequestStatusAsync-EdjCase-ICP-Candid-Models-Principal,EdjCase-ICP-Candid-Models-RequestId,System-Nullable{System-Threading-CancellationToken}- 'EdjCase.ICP.Agent.Agents.IAgent.GetRequestStatusAsync(EdjCase.ICP.Candid.Models.Principal,EdjCase.ICP.Candid.Models.RequestId,System.Nullable{System.Threading.CancellationToken})')
+  - [GetRootKeyAsync(cancellationToken)](#M-EdjCase-ICP-Agent-Agents-IAgent-GetRootKeyAsync-System-Nullable{System-Threading-CancellationToken}- 'EdjCase.ICP.Agent.Agents.IAgent.GetRootKeyAsync(System.Nullable{System.Threading.CancellationToken})')
+  - [QueryAsync(canisterId,method,arg,cancellationToken)](#M-EdjCase-ICP-Agent-Agents-IAgent-QueryAsync-EdjCase-ICP-Candid-Models-Principal,System-String,EdjCase-ICP-Candid-Models-CandidArg,System-Nullable{System-Threading-CancellationToken}- 'EdjCase.ICP.Agent.Agents.IAgent.QueryAsync(EdjCase.ICP.Candid.Models.Principal,System.String,EdjCase.ICP.Candid.Models.CandidArg,System.Nullable{System.Threading.CancellationToken})')
+  - [ReadStateAsync(canisterId,paths,cancellationToken)](#M-EdjCase-ICP-Agent-Agents-IAgent-ReadStateAsync-EdjCase-ICP-Candid-Models-Principal,System-Collections-Generic-List{EdjCase-ICP-Candid-Models-StatePath},System-Nullable{System-Threading-CancellationToken}- 'EdjCase.ICP.Agent.Agents.IAgent.ReadStateAsync(EdjCase.ICP.Candid.Models.Principal,System.Collections.Generic.List{EdjCase.ICP.Candid.Models.StatePath},System.Nullable{System.Threading.CancellationToken})')
 - [IAgentExtensions](#T-EdjCase-ICP-Agent-Agents-IAgentExtensions 'EdjCase.ICP.Agent.Agents.IAgentExtensions')
   - [CallAndWaitAsync(agent,canisterId,method,arg,effectiveCanisterId,cancellationToken)](#M-EdjCase-ICP-Agent-Agents-IAgentExtensions-CallAndWaitAsync-EdjCase-ICP-Agent-Agents-IAgent,EdjCase-ICP-Candid-Models-Principal,System-String,EdjCase-ICP-Candid-Models-CandidArg,EdjCase-ICP-Candid-Models-Principal,System-Nullable{System-Threading-CancellationToken}- 'EdjCase.ICP.Agent.Agents.IAgentExtensions.CallAndWaitAsync(EdjCase.ICP.Agent.Agents.IAgent,EdjCase.ICP.Candid.Models.Principal,System.String,EdjCase.ICP.Candid.Models.CandidArg,EdjCase.ICP.Candid.Models.Principal,System.Nullable{System.Threading.CancellationToken})')
 - [ICRC1Client](#T-EdjCase-ICP-Agent-Standards-ICRC1-ICRC1Client 'EdjCase.ICP.Agent.Standards.ICRC1.ICRC1Client')
@@ -144,8 +144,8 @@
   - [TotalSupply()](#M-EdjCase-ICP-Agent-Standards-ICRC1-ICRC1Client-TotalSupply 'EdjCase.ICP.Agent.Standards.ICRC1.ICRC1Client.TotalSupply')
   - [Transfer(args)](#M-EdjCase-ICP-Agent-Standards-ICRC1-ICRC1Client-Transfer-EdjCase-ICP-Agent-Standards-ICRC1-Models-TransferArgs- 'EdjCase.ICP.Agent.Standards.ICRC1.ICRC1Client.Transfer(EdjCase.ICP.Agent.Standards.ICRC1.Models.TransferArgs)')
 - [IHttpClient](#T-EdjCase-ICP-Agent-Agents-Http-IHttpClient 'EdjCase.ICP.Agent.Agents.Http.IHttpClient')
-  - [GetAsync(url)](#M-EdjCase-ICP-Agent-Agents-Http-IHttpClient-GetAsync-System-String- 'EdjCase.ICP.Agent.Agents.Http.IHttpClient.GetAsync(System.String)')
-  - [PostAsync(url,cborBody)](#M-EdjCase-ICP-Agent-Agents-Http-IHttpClient-PostAsync-System-String,System-Byte[]- 'EdjCase.ICP.Agent.Agents.Http.IHttpClient.PostAsync(System.String,System.Byte[])')
+  - [GetAsync(url,cancellationToken)](#M-EdjCase-ICP-Agent-Agents-Http-IHttpClient-GetAsync-System-String,System-Nullable{System-Threading-CancellationToken}- 'EdjCase.ICP.Agent.Agents.Http.IHttpClient.GetAsync(System.String,System.Nullable{System.Threading.CancellationToken})')
+  - [PostAsync(url,cborBody,cancellationToken)](#M-EdjCase-ICP-Agent-Agents-Http-IHttpClient-PostAsync-System-String,System-Byte[],System-Nullable{System-Threading-CancellationToken}- 'EdjCase.ICP.Agent.Agents.Http.IHttpClient.PostAsync(System.String,System.Byte[],System.Nullable{System.Threading.CancellationToken})')
 - [IIdentity](#T-EdjCase-ICP-Agent-Identities-IIdentity 'EdjCase.ICP.Agent.Identities.IIdentity')
   - [GetPrincipal()](#M-EdjCase-ICP-Agent-Identities-IIdentity-GetPrincipal 'EdjCase.ICP.Agent.Identities.IIdentity.GetPrincipal')
   - [GetPublicKey()](#M-EdjCase-ICP-Agent-Identities-IIdentity-GetPublicKey 'EdjCase.ICP.Agent.Identities.IIdentity.GetPublicKey')
@@ -882,7 +882,7 @@ Default constructor
 | ---- | ---- | ----------- |
 | client | [System.Net.Http.HttpClient](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Net.Http.HttpClient 'System.Net.Http.HttpClient') | HTTP client to use |
 
-<a name='M-EdjCase-ICP-Agent-Agents-Http-DefaultHttpClient-GetAsync-System-String-'></a>
+<a name='M-EdjCase-ICP-Agent-Agents-Http-DefaultHttpClient-GetAsync-System-String,System-Nullable{System-Threading-CancellationToken}-'></a>
 ### GetAsync() `method`
 
 ##### Summary
@@ -893,7 +893,7 @@ Default constructor
 
 This method has no parameters.
 
-<a name='M-EdjCase-ICP-Agent-Agents-Http-DefaultHttpClient-PostAsync-System-String,System-Byte[]-'></a>
+<a name='M-EdjCase-ICP-Agent-Agents-Http-DefaultHttpClient-PostAsync-System-String,System-Byte[],System-Nullable{System-Threading-CancellationToken}-'></a>
 ### PostAsync() `method`
 
 ##### Summary
@@ -1450,7 +1450,7 @@ An \`IAgent\` implementation using HTTP to make requests to the IC
 The identity that will be used on each request unless overriden
 This identity can be anonymous
 
-<a name='M-EdjCase-ICP-Agent-Agents-HttpAgent-CallAsync-EdjCase-ICP-Candid-Models-Principal,System-String,EdjCase-ICP-Candid-Models-CandidArg,EdjCase-ICP-Candid-Models-Principal-'></a>
+<a name='M-EdjCase-ICP-Agent-Agents-HttpAgent-CallAsync-EdjCase-ICP-Candid-Models-Principal,System-String,EdjCase-ICP-Candid-Models-CandidArg,EdjCase-ICP-Candid-Models-Principal,System-Nullable{System-Threading-CancellationToken}-'></a>
 ### CallAsync() `method`
 
 ##### Summary
@@ -1461,7 +1461,7 @@ This identity can be anonymous
 
 This method has no parameters.
 
-<a name='M-EdjCase-ICP-Agent-Agents-HttpAgent-GetReplicaStatusAsync'></a>
+<a name='M-EdjCase-ICP-Agent-Agents-HttpAgent-GetReplicaStatusAsync-System-Nullable{System-Threading-CancellationToken}-'></a>
 ### GetReplicaStatusAsync() `method`
 
 ##### Summary
@@ -1472,7 +1472,7 @@ This method has no parameters.
 
 This method has no parameters.
 
-<a name='M-EdjCase-ICP-Agent-Agents-HttpAgent-GetRequestStatusAsync-EdjCase-ICP-Candid-Models-Principal,EdjCase-ICP-Candid-Models-RequestId-'></a>
+<a name='M-EdjCase-ICP-Agent-Agents-HttpAgent-GetRequestStatusAsync-EdjCase-ICP-Candid-Models-Principal,EdjCase-ICP-Candid-Models-RequestId,System-Nullable{System-Threading-CancellationToken}-'></a>
 ### GetRequestStatusAsync() `method`
 
 ##### Summary
@@ -1483,7 +1483,7 @@ This method has no parameters.
 
 This method has no parameters.
 
-<a name='M-EdjCase-ICP-Agent-Agents-HttpAgent-GetRootKeyAsync'></a>
+<a name='M-EdjCase-ICP-Agent-Agents-HttpAgent-GetRootKeyAsync-System-Nullable{System-Threading-CancellationToken}-'></a>
 ### GetRootKeyAsync() `method`
 
 ##### Summary
@@ -1494,7 +1494,7 @@ This method has no parameters.
 
 This method has no parameters.
 
-<a name='M-EdjCase-ICP-Agent-Agents-HttpAgent-QueryAsync-EdjCase-ICP-Candid-Models-Principal,System-String,EdjCase-ICP-Candid-Models-CandidArg-'></a>
+<a name='M-EdjCase-ICP-Agent-Agents-HttpAgent-QueryAsync-EdjCase-ICP-Candid-Models-Principal,System-String,EdjCase-ICP-Candid-Models-CandidArg,System-Nullable{System-Threading-CancellationToken}-'></a>
 ### QueryAsync() `method`
 
 ##### Summary
@@ -1505,7 +1505,7 @@ This method has no parameters.
 
 This method has no parameters.
 
-<a name='M-EdjCase-ICP-Agent-Agents-HttpAgent-ReadStateAsync-EdjCase-ICP-Candid-Models-Principal,System-Collections-Generic-List{EdjCase-ICP-Candid-Models-StatePath}-'></a>
+<a name='M-EdjCase-ICP-Agent-Agents-HttpAgent-ReadStateAsync-EdjCase-ICP-Candid-Models-Principal,System-Collections-Generic-List{EdjCase-ICP-Candid-Models-StatePath},System-Nullable{System-Threading-CancellationToken}-'></a>
 ### ReadStateAsync() `method`
 
 ##### Summary
@@ -1597,8 +1597,8 @@ are specific to an \`IAgent\` implementation
 
 The identity to use for requests. If null, then it will use the anonymous identity
 
-<a name='M-EdjCase-ICP-Agent-Agents-IAgent-CallAsync-EdjCase-ICP-Candid-Models-Principal,System-String,EdjCase-ICP-Candid-Models-CandidArg,EdjCase-ICP-Candid-Models-Principal-'></a>
-### CallAsync(canisterId,method,arg,effectiveCanisterId) `method`
+<a name='M-EdjCase-ICP-Agent-Agents-IAgent-CallAsync-EdjCase-ICP-Candid-Models-Principal,System-String,EdjCase-ICP-Candid-Models-CandidArg,EdjCase-ICP-Candid-Models-Principal,System-Nullable{System-Threading-CancellationToken}-'></a>
+### CallAsync(canisterId,method,arg,effectiveCanisterId,cancellationToken) `method`
 
 ##### Summary
 
@@ -1618,8 +1618,9 @@ The id of the request that can be used to look up its status with \`GetRequestSt
 | method | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The name of the method to call on the cansiter |
 | arg | [EdjCase.ICP.Candid.Models.CandidArg](#T-EdjCase-ICP-Candid-Models-CandidArg 'EdjCase.ICP.Candid.Models.CandidArg') | The candid arg to send with the request |
 | effectiveCanisterId | [EdjCase.ICP.Candid.Models.Principal](#T-EdjCase-ICP-Candid-Models-Principal 'EdjCase.ICP.Candid.Models.Principal') | Optional. Specifies the relevant canister id if calling the root canister |
+| cancellationToken | [System.Nullable{System.Threading.CancellationToken}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Nullable 'System.Nullable{System.Threading.CancellationToken}') | Optional. Token to cancel request |
 
-<a name='M-EdjCase-ICP-Agent-Agents-IAgent-GetReplicaStatusAsync'></a>
+<a name='M-EdjCase-ICP-Agent-Agents-IAgent-GetReplicaStatusAsync-System-Nullable{System-Threading-CancellationToken}-'></a>
 ### GetReplicaStatusAsync() `method`
 
 ##### Summary
@@ -1635,8 +1636,8 @@ A response containing all replica status information
 
 This method has no parameters.
 
-<a name='M-EdjCase-ICP-Agent-Agents-IAgent-GetRequestStatusAsync-EdjCase-ICP-Candid-Models-Principal,EdjCase-ICP-Candid-Models-RequestId-'></a>
-### GetRequestStatusAsync(canisterId,id) `method`
+<a name='M-EdjCase-ICP-Agent-Agents-IAgent-GetRequestStatusAsync-EdjCase-ICP-Candid-Models-Principal,EdjCase-ICP-Candid-Models-RequestId,System-Nullable{System-Threading-CancellationToken}-'></a>
+### GetRequestStatusAsync(canisterId,id,cancellationToken) `method`
 
 ##### Summary
 
@@ -1652,9 +1653,10 @@ A status variant of the request. If request is not found, will return null
 | ---- | ---- | ----------- |
 | canisterId | [EdjCase.ICP.Candid.Models.Principal](#T-EdjCase-ICP-Candid-Models-Principal 'EdjCase.ICP.Candid.Models.Principal') | Canister where the request was sent to |
 | id | [EdjCase.ICP.Candid.Models.RequestId](#T-EdjCase-ICP-Candid-Models-RequestId 'EdjCase.ICP.Candid.Models.RequestId') | Id of the request to get a status for |
+| cancellationToken | [System.Nullable{System.Threading.CancellationToken}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Nullable 'System.Nullable{System.Threading.CancellationToken}') | Optional. Token to cancel request |
 
-<a name='M-EdjCase-ICP-Agent-Agents-IAgent-GetRootKeyAsync'></a>
-### GetRootKeyAsync() `method`
+<a name='M-EdjCase-ICP-Agent-Agents-IAgent-GetRootKeyAsync-System-Nullable{System-Threading-CancellationToken}-'></a>
+### GetRootKeyAsync(cancellationToken) `method`
 
 ##### Summary
 
@@ -1666,10 +1668,12 @@ The root public key bytes
 
 ##### Parameters
 
-This method has no parameters.
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| cancellationToken | [System.Nullable{System.Threading.CancellationToken}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Nullable 'System.Nullable{System.Threading.CancellationToken}') | Optional. Token to cancel request |
 
-<a name='M-EdjCase-ICP-Agent-Agents-IAgent-QueryAsync-EdjCase-ICP-Candid-Models-Principal,System-String,EdjCase-ICP-Candid-Models-CandidArg-'></a>
-### QueryAsync(canisterId,method,arg) `method`
+<a name='M-EdjCase-ICP-Agent-Agents-IAgent-QueryAsync-EdjCase-ICP-Candid-Models-Principal,System-String,EdjCase-ICP-Candid-Models-CandidArg,System-Nullable{System-Threading-CancellationToken}-'></a>
+### QueryAsync(canisterId,method,arg,cancellationToken) `method`
 
 ##### Summary
 
@@ -1686,9 +1690,10 @@ The response data of the query call
 | canisterId | [EdjCase.ICP.Candid.Models.Principal](#T-EdjCase-ICP-Candid-Models-Principal 'EdjCase.ICP.Candid.Models.Principal') | Canister to read state for |
 | method | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The name of the method to call on the cansiter |
 | arg | [EdjCase.ICP.Candid.Models.CandidArg](#T-EdjCase-ICP-Candid-Models-CandidArg 'EdjCase.ICP.Candid.Models.CandidArg') | The candid arg to send with the request |
+| cancellationToken | [System.Nullable{System.Threading.CancellationToken}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Nullable 'System.Nullable{System.Threading.CancellationToken}') | Optional. Token to cancel request |
 
-<a name='M-EdjCase-ICP-Agent-Agents-IAgent-ReadStateAsync-EdjCase-ICP-Candid-Models-Principal,System-Collections-Generic-List{EdjCase-ICP-Candid-Models-StatePath}-'></a>
-### ReadStateAsync(canisterId,paths) `method`
+<a name='M-EdjCase-ICP-Agent-Agents-IAgent-ReadStateAsync-EdjCase-ICP-Candid-Models-Principal,System-Collections-Generic-List{EdjCase-ICP-Candid-Models-StatePath},System-Nullable{System-Threading-CancellationToken}-'></a>
+### ReadStateAsync(canisterId,paths,cancellationToken) `method`
 
 ##### Summary
 
@@ -1705,6 +1710,7 @@ A response that contains the certificate of the current cansiter state
 | ---- | ---- | ----------- |
 | canisterId | [EdjCase.ICP.Candid.Models.Principal](#T-EdjCase-ICP-Candid-Models-Principal 'EdjCase.ICP.Candid.Models.Principal') | Canister to read state for |
 | paths | [System.Collections.Generic.List{EdjCase.ICP.Candid.Models.StatePath}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.List 'System.Collections.Generic.List{EdjCase.ICP.Candid.Models.StatePath}') | The state paths to get information for. Other state data will be pruned if not specified |
+| cancellationToken | [System.Nullable{System.Threading.CancellationToken}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Nullable 'System.Nullable{System.Threading.CancellationToken}') | Optional. Token to cancel request |
 
 <a name='T-EdjCase-ICP-Agent-Agents-IAgentExtensions'></a>
 ## IAgentExtensions `type`
@@ -1739,7 +1745,7 @@ The id of the request that can be used to look up its status with \`GetRequestSt
 | method | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The name of the method to call on the cansiter |
 | arg | [EdjCase.ICP.Candid.Models.CandidArg](#T-EdjCase-ICP-Candid-Models-CandidArg 'EdjCase.ICP.Candid.Models.CandidArg') | The candid arg to send with the request |
 | effectiveCanisterId | [EdjCase.ICP.Candid.Models.Principal](#T-EdjCase-ICP-Candid-Models-Principal 'EdjCase.ICP.Candid.Models.Principal') | Optional. Specifies the relevant canister id if calling the root canister |
-| cancellationToken | [System.Nullable{System.Threading.CancellationToken}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Nullable 'System.Nullable{System.Threading.CancellationToken}') | Optional. If specified, will be used to prematurely end the waiting |
+| cancellationToken | [System.Nullable{System.Threading.CancellationToken}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Nullable 'System.Nullable{System.Threading.CancellationToken}') | Optional. Token to cancel request |
 
 <a name='T-EdjCase-ICP-Agent-Standards-ICRC1-ICRC1Client'></a>
 ## ICRC1Client `type`
@@ -1945,8 +1951,8 @@ EdjCase.ICP.Agent.Agents.Http
 
 A simple http request interface for sending messages
 
-<a name='M-EdjCase-ICP-Agent-Agents-Http-IHttpClient-GetAsync-System-String-'></a>
-### GetAsync(url) `method`
+<a name='M-EdjCase-ICP-Agent-Agents-Http-IHttpClient-GetAsync-System-String,System-Nullable{System-Threading-CancellationToken}-'></a>
+### GetAsync(url,cancellationToken) `method`
 
 ##### Summary
 
@@ -1961,9 +1967,10 @@ The http response
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | url | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The url to send the GET request to |
+| cancellationToken | [System.Nullable{System.Threading.CancellationToken}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Nullable 'System.Nullable{System.Threading.CancellationToken}') | Optional. Token to cancel request |
 
-<a name='M-EdjCase-ICP-Agent-Agents-Http-IHttpClient-PostAsync-System-String,System-Byte[]-'></a>
-### PostAsync(url,cborBody) `method`
+<a name='M-EdjCase-ICP-Agent-Agents-Http-IHttpClient-PostAsync-System-String,System-Byte[],System-Nullable{System-Threading-CancellationToken}-'></a>
+### PostAsync(url,cborBody,cancellationToken) `method`
 
 ##### Summary
 
@@ -1979,6 +1986,7 @@ The http response
 | ---- | ---- | ----------- |
 | url | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The url to send the POST request to |
 | cborBody | [System.Byte[]](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Byte[] 'System.Byte[]') | The CBOR encoded body to send |
+| cancellationToken | [System.Nullable{System.Threading.CancellationToken}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Nullable 'System.Nullable{System.Threading.CancellationToken}') | Optional. Token to cancel request |
 
 <a name='T-EdjCase-ICP-Agent-Identities-IIdentity'></a>
 ## IIdentity `type`

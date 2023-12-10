@@ -462,7 +462,7 @@
   - [Equals()](#M-EdjCase-ICP-Candid-Models-HashTree-Equals-System-Object- 'EdjCase.ICP.Candid.Models.HashTree.Equals(System.Object)')
   - [Fork(left,right)](#M-EdjCase-ICP-Candid-Models-HashTree-Fork-EdjCase-ICP-Candid-Models-HashTree,EdjCase-ICP-Candid-Models-HashTree- 'EdjCase.ICP.Candid.Models.HashTree.Fork(EdjCase.ICP.Candid.Models.HashTree,EdjCase.ICP.Candid.Models.HashTree)')
   - [GetHashCode()](#M-EdjCase-ICP-Candid-Models-HashTree-GetHashCode 'EdjCase.ICP.Candid.Models.HashTree.GetHashCode')
-  - [GetValueOrDefault(path)](#M-EdjCase-ICP-Candid-Models-HashTree-GetValueOrDefault-EdjCase-ICP-Candid-Models-StatePathSegment- 'EdjCase.ICP.Candid.Models.HashTree.GetValueOrDefault(EdjCase.ICP.Candid.Models.StatePathSegment)')
+  - [GetValueOrDefault(path)](#M-EdjCase-ICP-Candid-Models-HashTree-GetValueOrDefault-EdjCase-ICP-Candid-Models-StatePathSegment[]- 'EdjCase.ICP.Candid.Models.HashTree.GetValueOrDefault(EdjCase.ICP.Candid.Models.StatePathSegment[])')
   - [GetValueOrDefault(path)](#M-EdjCase-ICP-Candid-Models-HashTree-GetValueOrDefault-EdjCase-ICP-Candid-Models-StatePath- 'EdjCase.ICP.Candid.Models.HashTree.GetValueOrDefault(EdjCase.ICP.Candid.Models.StatePath)')
   - [Labeled(label,tree)](#M-EdjCase-ICP-Candid-Models-HashTree-Labeled-EdjCase-ICP-Candid-Models-HashTree-EncodedValue,EdjCase-ICP-Candid-Models-HashTree- 'EdjCase.ICP.Candid.Models.HashTree.Labeled(EdjCase.ICP.Candid.Models.HashTree.EncodedValue,EdjCase.ICP.Candid.Models.HashTree)')
   - [Leaf(value)](#M-EdjCase-ICP-Candid-Models-HashTree-Leaf-EdjCase-ICP-Candid-Models-HashTree-EncodedValue- 'EdjCase.ICP.Candid.Models.HashTree.Leaf(EdjCase.ICP.Candid.Models.HashTree.EncodedValue)')
@@ -6507,7 +6507,7 @@ An forked hash tree
 
 This method has no parameters.
 
-<a name='M-EdjCase-ICP-Candid-Models-HashTree-GetValueOrDefault-EdjCase-ICP-Candid-Models-StatePathSegment-'></a>
+<a name='M-EdjCase-ICP-Candid-Models-HashTree-GetValueOrDefault-EdjCase-ICP-Candid-Models-StatePathSegment[]-'></a>
 ### GetValueOrDefault(path) `method`
 
 ##### Summary
@@ -6522,7 +6522,7 @@ A hash tree from the path, or null if not found
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| path | [EdjCase.ICP.Candid.Models.StatePathSegment](#T-EdjCase-ICP-Candid-Models-StatePathSegment 'EdjCase.ICP.Candid.Models.StatePathSegment') | The path segment to get a value from |
+| path | [EdjCase.ICP.Candid.Models.StatePathSegment[]](#T-EdjCase-ICP-Candid-Models-StatePathSegment[] 'EdjCase.ICP.Candid.Models.StatePathSegment[]') | The path segment to get a value from |
 
 <a name='M-EdjCase-ICP-Candid-Models-HashTree-GetValueOrDefault-EdjCase-ICP-Candid-Models-StatePath-'></a>
 ### GetValueOrDefault(path) `method`

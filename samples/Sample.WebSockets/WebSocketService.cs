@@ -31,9 +31,10 @@ namespace Sample.WebSockets
 		{
 			Principal canisterId = Principal.FromText("bkyz2-fmaaa-aaaaa-qaaaq-cai");
 			Uri gatewayUri = new Uri("ws://localhost:8080");
-			this.webSocket = await new WebSocketBuilder(canisterId, gatewayUri)
+			Uri boundryNodeUrl = new Uri("http://localhost:4943");
+			this.webSocket = await new WebSocketBuilder(canisterId, gatewayUri, boundryNodeUrl)
 				.WithIdentity(Secp256k1Identity.Generate())
-				.BuildAndConnectAsync<AppMessage>();
+				.BuildAsync<AppMessage>(cancellationToken: cancellationToken);
 			await base.StartAsync(cancellationToken);
 		}
 

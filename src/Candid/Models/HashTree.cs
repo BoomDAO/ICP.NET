@@ -153,9 +153,9 @@ namespace EdjCase.ICP.Candid.Models
 		/// </summary>
 		/// <param name="path">The path segment to get a value from</param>
 		/// <returns>A hash tree from the path, or null if not found</returns>
-		public HashTree? GetValueOrDefault(StatePathSegment path)
+		public HashTree? GetValueOrDefault(params StatePathSegment[] path)
 		{
-			return this.GetValueOrDefault(new StatePath(new List<StatePathSegment> { path }));
+			return this.GetValueOrDefault(new StatePath(path.ToList()));
 		}
 
 		/// <summary>
