@@ -57,7 +57,7 @@ namespace Sample.WebSockets
 				).GetRootKeyAsync();
 				builder = builder.WithRootKey(devRootKey);
 			}
-			this.webSocket = await builder.BuildAsync(cancellationToken: cancellationToken);
+			this.webSocket = await builder.BuildAndConnectAsync(cancellationToken: cancellationToken);
 			await base.StartAsync(cancellationToken);
 		}
 
