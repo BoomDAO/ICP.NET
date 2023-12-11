@@ -40,13 +40,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnityAssets", "UnityAssets"
 		UnityAssets\Bls.jslib = UnityAssets\Bls.jslib
 		UnityAssets\README = UnityAssets\README
 		UnityAssets\UnityHttp.cs = UnityAssets\UnityHttp.cs
-		UnityWebSocketClient.cs = UnityWebSocketClient.cs
 		UnityAssets\WebGlBlsCryptography.cs = UnityAssets\WebGlBlsCryptography.cs
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdjCase.ICP.WebSockets", "src\WebSockets\EdjCase.ICP.WebSockets.csproj", "{C8A19595-476F-46CD-84BC-A19D286AE414}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.WebSockets", "samples\Sample.WebSockets\Sample.WebSockets.csproj", "{B4F9E828-BC3D-4EFF-9E21-53DD82928AB0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.WebSockets", "samples\Sample.WebSockets\Sample.WebSockets.csproj", "{B4F9E828-BC3D-4EFF-9E21-53DD82928AB0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -507,12 +507,15 @@ namespace EdjCase.ICP.WebSockets
 
 		public async Task CloseAsync()
 		{
-			this.onClose?.Invoke();
-			await this.socket.CloseAsync(
-				WebSocketCloseStatus.NormalClosure,
-				"Closing",
-				CancellationToken.None
-			);
+			if (this.State != WebSocketState.Closed)
+			{
+				this.onClose?.Invoke();
+				await this.socket.CloseAsync(
+					WebSocketCloseStatus.NormalClosure,
+					"Closing",
+					CancellationToken.None
+				);
+			}
 		}
 
 		public async ValueTask DisposeAsync()
