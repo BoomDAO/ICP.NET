@@ -8,7 +8,7 @@ Principal canisterId = ...; // Id of the canister to communicate with over webso
 Uri gatewayUri = ...; // Uri to the websocket gateway server
 IWebSocketAgent<AppMessage> webSocket = await new WebSocketBuilder(canisterId, gatewayUri)
     .OnMessage((msg) => {}) // Action to receive messages from the server
-	.BuildAsync<AppMessage>();
+    .BuildAndConnectAsync<AppMessage>();
 ```
 
 ## Usage (Advanced)
@@ -23,7 +23,7 @@ IWebSocketAgent<AppMessage> webSocket = await new WebSocketBuilder(canisterId, g
     .WithRootKey(rootKey) // Used to specify the network root public key, required if using a dev or other ic network
     .WithCustomCandidConverter(customConverter) // Used if `AppMessage` requires a custom CandidConverter for serialization
     .WithCustomBlsCryptography(bls) // Used to override the default bls library. See `WebGL Builds` below
-    .BuildAsync<AppMessage>();
+    .BuildAndConnectAsync<AppMessage>(cancellationToken);
 ```
 
 # Unity
@@ -89,7 +89,7 @@ public class WebSocketManager : MonoBehaviour
             ).GetRootKeyAsync();
             builder = builder.WithRootKey(devRootKey);
         }
-        this.agent = await builder.BuildAsync(cancellationToken: cancellationTokenSource.Token);
+        this.agent = await builder.BuildAndConnectAsync(cancellationToken: cancellationTokenSource.Token);
         await this.agent.ReceiveAllAsync(cancellationTokenSource.Token);
     }
 

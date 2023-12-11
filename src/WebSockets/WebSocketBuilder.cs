@@ -94,10 +94,7 @@ namespace EdjCase.ICP.WebSockets
 			return this;
 		}
 
-		public async Task<IWebSocketAgent<TMessage>> BuildAsync(
-			bool connect = true,
-			CancellationToken? cancellationToken = null
-		)
+		public IWebSocketAgent<TMessage> Build()
 		{
 			if (this.identity == null)
 			{
@@ -116,7 +113,7 @@ namespace EdjCase.ICP.WebSockets
 			{
 				throw new InvalidOperationException("Web socket requires an OnMessage action");
 			}
-			WebSocketAgent<TMessage> agent = new(
+			return new WebSocketAgent<TMessage>(
 				this.canisterId,
 				this.gatewayUri,
 				this.rootPublicKey,
@@ -128,10 +125,12 @@ namespace EdjCase.ICP.WebSockets
 				this.onClose,
 				this.customConverter
 			);
-			if (connect)
-			{
-				await agent.ConnectAsync(cancellationToken);
-			}
+		}
+
+		public async Task<IWebSocketAgent<TMessage>> BuildAndConnectAsync(CancellationToken? cancellationToken = null)
+		{
+			IWebSocketAgent<TMessage> agent = this.Build();
+			await agent.ConnectAsync(cancellationToken);
 			return agent;
 		}
 
