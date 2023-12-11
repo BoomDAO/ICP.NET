@@ -1,41 +1,69 @@
+
+public class AppMessage
+{
+
+}
+
 public class WebSocketManager : MonoBehaviour
 {
-	private ClientWebSocket ws = new ClientWebSocket();
+	private Principal devCanisterId = Principal.FromText("{devCanisterId}");
+	private Uri devGatewayUri = new Uri("ws://localhost:8080");
+	private Uri devBoundryNodeUri = new Uri("http://localhost:4943");
+
+	private Principal prodCanisterId = Principal.FromText("{prodCanisterId}");
+	private Uri prodGatewayUri = new Uri("wss://icwebsocketgateway.app.runonflux.io");
+
+	private IWebSocket<AppMessage>? websocket;
 	private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
 	async void Start()
 	{
-		await ConnectWebSocket();
-		StartCoroutine(ReceiveMessages());
-	}
-
-	async Task ConnectWebSocket()
-	{
-		await ws.ConnectAsync(new Uri("ws://example.com"), cancellationTokenSource.Token);
-	}
-
-	IEnumerator ReceiveMessages()
-	{
-		byte[] buffer = new byte[1024 * 4];
-
-		while (ws.State == WebSocketState.Open)
+		bool development = true;
+		Principal canisterId;
+		Uri gatewayUri;
+		if (development)
 		{
-			var segment = new ArraySegment<byte>(buffer);
-			var result = await ws.ReceiveAsync(segment, cancellationTokenSource.Token);
-			OnMessage(segment.Array, result);
-			yield return null; // Yield to avoid blocking
+			canisterId = devCanisterId;
+			gatewayUri = devGatewayUri;
 		}
+		else
+		{
+			canisterId = prodCanisterId;
+			gatewayUri = prodGatewayUri;
+		}
+		var builder = new WebSocketBuilder<AppMessage>(canisterId, gatewayUri)
+			.OnMessage(this.OnMessage)
+			.OnOpen(this.OnOpen)
+			.OnError(this.OnError)
+			.OnClose(this.OnClose);
+		if (development)
+		{
+			// Set the root key as the dev network key
+			SubjectPublicKeyInfo devRootKey = await new HttpAgent(
+				httpBoundryNodeUrl: devBoundryNodeUri
+			).GetRootKeyAsync();
+			builder = builder.WithRootKey(devRootKey);
+		}
+		this.websocket = await builder.BuildAsync(cancellationToken: cancellationTokenSource.Token);
+		await this.websocket.ReceiveAllAsync(cancellationTokenSource.Token);
 	}
 
-	void OnMessage(byte[] buffer, WebSocketReceiveResult result)
+	void OnOpen()
 	{
-		string message = System.Text.Encoding.UTF8.GetString(buffer, 0, result.Count);
-		// Handle message
+	}
+	void OnMessage(AppMessage message)
+	{
+	}
+	void OnError(Exception ex)
+	{
+	}
+	void OnClose()
+	{
 	}
 
 	void OnDestroy()
 	{
 		cancellationTokenSource.Cancel(); // Cancel any ongoing operations
-		ws.Dispose();
+		webSocket?.Dispose();
 	}
 }

@@ -1859,5 +1859,10 @@
             <param name="publicKey">A raw bls public key</param>
             <returns>Bls SubjectPublicKeyInfo</returns>
         </member>
+        <member name="P:EdjCase.ICP.Agent.SubjectPublicKeyInfo.MainNetRootPublicKey">
+            <summary>
+            Gets the public key info for the IC main network
+            </summary>
+        </member>
     </members>
 </doc>

@@ -27,6 +27,10 @@ namespace EdjCase.ICP.WebSockets
 	internal class WebSocketAgent<TMessage> : IWebSocketAgent<TMessage>
 		where TMessage : notnull
 	{
+		private Action<TMessage> onMessage { get; }
+		private Action? onOpen { get; }
+		private Action? onClose { get; }
+		private Action<Exception>? onError { get; }
 		private Principal canisterId { get; }
 		private Uri gatewayUri { get; }
 		private IIdentity identity { get; }
@@ -48,14 +52,22 @@ namespace EdjCase.ICP.WebSockets
 			SubjectPublicKeyInfo rootPublicKey,
 			IIdentity identity,
 			IBlsCryptography bls,
+			Action<TMessage> onMessage,
+			Action? onOpen = null,
+			Action<Exception>? onError = null,
+			Action? onClose = null,
 			CandidConverter? customConverter = null
 		)
 		{
-			this.canisterId = canisterId;
-			this.gatewayUri = gatewayUri;
-			this.RootPublicKey = rootPublicKey;
-			this.identity = identity;
-			this.bls = bls;
+			this.canisterId = canisterId ?? throw new ArgumentNullException(nameof(canisterId));
+			this.gatewayUri = gatewayUri ?? throw new ArgumentNullException(nameof(gatewayUri));
+			this.RootPublicKey = rootPublicKey ?? throw new ArgumentNullException(nameof(rootPublicKey));
+			this.identity = identity ?? throw new ArgumentNullException(nameof(identity));
+			this.bls = bls ?? throw new ArgumentNullException(nameof(bls));
+			this.onMessage = onMessage ?? throw new ArgumentNullException(nameof(onMessage));
+			this.onOpen = onOpen;
+			this.onError = onError;
+			this.onClose = onClose;
 			this.customConverter = customConverter;
 			this.socket = new ClientWebSocket();
 			this.socket.Options.KeepAliveInterval = TimeSpan.Zero;
@@ -105,10 +117,6 @@ namespace EdjCase.ICP.WebSockets
 		}
 
 		public async Task ReceiveNextAsync(
-			Action onOpen,
-			Action<TMessage> onMessage,
-			Action<Exception> onError,
-			Action<OnCloseContext> onClose,
 			CancellationToken? cancellationToken = null
 		)
 		{
@@ -125,29 +133,23 @@ namespace EdjCase.ICP.WebSockets
 			}
 			catch (Exception ex)
 			{
-				onError(new Exception("Failed to receive message", ex));
+				this.onError?.Invoke(new Exception("Failed to receive message", ex));
 				return;
 			}
 			if (isClosed)
 			{
-				onClose(new OnCloseContext()); // TODO
+				this.onClose?.Invoke();
 				return;
 			}
 
 			await this.ProcessMessageAsync(
 				data,
-				onOpen,
-				onMessage,
-				onError,
 				cancellationToken.Value
 			);
 		}
 
 		private async Task ProcessMessageAsync(
 			byte[] data,
-			Action onOpen,
-			Action<TMessage> onMessage,
-			Action<Exception> onError,
 			CancellationToken cancellationToken
 		)
 		{
@@ -165,7 +167,7 @@ namespace EdjCase.ICP.WebSockets
 				catch (Exception ex)
 				{
 					string hex = BitConverter.ToString(data).Replace("-", "");
-					onError(new Exception("Unrecognized message format. Unable to parse handshake message. Message hex: " + hex, ex));
+					this.onError?.Invoke(new Exception("Unrecognized message format. Unable to parse handshake message. Message hex: " + hex, ex));
 					return;
 				}
 				this.gatewayPrincipal = message.GatewayPrincipal;
@@ -186,12 +188,12 @@ namespace EdjCase.ICP.WebSockets
 			}
 			catch (Exception ex)
 			{
-				onError(new Exception("Unable to parse incoming message", ex));
+				this.onError?.Invoke(new Exception("Unable to parse incoming message", ex));
 				return;
 			}
 			if (!this.ValidateMessage(clientMessage, out string? error))
 			{
-				onError(new Exception(error));
+				this.onError?.Invoke(new Exception(error));
 				await this.CloseAsync();
 				return;
 			}
@@ -204,25 +206,25 @@ namespace EdjCase.ICP.WebSockets
 			}
 			catch (Exception ex)
 			{
-				onError(new Exception("Unable to parse websocket message", ex));
+				this.onError?.Invoke(new Exception("Unable to parse websocket message", ex));
 				return;
 			}
 			if (wsMessage.SequenceNumber != this.incomingSequenceNumber)
 			{
-				onError(new Exception("Message sequence number is invalid. Closing connection"));
+				this.onError?.Invoke(new Exception("Message sequence number is invalid. Closing connection"));
 				await this.CloseAsync();
 				return;
 			}
 			this.incomingSequenceNumber++;
 			if (wsMessage.ClientKey.Id != this.identity.GetPrincipal())
 			{
-				onError(new Exception("Message client principal is invalid. Closing connection"));
+				this.onError?.Invoke(new Exception("Message client principal is invalid. Closing connection"));
 				await this.CloseAsync();
 				return;
 			}
 			if (wsMessage.ClientKey.Nonce != this.clientNonce)
 			{
-				onError(new Exception("Message client nonce is invalid. Closing connection"));
+				this.onError?.Invoke(new Exception("Message client nonce is invalid. Closing connection"));
 				await this.CloseAsync();
 				return;
 			}
@@ -236,12 +238,12 @@ namespace EdjCase.ICP.WebSockets
 			}
 			catch (Exception ex)
 			{
-				onError(new Exception("Failed to parse bytes as candid", ex));
+				this.onError?.Invoke(new Exception("Failed to parse bytes as candid", ex));
 				return;
 			}
 			if (wsMessage.IsServiceMessage)
 			{
-				await this.ProcessServiceMessageAsync(arg, onOpen, cancellationToken);
+				await this.ProcessServiceMessageAsync(arg, cancellationToken);
 				return;
 			}
 			else
@@ -254,10 +256,10 @@ namespace EdjCase.ICP.WebSockets
 				}
 				catch (Exception ex)
 				{
-					onError(new Exception("Failed to convert candid to message", ex));
+					this.onError?.Invoke(new Exception("Failed to convert candid to message", ex));
 					return;
 				}
-				onMessage(message);
+				this.onMessage(message);
 				return;
 			}
 		}
@@ -339,7 +341,6 @@ namespace EdjCase.ICP.WebSockets
 
 		private async Task ProcessServiceMessageAsync(
 			CandidArg arg,
-			Action onOpen,
 			CancellationToken cancellationToken
 		)
 		{
@@ -353,8 +354,7 @@ namespace EdjCase.ICP.WebSockets
 						// and is greater than the last sequence number in the queue
 						if (message.LastIncomingSequenceNumber > this.outgoingSequenceNumber)
 						{
-							// TODO
-							//onError();
+							this.onError?.Invoke(new Exception("Ack sequence is invalid. Closing connection"));
 							await this.socket.CloseAsync(WebSocketCloseStatus.PolicyViolation, "Ack sequence number is invalid.", cancellationToken);
 							break;
 						}
@@ -363,8 +363,7 @@ namespace EdjCase.ICP.WebSockets
 					}
 				case ServiceMessageTag.OpenMessage:
 					{
-						OpenMessage message = serviceMessage.AsOpenMessage();
-						onOpen();
+						this.onOpen?.Invoke();
 						return;
 					}
 				default:
@@ -508,6 +507,7 @@ namespace EdjCase.ICP.WebSockets
 
 		public async Task CloseAsync()
 		{
+			this.onClose?.Invoke();
 			await this.socket.CloseAsync(
 				WebSocketCloseStatus.NormalClosure,
 				"Closing",
@@ -527,7 +527,7 @@ namespace EdjCase.ICP.WebSockets
 			}
 		}
 
-		private async Task<(byte[] Data, bool Closed)> ReceiveInternalAsync(
+		private async Task<(byte[] Data, bool IsClosed)> ReceiveInternalAsync(
 			CancellationToken cancellationToken
 		)
 		{

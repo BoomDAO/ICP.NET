@@ -1,3 +1,5 @@
+using EdjCase.ICP.Agent;
+using EdjCase.ICP.Agent.Agents;
 using EdjCase.ICP.Agent.Identities;
 using EdjCase.ICP.Candid.Mapping;
 using EdjCase.ICP.Candid.Models;
@@ -29,33 +31,45 @@ namespace Sample.WebSockets
 
 		public override async Task StartAsync(CancellationToken cancellationToken)
 		{
-			Principal canisterId = Principal.FromText("bkyz2-fmaaa-aaaaa-qaaaq-cai");
-			Uri gatewayUri = new Uri("ws://localhost:8080");
-			Uri boundryNodeUrl = new Uri("http://localhost:4943");
-			this.webSocket = await new WebSocketBuilder(canisterId, gatewayUri, boundryNodeUrl)
-				.WithIdentity(Secp256k1Identity.Generate())
-				.BuildAsync<AppMessage>(cancellationToken: cancellationToken);
+			bool development = true;
+			Principal canisterId;
+			Uri gatewayUri;
+			if (development)
+			{
+				canisterId = Principal.FromText("bkyz2-fmaaa-aaaaa-qaaaq-cai");
+				gatewayUri = new Uri("ws://localhost:8080");
+			}
+			else
+			{
+				canisterId = Principal.FromText("bkyz2-fmaaa-aaaaa-qaaaq-cai");
+				gatewayUri = new Uri("wss://icwebsocketgateway.app.runonflux.io");
+			}
+			var builder = new WebSocketBuilder<AppMessage>(canisterId, gatewayUri)
+				.OnMessage(this.OnMessage)
+				.OnOpen(this.OnOpen)
+				.OnError(this.OnError)
+				.OnClose(this.OnClose);
+			if (development)
+			{
+				// Set the root key as the dev network key
+				SubjectPublicKeyInfo devRootKey = await new HttpAgent(
+					httpBoundryNodeUrl: new Uri("http://localhost:4943")
+				).GetRootKeyAsync();
+				builder = builder.WithRootKey(devRootKey);
+			}
+			this.webSocket = await builder.BuildAsync(cancellationToken: cancellationToken);
 			await base.StartAsync(cancellationToken);
 		}
 
 		protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 		{
-			while (this.webSocket?.IsConnectionEstablished == true)
-			{
-				await this.webSocket.ReceiveNextAsync(
-					this.OnOpen,
-					this.OnMessage,
-					this.OnError,
-					this.OnClose,
-					stoppingToken
-				);
-			}
+			await this.webSocket!.ReceiveAllAsync(stoppingToken);
 		}
 
 		private void OnOpen()
 		{
 			Console.WriteLine("Opened: " + this.stopwatch.Elapsed);
-			
+
 		}
 
 		private void OnMessage(AppMessage message)
@@ -74,7 +88,7 @@ namespace Sample.WebSockets
 			Console.WriteLine("Error: " + ex.ToString());
 		}
 
-		private void OnClose(OnCloseContext context)
+		private void OnClose()
 		{
 			Console.WriteLine("Closed" + this.stopwatch.Elapsed);
 		}

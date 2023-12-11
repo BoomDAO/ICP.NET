@@ -15,61 +15,89 @@ using System.Threading.Tasks;
 
 namespace EdjCase.ICP.WebSockets
 {
-	public class WebSocketBuilder
+	public class WebSocketBuilder<TMessage>
+			where TMessage : notnull
 	{
 		private Principal canisterId { get; }
 		private Uri gatewayUri { get; }
 		private IIdentity? identity { get; set; }
 		private IBlsCryptography? bls { get; set; }
 		private SubjectPublicKeyInfo? rootPublicKey { get; set; }
-		private Uri? boundryNodeUri { get; set; }
 		private CandidConverter? customConverter { get; set; }
+		private Action<TMessage>? onMessage { get; set; }
+		private Action? onOpen { get; set; }
+		private Action? onClose { get; set; }
+		private Action<Exception>? onError { get; set; }
+
 
 		public WebSocketBuilder(
 			Principal canisterId,
-			Uri gatewayUri,
-			SubjectPublicKeyInfo rootPublicKey
+			Uri gatewayUri
 		)
 		{
 			this.canisterId = canisterId;
 			this.gatewayUri = gatewayUri;
-			this.rootPublicKey = rootPublicKey;
 		}
 
-		public WebSocketBuilder(
-			Principal canisterId,
-			Uri gatewayUri,
-			Uri? boundryNodeUri = null
-		)
+		public WebSocketBuilder<TMessage> OnOpen(Action onOpen)
 		{
-			this.canisterId = canisterId;
-			this.gatewayUri = gatewayUri;
-			this.boundryNodeUri = boundryNodeUri;
+			this.onOpen = onOpen;
+			return this;
 		}
 
-		public WebSocketBuilder WithIdentity(IIdentity identity)
+		public WebSocketBuilder<TMessage> OnMessage(Action<TMessage> onMessage)
+		{
+			this.onMessage = onMessage;
+			return this;
+		}
+
+		public WebSocketBuilder<TMessage> OnError(Action<Exception> onError)
+		{
+			this.onError = onError;
+			return this;
+		}
+
+		public WebSocketBuilder<TMessage> OnClose(Action onClose)
+		{
+			this.onClose = onClose;
+			return this;
+		}
+
+
+		public WebSocketBuilder<TMessage> WithRootKey(byte[] derEncodedRootKey)
+		{
+			this.rootPublicKey = SubjectPublicKeyInfo.FromDerEncoding(derEncodedRootKey);
+			return this;
+		}
+
+		public WebSocketBuilder<TMessage> WithRootKey(SubjectPublicKeyInfo subjectPublicKeyInfo)
+		{
+			this.rootPublicKey = subjectPublicKeyInfo;
+			return this;
+		}
+
+		public WebSocketBuilder<TMessage> WithIdentity(IIdentity identity)
 		{
 			this.identity = identity;
 			return this;
 		}
 
-		public WebSocketBuilder WithCustomCandidConverter(CandidConverter customConverter)
+		public WebSocketBuilder<TMessage> WithCustomCandidConverter(CandidConverter customConverter)
 		{
 			this.customConverter = customConverter;
 			return this;
 		}
 
-		public WebSocketBuilder WithCustomBlsCryptography(IBlsCryptography bls)
+		public WebSocketBuilder<TMessage> WithCustomBlsCryptography(IBlsCryptography bls)
 		{
 			this.bls = bls;
 			return this;
 		}
 
-		public async Task<IWebSocketAgent<TMessage>> BuildAsync<TMessage>(
+		public async Task<IWebSocketAgent<TMessage>> BuildAsync(
 			bool connect = true,
 			CancellationToken? cancellationToken = null
 		)
-			where TMessage : notnull
 		{
 			if (this.identity == null)
 			{
@@ -78,23 +106,26 @@ namespace EdjCase.ICP.WebSockets
 			}
 			if (this.rootPublicKey == null)
 			{
-				IHttpClient httpClient = new DefaultHttpClient(new System.Net.Http.HttpClient
-				{
-					BaseAddress = this.boundryNodeUri ?? new Uri("https://ic0.app/")
-				});
-				HttpAgent httpAgent= new (httpClient, null, this.bls);
-				this.rootPublicKey = await httpAgent.GetRootKeyAsync(cancellationToken);
+				this.rootPublicKey = SubjectPublicKeyInfo.MainNetRootPublicKey;
 			}
 			if (this.bls == null)
 			{
 				this.bls = new WasmBlsCryptography();
 			}
-			var agent = new WebSocketAgent<TMessage>(
+			if (this.onMessage == null)
+			{
+				throw new InvalidOperationException("Web socket requires an OnMessage action");
+			}
+			WebSocketAgent<TMessage> agent = new(
 				this.canisterId,
 				this.gatewayUri,
 				this.rootPublicKey,
 				this.identity,
 				this.bls,
+				this.onMessage,
+				this.onOpen,
+				this.onError,
+				this.onClose,
 				this.customConverter
 			);
 			if (connect)
@@ -103,25 +134,6 @@ namespace EdjCase.ICP.WebSockets
 			}
 			return agent;
 		}
-
-	}
-	public class OnCloseContext
-	{
-
-	}
-
-	public class OnErrorContext
-	{
-
-	}
-
-	public class OnMessageContext
-	{
-
-	}
-
-	public class OnOpenContext
-	{
 
 	}
 }

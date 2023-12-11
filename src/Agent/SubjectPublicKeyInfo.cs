@@ -1,7 +1,9 @@
 using EdjCase.ICP.Candid.Models;
+using EdjCase.ICP.Candid.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Formats.Asn1;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -12,6 +14,9 @@ namespace EdjCase.ICP.Agent
 	/// </summary>
 	public class SubjectPublicKeyInfo
 	{
+		private static byte[] mainNetRootPublicKeyBytes = ByteUtil.FromHexString("308182301d060d2b0601040182dc7c0503010201060c2b0601040182dc7c05030201036100814c0e6ec71fab583b08bd81373c255c3c371b2e84863c98a4f1e08b74235d14fb5d9c0cd546d9685f913a0c0b2cc5341583bf4b4392e467db96d65b9bb4cb717112f8472e0d5a4d14505ffd7484b01291091c5f87b98883463f98091a0baaae");
+		private static SubjectPublicKeyInfo? mainNetRootPublicKeyCache = null;
+
 		/// <summary>
 		/// The cryptographic algorithm that the public key is for
 		/// </summary>
@@ -141,6 +146,21 @@ namespace EdjCase.ICP.Agent
 		{
 			var algorithm = AlgorithmIdentifier.Bls();
 			return new SubjectPublicKeyInfo(algorithm, publicKey);
+		}
+
+		/// <summary>
+		/// Gets the public key info for the IC main network
+		/// </summary>
+		public static SubjectPublicKeyInfo MainNetRootPublicKey
+		{
+			get
+			{
+				lock (mainNetRootPublicKeyBytes)
+				{
+					mainNetRootPublicKeyCache ??= FromDerEncoding(mainNetRootPublicKeyBytes);
+					return mainNetRootPublicKeyCache;
+				}	
+			}
 		}
 	}
 }

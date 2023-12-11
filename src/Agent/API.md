@@ -276,6 +276,7 @@
 - [SubjectPublicKeyInfo](#T-EdjCase-ICP-Agent-SubjectPublicKeyInfo 'EdjCase.ICP.Agent.SubjectPublicKeyInfo')
   - [#ctor(algorithm,subjectPublicKey)](#M-EdjCase-ICP-Agent-SubjectPublicKeyInfo-#ctor-EdjCase-ICP-Agent-AlgorithmIdentifier,System-Byte[]- 'EdjCase.ICP.Agent.SubjectPublicKeyInfo.#ctor(EdjCase.ICP.Agent.AlgorithmIdentifier,System.Byte[])')
   - [Algorithm](#P-EdjCase-ICP-Agent-SubjectPublicKeyInfo-Algorithm 'EdjCase.ICP.Agent.SubjectPublicKeyInfo.Algorithm')
+  - [MainNetRootPublicKey](#P-EdjCase-ICP-Agent-SubjectPublicKeyInfo-MainNetRootPublicKey 'EdjCase.ICP.Agent.SubjectPublicKeyInfo.MainNetRootPublicKey')
   - [PublicKey](#P-EdjCase-ICP-Agent-SubjectPublicKeyInfo-PublicKey 'EdjCase.ICP.Agent.SubjectPublicKeyInfo.PublicKey')
   - [Bls(publicKey)](#M-EdjCase-ICP-Agent-SubjectPublicKeyInfo-Bls-System-Byte[]- 'EdjCase.ICP.Agent.SubjectPublicKeyInfo.Bls(System.Byte[])')
   - [Ecdsa(publicKey,curveOid)](#M-EdjCase-ICP-Agent-SubjectPublicKeyInfo-Ecdsa-System-Byte[],System-String- 'EdjCase.ICP.Agent.SubjectPublicKeyInfo.Ecdsa(System.Byte[],System.String)')
@@ -3407,6 +3408,13 @@ Default constructor
 ##### Summary
 
 The cryptographic algorithm that the public key is for
+
+<a name='P-EdjCase-ICP-Agent-SubjectPublicKeyInfo-MainNetRootPublicKey'></a>
+### MainNetRootPublicKey `property`
+
+##### Summary
+
+Gets the public key info for the IC main network
 
 <a name='P-EdjCase-ICP-Agent-SubjectPublicKeyInfo-PublicKey'></a>
 ### PublicKey `property`

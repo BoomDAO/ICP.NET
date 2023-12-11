@@ -17,19 +17,22 @@ namespace EdjCase.ICP.WebSockets
 			CancellationToken? cancellationToken = null
 		);
 
-		Task ReceiveNextAsync(
-			Action onOpen,
-			Action<TMessage> onMessage,
-			Action<Exception> onError,
-			Action<OnCloseContext> onClose,
-			CancellationToken? cancellationToken = null
-		);
+		Task ReceiveNextAsync(CancellationToken? cancellationToken = null);
 
 		Task CloseAsync();
 
 		WebSocketState State { get; }
 
-		bool IsConnectionEstablished => this.State == WebSocketState.Open;
+		public bool IsConnectionEstablished => this.State == WebSocketState.Open;
+
+		public async Task ReceiveAllAsync(CancellationToken? cancellationToken = null)
+		{
+			while (cancellationToken?.IsCancellationRequested != true
+				&& this.IsConnectionEstablished == true)
+			{
+				await this.ReceiveNextAsync(cancellationToken);
+			}
+		}
 	}
 
 }
