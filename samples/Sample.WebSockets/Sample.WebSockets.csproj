@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\EdjCase.ICP.WebSockets\EdjCase.ICP.WebSockets.csproj" />
+    <ProjectReference Include="..\..\src\WebSockets\EdjCase.ICP.WebSockets.csproj" />
   </ItemGroup>
 
 </Project>
