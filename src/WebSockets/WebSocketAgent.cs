@@ -201,7 +201,12 @@ namespace EdjCase.ICP.WebSockets
 			try
 			{
 				CborReader wsReader = new(clientMessage.Content);
-				wsReader.ReadTag();
+				if (wsReader.PeekState() == CborReaderState.Tag)
+				{
+					// TODO handle better?
+					// Sometimes there is a tag, but others not
+					wsReader.ReadTag();
+				}
 				wsMessage = WebSocketMessage.FromCbor(wsReader);
 			}
 			catch (Exception ex)
