@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using System.Formats.Cbor;
 using System.IO;
 using System.Net.WebSockets;
-using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 using EdjCase.ICP.Agent.Identities;
@@ -20,7 +19,6 @@ using EdjCase.ICP.Agent;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using EdjCase.ICP.Candid.Crypto;
-using System.Security.Cryptography;
 
 namespace EdjCase.ICP.WebSockets
 {
@@ -89,7 +87,7 @@ namespace EdjCase.ICP.WebSockets
 					cancellationToken ?? CancellationToken.None
 				);
 			}
-			catch(WebSocketException ex)
+			catch (WebSocketException ex)
 			{
 				throw new Exception("Failed to connect to server with websocket. ErrorCode: " + ex.WebSocketErrorCode);
 			}
@@ -332,7 +330,8 @@ namespace EdjCase.ICP.WebSockets
 				// Allow fallback to index path.
 				hashFromTree = tree.GetValueOrDefault("websocket");
 			}
-			if (hashFromTree == null) {
+			if (hashFromTree == null)
+			{
 				// The tree returned in the certification header is wrong. Return false.
 				// We don't throw here, just invalidate the request.
 				error = $"Message tree in the header. Does not contain path {clientMessage.Key}";
@@ -465,20 +464,14 @@ namespace EdjCase.ICP.WebSockets
 			byte[] messageBytes = arg.Encode();
 
 			ICTimestamp.Now().NanoSeconds.TryToUInt64(out ulong now);
-			var wsMessage = new WebSocketMessageWrapper
-			{
-				Message = new WebSocketMessage(
-					sequenceNumber: this.outgoingSequenceNumber,
-					content: messageBytes,
-					clientKey: new ClientKey
-					{
-						Id = this.identity.GetPrincipal(),
-						Nonce = this.clientNonce!.Value
-					},
-					timestamp: now,
-					isServiceMessage: isServiceMessage
-				)
-			};
+			WebSocketMessage message = new(
+				sequenceNumber: this.outgoingSequenceNumber,
+				content: messageBytes,
+				clientKey: new ClientKey(this.identity.GetPrincipal(), this.clientNonce!.Value),
+				timestamp: now,
+				isServiceMessage: isServiceMessage
+			);
+			var wsMessage = new WebSocketMessageWrapper(message);
 			this.outgoingSequenceNumber++;
 			CandidArg messageArg = CandidArg.FromCandid(
 				CandidTypedValue.FromObject(wsMessage)

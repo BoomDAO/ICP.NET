@@ -16,7 +16,6 @@
 		<PackageId>EdjCase.ICP.WebSockets</PackageId>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 		<DocumentationFile>API.xml</DocumentationFile>
-		<DocumentationMarkdown>$(MSBuildProjectDirectory)\API.md</DocumentationMarkdown>
 	</PropertyGroup>
 
 	<ItemGroup>

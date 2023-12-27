@@ -64,6 +64,11 @@ namespace EdjCase.ICP.WebSockets.Models
 	{
 		[CandidName("client_key")]
 		public ClientKey ClientKey { get; set; }
+
+		public OpenMessage(ClientKey clientKey)
+		{
+			this.ClientKey = clientKey ?? throw new ArgumentNullException(nameof(clientKey));
+		}
 	}
 
 	internal class AckMessage

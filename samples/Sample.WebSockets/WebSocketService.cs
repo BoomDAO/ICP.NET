@@ -19,6 +19,11 @@ namespace Sample.WebSockets
 	{
 		[CandidName("text")]
 		public string Text { get; set; }
+
+		public AppMessage(string text)
+		{
+			this.Text = text;
+		}
 	}
 
 	public class WebSocketService : BackgroundService
@@ -76,10 +81,7 @@ namespace Sample.WebSockets
 			Console.WriteLine("Received message: " + message.Text);
 			ICTimestamp.Now().NanoSeconds.TryToUInt64(out ulong now);
 			Console.WriteLine("Sending message:  pong" + this.stopwatch.Elapsed);
-			this.webSocket!.SendAsync(new AppMessage
-			{
-				Text = "pong"
-			});
+			this.webSocket!.SendAsync(new AppMessage("pong"));
 		}
 		private void OnError(Exception ex)
 		{

@@ -10,15 +10,17 @@ namespace EdjCase.ICP.WebSockets.Models
 	{
 		public Principal GatewayPrincipal { get; set; }
 
+		public HandshakeMessage(Principal gatewayPrincipal)
+		{
+			this.GatewayPrincipal = gatewayPrincipal;
+		}
+
 		public static HandshakeMessage FromCbor(CborReader reader)
 		{
 			reader.ReadStartMap();
 			reader.ReadTextString();
 			byte[] gatewayPrincipalBytes = reader.ReadByteString();
-			return new HandshakeMessage
-			{
-				GatewayPrincipal = Principal.FromBytes(gatewayPrincipalBytes)
-			};
+			return new HandshakeMessage(Principal.FromBytes(gatewayPrincipalBytes));
 		}
 	}
 }

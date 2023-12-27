@@ -11,6 +11,11 @@ namespace EdjCase.ICP.WebSockets.Models
 	{
 		[CandidName("msg")]
 		public WebSocketMessage Message { get; set; }
+
+		public WebSocketMessageWrapper(WebSocketMessage message)
+		{
+			this.Message = message ?? throw new ArgumentNullException(nameof(message));
+		}
 	}
 	internal class WebSocketMessage
 	{

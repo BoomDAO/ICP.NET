@@ -1,18 +1,21 @@
 using EdjCase.ICP.Candid.Mapping;
 using EdjCase.ICP.Candid.Models;
-using System;
-using System.Collections.Generic;
 using System.Formats.Cbor;
-using System.Text;
 
 namespace EdjCase.ICP.WebSockets.Models
 {
 	internal class ClientKey
 	{
 		[CandidName("client_principal")]
-		public Principal Id { get; set;  }
+		public Principal Id { get; set; }
 		[CandidName("client_nonce")]
 		public ulong Nonce { get; set; }
+
+		public ClientKey(Principal id, ulong nonce)
+		{
+			this.Id = id;
+			this.Nonce = nonce;
+		}
 
 
 
@@ -43,11 +46,7 @@ namespace EdjCase.ICP.WebSockets.Models
 			{
 				throw new CborContentException("Missing field from incoming client message: client_nonce");
 			}
-			return new ClientKey
-			{
-				Id = id,
-				Nonce = nonce.Value
-			};
+			return new ClientKey(id, nonce.Value);
 		}
 	}
 }

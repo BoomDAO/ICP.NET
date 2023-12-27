@@ -1,28 +1,27 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-	  <OutputType>Exe</OutputType>
-	  <TargetFramework>net6.0</TargetFramework>
-	  <Nullable>enable</Nullable>
-	  <LangVersion>latest</LangVersion>
-	  <RootNamespace>EdjCase.ICP.ClientGenerator</RootNamespace>
-	  <RepositoryUrl>https://github.com/EdjCase/ICP.NET</RepositoryUrl>
-	  <RepositoryType>git</RepositoryType>
-	  <PackageTags>.net;blazor;ICP;IC</PackageTags>
-	  <PackageReadmeFile>README.md</PackageReadmeFile>
-	  <PackageProjectUrl>https://github.com/EdjCase/ICP.NET</PackageProjectUrl>
-	  <Product>EdjCase.ICP.ClientGenerator</Product>
-	  <Company>Edjcase</Company>
-	  <Authors>Gekctek</Authors>
-	  <PackageId>EdjCase.ICP.ClientGenerator</PackageId>
-	  <PackAsTool>true</PackAsTool>
-	  <ToolCommandName>candid-client-generator</ToolCommandName>
-	  <PackageOutputPath>./nupkg</PackageOutputPath>
-	  <GenerateDocumentationFile>True</GenerateDocumentationFile>
-	  <DocumentationFile>API.xml</DocumentationFile>
-	  <DocumentationMarkdown>$(MSBuildProjectDirectory)\API.md</DocumentationMarkdown>
-	  <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
-  </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net6.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<LangVersion>latest</LangVersion>
+		<RootNamespace>EdjCase.ICP.ClientGenerator</RootNamespace>
+		<RepositoryUrl>https://github.com/EdjCase/ICP.NET</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageTags>.net;blazor;ICP;IC</PackageTags>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageProjectUrl>https://github.com/EdjCase/ICP.NET</PackageProjectUrl>
+		<Product>EdjCase.ICP.ClientGenerator</Product>
+		<Company>Edjcase</Company>
+		<Authors>Gekctek</Authors>
+		<PackageId>EdjCase.ICP.ClientGenerator</PackageId>
+		<PackAsTool>true</PackAsTool>
+		<ToolCommandName>candid-client-generator</ToolCommandName>
+		<PackageOutputPath>./nupkg</PackageOutputPath>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<DocumentationFile>API.xml</DocumentationFile>
+		<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+	</PropertyGroup>
 
 	<ItemGroup>
 		<None Include="README.md">
@@ -35,15 +34,11 @@
 		<PackageReference Include="CommandLineParser" Version="2.9.1" />
 		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Features" Version="4.4.0" />
 		<PackageReference Include="Tomlyn" Version="0.16.2" />
-		<PackageReference Include="Vsxmd" Version="1.4.4">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\Agent\EdjCase.ICP.Agent.csproj" />
-	  <ProjectReference Include="..\Candid\EdjCase.ICP.Candid.csproj" />
+		<ProjectReference Include="..\Agent\EdjCase.ICP.Agent.csproj" />
+		<ProjectReference Include="..\Candid\EdjCase.ICP.Candid.csproj" />
 	</ItemGroup>
 
 </Project>

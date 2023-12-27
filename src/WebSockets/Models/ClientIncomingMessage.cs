@@ -11,10 +11,10 @@ namespace EdjCase.ICP.WebSockets.Models
 {
 	internal class ClientIncomingMessage
 	{
-		public string Key { get;  }
+		public string Key { get; }
 		public byte[] Content { get; }
-		public byte[] Cert {  get;  }
-		public byte[] Tree { get;  }
+		public byte[] Cert { get; }
+		public byte[] Tree { get; }
 
 		public ClientIncomingMessage(string key, byte[] content, byte[] cert, byte[] tree)
 		{
@@ -26,7 +26,6 @@ namespace EdjCase.ICP.WebSockets.Models
 
 		public static ClientIncomingMessage FromCbor(CborReader reader)
 		{
-
 			string? key = null;
 			byte[]? content = null;
 			byte[]? cert = null;
