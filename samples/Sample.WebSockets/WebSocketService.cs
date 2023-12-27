@@ -19,9 +19,6 @@ namespace Sample.WebSockets
 	{
 		[CandidName("text")]
 		public string Text { get; set; }
-
-		[CandidName("timestamp")]
-		public ulong Timestamp { get; set; }
 	}
 
 	public class WebSocketService : BackgroundService
@@ -31,18 +28,20 @@ namespace Sample.WebSockets
 
 		public override async Task StartAsync(CancellationToken cancellationToken)
 		{
-			bool development = true;
+			bool development = false;
 			Principal canisterId;
 			Uri gatewayUri;
 			if (development)
 			{
-				canisterId = Principal.FromText("bkyz2-fmaaa-aaaaa-qaaaq-cai");
+				canisterId = Principal.FromText("j4n55-giaaa-aaaap-qb3wq-cai");
 				gatewayUri = new Uri("ws://localhost:8080");
 			}
 			else
 			{
-				canisterId = Principal.FromText("bkyz2-fmaaa-aaaaa-qaaaq-cai");
-				gatewayUri = new Uri("wss://icwebsocketgateway.app.runonflux.io");
+				canisterId = Principal.FromText("j4n55-giaaa-aaaap-qb3wq-cai");
+				//gatewayUri = new Uri("wss://gateway.icws.io");
+				//gatewayUri = new Uri("wss://icwebsocketgateway.app.runonflux.io");
+				gatewayUri = new Uri("ws://localhost:8080");
 			}
 			var builder = new WebSocketBuilder<AppMessage>(canisterId, gatewayUri)
 				.OnMessage(this.OnMessage)
@@ -79,8 +78,7 @@ namespace Sample.WebSockets
 			Console.WriteLine("Sending message:  pong" + this.stopwatch.Elapsed);
 			this.webSocket!.SendAsync(new AppMessage
 			{
-				Text = "pong",
-				Timestamp = now
+				Text = "pong"
 			});
 		}
 		private void OnError(Exception ex)

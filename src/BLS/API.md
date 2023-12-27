@@ -3,10 +3,35 @@
 
 ## Contents
 
+- [BypassedBlsCryptography](#T-EdjCase-ICP-BLS-BypassedBlsCryptography 'EdjCase.ICP.BLS.BypassedBlsCryptography')
+  - [VerifySignature()](#M-EdjCase-ICP-BLS-BypassedBlsCryptography-VerifySignature-System-Byte[],System-Byte[],System-Byte[]- 'EdjCase.ICP.BLS.BypassedBlsCryptography.VerifySignature(System.Byte[],System.Byte[],System.Byte[])')
 - [IBlsCryptography](#T-EdjCase-ICP-BLS-IBlsCryptography 'EdjCase.ICP.BLS.IBlsCryptography')
   - [VerifySignature(publicKey,messageHash,signature)](#M-EdjCase-ICP-BLS-IBlsCryptography-VerifySignature-System-Byte[],System-Byte[],System-Byte[]- 'EdjCase.ICP.BLS.IBlsCryptography.VerifySignature(System.Byte[],System.Byte[],System.Byte[])')
 - [WasmBlsCryptography](#T-EdjCase-ICP-BLS-WasmBlsCryptography 'EdjCase.ICP.BLS.WasmBlsCryptography')
   - [VerifySignature()](#M-EdjCase-ICP-BLS-WasmBlsCryptography-VerifySignature-System-Byte[],System-Byte[],System-Byte[]- 'EdjCase.ICP.BLS.WasmBlsCryptography.VerifySignature(System.Byte[],System.Byte[],System.Byte[])')
+
+<a name='T-EdjCase-ICP-BLS-BypassedBlsCryptography'></a>
+## BypassedBlsCryptography `type`
+
+##### Namespace
+
+EdjCase.ICP.BLS
+
+##### Summary
+
+Bls cryptography class that AWLAYS returns TRUE. This is intended only for
+development scenarios and is never recommended
+
+<a name='M-EdjCase-ICP-BLS-BypassedBlsCryptography-VerifySignature-System-Byte[],System-Byte[],System-Byte[]-'></a>
+### VerifySignature() `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
 
 <a name='T-EdjCase-ICP-BLS-IBlsCryptography'></a>
 ## IBlsCryptography `type`

@@ -4,5 +4,57 @@
         <name>EdjCase.ICP.WebSockets</name>
     </assembly>
     <members>
+        <member name="T:EdjCase.ICP.WebSockets.IWebSocketAgent`1">
+            <summary>
+            Agent for the Internet Computer using websockets
+            </summary>
+            <typeparam name="TMessage">The type of the message that will be sent back and forth
+            from client/server</typeparam>
+        </member>
+        <member name="M:EdjCase.ICP.WebSockets.IWebSocketAgent`1.ConnectAsync(System.Nullable{System.Threading.CancellationToken})">
+            <summary>
+            Connects to the server with a websocket connection. Will update `State` property
+            when connected
+            </summary>
+            <param name="cancellationToken">Optional. Cancellation token used to stop the network requests before completion</param>
+            <returns></returns>
+        </member>
+        <member name="M:EdjCase.ICP.WebSockets.IWebSocketAgent`1.SendAsync(`0,System.Nullable{System.Threading.CancellationToken})">
+            <summary>
+            Sends a message to the server via websockets
+            </summary>
+            <param name="message">The message that should be sent to the server</param>
+            <param name="cancellationToken">Optional. Cancellation token used to stop the network requests before completion</param>
+            <returns></returns>
+        </member>
+        <member name="M:EdjCase.ICP.WebSockets.IWebSocketAgent`1.ReceiveNextAsync(System.Nullable{System.Threading.CancellationToken})">
+            <summary>
+            Gets the next message from the server and processes it with the defined callbacks
+            </summary>
+            <param name="cancellationToken">Optional. Cancellation token used to stop the network requests before completion</param>
+        </member>
+        <member name="M:EdjCase.ICP.WebSockets.IWebSocketAgent`1.CloseAsync">
+            <summary>
+            Closes the websocket connection. Will change the `State` property
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.WebSockets.IWebSocketAgent`1.State">
+            <summary>
+            Indicates the current state of the websocket connection
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.WebSockets.IWebSocketAgent`1.IsConnectionEstablished">
+            <summary>
+            Will return true if the `State` property is open, otherwise false
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.WebSockets.IWebSocketAgent`1.ReceiveAllAsync(System.Nullable{System.Threading.CancellationToken})">
+            <summary>
+            Waits and receives all messages from the server until the connection is closed or
+            the cancellation token is canceled
+            </summary>
+            <param name="cancellationToken">Optional. Cancellation token used to stop the loop and network requests before completion</param>
+            <returns></returns>
+        </member>
     </members>
 </doc>

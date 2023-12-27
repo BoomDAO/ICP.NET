@@ -4,6 +4,15 @@
         <name>EdjCase.ICP.BLS</name>
     </assembly>
     <members>
+        <member name="T:EdjCase.ICP.BLS.BypassedBlsCryptography">
+            <summary>
+            Bls cryptography class that AWLAYS returns TRUE. This is intended only for
+            development scenarios and is never recommended
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.BLS.BypassedBlsCryptography.VerifySignature(System.Byte[],System.Byte[],System.Byte[])">
+            <inheritdoc/>
+        </member>
         <member name="T:EdjCase.ICP.BLS.IBlsCryptography">
             <summary>
             An interface for all BLS crytography operations

@@ -82,10 +82,17 @@ namespace EdjCase.ICP.WebSockets
 			this.incomingSequenceNumber = 1;
 			this.outgoingSequenceNumber = 1;
 			this.gatewayPrincipal = null;
-			await this.socket.ConnectAsync(
-				this.gatewayUri,
-				cancellationToken ?? CancellationToken.None
-			);
+			try
+			{
+				await this.socket.ConnectAsync(
+					this.gatewayUri,
+					cancellationToken ?? CancellationToken.None
+				);
+			}
+			catch(WebSocketException ex)
+			{
+				throw new Exception("Failed to connect to server with websocket. ErrorCode: " + ex.WebSocketErrorCode);
+			}
 		}
 
 		public async Task SendAsync(
