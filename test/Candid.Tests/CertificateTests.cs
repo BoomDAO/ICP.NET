@@ -122,7 +122,7 @@ namespace ICP.Candid.Tests
 			{
 				byte[] cborBytes = ByteUtil.FromHexString(cborHex);
 				var cborReader = new CborReader(cborBytes);
-				Certificate c = Certificate.ReadCbor(cborReader);
+				Certificate c = Certificate.FromCbor(cborReader);
 				Assert.Equal(expected.Tree, c.Tree);
 				Assert.Equal(ByteUtil.ToHexString(expected.Signature), ByteUtil.ToHexString(c.Signature));
 				this.CompareDelegation(expected.Delegation, c.Delegation);

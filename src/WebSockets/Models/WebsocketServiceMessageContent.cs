@@ -1,6 +1,7 @@
 using EdjCase.ICP.Candid.Mapping;
 using System;
 using System.Collections.Generic;
+using System.Formats.Cbor;
 using System.Text;
 
 namespace EdjCase.ICP.WebSockets.Models
@@ -63,11 +64,17 @@ namespace EdjCase.ICP.WebSockets.Models
 	internal class OpenMessage
 	{
 		[CandidName("client_key")]
-		public ClientKey ClientKey { get; set; }
+		public ClientKey? ClientKey { get; set; }
 
-		public OpenMessage(ClientKey clientKey)
+		internal void ToCbor(CborWriter writer)
 		{
-			this.ClientKey = clientKey ?? throw new ArgumentNullException(nameof(clientKey));
+			writer.WriteStartMap(1);
+
+			// Write "client_key"
+			writer.WriteTextString("client_key");
+			this.ClientKey!.ToCbor(writer);
+
+			writer.WriteEndMap();
 		}
 	}
 

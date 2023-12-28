@@ -38,14 +38,9 @@
             Closes the websocket connection. Will change the `State` property
             </summary>
         </member>
-        <member name="P:EdjCase.ICP.WebSockets.IWebSocketAgent`1.State">
+        <member name="P:EdjCase.ICP.WebSockets.IWebSocketAgent`1.IsOpen">
             <summary>
-            Indicates the current state of the websocket connection
-            </summary>
-        </member>
-        <member name="P:EdjCase.ICP.WebSockets.IWebSocketAgent`1.IsConnectionEstablished">
-            <summary>
-            Will return true if the `State` property is open, otherwise false
+            Will return true if the connection is open and false otherwise
             </summary>
         </member>
         <member name="M:EdjCase.ICP.WebSockets.IWebSocketAgent`1.ReceiveAllAsync(System.Nullable{System.Threading.CancellationToken})">
@@ -55,6 +50,44 @@
             </summary>
             <param name="cancellationToken">Optional. Cancellation token used to stop the loop and network requests before completion</param>
             <returns></returns>
+        </member>
+        <member name="T:EdjCase.ICP.WebSockets.IWebSocketClient">
+            <summary>
+            Represents a WebSocket client.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.WebSockets.IWebSocketClient.IsOpen">
+            <summary>
+            Gets a value indicating whether the WebSocket connection is open.
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.WebSockets.IWebSocketClient.ConnectAsync(System.Uri,System.Threading.CancellationToken)">
+            <summary>
+            Connects to the specified WebSocket gateway
+            </summary>
+            <param name="gatewayUri">The URI of the WebSocket gateway.</param>
+            <param name="cancellationToken">To cancel connection in mid operation</param>
+        </member>
+        <member name="M:EdjCase.ICP.WebSockets.IWebSocketClient.SendAsync(System.Byte[],System.Threading.CancellationToken)">
+            <summary>
+            Sends a message to the WebSocket server
+            </summary>
+            <param name="messageBytes">The message to send as a byte array.</param>
+            <param name="cancellationToken">To cancel sending in mid operation</param>
+        </member>
+        <member name="M:EdjCase.ICP.WebSockets.IWebSocketClient.ReceiveAsync(System.Threading.CancellationToken)">
+            <summary>
+            Receives the next message from the WebSocket server
+            </summary>
+            <param name="cancellationToken">To cancel receiving in mid operation</param>
+            <returns>The received bytes and a flag indicating if the message is a close message.</returns>
+        </member>
+        <member name="M:EdjCase.ICP.WebSockets.IWebSocketClient.CloseAsync(System.Threading.CancellationToken,System.String)">
+            <summary>
+            Closes the WebSocket connection
+            </summary>
+            <param name="cancellationToken">To cancel closing in mid operation</param>
+            <param name="policyViolationMessage">The optional policy violation message.</param>
         </member>
         <member name="T:EdjCase.ICP.WebSockets.WebSocketBuilder`1">
             <summary>
@@ -126,6 +159,13 @@
             default implemenation.
             </summary>
             <param name="customConverter">The custom CandidConverter to use.</param>
+            <returns>The WebSocketBuilder instance.</returns>
+        </member>
+        <member name="M:EdjCase.ICP.WebSockets.WebSocketBuilder`1.WithCustomClient(EdjCase.ICP.WebSockets.IWebSocketClient)">
+            <summary>
+            Sets a custom websocket client implementation to override the default.
+            </summary>
+            <param name="client">The custom websocket client implementation.</param>
             <returns>The WebSocketBuilder instance.</returns>
         </member>
         <member name="M:EdjCase.ICP.WebSockets.WebSocketBuilder`1.WithCustomBlsCryptography(EdjCase.ICP.BLS.IBlsCryptography)">

@@ -9,7 +9,6 @@ using System.Buffers;
 using System.Collections.Generic;
 using System.Formats.Cbor;
 using System.IO;
-using System.Net.WebSockets;
 using System.Threading.Tasks;
 using System.Threading;
 using EdjCase.ICP.Agent.Identities;
@@ -25,6 +24,8 @@ namespace EdjCase.ICP.WebSockets
 	internal class WebSocketAgent<TMessage> : IWebSocketAgent<TMessage>
 		where TMessage : notnull
 	{
+		internal ulong? ClientNonce { get; private set; }
+
 		private Action<TMessage> onMessage { get; }
 		private Action? onOpen { get; }
 		private Action? onClose { get; }
@@ -35,20 +36,20 @@ namespace EdjCase.ICP.WebSockets
 		private IBlsCryptography bls { get; }
 		private SubjectPublicKeyInfo RootPublicKey { get; }
 		private CandidConverter? customConverter { get; }
-		private ClientWebSocket socket { get; }
+		private IWebSocketClient client { get; }
 		private Principal? gatewayPrincipal { get; set; }
-		private ulong? clientNonce { get; set; }
 		private ulong outgoingSequenceNumber = 1;
 		private ulong incomingSequenceNumber = 1;
 		private SHA256HashFunction sha256 = SHA256HashFunction.Create();
 
-		public WebSocketState State => this.socket.State;
+		public bool IsOpen => this.client.IsOpen;
 
 		public WebSocketAgent(
 			Principal canisterId,
 			Uri gatewayUri,
 			SubjectPublicKeyInfo rootPublicKey,
 			IIdentity identity,
+			IWebSocketClient client,
 			IBlsCryptography bls,
 			Action<TMessage> onMessage,
 			Action? onOpen = null,
@@ -61,14 +62,13 @@ namespace EdjCase.ICP.WebSockets
 			this.gatewayUri = gatewayUri ?? throw new ArgumentNullException(nameof(gatewayUri));
 			this.RootPublicKey = rootPublicKey ?? throw new ArgumentNullException(nameof(rootPublicKey));
 			this.identity = identity ?? throw new ArgumentNullException(nameof(identity));
+			this.client = client ?? throw new ArgumentNullException(nameof(client));
 			this.bls = bls ?? throw new ArgumentNullException(nameof(bls));
 			this.onMessage = onMessage ?? throw new ArgumentNullException(nameof(onMessage));
 			this.onOpen = onOpen;
 			this.onError = onError;
 			this.onClose = onClose;
 			this.customConverter = customConverter;
-			this.socket = new ClientWebSocket();
-			this.socket.Options.KeepAliveInterval = TimeSpan.Zero;
 		}
 
 		public async Task ConnectAsync(
@@ -80,17 +80,10 @@ namespace EdjCase.ICP.WebSockets
 			this.incomingSequenceNumber = 1;
 			this.outgoingSequenceNumber = 1;
 			this.gatewayPrincipal = null;
-			try
-			{
-				await this.socket.ConnectAsync(
-					this.gatewayUri,
-					cancellationToken ?? CancellationToken.None
-				);
-			}
-			catch (WebSocketException ex)
-			{
-				throw new Exception("Failed to connect to server with websocket. ErrorCode: " + ex.WebSocketErrorCode);
-			}
+			await this.client.ConnectAsync(
+				this.gatewayUri,
+				cancellationToken ?? CancellationToken.None
+			);
 		}
 
 		public async Task SendAsync(
@@ -125,7 +118,7 @@ namespace EdjCase.ICP.WebSockets
 			CancellationToken? cancellationToken = null
 		)
 		{
-			if (this.socket.State != WebSocketState.Open)
+			if (!this.client.IsOpen)
 			{
 				throw new InvalidOperationException("Websocket is not open");
 			}
@@ -134,13 +127,16 @@ namespace EdjCase.ICP.WebSockets
 			bool isClosed;
 			try
 			{
-				(data, isClosed) = await this.ReceiveInternalAsync(cancellationToken.Value);
+				(data, isClosed) = await this.client.ReceiveAsync(cancellationToken.Value);
 			}
 			catch (Exception ex)
 			{
 				this.onError?.Invoke(new Exception("Failed to receive message", ex));
 				return;
 			}
+#if DEBUG
+			string hex = Candid.Utilities.ByteUtil.ToHexString(data);
+#endif
 			if (isClosed)
 			{
 				this.onClose?.Invoke();
@@ -232,7 +228,7 @@ namespace EdjCase.ICP.WebSockets
 				await this.CloseAsync();
 				return;
 			}
-			if (wsMessage.ClientKey.Nonce != this.clientNonce)
+			if (wsMessage.ClientKey.Nonce != this.ClientNonce)
 			{
 				this.onError?.Invoke(new Exception("Message client nonce is invalid. Closing connection"));
 				await this.CloseAsync();
@@ -283,7 +279,7 @@ namespace EdjCase.ICP.WebSockets
 			Certificate? cert;
 			try
 			{
-				cert = Certificate.ReadCbor(certReader);
+				cert = Certificate.FromCbor(certReader);
 			}
 			catch
 			{
@@ -293,7 +289,7 @@ namespace EdjCase.ICP.WebSockets
 
 			if (cert == null || !cert.IsValid(this.bls, this.RootPublicKey))
 			{
-				error = "Message certificate is invalid";
+				error = "Message certificate is invalid: Invalid signature";
 				return false;
 			}
 			HashTree? witness = cert!.Tree.GetValueOrDefault(
@@ -303,7 +299,7 @@ namespace EdjCase.ICP.WebSockets
 			);
 			if (witness == null)
 			{
-				error = "Message certified data is invalid";
+				error = "Message certified data is invalid: No data in certificate tree";
 				return false;
 			}
 
@@ -312,7 +308,7 @@ namespace EdjCase.ICP.WebSockets
 			try
 			{
 				treeReader.ReadTag();
-				tree = Certificate.ReadTreeCbor(treeReader);
+				tree = Certificate.TreeFromCbor(treeReader);
 			}
 			catch
 			{
@@ -366,7 +362,7 @@ namespace EdjCase.ICP.WebSockets
 						if (message.LastIncomingSequenceNumber > this.outgoingSequenceNumber)
 						{
 							this.onError?.Invoke(new Exception("Ack sequence is invalid. Closing connection"));
-							await this.socket.CloseAsync(WebSocketCloseStatus.PolicyViolation, "Ack sequence number is invalid.", cancellationToken);
+							await this.client.CloseAsync(cancellationToken, "Ack sequence number is invalid.");
 							break;
 						}
 						await this.SendKeepAliveMessageAsync(cancellationToken);
@@ -413,15 +409,15 @@ namespace EdjCase.ICP.WebSockets
 
 		private ulong GetOrCreateClientNonce(bool forceReset = false)
 		{
-			if (forceReset || this.clientNonce == null)
+			if (forceReset || this.ClientNonce == null)
 			{
 				// Create random ulong
 				Random rand = new();
 				byte[] buf = new byte[8];
 				rand.NextBytes(buf);
-				this.clientNonce = BitConverter.ToUInt64(buf, 0);
+				this.ClientNonce = BitConverter.ToUInt64(buf, 0);
 			}
-			return this.clientNonce.Value;
+			return this.ClientNonce.Value;
 		}
 
 		private async Task SendOpenMessageAsync(
@@ -467,7 +463,11 @@ namespace EdjCase.ICP.WebSockets
 			WebSocketMessage message = new(
 				sequenceNumber: this.outgoingSequenceNumber,
 				content: messageBytes,
-				clientKey: new ClientKey(this.identity.GetPrincipal(), this.clientNonce!.Value),
+				clientKey: new ClientKey
+				{
+					Id = this.identity.GetPrincipal(),
+					Nonce = this.ClientNonce!.Value
+				},
 				timestamp: now,
 				isServiceMessage: isServiceMessage
 			);
@@ -502,24 +502,15 @@ namespace EdjCase.ICP.WebSockets
 			signedContent.WriteCbor(writer);
 			writer.WriteEndMap();
 			byte[] message = writer.Encode();
-			await this.socket.SendAsync(
-				message,
-				WebSocketMessageType.Binary,
-				true,
-				cancellationToken
-			);
+			await this.client.SendAsync(message, cancellationToken);
 		}
 
 		public async Task CloseAsync()
 		{
-			if (this.State != WebSocketState.Closed)
+			if (this.IsOpen)
 			{
 				this.onClose?.Invoke();
-				await this.socket.CloseAsync(
-					WebSocketCloseStatus.NormalClosure,
-					"Closing",
-					CancellationToken.None
-				);
+				await this.client.CloseAsync(CancellationToken.None);
 			}
 		}
 
@@ -531,46 +522,8 @@ namespace EdjCase.ICP.WebSockets
 			}
 			finally
 			{
-				this.socket.Dispose();
+				this.client.Dispose();
 			}
 		}
-
-		private async Task<(byte[] Data, bool IsClosed)> ReceiveInternalAsync(
-			CancellationToken cancellationToken
-		)
-		{
-			ArrayPool<byte> arrayPool = ArrayPool<byte>.Shared;
-			byte[] buffer = arrayPool.Rent(4096); // Used shared memory from pool
-			try
-			{
-				using (MemoryStream memoryStream = new())
-				{
-					while (true)
-					{
-						WebSocketReceiveResult result = await this.socket.ReceiveAsync(
-							new ArraySegment<byte>(buffer),
-							cancellationToken
-						);
-
-						if (result.Count > 0)
-						{
-							memoryStream.Write(buffer, 0, result.Count);
-						}
-
-						if (result.EndOfMessage)
-						{
-							bool isClosed = result.MessageType == WebSocketMessageType.Close;
-							return (memoryStream.ToArray(), isClosed);
-						}
-					}
-				}
-			}
-			finally
-			{
-				arrayPool.Return(buffer); // Return the buffer to the pool
-			}
-		}
-
-
 	}
 }

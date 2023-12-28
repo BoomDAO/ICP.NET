@@ -1,5 +1,4 @@
 using System;
-using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -46,14 +45,9 @@ namespace EdjCase.ICP.WebSockets
 		Task CloseAsync();
 
 		/// <summary>
-		/// Indicates the current state of the websocket connection
+		/// Will return true if the connection is open and false otherwise
 		/// </summary>
-		WebSocketState State { get; }
-
-		/// <summary>
-		/// Will return true if the `State` property is open, otherwise false
-		/// </summary>
-		public bool IsConnectionEstablished => this.State == WebSocketState.Open;
+		public bool IsOpen { get; }
 
 		/// <summary>
 		/// Waits and receives all messages from the server until the connection is closed or
@@ -63,9 +57,12 @@ namespace EdjCase.ICP.WebSockets
 		/// <returns></returns>
 		public async Task ReceiveAllAsync(CancellationToken? cancellationToken = null)
 		{
-			while (cancellationToken?.IsCancellationRequested != true
-				&& this.IsConnectionEstablished == true)
+			while (this.IsOpen)
 			{
+				if (cancellationToken?.IsCancellationRequested == true)
+				{
+					break;
+				}
 				await this.ReceiveNextAsync(cancellationToken);
 			}
 		}

@@ -7,15 +7,9 @@ namespace EdjCase.ICP.WebSockets.Models
 	internal class ClientKey
 	{
 		[CandidName("client_principal")]
-		public Principal Id { get; set; }
+		public Principal? Id { get; set; }
 		[CandidName("client_nonce")]
 		public ulong Nonce { get; set; }
-
-		public ClientKey(Principal id, ulong nonce)
-		{
-			this.Id = id;
-			this.Nonce = nonce;
-		}
 
 
 
@@ -46,7 +40,27 @@ namespace EdjCase.ICP.WebSockets.Models
 			{
 				throw new CborContentException("Missing field from incoming client message: client_nonce");
 			}
-			return new ClientKey(id, nonce.Value);
+			return new ClientKey
+			{
+				Id = id,
+				Nonce = nonce.Value
+			};
 		}
+
+		internal void ToCbor(CborWriter writer)
+		{
+			writer.WriteStartMap(2); // There are 2 fields to write
+
+			// Write "client_principal"
+			writer.WriteTextString("client_principal");
+			writer.WriteByteString(this.Id!.Raw);
+
+			// Write "client_nonce"
+			writer.WriteTextString("client_nonce");
+			writer.WriteUInt64(this.Nonce);
+
+			writer.WriteEndMap();
+		}
+
 	}
 }

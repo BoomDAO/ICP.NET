@@ -104,5 +104,32 @@ namespace EdjCase.ICP.WebSockets.Models
 				isServiceMessage.Value
 			);
 		}
+
+		internal void ToCbor(CborWriter writer)
+		{
+			writer.WriteStartMap(5); // Assuming there are 5 fields to write
+
+			// Write "sequence_num"
+			writer.WriteTextString("sequence_num");
+			writer.WriteUInt64(this.SequenceNumber);
+
+			// Write "content"
+			writer.WriteTextString("content");
+			writer.WriteByteString(this.Content);
+
+			// Write "client_key"
+			writer.WriteTextString("client_key");
+			this.ClientKey.ToCbor(writer);
+
+			// Write "timestamp"
+			writer.WriteTextString("timestamp");
+			writer.WriteUInt64(this.Timestamp);
+
+			// Write "is_service_message"
+			writer.WriteTextString("is_service_message");
+			writer.WriteBoolean(this.IsServiceMessage);
+
+			writer.WriteEndMap();
+		}
 	}
 }

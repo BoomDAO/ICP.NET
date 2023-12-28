@@ -19,6 +19,7 @@ namespace EdjCase.ICP.WebSockets
 		private Principal canisterId { get; }
 		private Uri gatewayUri { get; }
 		private IIdentity? identity { get; set; }
+		private IWebSocketClient? client { get; set; }
 		private IBlsCryptography? bls { get; set; }
 		private SubjectPublicKeyInfo? rootPublicKey { get; set; }
 		private CandidConverter? customConverter { get; set; }
@@ -135,6 +136,17 @@ namespace EdjCase.ICP.WebSockets
 		}
 
 		/// <summary>
+		/// Sets a custom websocket client implementation to override the default.
+		/// </summary>
+		/// <param name="client">The custom websocket client implementation.</param>
+		/// <returns>The WebSocketBuilder instance.</returns>
+		public WebSocketBuilder<TMessage> WithCustomClient(IWebSocketClient client)
+		{
+			this.client = client;
+			return this;
+		}
+
+		/// <summary>
 		/// Sets a custom BLS cryptography implementation to override the default.
 		/// </summary>
 		/// <param name="bls">The custom BLS cryptography implementation.</param>
@@ -153,6 +165,10 @@ namespace EdjCase.ICP.WebSockets
 		/// <exception cref="InvalidOperationException">Thrown if the OnMessage action is not specified.</exception>
 		public IWebSocketAgent<TMessage> Build()
 		{
+			if (this.onMessage == null)
+			{
+				throw new InvalidOperationException("Web socket requires an OnMessage action");
+			}
 			if (this.identity == null)
 			{
 				// Generate ephemral identity if not specified
@@ -162,19 +178,20 @@ namespace EdjCase.ICP.WebSockets
 			{
 				this.rootPublicKey = SubjectPublicKeyInfo.MainNetRootPublicKey;
 			}
+			if (this.client == null)
+			{
+				this.client = new WebSocketClient();
+			}
 			if (this.bls == null)
 			{
 				this.bls = new WasmBlsCryptography();
-			}
-			if (this.onMessage == null)
-			{
-				throw new InvalidOperationException("Web socket requires an OnMessage action");
 			}
 			return new WebSocketAgent<TMessage>(
 				this.canisterId,
 				this.gatewayUri,
 				this.rootPublicKey,
 				this.identity,
+				this.client,
 				this.bls,
 				this.onMessage,
 				this.onOpen,

@@ -1,11 +1,5 @@
-using EdjCase.ICP.Agent.Responses;
-using EdjCase.ICP.Candid.Encodings;
-using EdjCase.ICP.Candid.Models;
 using System;
-using System.Collections.Generic;
 using System.Formats.Cbor;
-using System.Linq;
-using System.Text;
 
 namespace EdjCase.ICP.WebSockets.Models
 {
@@ -73,6 +67,29 @@ namespace EdjCase.ICP.WebSockets.Models
 				cert,
 				tree
 			);
+		}
+
+		internal void ToCbor(CborWriter writer)
+		{
+			writer.WriteStartMap(4); // There are 4 fields to write
+
+			// Write "key"
+			writer.WriteTextString("key");
+			writer.WriteTextString(this.Key);
+
+			// Write "content"
+			writer.WriteTextString("content");
+			writer.WriteByteString(this.Content);
+
+			// Write "cert"
+			writer.WriteTextString("cert");
+			writer.WriteByteString(this.Cert);
+
+			// Write "tree"
+			writer.WriteTextString("tree");
+			writer.WriteByteString(this.Tree);
+
+			writer.WriteEndMap();
 		}
 	}
 }

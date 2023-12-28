@@ -44,9 +44,9 @@ namespace Sample.WebSockets
 			else
 			{
 				canisterId = Principal.FromText("j4n55-giaaa-aaaap-qb3wq-cai");
-				//gatewayUri = new Uri("wss://gateway.icws.io");
+				gatewayUri = new Uri("wss://gateway.icws.io");
 				//gatewayUri = new Uri("wss://icwebsocketgateway.app.runonflux.io");
-				gatewayUri = new Uri("ws://localhost:8080");
+				//gatewayUri = new Uri("ws://localhost:8080");
 			}
 			var builder = new WebSocketBuilder<AppMessage>(canisterId, gatewayUri)
 				.OnMessage(this.OnMessage)
