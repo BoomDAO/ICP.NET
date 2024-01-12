@@ -32,7 +32,13 @@ jobs:
 
       - name: Push Agent
         run: dotnet nuget push EdjCase.ICP.Agent.${{ github.event.release.tag_name }}.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
-        
+
+      - name: Pack WebSockets
+        run: dotnet pack src/WebSockets/EdjCase.ICP.WebSockets.csproj --configuration Release /p:Version=${{ github.event.release.tag_name }} --output . --include-symbols --include-source
+
+      - name: Push WebSockets
+        run: dotnet nuget push EdjCase.ICP.WebSockets.${{ github.event.release.tag_name }}.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+
       - name: Pack Client Generator
         run: dotnet pack src/ClientGenerator/EdjCase.ICP.ClientGenerator.csproj --configuration Release /p:Version=${{ github.event.release.tag_name }} --output . --include-symbols --include-source
 

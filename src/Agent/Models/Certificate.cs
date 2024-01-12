@@ -71,7 +71,7 @@ namespace EdjCase.ICP.Agent.Models
 			return bls.VerifySignature(rootPublicKey.PublicKey, rootHash, this.Signature);
 		}
 
-		internal static Certificate ReadCbor(CborReader reader)
+		internal static Certificate FromCbor(CborReader reader)
 		{
 			HashTree? hashTree = null;
 			byte[]? signature = null;
@@ -89,13 +89,13 @@ namespace EdjCase.ICP.Agent.Models
 				switch (name)
 				{
 					case "tree":
-						hashTree = ReadTreeCbor(reader);
+						hashTree = TreeFromCbor(reader);
 						break;
 					case "signature":
 						signature = reader.ReadByteString().ToArray();
 						break;
 					case "delegation":
-						delegation = CertificateDelegation.ReadCbor(reader);
+						delegation = CertificateDelegation.FromCbor(reader);
 						break;
 					default:
 						// Skip
@@ -117,8 +117,37 @@ namespace EdjCase.ICP.Agent.Models
 			return new Certificate(hashTree, signature, delegation);
 		}
 
+		internal void ToCbor(CborWriter writer)
+		{
+			writer.WriteTag(CborTag.SelfDescribeCbor);
+			writer.WriteStartMap(null);
 
-		internal static HashTree ReadTreeCbor(CborReader reader)
+			// Write "tree"
+			if (this.Tree != null)
+			{
+				writer.WriteTextString("tree");
+				this.TreeToCbor(writer);
+			}
+
+			// Write "signature"
+			if (this.Signature != null)
+			{
+				writer.WriteTextString("signature");
+				writer.WriteByteString(this.Signature);
+			}
+
+			// Write "delegation"
+			if (this.Delegation != null)
+			{
+				writer.WriteTextString("delegation");
+				this.Delegation.ToCbor(writer);
+			}
+
+			writer.WriteEndMap();
+		}
+
+
+		internal static HashTree TreeFromCbor(CborReader reader)
 		{
 			_ = reader.ReadStartArray(); // Array size
 			uint nodeType = reader.ReadUInt32(); // Get tree node type
@@ -129,13 +158,13 @@ namespace EdjCase.ICP.Agent.Models
 					hashTree = HashTree.Empty();
 					break;
 				case 1:
-					HashTree left = ReadTreeCbor(reader);
-					HashTree right = ReadTreeCbor(reader);
+					HashTree left = TreeFromCbor(reader);
+					HashTree right = TreeFromCbor(reader);
 					hashTree = HashTree.Fork(left, right);
 					break;
 				case 2:
 					byte[] labelBytes = reader.ReadByteString();
-					HashTree tree = ReadTreeCbor(reader);
+					HashTree tree = TreeFromCbor(reader);
 					hashTree = HashTree.Labeled(labelBytes, tree);
 					break;
 				case 3:
@@ -156,6 +185,61 @@ namespace EdjCase.ICP.Agent.Models
 			reader.ReadEndArray();
 			return hashTree;
 		}
+
+		internal void TreeToCbor(CborWriter writer)
+		{
+			TreeToCborInternal(writer, this.Tree);
+		}
+
+		internal static void TreeToCborInternal(CborWriter writer, HashTree tree)
+		{
+			// The structure and logic here depend on how HashTree is implemented
+			// and how it stores its data (e.g., type of node, children, label, value).
+
+			switch (tree.Type)
+			{
+				case HashTreeType.Empty:
+					writer.WriteStartArray(1);
+					writer.WriteUInt32(0); // Node type for Empty
+					break;
+
+				case HashTreeType.Fork:
+					writer.WriteStartArray(3);
+					writer.WriteUInt32(1); // Node type for Fork
+					(HashTree left, HashTree right) = tree.AsFork();
+					TreeToCborInternal(writer, left);
+					TreeToCborInternal(writer, right);
+					break;
+
+				case HashTreeType.Labeled:
+					writer.WriteStartArray(3);
+					writer.WriteUInt32(2); // Node type for Labeled
+					(HashTree.EncodedValue label, HashTree subTree) = tree.AsLabeled();
+					writer.WriteByteString(label.Value);
+					TreeToCborInternal(writer, subTree);
+					break;
+
+				case HashTreeType.Leaf:
+					writer.WriteStartArray(2);
+					writer.WriteUInt32(3); // Node type for Leaf
+					byte[] leaf = tree.AsLeaf();
+					writer.WriteByteString(leaf);
+					break;
+
+				case HashTreeType.Pruned:
+					writer.WriteStartArray(2);
+					writer.WriteUInt32(4); // Node type for Pruned
+					byte[] hash = tree.AsPruned();
+					writer.WriteByteString(hash);
+					break;
+
+				default:
+					throw new NotImplementedException($"No hash tree node type of '{tree.Type}' is implemented");
+			}
+
+			writer.WriteEndArray();
+		}
+
 	}
 
 }

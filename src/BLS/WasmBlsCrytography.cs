@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Net;
@@ -50,8 +51,15 @@ namespace EdjCase.ICP.BLS
 			byte[] signature
 		)
 		{
-			EnsureInitialized();
+			try
+			{
 
+				EnsureInitialized();
+			}
+			catch (DllNotFoundException ex)
+			{
+				throw new Exception("Unable to load the wasmtime bls library", ex);
+			}
 			byte[] blsPublicKey = instance!.PublicKeyDeserialize(publicKey);
 
 			byte[] blsSignature = instance.SignatureDeserialize(signature);

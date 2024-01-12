@@ -24,7 +24,7 @@ jobs:
         run: dotnet test --no-build --verbosity normal
 
       - name: Publish Agent Dlls
-        run: dotnet publish ./src/Agent --no-restore -c Release -o ./publish-agent
+        run: dotnet publish ./src/WebSockets --no-restore -c Release -o ./publish-agent
 
       - name: Upload Agent Binaries Artifact
         uses: actions/upload-artifact@v2

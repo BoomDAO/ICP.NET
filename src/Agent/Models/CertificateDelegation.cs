@@ -49,7 +49,7 @@ namespace EdjCase.ICP.Agent.Models
 			return SubjectPublicKeyInfo.FromDerEncoding(publicKey.AsLeaf());
 		}
 
-		internal static CertificateDelegation ReadCbor(CborReader reader)
+		internal static CertificateDelegation FromCbor(CborReader reader)
 		{
 			Principal? subnetId = null;
 			Certificate? certificate = null;
@@ -68,7 +68,7 @@ namespace EdjCase.ICP.Agent.Models
 					case "certificate":
 						var certBytes = reader.ReadByteString()!;
 						var certReader = new CborReader(certBytes);
-						certificate = Certificate.ReadCbor(certReader);
+						certificate = Certificate.FromCbor(certReader);
 						break;
 					default:
 						//skip
@@ -89,6 +89,24 @@ namespace EdjCase.ICP.Agent.Models
 
 			return new CertificateDelegation(subnetId, certificate);
 		}
+
+		internal void ToCbor(CborWriter writer)
+		{
+			writer.WriteStartMap(2); 
+
+			// Write "subnet_id"
+			writer.WriteTextString("subnet_id");
+			writer.WriteByteString(this.SubnetId.Raw);
+
+			// Write "certificate"
+			writer.WriteTextString("certificate");
+			var certWriter = new CborWriter();
+			this.Certificate.ToCbor(certWriter);
+			writer.WriteByteString(certWriter.Encode());
+
+			writer.WriteEndMap();
+		}
+
 	}
 
 }

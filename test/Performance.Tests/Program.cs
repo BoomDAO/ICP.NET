@@ -22,12 +22,12 @@ internal class FakeHttpClient : IHttpClient
 		this.response = new HttpResponse(System.Net.HttpStatusCode.OK, () => Task.FromResult(content));
 	}
 
-	public Task<HttpResponse> GetAsync(string url)
+	public Task<HttpResponse> GetAsync(string url, CancellationToken? cancellationToken = null)
 	{
 		return Task.FromResult(this.response);
 	}
 
-	public Task<HttpResponse> PostAsync(string url, byte[] cborBody)
+	public Task<HttpResponse> PostAsync(string url, byte[] cborBody, CancellationToken? cancellationToken = null)
 	{
 		return Task.FromResult(this.response);
 	}

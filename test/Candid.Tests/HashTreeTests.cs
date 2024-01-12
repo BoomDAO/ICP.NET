@@ -97,7 +97,7 @@ namespace ICP.Candid.Tests
 			{
 				byte[] cborBytes = ByteUtil.FromHexString(cborHex);
 				var cborReader = new CborReader(cborBytes);
-				HashTree tree = Certificate.ReadTreeCbor(cborReader);
+				HashTree tree = Certificate.TreeFromCbor(cborReader);
 				Assert.Equal(expectedTree, tree);
 
 				byte[] rootHash = tree.BuildRootHash();

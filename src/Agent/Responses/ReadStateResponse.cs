@@ -38,7 +38,7 @@ namespace EdjCase.ICP.Agent.Responses
 				{
 					case "certificate":
 						var certReader = new CborReader(reader.ReadByteString());
-						certificate = Certificate.ReadCbor(certReader);
+						certificate = Certificate.FromCbor(certReader);
 						break;
 					default:
 						throw new NotImplementedException($"Cannot deserialize read_state response. Unknown field '{field}'");

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace EdjCase.ICP.Agent.Agents.Http
@@ -16,16 +17,18 @@ namespace EdjCase.ICP.Agent.Agents.Http
 		/// Sends a GET http request and awaits the response
 		/// </summary>
 		/// <param name="url">The url to send the GET request to</param>
+		/// <param name="cancellationToken">Optional. Token to cancel request</param>
 		/// <returns>The http response</returns>
-		Task<HttpResponse> GetAsync(string url);
+		Task<HttpResponse> GetAsync(string url, CancellationToken? cancellationToken = null);
 
 		/// <summary>
 		/// Sends a POST http request and awaits a response
 		/// </summary>
 		/// <param name="url">The url to send the POST request to</param>
 		/// <param name="cborBody">The CBOR encoded body to send</param>
+		/// <param name="cancellationToken">Optional. Token to cancel request</param>
 		/// <returns>The http response</returns>
-		Task<HttpResponse> PostAsync(string url, byte[] cborBody);
+		Task<HttpResponse> PostAsync(string url, byte[] cborBody, CancellationToken? cancellationToken = null);
 	}
 
 	/// <summary>

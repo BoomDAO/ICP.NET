@@ -17,6 +17,7 @@ using System.Formats.Cbor;
 using EdjCase.ICP.Candid.Encodings;
 using System.Linq;
 using EdjCase.ICP.BLS;
+using System.Threading;
 
 namespace EdjCase.ICP.Agent.Agents
 {
@@ -25,7 +26,6 @@ namespace EdjCase.ICP.Agent.Agents
 	/// </summary>
 	public class HttpAgent : IAgent
 	{
-		private static byte[] mainnetRootKey = ByteUtil.FromHexString("308182301d060d2b0601040182dc7c0503010201060c2b0601040182dc7c05030201036100814c0e6ec71fab583b08bd81373c255c3c371b2e84863c98a4f1e08b74235d14fb5d9c0cd546d9685f913a0c0b2cc5341583bf4b4392e467db96d65b9bb4cb717112f8472e0d5a4d14505ffd7484b01291091c5f87b98883463f98091a0baaae");
 		private byte[]? rootKeyCache = null;
 
 		/// <summary>
@@ -74,13 +74,14 @@ namespace EdjCase.ICP.Agent.Agents
 			Principal canisterId,
 			string method,
 			CandidArg arg,
-			Principal? effectiveCanisterId = null)
+			Principal? effectiveCanisterId = null,
+			CancellationToken? cancellationToken = null)
 		{
 			if (effectiveCanisterId == null)
 			{
 				effectiveCanisterId = canisterId;
 			}
-			(HttpResponse httpResponse, RequestId requestId) = await this.SendAsync($"/api/v2/canister/{effectiveCanisterId.ToText()}/call", BuildRequest);
+			(HttpResponse httpResponse, RequestId requestId) = await this.SendAsync($"/api/v2/canister/{effectiveCanisterId.ToText()}/call", BuildRequest, cancellationToken);
 
 			await httpResponse.ThrowIfErrorAsync();
 			if (httpResponse.StatusCode == System.Net.HttpStatusCode.OK)
@@ -114,9 +115,11 @@ namespace EdjCase.ICP.Agent.Agents
 		public async Task<QueryResponse> QueryAsync(
 			Principal canisterId,
 			string method,
-			CandidArg arg)
+			CandidArg arg,
+			CancellationToken? cancellationToken = null
+		)
 		{
-			(HttpResponse httpResponse, RequestId requestId) = await this.SendAsync($"/api/v2/canister/{canisterId.ToText()}/query", BuildRequest);
+			(HttpResponse httpResponse, RequestId requestId) = await this.SendAsync($"/api/v2/canister/{canisterId.ToText()}/query", BuildRequest, cancellationToken);
 			await httpResponse.ThrowIfErrorAsync();
 			byte[] cborBytes = await httpResponse.GetContentAsync();
 			return QueryResponse.ReadCbor(new CborReader(cborBytes));
@@ -128,17 +131,21 @@ namespace EdjCase.ICP.Agent.Agents
 		}
 
 		/// <inheritdoc/>
-		public async Task<ReadStateResponse> ReadStateAsync(Principal canisterId, List<StatePath> paths)
+		public async Task<ReadStateResponse> ReadStateAsync(
+			Principal canisterId,
+			List<StatePath> paths,
+			CancellationToken? cancellationToken = null
+		)
 		{
 			string url = $"/api/v2/canister/{canisterId.ToText()}/read_state";
-			(HttpResponse httpResponse, RequestId requestId) = await this.SendAsync(url, BuildRequest);
+			(HttpResponse httpResponse, RequestId requestId) = await this.SendAsync(url, BuildRequest, cancellationToken);
 
 			await httpResponse.ThrowIfErrorAsync();
 			byte[] cborBytes = await httpResponse.GetContentAsync();
 			var reader = new CborReader(cborBytes);
 			ReadStateResponse response = ReadStateResponse.ReadCbor(reader);
 
-			SubjectPublicKeyInfo rootPublicKey = await this.GetRootKeyAsync();
+			SubjectPublicKeyInfo rootPublicKey = await this.GetRootKeyAsync(cancellationToken);
 			if (!response.Certificate.IsValid(this.bls, rootPublicKey))
 			{
 				throw new InvalidCertificateException("Certificate signature does not match the IC public key");
@@ -153,11 +160,15 @@ namespace EdjCase.ICP.Agent.Agents
 		}
 
 		/// <inheritdoc/>
-		public async Task<RequestStatus?> GetRequestStatusAsync(Principal canisterId, RequestId id)
+		public async Task<RequestStatus?> GetRequestStatusAsync(
+			Principal canisterId,
+			RequestId id,
+			CancellationToken? cancellationToken = null
+		)
 		{
 			var pathRequestStatus = StatePath.FromSegments("request_status", id.RawValue);
 			var paths = new List<StatePath> { pathRequestStatus };
-			ReadStateResponse response = await this.ReadStateAsync(canisterId, paths);
+			ReadStateResponse response = await this.ReadStateAsync(canisterId, paths, cancellationToken);
 			HashTree? requestStatus = response.Certificate.Tree.GetValueOrDefault(pathRequestStatus);
 			string? status = requestStatus?.GetValueOrDefault("status")?.AsLeaf().AsUtf8();
 			//received, processing, replied, rejected or done
@@ -186,21 +197,30 @@ namespace EdjCase.ICP.Agent.Agents
 
 
 		/// <inheritdoc/>
-		public async Task<SubjectPublicKeyInfo> GetRootKeyAsync()
+		public async Task<SubjectPublicKeyInfo> GetRootKeyAsync(
+			CancellationToken? cancellationToken = null
+		)
 		{
 			if (this.rootKeyCache == null)
 			{
-				StatusResponse jsonObject = await this.GetReplicaStatusAsync();
-				this.rootKeyCache = jsonObject.DevelopmentRootKey ?? mainnetRootKey;
+				StatusResponse jsonObject = await this.GetReplicaStatusAsync(cancellationToken);
+				this.rootKeyCache = jsonObject.DevelopmentRootKey;
+				if (this.rootKeyCache == null)
+				{
+					// If not specified, use main net
+					return SubjectPublicKeyInfo.MainNetRootPublicKey;
+				}
 			}
 			return SubjectPublicKeyInfo.FromDerEncoding(this.rootKeyCache);
 		}
 
 
 		/// <inheritdoc/>
-		public async Task<StatusResponse> GetReplicaStatusAsync()
+		public async Task<StatusResponse> GetReplicaStatusAsync(
+			CancellationToken? cancellationToken = null
+		)
 		{
-			HttpResponse httpResponse = await this.httpClient.GetAsync("/api/v2/status");
+			HttpResponse httpResponse = await this.httpClient.GetAsync("/api/v2/status", cancellationToken);
 			await httpResponse.ThrowIfErrorAsync();
 			byte[] bytes = await httpResponse.GetContentAsync();
 			return StatusResponse.ReadCbor(new CborReader(bytes));
@@ -208,7 +228,8 @@ namespace EdjCase.ICP.Agent.Agents
 
 		private async Task<(HttpResponse Response, RequestId RequestId)> SendAsync<TRequest>(
 			string url,
-			Func<Principal, ICTimestamp, TRequest> getRequest
+			Func<Principal, ICTimestamp, TRequest> getRequest,
+			CancellationToken? cancellationToken = null
 		)
 			where TRequest : IRepresentationIndependentHashItem
 		{
@@ -222,7 +243,7 @@ namespace EdjCase.ICP.Agent.Agents
 				SubjectPublicKeyInfo publicKey = this.Identity.GetPublicKey();
 				principal = publicKey.ToPrincipal();
 			}
-			TRequest request = getRequest(principal, ICTimestamp.Now());
+			TRequest request = getRequest(principal, ICTimestamp.Future(TimeSpan.FromSeconds(10)));
 			Dictionary<string, IHashable> content = request.BuildHashableItem();
 
 			SignedContent signedContent;
@@ -240,7 +261,7 @@ namespace EdjCase.ICP.Agent.Agents
 #if DEBUG
 			string hex = ByteUtil.ToHexString(cborBody);
 #endif
-			HttpResponse httpResponse = await this.httpClient.PostAsync(url, cborBody);
+			HttpResponse httpResponse = await this.httpClient.PostAsync(url, cborBody, cancellationToken);
 			var sha256 = SHA256HashFunction.Create();
 			RequestId requestId = RequestId.FromObject(content, sha256); // TODO this is redundant, `CreateSignedContent` hashes it too
 			return (httpResponse, requestId);
