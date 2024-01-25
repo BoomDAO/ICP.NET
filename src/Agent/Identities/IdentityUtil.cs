@@ -53,13 +53,27 @@ namespace EdjCase.ICP.Agent.Identities
 		/// <summary>
 		/// Parses a PEM file into the proper IIdentity class
 		/// </summary>
-		/// <param name="pemFile">The stream of a PEM file</param>
+		/// <param name="pemFilePath">The file path of a PEM file</param>
+		/// <param name="password">Optional. The password of the encrypted PEM file</param>
 		/// <returns>IIdentity for the private key</returns>
-		public static IIdentity FromPemFile(Stream pemFile)
+		public static IIdentity FromPemFile(string pemFilePath, string? password)
+		{
+			using (FileStream stream = File.OpenRead(pemFilePath))
+			{
+				return FromPemFile(stream, password);
+			}
+		}
+		/// <summary>
+		/// Parses a PEM file into the proper IIdentity class
+		/// </summary>
+		/// <param name="pemFile">The stream of a PEM file</param>
+		/// <param name="password">Optional. The password of the encrypted PEM file</param>
+		/// <returns>IIdentity for the private key</returns>
+		public static IIdentity FromPemFile(Stream pemFile, string? password)
 		{
 			using (StreamReader reader = new StreamReader(pemFile))
 			{
-				return FromPemFile(reader);
+				return FromPemFile(reader, password);
 			}
 		}
 
@@ -67,11 +81,21 @@ namespace EdjCase.ICP.Agent.Identities
 		/// Parses a PEM file into the proper IIdentity class
 		/// </summary>
 		/// <param name="pemFileReader">The text reader of a PEM file</param>
+		/// <param name="password">Optional. The password of the encrypted PEM file</param>
 		/// <returns>IIdentity for the private key</returns>
-		public static IIdentity FromPemFile(TextReader pemFileReader)
+		public static IIdentity FromPemFile(TextReader pemFileReader, string? password)
 		{
-			PemReader pemReader = new PemReader(pemFileReader);
+			IPasswordFinder? passwordFinder = null;
+			if (password != null)
+			{
+				passwordFinder = new StaticPassworFinder(password);
+			};
+			PemReader pemReader = new PemReader(pemFileReader, passwordFinder);
 			object obj = pemReader.ReadObject();
+			if (obj == null)
+			{
+				throw new Exception("Could not read PEM file");
+			}
 			if (obj is AsymmetricCipherKeyPair aKeyPair
 				&& aKeyPair.Private is ECPrivateKeyParameters ecPrivateKey)
 			{
@@ -92,6 +116,19 @@ namespace EdjCase.ICP.Agent.Identities
 			else
 			{
 				throw new NotImplementedException($"PEM data of type '{obj.GetType()}' is not yet supported");
+			}
+		}
+
+		private class StaticPassworFinder : IPasswordFinder
+		{
+			private readonly string password;
+			public StaticPassworFinder(string password)
+			{
+				this.password = password;
+			}
+			public char[] GetPassword()
+			{
+				return this.password.ToCharArray();
 			}
 		}
 	}

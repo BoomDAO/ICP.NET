@@ -466,18 +466,28 @@
             <param name="privateKey">A raw Ed25519 private key</param>
             <returns>Ed25519 identity</returns>
         </member>
-        <member name="M:EdjCase.ICP.Agent.Identities.IdentityUtil.FromPemFile(System.IO.Stream)">
+        <member name="M:EdjCase.ICP.Agent.Identities.IdentityUtil.FromPemFile(System.String,System.String)">
+            <summary>
+            Parses a PEM file into the proper IIdentity class
+            </summary>
+            <param name="pemFilePath">The file path of a PEM file</param>
+            <param name="password">Optional. The password of the encrypted PEM file</param>
+            <returns>IIdentity for the private key</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Identities.IdentityUtil.FromPemFile(System.IO.Stream,System.String)">
             <summary>
             Parses a PEM file into the proper IIdentity class
             </summary>
             <param name="pemFile">The stream of a PEM file</param>
+            <param name="password">Optional. The password of the encrypted PEM file</param>
             <returns>IIdentity for the private key</returns>
         </member>
-        <member name="M:EdjCase.ICP.Agent.Identities.IdentityUtil.FromPemFile(System.IO.TextReader)">
+        <member name="M:EdjCase.ICP.Agent.Identities.IdentityUtil.FromPemFile(System.IO.TextReader,System.String)">
             <summary>
             Parses a PEM file into the proper IIdentity class
             </summary>
             <param name="pemFileReader">The text reader of a PEM file</param>
+            <param name="password">Optional. The password of the encrypted PEM file</param>
             <returns>IIdentity for the private key</returns>
         </member>
         <member name="T:EdjCase.ICP.Agent.Identities.IIdentity">
@@ -1172,6 +1182,310 @@
             development instances, to allow the agent to fetch the public key. For the
             Internet Computer, agents must have an independent trustworthy source for this data,
             and must not be tempted to fetch it from this insecure location</param>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.AssetCanister.AssetCanisterApiClient">
+            <summary>
+            Represents a client for interacting with the Asset Canister API.
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Agent.Standards.AssetCanister.AssetCanisterApiClient.MAX_INGRESS_MESSAGE_SIZE">
+            <summary>
+            The maximum size of an ingress message in bytes.
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Agent.Standards.AssetCanister.AssetCanisterApiClient.MAX_CHUNK_SIZE">
+            <summary>
+            The maximum size of a file chunk
+            It is set to just under 2MB.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.AssetCanisterApiClient.Agent">
+            <summary>
+            The IC agent
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.AssetCanisterApiClient.CanisterId">
+            <summary>
+            The asset canister id
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.AssetCanisterApiClient.Converter">
+            <summary>
+            The optional custom candid converter for request and response objects
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.AssetCanisterApiClient.#ctor(EdjCase.ICP.Agent.Agents.IAgent,EdjCase.ICP.Candid.Models.Principal,EdjCase.ICP.Candid.CandidConverter)">
+            <summary>
+            Initializes a new instance of the <see cref="T:EdjCase.ICP.Agent.Standards.AssetCanister.AssetCanisterApiClient"/> class.
+            </summary>
+            <param name="agent">The agent used for communication.</param>
+            <param name="canisterId">The ID of the asset canister.</param>
+            <param name="converter">The Candid converter to use for encoding and decoding values (optional).</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.AssetCanisterApiClient.UploadAssetSimpleAsync(System.String,System.String,System.String,System.Byte[],System.Byte[])">
+            <summary>
+            A helper method to upload an asset to the asset canister.
+            If the asset is larger than <see cref="F:EdjCase.ICP.Agent.Standards.AssetCanister.AssetCanisterApiClient.MAX_CHUNK_SIZE"/>, it will be chunked.
+            If the asset is smaller than <see cref="F:EdjCase.ICP.Agent.Standards.AssetCanister.AssetCanisterApiClient.MAX_CHUNK_SIZE"/>, it will be uploaded in a single request.
+            See <see cref="M:EdjCase.ICP.Agent.Standards.AssetCanister.AssetCanisterApiClient.UploadAssetChunkedAsync(System.String,System.String,System.String,System.IO.Stream,System.Byte[],System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Collections.Generic.List{System.ValueTuple{System.String,System.String}},System.Nullable{System.UInt64})"/> for more advanced options
+            </summary>
+            <param name="key">The key of the asset.</param>
+            <param name="contentType">The content type of the asset.</param>
+            <param name="contentEncoding">The content encoding of the asset.</param>
+            <param name="content">The content of the asset.</param>
+            <param name="sha256">The SHA256 hash of the asset (optional).</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.AssetCanisterApiClient.UploadAssetChunkedAsync(System.String,System.String,System.String,System.IO.Stream,System.Byte[],System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Collections.Generic.List{System.ValueTuple{System.String,System.String}},System.Nullable{System.UInt64})">
+            <summary>
+             A helper method to upload an asset to the asset canister in chunks
+            </summary>
+            <param name="key">The key of the asset.</param>
+            <param name="contentType">The content type of the asset.</param>
+            <param name="contentEncoding">The content encoding of the asset.</param>
+            <param name="contentStream">The stream containing the asset content.</param>
+            <param name="sha256">The SHA256 hash of the asset content.</param>
+            <param name="allowRawAccess">Specifies whether raw access is allowed for the asset.</param>
+            <param name="enableAliasing">Specifies whether aliasing is enabled for the asset.</param>
+            <param name="headers">Additional headers to be included in the request.</param>
+            <param name="maxAge">The maximum age of the asset in seconds.</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.AssetCanisterApiClient.GetApiVersionAsync">
+            <summary>
+            Retrieves the API version for the asset canister
+            </summary>
+            <returns>The API version</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.AssetCanisterApiClient.GetAsync(System.String,System.Collections.Generic.List{System.String})">
+            <summary>
+            Retrieves the specified asset with the given accept encodings
+            </summary>
+            <param name="key">The asset key to get</param>
+            <param name="acceptEncodings">A list of encodings to accept for the asset</param>
+            <returns>The result of the get request</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.AssetCanisterApiClient.GetChunkAsync(System.String,System.String,EdjCase.ICP.Candid.Models.UnboundedUInt,System.Byte[])">
+            <summary>
+            Retrieves a chunk of data from the asset canister.
+            </summary>
+            <param name="key">The key of the asset.</param>
+            <param name="contentEncoding">The content encoding of the asset.</param>
+            <param name="index">The index of the chunk.</param>
+            <param name="sha256">The SHA256 hash of the chunk (optional).</param>
+            <returns>The result of the chunk retrieval operation.</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.AssetCanisterApiClient.ListAsync">
+            <summary>
+            Retrieves a list of assets from the asset canister
+            </summary>
+            <returns>List of assets</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.AssetCanisterApiClient.GetCertifiedTreeAsync">
+            <summary>
+            Retrieves the certified tree of the asset canister
+            </summary>
+            <returns>The certified tree result.</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.AssetCanisterApiClient.CreateBatchAsync">
+            <summary>
+            Creates a new batch for asset operations.
+            </summary>
+            <returns>The result of the batch creation operation.</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.AssetCanisterApiClient.CreateChunkAsync(EdjCase.ICP.Candid.Models.UnboundedUInt,System.Byte[])">
+            <summary>
+            Creates a new chunk in a batch.
+            </summary>
+            <param name="batchId">The ID of the batch.</param>
+            <param name="content">The content of the chunk.</param>
+            <returns>The result of the chunk creation operation.</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.AssetCanisterApiClient.CommitBatchAsync(EdjCase.ICP.Candid.Models.UnboundedUInt,System.Collections.Generic.List{EdjCase.ICP.Agent.Standards.AssetCanister.Models.BatchOperationKind})">
+            <summary>
+            Commits a batch of operations to the asset canister.
+            </summary>
+            <param name="batchId">The ID of the batch.</param>
+            <param name="operations">The operations to commit.</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.AssetCanisterApiClient.ProposeCommitBatchAsync(EdjCase.ICP.Candid.Models.UnboundedUInt,System.Collections.Generic.List{EdjCase.ICP.Agent.Standards.AssetCanister.Models.BatchOperationKind})">
+            <summary>
+            Proposes a batch of operations for later commitment.
+            </summary>
+            <param name="batchId">The ID of the batch.</param>
+            <param name="operations">The operations to propose.</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.AssetCanisterApiClient.CommitProposedBatchAsync(EdjCase.ICP.Candid.Models.UnboundedUInt,System.Byte[])">
+            <summary>
+            Commits a previously proposed batch of operations.
+            </summary>
+            <param name="batchId">The ID of the batch.</param>
+            <param name="evidence">The evidence for the proposed batch.</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.AssetCanisterApiClient.ComputeEvidenceAsync(EdjCase.ICP.Candid.Models.UnboundedUInt,System.Nullable{System.UInt16})">
+            <summary>
+            Computes evidence for a proposed batch of operations.
+            </summary>
+            <param name="batchId">The ID of the batch.</param>
+            <param name="maxIterations">The maximum number of iterations (optional).</param>
+            <returns>The computed evidence.</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.AssetCanisterApiClient.DeleteBatchAsync(EdjCase.ICP.Candid.Models.UnboundedUInt)">
+            <summary>
+            Deletes a batch of operations.
+            </summary>
+            <param name="batchId">The ID of the batch.</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.AssetCanisterApiClient.CreateAssetAsync(System.String,System.String,System.Nullable{System.UInt64},System.Collections.Generic.List{System.ValueTuple{System.String,System.String}},System.Nullable{System.Boolean},System.Nullable{System.Boolean})">
+            <summary>
+            Creates a new asset in the asset canister.
+            </summary>
+            <param name="key">The key of the asset.</param>
+            <param name="contentType">The content type of the asset.</param>
+            <param name="maxAge">The maximum age of the asset in seconds (optional).</param>
+            <param name="headers">Additional headers for the asset (optional).</param>
+            <param name="enableAliasing">Specifies whether aliasing is enabled for the asset (optional).</param>
+            <param name="allowRawAccess">Specifies whether raw access is allowed for the asset (optional).</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.AssetCanisterApiClient.SetAssetContentAsync(System.String,System.String,System.Collections.Generic.List{EdjCase.ICP.Candid.Models.UnboundedUInt},System.Byte[])">
+            <summary>
+            Sets the content for an asset in the asset canister.
+            </summary>
+            <param name="key">The key of the asset.</param>
+            <param name="contentEncoding">The content encoding of the asset.</param>
+            <param name="chunkIds">The IDs of the chunks comprising the asset content.</param>
+            <param name="sha256">The SHA256 hash of the asset content (optional).</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.AssetCanisterApiClient.UnsetAssetContentAsync(System.String,System.String)">
+            <summary>
+            Removes a content encoding from an asset in the asset canister.
+            </summary>
+            <param name="key">The key of the asset.</param>
+            <param name="contentEncoding">The content encoding to remove.</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.AssetCanisterApiClient.DeleteAssetAsync(System.String)">
+            <summary>
+            Deletes an asset from the asset canister.
+            </summary>
+            <param name="key">The key of the asset to delete.</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.AssetCanisterApiClient.ClearAsync">
+            <summary>
+            Deletes all assets from the asset canister.
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.AssetCanisterApiClient.StoreAsync(System.String,System.String,System.String,System.Byte[],System.Byte[])">
+            <summary>
+            Stores an asset in the asset canister.
+            </summary>
+            <param name="key">The key of the asset.</param>
+            <param name="contentType">The content type of the asset.</param>
+            <param name="contextEncoding">The content encoding of the asset.</param>
+            <param name="content">The content of the asset.</param>
+            <param name="sha256">The SHA256 hash of the asset (optional).</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.AssetCanisterApiClient.AuthorizeAsync(EdjCase.ICP.Candid.Models.Principal)">
+            <summary>
+            Grants the Commit permission to an identity
+            </summary>
+            <param name="principal">The principal to authorize.</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.AssetCanisterApiClient.DeauthorizeAsync(EdjCase.ICP.Candid.Models.Principal)">
+            <summary>
+            Revokes the Commit permission from a principal.
+            </summary>
+            <param name="principal">The principal to deauthorize.</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.AssetCanisterApiClient.ListAuthorizedAsync">
+            <summary>
+            Retrieves a list of principals with the Commit permission.
+            </summary>
+            <returns>List of principals.</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.AssetCanisterApiClient.GrantPermissionAsync(EdjCase.ICP.Candid.Models.Principal,EdjCase.ICP.Agent.Standards.AssetCanister.Models.Permission)">
+            <summary>
+            Grants a permission to an identity
+            </summary>
+            <param name="principal">The principal to grant permission to.</param>
+            <param name="permission">The permission to grant.</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.AssetCanisterApiClient.RevokePermissionAsync(EdjCase.ICP.Candid.Models.Principal,EdjCase.ICP.Agent.Standards.AssetCanister.Models.Permission)">
+            <summary>
+            Revokes a permission from a principal.
+            </summary>
+            <param name="principal">The principal to revoke permission from.</param>
+            <param name="permission">The permission to revoke.</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.AssetCanisterApiClient.ListPermittedAsync(EdjCase.ICP.Agent.Standards.AssetCanister.Models.Permission)">
+            <summary>
+            Retrieves a list of principals with a specified permission.
+            </summary>
+            <param name="withPermission">The permission to check.</param>
+            <returns>List of principals.</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.AssetCanisterApiClient.TakeOwnershipAsync">
+            <summary>
+            Takes ownership of the asset canister.
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.AssetCanisterApiClient.GetAssetPropertiesAsync(System.String)">
+            <summary>
+            Retrieves properties of a specific asset.
+            </summary>
+            <param name="key">The key of the asset.</param>
+            <returns>The asset properties.</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.AssetCanisterApiClient.SetAssetPropertiesAsync(EdjCase.ICP.Agent.Standards.AssetCanister.Models.SetAssetPropertiesRequest)">
+            <summary>
+            Sets properties for an asset in the asset canister.
+            </summary>
+            <param name="request">The request containing the asset properties to set.</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.AssetCanisterApiClient.GetConfigurationAsync">
+            <summary>
+            Retrieves the configuration of the asset canister.
+            </summary>
+            <returns>The configuration response.</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.AssetCanisterApiClient.ConfigureAsync(EdjCase.ICP.Agent.Standards.AssetCanister.Models.ConfigureRequest)">
+            <summary>
+            Configures the asset canister.
+            </summary>
+            <param name="request">The request containing the configuration settings.</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.AssetCanisterApiClient.ValidateGrantPermissionAsync(EdjCase.ICP.Candid.Models.Principal,EdjCase.ICP.Agent.Standards.AssetCanister.Models.Permission)">
+            <summary>
+            Validates the granting of a permission to a principal.
+            </summary>
+            <param name="principal">The principal to grant permission to.</param>
+            <param name="permission">The permission to grant.</param>
+            <returns>The validation result.</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.AssetCanisterApiClient.ValidateRevokePermissionAsync(EdjCase.ICP.Candid.Models.Principal,EdjCase.ICP.Agent.Standards.AssetCanister.Models.Permission)">
+            <summary>
+            Validates the revocation of a permission from a principal.
+            </summary>
+            <param name="principal">The principal to revoke permission from.</param>
+            <param name="permission">The permission to revoke.</param>
+            <returns>The validation result.</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.AssetCanisterApiClient.ValidateTakeOwnershipAsync">
+            <summary>
+            Validates the taking of ownership of the asset canister.
+            </summary>
+            <returns>The validation result.</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.AssetCanisterApiClient.ValidateCommitProposedBatchAsync(EdjCase.ICP.Agent.Standards.AssetCanister.Models.CommitProposedBatchRequest)">
+            <summary>
+            Validates the commitment of a proposed batch of operations.
+            </summary>
+            <param name="request">The request containing the proposed batch details.</param>
+            <returns>The validation result.</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.AssetCanisterApiClient.ValidateConfigureAsync(EdjCase.ICP.Agent.Standards.AssetCanister.Models.ConfigureRequest)">
+            <summary>
+            Validates the configuration settings for the asset canister.
+            </summary>
+            <param name="request">The request containing the configuration settings.</param>
+            <returns>The validation result.</returns>
         </member>
         <member name="T:EdjCase.ICP.Agent.Standards.ICRC1.ICRC1Client">
             <summary>

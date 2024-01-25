@@ -1119,6 +1119,12 @@
             <param name="values">An array of values to use as vector items</param>
             <returns>A candid typed value of the array</returns>
         </member>
+        <member name="M:EdjCase.ICP.Candid.Models.CandidTypedValue.EmptyRecord">
+            <summary>
+            A helper method to create a typed record value with no fields
+            </summary>
+            <returns>A candid typed value of the empty record</returns>
+        </member>
         <member name="F:EdjCase.ICP.Candid.Models.CompoundTypeTable.CompoundTypeIndexMap">
             <summary>
             A mapping of compound type definition to `EncodedCompoundTypes` index to be used as reference
@@ -1940,6 +1946,12 @@
             Helper method to create a Principal candid type
             </summary>
             <returns>Principal candid type</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Types.CandidType.Blob">
+            <summary>
+            Helper method to create a Blob/Vec Nat8 candid type
+            </summary>
+            <returns>Blob/Vec Nat8 candid type</returns>
         </member>
         <member name="M:EdjCase.ICP.Candid.Models.Types.CandidType.Null">
             <summary>
@@ -3425,6 +3437,13 @@
             </summary>
             <param name="value">An principal value to convert to a candid principal</param>
             <returns>Candid principal value</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Candid.Models.Values.CandidValue.Blob(System.Byte[])">
+            <summary>
+            Helper method to create a blob/vec nat8 value from a byte array
+            </summary>
+            <param name="value">A byte array to convert to a blob/vec nat8</param>
+            <returns>Candid vector value of nat8's</returns>
         </member>
         <member name="M:EdjCase.ICP.Candid.Models.Values.CandidValue.Null">
             <summary>

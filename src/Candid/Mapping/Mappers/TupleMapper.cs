@@ -69,6 +69,7 @@ namespace EdjCase.ICP.Candid.Mapping.Mappers
 				object propValue = tuple[i];
 				CandidValue v = converter.FromObject(propValue);
 				fields.Add(CandidTag.FromId((uint)i), v);
+				i++;
 			}
 			return new CandidRecord(fields);
 		}

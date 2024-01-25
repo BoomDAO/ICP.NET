@@ -563,5 +563,17 @@ namespace EdjCase.ICP.Candid.Models
 				new CandidVectorType(innerType)
 			);
 		}
+
+		/// <summary>
+		/// A helper method to create a typed record value with no fields
+		/// </summary>
+		/// <returns>A candid typed value of the empty record</returns>
+		public static CandidTypedValue EmptyRecord()
+		{
+			return new CandidTypedValue(
+				new CandidRecord(new Dictionary<CandidTag, CandidValue>()),
+				new CandidRecordType(new Dictionary<CandidTag, CandidType>())
+			);
+		}
 	}
 }
