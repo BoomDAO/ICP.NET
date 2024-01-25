@@ -5,24 +5,50 @@ using HeaderField = System.ValueTuple<System.String, System.String>;
 
 namespace EdjCase.ICP.Agent.Standards.AssetCanister.Models
 {
+	/// <summary>
+	/// Represents an HTTP request for the Asset Canister.
+	/// </summary>
 	public class HttpRequest
 	{
+		/// <summary>
+		/// HTTP method (e.g., GET, POST).
+		/// </summary>
 		[CandidName("method")]
 		public string Method { get; set; }
 
+		/// <summary>
+		/// URL of the request.
+		/// </summary>
 		[CandidName("url")]
 		public string Url { get; set; }
 
+		/// <summary>
+		/// List of HTTP headers.
+		/// </summary>
 		[CandidName("headers")]
-		public HttpRequest.HeadersInfo Headers { get; set; }
+		public List<HeaderField> Headers { get; set; }
 
+		/// <summary>
+		/// Body of the request as a list of bytes.
+		/// </summary>
 		[CandidName("body")]
 		public List<byte> Body { get; set; }
 
+		/// <summary>
+		/// Optional certificate version.
+		/// </summary>
 		[CandidName("certificate_version")]
 		public OptionalValue<ushort> CertificateVersion { get; set; }
 
-		public HttpRequest(string method, string url, HttpRequest.HeadersInfo headers, List<byte> body, OptionalValue<ushort> certificateVersion)
+		/// <summary>
+		/// Constructs an HttpRequest with specified parameters.
+		/// </summary>
+		/// <param name="method">HTTP method.</param>
+		/// <param name="url">URL of the request.</param>
+		/// <param name="headers">List of HTTP headers.</param>
+		/// <param name="body">Body of the request as a list of bytes.</param>
+		/// <param name="certificateVersion">Optional certificate version.</param>
+		public HttpRequest(string method, string url, List<HeaderField> headers, List<byte> body, OptionalValue<ushort> certificateVersion)
 		{
 			this.Method = method;
 			this.Url = url;
@@ -31,15 +57,11 @@ namespace EdjCase.ICP.Agent.Standards.AssetCanister.Models
 			this.CertificateVersion = certificateVersion;
 		}
 
+		/// <summary>
+		/// Default constructor for HttpRequest.
+		/// </summary>
 		public HttpRequest()
 		{
-		}
-
-		public class HeadersInfo : List<HeaderField>
-		{
-			public HeadersInfo()
-			{
-			}
 		}
 	}
 }
