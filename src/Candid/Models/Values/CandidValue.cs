@@ -550,6 +550,20 @@ namespace EdjCase.ICP.Candid.Models.Values
 			return new CandidPrimitive(PrimitiveType.Principal, value);
 		}
 
+		/// <summary>
+		/// Helper method to create a blob/vec nat8 value from a byte array
+		/// </summary>
+		/// <param name="value">A byte array to convert to a blob/vec nat8</param>
+		/// <returns>Candid vector value of nat8's</returns>
+		public static CandidVector Blob(byte[] value)
+		{
+			return new CandidVector(
+				value
+				.Select(CandidValue.Nat8)
+				.ToArray()
+			);
+		}
+
 
 		/// <summary>
 		/// Helper method to create a null value

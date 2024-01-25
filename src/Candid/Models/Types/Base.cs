@@ -202,6 +202,15 @@ namespace EdjCase.ICP.Candid.Models.Types
 		}
 
 		/// <summary>
+		/// Helper method to create a Blob/Vec Nat8 candid type
+		/// </summary>
+		/// <returns>Blob/Vec Nat8 candid type</returns>
+		public static CandidVectorType Blob()
+		{
+			return new CandidVectorType(CandidType.Nat8());
+		}
+
+		/// <summary>
 		/// Helper method to create a Null candid type
 		/// </summary>
 		/// <returns>Null candid type</returns>
