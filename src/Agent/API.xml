@@ -1487,6 +1487,1355 @@
             <param name="request">The request containing the configuration settings.</param>
             <returns>The validation result.</returns>
         </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.Asset">
+            <summary>
+            Represents an asset in the asset canister.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.Asset.Key">
+            <summary>
+            The key of the asset.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.Asset.ContentType">
+            <summary>
+            The content type of the asset.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.Asset.Encodings">
+            <summary>
+            A list of encodings for the asset.
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.Asset.#ctor(System.String,System.String,System.Collections.Generic.List{EdjCase.ICP.Agent.Standards.AssetCanister.Models.Encoding})">
+            <summary>
+            Initializes a new instance of the <see cref="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.Asset"/> class.
+            </summary>
+            <param name="key">The key of the asset.</param>
+            <param name="contentType">The content type of the asset.</param>
+            <param name="encodings">A list of encodings for the asset.</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.Asset.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.Asset"/> class.
+            </summary>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.Encoding">
+            <summary>
+            Represents an encoding of an asset.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.Encoding.ContentEncoding">
+            <summary>
+            The content encoding of the asset.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.Encoding.Sha256">
+            <summary>
+            The SHA256 hash of the asset content.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.Encoding.Length">
+            <summary>
+            The length of the asset content.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.Encoding.Modified">
+            <summary>
+            The last modified timestamp of the asset content.
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.Encoding.#ctor(System.String,EdjCase.ICP.Candid.Models.OptionalValue{System.Byte[]},EdjCase.ICP.Candid.Models.UnboundedUInt,EdjCase.ICP.Candid.Models.UnboundedInt)">
+            <summary>
+            Initializes a new instance of the <see cref="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.Encoding"/> class.
+            </summary>
+            <param name="contentEncoding">The content encoding of the asset.</param>
+            <param name="sha256">The SHA256 hash of the asset content.</param>
+            <param name="length">The length of the asset content.</param>
+            <param name="modified">The last modified timestamp of the asset content.</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.Encoding.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.Encoding"/> class.
+            </summary>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.AssetCanisterArgs">
+            <summary>
+            Represents arguments for asset canister operations, supporting different variants.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.AssetCanisterArgs.Tag">
+            <summary>
+            The tag indicating the type of the asset canister argument.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.AssetCanisterArgs.Value">
+            <summary>
+            The value of the asset canister argument.
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.AssetCanisterArgs.#ctor(EdjCase.ICP.Agent.Standards.AssetCanister.Models.AssetCanisterArgsTag,System.Object)">
+            <summary>
+            Initializes a new instance of the <see cref="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.AssetCanisterArgs"/> class.
+            </summary>
+            <param name="tag">The tag indicating the type of the argument.</param>
+            <param name="value">The value of the argument.</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.AssetCanisterArgs.#ctor">
+            <summary>
+            Protected constructor for <see cref="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.AssetCanisterArgs"/>.
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.AssetCanisterArgs.Init">
+            <summary>
+            Creates an instance of <see cref="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.AssetCanisterArgs"/> for the 'Init' operation.
+            </summary>
+            <returns>A new instance of <see cref="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.AssetCanisterArgs"/>.</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.AssetCanisterArgs.Upgrade(EdjCase.ICP.Agent.Standards.AssetCanister.Models.UpgradeArgs)">
+            <summary>
+            Creates an instance of <see cref="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.AssetCanisterArgs"/> for the 'Upgrade' operation.
+            </summary>
+            <param name="info">The upgrade arguments.</param>
+            <returns>A new instance of <see cref="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.AssetCanisterArgs"/>.</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.AssetCanisterArgs.AsUpgrade">
+            <summary>
+            Retrieves the 'Upgrade' arguments from the instance.
+            </summary>
+            <returns>The 'Upgrade' arguments.</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.AssetCanisterArgs.ValidateTag(EdjCase.ICP.Agent.Standards.AssetCanister.Models.AssetCanisterArgsTag)">
+            <summary>
+            Validates that the current tag matches the expected tag.
+            </summary>
+            <param name="tag">The expected tag.</param>
+            <exception cref="T:System.InvalidOperationException">Thrown if the current tag does not match the expected tag.</exception>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.AssetCanisterArgsTag">
+            <summary>
+            Enumerates the tags for different types of asset canister arguments.
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Agent.Standards.AssetCanister.Models.AssetCanisterArgsTag.Init">
+            <summary>
+            Tag for initialization arguments.
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Agent.Standards.AssetCanister.Models.AssetCanisterArgsTag.Upgrade">
+            <summary>
+            Tag for upgrade arguments.
+            </summary>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.BatchOperationKind">
+            <summary>
+            Represents a batch operation kind for asset canister operations, supporting different variants.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.BatchOperationKind.Tag">
+            <summary>
+            The tag indicating the type of the batch operation.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.BatchOperationKind.Value">
+            <summary>
+            The value of the batch operation.
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.BatchOperationKind.#ctor(EdjCase.ICP.Agent.Standards.AssetCanister.Models.BatchOperationKindTag,System.Object)">
+            <summary>
+            Initializes a new instance of the <see cref="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.BatchOperationKind"/> class.
+            </summary>
+            <param name="tag">The tag indicating the type of the operation.</param>
+            <param name="value">The value of the operation.</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.BatchOperationKind.#ctor">
+            <summary>
+            Protected constructor for <see cref="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.BatchOperationKind"/>.
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.BatchOperationKind.CreateAsset(EdjCase.ICP.Agent.Standards.AssetCanister.Models.CreateAssetArguments)">
+            <summary>
+            Creates an instance of <see cref="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.BatchOperationKind"/> for the 'CreateAsset' operation.
+            </summary>
+            <param name="info">The arguments for the 'CreateAsset' operation.</param>
+            <returns>A new instance of <see cref="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.BatchOperationKind"/>.</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.BatchOperationKind.SetAssetContent(EdjCase.ICP.Agent.Standards.AssetCanister.Models.SetAssetContentArguments)">
+            <summary>
+            Creates an instance of <see cref="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.BatchOperationKind"/> for the 'SetAssetContent' operation.
+            </summary>
+            <param name="info">The arguments for the 'SetAssetContent' operation.</param>
+            <returns>A new instance of <see cref="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.BatchOperationKind"/>.</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.BatchOperationKind.SetAssetProperties(EdjCase.ICP.Agent.Standards.AssetCanister.Models.SetAssetPropertiesRequest)">
+            <summary>
+            Creates an instance of <see cref="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.BatchOperationKind"/> for the 'SetAssetProperties' operation.
+            </summary>
+            <param name="info">The arguments for the 'SetAssetProperties' operation.</param>
+            <returns>A new instance of <see cref="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.BatchOperationKind"/>.</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.BatchOperationKind.UnsetAssetContent(EdjCase.ICP.Agent.Standards.AssetCanister.Models.UnsetAssetContentArguments)">
+            <summary>
+            Creates an instance of <see cref="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.BatchOperationKind"/> for the 'UnsetAssetContent' operation.
+            </summary>
+            <param name="info">The arguments for the 'UnsetAssetContent' operation.</param>
+            <returns>A new instance of <see cref="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.BatchOperationKind"/>.</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.BatchOperationKind.DeleteAsset(EdjCase.ICP.Agent.Standards.AssetCanister.Models.DeleteAssetArguments)">
+            <summary>
+            Creates an instance of <see cref="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.BatchOperationKind"/> for the 'DeleteAsset' operation.
+            </summary>
+            <param name="info">The arguments for the 'DeleteAsset' operation.</param>
+            <returns>A new instance of <see cref="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.BatchOperationKind"/>.</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.BatchOperationKind.Clear">
+            <summary>
+            Creates an instance of <see cref="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.BatchOperationKind"/> for the 'Clear' operation.
+            </summary>
+            <returns>A new instance of <see cref="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.BatchOperationKind"/>.</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.BatchOperationKind.AsCreateAsset">
+            <summary>
+            Retrieves the 'CreateAsset' arguments from the instance.
+            </summary>
+            <returns>The 'CreateAsset' arguments.</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.BatchOperationKind.AsSetAssetContent">
+            <summary>
+            Retrieves the 'SetAssetContent' arguments from the instance.
+            </summary>
+            <returns>The 'SetAssetContent' arguments.</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.BatchOperationKind.AsSetAssetProperties">
+            <summary>
+            Retrieves the 'SetAssetProperties' arguments from the instance.
+            </summary>
+            <returns>The 'SetAssetProperties' arguments.</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.BatchOperationKind.AsUnsetAssetContent">
+            <summary>
+            Retrieves the 'UnsetAssetContent' arguments from the instance.
+            </summary>
+            <returns>The 'UnsetAssetContent' arguments.</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.BatchOperationKind.AsDeleteAsset">
+            <summary>
+            Retrieves the 'DeleteAsset' arguments from the instance.
+            </summary>
+            <returns>The 'DeleteAsset' arguments.</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.BatchOperationKind.ValidateTag(EdjCase.ICP.Agent.Standards.AssetCanister.Models.BatchOperationKindTag)">
+            <summary>
+            Validates that the current tag matches the expected tag.
+            </summary>
+            <param name="tag">The expected tag.</param>
+            <exception cref="T:System.InvalidOperationException">Thrown if the current tag does not match the expected tag.</exception>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.BatchOperationKindTag">
+            <summary>
+            Enumerates the tags for different types of batch operations.
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Agent.Standards.AssetCanister.Models.BatchOperationKindTag.CreateAsset">
+            <summary>
+            Tag for the 'CreateAsset' operation.
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Agent.Standards.AssetCanister.Models.BatchOperationKindTag.SetAssetContent">
+            <summary>
+            Tag for the 'SetAssetContent' operation.
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Agent.Standards.AssetCanister.Models.BatchOperationKindTag.SetAssetProperties">
+            <summary>
+            Tag for the 'SetAssetProperties' operation.
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Agent.Standards.AssetCanister.Models.BatchOperationKindTag.UnsetAssetContent">
+            <summary>
+            Tag for the 'UnsetAssetContent' operation.
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Agent.Standards.AssetCanister.Models.BatchOperationKindTag.DeleteAsset">
+            <summary>
+            Tag for the 'DeleteAsset' operation.
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Agent.Standards.AssetCanister.Models.BatchOperationKindTag.Clear">
+            <summary>
+            Tag for the 'Clear' operation.
+            </summary>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.CertifiedTreeResult">
+            <summary>
+            Represents the result of a certified tree query to the asset canister.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.CertifiedTreeResult.Certificate">
+            <summary>
+            The certificate associated with the certified tree.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.CertifiedTreeResult.Tree">
+            <summary>
+            The binary representation of the certified tree.
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.CertifiedTreeResult.#ctor(System.Byte[],System.Byte[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.CertifiedTreeResult"/> class with specified certificate and tree.
+            </summary>
+            <param name="certificate">The certificate associated with the certified tree.</param>
+            <param name="tree">The binary representation of the certified tree.</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.CertifiedTreeResult.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.CertifiedTreeResult"/> class.
+            </summary>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.CommitBatchArguments">
+            <summary>
+            Represents the arguments for committing a batch of operations in the asset canister.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.CommitBatchArguments.BatchId">
+            <summary>
+            The unique identifier of the batch.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.CommitBatchArguments.Operations">
+            <summary>
+            A list of operations to be committed in the batch.
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.CommitBatchArguments.#ctor(EdjCase.ICP.Candid.Models.UnboundedUInt,System.Collections.Generic.List{EdjCase.ICP.Agent.Standards.AssetCanister.Models.BatchOperationKind})">
+            <summary>
+            Initializes a new instance of the <see cref="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.CommitBatchArguments"/> class with specified batch ID and operations.
+            </summary>
+            <param name="batchId">The unique identifier of the batch.</param>
+            <param name="operations">A list of operations to be committed in the batch.</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.CommitBatchArguments.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.CommitBatchArguments"/> class.
+            </summary>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.CommitProposedBatchRequest">
+            <summary>
+            Represents a request to commit a proposed batch of operations in the asset canister.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.CommitProposedBatchRequest.BatchId">
+            <summary>
+            The unique identifier of the proposed batch.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.CommitProposedBatchRequest.Evidence">
+            <summary>
+            The evidence required to commit the proposed batch.
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.CommitProposedBatchRequest.#ctor(EdjCase.ICP.Candid.Models.UnboundedUInt,System.Byte[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.CommitProposedBatchRequest"/> class with specified batch ID and evidence.
+            </summary>
+            <param name="batchId">The unique identifier of the proposed batch.</param>
+            <param name="evidence">The evidence required to commit the proposed batch.</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.CommitProposedBatchRequest.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.CommitProposedBatchRequest"/> class.
+            </summary>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.ComputeEvidenceArguments">
+            <summary>
+            Represents the arguments for computing evidence for a proposed batch in the asset canister.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.ComputeEvidenceArguments.BatchId">
+            <summary>
+            The unique identifier of the batch for which evidence is being computed.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.ComputeEvidenceArguments.MaxIterations">
+            <summary>
+            The maximum number of iterations to use in the computation of evidence.
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.ComputeEvidenceArguments.#ctor(EdjCase.ICP.Candid.Models.UnboundedUInt,EdjCase.ICP.Candid.Models.OptionalValue{System.UInt16})">
+            <summary>
+            Initializes a new instance of the <see cref="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.ComputeEvidenceArguments"/> class with specified batch ID and maximum iterations.
+            </summary>
+            <param name="batchId">The unique identifier of the batch.</param>
+            <param name="maxIterations">The maximum number of iterations for the evidence computation.</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.ComputeEvidenceArguments.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.ComputeEvidenceArguments"/> class.
+            </summary>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.ConfigurationResponse">
+            <summary>
+            Represents the response for the configuration of an asset canister.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.ConfigurationResponse.MaxBatches">
+            <summary>
+            Maximum number of batches allowed for upload at one time.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.ConfigurationResponse.MaxChunks">
+            <summary>
+            Maximum number of chunks across all batches being uploaded.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.ConfigurationResponse.MaxBytes">
+            <summary>
+            Maximum total size of content bytes across all chunks being uploaded.
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.ConfigurationResponse.#ctor(EdjCase.ICP.Candid.Models.OptionalValue{System.UInt64},EdjCase.ICP.Candid.Models.OptionalValue{System.UInt64},EdjCase.ICP.Candid.Models.OptionalValue{System.UInt64})">
+            <summary>
+            Initializes a new instance of the <see cref="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.ConfigurationResponse"/> class with specified configuration values.
+            </summary>
+            <param name="maxBatches">Maximum number of batches allowed for upload at one time.</param>
+            <param name="maxChunks">Maximum number of chunks across all batches being uploaded.</param>
+            <param name="maxBytes">Maximum total size of content bytes across all chunks being uploaded.</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.ConfigurationResponse.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.ConfigurationResponse"/> class.
+            </summary>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.ConfigureRequest">
+            <summary>
+            Represents a request to configure the asset canister with limits on batches, chunks, and bytes.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.ConfigureRequest.MaxBatches">
+            <summary>
+            Optional maximum number of batches being uploaded at one time.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.ConfigureRequest.MaxChunks">
+            <summary>
+            Optional maximum number of chunks across all batches being uploaded.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.ConfigureRequest.MaxBytes">
+            <summary>
+            Optional maximum total size of content bytes across all chunks being uploaded.
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.ConfigureRequest.#ctor(EdjCase.ICP.Candid.Models.OptionalValue{EdjCase.ICP.Candid.Models.OptionalValue{System.UInt64}},EdjCase.ICP.Candid.Models.OptionalValue{EdjCase.ICP.Candid.Models.OptionalValue{System.UInt64}},EdjCase.ICP.Candid.Models.OptionalValue{EdjCase.ICP.Candid.Models.OptionalValue{System.UInt64}})">
+            <summary>
+            Initializes a new instance of the <see cref="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.ConfigureRequest"/> class with specified limits.
+            </summary>
+            <param name="maxBatches">Optional maximum number of batches.</param>
+            <param name="maxChunks">Optional maximum number of chunks.</param>
+            <param name="maxBytes">Optional maximum size of bytes.</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.ConfigureRequest.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.ConfigureRequest"/> class without specified limits.
+            </summary>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.CreateAssetArguments">
+            <summary>
+            Represents the arguments for creating a new asset in the asset canister.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.CreateAssetArguments.Key">
+            <summary>
+            Unique key identifier for the asset.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.CreateAssetArguments.ContentType">
+            <summary>
+            Content type of the asset (e.g., 'text/plain', 'image/jpeg').
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.CreateAssetArguments.MaxAge">
+            <summary>
+            Optional maximum age for caching the asset.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.CreateAssetArguments.Headers">
+            <summary>
+            Optional list of additional HTTP headers for the asset.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.CreateAssetArguments.EnableAliasing">
+            <summary>
+            Optional flag to enable aliasing for the asset.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.CreateAssetArguments.AllowRawAccess">
+            <summary>
+            Optional flag to allow raw access to the asset.
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.CreateAssetArguments.#ctor(System.String,System.String,EdjCase.ICP.Candid.Models.OptionalValue{System.UInt64},EdjCase.ICP.Candid.Models.OptionalValue{System.Collections.Generic.List{System.ValueTuple{System.String,System.String}}},EdjCase.ICP.Candid.Models.OptionalValue{System.Boolean},EdjCase.ICP.Candid.Models.OptionalValue{System.Boolean})">
+            <summary>
+            Constructor for creating asset arguments with specified properties.
+            </summary>
+            <param name="key">Asset key.</param>
+            <param name="contentType">Content type of the asset.</param>
+            <param name="maxAge">Maximum age for caching.</param>
+            <param name="headers">Additional HTTP headers.</param>
+            <param name="enableAliasing">Flag for enabling aliasing.</param>
+            <param name="allowRawAccess">Flag for allowing raw access.</param>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.CreateBatchResult">
+            <summary>
+            Represents the result of creating a new batch in the asset canister.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.CreateBatchResult.BatchId">
+            <summary>
+            Unique identifier for the created batch.
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.CreateBatchResult.#ctor(EdjCase.ICP.Candid.Models.UnboundedUInt)">
+            <summary>
+            Initializes a new instance of the <see cref="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.CreateBatchResult"/> class with a specified batch ID.
+            </summary>
+            <param name="batchId">Unique identifier for the batch.</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.CreateBatchResult.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.CreateBatchResult"/> class.
+            </summary>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.CreateChunkRequest">
+            <summary>
+            Represents a request to create a chunk in an asset canister batch.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.CreateChunkRequest.BatchId">
+            <summary>
+            Unique identifier for the batch to which the chunk belongs.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.CreateChunkRequest.Content">
+            <summary>
+            Content of the chunk as a byte array.
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.CreateChunkRequest.#ctor(EdjCase.ICP.Candid.Models.UnboundedUInt,System.Byte[])">
+            <summary>
+            Initializes a new instance of the CreateChunkRequest class with specified batch ID and content.
+            </summary>
+            <param name="batchId">Unique identifier for the batch.</param>
+            <param name="content">Content of the chunk as a byte array.</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.CreateChunkRequest.#ctor">
+            <summary>
+            Initializes a new instance of the CreateChunkRequest class.
+            </summary>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.CreateChunkResult">
+            <summary>
+            Represents the result of a 'create_chunk' operation on an asset canister.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.CreateChunkResult.ChunkId">
+            <summary>
+            Unique identifier for the created chunk.
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.CreateChunkResult.#ctor(EdjCase.ICP.Candid.Models.UnboundedUInt)">
+            <summary>
+            Initializes a new instance of the CreateChunkResult class with a specified chunk ID.
+            </summary>
+            <param name="chunkId">Unique identifier for the chunk.</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.CreateChunkResult.#ctor">
+            <summary>
+            Initializes a new instance of the CreateChunkResult class.
+            </summary>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.DeleteAssetArguments">
+            <summary>
+            Represents the arguments for deleting an asset in the asset canister.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.DeleteAssetArguments.Key">
+            <summary>
+            The key of the asset to delete.
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.DeleteAssetArguments.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the DeleteAssetArguments class with a specified asset key.
+            </summary>
+            <param name="key">The key of the asset to delete.</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.DeleteAssetArguments.#ctor">
+            <summary>
+            Initializes a new instance of the DeleteAssetArguments class.
+            </summary>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.DeleteBatchArguments">
+            <summary>
+            Represents the arguments for deleting a batch in the asset canister.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.DeleteBatchArguments.BatchId">
+            <summary>
+            Unique identifier for the batch to be deleted.
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.DeleteBatchArguments.#ctor(EdjCase.ICP.Candid.Models.UnboundedUInt)">
+            <summary>
+            Initializes a new instance of DeleteBatchArguments with a specified batch ID.
+            </summary>
+            <param name="batchId">Unique identifier for the batch.</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.DeleteBatchArguments.#ctor">
+            <summary>
+            Initializes a new instance of DeleteBatchArguments.
+            </summary>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.GetAssetPropertiesResult">
+            <summary>
+            Represents the result of a request to get asset properties from an asset canister.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.GetAssetPropertiesResult.MaxAge">
+            <summary>
+            Maximum age of the asset for caching purposes.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.GetAssetPropertiesResult.Headers">
+            <summary>
+            List of additional HTTP headers to be set when serving the asset.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.GetAssetPropertiesResult.AllowRawAccess">
+            <summary>
+            Indicates whether the asset can be retrieved from raw.ic0.app or raw.icp0.io.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.GetAssetPropertiesResult.IsAliased">
+            <summary>
+            Indicates if the asset's key might be an alias for another asset.
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.GetAssetPropertiesResult.#ctor(EdjCase.ICP.Candid.Models.OptionalValue{System.UInt64},EdjCase.ICP.Candid.Models.OptionalValue{System.Collections.Generic.List{System.ValueTuple{System.String,System.String}}},EdjCase.ICP.Candid.Models.OptionalValue{System.Boolean},EdjCase.ICP.Candid.Models.OptionalValue{System.Boolean})">
+            <summary>
+            Constructor for initializing GetAssetPropertiesResult with specific values.
+            </summary>
+            <param name="maxAge">Maximum age of the asset for caching.</param>
+            <param name="headers">List of additional HTTP headers for the asset.</param>
+            <param name="allowRawAccess">Flag for raw access availability of the asset.</param>
+            <param name="isAliased">Flag indicating if the asset key is an alias.</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.GetAssetPropertiesResult.#ctor">
+            <summary>
+            Default constructor for GetAssetPropertiesResult.
+            </summary>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.GetChunkRequest">
+            <summary>
+            Represents a request to retrieve a specific chunk of an asset's content encoding from an asset canister.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.GetChunkRequest.Key">
+            <summary>
+            Unique identifier for the asset.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.GetChunkRequest.ContentEncoding">
+            <summary>
+            Content encoding type of the asset (e.g., 'gzip', 'identity').
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.GetChunkRequest.Index">
+            <summary>
+            Index of the chunk within the asset's content encoding.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.GetChunkRequest.Sha256">
+            <summary>
+            Optional SHA-256 hash of the entire asset encoding for validation.
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.GetChunkRequest.#ctor(System.String,System.String,EdjCase.ICP.Candid.Models.UnboundedUInt,EdjCase.ICP.Candid.Models.OptionalValue{System.Byte[]})">
+            <summary>
+            Initializes a new instance of the GetChunkRequest class with specified parameters.
+            </summary>
+            <param name="key">Asset key.</param>
+            <param name="contentEncoding">Content encoding type.</param>
+            <param name="index">Chunk index.</param>
+            <param name="sha256">Optional SHA-256 hash for validation.</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.GetChunkRequest.#ctor">
+            <summary>
+            Initializes a new instance of the GetChunkRequest class.
+            </summary>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.GetChunkResult">
+            <summary>
+            Represents the result of a 'get_chunk' method call to an asset canister.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.GetChunkResult.Content">
+            <summary>
+            Content of the asset chunk.
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.GetChunkResult.#ctor(System.Byte[])">
+            <summary>
+            Initializes a new instance of the GetChunkResult class with specified content.
+            </summary>
+            <param name="content">Byte array representing the content of the chunk.</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.GetChunkResult.#ctor">
+            <summary>
+            Initializes a new instance of the GetChunkResult class.
+            </summary>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.GetRequest">
+            <summary>
+            Represents a request for retrieving an asset from the asset canister.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.GetRequest.Key">
+            <summary>
+            The key identifying the asset to retrieve.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.GetRequest.AcceptEncodings">
+            <summary>
+            List of acceptable content encodings for the asset.
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.GetRequest.#ctor(System.String,System.Collections.Generic.List{System.String})">
+            <summary>
+            Initializes a new instance of the GetRequest class with specified key and acceptable encodings.
+            </summary>
+            <param name="key">The asset key.</param>
+            <param name="acceptEncodings">List of acceptable content encodings.</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.GetRequest.#ctor">
+            <summary>
+            Initializes a new instance of the GetRequest class.
+            </summary>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.GetResult">
+            <summary>
+            Represents the result of a 'get' operation from the asset canister.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.GetResult.Content">
+            <summary>
+            The content of the asset.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.GetResult.ContentType">
+            <summary>
+            The MIME type of the asset.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.GetResult.ContentEncoding">
+            <summary>
+            The encoding of the asset content.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.GetResult.Sha256">
+            <summary>
+            The SHA-256 hash of the asset, if available.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.GetResult.TotalLength">
+            <summary>
+            The total length of the asset in chunks.
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.GetResult.#ctor(System.Byte[],System.String,System.String,EdjCase.ICP.Candid.Models.OptionalValue{System.Byte[]},EdjCase.ICP.Candid.Models.UnboundedUInt)">
+            <summary>
+            Initializes a new instance of the GetResult class with specified details.
+            </summary>
+            <param name="content">The content of the asset.</param>
+            <param name="contentType">The MIME type of the asset.</param>
+            <param name="contentEncoding">The encoding of the asset content.</param>
+            <param name="sha256">The SHA-256 hash of the asset, if available.</param>
+            <param name="totalLength">The total length of the asset in chunks.</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.GetResult.#ctor">
+            <summary>
+            Initializes a new instance of the GetResult class.
+            </summary>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.GrantPermission">
+            <summary>
+            Represents a request to grant a permission to a principal in the asset canister.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.GrantPermission.ToPrincipal">
+            <summary>
+            The principal to which the permission will be granted.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.GrantPermission.Permission">
+            <summary>
+            The permission to be granted.
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.GrantPermission.#ctor(EdjCase.ICP.Candid.Models.Principal,EdjCase.ICP.Agent.Standards.AssetCanister.Models.Permission)">
+            <summary>
+            Initializes a new instance of the GrantPermission class with specified principal and permission.
+            </summary>
+            <param name="toPrincipal">The principal to grant permission to.</param>
+            <param name="permission">The permission to be granted.</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.GrantPermission.#ctor">
+            <summary>
+            Initializes a new instance of the GrantPermission class.
+            </summary>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.HttpRequest">
+            <summary>
+            Represents an HTTP request for the Asset Canister.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.HttpRequest.Method">
+            <summary>
+            HTTP method (e.g., GET, POST).
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.HttpRequest.Url">
+            <summary>
+            URL of the request.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.HttpRequest.Headers">
+            <summary>
+            List of HTTP headers.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.HttpRequest.Body">
+            <summary>
+            Body of the request as a list of bytes.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.HttpRequest.CertificateVersion">
+            <summary>
+            Optional certificate version.
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.HttpRequest.#ctor(System.String,System.String,System.Collections.Generic.List{System.ValueTuple{System.String,System.String}},System.Collections.Generic.List{System.Byte},EdjCase.ICP.Candid.Models.OptionalValue{System.UInt16})">
+            <summary>
+            Constructs an HttpRequest with specified parameters.
+            </summary>
+            <param name="method">HTTP method.</param>
+            <param name="url">URL of the request.</param>
+            <param name="headers">List of HTTP headers.</param>
+            <param name="body">Body of the request as a list of bytes.</param>
+            <param name="certificateVersion">Optional certificate version.</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.HttpRequest.#ctor">
+            <summary>
+            Default constructor for HttpRequest.
+            </summary>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.HttpResponse">
+            <summary>
+            Represents an HTTP response from the asset canister.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.HttpResponse.StatusCode">
+            <summary>
+            HTTP status code of the response.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.HttpResponse.Headers">
+            <summary>
+            List of headers included in the response.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.HttpResponse.Body">
+            <summary>
+            Body of the response as a list of bytes.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.HttpResponse.StreamingStrategy">
+            <summary>
+            Optional streaming strategy for the response.
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.HttpResponse.#ctor(System.UInt16,System.Collections.Generic.List{System.ValueTuple{System.String,System.String}},System.Collections.Generic.List{System.Byte},EdjCase.ICP.Candid.Models.OptionalValue{EdjCase.ICP.Agent.Standards.AssetCanister.Models.StreamingStrategy})">
+            <summary>
+            Initializes a new instance of the HttpResponse class with specified parameters.
+            </summary>
+            <param name="statusCode">HTTP status code of the response.</param>
+            <param name="headers">List of headers included in the response.</param>
+            <param name="body">Body of the response as a list of bytes.</param>
+            <param name="streamingStrategy">Optional streaming strategy for the response.</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.HttpResponse.#ctor">
+            <summary>
+            Initializes a new instance of the HttpResponse class.
+            </summary>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.ListPermitted">
+            <summary>
+            Represents a request to list principals with a specified permission in the asset canister.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.ListPermitted.Permission">
+            <summary>
+            The specific permission to query for.
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.ListPermitted.#ctor(EdjCase.ICP.Agent.Standards.AssetCanister.Models.Permission)">
+            <summary>
+            Initializes a new instance of the ListPermitted class with a specified permission.
+            </summary>
+            <param name="permission">The permission to query for.</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.ListPermitted.#ctor">
+            <summary>
+            Initializes a new instance of the ListPermitted class.
+            </summary>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.Permission">
+            <summary>
+            Enum representing the different types of permissions for interacting with an asset canister.
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Agent.Standards.AssetCanister.Models.Permission.Commit">
+            <summary>
+            Permission allowing changes to the assets served by the asset canister.
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Agent.Standards.AssetCanister.Models.Permission.ManagePermissions">
+            <summary>
+            Permission allowing a principal to grant and revoke permissions to other principals.
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Agent.Standards.AssetCanister.Models.Permission.Prepare">
+            <summary>
+            Permission allowing the upload of data to the canister to be committed later by a principal with the Commit permission.
+            </summary>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.RevokePermission">
+            <summary>
+            Represents a request to revoke a permission from a principal in the asset canister.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.RevokePermission.OfPrincipal">
+            <summary>
+            The principal from whom the permission will be revoked.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.RevokePermission.Permission">
+            <summary>
+            The permission to be revoked.
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.RevokePermission.#ctor(EdjCase.ICP.Candid.Models.Principal,EdjCase.ICP.Agent.Standards.AssetCanister.Models.Permission)">
+            <summary>
+            Initializes a new instance of the RevokePermission class with specified principal and permission.
+            </summary>
+            <param name="ofPrincipal">The principal from whom the permission will be revoked.</param>
+            <param name="permission">The permission to be revoked.</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.RevokePermission.#ctor">
+            <summary>
+            Initializes a new instance of the RevokePermission class.
+            </summary>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.SetAssetContentArguments">
+            <summary>
+            Represents a request to set asset content with chunks in the asset canister.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.SetAssetContentArguments.Key">
+            <summary>
+            Unique identifier for the asset.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.SetAssetContentArguments.ContentEncoding">
+            <summary>
+            The content encoding of the asset (e.g UTF-8)
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.SetAssetContentArguments.ChunkIds">
+            <summary>
+            A list of chunk ids that have been uploaded, to use as the content bytes
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.SetAssetContentArguments.Sha256">
+            <summary>
+            Optional. The SHA256 hash of the entire content bytes, for validation of the chunk bytes
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.SetAssetContentArguments.#ctor(System.String,System.String,System.Collections.Generic.List{EdjCase.ICP.Candid.Models.UnboundedUInt},EdjCase.ICP.Candid.Models.OptionalValue{System.Byte[]})">
+            <param name="key">Unique identifier for the asset.</param>
+            <param name="contentEncoding">The content encoding of the asset (e.g UTF-8)</param>
+            <param name="chunkIds">A list of chunk ids that have been uploaded, to use as the content bytes</param>
+            <param name="sha256">Optional. The SHA256 hash of the entire content bytes, for validation of the chunk bytes</param>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.SetAssetPropertiesRequest">
+            <summary>
+            Represents a request to set properties of an asset in the asset canister.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.SetAssetPropertiesRequest.Key">
+            <summary>
+            Unique identifier for the asset.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.SetAssetPropertiesRequest.MaxAge">
+            <summary>
+            Optional. The max age (in nanoseconds) for the asset
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.SetAssetPropertiesRequest.Headers">
+            <summary>
+            Optional. The headers for the asset
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.SetAssetPropertiesRequest.AllowRawAccess">
+            <summary>
+            Optional. Whether to allow raw access to the asset
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.SetAssetPropertiesRequest.IsAliased">
+            <summary>
+            Optional. Whether the asset is aliased
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.SetAssetPropertiesRequest.#ctor(System.String,EdjCase.ICP.Candid.Models.OptionalValue{EdjCase.ICP.Candid.Models.OptionalValue{System.UInt64}},EdjCase.ICP.Candid.Models.OptionalValue{EdjCase.ICP.Candid.Models.OptionalValue{System.Collections.Generic.List{System.ValueTuple{System.String,System.String}}}},EdjCase.ICP.Candid.Models.OptionalValue{EdjCase.ICP.Candid.Models.OptionalValue{System.Boolean}},EdjCase.ICP.Candid.Models.OptionalValue{EdjCase.ICP.Candid.Models.OptionalValue{System.Boolean}})">
+            <summary>
+            Initializes a new instance of the <see cref="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.SetAssetPropertiesRequest"/> class.
+            </summary>
+            <param name="key">The key of the asset.</param>
+            <param name="maxAge">The maximum age of the asset.</param>
+            <param name="headers">The headers of the asset.</param>
+            <param name="allowRawAccess">Indicates whether raw access is allowed for the asset.</param>
+            <param name="isAliased">Indicates whether the asset is aliased.</param>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.SetPermissions">
+            <summary>
+            Represents a request to set permessions for identities in the asset canister.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.SetPermissions.Prepare">
+            <summary>
+            A list of identities that can prepare an asset
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.SetPermissions.Commit">
+            <summary>
+            A list of identities that can commit an asset
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.SetPermissions.ManagePermissions">
+            <summary>
+            A list of identities that can manage permissions
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.SetPermissions.#ctor(System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal},System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal},System.Collections.Generic.List{EdjCase.ICP.Candid.Models.Principal})">
+            <summary>
+            Initializes a new instance of the <see cref="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.SetPermissions"/> class.
+            </summary>
+            <param name="prepare">The list of principals with prepare permissions.</param>
+            <param name="commit">The list of principals with commit permissions.</param>
+            <param name="managePermissions">The list of principals with manage permissions.</param>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.StoreRequest">
+            <summary>
+            Represents a request to store a small asset in the asset canister.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.StoreRequest.Key">
+            <summary>
+            Unique identifier for the asset.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.StoreRequest.ContentType">
+            <summary>
+            The content type of the asset (e.g text/plain)
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.StoreRequest.ContentEncoding">
+            <summary>
+            The content encoding of the asset (e.g UTF-8)
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.StoreRequest.Content">
+            <summary>
+            The content bytes of the asset
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.StoreRequest.Sha256">
+            <summary>
+            Optional. The SHA256 hash of the entire content bytes, for validation of the bytes
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.StoreRequest.#ctor(System.String,System.String,System.String,System.Byte[],EdjCase.ICP.Candid.Models.OptionalValue{System.Byte[]})">
+            <summary>
+            Represents a request to store an asset in the canister.
+            </summary>
+            <param name="key">The key of the asset.</param>
+            <param name="contentType">The content type of the asset.</param>
+            <param name="contentEncoding">The content encoding of the asset.</param>
+            <param name="content">The content of the asset.</param>
+            <param name="sha256">The SHA256 hash of the asset content.</param>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.StreamingCallbackHttpResponse">
+            <summary>
+            Represents a response from the streaming callback method
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.StreamingCallbackHttpResponse.Body">
+            <summary>
+            The returned bytes for the streaming callback
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.StreamingCallbackHttpResponse.Token">
+            <summary>
+            Optional. The token to use for the next streaming callback
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.StreamingCallbackHttpResponse.#ctor(System.Byte[],EdjCase.ICP.Candid.Models.OptionalValue{EdjCase.ICP.Agent.Standards.AssetCanister.Models.StreamingCallbackToken})">
+            <summary>
+            Represents an HTTP response for a streaming callback.
+            </summary>
+            <param name="body">The body of the response.</param>
+            <param name="token">The optional token associated with the response.</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.StreamingCallbackHttpResponse.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.StreamingCallbackHttpResponse"/> class.
+            </summary>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.StreamingCallbackToken">
+            <summary>
+            Represents a single result of streaming an asset from the asset canister
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.StreamingCallbackToken.Key">
+            <summary>
+            Unique identifier for the asset.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.StreamingCallbackToken.ContentEncoding">
+            <summary>
+            The content encoding of the asset (e.g UTF-8)
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.StreamingCallbackToken.Index">
+            <summary>
+            The index of the chunk to stream
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.StreamingCallbackToken.Sha256">
+            <summary>
+            Optional. The SHA256 hash of the entire content bytes, for validation of the bytes
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.StreamingCallbackToken.#ctor(System.String,System.String,EdjCase.ICP.Candid.Models.UnboundedUInt,EdjCase.ICP.Candid.Models.OptionalValue{System.Byte[]})">
+            <summary>
+            Initializes a new instance of the <see cref="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.StreamingCallbackToken"/> class.
+            </summary>
+            <param name="key">The key associated with the token.</param>
+            <param name="contentEncoding">The content encoding of the token.</param>
+            <param name="index">The index of the token.</param>
+            <param name="sha256">The SHA256 value of the token.</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.StreamingCallbackToken.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.StreamingCallbackToken"/> class.
+            </summary>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.StreamingStrategy">
+            <summary>
+            Represents a strategy for streaming from an asset canister
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.StreamingStrategy.Tag">
+            <summary>
+            The tag for the streaming strategy variant
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.StreamingStrategy.Value">
+            <summary>
+            The value for the streaming strategy variant
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.StreamingStrategy.#ctor(EdjCase.ICP.Agent.Standards.AssetCanister.Models.StreamingStrategyTag,System.Object)">
+            <summary>
+            Represents a strategy for streaming from an asset canister
+            </summary>
+            <param name="tag">The tag for the streaming strategy variant</param>
+            <param name="value">The value for the streaming strategy variant</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.StreamingStrategy.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.StreamingStrategy"/> class.
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.StreamingStrategy.Callback(EdjCase.ICP.Agent.Standards.AssetCanister.Models.StreamingStrategy.CallbackInfo)">
+            <summary>
+            Creates a new streaming strategy with a callback
+            </summary>
+            <param name="info">The callback info</param>
+            <returns>The streaming strategy variant</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.StreamingStrategy.AsCallback">
+            <summary>
+            Casts the streaming strategy to a callback
+            </summary>
+            <returns>The Callback info</returns>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.StreamingStrategy.CallbackInfo">
+            <summary>
+            Represents information about a callback function and its associated token.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.StreamingStrategy.CallbackInfo.Callback">
+            <summary>
+            The callback function
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.StreamingStrategy.CallbackInfo.Token">
+            <summary>
+            The streaming callback token
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.StreamingStrategy.CallbackInfo.#ctor(EdjCase.ICP.Candid.Models.Values.CandidFunc,EdjCase.ICP.Agent.Standards.AssetCanister.Models.StreamingCallbackToken)">
+            <summary>
+            Initializes a new instance of the <see cref="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.StreamingStrategy.CallbackInfo"/> class.
+            </summary>
+            <param name="callback">The callback function.</param>
+            <param name="token">The streaming callback token.</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.StreamingStrategy.CallbackInfo.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.StreamingStrategy.CallbackInfo"/> class.
+            </summary>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.StreamingStrategyTag">
+            <summary>
+            Represents all the options for the streaming strategy variant
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Agent.Standards.AssetCanister.Models.StreamingStrategyTag.Callback">
+            <summary>
+            For callback streaming
+            </summary>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.UnsetAssetContentArguments">
+            <summary>
+            Represents a request to remove the content encoding for an asset
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.UnsetAssetContentArguments.Key">
+            <summary>
+            Unique identifier for the asset.
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.UnsetAssetContentArguments.ContentEncoding">
+            <summary>
+            The content encoding of the asset (e.g UTF-8)
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.UnsetAssetContentArguments.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.UnsetAssetContentArguments"/> class.
+            </summary>
+            <param name="key">The key of the asset.</param>
+            <param name="contentEncoding">The encoding of the asset content.</param>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.UpgradeArgs">
+            <summary>
+            Represents a request for upgrading the asset canister with options
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.UpgradeArgs.SetPermissions">
+            <summary>
+            Optional. The permissions to set for the asset canister
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.UpgradeArgs.#ctor(EdjCase.ICP.Candid.Models.OptionalValue{EdjCase.ICP.Agent.Standards.AssetCanister.Models.SetPermissions})">
+            <summary>
+            Creates a new instance of the <see cref="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.UpgradeArgs"/> class.
+            </summary>
+            <param name="setPermissions">Optional value for setting permissions.</param>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.ValidationResult">
+            <summary>
+            Represents a result from calling a validation method
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.ValidationResult.Tag">
+            <summary>
+            The tag for the validation result variant
+            </summary>
+        </member>
+        <member name="P:EdjCase.ICP.Agent.Standards.AssetCanister.Models.ValidationResult.Value">
+            <summary>
+            The value for the validation result variant
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.ValidationResult.#ctor(EdjCase.ICP.Agent.Standards.AssetCanister.Models.ValidationResultTag,System.Object)">
+            <summary>
+            Represents a result from calling a validation method
+            </summary>
+            <param name="tag">The tag for the validation result variant</param>
+            <param name="value">The value for the validation result variant</param>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.ValidationResult.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.ValidationResult"/> class.
+            </summary>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.ValidationResult.Ok(System.String)">
+            <summary>
+            Creates a new validation result with an ok value
+            </summary>
+            <param name="message">The validation message</param>
+            <returns>The OK validation result variant</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.ValidationResult.Err(System.String)">
+            <summary>
+            Creates a new validation result with an error value
+            </summary>
+            <param name="message">The error message</param>
+            <returns>The error validation result variant</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.ValidationResult.AsOk">
+            <summary>
+            Casts the validation result to an ok message
+            </summary>
+            <returns>The ok message</returns>
+        </member>
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.Models.ValidationResult.AsErr">
+            <summary>
+            Casts the validation result to an error message
+            </summary>
+            <returns>The error message</returns>
+        </member>
+        <member name="T:EdjCase.ICP.Agent.Standards.AssetCanister.Models.ValidationResultTag">
+            <summary>
+            The tag for the validation result variant
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Agent.Standards.AssetCanister.Models.ValidationResultTag.Ok">
+            <summary>
+            The ok variant
+            </summary>
+        </member>
+        <member name="F:EdjCase.ICP.Agent.Standards.AssetCanister.Models.ValidationResultTag.Err">
+            <summary>
+            The error variant
+            </summary>
+        </member>
         <member name="T:EdjCase.ICP.Agent.Standards.ICRC1.ICRC1Client">
             <summary>
             A pre-generated client for the ICRC1 standard

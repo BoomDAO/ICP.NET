@@ -42,7 +42,9 @@ namespace EdjCase.ICP.Agent.Standards.AssetCanister.Models
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ConfigurationResponse"/> class.
 		/// </summary>
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 		public ConfigurationResponse()
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 		{
 		}
 	}

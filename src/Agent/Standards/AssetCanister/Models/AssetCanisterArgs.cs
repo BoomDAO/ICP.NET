@@ -42,11 +42,10 @@ namespace EdjCase.ICP.Agent.Standards.AssetCanister.Models
 		/// <summary>
 		/// Creates an instance of <see cref="AssetCanisterArgs"/> for the 'Init' operation.
 		/// </summary>
-		/// <param name="info">The initialization arguments.</param>
 		/// <returns>A new instance of <see cref="AssetCanisterArgs"/>.</returns>
-		public static AssetCanisterArgs Init(InitArgs info)
+		public static AssetCanisterArgs Init()
 		{
-			return new AssetCanisterArgs(AssetCanisterArgsTag.Init, info);
+			return new AssetCanisterArgs(AssetCanisterArgsTag.Init, null);
 		}
 
 		/// <summary>
@@ -57,16 +56,6 @@ namespace EdjCase.ICP.Agent.Standards.AssetCanister.Models
 		public static AssetCanisterArgs Upgrade(UpgradeArgs info)
 		{
 			return new AssetCanisterArgs(AssetCanisterArgsTag.Upgrade, info);
-		}
-
-		/// <summary>
-		/// Retrieves the 'Init' arguments from the instance.
-		/// </summary>
-		/// <returns>The 'Init' arguments.</returns>
-		public InitArgs AsInit()
-		{
-			this.ValidateTag(AssetCanisterArgsTag.Init);
-			return (InitArgs)this.Value!;
 		}
 
 		/// <summary>

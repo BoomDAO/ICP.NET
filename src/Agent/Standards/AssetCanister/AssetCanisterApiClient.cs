@@ -165,22 +165,8 @@ namespace EdjCase.ICP.Agent.Standards.AssetCanister
 
 				List<BatchOperationKind> operations = new List<BatchOperationKind>
 				{
-					BatchOperationKind.CreateAsset(new CreateAssetArguments
-					{
-						Key = key,
-						AllowRawAccess = allowRawAccessOpt,
-						ContentType = contentType,
-						EnableAliasing = enableAliasingOpt,
-						Headers = headersOpt,
-						MaxAge = maxAgeOpt
-					}),
-					BatchOperationKind.SetAssetContent(new SetAssetContentArguments
-					{
-						ChunkIds = chunkIds,
-						ContentEncoding = contentEncoding,
-						Key = key,
-						Sha256 = sha256Opt
-					})
+					BatchOperationKind.CreateAsset(new CreateAssetArguments(key, contentType, maxAgeOpt, headersOpt, enableAliasingOpt, allowRawAccessOpt)),
+					BatchOperationKind.SetAssetContent(new SetAssetContentArguments(key, contentEncoding, chunkIds, sha256Opt))
 				};
 
 				await this.CommitBatchAsync(createBatchResult.BatchId, operations);

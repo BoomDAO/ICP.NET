@@ -65,12 +65,5 @@ namespace EdjCase.ICP.Agent.Standards.AssetCanister.Models
 			this.EnableAliasing = enableAliasing;
 			this.AllowRawAccess = allowRawAccess;
 		}
-
-		/// <summary>
-		/// Default constructor for CreateAssetArguments.
-		/// </summary>
-		public CreateAssetArguments()
-		{
-		}
 	}
 }

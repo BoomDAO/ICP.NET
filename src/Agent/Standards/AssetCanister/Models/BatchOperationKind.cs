@@ -92,11 +92,10 @@ namespace EdjCase.ICP.Agent.Standards.AssetCanister.Models
 		/// <summary>
 		/// Creates an instance of <see cref="BatchOperationKind"/> for the 'Clear' operation.
 		/// </summary>
-		/// <param name="info">The arguments for the 'Clear' operation.</param>
 		/// <returns>A new instance of <see cref="BatchOperationKind"/>.</returns>
-		public static BatchOperationKind Clear(ClearArguments info)
+		public static BatchOperationKind Clear()
 		{
-			return new BatchOperationKind(BatchOperationKindTag.Clear, info);
+			return new BatchOperationKind(BatchOperationKindTag.Clear, null);
 		}
 
 		/// <summary>
@@ -147,16 +146,6 @@ namespace EdjCase.ICP.Agent.Standards.AssetCanister.Models
 		{
 			this.ValidateTag(BatchOperationKindTag.DeleteAsset);
 			return (DeleteAssetArguments)this.Value!;
-		}
-
-		/// <summary>
-		/// Retrieves the 'Clear' arguments from the instance.
-		/// </summary>
-		/// <returns>The 'Clear' arguments.</returns>
-		public ClearArguments AsClear()
-		{
-			this.ValidateTag(BatchOperationKindTag.Clear);
-			return (ClearArguments)this.Value!;
 		}
 
 		/// <summary>
