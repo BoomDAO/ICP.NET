@@ -22,4 +22,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\src\BLS\EdjCase.ICP.BLS.csproj" />
+  </ItemGroup>
+
 </Project>
