@@ -11,7 +11,7 @@ namespace EdjCase.ICP.BLS
 		public bool VerifySignature(byte[] publicKey, byte[] messageHash, byte[] signature)
 		{
 			G2Protective[] hashes = new[]{
-				G2Protective.romBytes(messageHash)
+				G2Protective.FromBytes(messageHash)
 			};
 			PublicKey[] publicKeys = new PublicKey[]
 			{
@@ -62,4 +62,4 @@ namespace EdjCase.ICP.BLS
 
 			return ml.FinalExponentiation() == Gt.Identity;
 		}
-}
+	}

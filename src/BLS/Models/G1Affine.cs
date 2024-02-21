@@ -4,11 +4,25 @@ using System.Text;
 
 namespace EdjCase.ICP.BLS.Models
 {
-	public class G1Affine
+	internal class G1Affine
 	{
 		public Fp X { get; }
 		public Fp Y { get; }
 		public bool IsInfinity { get; }
+
+		private static readonly Fp B;
+
+		static G1Affine()
+		{
+			B = new Fp(
+				0xaa27_0000_000c_fff3,
+				0x53cc_0032_fc34_000a,
+				0x478f_e97a_6b0a_807f,
+				0xb1d3_7ebe_e6ba_24d7,
+				0x8ec9_733b_bf78_ab2f,
+				0x09d6_4551_3d83_de7e
+			);
+		}
 
 		public G1Affine(Fp x, Fp y, bool isInfinity)
 		{
@@ -17,46 +31,46 @@ namespace EdjCase.ICP.BLS.Models
 			this.IsInfinity = isInfinity;
 		}
 
-		private static G1Affine Infinity()
+		public static G1Affine Identity()
 		{
-
+			return new G1Affine(Fp.Zero(), Fp.One(), true);
 		}
 
 
 		internal static G1Affine FromCompressed(byte[] bytes)
 		{
-			if (bytes.Length != 48) throw new ArgumentException("Invalid byte array length for G1Affine compression.");
+			// Obtain the three flags from the start of the byte sequence
+			bool compressionFlagSet = ((bytes[0] >> 7) & 1) == 1;
+			bool infinityFlagSet = ((bytes[0] >> 6) & 1) == 1;
+			bool sortFlagSet = ((bytes[0] >> 5) & 1) == 1;
 
-			// Extract flags and reconstruct the x-coordinate
-			bool compressionFlag = (bytes[0] & 0x80) != 0;
-			bool infinityFlag = (bytes[0] & 0x40) != 0;
-			bool sortFlag = (bytes[0] & 0x20) != 0;
+			// Attempt to obtain the x-coordinate
+			byte[] bytesWithoutFlagBits = new byte[48];
+			Array.Copy(bytes, 0, bytesWithoutFlagBits, 0, 48);
+			bytesWithoutFlagBits[0] &= 0b0001_1111;
+			Fp x = Fp.FromBytes(bytesWithoutFlagBits);
 
-			bytes[0] &= 0x1F; // Clear flag bits
-			Fp x = Fp.FromBytes(bytes);
-
-			if (infinityFlag)
+			if (infinityFlagSet && compressionFlagSet && !sortFlagSet && x.IsZero())
 			{
-				return G1Affine.Infinity();
+				return G1Affine.Identity();
 			}
 			else
 			{
-				Fp ySquared = x.Square().Multiply(x).Add(B); // y^2 = x^3 + B
-				Fp y = ySquared.Sqrt(); // Attempt to compute sqrt(y^2)
+				// Recover a y-coordinate given x by y = sqrt(x^3 + 4)
+				Fp y = (x.Square() * x + B).SquareRoot();
 
-				if (y != null)
+				// Switch to the correct y-coordinate if necessary.
+				if (y.LexicographicallyLargest() ^ sortFlagSet)
 				{
-					bool yFlag = y.ToBytes()[0] >> 7 != 0; // Assuming ToBytes() gives the big-endian representation and we check the lexicographic order
-					if (sortFlag != yFlag)
-					{
-						y = y.Negate(); // Switch y if necessary based on the sort flag
-					}
-
-					return new G1Affine { X = x, Y = y, IsInfinity = infinityFlag };
+					y = y.Neg();
 				}
+				bool isValid = !infinityFlagSet && compressionFlagSet;
+				if (!isValid)
+				{
+					throw new ArgumentException("Invalid compressed point");
+				}
+				return new G1Affine(x, y, infinityFlagSet);
 			}
-
-			throw new ArgumentException("Invalid compressed bytes for G1Affine point.");
 		}
 	}
 

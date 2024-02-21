@@ -53,6 +53,30 @@ namespace EdjCase.ICP.BLS.Models
 			return R.Clone();
 		}
 
+		public override bool Equals(object obj)
+		{
+			if (obj is Fp fp)
+			{
+				return this.Equals(fp);
+			}
+			return false;
+		}
+
+		public bool Equals(Fp other)
+		{
+			return this.Values.SequenceEqual(other.Values);
+		}
+
+		public override int GetHashCode()
+		{
+			return HashCode.Combine(this.Values[0], this.Values[1], this.Values[2], this.Values[3], this.Values[4], this.Values[5]);
+		}
+
+		public bool IsZero()
+		{
+			return this.Equals(Fp.Zero());
+		}
+
 		public Fp Clone()
 		{
 			return new Fp(
@@ -82,6 +106,97 @@ namespace EdjCase.ICP.BLS.Models
 			Array.Copy(BitConverter.GetBytes(tmp.Values[0]).Reverse().ToArray(), 0, res, 40, 8);
 
 			return res;
+		}
+
+
+		public Fp Add(Fp rhs)
+		{
+			ulong[] result = new ulong[6];
+			ulong carry = 0;
+
+			for (int i = 0; i < 6; i++)
+			{
+				(result[i], carry) = BlsUtil.AddWithCarry(this.Values[i], rhs.Values[i], carry);
+			}
+
+			// Attempt to subtract the modulus, to ensure the value
+			// is smaller than the modulus.
+			return new Fp(
+				result[0],
+				result[1],
+				result[2],
+				result[3],
+				result[4],
+				result[5]
+			)
+			.SubtractP();
+		}
+
+		public static Fp operator +(Fp a, Fp b)
+		{
+			return a.Add(b);
+		}
+
+		public Fp Subtract(Fp rhs)
+		{
+			return rhs.Neg().Add(this);
+		}
+
+		public static Fp operator -(Fp a, Fp b)
+		{
+			return a.Subtract(b);
+		}
+
+		public Fp Multiply(Fp rhs)
+		{
+			(ulong t0, ulong carry) = BlsUtil.MultiplyAddCarry(0, this.Values[0], rhs.Values[0], 0);
+			(ulong t1, carry) = BlsUtil.MultiplyAddCarry(0, this.Values[0], rhs.Values[1], carry);
+			(ulong t2, carry) = BlsUtil.MultiplyAddCarry(0, this.Values[0], rhs.Values[2], carry);
+			(ulong t3, carry) = BlsUtil.MultiplyAddCarry(0, this.Values[0], rhs.Values[3], carry);
+			(ulong t4, carry) = BlsUtil.MultiplyAddCarry(0, this.Values[0], rhs.Values[4], carry);
+			(ulong t5, ulong t6) = BlsUtil.MultiplyAddCarry(0, this.Values[0], rhs.Values[5], carry);
+
+			(t1, carry) = BlsUtil.MultiplyAddCarry(t1, this.Values[1], rhs.Values[0], 0);
+			(t2, carry) = BlsUtil.MultiplyAddCarry(t2, this.Values[1], rhs.Values[1], carry);
+			(t3, carry) = BlsUtil.MultiplyAddCarry(t3, this.Values[1], rhs.Values[2], carry);
+			(t4, carry) = BlsUtil.MultiplyAddCarry(t4, this.Values[1], rhs.Values[3], carry);
+			(t5, carry) = BlsUtil.MultiplyAddCarry(t5, this.Values[1], rhs.Values[4], carry);
+			(t6, ulong t7) = BlsUtil.MultiplyAddCarry(t6, this.Values[1], rhs.Values[5], carry);
+
+			(t2, carry) = BlsUtil.MultiplyAddCarry(t2, this.Values[2], rhs.Values[0], 0);
+			(t3, carry) = BlsUtil.MultiplyAddCarry(t3, this.Values[2], rhs.Values[1], carry);
+			(t4, carry) = BlsUtil.MultiplyAddCarry(t4, this.Values[2], rhs.Values[2], carry);
+			(t5, carry) = BlsUtil.MultiplyAddCarry(t5, this.Values[2], rhs.Values[3], carry);
+			(t6, carry) = BlsUtil.MultiplyAddCarry(t6, this.Values[2], rhs.Values[4], carry);
+			(t7, ulong t8) = BlsUtil.MultiplyAddCarry(t7, this.Values[2], rhs.Values[5], carry);
+
+			(t3, carry) = BlsUtil.MultiplyAddCarry(t3, this.Values[3], rhs.Values[0], 0);
+			(t4, carry) = BlsUtil.MultiplyAddCarry(t4, this.Values[3], rhs.Values[1], carry);
+			(t5, carry) = BlsUtil.MultiplyAddCarry(t5, this.Values[3], rhs.Values[2], carry);
+			(t6, carry) = BlsUtil.MultiplyAddCarry(t6, this.Values[3], rhs.Values[3], carry);
+			(t7, carry) = BlsUtil.MultiplyAddCarry(t7, this.Values[3], rhs.Values[4], carry);
+			(t8, ulong t9) = BlsUtil.MultiplyAddCarry(t8, this.Values[3], rhs.Values[5], carry);
+
+			(t4, carry) = BlsUtil.MultiplyAddCarry(t4, this.Values[4], rhs.Values[0], 0);
+			(t5, carry) = BlsUtil.MultiplyAddCarry(t5, this.Values[4], rhs.Values[1], carry);
+			(t6, carry) = BlsUtil.MultiplyAddCarry(t6, this.Values[4], rhs.Values[2], carry);
+			(t7, carry) = BlsUtil.MultiplyAddCarry(t7, this.Values[4], rhs.Values[3], carry);
+			(t8, carry) = BlsUtil.MultiplyAddCarry(t8, this.Values[4], rhs.Values[4], carry);
+			(t9, ulong t10) = BlsUtil.MultiplyAddCarry(t9, this.Values[4], rhs.Values[5], carry);
+
+			(t5, carry) = BlsUtil.MultiplyAddCarry(t5, this.Values[5], rhs.Values[0], 0);
+			(t6, carry) = BlsUtil.MultiplyAddCarry(t6, this.Values[5], rhs.Values[1], carry);
+			(t7, carry) = BlsUtil.MultiplyAddCarry(t7, this.Values[5], rhs.Values[2], carry);
+			(t8, carry) = BlsUtil.MultiplyAddCarry(t8, this.Values[5], rhs.Values[3], carry);
+			(t9, carry) = BlsUtil.MultiplyAddCarry(t9, this.Values[5], rhs.Values[4], carry);
+			(t10, ulong t11) = BlsUtil.MultiplyAddCarry(t10, this.Values[5], rhs.Values[5], carry);
+
+			return MontgomeryReduce(t0, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11);
+		}
+
+		public static Fp operator *(Fp a, Fp b)
+		{
+			return a.Multiply(b);
 		}
 
 
@@ -158,12 +273,12 @@ namespace EdjCase.ICP.BLS.Models
 
 		public Fp Neg()
 		{
-			(ulong d0, ulong borrow) = Sbb(MODULUS[0], this.Values[0], 0);
-			(ulong d1, borrow) = Sbb(MODULUS[1], this.Values[1], borrow);
-			(ulong d2, borrow) = Sbb(MODULUS[2], this.Values[2], borrow);
-			(ulong d3, borrow) = Sbb(MODULUS[3], this.Values[3], borrow);
-			(ulong d4, borrow) = Sbb(MODULUS[4], this.Values[4], borrow);
-			(ulong d5, _) = Sbb(MODULUS[5], this.Values[5], borrow);
+			(ulong d0, ulong borrow) = BlsUtil.SubtractWithBorrow(MODULUS[0], this.Values[0], 0);
+			(ulong d1, borrow) = BlsUtil.SubtractWithBorrow(MODULUS[1], this.Values[1], borrow);
+			(ulong d2, borrow) = BlsUtil.SubtractWithBorrow(MODULUS[2], this.Values[2], borrow);
+			(ulong d3, borrow) = BlsUtil.SubtractWithBorrow(MODULUS[3], this.Values[3], borrow);
+			(ulong d4, borrow) = BlsUtil.SubtractWithBorrow(MODULUS[4], this.Values[4], borrow);
+			(ulong d5, _) = BlsUtil.SubtractWithBorrow(MODULUS[5], this.Values[5], borrow);
 
 			// Let's use a mask if `self` was zero, which would mean
 			// the result of the subtraction is p.
@@ -171,7 +286,14 @@ namespace EdjCase.ICP.BLS.Models
 				? ulong.MaxValue
 				: 0;
 
-			return new Fp(new ulong[] { d0 & mask, d1 & mask, d2 & mask, d3 & mask, d4 & mask, d5 & mask });
+			return new Fp(
+				d0 & mask,
+				d1 & mask,
+				d2 & mask,
+				d3 & mask,
+				d4 & mask,
+				d5 & mask
+			);
 		}
 
 
@@ -271,6 +393,151 @@ namespace EdjCase.ICP.BLS.Models
 			(r11, _) = BlsUtil.AddWithCarry(t11, r11, carry);
 
 			return new Fp(r6, r7, r8, r9, r10, r11).SubtractP();
+		}
+
+		public Fp SquareRoot()
+		{
+			Fp by = new(
+				0xee7f_bfff_ffff_eaab,
+				0x07aa_ffff_ac54_ffff,
+				0xd9cc_34a8_3dac_3d89,
+				0xd91d_d2e1_3ce1_44af,
+				0x92c6_e9ed_90d2_eb35,
+				0x0680_447a_8e5f_f9a6
+			);
+			return this.Pow(by);
+		}
+
+		public Fp Pow(Fp by)
+		{
+			Fp res = Fp.One();
+			for (int i = 5; i >= 0; i--)
+			{
+				for (int j = 63; j >= 0; j--)
+				{
+					res = res.Square();
+					if (((by.Values[i] >> j) & 1) == 1)
+					{
+						res *= this;
+					}
+				}
+			}
+			return res;
+		}
+		// 	    #[inline]
+		// /// Computes the multiplicative inverse of this field
+		// /// element, returning None in the case that this element
+		// /// is zero.
+		// pub fn invert(&self) -> CtOption<Self> {
+		//     // Exponentiate by p - 2
+		//     let t = self.pow_vartime(&[
+		//         0xb9fe_ffff_ffff_aaa9,
+		//         0x1eab_fffe_b153_ffff,
+		//         0x6730_d2a0_f6b0_f624,
+		//         0x6477_4b84_f385_12bf,
+		//         0x4b1b_a7b6_434b_acd7,
+		//         0x1a01_11ea_397f_e69a,
+		//     ]);
+
+		//     CtOption::new(t, !self.is_zero())
+		// }
+
+		public Fp? Invert()
+		{
+			Fp t = this.Pow(new Fp(
+				0xb9fe_ffff_ffff_aaa9,
+				0x1eab_fffe_b153_ffff,
+				0x6730_d2a0_f6b0_f624,
+				0x6477_4b84_f385_12bf,
+				0x4b1b_a7b6_434b_acd7,
+				0x1a01_11ea_397f_e69a
+			));
+			if (this.IsZero())
+			{
+				return null;
+			}
+			return t;
+		}
+
+		public bool LexicographicallyLargest()
+		{
+			Fp tmp = Fp.MontgomeryReduce(
+				this.Values[0],
+				this.Values[1],
+				this.Values[2],
+				this.Values[3],
+				this.Values[4],
+				this.Values[5],
+				0,
+				0,
+				0,
+				0,
+				0,
+				0
+			);
+			(_, ulong borrow) = BlsUtil.SubtractWithBorrow(tmp.Values[0], 0xdcff_7fff_ffff_d556, 0);
+			(_, borrow) = BlsUtil.SubtractWithBorrow(tmp.Values[1], 0x0f55_ffff_58a9_ffff, borrow);
+			(_, borrow) = BlsUtil.SubtractWithBorrow(tmp.Values[2], 0xb398_6950_7b58_7b12, borrow);
+			(_, borrow) = BlsUtil.SubtractWithBorrow(tmp.Values[3], 0xb23b_a5c2_79c2_895f, borrow);
+			(_, borrow) = BlsUtil.SubtractWithBorrow(tmp.Values[4], 0x258d_d3db_21a5_d66b, borrow);
+			(_, borrow) = BlsUtil.SubtractWithBorrow(tmp.Values[5], 0x0d00_88f5_1cbf_f34d, borrow);
+			return (borrow & 1) == 1;
+		}
+
+		public static Fp SumOfProducts(Fp[] a, Fp[] b)
+		{
+			if (a.Length != b.Length)
+			{
+				throw new ArgumentException("Arrays must be of the same length.");
+			};
+			// Iterate Range from 0 -> 6
+
+			(ulong u0, ulong u1, ulong u2, ulong u3, ulong u4, ulong u5) = Enumerable.Range(0, 6)
+			.Aggregate((0ul, 0ul, 0ul, 0ul, 0ul, 0ul), (acc, j) =>
+			{
+				(ulong u0, ulong u1, ulong u2, ulong u3, ulong u4, ulong u5) = acc;
+				(ulong t0, ulong t1, ulong t2, ulong t3, ulong t4, ulong t5, ulong t6) = a
+					.Zip(b, (a, b) => (a, b))
+					.Aggregate(
+						(u0, u1, u2, u3, u4, u5, 0ul),
+						(acc2, pair) =>
+						{
+							(ulong t0, ulong t1, ulong t2, ulong t3, ulong t4, ulong t5, ulong t6) = acc2;
+							(t0, ulong carry) = BlsUtil.MultiplyAddCarry(t0, pair.a.Values[j], pair.b.Values[0], 0);
+							(t1, carry) = BlsUtil.MultiplyAddCarry(t1, pair.a.Values[j], pair.b.Values[1], carry);
+							(t2, carry) = BlsUtil.MultiplyAddCarry(t2, pair.a.Values[j], pair.b.Values[2], carry);
+							(t3, carry) = BlsUtil.MultiplyAddCarry(t3, pair.a.Values[j], pair.b.Values[3], carry);
+							(t4, carry) = BlsUtil.MultiplyAddCarry(t4, pair.a.Values[j], pair.b.Values[4], carry);
+							(t5, carry) = BlsUtil.MultiplyAddCarry(t5, pair.a.Values[j], pair.b.Values[5], carry);
+							(t6, _) = BlsUtil.AddWithCarry(0, 0, carry);
+							return (t0, t1, t2, t3, t4, t5, t6);
+						});
+
+				ulong k;
+				unchecked
+				{
+					// Wrapping multiply
+					k = t0 * INV;
+				}
+				(ulong _, ulong carry) = BlsUtil.MultiplyAddCarry(t0, k, MODULUS[0], 0);
+				(ulong r1, carry) = BlsUtil.MultiplyAddCarry(t1, k, MODULUS[1], carry);
+				(ulong r2, carry) = BlsUtil.MultiplyAddCarry(t2, k, MODULUS[2], carry);
+				(ulong r3, carry) = BlsUtil.MultiplyAddCarry(t3, k, MODULUS[3], carry);
+				(ulong r4, carry) = BlsUtil.MultiplyAddCarry(t4, k, MODULUS[4], carry);
+				(ulong r5, carry) = BlsUtil.MultiplyAddCarry(t5, k, MODULUS[5], carry);
+				(ulong r6, _) = BlsUtil.AddWithCarry(t6, 0, carry);
+				return (r1, r2, r3, r4, r5, r6);
+			});
+			return new Fp(
+				u0,
+				u1,
+				u2,
+				u3,
+				u4,
+				u5
+			)
+			.SubtractP();
+
 		}
 	}
 }

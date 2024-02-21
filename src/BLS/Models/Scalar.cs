@@ -3,7 +3,7 @@ using System.Numerics;
 namespace EdjCase.ICP.BLS.Models
 {
 
-	public class Scalar
+	internal class Scalar
 	{
 		private BigInteger value;
 		private static readonly BigInteger Modulus = BigInteger.Parse("52435875175126190479447740508185965837690552500527637822603658699938581184512", System.Globalization.NumberStyles.AllowHexSpecifier);

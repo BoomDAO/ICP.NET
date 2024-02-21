@@ -32,7 +32,7 @@ public class FpTests
 			132, 243, 133, 18, 191, 103, 48, 210, 160, 246, 176, 246, 36, 30, 171, 255, 254, 177,
 			83, 255, 255, 185, 254, 255, 255, 255, 255, 170, 170
 		};
-		Assert.Equal(-Fp.One(), Fp.FromBytes(negativeOneBytes)); // Assuming you have a static property for Fp.One()
+		Assert.Equal(Fp.One().Neg(), Fp.FromBytes(negativeOneBytes)); // Assuming you have a static property for Fp.One()
 	}
 	[Fact]
 	public void FromBytes_InvalidBytes_Error()
