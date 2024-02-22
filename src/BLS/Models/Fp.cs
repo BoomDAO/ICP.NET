@@ -424,23 +424,6 @@ namespace EdjCase.ICP.BLS.Models
 			}
 			return res;
 		}
-		// 	    #[inline]
-		// /// Computes the multiplicative inverse of this field
-		// /// element, returning None in the case that this element
-		// /// is zero.
-		// pub fn invert(&self) -> CtOption<Self> {
-		//     // Exponentiate by p - 2
-		//     let t = self.pow_vartime(&[
-		//         0xb9fe_ffff_ffff_aaa9,
-		//         0x1eab_fffe_b153_ffff,
-		//         0x6730_d2a0_f6b0_f624,
-		//         0x6477_4b84_f385_12bf,
-		//         0x4b1b_a7b6_434b_acd7,
-		//         0x1a01_11ea_397f_e69a,
-		//     ]);
-
-		//     CtOption::new(t, !self.is_zero())
-		// }
 
 		public Fp? Invert()
 		{

@@ -1,6 +1,7 @@
 using EdjCase.ICP.BLS.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using System.Text;
 
@@ -34,6 +35,44 @@ namespace EdjCase.ICP.BLS
 			ulong lower = (ulong)(sum & 0xFFFFFFFFFFFFFFFF);
 			ulong upper = (ulong)((sum >> 64) & 0xFFFFFFFFFFFFFFFF);
 			return (lower, upper);
+		}
+
+		internal static T MillerLoop<T>(
+			T f,
+			Func<T, T> doublingStep,
+			Func<T, T> additionStep,
+			Func<T, T> square,
+			Func<T, T> conjugate
+		)
+		{
+			bool foundOne = false;
+
+			var values = Enumerable.Range(0, 64)
+			.Reverse()
+			.Select(b => ((Constants.BLS_X >> 1 >> b) & 1) == 1);
+
+			foreach (bool i in values)
+			{
+				if (!foundOne)
+				{
+					foundOne = i;
+					continue;
+				}
+
+				f = doublingStep(f);
+
+				if (i)
+				{
+					f = additionStep(f);
+				}
+				f = square(f);
+			}
+
+			f = doublingStep(f);
+
+			f = conjugate(f);
+			return f;
+
 		}
 	}
 }

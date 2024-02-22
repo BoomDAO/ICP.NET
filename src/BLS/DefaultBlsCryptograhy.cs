@@ -13,8 +13,6 @@ namespace EdjCase.ICP.BLS
 	/// </summary>
 	public class DefaultBlsCryptograhy : IBlsCryptography
 	{
-		// The BLS parameter x for BLS12-381 is -0xd201000000010000
-		private const ulong BLS_X = 0xd201_0000_0001_0000;
 		/// <inheritdoc />
 		public bool VerifySignature(byte[] publicKey, byte[] messageHash, byte[] signature)
 		{
@@ -59,22 +57,59 @@ namespace EdjCase.ICP.BLS
 				return false;
 			}
 
-			Fp12 ml = Fp12.One();
+			Fp12 millerLoopValue = Fp12.One();
+			int i = 0;
 			foreach ((G1Projective pk, G2Projective hash) in publicKeys.Zip(hashes, (pk, h) => (pk, h)))
 			{
 				G1Affine pkAffine = pk.ToAffine();
 				G2Affine hAffine = hash.ToAffine();
-				ml = ml.Add(Bls12.MultiMillerLoop((pkAffine, hAffine)));
+				G2Prepared hPrepared = hAffine.ToPrepared();
+				Fp12 result = BlsUtil.MillerLoop(
+					Fp12.One(),
+					(f) => DoublingStep(f, pkAffine, hPrepared, i),
+					(f) => DoublingStep(f, pkAffine, hPrepared, i),
+					(f) => f.Square(),
+					(f) => f.Conjugate()
+				);
+				millerLoopValue *= result;
+				i++;
 			}
 
-			var g1Neg = G1Affine.NegativeGenerator();
-			var r = Bls12.MultiMillerLoop(g1Neg, signature);
-			ml = ml.Add(r);
+			G1Affine g1Neg = G1Affine.Generator().Neg();
+			G2Prepared signaturePrepared = signature.ToPrepared();
+			Fp12 r = BlsUtil.MillerLoop(
+					Fp12.One(),
+					(f) => DoublingStep(f, g1Neg, signaturePrepared, 0),
+					(f) => DoublingStep(f, g1Neg, signaturePrepared, 0),
+					(f) => f.Square(),
+					(f) => f.Conjugate()
+				);
+			millerLoopValue *= r;
 
-			return ml.FinalExponentiation() == Gt.Identity;
+			return FinalExponentiation(millerLoopValue) == Fp12.One();
 		}
 
 
+		private static Fp12 DoublingStep(Fp12 f, G1Affine publicKey, G2Prepared hash, int index)
+		{
+			bool eitherIdentity = publicKey.IsIdentity() || hash.IsInfinity;
+			if (eitherIdentity)
+			{
+				return f;
+			}
+			Fp12 newF = Ell(f, hash.Coefficients[index], publicKey);
+			return newF;
+		}
+
+		private static Fp12 Ell(Fp12 f, (Fp2, Fp2, Fp2) value, G1Affine publicKey)
+		{
+			(Fp2 c0, Fp2 c1, Fp2 c2) = value;
+
+			c0 = new Fp2(c0.C0 * publicKey.Y, c0.C1 * publicKey.Y);
+			c1 = new Fp2(c1.C0 * publicKey.X, c1.C1 * publicKey.X);
+
+			return f.MultiplyBy014(c2, c1, c0);
+		}
 
 		private static Fp12 FinalExponentiation(Fp12 f)
 		{
@@ -85,7 +120,7 @@ namespace EdjCase.ICP.BLS
 				.FrobeniusMap()
 				.FrobeniusMap()
 				.FrobeniusMap();
-			Fp12? t1 = f.Invert();
+			Fp12 t1 = f.Invert() ?? throw new Exception("Failed to invert");
 			Fp12 t2 = t0.Multiply(t1);
 			t1 = t2;
 			t2 = t2.FrobeniusMap().FrobeniusMap();
@@ -169,7 +204,7 @@ namespace EdjCase.ICP.BLS
 
 		private static Fp12 CyclotomicExp(Fp12 f)
 		{
-			ulong x = BLS_X;
+			ulong x = Constants.BLS_X;
 			Fp12 tmp = Fp12.One();
 			bool foundOne = false;
 			for (int i = 63; i >= 0; i--)

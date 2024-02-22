@@ -18,5 +18,8 @@ namespace EdjCase.ICP.BLS
 
 		public const int PUBLICKEY_SIZE = 288;
 		public const int SIGNATURE_SIZE = 144;
+
+		public const ulong BLS_X = 0xd201_0000_0001_0000;
+
 	}
 }

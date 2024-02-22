@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Numerics;
 using System.Text;
@@ -22,7 +23,7 @@ namespace EdjCase.ICP.BLS.Models
 			Fp6 c0 = this.C0.FrobeniusMap();
 			Fp6 c1 = this.C1.FrobeniusMap();
 
-			c1 = c1 * new Fp6(
+			c1 *= new Fp6(
 				new Fp2(
 					new Fp(
 						0x0708_9552_b319_d465,
@@ -57,22 +58,11 @@ namespace EdjCase.ICP.BLS.Models
 			return new Fp12(this.C0.Multiply(t), this.C1.Multiply(t.Neg()));
 		}
 
-		public Fp12 Multiply(Fp12 t1)
+		public Fp12 Multiply(Fp12 rhs)
 		{
-			// let aa = self.c0 * other.c0;
-			//         let bb = self.c1 * other.c1;
-			//         let o = other.c0 + other.c1;
-			//         let c1 = self.c1 + self.c0;
-			//         let c1 = c1 * o;
-			//         let c1 = c1 - aa;
-			//         let c1 = c1 - bb;
-			//         let c0 = bb.mul_by_nonresidue();
-			//         let c0 = c0 + aa;
-
-			//         Fp12 { c0, c1 }
-			Fp6 aa = this.C0.Multiply(t1.C0);
-			Fp6 bb = this.C1.Multiply(t1.C1);
-			Fp6 o = t1.C0.Add(t1.C1);
+			Fp6 aa = this.C0.Multiply(rhs.C0);
+			Fp6 bb = this.C1.Multiply(rhs.C1);
+			Fp6 o = rhs.C0.Add(rhs.C1);
 			Fp6 c1 = this.C1.Add(this.C0);
 			c1 = c1.Multiply(o);
 			c1 = c1.Subtract(aa);
@@ -80,6 +70,11 @@ namespace EdjCase.ICP.BLS.Models
 			Fp6 c0 = bb.MultiplyByNonresidue();
 			c0 = c0.Add(aa);
 			return new Fp12(c0, c1);
+		}
+
+		public static Fp12 operator *(Fp12 a, Fp12 b)
+		{
+			return a.Multiply(b);
 		}
 
 		public Fp12 Conjugate()
@@ -95,6 +90,35 @@ namespace EdjCase.ICP.BLS.Models
 		public static Fp12 One()
 		{
 			return new Fp12(Fp6.One(), Fp6.Zero());
+		}
+
+		internal Fp12 Square()
+		{
+			Fp6 ab = this.C0 * this.C1;
+			Fp6 c0c1 = this.C0 + this.C1;
+			Fp6 c0 = this.C1.MultiplyByNonresidue();
+			c0 += this.C0;
+			c0 *= c0c1;
+			c0 -= ab;
+			Fp6 c1 = ab + ab;
+			c0 -= ab.MultiplyByNonresidue();
+
+			return new Fp12(c0, c1);
+		}
+
+		internal Fp12 MultiplyBy014(Fp2 c0, Fp2 c1, Fp2 c4)
+		{
+			Fp6 aa = this.C0.MultiplyBy01(c0, c1);
+			Fp6 bb = this.C1.MultiplyBy1(c4);
+			Fp2 o = c1 + c4;
+			Fp6 newC1 = this.C1 + this.C0;
+			newC1 = newC1.MultiplyBy01(c0, o);
+			newC1 = newC1 - aa - bb;
+			Fp6 newC0 = bb;
+			newC0 = newC0.MultiplyByNonresidue();
+			newC0 = newC0 + aa;
+
+			return new Fp12(newC0, newC1);
 		}
 	}
 }

@@ -185,5 +185,28 @@ namespace EdjCase.ICP.BLS.Models
 		{
 			return new Fp6(Fp2.One(), Fp2.Zero(), Fp2.Zero());
 		}
+
+		internal Fp6 MultiplyBy01(Fp2 c0, Fp2 c1)
+		{
+			Fp2 a_a = this.C0.Multiply(c0);
+			Fp2 b_b = this.C1.Multiply(c1);
+
+			Fp2 t1 = (this.C2.Multiply(c1).MultiplyByNonresidue()) + a_a;
+
+			Fp2 t2 = (c0 + c1).Multiply(this.C0 + this.C1) - a_a - b_b;
+
+			Fp2 t3 = this.C2.Multiply(c0) + b_b;
+
+			return new Fp6(t1, t2, t3);
+		}
+
+		internal Fp6 MultiplyBy1(Fp2 c1)
+		{
+			return new Fp6(
+				this.C2.Multiply(c1).MultiplyByNonresidue(),
+				this.C0.Multiply(c1),
+				this.C1.Multiply(c1)
+			);
+		}
 	}
 }
