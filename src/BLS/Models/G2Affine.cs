@@ -62,13 +62,13 @@ namespace EdjCase.ICP.BLS.Models
 				0, // Dummy value instead of void
 				(f) =>
 				{
-					cur = G2Projective.DoublingStep(cur, out var values);
+					cur = G2Prepared.DoublingStep(cur, out var values);
 					coeffs.Add(values);
 					return f; // Dummy
 				},
 				(f) =>
 				{
-					cur = G2Projective.AdditionStep(cur, q, out var values);
+					cur = G2Prepared.AdditionStep(cur, q, out var values);
 					coeffs.Add(values);
 					return f; // Dummy
 				},

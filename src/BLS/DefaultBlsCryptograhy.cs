@@ -67,7 +67,7 @@ namespace EdjCase.ICP.BLS
 				Fp12 result = BlsUtil.MillerLoop(
 					Fp12.One(),
 					(f) => DoublingStep(f, pkAffine, hPrepared, i),
-					(f) => DoublingStep(f, pkAffine, hPrepared, i),
+					(f) => AddingStep(f, pkAffine, hPrepared, i),
 					(f) => f.Square(),
 					(f) => f.Conjugate()
 				);
@@ -80,7 +80,7 @@ namespace EdjCase.ICP.BLS
 			Fp12 r = BlsUtil.MillerLoop(
 					Fp12.One(),
 					(f) => DoublingStep(f, g1Neg, signaturePrepared, 0),
-					(f) => DoublingStep(f, g1Neg, signaturePrepared, 0),
+					(f) => AddingStep(f, g1Neg, signaturePrepared, 0),
 					(f) => f.Square(),
 					(f) => f.Conjugate()
 				);
@@ -91,6 +91,17 @@ namespace EdjCase.ICP.BLS
 
 
 		private static Fp12 DoublingStep(Fp12 f, G1Affine publicKey, G2Prepared hash, int index)
+		{
+			bool eitherIdentity = publicKey.IsIdentity() || hash.IsInfinity;
+			if (eitherIdentity)
+			{
+				return f;
+			}
+			Fp12 newF = Ell(f, hash.Coefficients[index], publicKey);
+			return newF;
+		}
+
+		private static Fp12 AddingStep(Fp12 f, G1Affine publicKey, G2Prepared hash, int index)
 		{
 			bool eitherIdentity = publicKey.IsIdentity() || hash.IsInfinity;
 			if (eitherIdentity)
