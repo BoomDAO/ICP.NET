@@ -169,5 +169,24 @@ namespace EdjCase.ICP.BLS.Models
 			return new Fp2(this.C0 - this.C1, this.C0 + this.C1);
 		}
 
+
+		public override bool Equals(object obj)
+		{
+			if (obj is Fp2 fp2)
+			{
+				return this.Equals(fp2);
+			}
+			return false;
+		}
+
+		public bool Equals(Fp2 rhs)
+		{
+			return this.C0.Equals(rhs.C0) && this.C1.Equals(rhs.C1);
+		}
+
+		public override int GetHashCode()
+		{
+			return this.C0.GetHashCode() ^ this.C1.GetHashCode();
+		}
 	}
 }

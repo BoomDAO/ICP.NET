@@ -208,5 +208,25 @@ namespace EdjCase.ICP.BLS.Models
 				this.C1.Multiply(c1)
 			);
 		}
+
+
+		public override bool Equals(object obj)
+		{
+			if (obj is Fp6 fp6)
+			{
+				return this.Equals(fp6);
+			}
+			return false;
+		}
+
+		public bool Equals(Fp6 rhs)
+		{
+			return this.C0.Equals(rhs.C0) && this.C1.Equals(rhs.C1) && this.C2.Equals(rhs.C2);
+		}
+
+		public override int GetHashCode()
+		{
+			return this.C0.GetHashCode() ^ this.C1.GetHashCode() ^ this.C2.GetHashCode();
+		}
 	}
 }

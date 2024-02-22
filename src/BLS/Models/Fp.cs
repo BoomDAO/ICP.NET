@@ -541,7 +541,7 @@ namespace EdjCase.ICP.BLS.Models
 							(t3, carry) = BlsUtil.MultiplyAddCarry(t3, pair.a.Values[j], pair.b.Values[3], carry);
 							(t4, carry) = BlsUtil.MultiplyAddCarry(t4, pair.a.Values[j], pair.b.Values[4], carry);
 							(t5, carry) = BlsUtil.MultiplyAddCarry(t5, pair.a.Values[j], pair.b.Values[5], carry);
-							(t6, _) = BlsUtil.AddWithCarry(0, 0, carry);
+							(t6, _) = BlsUtil.AddWithCarry(t6, 0, carry);
 							return (t0, t1, t2, t3, t4, t5, t6);
 						});
 

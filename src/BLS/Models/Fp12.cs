@@ -120,5 +120,29 @@ namespace EdjCase.ICP.BLS.Models
 
 			return new Fp12(newC0, newC1);
 		}
+
+		public Fp12 Add(Fp12 rhs)
+		{
+			return new Fp12(this.C0 + rhs.C0, this.C1 + rhs.C1);
+		}
+
+		public override bool Equals(object obj)
+		{
+			if (obj is Fp12 fp12)
+			{
+				return this.Equals(fp12);
+			}
+			return false;
+		}
+
+		public bool Equals(Fp12 rhs)
+		{
+			return this.C0.Equals(rhs.C0) && this.C1.Equals(rhs.C1);
+		}
+
+		public override int GetHashCode()
+		{
+			return this.C0.GetHashCode() ^ this.C1.GetHashCode();
+		}
 	}
 }
