@@ -63,6 +63,11 @@ namespace EdjCase.ICP.BLS.Models
 			return new G2Affine(Fp2.Zero(), Fp2.One(), true);
 		}
 
+		public G2Projective ToProjective()
+		{
+			return new G2Projective(this.X, this.Y, this.IsInfinity ? Fp2.Zero() : Fp2.One());
+		}
+
 		public static G2Affine FromCompressed(byte[] bytes)
 		{
 			if (bytes.Length != 96)

@@ -1,3 +1,5 @@
+using System;
+
 namespace EdjCase.ICP.BLS.Models
 {
 	internal class G2Projective
@@ -24,6 +26,16 @@ namespace EdjCase.ICP.BLS.Models
 			Fp2 x = this.X.Multiply(zinv);
 			Fp2 y = this.Y.Multiply(zinv);
 			return new(x, y, false);
+		}
+
+		public static G2Projective FromCompressed(byte[] bytes)
+		{
+			return G2Affine.FromCompressed(bytes).ToProjective();
+		}
+
+		internal byte[] ToCompressed()
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

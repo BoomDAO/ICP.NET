@@ -1,3 +1,5 @@
+using System;
+
 namespace EdjCase.ICP.BLS.Models
 {
 	internal class G1Projective
@@ -24,6 +26,15 @@ namespace EdjCase.ICP.BLS.Models
 			Fp x = this.X.Multiply(zinv);
 			Fp y = this.Y.Multiply(zinv);
 			return new(x, y, false);
+		}
+		public static G1Projective FromCompressed(byte[] bytes)
+		{
+			return G1Affine.FromCompressed(bytes).ToProjective();
+		}
+
+		public bool IsIdentity()
+		{
+			return this.Z.IsZero();
 		}
 	}
 }

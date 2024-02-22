@@ -60,6 +60,16 @@ namespace EdjCase.ICP.BLS.Models
 			return lhs.Add(rhs);
 		}
 
+		public Fp2 Subtract(Fp2 rhs)
+		{
+			return new Fp2(this.C0.Subtract(rhs.C0), this.C1.Subtract(rhs.C1));
+		}
+
+		public static Fp2 operator -(Fp2 lhs, Fp2 rhs)
+		{
+			return lhs.Subtract(rhs);
+		}
+
 		public Fp2 Multiply(Fp2 rhs)
 		{
 			Fp newC0 = Fp.SumOfProducts(new[] { this.C0, this.C1.Neg() }, new[] { rhs.C0, rhs.C1 });
@@ -142,6 +152,21 @@ namespace EdjCase.ICP.BLS.Models
 			Fp t4 = this.C0.Multiply(t3);
 			Fp t5 = this.C1.Multiply(t3.Neg());
 			return new Fp2(t4, t5);
+		}
+
+		public Fp2 FrobeniusMap()
+		{
+			return this.Conjugate();
+		}
+
+		public Fp2 Conjugate()
+		{
+			return new Fp2(this.C0, this.C1.Neg());
+		}
+
+		public Fp2 MultiplyByNonresidue()
+		{
+			return new Fp2(this.C0 - this.C1, this.C0 + this.C1);
 		}
 
 	}

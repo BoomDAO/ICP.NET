@@ -36,6 +36,20 @@ namespace EdjCase.ICP.BLS.Models
 			return new G1Affine(Fp.Zero(), Fp.One(), true);
 		}
 
+		public G1Projective ToProjective()
+		{
+			return new G1Projective(this.X, this.Y, this.IsInfinity ? Fp.Zero() : Fp.One());
+		}
+
+		public byte[] ToCompressed()
+		{
+			byte[] bytes = (this.IsInfinity ? Fp.Zero() : this.X).ToBytes();
+			bytes[0] |= 1 << 7;
+			bytes[0] |= (byte)(this.IsInfinity ? 1 << 6 : 0);
+			bytes[0] |= (byte)((!this.IsInfinity && this.Y.LexicographicallyLargest()) ? 1 << 5 : 0);
+			return bytes;
+		}
+
 
 		internal static G1Affine FromCompressed(byte[] bytes)
 		{
