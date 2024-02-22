@@ -23,31 +23,20 @@ namespace EdjCase.ICP.BLS
 			return (lower, upper);
 		}
 
-		internal static (ulong Value, ulong Borrow) SubtractWithBorrow(ulong a, ulong b, ulong borrow)
+		internal static (ulong Value, ulong BorrowOut) SubtractWithBorrow(ulong a, ulong b, ulong borrow)
 		{
-			// Perform the subtraction and borrow in two steps for clarity, using unchecked
-			// to allow wrapping without throwing an overflow exception
-			ulong retLow;
-			ulong retHigh;
 			unchecked
 			{
-				// First, subtract b and the borrow from a, treating them as 128-bit integers for the operation
-				// Since C# does not support 128-bit integers directly, we handle the low and high parts separately
-				ulong lowPart = a - b - (borrow >> 63);
-				ulong highPart = 0;
+				// Interpret any non-zero borrow value as true (1) for subtraction
+				ulong effectiveBorrow = borrow > 0 ? 1UL : 0UL;
+				ulong result = a - b - effectiveBorrow;
 
-				// If a borrow occurs during the subtraction, increment the high part
-				if (a < b + (borrow >> 63))
-				{
-					highPart = 1;
-				}
+				// Determine if a borrow occurred. A borrow is needed if a is less than b,
+				// or if a equals b and an effective borrow is subtracted.
+				ulong borrowOut = (a < b || (a == b && effectiveBorrow > 0)) ? 1UL : 0UL;
 
-				retLow = lowPart;
-				retHigh = highPart;
+				return (result, borrowOut);
 			}
-
-			// The second element of the tuple indicates if there was a borrow, which is true if retHigh is not 0
-			return (retLow, retHigh);
 		}
 
 

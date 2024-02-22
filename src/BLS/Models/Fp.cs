@@ -11,7 +11,14 @@ namespace EdjCase.ICP.BLS.Models
 		public readonly ulong[] Values;
 
 		// Constants
-		public static readonly ulong[] MODULUS = new ulong[] { 0xb9fe_ffff_ffff_aaab, 0x1eab_fffe_b153_ffff, 0x6730_d2a0_f6b0_f624, 0x6477_4b84_f385_12bf, 0x4b1b_a7b6_434b_acd7, 0x1a01_11ea_397f_e69a };
+		public static readonly ulong[] MODULUS = new ulong[] {
+			0xb9fe_ffff_ffff_aaab,
+			0x1eab_fffe_b153_ffff,
+			0x6730_d2a0_f6b0_f624,
+			0x6477_4b84_f385_12bf,
+			0x4b1b_a7b6_434b_acd7,
+			0x1a01_11ea_397f_e69a
+		};
 		public static readonly ulong INV = 0x89f3_fffc_fffc_fffd;
 
 		// Static readonly instances of Fp for R, R2, and R3
@@ -94,18 +101,36 @@ namespace EdjCase.ICP.BLS.Models
 			// Turn into canonical form by computing
 			// (a.R) / R = a
 			Fp tmp = Fp.MontgomeryReduce(
-				this.Values[0], this.Values[1], this.Values[2], this.Values[3], this.Values[4], this.Values[5], 0, 0, 0, 0, 0, 0
+				this.Values[0],
+				this.Values[1],
+				this.Values[2],
+				this.Values[3],
+				this.Values[4],
+				this.Values[5],
+				0,
+				0,
+				0,
+				0,
+				0,
+				0
 			);
 
-			byte[] res = new byte[48];
-			Array.Copy(BitConverter.GetBytes(tmp.Values[5]).Reverse().ToArray(), 0, res, 0, 8);
-			Array.Copy(BitConverter.GetBytes(tmp.Values[4]).Reverse().ToArray(), 0, res, 8, 8);
-			Array.Copy(BitConverter.GetBytes(tmp.Values[3]).Reverse().ToArray(), 0, res, 16, 8);
-			Array.Copy(BitConverter.GetBytes(tmp.Values[2]).Reverse().ToArray(), 0, res, 24, 8);
-			Array.Copy(BitConverter.GetBytes(tmp.Values[1]).Reverse().ToArray(), 0, res, 32, 8);
-			Array.Copy(BitConverter.GetBytes(tmp.Values[0]).Reverse().ToArray(), 0, res, 40, 8);
+			byte[] bytes = new byte[48];
+			// Ensure big-endian format for each ulong value
+			for (int i = 0; i < 6; i++)
+			{
+				byte[] ulongBytes = BitConverter.GetBytes(tmp.Values[5 - i]);
 
-			return res;
+				// Check system endianness and reverse if necessary
+				if (BitConverter.IsLittleEndian)
+				{
+					Array.Reverse(ulongBytes);
+				}
+
+				Array.Copy(ulongBytes, 0, bytes, i * 8, 8);
+			}
+
+			return bytes;
 		}
 
 
@@ -283,8 +308,8 @@ namespace EdjCase.ICP.BLS.Models
 			// Let's use a mask if `self` was zero, which would mean
 			// the result of the subtraction is p.
 			ulong mask = ((this.Values[0] | this.Values[1] | this.Values[2] | this.Values[3] | this.Values[4] | this.Values[5]) == 0)
-				? ulong.MaxValue
-				: 0;
+				? 0
+				: ulong.MaxValue;
 
 			return new Fp(
 				d0 & mask,
@@ -305,16 +330,26 @@ namespace EdjCase.ICP.BLS.Models
 			ulong[] value = new ulong[6];
 			for (int i = 0; i < 6; i++)
 			{
-				value[5 - i] = BitConverter.ToUInt64(bytes, i * 8);
+				// Extract 8 bytes for each ulong, considering the position in the array
+				byte[] ulongBytes = new byte[8];
+				Array.Copy(bytes, i * 8, ulongBytes, 0, 8);
+
+				// Check if the system is little-endian; reverse the array to ensure big-endian order
+				if (BitConverter.IsLittleEndian)
+				{
+					Array.Reverse(ulongBytes);
+				}
+
+				// Convert bytes to ulong considering they are now in big-endian format
+				value[5 - i] = BitConverter.ToUInt64(ulongBytes, 0);
 			}
 
 			ulong borrow = 0;
 			for (int i = 0; i < 6; i++)
 			{
-				(_, borrow) = BlsUtil.SubtractWithBorrow(value[i], MODULUS[i], borrow);
+				(value[i], borrow) = BlsUtil.SubtractWithBorrow(value[i], MODULUS[i], borrow);
 			}
 			bool isValid = (borrow & 1) == 1;
-
 
 			if (!isValid)
 				throw new ArgumentException("The provided bytes represent a value that is not within the valid range of the field.");
