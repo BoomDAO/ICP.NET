@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\src\BLS\EdjCase.ICP.BLS.csproj" />
+    <ProjectReference Include="..\src\Candid\EdjCase.ICP.Candid.csproj" />
   </ItemGroup>
 
 </Project>

@@ -227,27 +227,33 @@ namespace EdjCase.ICP.BLS.Models
 
 		public Fp Square()
 		{
-			(ulong t1, ulong carry) = BlsUtil.MultiplyAddCarry(0, this.Values[0], this.Values[1], 0);
-			(ulong t2, carry) = BlsUtil.MultiplyAddCarry(0, this.Values[0], this.Values[2], carry);
-			(ulong t3, carry) = BlsUtil.MultiplyAddCarry(0, this.Values[0], this.Values[3], carry);
-			(ulong t4, carry) = BlsUtil.MultiplyAddCarry(0, this.Values[0], this.Values[4], carry);
-			(ulong t5, ulong t6) = BlsUtil.MultiplyAddCarry(0, this.Values[0], this.Values[5], carry);
+			// Initial declarations
+			ulong t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11;
+			ulong carry;
+
+			// Operations
+			(t1, carry) = BlsUtil.MultiplyAddCarry(0, this.Values[0], this.Values[1], 0);
+			(t2, carry) = BlsUtil.MultiplyAddCarry(0, this.Values[0], this.Values[2], carry);
+			(t3, carry) = BlsUtil.MultiplyAddCarry(0, this.Values[0], this.Values[3], carry);
+			(t4, carry) = BlsUtil.MultiplyAddCarry(0, this.Values[0], this.Values[4], carry);
+			(t5, t6) = BlsUtil.MultiplyAddCarry(0, this.Values[0], this.Values[5], carry);
 
 			(t3, carry) = BlsUtil.MultiplyAddCarry(t3, this.Values[1], this.Values[2], 0);
 			(t4, carry) = BlsUtil.MultiplyAddCarry(t4, this.Values[1], this.Values[3], carry);
 			(t5, carry) = BlsUtil.MultiplyAddCarry(t5, this.Values[1], this.Values[4], carry);
-			(t6, ulong t7) = BlsUtil.MultiplyAddCarry(t6, this.Values[1], this.Values[5], carry);
+			(t6, t7) = BlsUtil.MultiplyAddCarry(t6, this.Values[1], this.Values[5], carry);
 
 			(t5, carry) = BlsUtil.MultiplyAddCarry(t5, this.Values[2], this.Values[3], 0);
 			(t6, carry) = BlsUtil.MultiplyAddCarry(t6, this.Values[2], this.Values[4], carry);
-			(t7, ulong t8) = BlsUtil.MultiplyAddCarry(t7, this.Values[2], this.Values[5], carry);
+			(t7, t8) = BlsUtil.MultiplyAddCarry(t7, this.Values[2], this.Values[5], carry);
 
 			(t7, carry) = BlsUtil.MultiplyAddCarry(t7, this.Values[3], this.Values[4], 0);
-			(t8, ulong t9) = BlsUtil.MultiplyAddCarry(t8, this.Values[3], this.Values[5], carry);
+			(t8, t9) = BlsUtil.MultiplyAddCarry(t8, this.Values[3], this.Values[5], carry);
 
-			(t9, ulong t10) = BlsUtil.MultiplyAddCarry(t9, this.Values[4], this.Values[5], 0);
+			(t9, t10) = BlsUtil.MultiplyAddCarry(t9, this.Values[4], this.Values[5], 0);
 
-			ulong t11 = t10 >> 63;
+			// Bit shifting operations
+			t11 = t10 >> 63;
 			t10 = (t10 << 1) | (t9 >> 63);
 			t9 = (t9 << 1) | (t8 >> 63);
 			t8 = (t8 << 1) | (t7 >> 63);
@@ -259,7 +265,9 @@ namespace EdjCase.ICP.BLS.Models
 			t2 = (t2 << 1) | (t1 >> 63);
 			t1 = t1 << 1;
 
-			(ulong t0, carry) = BlsUtil.MultiplyAddCarry(0, this.Values[0], this.Values[0], 0);
+			// Final operations with carry management
+			ulong t0;
+			(t0, carry) = BlsUtil.MultiplyAddCarry(0, this.Values[0], this.Values[0], 0);
 			(t1, carry) = BlsUtil.AddWithCarry(t1, 0, carry);
 			(t2, carry) = BlsUtil.MultiplyAddCarry(t2, this.Values[1], this.Values[1], carry);
 			(t3, carry) = BlsUtil.AddWithCarry(t3, 0, carry);
@@ -272,8 +280,10 @@ namespace EdjCase.ICP.BLS.Models
 			(t10, carry) = BlsUtil.MultiplyAddCarry(t10, this.Values[5], this.Values[5], carry);
 			(t11, _) = BlsUtil.AddWithCarry(t11, 0, carry);
 
+			// Return the final result
 			return MontgomeryReduce(t0, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11);
 		}
+
 
 		public Fp SubtractP()
 		{
@@ -286,12 +296,14 @@ namespace EdjCase.ICP.BLS.Models
 
 			// If underflow occurred on the final limb, borrow = 0xfff...fff, otherwise
 			// borrow = 0x000...000. Thus, we use it as a mask!
-			r0 = (this.Values[0] & borrow) | (r0 & ~borrow);
-			r1 = (this.Values[1] & borrow) | (r1 & ~borrow);
-			r2 = (this.Values[2] & borrow) | (r2 & ~borrow);
-			r3 = (this.Values[3] & borrow) | (r3 & ~borrow);
-			r4 = (this.Values[4] & borrow) | (r4 & ~borrow);
-			r5 = (this.Values[5] & borrow) | (r5 & ~borrow);
+			ulong mask = borrow == 0 ? ulong.MaxValue : 0;
+
+			r0 = (this.Values[0] & ~mask) | (r0 & mask);
+			r1 = (this.Values[1] & ~mask) | (r1 & mask);
+			r2 = (this.Values[2] & ~mask) | (r2 & mask);
+			r3 = (this.Values[3] & ~mask) | (r3 & mask);
+			r4 = (this.Values[4] & ~mask) | (r4 & mask);
+			r5 = (this.Values[5] & ~mask) | (r5 & mask);
 
 			return new Fp(r0, r1, r2, r3, r4, r5);
 		}
@@ -347,14 +359,16 @@ namespace EdjCase.ICP.BLS.Models
 			ulong borrow = 0;
 			for (int i = 0; i < 6; i++)
 			{
-				(value[i], borrow) = BlsUtil.SubtractWithBorrow(value[i], MODULUS[i], borrow);
+				(_, borrow) = BlsUtil.SubtractWithBorrow(value[i], MODULUS[i], borrow);
 			}
 			bool isValid = (borrow & 1) == 1;
 
 			if (!isValid)
 				throw new ArgumentException("The provided bytes represent a value that is not within the valid range of the field.");
 
-			return new Fp(value[0], value[1], value[2], value[3], value[4], value[5]);
+			Fp fp = new Fp(value[0], value[1], value[2], value[3], value[4], value[5]);
+			fp *= R2;
+			return fp;
 		}
 
 
@@ -499,7 +513,7 @@ namespace EdjCase.ICP.BLS.Models
 			(_, borrow) = BlsUtil.SubtractWithBorrow(tmp.Values[3], 0xb23b_a5c2_79c2_895f, borrow);
 			(_, borrow) = BlsUtil.SubtractWithBorrow(tmp.Values[4], 0x258d_d3db_21a5_d66b, borrow);
 			(_, borrow) = BlsUtil.SubtractWithBorrow(tmp.Values[5], 0x0d00_88f5_1cbf_f34d, borrow);
-			return (borrow & 1) == 1;
+			return (borrow & 1) != 1;
 		}
 
 		public static Fp SumOfProducts(Fp[] a, Fp[] b)
