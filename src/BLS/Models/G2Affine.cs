@@ -154,7 +154,7 @@ namespace EdjCase.ICP.BLS.Models
 			else
 			{
 				// Recover a y-coordinate given x by y = sqrt(x^3 + 4)
-				Fp2 y = (x.Square() * x + B).SquareRoot();
+				Fp2 y = (x.Square() * x + B).SquareRoot() ?? throw new Exception("Cant calculate square root");
 
 				// Switch to the correct y-coordinate if necessary.
 				if (y.LexicographicallyLargest() ^ sortFlagSet)

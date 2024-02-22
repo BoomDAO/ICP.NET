@@ -87,11 +87,11 @@ namespace EdjCase.ICP.BLS.Models
 			return new Fp2(this.C0.Neg(), this.C1.Neg());
 		}
 
-		public Fp2 SquareRoot()
+		public Fp2? SquareRoot()
 		{
 			if (this.IsZero())
 			{
-				return Fp2.Zero();
+				return null;
 			}
 			Fp2 a1 = this.Pow(new Fp(
 				0xee7f_bfff_ffff_eaaa,
@@ -103,7 +103,7 @@ namespace EdjCase.ICP.BLS.Models
 			));
 			Fp2 alpha = a1.Square() * this;
 			Fp2 x0 = a1 * this;
-			if (alpha == Fp2.One().Neg())
+			if (alpha.Equals(Fp2.One().Neg()))
 			{
 				return new Fp2(x0.C1.Neg(), x0.C0);
 			}
@@ -115,9 +115,9 @@ namespace EdjCase.ICP.BLS.Models
 				0x258d_d3db_21a5_d66b,
 				0x0d00_88f5_1cbf_f34d
 			)) * x0;
-			if (sqrt.Square() != this)
+			if (!sqrt.Square().Equals(this))
 			{
-				throw new InvalidOperationException("No square root exists for this element.");
+				return null;
 			}
 			return sqrt;
 		}
