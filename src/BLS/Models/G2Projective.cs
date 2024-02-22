@@ -103,5 +103,10 @@ namespace EdjCase.ICP.BLS.Models
 
 			return new G2Projective(newX, newY, newZ);
 		}
+
+		internal bool IsIdentity()
+		{
+			return this.Z.IsZero();
+		}
 	}
 }

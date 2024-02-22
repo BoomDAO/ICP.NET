@@ -1,5 +1,6 @@
 using EdjCase.ICP.BLS;
 using EdjCase.ICP.Candid.Utilities;
+using System.Security.Cryptography.X509Certificates;
 
 namespace BLS.Tests
 {
@@ -25,5 +26,42 @@ namespace BLS.Tests
 			bool isValid = new DefaultBlsCryptograhy().VerifySignature(publicKey, hash, signature);
 			Assert.True(isValid);
 		}
+
+		//[Fact]
+		//public void BasicAggregation()
+		//{
+		//	var rng = new ChaCha8Rng(12); // Assuming ChaCha8Rng is initialized with a seed like this
+
+		//	int numMessages = 10;
+
+		//	// Generate private keys
+		//	List<PrivateKey> privateKeys = Enumerable.Range(0, numMessages)
+		//		.Select(_ => PrivateKey.Generate(rng))
+		//		.ToList();
+
+		//	// Generate messages
+		//	List<byte[]> messages = Enumerable.Range(0, numMessages)
+		//		.Select(_ => Enumerable.Range(0, 64).Select(__ => rng.Gen<byte>()).ToArray()) // Assuming rng.Gen<byte>() generates a random byte
+		//		.ToList();
+
+		//	// Sign messages
+		//	List<Signature> sigs = messages.Zip(privateKeys, (message, pk) => pk.Sign(message)).ToList();
+
+		//	Signature aggregatedSignature = Signature.Aggregate(sigs); // Assuming Aggregate method exists and does not return null
+
+		//	// Hash messages
+		//	List<Hash> hashes = messages.Select(message => Hash.Compute(message)).ToList(); // Assuming Hash.Compute method exists
+
+		//	// Extract public keys
+		//	List<PublicKey> publicKeys = privateKeys.Select(pk => pk.PublicKey).ToList(); // Assuming PrivateKey has a PublicKey property
+
+		//	// Verify aggregated signature
+		//	bool isVerified = aggregatedSignature.Verify(hashes, publicKeys); // Assuming Verify method exists and matches the required signature
+		//	Assert.True(isVerified, "Failed to verify");
+
+		//	// Verify messages directly, assuming VerifyMessages method exists and matches the required signature
+		//	Assert.True(aggregatedSignature.VerifyMessages(messages, publicKeys));
+		//}
+
 	}
 }

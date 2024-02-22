@@ -120,7 +120,7 @@ namespace EdjCase.ICP.BLS.Models
 			return new G2Affine(x, y, false);
 		}
 
-		private bool IsIdentity()
+		public bool IsIdentity()
 		{
 			return this.IsInfinity;
 		}
