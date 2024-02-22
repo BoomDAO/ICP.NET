@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Text;
+using Wasmtime;
 
 namespace EdjCase.ICP.BLS
 {
@@ -22,12 +23,33 @@ namespace EdjCase.ICP.BLS
 			return (lower, upper);
 		}
 
-		internal static (ulong, ulong) SubtractWithBorrow(ulong a, ulong b, ulong borrow)
+		internal static (ulong Value, ulong Borrow) SubtractWithBorrow(ulong a, ulong b, ulong borrow)
 		{
-			ulong diff = a - b - (borrow >> 63);
-			ulong borrowOut = (a < b || (borrow >> 63) == 1 && diff == ulong.MaxValue) ? 1UL : 0UL;
-			return (diff, borrowOut);
+			// Perform the subtraction and borrow in two steps for clarity, using unchecked
+			// to allow wrapping without throwing an overflow exception
+			ulong retLow;
+			ulong retHigh;
+			unchecked
+			{
+				// First, subtract b and the borrow from a, treating them as 128-bit integers for the operation
+				// Since C# does not support 128-bit integers directly, we handle the low and high parts separately
+				ulong lowPart = a - b - (borrow >> 63);
+				ulong highPart = 0;
+
+				// If a borrow occurs during the subtraction, increment the high part
+				if (a < b + (borrow >> 63))
+				{
+					highPart = 1;
+				}
+
+				retLow = lowPart;
+				retHigh = highPart;
+			}
+
+			// The second element of the tuple indicates if there was a borrow, which is true if retHigh is not 0
+			return (retLow, retHigh);
 		}
+
 
 		internal static (ulong, ulong) AddWithCarry(ulong a, ulong b, ulong carry)
 		{

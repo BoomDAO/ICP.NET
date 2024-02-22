@@ -313,7 +313,7 @@ namespace EdjCase.ICP.BLS.Models
 			{
 				(_, borrow) = BlsUtil.SubtractWithBorrow(value[i], MODULUS[i], borrow);
 			}
-			bool isValid = (borrow & 1) == 0;
+			bool isValid = (borrow & 1) == 1;
 
 
 			if (!isValid)
