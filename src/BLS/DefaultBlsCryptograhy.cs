@@ -20,7 +20,7 @@ namespace EdjCase.ICP.BLS
 			{
 				G2Projective.FromCompressed(messageHash)
 			};
-			G1Projective[] publicKeys = new G1Projective[]
+			G1Projective[] publicKeys = new []
 			{
 				G1Projective.FromCompressed(publicKey)
 			};

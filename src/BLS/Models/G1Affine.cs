@@ -53,6 +53,10 @@ namespace EdjCase.ICP.BLS.Models
 
 		internal static G1Affine FromCompressed(byte[] bytes)
 		{
+			if (bytes.Length != 48)
+			{
+				throw new ArgumentException("Byte length must be 48 for G1");
+			}
 			// Obtain the three flags from the start of the byte sequence
 			bool compressionFlagSet = ((bytes[0] >> 7) & 1) == 1;
 			bool infinityFlagSet = ((bytes[0] >> 6) & 1) == 1;
