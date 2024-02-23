@@ -195,5 +195,10 @@ namespace EdjCase.ICP.BLS.Models
 		{
 			return $"{this.C0} + ({this.C1})*u";
 		}
+
+		internal static Fp Default()
+		{
+			return Fp.Zero();
+		}
 	}
 }
