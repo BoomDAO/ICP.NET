@@ -183,7 +183,7 @@ namespace EdjCase.ICP.BLS.Models
 						0x167f_53e0_ba74_31b8
 					)
 				),
-				Fp2.Zero()
+				Fp2.One()
 			};
 			ISO3_YNUM = new[]
 			{

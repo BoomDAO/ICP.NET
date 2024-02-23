@@ -7,7 +7,6 @@ using System.Text;
 
 namespace EdjCase.ICP.BLS.Models
 {
-	[DebuggerDisplay("Value = {ToString()}")]
 	internal class Fp2
 	{
 		public static readonly Fp2 B;

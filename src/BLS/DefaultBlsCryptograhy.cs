@@ -14,30 +14,100 @@ namespace EdjCase.ICP.BLS
 	/// </summary>
 	public class DefaultBlsCryptograhy : IBlsCryptography
 	{
+		private static readonly byte[] DstG2;
+
+		static DefaultBlsCryptograhy()
+		{
+			DstG2 = Encoding.UTF8.GetBytes("BLS_SIG_BLS12381G2_XMD:SHA-256_SSWU_RO_NUL_");
+		}
+
 		/// <inheritdoc />
 		public bool VerifySignature(byte[] publicKey, byte[] messageHash, byte[] signature)
 		{
-			G2Projective[] hashes = new[]
-			{
-				G2Projective.FromCompressed(messageHash)
-			};
-			G1Projective[] publicKeys = new[]
+			G1Projective[] g1Values = new[]
 			{
 				G1Projective.FromCompressed(publicKey)
 			};
+			G2Projective[] g2Values = new[]
+			{
+				HashToCurveG2(messageHash)
+			};
 			G2Affine sig = G2Affine.FromCompressed(signature);
-			return this.Verify(sig, hashes, publicKeys);
+			return this.Verify(sig, g2Values, g1Values);
 		}
 
-		private static void HashToCurve(byte[] message, byte[] dst)
+		private bool Verify(G2Affine signature, G2Projective[] g2Values, G1Projective[] g1Values)
 		{
-			(Fp2 u1, Fp2 u2) = HashToField(message, dst);
-			G2Projective p1 = MapToCurve(u1);
-			G2Projective p2 = MapToCurve(u2);
-			(p1 + p2).ClearH();
+			if (g2Values.Length == 0 || g1Values.Length == 0)
+			{
+				return false;
+			}
+
+			int nHashes = g2Values.Length;
+
+			if (nHashes != g1Values.Length)
+			{
+				return false;
+			}
+
+			// Zero keys should always fail
+			if (g1Values.Any(pk => pk.IsIdentity()))
+			{
+				return false;
+			}
+
+			// Enforce distinct messages to counter BLS's rogue-key attack
+			HashSet<byte[]> distinctHashes = g2Values
+				.Select(h => h.ToCompressed())
+				.ToHashSet(new ByteArrayComparer());
+			if (distinctHashes.Count() != nHashes)
+			{
+				return false;
+			}
+
+			Fp12 millerLoopValue = Fp12.One();
+			int i = 0;
+			foreach ((G1Projective pk, G2Projective hash) in g1Values.Zip(g2Values, (pk, h) => (pk, h)))
+			{
+				G1Affine pkAffine = pk.ToAffine();
+				G2Affine hAffine = hash.ToAffine();
+				G2Prepared hPrepared = hAffine.ToPrepared();
+				Fp12 result = BlsUtil.MillerLoop(
+					Fp12.One(),
+					(f) => DoublingStep(f, pkAffine, hPrepared, ref i),
+					(f) => AddingStep(f, pkAffine, hPrepared, ref i),
+					(f) => f.Square(),
+					(f) => f.Conjugate()
+				);
+				millerLoopValue *= result;
+			}
+
+			G1Affine g1Neg = G1Affine.Generator().Neg();
+			G2Prepared signaturePrepared = signature.ToPrepared();
+			i = 0;
+			Fp12 r = BlsUtil.MillerLoop(
+					Fp12.One(),
+					(f) => DoublingStep(f, g1Neg, signaturePrepared, ref i),
+					(f) => AddingStep(f, g1Neg, signaturePrepared, ref i),
+					(f) => f.Square(),
+					(f) => f.Conjugate()
+				);
+			millerLoopValue *= r;
+
+			return FinalExponentiation(millerLoopValue).Equals(Fp12.One());
 		}
 
-		private static G2Projective MapToCurve(Fp2 u)
+		private static G2Projective HashToCurveG2(byte[] message)
+		{
+			int outputLength = 128;
+			int hashSize = 32;
+			(Fp2 u1, Fp2 u2) = HashToFieldF2(message, DstG2, outputLength, hashSize);
+			G2Projective p1 = MapToCurveG2(u1);
+			G2Projective p2 = MapToCurveG2(u2);
+			return (p1 + p2).ClearH();
+		}
+
+		private static G2Projective MapToCurveG2(Fp2 u)
 		{
 			Fp2 usq = u.Square();
 			Fp2 xi_usq = G2Affine.SSWU_XI * usq;
@@ -174,6 +244,7 @@ namespace EdjCase.ICP.BLS
 			var1 *= var3;
 			Square(var1, 5);
 			var1 *= var15;
+			// bad
 			Square(var1, 7);
 			var1 *= var3;
 			Square(var1, 5);
@@ -393,11 +464,11 @@ namespace EdjCase.ICP.BLS
 			for (int idx = 0; idx < 4; idx++)
 			{
 				Fp2[] coeff = coeffs[idx];
-				Fp2 clast = coeff[coeff.Length - 1];
-				mapvals[idx] = clast;
-				for (int jdx = 0; jdx < coeff.Length - 1; jdx++)
+				int clast = coeff.Length - 1;
+				mapvals[idx] = coeff[clast];
+				for (int jdx = 0; jdx < clast; jdx++)
 				{
-					mapvals[idx] = mapvals[idx] * x + zpows[jdx] * coeff[coeff.Length - 2 - jdx];
+					mapvals[idx] = mapvals[idx] * x + zpows[jdx] * coeff[clast - 1 - jdx];
 				}
 			}
 
@@ -409,27 +480,30 @@ namespace EdjCase.ICP.BLS
 			return new G2Projective(mapvals[0] * mapvals[3], mapvals[2] * mapvals[1], mapvals[1] * mapvals[3]);
 		}
 
-		private static (Fp2, Fp2) HashToField(byte[] message, byte[] dst)
+		private static (Fp2, Fp2) HashToFieldF2(byte[] message, byte[] dst, int outputLength, int hashSize)
 		{
-			const int byteLength = 128;
-			(Fp2, Fp2) result = (Fp2.Zero(), Fp2.Zero());
-			Expander ex = Expander.Create(message, dst, byteLength);
-			(int aa, byte[] a) = ex.ReadInto();
-			(int bb, byte[] b) = ex.ReadInto();
+			const int byteLength = 256;
+			Expander ex = Expander.Create(message, dst, byteLength, hashSize);
+			byte[] a = ex.ReadInto(outputLength, hashSize);
+			byte[] b = ex.ReadInto(outputLength, hashSize);
 			return (
-				FromOkm(a),
-				FromOkm(b)
+				FromOkmFp2(a),
+				FromOkmFp2(b)
 			);
-
-			//let mut buf = GenericArray::< u8, Self::InputLength >::default();
-			//output.iter_mut().for_each(| item | {
-			//	expander.read_into(&mut buf[..]);
-			//	*item = Self::from_okm(&buf);
-			//});
 		}
 
+		private static Fp2 FromOkmFp2(byte[] okm)
+		{
+			if (okm.Length != 128)
+			{
+				throw new ArgumentException("Invalid OKM length");
+			}
+			Fp c0 = FromOkFp(okm[..64]);
+			Fp c1 = FromOkFp(okm[64..]);
+			return new Fp2(c0, c1);
+		}
 
-		private static Fp FromOkm(byte[] okm)
+		private static Fp FromOkFp(byte[] okm)
 		{
 			if (okm.Length != 64)
 			{
@@ -444,72 +518,11 @@ namespace EdjCase.ICP.BLS
 				0x0f96_28b4_9caa_2e85
 			);
 			var bs = new byte[48];
-			Array.Copy(okm, 0, bs, 16, 48);
+			Array.Copy(okm, 0, bs, 16, 32);
 			Fp db = Fp.FromBytes(bs);
-			Array.Copy(okm, 32, bs, 16, 48);
+			Array.Copy(okm, 32, bs, 16, 32);
 			Fp da = Fp.FromBytes(bs);
 			return db * F2256 + da;
-		}
-
-		private bool Verify(G2Affine signature, G2Projective[] g2Values, G1Projective[] g1Values)
-		{
-			if (g2Values.Length == 0 || g1Values.Length == 0)
-			{
-				return false;
-			}
-
-			int nHashes = g2Values.Length;
-
-			if (nHashes != g1Values.Length)
-			{
-				return false;
-			}
-
-			// Zero keys should always fail
-			if (g1Values.Any(pk => pk.IsIdentity()))
-			{
-				return false;
-			}
-
-			// Enforce distinct messages to counter BLS's rogue-key attack
-			HashSet<byte[]> distinctHashes = g2Values
-				.Select(h => h.ToCompressed())
-				.ToHashSet(new ByteArrayComparer());
-			if (distinctHashes.Count() != nHashes)
-			{
-				return false;
-			}
-
-			Fp12 millerLoopValue = Fp12.One();
-			int i = 0;
-			foreach ((G1Projective pk, G2Projective hash) in g1Values.Zip(g2Values, (pk, h) => (pk, h)))
-			{
-				G1Affine pkAffine = pk.ToAffine();
-				G2Affine hAffine = hash.ToAffine();
-				G2Prepared hPrepared = hAffine.ToPrepared();
-				Fp12 result = BlsUtil.MillerLoop(
-					Fp12.One(),
-					(f) => DoublingStep(f, pkAffine, hPrepared, ref i),
-					(f) => AddingStep(f, pkAffine, hPrepared, ref i),
-					(f) => f.Square(),
-					(f) => f.Conjugate()
-				);
-				millerLoopValue *= result;
-			}
-
-			G1Affine g1Neg = G1Affine.Generator().Neg();
-			G2Prepared signaturePrepared = signature.ToPrepared();
-			i = 0;
-			Fp12 r = BlsUtil.MillerLoop(
-					Fp12.One(),
-					(f) => DoublingStep(f, g1Neg, signaturePrepared, ref i),
-					(f) => AddingStep(f, g1Neg, signaturePrepared, ref i),
-					(f) => f.Square(),
-					(f) => f.Conjugate()
-				);
-			millerLoopValue *= r;
-
-			return FinalExponentiation(millerLoopValue).Equals(Fp12.One());
 		}
 
 

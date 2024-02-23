@@ -8,7 +8,6 @@ using System.Text;
 
 namespace EdjCase.ICP.BLS.Models
 {
-	[DebuggerDisplay("Value = {ToString()}")]
 	internal class Fp12
 	{
 		public Fp6 C0 { get; }

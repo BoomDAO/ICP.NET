@@ -4,7 +4,6 @@ using System.Linq;
 
 namespace EdjCase.ICP.BLS.Models
 {
-	[DebuggerDisplay("Value = {ToString()}")]
 	internal class Fp
 	{
 		public readonly ulong[] Values;

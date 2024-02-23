@@ -24,16 +24,16 @@ namespace BLS.Tests
 			// Sig G2 b53cfdf8b488a286df1ed20432e2bbc4e6361003757dfda3a4fd6cd98de95e5513f7c448d70b2681e14547a6ced47e7c10e28432e8abcb34de1dc28f39328fd2a13db12a4c6a30bd17b0e42881a429003e4c24583ba0f29a40fd836cf05e1a40
 			//"84c5ba8cd2507bdde36e4697d027f0b895079871c587eec363cd7dba7fbb05fc4abc78c0150f4696aaf88e1043a973c3",
 			"b2be11dc8e54ee74dbc07569fd74fe03b5f52ad71cd49a8579b6c6387891f5a20ad980ec2747618c1b9ad35846a68a3e",
-			"a8aab303e33ed14f4a904004a92bd26ffc969c1d1e7d4b7f0c04150a73e1845a911e51a2b2d369d5cef06560c5ac9f5715c01566993d4469805df3e1f29b536481a832bf2751b6908faed6776d062d585521889232999d72b679d6e38bb5cfff",
+			"",
 			"b53cfdf8b488a286df1ed20432e2bbc4e6361003757dfda3a4fd6cd98de95e5513f7c448d70b2681e14547a6ced47e7c10e28432e8abcb34de1dc28f39328fd2a13db12a4c6a30bd17b0e42881a429003e4c24583ba0f29a40fd836cf05e1a40"
 		)]
-		public void VerifySignature(string publicKeyHex, string hashHex, string signatureHex)
+		public void VerifySignature(string publicKeyHex, string msgHex, string signatureHex)
 		{
 			byte[] publicKey = ByteUtil.FromHexString(publicKeyHex);
-			byte[] hash = ByteUtil.FromHexString(hashHex);
+			byte[] msg = ByteUtil.FromHexString(msgHex);
 			byte[] signature = ByteUtil.FromHexString(signatureHex);
 			
-			bool isValid = new DefaultBlsCryptograhy().VerifySignature(publicKey, hash, signature);
+			bool isValid = new DefaultBlsCryptograhy().VerifySignature(publicKey, msg, signature);
 			Assert.True(isValid);
 		}
 

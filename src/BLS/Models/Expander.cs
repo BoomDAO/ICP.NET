@@ -1,19 +1,20 @@
 using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Cryptography;
 
 namespace EdjCase.ICP.BLS.Models
 {
-	public class Expander
+	internal class Expander
 	{
 		public byte[] Dst { get; }
 		public byte[] B0 { get; }
-		public byte[] Bi { get; }
-		public int I { get; }
-		public int BOffs { get; }
-		public int Remain { get; }
+		public byte[] Bi { get; private set; }
+		public byte I { get; private set; }
+		public int BOffs { get; private set; }
+		public int Remain { get; private set; }
 
-		public Expander(byte[] dst, byte[] b0, byte[] bi, int i, int bOffs, int remain)
+		public Expander(byte[] dst, byte[] b0, byte[] bi, byte i, int bOffs, int remain)
 		{
 			this.Dst = dst;
 			this.B0 = b0;
@@ -23,39 +24,66 @@ namespace EdjCase.ICP.BLS.Models
 			this.Remain = remain;
 		}
 
-		public static Expander Create(byte[] message, byte[] dst, int byteLength)
+		public static Expander Create(byte[] message, byte[] dst, int byteLength, int hashSize)
 		{
-			const int hashSize = 48;
-			const int ell = (byteLength + hashSize - 1) / hashSize;
+			int ell = (byteLength + hashSize - 1) / hashSize;
 			if (ell > 255)
 			{
 				throw new ArgumentException("Invalid ExpandMsgXmd usage: ell > 255");
 			}
-			var dst = ExpandMsgDst.ProcessXmd(dst);
+			if (dst.Length > 255)
+			{
+				throw new NotImplementedException();
+			}
 
 			byte[] b0 = SHA256.Create().ComputeHash(
 				message
-				.Concat(byteLength.ToBytes())
+				.Concat(new byte[64])
+				.Concat(ToU16Bytes(byteLength))
 				.Concat(new byte[] { 0 })
 				.Concat(dst)
-				.Concat(dst.Length.toBytes())
+				.Concat(ToU8Bytes(dst.Length))
+				.ToArray()
 			);
 			byte[] bi = SHA256.Create().ComputeHash(
 				b0
 				.Concat(new byte[] { 1 })
 				.Concat(dst)
-				.Concat(dst.Length.toBytes())
+				.Concat(ToU8Bytes(dst.Length))
+				.ToArray()
 			);
 
 			return new Expander(dst, b0, bi, 2, 0, byteLength);
 		}
 
-		public byte[] ReadInto()
+		private static byte[] ToU16Bytes(int value)
 		{
-			int outputLength = 64;
+			if (value > ushort.MaxValue)
+			{
+				throw new ArgumentException("Max value is " + ushort.MaxValue);
+			}
+			byte[] bytes = BitConverter.GetBytes((ushort)value);
+
+			if (BitConverter.IsLittleEndian)
+			{
+				Array.Reverse(bytes); // Convert to big-endian if system is little-endian
+			}
+			return bytes;
+		}
+		private static byte[] ToU8Bytes(int value)
+		{
+			if (value > byte.MaxValue)
+			{
+				throw new ArgumentException("Max value is " + byte.MaxValue);
+			}
+			return new byte[] { (byte)value };
+		}
+
+		public byte[] ReadInto(int outputLength, int hashSize)
+		{
+			byte[] output = new byte[outputLength];
 			int readLen = Math.Min(this.Remain, outputLength);
 			int offs = 0;
-			int hashSize = 32;
 			while (offs < readLen)
 			{
 				int bOffs = this.BOffs;
@@ -63,57 +91,31 @@ namespace EdjCase.ICP.BLS.Models
 				if (copyLen > 0)
 				{
 					copyLen = Math.Min(readLen - offs, copyLen);
-					Array.Copy(bi, bOffs, b0, offs, copyLen);
+					Array.Copy(this.Bi, bOffs, output, offs, copyLen);
 					offs += copyLen;
-					bOffs += copyLen;
+					this.BOffs += copyLen;
 				}
 				else
 				{
-					byte[] bPrevXor = new byte[b0.Length];
-					Array.Copy(b0, bPrevXor, b0.Length);
+					byte[] bPrevXor = new byte[this.B0.Length];
+					Array.Copy(this.B0, bPrevXor, this.B0.Length);
 					for (int j = 0; j < hashSize; j++)
 					{
-						bPrevXor[j] ^= bi[j];
+						bPrevXor[j] ^= this.Bi[j];
 					}
-					this.BI = SHA256.Create().ComputeHash(
+					this.Bi = SHA256.Create().ComputeHash(
 						bPrevXor
-						.Concat(new byte[] { i })
-						.Concat(dst)
-						.Concat(dst.Length.toBytes())
+						.Concat(new[] { this.I })
+						.Concat(this.Dst)
+						.Concat(ToU8Bytes(this.Dst.Length))
+						.ToArray()
 					);
 					this.BOffs = 0;
-					remain -= readLen;
+					this.I += 1;
 				}
 			}
-			// 	let read_len = self.remain.min(output.len());
-			// let mut offs = 0;
-			// let hash_size = H::OutputSize::to_usize();
-			// while offs < read_len {
-			//     let b_offs = self.b_offs;
-			//     let mut copy_len = hash_size - b_offs;
-			//     if copy_len > 0 {
-			//         copy_len = copy_len.min(read_len - offs);
-			//         output[offs..(offs + copy_len)]
-			//             .copy_from_slice(&self.b_i[b_offs..(b_offs + copy_len)]);
-			//         offs += copy_len;
-			//         self.b_offs = b_offs + copy_len;
-			//     } else {
-			//         let mut b_prev_xor = self.b_0.clone();
-			//         for j in 0..hash_size {
-			//             b_prev_xor[j] ^= self.b_i[j];
-			//         }
-			//         self.b_i = H::new()
-			//             .chain(b_prev_xor)
-			//             .chain([self.i as u8])
-			//             .chain(self.dst.data())
-			//             .chain([self.dst.len() as u8])
-			//             .finalize();
-			//         self.b_offs = 0;
-			//         self.i += 1;
-			//     }
-			// }
-			// self.remain -= read_len;
-			// read_len
+			this.Remain -= readLen;
+			return output;
 		}
 	}
 }
