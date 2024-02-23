@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace EdjCase.ICP.BLS
@@ -55,71 +56,39 @@ namespace EdjCase.ICP.BLS
 			Fp2 sqrt_candidate = uv_7 * ChainP2m9div16(uv_15);
 			Fp2 y = sqrt_candidate;
 			Fp2 tmp = new Fp2(sqrt_candidate.C1.Neg(), sqrt_candidate.C0);
-			y = y.ConditionalAssign(tmp, (tmp.Square() * gx_den).CtEq(gx0_num));
-			//			let usq = u.square();
-			//			let xi_usq = SSWU_XI * usq;
-			//			let xisq_u4 = xi_usq.square();
-			//			let nd_common = xisq_u4 + xi_usq; // XI^2 * u^4 + XI * u^2
-			//			let x_den = SSWU_ELLP_A * Fp2::conditional_select(&(-nd_common), &SSWU_XI, nd_common.is_zero());
-			//			let x0_num = SSWU_ELLP_B * (Fp2::one() + nd_common); // B * (1 + (XI^2 * u^4 + XI * u^2))
+			if ((tmp.Square() * gx_den).Equals(gx0_num))
+			{
+				y = tmp;
+			}
+			tmp = sqrt_candidate * G2Affine.SSWU_RV1;
+			if ((tmp.Square() * gx_den).Equals(gx0_num))
+			{
+				y = tmp;
+			}
+			tmp = new Fp2(tmp.C1, tmp.C0.Neg());
+			if ((tmp.Square() * gx_den).Equals(gx0_num))
+			{
+				y = tmp;
+			}
+			Fp2 gx1_num = gx0_num * xi_usq * xisq_u4;
+			sqrt_candidate = sqrt_candidate * usq * u;
+			bool eta_found = false;
+			foreach (Fp2 eta in G2Affine.SSWU_ETAS)
+			{
+				tmp = sqrt_candidate * eta;
+				if ((tmp.Square() * gx_den).Equals(gx1_num))
+				{
+					y = tmp;
+					eta_found = true;
+				}
+			}
+			Fp2 x_num = eta_found ? x0_num * xi_usq : x0_num;
+			if (x_num.Sgn0() ^ y.Sgn0())
+			{
+				y = y.Neg();
+			}
 
-			//			// compute g(x0(u))
-			//			let x_densq = x_den.square();
-			//			let gx_den = x_densq * x_den;
-			//			// x0_num^3 + A * x0_num * x_den^2 + B * x_den^3
-			//			let gx0_num = (x0_num.square() + SSWU_ELLP_A * x_densq) * x0_num + SSWU_ELLP_B * gx_den;
-
-			//			// compute g(x0(u)) ^ ((p^2 - 9) // 16)
-			//			let sqrt_candidate = {
-			//		let vsq = gx_den.square(); // v^2
-			//			let v_3 = vsq * gx_den; // v^3
-			//			let v_4 = vsq.square(); // v^4
-			//			let uv_7 = gx0_num * v_3 * v_4; // u v^7
-			//			let uv_15 = uv_7 * v_4.square(); // u v^15
-			//			uv_7* chain_p2m9div16(&uv_15) // u v^7 (u v^15) ^ ((p^2 - 9) // 16)
-			//    };
-
-			//		// set y = sqrt_candidate * Fp2::one(), check candidate against other roots of unity
-			//		let mut y = sqrt_candidate;
-			//    // check Fp2(0, 1)
-			//    let tmp = Fp2 {
-
-			//		c0: -sqrt_candidate.c1,
-			//        c1: sqrt_candidate.c0,
-			//    };
-			//	y.conditional_assign(&tmp, (tmp.square()* gx_den).ct_eq(&gx0_num));
-			//    // check Fp2(RV1, RV1)
-			//    let tmp = sqrt_candidate * SSWU_RV1;
-			//	y.conditional_assign(&tmp, (tmp.square()* gx_den).ct_eq(&gx0_num));
-			//    // check Fp2(RV1, -RV1)
-			//    let tmp = Fp2 {
-			//        c0: tmp.c1,
-			//        c1: -tmp.c0,
-			//    };
-			//y.conditional_assign(&tmp, (tmp.square() * gx_den).ct_eq(&gx0_num));
-
-			//// compute g(x1(u)) = g(x0(u)) * XI^3 * u^6
-			//let gx1_num = gx0_num * xi_usq * xisq_u4;
-			//// compute g(x1(u)) * u^3
-			//let sqrt_candidate = sqrt_candidate * usq * u;
-			//let mut eta_found = Choice::from(0u8);
-			//for eta in &SSWU_ETAS[..] {
-			//	let tmp = sqrt_candidate * eta;
-			//	let found = (tmp.square() * gx_den).ct_eq(&gx1_num);
-			//	y.conditional_assign(&tmp, found);
-			//	eta_found |= found;
-			//}
-
-			//let x_num = Fp2::conditional_select(&x0_num, &(x0_num * xi_usq), eta_found);
-			//// ensure sign of y and sign of u agree
-			//y.conditional_negate(u.sgn0() ^ y.sgn0());
-
-			//G2Projective {
-			//        x: x_num,
-			//		y: y* x_den,
-			//		z: x_den,
-			//    }
-			G2Projective v = ;
+			G2Projective v = new(x_num, y * x_den, x_den);
 			return IsoMap(v);
 		}
 
@@ -403,56 +372,83 @@ namespace EdjCase.ICP.BLS
 			return var1 * var2;
 		}
 
-		private static G2Projective IsoMap(G2Projective v)
+		private static G2Projective IsoMap(G2Projective u)
 		{
-			//const COEFFS: [&[Fp2]; 4] = [&ISO3_XNUM, &ISO3_XDEN, &ISO3_YNUM, &ISO3_YDEN];
+			Fp2[][] coeffs = {
+				G2Affine.ISO3_XNUM,
+				G2Affine.ISO3_XDEN,
+				G2Affine.ISO3_YNUM,
+				G2Affine.ISO3_YDEN
+			};
 
-			//// unpack input point
-			//let G2Projective { x, y, z } = *u;
+			Fp2 x = u.X;
+			Fp2 y = u.Y;
+			Fp2 z = u.Z;
 
-			//// xnum, xden, ynum, yden
-			//let mut mapvals = [Fp2::zero(); 4];
+			Fp2[] mapvals = new[] { Fp2.Zero(), Fp2.Zero(), Fp2.Zero(), Fp2.Zero() };
 
-			//// compute powers of z
-			//let zsq = z.square();
-			//let zpows = [z, zsq, zsq * z];
+			Fp2 zsq = z.Square();
+			Fp2[] zpows = new[] { z, zsq, zsq * z };
 
-			//// compute map value by Horner's rule
-			//for idx in 0..4 {
-			//	let coeff = COEFFS[idx];
-			//	let clast = coeff.len() - 1;
-			//	mapvals[idx] = coeff[clast];
-			//	for jdx in 0..clast {
-			//		mapvals[idx] = mapvals[idx] * x + zpows[jdx] * coeff[clast - 1 - jdx];
-			//	}
-			//}
+			for (int idx = 0; idx < 4; idx++)
+			{
+				Fp2[] coeff = coeffs[idx];
+				Fp2 clast = coeff[coeff.Length - 1];
+				mapvals[idx] = clast;
+				for (int jdx = 0; jdx < coeff.Length - 1; jdx++)
+				{
+					mapvals[idx] = mapvals[idx] * x + zpows[jdx] * coeff[coeff.Length - 2 - jdx];
+				}
+			}
 
-			//// x denominator is order 1 less than x numerator, so we need an extra factor of z
-			//mapvals[1] *= z;
+			mapvals[1] *= z;
 
-			//// multiply result of Y map by the y-coord, y / z
-			//mapvals[2] *= y;
-			//mapvals[3] *= z;
+			mapvals[2] *= y;
+			mapvals[3] *= z;
 
-			//G2Projective {
-			//x: mapvals[0] * mapvals[3], // xnum * yden,
-			//     y: mapvals[2] * mapvals[1], // ynum * xden,
-			//     z: mapvals[1] * mapvals[3], // xden * yden
-			// }
-			return v;
+			return new G2Projective(mapvals[0] * mapvals[3], mapvals[2] * mapvals[1], mapvals[1] * mapvals[3]);
 		}
 
 		private static (Fp2, Fp2) HashToField(byte[] message, byte[] dst)
 		{
-			//let len_per_elm = Self::InputLength::to_usize();
-			//let len_in_bytes = output.len() * len_per_elm;
-			//let mut expander = X::init_expand(message, dst, len_in_bytes);
+			const int byteLength = 128;
+			(Fp2, Fp2) result = (Fp2.Zero(), Fp2.Zero());
+			Expander ex = Expander.Create(message, dst, byteLength);
+			(int aa, byte[] a) = ex.ReadInto();
+			(int bb, byte[] b) = ex.ReadInto();
+			return (
+				FromOkm(a),
+				FromOkm(b)
+			);
 
 			//let mut buf = GenericArray::< u8, Self::InputLength >::default();
 			//output.iter_mut().for_each(| item | {
 			//	expander.read_into(&mut buf[..]);
 			//	*item = Self::from_okm(&buf);
 			//});
+		}
+
+
+		private static Fp FromOkm(byte[] okm)
+		{
+			if (okm.Length != 64)
+			{
+				throw new ArgumentException("Invalid OKM length");
+			}
+			Fp F2256 = new(
+				0x075b_3cd7_c5ce_820f,
+				0x3ec6_ba62_1c3e_db0b,
+				0x168a_13d8_2bff_6bce,
+				0x8766_3c4b_f8c4_49d2,
+				0x15f3_4c83_ddc8_d830,
+				0x0f96_28b4_9caa_2e85
+			);
+			var bs = new byte[48];
+			Array.Copy(okm, 0, bs, 16, 48);
+			Fp db = Fp.FromBytes(bs);
+			Array.Copy(okm, 32, bs, 16, 48);
+			Fp da = Fp.FromBytes(bs);
+			return db * F2256 + da;
 		}
 
 		private bool Verify(G2Affine signature, G2Projective[] g2Values, G1Projective[] g1Values)

@@ -609,5 +609,23 @@ namespace EdjCase.ICP.BLS.Models
 			return (char)(value + 65 - 10); // A->F ASCII
 		}
 
+		internal bool Sgn0()
+		{
+			Fp tmp = Fp.MontgomeryReduce(
+				this.Values[0],
+				this.Values[1],
+				this.Values[2],
+				this.Values[3],
+				this.Values[4],
+				this.Values[5],
+				0,
+				0,
+				0,
+				0,
+				0,
+				0
+			);
+			return (tmp.Values[0] & 1) != 0;
+		}
 	}
 }

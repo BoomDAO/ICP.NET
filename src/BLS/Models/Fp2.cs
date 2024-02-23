@@ -224,5 +224,13 @@ namespace EdjCase.ICP.BLS.Models
 		{
 			return Fp.Zero();
 		}
+
+		internal bool Sgn0()
+		{
+			bool sign0 = this.C0.Sgn0();
+			bool zero0 = this.C0.IsZero();
+			bool sign1 = this.C1.Sgn0();
+			return sign0 || (zero0 && sign1);
+		}
 	}
 }
