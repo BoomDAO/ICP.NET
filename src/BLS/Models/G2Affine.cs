@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Text;
 
@@ -435,42 +436,42 @@ namespace EdjCase.ICP.BLS.Models
 			return new G2Prepared(q.IsInfinity, coeffs);
 		}
 
-		private static G2Affine Generator()
+		public static G2Affine Generator()
 		{
-			Fp2 x = new Fp2(
+			Fp2 x = new (
 				new Fp(
-					0xf5f2_8fa2_0294_0a10,
-					0xb3f5_fb26_87b4_961a,
-					0xa1a8_93b5_3e2a_e580,
-					0x9894_999d_1a3c_aee9,
-					0x6f67_b763_1863_366b,
-					0x0581_9192_4350_bcd7
+					0x024a_a2b2_f08f_0a91,
+					0x2608_0527_2dc5_1051,
+					0xc6e4_7ad4_fa40_3b02,
+					0xb451_0b64_7ae3_d177,
+					0x0bac_0326_a805_bbef,
+					0xd480_56c8_c121_bdb8
 				),
 				new Fp(
-					0xa5a9_c075_9e23_f606,
-					0xaaa0_c59d_bccd_60c3,
-					0x3bb1_7e18_e286_7806,
-					0x1b1a_b6cc_8541_b367,
-					0xc2b6_ed0e_f215_8547,
-					0x1192_2a09_7360_edf3
+					0x13e0_2b60_5271_9f60,
+					0x7dac_d3a0_8827_4f65,
+					0x596b_d0d0_9920_b61a,
+					0xb5da_61bb_dc7f_5049,
+					0x334c_f112_1394_5d57,
+					0xe5ac_7d05_5d04_2b7e
 				)
 			);
-			Fp2 y = new Fp2(
+			Fp2 y = new (
 				new Fp(
-					0x4c73_0af8_6049_4c4a,
-					0x597c_fa1f_5e36_9c5a,
-					0xe7e6_856c_aa0a_635a,
-					0xbbef_b5e9_6e0d_495f,
-					0x07d3_a975_f0ef_25a2,
-					0x0083_fd8e_7e80_dae5
+					0x0ce5_d527_727d_6e11,
+					0x8cc9_cdc6_da2e_351a,
+					0xadfd_9baa_8cbd_d3a7,
+					0x6d42_9a69_5160_d12c,
+					0x923a_c9cc_3bac_a289,
+					0xe193_5486_08b8_2801
 				),
 				new Fp(
-					0xadc0_fc92_df64_b05d,
-					0x18aa_270a_2b14_61dc,
-					0x86ad_ac6a_3be4_eba0,
-					0x7949_5c4e_c93d_a33a,
-					0xe717_5850_a43c_caed,
-					0x0b2b_c2a1_63de_1bf2
+					0x0606_c4a0_2ea7_34cc,
+					0x32ac_d2b0_2bc2_8b99,
+					0xcb3e_287e_85a7_63af,
+					0x2674_92ab_572e_99ab,
+					0x3f37_0d27_5cec_1da1,
+					0xaaa9_075f_f05f_79be
 				)
 			);
 			return new G2Affine(x, y, false);
