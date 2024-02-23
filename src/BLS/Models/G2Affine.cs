@@ -11,7 +11,11 @@ namespace EdjCase.ICP.BLS.Models
 		public Fp2 Y { get; }
 		public bool IsInfinity { get; }
 
-		static readonly Fp2 B;
+		public static readonly Fp2 B;
+
+		public static readonly Fp2 SSWU_XI;
+		public static readonly Fp2 SSWU_ELLP_A;
+		public static readonly Fp2 SSWU_ELLP_B;
 
 		static G2Affine()
 		{
@@ -32,6 +36,55 @@ namespace EdjCase.ICP.BLS.Models
 				0x09d6_4551_3d83_de7e
 			);
 			B = new Fp2(c0, c1);
+			SSWU_XI = new(
+				new Fp(
+					0x87eb_ffff_fff9_555c,
+					0x656f_ffe5_da8f_fffa,
+					0x0fd0_7493_45d3_3ad2,
+					0xd951_e663_0665_76f4,
+					0xde29_1a3d_41e9_80d3,
+					0x0815_664c_7dfe_040d
+
+				),
+				new Fp(
+					0x43f5_ffff_fffc_aaae,
+					0x32b7_fff2_ed47_fffd,
+					0x07e8_3a49_a2e9_9d69,
+					0xeca8_f331_8332_bb7a,
+					0xef14_8d1e_a0f4_c069,
+					0x040a_b326_3eff_0206
+
+				)
+			);
+			SSWU_ELLP_A = new Fp2(
+				Fp.Zero(),
+				new Fp(
+					0xe53a_0000_0313_5242,
+					0x0108_0c0f_def8_0285,
+					0xe788_9edb_e340_f6bd,
+					0x0b51_3751_2631_0601,
+					0x02d6_9857_17c7_44ab,
+					0x1220_b4e9_79ea_5467
+				)
+			);
+			SSWU_ELLP_B = new Fp2(
+				new Fp(
+					0x22ea_0000_0cf8_9db2,
+					0x6ec8_32df_7138_0aa4,
+					0x6e1b_9440_3db5_a66e,
+					0x75bf_3c53_a794_73ba,
+					0x3dd3_a569_412c_0a34,
+					0x125c_db5e_74dc_4fd1
+				),
+				new Fp(
+					0x22ea_0000_0cf8_9db2,
+					0x6ec8_32df_7138_0aa4,
+					0x6e1b_9440_3db5_a66e,
+					0x75bf_3c53_a794_73ba,
+					0x3dd3_a569_412c_0a34,
+					0x125c_db5e_74dc_4fd1
+				)
+			);
 		}
 
 		public G2Affine(Fp2 x, Fp2 y, bool isInfinity)

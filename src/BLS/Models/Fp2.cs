@@ -10,6 +10,30 @@ namespace EdjCase.ICP.BLS.Models
 	[DebuggerDisplay("Value = {ToString()}")]
 	internal class Fp2
 	{
+		public static readonly Fp2 B;
+		public static readonly Fp2 B3;
+		static Fp2()
+		{
+			B = new Fp2(
+				new Fp(
+					0xaa27_0000_000c_fff3,
+					0x53cc_0032_fc34_000a,
+					0x478f_e97a_6b0a_807f,
+					0xb1d3_7ebe_e6ba_24d7,
+					0x8ec9_733b_bf78_ab2f,
+					0x09d6_4551_3d83_de7e
+				),
+				new Fp(
+					0xaa27_0000_000c_fff3,
+					0x53cc_0032_fc34_000a,
+					0x478f_e97a_6b0a_807f,
+					0xb1d3_7ebe_e6ba_24d7,
+					0x8ec9_733b_bf78_ab2f,
+					0x09d6_4551_3d83_de7e
+				)
+			);
+			B3 = B + B + B;
+		}
 		public readonly Fp C0;
 		public readonly Fp C1;
 

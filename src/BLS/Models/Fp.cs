@@ -24,12 +24,22 @@ namespace EdjCase.ICP.BLS.Models
 		public static readonly Fp R;
 		public static readonly Fp R2;
 		public static readonly Fp R3;
+		public static readonly Fp B;
 
 		static Fp()
 		{
 			R = new Fp(0x7609_0000_0002_fffd, 0xebf4_000b_c40c_0002, 0x5f48_9857_53c7_58ba, 0x77ce_5853_7052_5745, 0x5c07_1a97_a256_ec6d, 0x15f6_5ec3_fa80_e493);
 			R2 = new Fp(0xf4df_1f34_1c34_1746, 0x0a76_e6a6_09d1_04f1, 0x8de5_476c_4c95_b6d5, 0x67eb_88a9_939d_83c0, 0x9a79_3e85_b519_952d, 0x1198_8fe5_92ca_e3aa);
 			R3 = new Fp(0xed48_ac6b_d94c_a1e0, 0x315f_831e_03a7_adf8, 0x9a53_352a_615e_29dd, 0x34c0_4e5e_921e_1761, 0x2512_d435_6572_4728, 0x0aa6_3460_9175_5d4d);
+
+			B = new Fp(
+				0xaa27_0000_000c_fff3,
+				0x53cc_0032_fc34_000a,
+				0x478f_e97a_6b0a_807f,
+				0xb1d3_7ebe_e6ba_24d7,
+				0x8ec9_733b_bf78_ab2f,
+				0x09d6_4551_3d83_de7e
+			);
 		}
 
 		public Fp(ulong v0, ulong v1, ulong v2, ulong v3, ulong v4, ulong v5)
