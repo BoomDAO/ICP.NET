@@ -1,11 +1,10 @@
 using System;
-using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using System.Numerics;
-using System.Text;
 
 namespace EdjCase.ICP.BLS.Models
 {
+	[DebuggerDisplay("Value = {ToString()}")]
 	internal class Fp
 	{
 		public readonly ulong[] Values;
@@ -571,5 +570,34 @@ namespace EdjCase.ICP.BLS.Models
 			.SubtractP();
 
 		}
+
+		public override string ToString()
+		{
+			// Hex of bytes with 0x prefix
+			byte[] bytes = this.ToBytes();
+			Span<char> stringValue = stackalloc char[bytes.Length * 2 + 2];
+			stringValue[0] = '0';
+			stringValue[1] = 'x';
+			int i = 1;
+			foreach (byte b in bytes)
+			{
+				int charIndex = i++ * 2;
+				int quotient = Math.DivRem(b, 16, out int remainder);
+				stringValue[charIndex] = GetChar(quotient);
+				stringValue[charIndex + 1] = GetChar(remainder);
+			}
+
+			return new string(stringValue);
+		}
+
+		private static char GetChar(int value)
+		{
+			if (value < 10)
+			{
+				return (char)(value + 48); // 0->9
+			}
+			return (char)(value + 65 - 10); // A->F ASCII
+		}
+
 	}
 }

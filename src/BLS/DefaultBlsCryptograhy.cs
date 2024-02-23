@@ -66,50 +66,64 @@ namespace EdjCase.ICP.BLS
 				G2Prepared hPrepared = hAffine.ToPrepared();
 				Fp12 result = BlsUtil.MillerLoop(
 					Fp12.One(),
-					(f) => DoublingStep(f, pkAffine, hPrepared, i),
-					(f) => AddingStep(f, pkAffine, hPrepared, i),
+					(f) => DoublingStep(f, pkAffine, hPrepared, ref i),
+					(f) => AddingStep(f, pkAffine, hPrepared, ref i),
 					(f) => f.Square(),
 					(f) => f.Conjugate()
 				);
 				millerLoopValue *= result;
-				i++;
 			}
 
 			G1Affine g1Neg = G1Affine.Generator().Neg();
 			G2Prepared signaturePrepared = signature.ToPrepared();
+			i = 0;
 			Fp12 r = BlsUtil.MillerLoop(
 					Fp12.One(),
-					(f) => DoublingStep(f, g1Neg, signaturePrepared, 0),
-					(f) => AddingStep(f, g1Neg, signaturePrepared, 0),
+					(f) => DoublingStep(f, g1Neg, signaturePrepared, ref i),
+					(f) => AddingStep(f, g1Neg, signaturePrepared, ref i),
 					(f) => f.Square(),
 					(f) => f.Conjugate()
 				);
 			millerLoopValue *= r;
 
-			return FinalExponentiation(millerLoopValue) == Fp12.One();
+			return FinalExponentiation(millerLoopValue).Equals(Fp12.One());
 		}
 
 
-		private static Fp12 DoublingStep(Fp12 f, G1Affine publicKey, G2Prepared hash, int index)
+		private static Fp12 DoublingStep(Fp12 f, G1Affine publicKey, G2Prepared hash, ref int index)
 		{
-			bool eitherIdentity = publicKey.IsIdentity() || hash.IsInfinity;
-			if (eitherIdentity)
+			try
 			{
-				return f;
+				bool eitherIdentity = publicKey.IsIdentity() || hash.IsInfinity;
+				if (eitherIdentity)
+				{
+					return f;
+				}
+				Fp12 newF = Ell(f, hash.Coefficients[index], publicKey);
+				return newF;
 			}
-			Fp12 newF = Ell(f, hash.Coefficients[index], publicKey);
-			return newF;
+			finally
+			{
+				index++;
+			}
 		}
 
-		private static Fp12 AddingStep(Fp12 f, G1Affine publicKey, G2Prepared hash, int index)
+		private static Fp12 AddingStep(Fp12 f, G1Affine publicKey, G2Prepared hash, ref int index)
 		{
-			bool eitherIdentity = publicKey.IsIdentity() || hash.IsInfinity;
-			if (eitherIdentity)
+			try
 			{
-				return f;
+				bool eitherIdentity = publicKey.IsIdentity() || hash.IsInfinity;
+				if (eitherIdentity)
+				{
+					return f;
+				}
+				Fp12 newF = Ell(f, hash.Coefficients[index], publicKey);
+				return newF;
 			}
-			Fp12 newF = Ell(f, hash.Coefficients[index], publicKey);
-			return newF;
+			finally
+			{
+				index++;
+			}
 		}
 
 		private static Fp12 Ell(Fp12 f, (Fp2, Fp2, Fp2) value, G1Affine publicKey)

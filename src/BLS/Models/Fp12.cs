@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
 using System.Text;
 
 namespace EdjCase.ICP.BLS.Models
 {
+	[DebuggerDisplay("Value = {ToString()}")]
 	internal class Fp12
 	{
 		public Fp6 C0 { get; }
@@ -143,6 +145,11 @@ namespace EdjCase.ICP.BLS.Models
 		public override int GetHashCode()
 		{
 			return this.C0.GetHashCode() ^ this.C1.GetHashCode();
+		}
+
+		public override string ToString()
+		{
+			return $"{this.C0} + {this.C1}";
 		}
 	}
 }
