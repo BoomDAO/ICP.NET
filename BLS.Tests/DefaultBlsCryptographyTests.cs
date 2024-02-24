@@ -30,6 +30,7 @@ namespace BLS.Tests
 		}
 
 
+		[Theory]
 		[InlineData(
 			// G1 84c5ba8cd2507bdde36e4697d027f0b895079871c587eec363cd7dba7fbb05fc4abc78c0150f4696aaf88e1043a973c3
 			// G2 a8aab303e33ed14f4a904004a92bd26ffc969c1d1e7d4b7f0c04150a73e1845a911e51a2b2d369d5cef06560c5ac9f5715c01566993d4469805df3e1f29b536481a832bf2751b6908faed6776d062d585521889232999d72b679d6e38bb5cfff
@@ -51,7 +52,7 @@ namespace BLS.Tests
 			};
 			G2Projective[] g2Values = new[]
 			{
-				G2Projective.HashToCurve(msg, DefaultBlsCryptograhy.Dst)
+				G2Projective.HashToCurve(msg, DefaultBlsCryptograhy.DstG2)
 			};
 			G2Affine sig = G2Affine.FromCompressed(signature);
 			bool isValid = new DefaultBlsCryptograhy().VerifyG2Signature(sig, g2Values, g1Values);
@@ -72,7 +73,7 @@ namespace BLS.Tests
 			byte[] g1Compressed = Convert.FromBase64String(g1CompressedBase64);
 			G1Projective g1Expected = G1Projective.FromCompressed(g1Compressed);
 
-			G1Projective g1Actual = G1Projective.HashToCurve(msg, DefaultBlsCryptograhy.Dst);
+			G1Projective g1Actual = G1Projective.HashToCurve(msg, DefaultBlsCryptograhy.DstG1);
 
 			Assert.True(g1Expected.Equals(g1Actual));
 		}
@@ -90,7 +91,7 @@ namespace BLS.Tests
 			byte[] g2Compressed = Convert.FromBase64String(g2CompressedBase64);
 			G2Projective g2Expected = G2Projective.FromCompressed(g2Compressed);
 
-			G2Projective g2Actual = G2Projective.HashToCurve(msg, DefaultBlsCryptograhy.Dst);
+			G2Projective g2Actual = G2Projective.HashToCurve(msg, DefaultBlsCryptograhy.DstG2);
 
 			Assert.True(g2Expected.Equals(g2Actual));
 		}

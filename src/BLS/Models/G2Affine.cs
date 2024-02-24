@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 
@@ -415,40 +416,40 @@ namespace EdjCase.ICP.BLS.Models
 
 		public static G2Affine Generator()
 		{
-			Fp2 x = new (
+			Fp2 x = new(
 				new Fp(
-					0x024a_a2b2_f08f_0a91,
-					0x2608_0527_2dc5_1051,
-					0xc6e4_7ad4_fa40_3b02,
-					0xb451_0b64_7ae3_d177,
-					0x0bac_0326_a805_bbef,
-					0xd480_56c8_c121_bdb8
+					0xF5F28FA202940A10,
+					0xB3F5FB2687B4961A,
+					0xA1A893B53E2AE580,
+					0x9894999D1A3CAEE9,
+					0x6F67B7631863366B,
+					0x058191924350BCD7
 				),
 				new Fp(
-					0x13e0_2b60_5271_9f60,
-					0x7dac_d3a0_8827_4f65,
-					0x596b_d0d0_9920_b61a,
-					0xb5da_61bb_dc7f_5049,
-					0x334c_f112_1394_5d57,
-					0xe5ac_7d05_5d04_2b7e
+					0xA5A9C0759E23F606,
+					0xAAA0C59DBCCD60C3,
+					0x3BB17E18E2867806,
+					0x1B1AB6CC8541B367,
+					0xC2B6ED0EF2158547,
+					0x11922A097360EDF3
 				)
 			);
-			Fp2 y = new (
+			Fp2 y = new(
 				new Fp(
-					0x0ce5_d527_727d_6e11,
-					0x8cc9_cdc6_da2e_351a,
-					0xadfd_9baa_8cbd_d3a7,
-					0x6d42_9a69_5160_d12c,
-					0x923a_c9cc_3bac_a289,
-					0xe193_5486_08b8_2801
+					0x4C730AF860494C4A,
+					0x597CFA1F5E369C5A,
+					0xE7E6856CAA0A635A,
+					0xBBEFB5E96E0D495F,
+					0x07D3A975F0EF25A2,
+					0x0083FD8E7E80DAE5
 				),
 				new Fp(
-					0x0606_c4a0_2ea7_34cc,
-					0x32ac_d2b0_2bc2_8b99,
-					0xcb3e_287e_85a7_63af,
-					0x2674_92ab_572e_99ab,
-					0x3f37_0d27_5cec_1da1,
-					0xaaa9_075f_f05f_79be
+					0xADC0FC92DF64B05D,
+					0x18AA270A2B1461DC,
+					0x86ADAC6A3BE4EBA0,
+					0x79495C4EC93DA33A,
+					0xE7175850A43CCAED,
+					0x0B2BC2A163DE1BF2
 				)
 			);
 			return new G2Affine(x, y, false);

@@ -125,7 +125,7 @@ namespace EdjCase.ICP.Candid.Tests.Generators
 		private static string GetFileText(string fileName)
 		{
 			Assembly assembly = Assembly.GetExecutingAssembly();
-			string resourceName = "ICP.Candid.Tests.Generators.Files." + fileName;
+			string resourceName = "EdjCase.ICP.Candid.Tests.Generators.Files." + fileName;
 
 			using (Stream? stream = assembly.GetManifestResourceStream(resourceName))
 			{

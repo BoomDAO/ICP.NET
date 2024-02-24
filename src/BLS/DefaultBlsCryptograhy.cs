@@ -14,11 +14,13 @@ namespace EdjCase.ICP.BLS
 	/// </summary>
 	public class DefaultBlsCryptograhy : IBlsCryptography
 	{
-		internal static readonly byte[] Dst;
+		internal static readonly byte[] DstG1;
+		internal static readonly byte[] DstG2;
 
 		static DefaultBlsCryptograhy()
 		{
-			Dst = Encoding.UTF8.GetBytes("BLS_SIG_BLS12381G2_XMD:SHA-256_SSWU_RO_NUL_");
+			DstG1 = Encoding.UTF8.GetBytes("BLS_SIG_BLS12381G1_XMD:SHA-256_SSWU_RO_NUL_");
+			DstG2 = Encoding.UTF8.GetBytes("BLS_SIG_BLS12381G2_XMD:SHA-256_SSWU_RO_NUL_");
 		}
 
 		/// <inheritdoc />
@@ -26,7 +28,7 @@ namespace EdjCase.ICP.BLS
 		{
 			G1Projective[] g1Values = new[]
 			{
-				G1Projective.HashToCurve(messageHash, Dst)
+				G1Projective.HashToCurve(messageHash, DstG1)
 			};
 			G2Projective[] g2Values = new[]
 			{
@@ -47,21 +49,31 @@ namespace EdjCase.ICP.BLS
 
 			static Fp12 Ell(Fp12 f, G1Projective g1, G2Projective g2, int index)
 			{
-				// TODO BLSICP
-				//(Fp c0, Fp c1, Fp c2) = g1.ToPrepared().Coefficients[index];
+				(Fp2 c0, Fp2 c1, Fp2 c2) = g2.ToPrepared().Coefficients[index];
 
-				//// Convert Fp to Fp2 by using c0 and c1 as the real part and setting the imaginary part to 0
-				//Fp2 convertedC0 = new Fp2(c0, Fp.Zero());
-				//Fp2 convertedC1 = new Fp2(c1, Fp.Zero());
-				//Fp2 convertedC2 = new Fp2(c2, Fp.Zero());
+				c0 = new Fp2(c0.C0 * g1.Y, c0.C1 * g1.Y);
+				c1 = new Fp2(c1.C0 * g1.X, c1.C1 * g1.X);
 
-				//// Now you can use convertedC0, convertedC1, and convertedC2 with MultiplyBy014
-				//Fp12 newF = f.MultiplyBy014(convertedC0, convertedC1, convertedC2);
-
-
-				//return newF;
-				throw new NotImplementedException();
+				Fp12 newF = f.MultiplyBy014(c2, c1, c0);
+				return newF;
 			}
+			//static Fp12 Ell(Fp12 f, G1Projective g1, G2Projective g2, int index)
+			//{
+			//	//TODO BLSICP
+			//   (Fp c0, Fp c1, Fp c2) = g1.ToPrepared().Coefficients[index];
+
+			//	// Convert Fp to Fp2 by using c0 and c1 as the real part and setting the imaginary part to 0
+			//	Fp2 convertedC0 = new Fp2(c0, Fp.Zero());
+			//	Fp2 convertedC1 = new Fp2(c1, Fp.Zero());
+			//	Fp2 convertedC2 = new Fp2(c2, Fp.Zero());
+
+			//	// Now you can use convertedC0, convertedC1, and convertedC2 with MultiplyBy014
+			//	Fp12 newF = f.MultiplyBy014(convertedC0, convertedC1, convertedC2);
+
+
+			//	return newF;
+			//	throw new NotImplementedException();
+			//}
 
 
 			return this.VerifyInternal(g2Values, g1Values, g1, g2, Ell);
