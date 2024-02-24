@@ -93,7 +93,7 @@ namespace EdjCase.ICP.BLS.Models
 					copyLen = Math.Min(readLen - offs, copyLen);
 					Array.Copy(this.Bi, bOffs, output, offs, copyLen);
 					offs += copyLen;
-					this.BOffs += copyLen;
+					this.BOffs = bOffs + copyLen;
 				}
 				else
 				{

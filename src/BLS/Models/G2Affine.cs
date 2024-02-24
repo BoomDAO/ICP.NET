@@ -50,7 +50,6 @@ namespace EdjCase.ICP.BLS.Models
 					0xd951_e663_0665_76f4,
 					0xde29_1a3d_41e9_80d3,
 					0x0815_664c_7dfe_040d
-
 				),
 				new Fp(
 					0x43f5_ffff_fffc_aaae,
@@ -59,7 +58,6 @@ namespace EdjCase.ICP.BLS.Models
 					0xeca8_f331_8332_bb7a,
 					0xef14_8d1e_a0f4_c069,
 					0x040a_b326_3eff_0206
-
 				)
 			);
 			SSWU_ELLP_A = new Fp2(
