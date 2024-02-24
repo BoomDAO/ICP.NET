@@ -85,5 +85,24 @@ namespace EdjCase.ICP.BLS
 			return f;
 
 		}
+
+		public static Fp FromOkmFp(byte[] okm)
+		{
+			Fp F2256 = new(
+				0x075b_3cd7_c5ce_820f,
+				0x3ec6_ba62_1c3e_db0b,
+				0x168a_13d8_2bff_6bce,
+				0x8766_3c4b_f8c4_49d2,
+				0x15f3_4c83_ddc8_d830,
+				0x0f96_28b4_9caa_2e85
+			);
+			var bs = new byte[48];
+			Array.Copy(okm, 0, bs, 16, 32);
+			Fp db = Fp.FromBytes(bs);
+			Array.Copy(okm, 32, bs, 16, 32);
+			Fp da = Fp.FromBytes(bs);
+			return db * F2256 + da;
+		}
+
 	}
 }
