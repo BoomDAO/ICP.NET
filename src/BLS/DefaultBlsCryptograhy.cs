@@ -26,21 +26,44 @@ namespace EdjCase.ICP.BLS
 		{
 			G1Projective[] g1Values = new[]
 			{
-				G1Projective.FromCompressed(publicKey)
+				G1Projective.HashToCurve(messageHash, Dst)
 			};
 			G2Projective[] g2Values = new[]
 			{
-				G2Projective.HashToCurve(messageHash, Dst)
+				G2Projective.FromCompressed(publicKey)
 			};
-			G2Affine sig = G2Affine.FromCompressed(signature);
-			return this.Verify(sig, g2Values, g1Values);
+			G1Affine sig = G1Affine.FromCompressed(signature);
+			return this.VerifyG1Signature(sig, g2Values, g1Values);
 		}
 
-		private bool Verify(
+		internal bool VerifyG1Signature(
+			G1Affine signature,
+			G2Projective[] g2Values,
+			G1Projective[] g1Values
+		)
+		{
+			G1Affine g1Neg = signature;
+			G2Prepared g2Prepared = G2Affine.Generator().Neg().ToPrepared();
+			return this.VerifyInternal(g2Values, g1Values, g1Neg, g2Prepared);
+		}
+
+		internal bool VerifyG2Signature(
 			G2Affine signature,
 			G2Projective[] g2Values,
 			G1Projective[] g1Values
 		)
+		{
+			G1Affine g1Neg = G1Affine.Generator().Neg();
+			G2Prepared g2Prepared = signature.ToPrepared();
+			return this.VerifyInternal(g2Values, g1Values, g1Neg, g2Prepared);
+		}
+
+		private bool VerifyInternal(
+			G2Projective[] g2Values,
+			G1Projective[] g1Values,
+			G1Affine lastG1,
+			G2Prepared lastG2
+			)
 		{
 			if (g2Values.Length == 0 || g1Values.Length == 0)
 			{
@@ -86,13 +109,11 @@ namespace EdjCase.ICP.BLS
 				millerLoopValue *= result;
 			}
 
-			G1Affine g1Neg = G1Affine.Generator().Neg();
-			G2Prepared g2Prepared = signature.ToPrepared();
 			i = 0;
 			Fp12 r = BlsUtil.MillerLoop(
 					Fp12.One(),
-					(f) => DoublingStep(f, g1Neg, g2Prepared, ref i),
-					(f) => AddingStep(f, g1Neg, g2Prepared, ref i),
+					(f) => DoublingStep(f, lastG1, lastG2, ref i),
+					(f) => AddingStep(f, lastG1, lastG2, ref i),
 					(f) => f.Square(),
 					(f) => f.Conjugate()
 				);
