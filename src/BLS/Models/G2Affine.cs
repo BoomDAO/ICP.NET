@@ -410,30 +410,7 @@ namespace EdjCase.ICP.BLS.Models
 
 		public G2Prepared ToPrepared()
 		{
-			G2Projective cur = this.ToProjective();
-			G2Affine q = this.IsIdentity() ? G2Affine.Generator() : this;
-			List<(Fp2, Fp2, Fp2)> coeffs = new();
-
-
-			BlsUtil.MillerLoop(
-				0, // Dummy value instead of void
-				(f) =>
-				{
-					cur = G2Prepared.DoublingStep(cur, out var values);
-					coeffs.Add(values);
-					return f; // Dummy
-				},
-				(f) =>
-				{
-					cur = G2Prepared.AdditionStep(cur, q, out var values);
-					coeffs.Add(values);
-					return f; // Dummy
-				},
-				(f) => f, // Dummy
-				(f) => f // Dummy
-			);
-
-			return new G2Prepared(q.IsInfinity, coeffs);
+			return this.ToProjective().ToPrepared();
 		}
 
 		public static G2Affine Generator()

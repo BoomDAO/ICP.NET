@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Runtime.ConstrainedExecution;
 
 namespace EdjCase.ICP.BLS.Models
 {
@@ -663,5 +665,30 @@ namespace EdjCase.ICP.BLS.Models
 			return new Fp2(c0, c1);
 		}
 
+		internal G2Prepared ToPrepared()
+		{
+			G2Affine q = this.IsIdentity() ? G2Affine.Generator() : this.ToAffine();
+			List<(Fp2, Fp2, Fp2)> coeffs = new();
+			G2Projective cur = this;
+			BlsUtil.MillerLoop(
+			0, // Dummy value instead of void
+			(f) =>
+			{
+				cur = G2Prepared.DoublingStep(cur, out var values);
+				coeffs.Add(values);
+				return f; // Dummy
+			},
+			(f) =>
+			{
+				cur = G2Prepared.AdditionStep(cur, q, out var values);
+				coeffs.Add(values);
+				return f; // Dummy
+			},
+				(f) => f, // Dummy
+				(f) => f // Dummy
+			);
+
+			return new G2Prepared(q.IsInfinity, coeffs);
+		}
 	}
 }

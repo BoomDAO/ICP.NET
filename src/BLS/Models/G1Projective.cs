@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace EdjCase.ICP.BLS.Models
 {
@@ -449,6 +450,33 @@ namespace EdjCase.ICP.BLS.Models
 				BlsUtil.FromOkmFp(b)
 			);
 		}
+
+		// TODO BLSICP
+		//internal G1Prepared ToPrepared()
+		//{
+		//	G1Affine q = this.IsIdentity() ? G1Affine.Generator() : this.ToAffine();
+		//	List<(Fp, Fp, Fp)> coeffs = new();
+		//	G1Projective cur = this;
+		//	BlsUtil.MillerLoop(
+		//	0, // Dummy value instead of void
+		//	(f) =>
+		//	{
+		//		cur = G1Prepared.DoublingStep(cur, out var values);
+		//		coeffs.Add(values);
+		//		return f; // Dummy
+		//	},
+		//	(f) =>
+		//	{
+		//		cur = G1Prepared.AdditionStep(cur, q, out var values);
+		//		coeffs.Add(values);
+		//		return f; // Dummy
+		//	},
+		//		(f) => f, // Dummy
+		//		(f) => f // Dummy
+		//	);
+
+		//	return new G1Prepared(q.IsInfinity, coeffs);
+		//}
 
 
 	}

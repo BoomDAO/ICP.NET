@@ -42,9 +42,29 @@ namespace EdjCase.ICP.BLS
 			G1Projective[] g1Values
 		)
 		{
-			G1Affine g1Neg = signature;
-			G2Prepared g2Prepared = G2Affine.Generator().Neg().ToPrepared();
-			return this.VerifyInternal(g2Values, g1Values, g1Neg, g2Prepared);
+			G1Projective g1 = signature.ToProjective(); // TODO BLSICP
+			G2Projective g2 = G2Affine.Generator().Neg().ToProjective(); // TODO BLSICP
+
+			static Fp12 Ell(Fp12 f, G1Projective g1, G2Projective g2, int index)
+			{
+				// TODO BLSICP
+				//(Fp c0, Fp c1, Fp c2) = g1.ToPrepared().Coefficients[index];
+
+				//// Convert Fp to Fp2 by using c0 and c1 as the real part and setting the imaginary part to 0
+				//Fp2 convertedC0 = new Fp2(c0, Fp.Zero());
+				//Fp2 convertedC1 = new Fp2(c1, Fp.Zero());
+				//Fp2 convertedC2 = new Fp2(c2, Fp.Zero());
+
+				//// Now you can use convertedC0, convertedC1, and convertedC2 with MultiplyBy014
+				//Fp12 newF = f.MultiplyBy014(convertedC0, convertedC1, convertedC2);
+
+
+				//return newF;
+				throw new NotImplementedException();
+			}
+
+
+			return this.VerifyInternal(g2Values, g1Values, g1, g2, Ell);
 		}
 
 		internal bool VerifyG2Signature(
@@ -53,17 +73,30 @@ namespace EdjCase.ICP.BLS
 			G1Projective[] g1Values
 		)
 		{
-			G1Affine g1Neg = G1Affine.Generator().Neg();
-			G2Prepared g2Prepared = signature.ToPrepared();
-			return this.VerifyInternal(g2Values, g1Values, g1Neg, g2Prepared);
+			G1Projective g1 = G1Affine.Generator().Neg().ToProjective();
+			G2Projective g2 = signature.ToProjective();
+
+			static Fp12 Ell(Fp12 f, G1Projective g1, G2Projective g2, int index)
+			{
+				(Fp2 c0, Fp2 c1, Fp2 c2) = g2.ToPrepared().Coefficients[index];
+
+				c0 = new Fp2(c0.C0 * g1.Y, c0.C1 * g1.Y);
+				c1 = new Fp2(c1.C0 * g1.X, c1.C1 * g1.X);
+
+				Fp12 newF = f.MultiplyBy014(c2, c1, c0);
+				return newF;
+			}
+
+			return this.VerifyInternal(g2Values, g1Values, g1, g2, Ell);
 		}
 
 		private bool VerifyInternal(
 			G2Projective[] g2Values,
 			G1Projective[] g1Values,
-			G1Affine lastG1,
-			G2Prepared lastG2
-			)
+			G1Projective lastG1,
+			G2Projective lastG2,
+			Func<Fp12, G1Projective, G2Projective, int, Fp12> step
+		)
 		{
 			if (g2Values.Length == 0 || g1Values.Length == 0)
 			{
@@ -94,15 +127,12 @@ namespace EdjCase.ICP.BLS
 
 			Fp12 millerLoopValue = Fp12.One();
 			int i = 0;
-			foreach ((G1Projective pk, G2Projective hash) in g1Values.Zip(g2Values, (pk, h) => (pk, h)))
+			foreach ((G1Projective g1, G2Projective g2) in g1Values.Zip(g2Values, (g1, g2) => (g1, g2)))
 			{
-				G1Affine pkAffine = pk.ToAffine();
-				G2Affine hAffine = hash.ToAffine();
-				G2Prepared hPrepared = hAffine.ToPrepared();
 				Fp12 result = BlsUtil.MillerLoop(
 					Fp12.One(),
-					(f) => DoublingStep(f, pkAffine, hPrepared, ref i),
-					(f) => AddingStep(f, pkAffine, hPrepared, ref i),
+					(f) => Step(f, g1, g2, step, ref i),
+					(f) => Step(f, g1, g2, step, ref i),
 					(f) => f.Square(),
 					(f) => f.Conjugate()
 				);
@@ -112,8 +142,8 @@ namespace EdjCase.ICP.BLS
 			i = 0;
 			Fp12 r = BlsUtil.MillerLoop(
 					Fp12.One(),
-					(f) => DoublingStep(f, lastG1, lastG2, ref i),
-					(f) => AddingStep(f, lastG1, lastG2, ref i),
+					(f) => Step(f, lastG1, lastG2, step, ref i),
+					(f) => Step(f, lastG1, lastG2, step, ref i),
 					(f) => f.Square(),
 					(f) => f.Conjugate()
 				);
@@ -123,17 +153,16 @@ namespace EdjCase.ICP.BLS
 		}
 
 
-		private static Fp12 DoublingStep(Fp12 f, G1Affine g1, G2Prepared hash, ref int index)
+		private static Fp12 Step(Fp12 f, G1Projective g1, G2Projective g2, Func<Fp12, G1Projective, G2Projective, int, Fp12> step, ref int index)
 		{
 			try
 			{
-				bool eitherIdentity = g1.IsIdentity() || hash.IsInfinity;
+				bool eitherIdentity = g1.IsIdentity() || g2.IsIdentity();
 				if (eitherIdentity)
 				{
 					return f;
 				}
-				Fp12 newF = Ell(f, hash.Coefficients[index], g1);
-				return newF;
+				return step(f, g1, g2, index);
 			}
 			finally
 			{
@@ -141,33 +170,6 @@ namespace EdjCase.ICP.BLS
 			}
 		}
 
-		private static Fp12 AddingStep(Fp12 f, G1Affine g1, G2Prepared hash, ref int index)
-		{
-			try
-			{
-				bool eitherIdentity = g1.IsIdentity() || hash.IsInfinity;
-				if (eitherIdentity)
-				{
-					return f;
-				}
-				Fp12 newF = Ell(f, hash.Coefficients[index], g1);
-				return newF;
-			}
-			finally
-			{
-				index++;
-			}
-		}
-
-		private static Fp12 Ell(Fp12 f, (Fp2, Fp2, Fp2) value, G1Affine publicKey)
-		{
-			(Fp2 c0, Fp2 c1, Fp2 c2) = value;
-
-			c0 = new Fp2(c0.C0 * publicKey.Y, c0.C1 * publicKey.Y);
-			c1 = new Fp2(c1.C0 * publicKey.X, c1.C1 * publicKey.X);
-
-			return f.MultiplyBy014(c2, c1, c0);
-		}
 
 		private static Fp12 FinalExponentiation(Fp12 f)
 		{

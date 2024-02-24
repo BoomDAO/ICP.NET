@@ -601,6 +601,12 @@ namespace EdjCase.ICP.BLS.Models
 		{
 			return new G1Affine(this.X, this.IsInfinity ? Fp.One() : this.Y.Neg(), this.IsInfinity);
 		}
+
+		// TODO BLSICP
+		//internal G1Prepared ToPrepared()
+		//{
+		//	return this.ToProjective().ToPrepared();
+		//}
 	}
 
 }

@@ -122,6 +122,7 @@ namespace EdjCase.ICP.BLS.Models
 			return new Fp12(newC0, newC1);
 		}
 
+
 		public Fp12 Add(Fp12 rhs)
 		{
 			return new Fp12(this.C0 + rhs.C0, this.C1 + rhs.C1);
