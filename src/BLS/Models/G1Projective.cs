@@ -37,6 +37,30 @@ namespace EdjCase.ICP.BLS.Models
 			return this.Z.IsZero();
 		}
 
+		public override bool Equals(object obj)
+		{
+			if (obj is G2Projective p)
+			{
+				return this.Equals(p);
+			}
+			return false;
+		}
+
+		public bool Equals(G1Projective other)
+		{
+			Fp x1 = this.X * other.Z;
+			Fp x2 = other.X * this.Z;
+
+			Fp y1 = this.Y * other.Z;
+			Fp y2 = other.Y * this.Z;
+
+			bool thisIsZero = this.Z.IsZero();
+			bool otherIsZero = other.Z.IsZero();
+
+			return (thisIsZero && otherIsZero)
+				|| (!thisIsZero && !otherIsZero && x1.Equals(x2) && y1.Equals(y2));
+		}
+
 		public G1Projective Add(G1Projective rhs)
 		{
 			Fp t0 = this.X * rhs.X;
@@ -164,7 +188,7 @@ namespace EdjCase.ICP.BLS.Models
 
 		public static G1Projective HashToCurve(byte[] message, byte[] dst)
 		{
-			int outputLength = 128;
+			int outputLength = 64;
 			int hashSize = 32;
 			(Fp u1, Fp u2) = HashToFieldFp(message, dst, outputLength, hashSize);
 			G1Projective p1 = MapToCurveG1(u1);
@@ -416,7 +440,7 @@ namespace EdjCase.ICP.BLS.Models
 
 		private static (Fp, Fp) HashToFieldFp(byte[] message, byte[] dst, int outputLength, int hashSize)
 		{
-			const int byteLength = 256;
+			int byteLength = outputLength * 2;
 			Expander ex = Expander.Create(message, dst, byteLength, hashSize);
 			byte[] a = ex.ReadInto(outputLength, hashSize);
 			byte[] b = ex.ReadInto(outputLength, hashSize);

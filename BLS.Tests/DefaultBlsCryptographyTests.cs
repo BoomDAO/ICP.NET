@@ -1,5 +1,7 @@
 using EdjCase.ICP.BLS;
+using EdjCase.ICP.BLS.Models;
 using EdjCase.ICP.Candid.Utilities;
+using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 
 namespace BLS.Tests
@@ -36,6 +38,43 @@ namespace BLS.Tests
 			
 			bool isValid = new DefaultBlsCryptograhy().VerifySignature(publicKey, msg, signature);
 			Assert.True(isValid);
+		}
+
+		[Theory]
+		[InlineData(
+			"",
+			"hMW6jNJQe93jbkaX0CfwuJUHmHHFh+7DY819un+7BfxKvHjAFQ9Glqr4jhBDqXPD"
+		)]
+		public void HashToCurveG1(
+			string msgHex,
+			string g1CompressedBase64
+		)
+		{
+			byte[] msg = ByteUtil.FromHexString(msgHex);
+			byte[] g1Compressed = Convert.FromBase64String(g1CompressedBase64);
+			G1Projective g1Expected = G1Projective.FromCompressed(g1Compressed);
+
+			G1Projective g1Actual = G1Projective.HashToCurve(msg, DefaultBlsCryptograhy.Dst);
+
+			Assert.True(g1Expected.Equals(g1Actual));
+		}
+		[Theory]
+		[InlineData(
+			"",
+			"qKqzA+M+0U9KkEAEqSvSb/yWnB0efUt/DAQVCnPhhFqRHlGistNp1c7wZWDFrJ9XFcAVZpk9RGmAXfPh8ptTZIGoMr8nUbaQj67Wd20GLVhVIYiSMpmdcrZ51uOLtc//"
+		)]
+		public void HashToCurveG2(
+			string msgHex,
+			string g2CompressedBase64
+		)
+		{
+			byte[] msg = ByteUtil.FromHexString(msgHex);
+			byte[] g2Compressed = Convert.FromBase64String(g2CompressedBase64);
+			G2Projective g2Expected = G2Projective.FromCompressed(g2Compressed);
+
+			G2Projective g2Actual = G2Projective.HashToCurve(msg, DefaultBlsCryptograhy.Dst);
+
+			Assert.True(g2Expected.Equals(g2Actual));
 		}
 
 

@@ -14,7 +14,7 @@ namespace EdjCase.ICP.BLS
 	/// </summary>
 	public class DefaultBlsCryptograhy : IBlsCryptography
 	{
-		private static readonly byte[] Dst;
+		internal static readonly byte[] Dst;
 
 		static DefaultBlsCryptograhy()
 		{

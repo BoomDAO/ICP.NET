@@ -93,6 +93,30 @@ namespace EdjCase.ICP.BLS.Models
 			return lhs.Subtract(rhs);
 		}
 
+		public override bool Equals(object obj)
+		{
+			if (obj is G2Projective p)
+			{
+				return this.Equals(p);
+			}
+			return false;
+		}
+
+		public bool Equals(G2Projective other)
+		{
+			Fp2 x1 = this.X * other.Z;
+			Fp2 x2 = other.X * this.Z;
+
+			Fp2 y1 = this.Y * other.Z;
+			Fp2 y2 = other.Y * this.Z;
+
+			bool thisIsZero = this.Z.IsZero();
+			bool otherIsZero = other.Z.IsZero();
+
+			return (thisIsZero && otherIsZero)
+				|| (!thisIsZero && !otherIsZero && x1.Equals(x2) && y1.Equals(y2));
+		}
+
 
 		internal bool IsIdentity()
 		{
