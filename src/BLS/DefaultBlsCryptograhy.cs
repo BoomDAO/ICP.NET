@@ -32,11 +32,11 @@ namespace EdjCase.ICP.BLS
 			{
 				G2Projective.FromCompressed(publicKey)
 			};
-			G2Affine sig = G2Affine.FromCompressed(signature);
+			G1Affine sig = G1Affine.FromCompressed(signature);
 			return this.Verify(sig, g2Values, g1Values);
 		}
 
-		private bool Verify(G2Affine signature, G2Projective[] g2Values, G1Projective[] g1Values)
+		private bool Verify(G1Affine signature, G2Projective[] g2Values, G1Projective[] g1Values)
 		{
 			if (g2Values.Length == 0 || g1Values.Length == 0)
 			{
@@ -82,13 +82,12 @@ namespace EdjCase.ICP.BLS
 				millerLoopValue *= result;
 			}
 
-			G1Affine g1Neg = G1Affine.Generator().Neg();
-			G2Prepared signaturePrepared = signature.ToPrepared();
+			G2Prepared g2Prepared = G2Affine.Generator().Neg().ToPrepared();
 			i = 0;
 			Fp12 r = BlsUtil.MillerLoop(
 					Fp12.One(),
-					(f) => DoublingStep(f, g1Neg, signaturePrepared, ref i),
-					(f) => AddingStep(f, g1Neg, signaturePrepared, ref i),
+					(f) => DoublingStep(f, signature, g2Prepared, ref i),
+					(f) => AddingStep(f, signature, g2Prepared, ref i),
 					(f) => f.Square(),
 					(f) => f.Conjugate()
 				);
@@ -148,24 +147,24 @@ namespace EdjCase.ICP.BLS
 			return var0;
 		}
 
-		private static Fp ChainPm3div4(Fp fp)
+		private static Fp ChainPm3div4(Fp var0)
 		{
-			Fp2 var1 = var0.Square();
-			Fp2 var9 = var1 * var0;
-			Fp2 var5 = var1.Square();
-			Fp2 var2 = var9 * var1;
-			Fp2 var7 = var5 * var9;
-			Fp2 var10 = var2 * var5;
-			Fp2 var13 = var7 * var5;
-			Fp2 var4 = var10 * var5;
-			Fp2 var8 = var13 * var5;
-			Fp2 var15 = var4 * var5;
-			Fp2 var11 = var8 * var5;
-			Fp2 var3 = var15 * var5;
-			Fp2 var12 = var11 * var5;
+			Fp var1 = var0.Square();
+			Fp var9 = var1 * var0;
+			Fp var5 = var1.Square();
+			Fp var2 = var9 * var1;
+			Fp var7 = var5 * var9;
+			Fp var10 = var2 * var5;
+			Fp var13 = var7 * var5;
+			Fp var4 = var10 * var5;
+			Fp var8 = var13 * var5;
+			Fp var15 = var4 * var5;
+			Fp var11 = var8 * var5;
+			Fp var3 = var15 * var5;
+			Fp var12 = var11 * var5;
 			var1 = var4.Square();
-			Fp2 var14 = var12 * var5;
-			Fp2 var6 = var1 * var9;
+			Fp var14 = var12 * var5;
+			Fp var6 = var1 * var9;
 			var5 = var1 * var2;
 			var1 = Square(var1, 12);
 			var1 *= var15;
@@ -300,7 +299,7 @@ namespace EdjCase.ICP.BLS
 			var1 = Square(var1, 4);
 			var1 *= var2;
 			var1 = var1.Square();
-
+			return var1;
 		}
 
 
@@ -362,12 +361,8 @@ namespace EdjCase.ICP.BLS
 		}
 
 
-		private static Fp FromOkFp(byte[] okm)
+		private static Fp FromOkmFp(byte[] okm)
 		{
-			if (okm.Length != 64)
-			{
-				throw new ArgumentException("Invalid OKM length");
-			}
 			Fp F2256 = new(
 				0x075b_3cd7_c5ce_820f,
 				0x3ec6_ba62_1c3e_db0b,
@@ -385,16 +380,16 @@ namespace EdjCase.ICP.BLS
 		}
 
 
-		private static Fp12 DoublingStep(Fp12 f, G1Affine publicKey, G2Prepared hash, ref int index)
+		private static Fp12 DoublingStep(Fp12 f, G1Affine g1, G2Prepared hash, ref int index)
 		{
 			try
 			{
-				bool eitherIdentity = publicKey.IsIdentity() || hash.IsInfinity;
+				bool eitherIdentity = g1.IsIdentity() || hash.IsInfinity;
 				if (eitherIdentity)
 				{
 					return f;
 				}
-				Fp12 newF = Ell(f, hash.Coefficients[index], publicKey);
+				Fp12 newF = Ell(f, hash.Coefficients[index], g1);
 				return newF;
 			}
 			finally
@@ -403,16 +398,16 @@ namespace EdjCase.ICP.BLS
 			}
 		}
 
-		private static Fp12 AddingStep(Fp12 f, G1Affine publicKey, G2Prepared hash, ref int index)
+		private static Fp12 AddingStep(Fp12 f, G1Affine g1, G2Prepared hash, ref int index)
 		{
 			try
 			{
-				bool eitherIdentity = publicKey.IsIdentity() || hash.IsInfinity;
+				bool eitherIdentity = g1.IsIdentity() || hash.IsInfinity;
 				if (eitherIdentity)
 				{
 					return f;
 				}
-				Fp12 newF = Ell(f, hash.Coefficients[index], publicKey);
+				Fp12 newF = Ell(f, hash.Coefficients[index], g1);
 				return newF;
 			}
 			finally

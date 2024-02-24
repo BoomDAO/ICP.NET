@@ -545,6 +545,11 @@ namespace EdjCase.ICP.BLS.Models
 
 			return bytes;
 		}
+
+		internal G2Affine Neg()
+		{
+			return new G2Affine(this.X, this.IsInfinity ? Fp2.One() : this.Y.Neg(), this.IsInfinity);
+		}
 	}
 
 }
