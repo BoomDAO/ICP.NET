@@ -231,5 +231,413 @@ namespace EdjCase.ICP.BLS.Models
 			}
 			return a;
 		}
+
+
+
+		public static G2Projective HashToCurve(byte[] message, byte[] dst)
+		{
+			int outputLength = 128;
+			int hashSize = 32;
+			(Fp2 u1, Fp2 u2) = HashToFieldF2(message, dst, outputLength, hashSize);
+			G2Projective p1 = MapToCurveG2(u1);
+			G2Projective p2 = MapToCurveG2(u2);
+			return (p1 + p2).ClearH();
+		}
+
+		private static G2Projective MapToCurveG2(Fp2 u)
+		{
+			Fp2 usq = u.Square();
+			Fp2 xi_usq = G2Affine.SSWU_XI * usq;
+			Fp2 xisq_u4 = xi_usq.Square();
+			Fp2 nd_common = xisq_u4 + xi_usq;
+			Fp2 x_den = G2Affine.SSWU_ELLP_A * (nd_common.IsZero() ? G2Affine.SSWU_XI : nd_common.Neg());
+			Fp2 x0_num = G2Affine.SSWU_ELLP_B * (Fp2.One() + nd_common);
+			Fp2 x_densq = x_den.Square();
+			Fp2 gx_den = x_densq * x_den;
+			Fp2 gx0_num = (x0_num.Square() + G2Affine.SSWU_ELLP_A * x_densq) * x0_num + G2Affine.SSWU_ELLP_B * gx_den;
+			Fp2 vsq = gx_den.Square();
+			Fp2 v_3 = vsq * gx_den;
+			Fp2 v_4 = vsq.Square();
+			Fp2 uv_7 = gx0_num * v_3 * v_4;
+			Fp2 uv_15 = uv_7 * v_4.Square();
+			Fp2 sqrt_candidate = uv_7 * ChainP2m9div16(uv_15);
+			Fp2 y = sqrt_candidate;
+			Fp2 tmp = new Fp2(sqrt_candidate.C1.Neg(), sqrt_candidate.C0);
+			if ((tmp.Square() * gx_den).Equals(gx0_num))
+			{
+				y = tmp;
+			}
+			tmp = sqrt_candidate * G2Affine.SSWU_RV1;
+			if ((tmp.Square() * gx_den).Equals(gx0_num))
+			{
+				y = tmp;
+			}
+			tmp = new Fp2(tmp.C1, tmp.C0.Neg());
+			if ((tmp.Square() * gx_den).Equals(gx0_num))
+			{
+				y = tmp;
+			}
+			Fp2 gx1_num = gx0_num * xi_usq * xisq_u4;
+			sqrt_candidate = sqrt_candidate * usq * u;
+			bool eta_found = false;
+			foreach (Fp2 eta in G2Affine.SSWU_ETAS)
+			{
+				tmp = sqrt_candidate * eta;
+				if ((tmp.Square() * gx_den).Equals(gx1_num))
+				{
+					y = tmp;
+					eta_found = true;
+				}
+			}
+			Fp2 x_num = eta_found ? x0_num * xi_usq : x0_num;
+			if (u.Sgn0() ^ y.Sgn0())
+			{
+				y = y.Neg();
+			}
+
+			G2Projective v = new(x_num, y * x_den, x_den);
+			return IsoMap(v);
+		}
+
+		private static Fp2 Square(Fp2 var0, int var1)
+		{
+			for (int i = 0; i < var1; i++)
+			{
+				var0 = var0.Square();
+			}
+			return var0;
+		}
+
+		private static Fp2 ChainP2m9div16(Fp2 var0)
+		{
+			Fp2 var1 = var0.Square();
+			Fp2 var2 = var1 * var0;
+			Fp2 var15 = var2 * var1;
+			Fp2 var3 = var15 * var1;
+			Fp2 var14 = var3 * var1;
+			Fp2 var13 = var14 * var1;
+			Fp2 var5 = var13 * var1;
+			Fp2 var10 = var5 * var1;
+			Fp2 var9 = var10 * var1;
+			Fp2 var16 = var9 * var1;
+			Fp2 var4 = var16 * var1;
+			Fp2 var7 = var4 * var1;
+			Fp2 var6 = var7 * var1;
+			Fp2 var12 = var6 * var1;
+			Fp2 var8 = var12 * var1;
+			Fp2 var11 = var8 * var1;
+			var1 = var4.Square();
+			var1 = Square(var1, 2);
+			var1 *= var0;
+			var1 = Square(var1, 9);
+			var1 *= var12;
+			var1 = Square(var1, 4);
+			var1 *= var5;
+			var1 = Square(var1, 6);
+			var1 *= var14;
+			var1 = Square(var1, 4);
+			var1 *= var3;
+			var1 = Square(var1, 5);
+			var1 *= var2;
+			var1 = Square(var1, 8);
+			var1 *= var5;
+			var1 = Square(var1, 4);
+			var1 *= var3;
+			var1 = Square(var1, 4);
+			var1 *= var10;
+			var1 = Square(var1, 8);
+			var1 *= var8;
+			var1 = Square(var1, 6);
+			var1 *= var13;
+			var1 = Square(var1, 4);
+			var1 *= var5;
+			var1 = Square(var1, 3);
+			var1 *= var0;
+			var1 = Square(var1, 6);
+			var1 *= var10;
+			var1 = Square(var1, 8);
+			var1 *= var8;
+			var1 = Square(var1, 6);
+			var1 *= var4;
+			var1 = Square(var1, 8);
+			var1 *= var9;
+			var1 = Square(var1, 5);
+			var1 *= var10;
+			var1 = Square(var1, 6);
+			var1 *= var14;
+			var1 = Square(var1, 5);
+			var1 *= var10;
+			var1 = Square(var1, 2);
+			var1 *= var0;
+			var1 = Square(var1, 6);
+			var1 *= var10;
+			var1 = Square(var1, 7);
+			var1 *= var13;
+			var1 = Square(var1, 4);
+			var1 *= var3;
+			var1 = Square(var1, 6);
+			var1 *= var14;
+			var1 = Square(var1, 7);
+			var1 *= var3;
+			var1 = Square(var1, 5);
+			var1 *= var15;
+			var1 = Square(var1, 7);
+			var1 *= var3;
+			var1 = Square(var1, 5);
+			var1 *= var3;
+			var1 = Square(var1, 10);
+			var1 *= var9;
+			var1 = Square(var1, 3);
+			var1 *= var15;
+			var1 = Square(var1, 5);
+			var1 *= var5;
+			var1 = Square(var1, 8);
+			var1 *= var6;
+			var1 = Square(var1, 5);
+			var1 *= var7;
+			var1 = Square(var1, 6);
+			var1 *= var13;
+			var1 = Square(var1, 6);
+			var1 *= var10;
+			var1 = Square(var1, 6);
+			var1 *= var14;
+			var1 = Square(var1, 7);
+			var1 *= var16;
+			var1 = Square(var1, 5);
+			var1 *= var14;
+			var1 = Square(var1, 6);
+			var1 *= var10;
+			var1 = Square(var1, 6);
+			var1 *= var9;
+			var1 = Square(var1, 5);
+			var1 *= var10;
+			var1 = Square(var1, 2);
+			var1 *= var0;
+			var1 = Square(var1, 8);
+			var1 *= var15;
+			var1 = Square(var1, 7);
+			var1 *= var15;
+			var1 = Square(var1, 4);
+			var1 *= var2;
+			var1 = Square(var1, 7);
+			var1 *= var13;
+			var1 = Square(var1, 6);
+			var1 *= var10;
+			var1 = Square(var1, 4);
+			var1 *= var5;
+			var1 = Square(var1, 7);
+			var1 *= var13;
+			var1 = Square(var1, 6);
+			var1 *= var12;
+			var1 = Square(var1, 5);
+			var1 *= var7;
+			var1 = Square(var1, 5);
+			var1 *= var15;
+			var1 = Square(var1, 7);
+			var1 *= var12;
+			var1 = Square(var1, 5);
+			var1 *= var7;
+			var1 = Square(var1, 5);
+			var1 *= var4;
+			var1 = Square(var1, 4);
+			var1 *= var2;
+			var1 = Square(var1, 6);
+			var1 *= var15;
+			var1 = Square(var1, 6);
+			var1 *= var14;
+			var1 = Square(var1, 4);
+			var1 *= var2;
+			var1 = Square(var1, 4);
+			var1 *= var2;
+			var1 = Square(var1, 8);
+			var1 *= var14;
+			var1 = Square(var1, 5);
+			var1 *= var10;
+			var1 = Square(var1, 6);
+			var1 *= var3;
+			var1 = Square(var1, 5);
+			var1 *= var10;
+			var1 = Square(var1, 12);
+			var1 *= var9;
+			var1 = Square(var1, 4);
+			var1 *= var5;
+			var1 = Square(var1, 5);
+			var1 *= var5;
+			var1 = Square(var1, 6);
+			var1 *= var2;
+			var1 = Square(var1, 9);
+			var1 *= var6;
+			var1 = Square(var1, 5);
+			var1 *= var6;
+			var1 = Square(var1, 6);
+			var1 *= var2;
+			var1 = Square(var1, 6);
+			var1 *= var2;
+			var1 = Square(var1, 9);
+			var1 *= var7;
+			var1 = Square(var1, 7);
+			var1 *= var10;
+			var1 = Square(var1, 6);
+			var1 *= var6;
+			var1 = Square(var1, 5);
+			var1 *= var14;
+			var1 = Square(var1, 7);
+			var1 *= var7;
+			var1 = Square(var1, 2);
+			var1 *= var0;
+			var1 = Square(var1, 8);
+			var1 *= var13;
+			var1 = Square(var1, 4);
+			var1 *= var15;
+			var1 = Square(var1, 7);
+			var1 *= var3;
+			var1 = Square(var1, 8);
+			var1 *= var14;
+			var1 = Square(var1, 7);
+			var1 *= var5;
+			var1 = Square(var1, 10);
+			var1 *= var14;
+			var1 = Square(var1, 6);
+			var1 *= var13;
+			var1 = Square(var1, 6);
+			var1 *= var5;
+			var1 = Square(var1, 6);
+			var1 *= var11;
+			var1 = Square(var1, 5);
+			var1 *= var6;
+			var1 = Square(var1, 7);
+			var1 *= var10;
+			var1 = Square(var1, 5);
+			var1 *= var5;
+			var1 = Square(var1, 7);
+			var1 *= var11;
+			var1 = Square(var1, 5);
+			var1 *= var3;
+			var1 = Square(var1, 8);
+			var1 *= var12;
+			var1 = Square(var1, 6);
+			var1 *= var8;
+			var1 = Square(var1, 6);
+			var1 *= var2;
+			var1 = Square(var1, 7);
+			var1 *= var13;
+			var1 = Square(var1, 7);
+			var1 *= var13;
+			var1 = Square(var1, 6);
+			var1 *= var2;
+			var1 = Square(var1, 5);
+			var1 *= var3;
+			var1 = Square(var1, 10);
+			var1 *= var12;
+			var1 = Square(var1, 4);
+			var1 *= var0;
+			var1 = Square(var1, 9);
+			var1 *= var9;
+			var1 = Square(var1, 6);
+			var1 *= var10;
+			var1 = Square(var1, 7);
+			var1 *= var11;
+			var1 = Square(var1, 5);
+			var1 *= var4;
+			var1 = Square(var1, 4);
+			var1 *= var10;
+			var1 = Square(var1, 7);
+			var1 *= var8;
+			var1 = Square(var1, 5);
+			var1 *= var4;
+			var1 = Square(var1, 5);
+			var1 *= var4;
+			var1 = Square(var1, 5);
+			var1 *= var9;
+			var1 = Square(var1, 4);
+			var1 *= var5;
+			var1 = Square(var1, 6);
+			var1 *= var8;
+			var1 = var1.Square();
+			var1 *= var0;
+			var1 = Square(var1, 6);
+			var1 *= var3;
+			var1 = Square(var1, 10);
+			var1 *= var7;
+			var1 = Square(var1, 6);
+			var1 *= var4;
+			var1 = Square(var1, 6);
+			var1 *= var6;
+			var1 = Square(var1, 6);
+			var1 *= var5;
+			var1 = Square(var1, 6);
+			var1 *= var4;
+			var1 = Square(var1, 23);
+			var1 *= var3;
+			var1 = Square(var1, 6);
+			var1 *= var3;
+			var1 = Square(var1, 5);
+			var1 *= var2;
+			var1 = Square(var1, 6);
+			var1 *= var3;
+			var1 = Square(var1, 5);
+			return var1 * var2;
+		}
+
+		private static G2Projective IsoMap(G2Projective u)
+		{
+			Fp2[][] coeffs = {
+				G2Affine.ISO3_XNUM,
+				G2Affine.ISO3_XDEN,
+				G2Affine.ISO3_YNUM,
+				G2Affine.ISO3_YDEN
+			};
+
+			Fp2 x = u.X;
+			Fp2 y = u.Y;
+			Fp2 z = u.Z;
+
+			Fp2[] mapvals = new[] { Fp2.Zero(), Fp2.Zero(), Fp2.Zero(), Fp2.Zero() };
+
+			Fp2 zsq = z.Square();
+			Fp2[] zpows = new[] { z, zsq, zsq * z };
+
+			for (int idx = 0; idx < 4; idx++)
+			{
+				Fp2[] coeff = coeffs[idx];
+				int clast = coeff.Length - 1;
+				mapvals[idx] = coeff[clast];
+				for (int jdx = 0; jdx < clast; jdx++)
+				{
+					mapvals[idx] = mapvals[idx] * x + zpows[jdx] * coeff[clast - 1 - jdx];
+				}
+			}
+
+			mapvals[1] *= z;
+
+			mapvals[2] *= y;
+			mapvals[3] *= z;
+
+			return new G2Projective(mapvals[0] * mapvals[3], mapvals[2] * mapvals[1], mapvals[1] * mapvals[3]);
+		}
+
+		private static (Fp2, Fp2) HashToFieldF2(byte[] message, byte[] dst, int outputLength, int hashSize)
+		{
+			const int byteLength = 256;
+			Expander ex = Expander.Create(message, dst, byteLength, hashSize);
+			byte[] a = ex.ReadInto(outputLength, hashSize);
+			byte[] b = ex.ReadInto(outputLength, hashSize);
+			return (
+				FromOkmFp2(a),
+				FromOkmFp2(b)
+			);
+		}
+
+		private static Fp2 FromOkmFp2(byte[] okm)
+		{
+			if (okm.Length != 128)
+			{
+				throw new ArgumentException("Invalid OKM length");
+			}
+			Fp c0 = BlsUtil.FromOkmFp(okm[..64]);
+			Fp c1 = BlsUtil.FromOkmFp(okm[64..]);
+			return new Fp2(c0, c1);
+		}
+
 	}
 }
