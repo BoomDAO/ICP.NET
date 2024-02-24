@@ -10,6 +10,38 @@ namespace EdjCase.ICP.BLS.Models
 		public Fp Y { get; }
 		public bool IsInfinity { get; }
 
+		public static readonly Fp SSWU_XI;
+		public static readonly Fp SSWU_ELLP_A;
+		public static readonly Fp SSWU_ELLP_B;
+
+		static G1Affine()
+		{
+			SSWU_XI = new Fp(
+				0x886c_0000_0023_ffdc,
+				0x0f70_008d_3090_001d,
+				0x7767_2417_ed58_28c3,
+				0x9dac_23e9_43dc_1740,
+				0x5055_3f1b_9c13_1521,
+				0x078c_712f_be0a_b6e8
+			);
+			SSWU_ELLP_A = new Fp(
+				0x2f65_aa0e_9af5_aa51,
+				0x8646_4c2d_1e84_16c3,
+				0xb85c_e591_b7bd_31e2,
+				0x27e1_1c91_b5f2_4e7c,
+				0x2837_6eda_6bfc_1835,
+				0x1554_55c3_e507_1d85
+			);
+			SSWU_ELLP_B = new Fp(
+				0xfb99_6971_fe22_a1e0,
+				0x9aa9_3eb3_5b74_2d6f,
+				0x8c47_6013_de99_c5c4,
+				0x873e_27c3_a221_e571,
+				0xca72_b5e4_5a52_d888,
+				0x0682_4061_418a_386b
+			);
+		}
+
 
 		public G1Affine(Fp x, Fp y, bool isInfinity)
 		{

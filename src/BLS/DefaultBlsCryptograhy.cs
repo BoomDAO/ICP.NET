@@ -26,11 +26,11 @@ namespace EdjCase.ICP.BLS
 		{
 			G1Projective[] g1Values = new[]
 			{
-				G1Projective.FromCompressed(publicKey)
+				HashToCurveG1(messageHash)
 			};
 			G2Projective[] g2Values = new[]
 			{
-				HashToCurveG2(messageHash)
+				G2Projective.FromCompressed(publicKey)
 			};
 			G2Affine sig = G2Affine.FromCompressed(signature);
 			return this.Verify(sig, g2Values, g1Values);
@@ -97,78 +97,50 @@ namespace EdjCase.ICP.BLS
 			return FinalExponentiation(millerLoopValue).Equals(Fp12.One());
 		}
 
-		private static G2Projective HashToCurveG2(byte[] message)
+		private static G1Projective HashToCurveG1(byte[] message)
 		{
 			int outputLength = 128;
 			int hashSize = 32;
-			(Fp2 u1, Fp2 u2) = HashToFieldF2(message, DstG2, outputLength, hashSize);
-			G2Projective p1 = MapToCurveG2(u1);
-			G2Projective p2 = MapToCurveG2(u2);
+			(Fp u1, Fp u2) = HashToFieldFp(message, DstG2, outputLength, hashSize);
+			G1Projective p1 = MapToCurveG1(u1);
+			G1Projective p2 = MapToCurveG1(u2);
 			return (p1 + p2).ClearH();
 		}
 
-		private static G2Projective MapToCurveG2(Fp2 u)
+		private static G1Projective MapToCurveG1(Fp u)
 		{
-			Fp2 usq = u.Square();
-			Fp2 xi_usq = G2Affine.SSWU_XI * usq;
-			Fp2 xisq_u4 = xi_usq.Square();
-			Fp2 nd_common = xisq_u4 + xi_usq;
-			Fp2 x_den = G2Affine.SSWU_ELLP_A * (nd_common.IsZero() ? G2Affine.SSWU_XI : nd_common.Neg());
-			Fp2 x0_num = G2Affine.SSWU_ELLP_B * (Fp2.One() + nd_common);
-			Fp2 x_densq = x_den.Square();
-			Fp2 gx_den = x_densq * x_den;
-			Fp2 gx0_num = (x0_num.Square() + G2Affine.SSWU_ELLP_A * x_densq) * x0_num + G2Affine.SSWU_ELLP_B * gx_den;
-			Fp2 vsq = gx_den.Square();
-			Fp2 v_3 = vsq * gx_den;
-			Fp2 v_4 = vsq.Square();
-			Fp2 uv_7 = gx0_num * v_3 * v_4;
-			Fp2 uv_15 = uv_7 * v_4.Square();
-			Fp2 sqrt_candidate = uv_7 * ChainP2m9div16(uv_15);
-			Fp2 y = sqrt_candidate;
-			Fp2 tmp = new Fp2(sqrt_candidate.C1.Neg(), sqrt_candidate.C0);
-			if ((tmp.Square() * gx_den).Equals(gx0_num))
-			{
-				y = tmp;
-			}
-			tmp = sqrt_candidate * G2Affine.SSWU_RV1;
-			if ((tmp.Square() * gx_den).Equals(gx0_num))
-			{
-				y = tmp;
-			}
-			tmp = new Fp2(tmp.C1, tmp.C0.Neg());
-			if ((tmp.Square() * gx_den).Equals(gx0_num))
-			{
-				y = tmp;
-			}
-			Fp2 gx1_num = gx0_num * xi_usq * xisq_u4;
-			sqrt_candidate = sqrt_candidate * usq * u;
-			bool eta_found = false;
-			foreach (Fp2 eta in G2Affine.SSWU_ETAS)
-			{
-				tmp = sqrt_candidate * eta;
-				if ((tmp.Square() * gx_den).Equals(gx1_num))
-				{
-					y = tmp;
-					eta_found = true;
-				}
-			}
-			Fp2 x_num = eta_found ? x0_num * xi_usq : x0_num;
-			if (u.Sgn0() ^ y.Sgn0())
-			{
-				y = y.Neg();
-			}
+			Fp usq = u.Square();
+			Fp xi_usq = G1Affine.SSWU_XI * usq;
+			Fp xisq_u4 = xi_usq.Square();
+			Fp nd_common = xisq_u4 + xi_usq;
+			Fp x_den = G1Affine.SSWU_ELLP_A * (nd_common.IsZero() ? G1Affine.SSWU_XI : nd_common.Neg());
+			Fp x0_num = G1Affine.SSWU_ELLP_B * (Fp.One() + nd_common);
+			Fp x_densq = x_den.Square();
+			Fp gx_den = x_densq * x_den;
+			Fp gx0_num = (x0_num.Square() + G1Affine.SSWU_ELLP_A * x_densq) * x0_num + G1Affine.SSWU_ELLP_B * gx_den;
 
-			G2Projective v = new(x_num, y * x_den, x_den);
+			Fp uV = gx0_num * gx_den;
+			Fp vsq = gx_den.Square();
+			Fp sqrt_candidate = uV * ChainPm3div4(uV * vsq);
+
+
+
+
 			return IsoMap(v);
 		}
 
-		private static Fp2 Square(Fp2 var0, int var1)
+		private static Fp Square(Fp var0, int var1)
 		{
 			for (int i = 0; i < var1; i++)
 			{
 				var0 = var0.Square();
 			}
 			return var0;
+		}
+
+		private static Fp ChainPm3div4(Fp fp)
+		{
+
 		}
 
 		private static Fp2 ChainP2m9div16(Fp2 var0)
