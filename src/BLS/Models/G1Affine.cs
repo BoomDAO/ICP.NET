@@ -4,7 +4,7 @@ using System.Text;
 
 namespace EdjCase.ICP.BLS.Models
 {
-	internal class G1Affine
+	internal struct G1Affine
 	{
 		public Fp X { get; }
 		public Fp Y { get; }

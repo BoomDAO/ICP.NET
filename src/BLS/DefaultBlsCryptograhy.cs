@@ -46,8 +46,9 @@ namespace EdjCase.ICP.BLS
 		{
 			G1Projective g1 = signature.ToProjective(); // TODO BLSICP
 			G2Projective g2 = G2Affine.Generator().Neg().ToProjective(); // TODO BLSICP
+			G2Prepared g2Prepared = g2.ToPrepared();
 
-			static Fp12 Ell(Fp12 f, G1Projective g1, G2Projective g2, int index)
+			Fp12 Ell(Fp12 f, G1Projective g1, G2Projective g2, int index)
 			{
 				(Fp2 c0, Fp2 c1, Fp2 c2) = g2.ToPrepared().Coefficients[index];
 
@@ -87,10 +88,11 @@ namespace EdjCase.ICP.BLS
 		{
 			G1Projective g1 = G1Affine.Generator().Neg().ToProjective();
 			G2Projective g2 = signature.ToProjective();
+			G2Prepared g2Prepared = g2.ToPrepared();
 
-			static Fp12 Ell(Fp12 f, G1Projective g1, G2Projective g2, int index)
+			Fp12 Ell(Fp12 f, G1Projective g1, G2Projective g2, int index)
 			{
-				(Fp2 c0, Fp2 c1, Fp2 c2) = g2.ToPrepared().Coefficients[index];
+				(Fp2 c0, Fp2 c1, Fp2 c2) = g2Prepared.Coefficients[index];
 
 				c0 = new Fp2(c0.C0 * g1.Y, c0.C1 * g1.Y);
 				c1 = new Fp2(c1.C0 * g1.X, c1.C1 * g1.X);

@@ -7,7 +7,7 @@ using System.Text;
 
 namespace EdjCase.ICP.BLS.Models
 {
-	internal class Fp6
+	internal struct Fp6
 	{
 		public Fp2 C0 { get; }
 		public Fp2 C1 { get; }
@@ -169,7 +169,7 @@ namespace EdjCase.ICP.BLS.Models
 			{
 				return null;
 			}
-			return new Fp6(c0.Multiply(t), c1.Multiply(t), c2.Multiply(t));
+			return new Fp6(c0.Multiply(t.Value), c1.Multiply(t.Value), c2.Multiply(t.Value));
 		}
 
 		public Fp6 Neg()

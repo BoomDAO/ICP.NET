@@ -301,7 +301,7 @@ namespace BLS.Tests
 				)
 			);
 
-			Assert.Equal(a, a.SquareRoot()!.Square());
+			Assert.Equal(a, a.SquareRoot()!.Value.Square());
 
 			Fp2 b = new Fp2(
 				new Fp(
@@ -315,7 +315,7 @@ namespace BLS.Tests
 				Fp.Zero()
 			);
 
-			Assert.Equal(b, b.SquareRoot()!.Square());
+			Assert.Equal(b, b.SquareRoot()!.Value.Square());
 
 			Fp2 c = new Fp2(
 				new Fp(
@@ -329,7 +329,7 @@ namespace BLS.Tests
 				Fp.Zero()
 			);
 
-			Assert.Equal(c, c.SquareRoot()!.Square());
+			Assert.Equal(c, c.SquareRoot()!.Value.Square());
 
 			Fp2 d = new Fp2(
 				new Fp(

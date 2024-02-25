@@ -4,9 +4,16 @@ using System.Linq;
 
 namespace EdjCase.ICP.BLS.Models
 {
-	internal class Fp
+	internal struct Fp
 	{
-		public readonly ulong[] Values;
+		public ulong V0;
+		public ulong V1;
+		public ulong V2;
+		public ulong V3;
+		public ulong V4;
+		public ulong V5;
+		// TODO
+		public ulong[] Values => new ulong[] {this.V0, this.V1, this.V2, this.V3, this.V4, this.V5};
 
 		// Constants
 		public static readonly ulong[] MODULUS = new ulong[] {
@@ -43,14 +50,12 @@ namespace EdjCase.ICP.BLS.Models
 
 		public Fp(ulong v0, ulong v1, ulong v2, ulong v3, ulong v4, ulong v5)
 		{
-			this.Values = new ulong[] {
-				v0,
-				v1,
-				v2,
-				v3,
-				v4,
-				v5
-			};
+			this.V0 = v0;
+			this.V1 = v1;
+			this.V2 = v2;
+			this.V3 = v3;
+			this.V4 = v4;
+			this.V5 = v5;
 		}
 
 		public static Fp Zero()
@@ -84,7 +89,7 @@ namespace EdjCase.ICP.BLS.Models
 
 		public override int GetHashCode()
 		{
-			return HashCode.Combine(this.Values[0], this.Values[1], this.Values[2], this.Values[3], this.Values[4], this.Values[5]);
+			return HashCode.Combine(this.V0, this.V1, this.V2, this.V3, this.V4, this.V5);
 		}
 
 		public bool IsZero()
@@ -95,12 +100,12 @@ namespace EdjCase.ICP.BLS.Models
 		public Fp Clone()
 		{
 			return new Fp(
-				this.Values[0],
-				this.Values[1],
-				this.Values[2],
-				this.Values[3],
-				this.Values[4],
-				this.Values[5]
+				this.V0,
+				this.V1,
+				this.V2,
+				this.V3,
+				this.V4,
+				this.V5
 			);
 		}
 
@@ -109,12 +114,12 @@ namespace EdjCase.ICP.BLS.Models
 			// Turn into canonical form by computing
 			// (a.R) / R = a
 			Fp tmp = Fp.MontgomeryReduce(
-				this.Values[0],
-				this.Values[1],
-				this.Values[2],
-				this.Values[3],
-				this.Values[4],
-				this.Values[5],
+				this.V0,
+				this.V1,
+				this.V2,
+				this.V3,
+				this.V4,
+				this.V5,
 				0,
 				0,
 				0,
@@ -144,23 +149,24 @@ namespace EdjCase.ICP.BLS.Models
 
 		public Fp Add(Fp rhs)
 		{
-			ulong[] result = new ulong[6];
 			ulong carry = 0;
 
-			for (int i = 0; i < 6; i++)
-			{
-				(result[i], carry) = BlsUtil.AddWithCarry(this.Values[i], rhs.Values[i], carry);
-			}
+			(ulong v0, carry) = BlsUtil.AddWithCarry(this.V0, rhs.Values[0], carry);
+			(ulong v1, carry) = BlsUtil.AddWithCarry(this.V1, rhs.Values[1], carry);
+			(ulong v2, carry) = BlsUtil.AddWithCarry(this.V2, rhs.Values[2], carry);
+			(ulong v3, carry) = BlsUtil.AddWithCarry(this.V3, rhs.Values[3], carry);
+			(ulong v4, carry) = BlsUtil.AddWithCarry(this.V4, rhs.Values[4], carry);
+			(ulong v5, carry) = BlsUtil.AddWithCarry(this.V5, rhs.Values[5], carry);
 
 			// Attempt to subtract the modulus, to ensure the value
 			// is smaller than the modulus.
 			return new Fp(
-				result[0],
-				result[1],
-				result[2],
-				result[3],
-				result[4],
-				result[5]
+				v0,
+				v1,
+				v2,
+				v3,
+				v4,
+				v5
 			)
 			.SubtractP();
 		}
@@ -182,47 +188,47 @@ namespace EdjCase.ICP.BLS.Models
 
 		public Fp Multiply(Fp rhs)
 		{
-			(ulong t0, ulong carry) = BlsUtil.MultiplyAddCarry(0, this.Values[0], rhs.Values[0], 0);
-			(ulong t1, carry) = BlsUtil.MultiplyAddCarry(0, this.Values[0], rhs.Values[1], carry);
-			(ulong t2, carry) = BlsUtil.MultiplyAddCarry(0, this.Values[0], rhs.Values[2], carry);
-			(ulong t3, carry) = BlsUtil.MultiplyAddCarry(0, this.Values[0], rhs.Values[3], carry);
-			(ulong t4, carry) = BlsUtil.MultiplyAddCarry(0, this.Values[0], rhs.Values[4], carry);
-			(ulong t5, ulong t6) = BlsUtil.MultiplyAddCarry(0, this.Values[0], rhs.Values[5], carry);
+			(ulong t0, ulong carry) = BlsUtil.MultiplyAddCarry(0, this.V0, rhs.Values[0], 0);
+			(ulong t1, carry) = BlsUtil.MultiplyAddCarry(0, this.V0, rhs.Values[1], carry);
+			(ulong t2, carry) = BlsUtil.MultiplyAddCarry(0, this.V0, rhs.Values[2], carry);
+			(ulong t3, carry) = BlsUtil.MultiplyAddCarry(0, this.V0, rhs.Values[3], carry);
+			(ulong t4, carry) = BlsUtil.MultiplyAddCarry(0, this.V0, rhs.Values[4], carry);
+			(ulong t5, ulong t6) = BlsUtil.MultiplyAddCarry(0, this.V0, rhs.Values[5], carry);
 
-			(t1, carry) = BlsUtil.MultiplyAddCarry(t1, this.Values[1], rhs.Values[0], 0);
-			(t2, carry) = BlsUtil.MultiplyAddCarry(t2, this.Values[1], rhs.Values[1], carry);
-			(t3, carry) = BlsUtil.MultiplyAddCarry(t3, this.Values[1], rhs.Values[2], carry);
-			(t4, carry) = BlsUtil.MultiplyAddCarry(t4, this.Values[1], rhs.Values[3], carry);
-			(t5, carry) = BlsUtil.MultiplyAddCarry(t5, this.Values[1], rhs.Values[4], carry);
-			(t6, ulong t7) = BlsUtil.MultiplyAddCarry(t6, this.Values[1], rhs.Values[5], carry);
+			(t1, carry) = BlsUtil.MultiplyAddCarry(t1, this.V1, rhs.Values[0], 0);
+			(t2, carry) = BlsUtil.MultiplyAddCarry(t2, this.V1, rhs.Values[1], carry);
+			(t3, carry) = BlsUtil.MultiplyAddCarry(t3, this.V1, rhs.Values[2], carry);
+			(t4, carry) = BlsUtil.MultiplyAddCarry(t4, this.V1, rhs.Values[3], carry);
+			(t5, carry) = BlsUtil.MultiplyAddCarry(t5, this.V1, rhs.Values[4], carry);
+			(t6, ulong t7) = BlsUtil.MultiplyAddCarry(t6, this.V1, rhs.Values[5], carry);
 
-			(t2, carry) = BlsUtil.MultiplyAddCarry(t2, this.Values[2], rhs.Values[0], 0);
-			(t3, carry) = BlsUtil.MultiplyAddCarry(t3, this.Values[2], rhs.Values[1], carry);
-			(t4, carry) = BlsUtil.MultiplyAddCarry(t4, this.Values[2], rhs.Values[2], carry);
-			(t5, carry) = BlsUtil.MultiplyAddCarry(t5, this.Values[2], rhs.Values[3], carry);
-			(t6, carry) = BlsUtil.MultiplyAddCarry(t6, this.Values[2], rhs.Values[4], carry);
-			(t7, ulong t8) = BlsUtil.MultiplyAddCarry(t7, this.Values[2], rhs.Values[5], carry);
+			(t2, carry) = BlsUtil.MultiplyAddCarry(t2, this.V2, rhs.Values[0], 0);
+			(t3, carry) = BlsUtil.MultiplyAddCarry(t3, this.V2, rhs.Values[1], carry);
+			(t4, carry) = BlsUtil.MultiplyAddCarry(t4, this.V2, rhs.Values[2], carry);
+			(t5, carry) = BlsUtil.MultiplyAddCarry(t5, this.V2, rhs.Values[3], carry);
+			(t6, carry) = BlsUtil.MultiplyAddCarry(t6, this.V2, rhs.Values[4], carry);
+			(t7, ulong t8) = BlsUtil.MultiplyAddCarry(t7, this.V2, rhs.Values[5], carry);
 
-			(t3, carry) = BlsUtil.MultiplyAddCarry(t3, this.Values[3], rhs.Values[0], 0);
-			(t4, carry) = BlsUtil.MultiplyAddCarry(t4, this.Values[3], rhs.Values[1], carry);
-			(t5, carry) = BlsUtil.MultiplyAddCarry(t5, this.Values[3], rhs.Values[2], carry);
-			(t6, carry) = BlsUtil.MultiplyAddCarry(t6, this.Values[3], rhs.Values[3], carry);
-			(t7, carry) = BlsUtil.MultiplyAddCarry(t7, this.Values[3], rhs.Values[4], carry);
-			(t8, ulong t9) = BlsUtil.MultiplyAddCarry(t8, this.Values[3], rhs.Values[5], carry);
+			(t3, carry) = BlsUtil.MultiplyAddCarry(t3, this.V3, rhs.Values[0], 0);
+			(t4, carry) = BlsUtil.MultiplyAddCarry(t4, this.V3, rhs.Values[1], carry);
+			(t5, carry) = BlsUtil.MultiplyAddCarry(t5, this.V3, rhs.Values[2], carry);
+			(t6, carry) = BlsUtil.MultiplyAddCarry(t6, this.V3, rhs.Values[3], carry);
+			(t7, carry) = BlsUtil.MultiplyAddCarry(t7, this.V3, rhs.Values[4], carry);
+			(t8, ulong t9) = BlsUtil.MultiplyAddCarry(t8, this.V3, rhs.Values[5], carry);
 
-			(t4, carry) = BlsUtil.MultiplyAddCarry(t4, this.Values[4], rhs.Values[0], 0);
-			(t5, carry) = BlsUtil.MultiplyAddCarry(t5, this.Values[4], rhs.Values[1], carry);
-			(t6, carry) = BlsUtil.MultiplyAddCarry(t6, this.Values[4], rhs.Values[2], carry);
-			(t7, carry) = BlsUtil.MultiplyAddCarry(t7, this.Values[4], rhs.Values[3], carry);
-			(t8, carry) = BlsUtil.MultiplyAddCarry(t8, this.Values[4], rhs.Values[4], carry);
-			(t9, ulong t10) = BlsUtil.MultiplyAddCarry(t9, this.Values[4], rhs.Values[5], carry);
+			(t4, carry) = BlsUtil.MultiplyAddCarry(t4, this.V4, rhs.Values[0], 0);
+			(t5, carry) = BlsUtil.MultiplyAddCarry(t5, this.V4, rhs.Values[1], carry);
+			(t6, carry) = BlsUtil.MultiplyAddCarry(t6, this.V4, rhs.Values[2], carry);
+			(t7, carry) = BlsUtil.MultiplyAddCarry(t7, this.V4, rhs.Values[3], carry);
+			(t8, carry) = BlsUtil.MultiplyAddCarry(t8, this.V4, rhs.Values[4], carry);
+			(t9, ulong t10) = BlsUtil.MultiplyAddCarry(t9, this.V4, rhs.Values[5], carry);
 
-			(t5, carry) = BlsUtil.MultiplyAddCarry(t5, this.Values[5], rhs.Values[0], 0);
-			(t6, carry) = BlsUtil.MultiplyAddCarry(t6, this.Values[5], rhs.Values[1], carry);
-			(t7, carry) = BlsUtil.MultiplyAddCarry(t7, this.Values[5], rhs.Values[2], carry);
-			(t8, carry) = BlsUtil.MultiplyAddCarry(t8, this.Values[5], rhs.Values[3], carry);
-			(t9, carry) = BlsUtil.MultiplyAddCarry(t9, this.Values[5], rhs.Values[4], carry);
-			(t10, ulong t11) = BlsUtil.MultiplyAddCarry(t10, this.Values[5], rhs.Values[5], carry);
+			(t5, carry) = BlsUtil.MultiplyAddCarry(t5, this.V5, rhs.Values[0], 0);
+			(t6, carry) = BlsUtil.MultiplyAddCarry(t6, this.V5, rhs.Values[1], carry);
+			(t7, carry) = BlsUtil.MultiplyAddCarry(t7, this.V5, rhs.Values[2], carry);
+			(t8, carry) = BlsUtil.MultiplyAddCarry(t8, this.V5, rhs.Values[3], carry);
+			(t9, carry) = BlsUtil.MultiplyAddCarry(t9, this.V5, rhs.Values[4], carry);
+			(t10, ulong t11) = BlsUtil.MultiplyAddCarry(t10, this.V5, rhs.Values[5], carry);
 
 			return MontgomeryReduce(t0, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11);
 		}
@@ -240,25 +246,25 @@ namespace EdjCase.ICP.BLS.Models
 			ulong carry;
 
 			// Operations
-			(t1, carry) = BlsUtil.MultiplyAddCarry(0, this.Values[0], this.Values[1], 0);
-			(t2, carry) = BlsUtil.MultiplyAddCarry(0, this.Values[0], this.Values[2], carry);
-			(t3, carry) = BlsUtil.MultiplyAddCarry(0, this.Values[0], this.Values[3], carry);
-			(t4, carry) = BlsUtil.MultiplyAddCarry(0, this.Values[0], this.Values[4], carry);
-			(t5, t6) = BlsUtil.MultiplyAddCarry(0, this.Values[0], this.Values[5], carry);
+			(t1, carry) = BlsUtil.MultiplyAddCarry(0, this.V0, this.V1, 0);
+			(t2, carry) = BlsUtil.MultiplyAddCarry(0, this.V0, this.V2, carry);
+			(t3, carry) = BlsUtil.MultiplyAddCarry(0, this.V0, this.V3, carry);
+			(t4, carry) = BlsUtil.MultiplyAddCarry(0, this.V0, this.V4, carry);
+			(t5, t6) = BlsUtil.MultiplyAddCarry(0, this.V0, this.V5, carry);
 
-			(t3, carry) = BlsUtil.MultiplyAddCarry(t3, this.Values[1], this.Values[2], 0);
-			(t4, carry) = BlsUtil.MultiplyAddCarry(t4, this.Values[1], this.Values[3], carry);
-			(t5, carry) = BlsUtil.MultiplyAddCarry(t5, this.Values[1], this.Values[4], carry);
-			(t6, t7) = BlsUtil.MultiplyAddCarry(t6, this.Values[1], this.Values[5], carry);
+			(t3, carry) = BlsUtil.MultiplyAddCarry(t3, this.V1, this.V2, 0);
+			(t4, carry) = BlsUtil.MultiplyAddCarry(t4, this.V1, this.V3, carry);
+			(t5, carry) = BlsUtil.MultiplyAddCarry(t5, this.V1, this.V4, carry);
+			(t6, t7) = BlsUtil.MultiplyAddCarry(t6, this.V1, this.V5, carry);
 
-			(t5, carry) = BlsUtil.MultiplyAddCarry(t5, this.Values[2], this.Values[3], 0);
-			(t6, carry) = BlsUtil.MultiplyAddCarry(t6, this.Values[2], this.Values[4], carry);
-			(t7, t8) = BlsUtil.MultiplyAddCarry(t7, this.Values[2], this.Values[5], carry);
+			(t5, carry) = BlsUtil.MultiplyAddCarry(t5, this.V2, this.V3, 0);
+			(t6, carry) = BlsUtil.MultiplyAddCarry(t6, this.V2, this.V4, carry);
+			(t7, t8) = BlsUtil.MultiplyAddCarry(t7, this.V2, this.V5, carry);
 
-			(t7, carry) = BlsUtil.MultiplyAddCarry(t7, this.Values[3], this.Values[4], 0);
-			(t8, t9) = BlsUtil.MultiplyAddCarry(t8, this.Values[3], this.Values[5], carry);
+			(t7, carry) = BlsUtil.MultiplyAddCarry(t7, this.V3, this.V4, 0);
+			(t8, t9) = BlsUtil.MultiplyAddCarry(t8, this.V3, this.V5, carry);
 
-			(t9, t10) = BlsUtil.MultiplyAddCarry(t9, this.Values[4], this.Values[5], 0);
+			(t9, t10) = BlsUtil.MultiplyAddCarry(t9, this.V4, this.V5, 0);
 
 			// Bit shifting operations
 			t11 = t10 >> 63;
@@ -275,17 +281,17 @@ namespace EdjCase.ICP.BLS.Models
 
 			// Final operations with carry management
 			ulong t0;
-			(t0, carry) = BlsUtil.MultiplyAddCarry(0, this.Values[0], this.Values[0], 0);
+			(t0, carry) = BlsUtil.MultiplyAddCarry(0, this.V0, this.V0, 0);
 			(t1, carry) = BlsUtil.AddWithCarry(t1, 0, carry);
-			(t2, carry) = BlsUtil.MultiplyAddCarry(t2, this.Values[1], this.Values[1], carry);
+			(t2, carry) = BlsUtil.MultiplyAddCarry(t2, this.V1, this.V1, carry);
 			(t3, carry) = BlsUtil.AddWithCarry(t3, 0, carry);
-			(t4, carry) = BlsUtil.MultiplyAddCarry(t4, this.Values[2], this.Values[2], carry);
+			(t4, carry) = BlsUtil.MultiplyAddCarry(t4, this.V2, this.V2, carry);
 			(t5, carry) = BlsUtil.AddWithCarry(t5, 0, carry);
-			(t6, carry) = BlsUtil.MultiplyAddCarry(t6, this.Values[3], this.Values[3], carry);
+			(t6, carry) = BlsUtil.MultiplyAddCarry(t6, this.V3, this.V3, carry);
 			(t7, carry) = BlsUtil.AddWithCarry(t7, 0, carry);
-			(t8, carry) = BlsUtil.MultiplyAddCarry(t8, this.Values[4], this.Values[4], carry);
+			(t8, carry) = BlsUtil.MultiplyAddCarry(t8, this.V4, this.V4, carry);
 			(t9, carry) = BlsUtil.AddWithCarry(t9, 0, carry);
-			(t10, carry) = BlsUtil.MultiplyAddCarry(t10, this.Values[5], this.Values[5], carry);
+			(t10, carry) = BlsUtil.MultiplyAddCarry(t10, this.V5, this.V5, carry);
 			(t11, _) = BlsUtil.AddWithCarry(t11, 0, carry);
 
 			// Return the final result
@@ -295,39 +301,39 @@ namespace EdjCase.ICP.BLS.Models
 
 		public Fp SubtractP()
 		{
-			(ulong r0, ulong borrow) = BlsUtil.SubtractWithBorrow(this.Values[0], MODULUS[0], 0);
-			(ulong r1, borrow) = BlsUtil.SubtractWithBorrow(this.Values[1], MODULUS[1], borrow);
-			(ulong r2, borrow) = BlsUtil.SubtractWithBorrow(this.Values[2], MODULUS[2], borrow);
-			(ulong r3, borrow) = BlsUtil.SubtractWithBorrow(this.Values[3], MODULUS[3], borrow);
-			(ulong r4, borrow) = BlsUtil.SubtractWithBorrow(this.Values[4], MODULUS[4], borrow);
-			(ulong r5, borrow) = BlsUtil.SubtractWithBorrow(this.Values[5], MODULUS[5], borrow);
+			(ulong r0, ulong borrow) = BlsUtil.SubtractWithBorrow(this.V0, MODULUS[0], 0);
+			(ulong r1, borrow) = BlsUtil.SubtractWithBorrow(this.V1, MODULUS[1], borrow);
+			(ulong r2, borrow) = BlsUtil.SubtractWithBorrow(this.V2, MODULUS[2], borrow);
+			(ulong r3, borrow) = BlsUtil.SubtractWithBorrow(this.V3, MODULUS[3], borrow);
+			(ulong r4, borrow) = BlsUtil.SubtractWithBorrow(this.V4, MODULUS[4], borrow);
+			(ulong r5, borrow) = BlsUtil.SubtractWithBorrow(this.V5, MODULUS[5], borrow);
 
 			// If underflow occurred on the final limb, borrow = 0xfff...fff, otherwise
 			// borrow = 0x000...000. Thus, we use it as a mask!
 			ulong mask = borrow == 0 ? ulong.MaxValue : 0;
 
-			r0 = (this.Values[0] & ~mask) | (r0 & mask);
-			r1 = (this.Values[1] & ~mask) | (r1 & mask);
-			r2 = (this.Values[2] & ~mask) | (r2 & mask);
-			r3 = (this.Values[3] & ~mask) | (r3 & mask);
-			r4 = (this.Values[4] & ~mask) | (r4 & mask);
-			r5 = (this.Values[5] & ~mask) | (r5 & mask);
+			r0 = (this.V0 & ~mask) | (r0 & mask);
+			r1 = (this.V1 & ~mask) | (r1 & mask);
+			r2 = (this.V2 & ~mask) | (r2 & mask);
+			r3 = (this.V3 & ~mask) | (r3 & mask);
+			r4 = (this.V4 & ~mask) | (r4 & mask);
+			r5 = (this.V5 & ~mask) | (r5 & mask);
 
 			return new Fp(r0, r1, r2, r3, r4, r5);
 		}
 
 		public Fp Neg()
 		{
-			(ulong d0, ulong borrow) = BlsUtil.SubtractWithBorrow(MODULUS[0], this.Values[0], 0);
-			(ulong d1, borrow) = BlsUtil.SubtractWithBorrow(MODULUS[1], this.Values[1], borrow);
-			(ulong d2, borrow) = BlsUtil.SubtractWithBorrow(MODULUS[2], this.Values[2], borrow);
-			(ulong d3, borrow) = BlsUtil.SubtractWithBorrow(MODULUS[3], this.Values[3], borrow);
-			(ulong d4, borrow) = BlsUtil.SubtractWithBorrow(MODULUS[4], this.Values[4], borrow);
-			(ulong d5, _) = BlsUtil.SubtractWithBorrow(MODULUS[5], this.Values[5], borrow);
+			(ulong d0, ulong borrow) = BlsUtil.SubtractWithBorrow(MODULUS[0], this.V0, 0);
+			(ulong d1, borrow) = BlsUtil.SubtractWithBorrow(MODULUS[1], this.V1, borrow);
+			(ulong d2, borrow) = BlsUtil.SubtractWithBorrow(MODULUS[2], this.V2, borrow);
+			(ulong d3, borrow) = BlsUtil.SubtractWithBorrow(MODULUS[3], this.V3, borrow);
+			(ulong d4, borrow) = BlsUtil.SubtractWithBorrow(MODULUS[4], this.V4, borrow);
+			(ulong d5, _) = BlsUtil.SubtractWithBorrow(MODULUS[5], this.V5, borrow);
 
 			// Let's use a mask if `self` was zero, which would mean
 			// the result of the subtraction is p.
-			ulong mask = ((this.Values[0] | this.Values[1] | this.Values[2] | this.Values[3] | this.Values[4] | this.Values[5]) == 0)
+			ulong mask = ((this.V0 | this.V1 | this.V2 | this.V3 | this.V4 | this.V5) == 0)
 				? 0
 				: ulong.MaxValue;
 
@@ -502,12 +508,12 @@ namespace EdjCase.ICP.BLS.Models
 		public bool LexicographicallyLargest()
 		{
 			Fp tmp = Fp.MontgomeryReduce(
-				this.Values[0],
-				this.Values[1],
-				this.Values[2],
-				this.Values[3],
-				this.Values[4],
-				this.Values[5],
+				this.V0,
+				this.V1,
+				this.V2,
+				this.V3,
+				this.V4,
+				this.V5,
 				0,
 				0,
 				0,
@@ -611,12 +617,12 @@ namespace EdjCase.ICP.BLS.Models
 		internal bool Sgn0()
 		{
 			Fp tmp = Fp.MontgomeryReduce(
-				this.Values[0],
-				this.Values[1],
-				this.Values[2],
-				this.Values[3],
-				this.Values[4],
-				this.Values[5],
+				this.V0,
+				this.V1,
+				this.V2,
+				this.V3,
+				this.V4,
+				this.V5,
 				0,
 				0,
 				0,

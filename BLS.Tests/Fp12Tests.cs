@@ -353,9 +353,9 @@ namespace BLS.Tests
 			);
 
 
-			a = a.Square().Invert()!.Square().Add(c);
-			b = b.Square().Invert()!.Square().Add(a);
-			c = c.Square().Invert()!.Square().Add(b);
+			a = a.Square().Invert()!.Value.Square().Add(c);
+			b = b.Square().Invert()!.Value.Square().Add(a);
+			c = c.Square().Invert()!.Value.Square().Add(b);
 
 			Assert.Equal(a.Square(), a.Multiply(a));
 			Assert.Equal(b.Square(), b.Multiply(b));
@@ -363,8 +363,8 @@ namespace BLS.Tests
 
 			Assert.Equal((a.Add(b)).Multiply(c.Square()), (c.Square().Multiply(a)).Add(c.Square().Multiply(b)));
 
-			Assert.Equal(a.Invert()!.Multiply(b.Invert()!), (a.Multiply(b)).Invert());
-			Assert.Equal(a.Invert()!.Multiply(a), Fp12.One());
+			Assert.Equal(a.Invert()!.Value.Multiply(b.Invert()!.Value), (a.Multiply(b)).Invert());
+			Assert.Equal(a.Invert()!.Value.Multiply(a), Fp12.One());
 
 			Assert.NotEqual(a, a.FrobeniusMap());
 			Assert.Equal(a, a.FrobeniusMap().FrobeniusMap().FrobeniusMap().FrobeniusMap().FrobeniusMap().FrobeniusMap().FrobeniusMap().FrobeniusMap().FrobeniusMap().FrobeniusMap().FrobeniusMap().FrobeniusMap());

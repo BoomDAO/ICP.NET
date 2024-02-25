@@ -4,7 +4,7 @@ using System.Runtime.ConstrainedExecution;
 
 namespace EdjCase.ICP.BLS.Models
 {
-	internal class G2Projective
+	internal struct G2Projective
 	{
 		public Fp2 X { get; }
 		public Fp2 Y { get; }
@@ -688,7 +688,7 @@ namespace EdjCase.ICP.BLS.Models
 				(f) => f // Dummy
 			);
 
-			return new G2Prepared(q.IsInfinity, coeffs);
+			return new G2Prepared(q.IsInfinity, coeffs.ToArray());
 		}
 	}
 }

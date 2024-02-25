@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace EdjCase.ICP.BLS.Models
 {
-	internal class G1Projective
+	internal struct G1Projective
 	{
 		public Fp X { get; }
 		public Fp Y { get; }

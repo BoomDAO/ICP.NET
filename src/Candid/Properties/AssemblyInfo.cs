@@ -7,3 +7,4 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("EdjCase.ICP.ClientGenerator")]
 [assembly: InternalsVisibleTo("EdjCase.ICP.Agent")]
 [assembly: InternalsVisibleTo("EdjCase.ICP.WebSockets")]
+[assembly: InternalsVisibleTo("Sample.CLI")]
