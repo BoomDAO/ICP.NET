@@ -1,3 +1,4 @@
+using Dirichlet.Numerics;
 using EdjCase.ICP.BLS.Models;
 using System;
 using System.Collections.Generic;
@@ -12,15 +13,24 @@ namespace EdjCase.ICP.BLS
 	{
 		internal static (ulong, ulong) MultiplyAddCarry(ulong a, ulong b, ulong c, ulong carry)
 		{
-			// Convert to BigInteger for handling potential overflow
-			BigInteger product = (BigInteger)b * c;
-			BigInteger sum = product + a + carry;
+			UInt128.Multiply(out UInt128 product, b, c);
+			UInt128 sum = UInt128.Add(UInt128.Add(product, a), carry);
 
 			// Extract the lower and upper 64 bits of the result
 			ulong lower = (ulong)(sum & 0xFFFFFFFFFFFFFFFF);
 			ulong upper = (ulong)((sum >> 64) & 0xFFFFFFFFFFFFFFFF);
 
 			return (lower, upper);
+		}
+
+
+		internal static (ulong sum, ulong carry) AddWithCarry(ulong a, ulong b)
+		{
+			ulong sum = a + b;
+			// If sum is less than either a or b, then it means there was a wraparound, hence a carry.
+			ulong carry = (sum < a || sum < b) ? 1UL : 0UL;
+
+			return (sum, carry);
 		}
 
 

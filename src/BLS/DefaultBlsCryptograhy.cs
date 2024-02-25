@@ -50,7 +50,7 @@ namespace EdjCase.ICP.BLS
 
 			Fp12 Ell(Fp12 f, G1Projective g1, G2Projective g2, int index)
 			{
-				(Fp2 c0, Fp2 c1, Fp2 c2) = g2.ToPrepared().Coefficients[index];
+				(Fp2 c0, Fp2 c1, Fp2 c2) = g2Prepared.Coefficients[index];
 
 				c0 = new Fp2(c0.C0 * g1.Y, c0.C1 * g1.Y);
 				c1 = new Fp2(c1.C0 * g1.X, c1.C1 * g1.X);
@@ -61,7 +61,7 @@ namespace EdjCase.ICP.BLS
 			//static Fp12 Ell(Fp12 f, G1Projective g1, G2Projective g2, int index)
 			//{
 			//	//TODO BLSICP
-			//   (Fp c0, Fp c1, Fp c2) = g1.ToPrepared().Coefficients[index];
+			//   (Fp c0, Fp c1, Fp c2) = g1Prepared.Coefficients[index];
 
 			//	// Convert Fp to Fp2 by using c0 and c1 as the real part and setting the imaginary part to 0
 			//	Fp2 convertedC0 = new Fp2(c0, Fp.Zero());
@@ -130,34 +130,32 @@ namespace EdjCase.ICP.BLS
 				return false;
 			}
 
+			// TODO?
 			// Enforce distinct messages to counter BLS's rogue-key attack
-			HashSet<byte[]> distinctHashes = g2Values
-				.Select(h => h.ToCompressed())
-				.ToHashSet(new ByteArrayComparer());
-			if (distinctHashes.Count() != nHashes)
-			{
-				return false;
-			}
+			//HashSet<byte[]> distinctHashes = g2Values
+			//	.Select(h => h.ToCompressed())
+			//	.ToHashSet(new ByteArrayComparer());
+			//if (distinctHashes.Count() != nHashes)
+			//{
+			//	return false;
+			//}
 
-			Fp12 millerLoopValue = Fp12.One();
-			int i = 0;
-			foreach ((G1Projective g1, G2Projective g2) in g1Values.Zip(g2Values, (g1, g2) => (g1, g2)))
-			{
-				Fp12 result = BlsUtil.MillerLoop(
+			Fp12 millerLoopValue = g1Values.Zip(g2Values, (g1, g2) => (g1, g2))
+				.AsParallel()
+				.Select((pair, i) => BlsUtil.MillerLoop(
 					Fp12.One(),
-					(f) => Step(f, g1, g2, step, ref i),
-					(f) => Step(f, g1, g2, step, ref i),
+					(f) => Step(f, pair.g1, pair.g2, step, i),
+					(f) => Step(f, pair.g1, pair.g2, step, i),
 					(f) => f.Square(),
 					(f) => f.Conjugate()
-				);
-				millerLoopValue *= result;
-			}
+				))
+				.Aggregate(Fp12.One(), (acc, result) => acc * result);
 
-			i = 0;
+
 			Fp12 r = BlsUtil.MillerLoop(
 					Fp12.One(),
-					(f) => Step(f, lastG1, lastG2, step, ref i),
-					(f) => Step(f, lastG1, lastG2, step, ref i),
+					(f) => Step(f, lastG1, lastG2, step, 0),
+					(f) => Step(f, lastG1, lastG2, step, 0),
 					(f) => f.Square(),
 					(f) => f.Conjugate()
 				);
@@ -167,21 +165,14 @@ namespace EdjCase.ICP.BLS
 		}
 
 
-		private static Fp12 Step(Fp12 f, G1Projective g1, G2Projective g2, Func<Fp12, G1Projective, G2Projective, int, Fp12> step, ref int index)
+		private static Fp12 Step(Fp12 f, G1Projective g1, G2Projective g2, Func<Fp12, G1Projective, G2Projective, int, Fp12> step, int index)
 		{
-			try
+			bool eitherIdentity = g1.IsIdentity() || g2.IsIdentity();
+			if (eitherIdentity)
 			{
-				bool eitherIdentity = g1.IsIdentity() || g2.IsIdentity();
-				if (eitherIdentity)
-				{
-					return f;
-				}
-				return step(f, g1, g2, index);
+				return f;
 			}
-			finally
-			{
-				index++;
-			}
+			return step(f, g1, g2, index);
 		}
 
 

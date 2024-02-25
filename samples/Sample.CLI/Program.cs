@@ -18,6 +18,7 @@ using EdjCase.ICP.Agent.Standards.AssetCanister.Models;
 using EdjCase.ICP.BLS;
 using EdjCase.ICP.Candid.Utilities;
 using EdjCase.ICP.BLS.Models;
+using System.Diagnostics;
 
 public class Program
 {
@@ -93,9 +94,11 @@ public class Program
 			};
 		G2Affine sig = G2Affine.FromCompressed(signature);
 		var bls = new DefaultBlsCryptograhy();
-		for (int i = 0; i < 1_000_000; i++)
+		for (int i = 0; i < 100; i++)
 		{
+			var s = Stopwatch.StartNew();
 			bls.VerifyG2Signature(sig, g2Values, g1Values);
+			Console.WriteLine(s.Elapsed.ToString());
 		}
 		//var result = Parser.Default.ParseArguments<UploadOptions, DownloadOptions>(args)
 		//	.WithNotParsed(errors => { });
