@@ -23,6 +23,9 @@ namespace EdjCase.ICP.BLS
 			return (lower, upper);
 		}
 
+
+
+
 		internal static (ulong Value, ulong BorrowOut) SubtractWithBorrow(ulong a, ulong b, ulong borrow)
 		{
 			unchecked
@@ -42,10 +45,21 @@ namespace EdjCase.ICP.BLS
 
 		internal static (ulong, ulong) AddWithCarry(ulong a, ulong b, ulong carry)
 		{
-			BigInteger sum = (BigInteger)a + b + carry;
-			ulong lower = (ulong)(sum & 0xFFFFFFFFFFFFFFFF);
-			ulong upper = (ulong)((sum >> 64) & 0xFFFFFFFFFFFFFFFF);
-			return (lower, upper);
+			// Start with the addition of 'a' and 'b'
+			ulong lower = a + b;
+
+			// If 'lower' is less than either 'a' or 'b', it means an overflow occurred
+			// So, we need to account for this in the upper part
+			ulong overflow = (lower < a || lower < b) ? 1UL : 0;
+
+			// Add the carry to the lower part. If this addition overflows, it will also contribute to the upper part
+			lower += carry;
+			if (lower < carry) // Check for overflow after adding the carry
+			{
+				overflow++;
+			}
+
+			return (lower, overflow);
 		}
 
 		internal static T MillerLoop<T>(
