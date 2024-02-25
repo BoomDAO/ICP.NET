@@ -93,7 +93,10 @@ public class Program
 			};
 		G2Affine sig = G2Affine.FromCompressed(signature);
 		var bls = new DefaultBlsCryptograhy();
-		bls.VerifyG2Signature(sig, g2Values, g1Values);
+		for (int i = 0; i < 1_000_000; i++)
+		{
+			bls.VerifyG2Signature(sig, g2Values, g1Values);
+		}
 		//var result = Parser.Default.ParseArguments<UploadOptions, DownloadOptions>(args)
 		//	.WithNotParsed(errors => { });
 		//await result

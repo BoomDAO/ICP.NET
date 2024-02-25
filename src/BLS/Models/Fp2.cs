@@ -152,10 +152,11 @@ namespace EdjCase.ICP.BLS.Models
 			Fp2 res = Fp2.One();
 			for (int i = 5; i >= 0; i--)
 			{
+				ulong v = by.GetValueByIndex(i);
 				for (int j = 63; j >= 0; j--)
 				{
 					res = res.Square();
-					if (((by.Values[i] >> j) & 1) == 1)
+					if (((v >> j) & 1) == 1)
 					{
 						res *= this;
 					}

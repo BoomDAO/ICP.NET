@@ -14,6 +14,8 @@ namespace EdjCase.ICP.BLS.Models
 		public int BOffs { get; private set; }
 		public int Remain { get; private set; }
 
+		private static readonly SHA256 sHA256 = SHA256.Create();
+
 		public Expander(byte[] dst, byte[] b0, byte[] bi, byte i, int bOffs, int remain)
 		{
 			this.Dst = dst;
@@ -36,7 +38,7 @@ namespace EdjCase.ICP.BLS.Models
 				throw new NotImplementedException();
 			}
 
-			byte[] b0 = SHA256.Create().ComputeHash(
+			byte[] b0 = sHA256.ComputeHash(
 				message
 				.Concat(new byte[64])
 				.Concat(ToU16Bytes(byteLength))
@@ -45,7 +47,7 @@ namespace EdjCase.ICP.BLS.Models
 				.Concat(ToU8Bytes(dst.Length))
 				.ToArray()
 			);
-			byte[] bi = SHA256.Create().ComputeHash(
+			byte[] bi = sHA256.ComputeHash(
 				b0
 				.Concat(new byte[] { 1 })
 				.Concat(dst)
@@ -103,7 +105,7 @@ namespace EdjCase.ICP.BLS.Models
 					{
 						bPrevXor[j] ^= this.Bi[j];
 					}
-					this.Bi = SHA256.Create().ComputeHash(
+					this.Bi = sHA256.ComputeHash(
 						bPrevXor
 						.Concat(new[] { this.I })
 						.Concat(this.Dst)
