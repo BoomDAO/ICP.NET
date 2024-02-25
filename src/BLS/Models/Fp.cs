@@ -135,27 +135,19 @@ namespace EdjCase.ICP.BLS.Models
 			byte[] bytes = new byte[48];
 
 			// Write bytes directly into the array, using a helper method to respect endianness.
-			WriteBytes(bytes, 0, tmp.V0);
-			WriteBytes(bytes, 8, tmp.V1);
-			WriteBytes(bytes, 16, tmp.V2);
-			WriteBytes(bytes, 24, tmp.V3);
-			WriteBytes(bytes, 32, tmp.V4);
-			WriteBytes(bytes, 40, tmp.V5);
+			WriteBytes(bytes, 0, tmp.V5);
+			WriteBytes(bytes, 8, tmp.V4);
+			WriteBytes(bytes, 16, tmp.V3);
+			WriteBytes(bytes, 24, tmp.V2);
+			WriteBytes(bytes, 32, tmp.V1);
+			WriteBytes(bytes, 40, tmp.V0);
 
 			return bytes;
 		}
 
 		private static void WriteBytes(byte[] target, int start, ulong value)
 		{
-			// Check endianness only once and then use the correct method for all subsequent writes.
-			if (BitConverter.IsLittleEndian)
-			{
-				BinaryPrimitives.WriteUInt64LittleEndian(target.AsSpan(start, 8), value);
-			}
-			else
-			{
-				BinaryPrimitives.WriteUInt64BigEndian(target.AsSpan(start, 8), value);
-			}
+			BinaryPrimitives.WriteUInt64BigEndian(target.AsSpan(start, 8), value);
 		}
 
 
