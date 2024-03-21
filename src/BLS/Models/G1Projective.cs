@@ -62,6 +62,11 @@ namespace EdjCase.ICP.BLS.Models
 				|| (!thisIsZero && !otherIsZero && x1.Equals(x2) && y1.Equals(y2));
 		}
 
+		public override int GetHashCode()
+		{
+			return this.X.GetHashCode() ^ this.Y.GetHashCode() ^ this.Z.GetHashCode();
+		}
+
 		public G1Projective Add(G1Projective rhs)
 		{
 			Fp t0 = this.X * rhs.X;
