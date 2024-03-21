@@ -7,7 +7,7 @@ using System.Numerics;
 
 namespace Dirichlet.Numerics
 {
-	public struct UInt128 : IFormattable, IComparable, IComparable<UInt128>, IEquatable<UInt128>
+	internal struct UInt128 : IFormattable, IComparable, IComparable<UInt128>, IEquatable<UInt128>
 	{
 		private struct UInt256
 		{

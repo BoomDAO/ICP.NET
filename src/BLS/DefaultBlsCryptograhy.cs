@@ -29,11 +29,11 @@ namespace EdjCase.ICP.BLS
 
 			G1Affine msg = G1Projective.HashToCurve(messageHash, DomainSeperator).ToAffine();
 			G2Prepared pk = G2Affine.FromCompressed(publicKey).ToProjective().ToPrepared();
-			(G1Affine, G2Prepared)[] pairs =
-			[
+			(G1Affine, G2Prepared)[] pairs = new[]
+			{
 				(sig, g2Gen),
 				(msg, pk)
-			];
+			};
 			return this.VerifyInternal(pairs);
 		}
 
