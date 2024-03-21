@@ -29,11 +29,11 @@ namespace EdjCase.ICP.BLS
 
 			G1Affine msg = G1Projective.HashToCurve(messageHash, DomainSeperator).ToAffine();
 			G2Prepared pk = G2Affine.FromCompressed(publicKey).ToProjective().ToPrepared();
-			(G1Affine, G2Prepared)[] pairs = new[]
-			{
+			(G1Affine, G2Prepared)[] pairs =
+			[
 				(sig, g2Gen),
 				(msg, pk)
-			};
+			];
 			return this.VerifyInternal(pairs);
 		}
 
@@ -52,15 +52,6 @@ namespace EdjCase.ICP.BLS
 				return false;
 			}
 
-			// TODO?
-			// Enforce distinct messages to counter BLS's rogue-key attack
-			//HashSet<byte[]> distinctHashes = g2Values
-			//	.Select(h => h.ToCompressed())
-			//	.ToHashSet(new ByteArrayComparer());
-			//if (distinctHashes.Count() != nHashes)
-			//{
-			//	return false;
-			//}
 			int index = 0;
 			Fp12 Step(Fp12 f)
 			{
