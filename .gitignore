@@ -361,3 +361,5 @@ launchSettings.json
 
 # Secret test files
 test_SessionIdentity.json
+
+.mono/

@@ -15,6 +15,10 @@ using System.Reflection.Metadata.Ecma335;
 using EdjCase.ICP.Agent.Standards.AssetCanister;
 using System.Text;
 using EdjCase.ICP.Agent.Standards.AssetCanister.Models;
+using EdjCase.ICP.BLS;
+using EdjCase.ICP.Candid.Utilities;
+using EdjCase.ICP.BLS.Models;
+using System.Diagnostics;
 
 public class Program
 {
@@ -182,7 +186,7 @@ public class Program
 			try
 			{
 				contentStream = File.OpenRead(filePath);
-			
+
 				await client.UploadAssetChunkedAsync(
 						key: key,
 						contentType: contentType,

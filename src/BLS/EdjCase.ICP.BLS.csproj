@@ -27,10 +27,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<EmbeddedResource Include="bls.wasm" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<PackageReference Include="Wasmtime" Version="8.0.1" />
 	</ItemGroup>
 

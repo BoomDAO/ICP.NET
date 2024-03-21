@@ -40,7 +40,7 @@ IAgent agent = new HttpAgent();
 // Create Candid arg to send in request
 ulong proposalId = 1234;
 CandidArg arg = CandidArg.FromCandid(
-    CandidTypedValue.FromObject(proposalId) // Conversion can be C# or custom types
+	CandidTypedValue.FromObject(proposalId) // Conversion can be C# or custom types
 );
 
 // Make request to IC
@@ -89,19 +89,19 @@ string name = await client.Name();
 // Get the balance of a specific account
 Account account = new Account
 {
-    Id = Principal.FromText("<account_id>")
+	Id = Principal.FromText("<account_id>")
 };
 UnboundedUInt balance = await client.BalanceOf(account);
 
 // Transfer tokens from one account to another
 TransferArgs transferArgs = new TransferArgs
 {
-    To = new Account
-    {
-        Id = Principal.FromText("<to_account_id>")
-    },
-    Amount = 1,
-    Memo = "<memo>"
+	To = new Account
+	{
+		Id = Principal.FromText("<to_account_id>")
+	},
+	Amount = 1,
+	Memo = "<memo>"
 };
 TransferResult transferResult = await client.Transfer(transferArgs);
 ```
@@ -172,18 +172,7 @@ var delegatedIdentity = new DelegationIdentity(innerIdentity, chain);
 Due to how WebGL works by converting C# to JS/WASM using IL2CPP there are a few additional steps to avoid
 incompatibilities. 
 - UnityHttpClient - The .NET `HttpClient` does not work in many cases, so `UnityHttpClient` is added via Unity C# script.
-    ```cs
-    var client = new UnityHttpClient();
-    var agent = new HttpAgent(client);
-    ```
-- WebGlBlsCryptography - The BLS signature verification relies on a 3rd party library and due to that library not being directly compatible with the WebGL builds, `WebGlBlsCryptography` needs to be used instead of the default `WasmBlsCryptography` class.
-    
-    ```cs
-    var bls = new WebGlBlsCrytography();
-    var agent = new HttpAgent(client, bls: bls);
-    ```
-    In addition, the `noble-curves.js` file located [HERE](`https://github.com/paulmillr/noble-curves/releases/tag/1.2.0`) needs to be included in the Unity project and referenced by the HTML page
-    ```html
-    <script src="{path_to_dir}/noble-curves.js"/>
-    ```
-    That will load in the JS bls library that will be referenced by the `Bls.jslib` that is included in the ICP.NET unity package
+	```cs
+	var client = new UnityHttpClient();
+	var agent = new HttpAgent(client);
+	```

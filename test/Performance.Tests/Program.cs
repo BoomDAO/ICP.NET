@@ -1,9 +1,10 @@
 using BenchmarkDotNet.Running;
 using EdjCase.ICP.Agent.Agents.Http;
 using EdjCase.ICP.Candid.Utilities;
+using Performance.Tests.Benchmarks;
 
-//BenchmarkRunner.Run<CandidSerializationBenchmarks>();
-BenchmarkRunner.Run(typeof(Program).Assembly);
+BenchmarkRunner.Run<SignatureBenchmarks>();
+//BenchmarkRunner.Run(typeof(Program).Assembly);
 
 
 

@@ -6,7 +6,7 @@
 
 		<IsPackable>false</IsPackable>
 
-		<RootNamespace>ICP.Candid.Tests</RootNamespace>
+		<RootNamespace>EdjCase.ICP.Candid.Tests</RootNamespace>
 		<UseAppHost>true</UseAppHost>
 	</PropertyGroup>
 

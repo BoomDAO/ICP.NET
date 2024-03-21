@@ -184,7 +184,7 @@ namespace EdjCase.ICP.WebSockets
 			}
 			if (this.bls == null)
 			{
-				this.bls = new WasmBlsCryptography();
+				this.bls = new DefaultBlsCryptograhy();
 			}
 			return new WebSocketAgent<TMessage>(
 				this.canisterId,

@@ -48,7 +48,7 @@ namespace EdjCase.ICP.Agent.Agents
 		{
 			this.Identity = identity;
 			this.httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
-			this.bls = bls ?? new WasmBlsCryptography();
+			this.bls = bls ?? new DefaultBlsCryptograhy();
 		}
 
 		/// <param name="identity">Optional. Identity to use for each request. If unspecified, will use anonymous identity</param>
@@ -65,7 +65,7 @@ namespace EdjCase.ICP.Agent.Agents
 			{
 				BaseAddress = httpBoundryNodeUrl ?? new Uri("https://ic0.app/")
 			});
-			this.bls = bls ?? new WasmBlsCryptography();
+			this.bls = bls ?? new DefaultBlsCryptograhy();
 		}
 
 
