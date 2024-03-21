@@ -14,121 +14,40 @@ namespace EdjCase.ICP.BLS
 	/// </summary>
 	public class DefaultBlsCryptograhy : IBlsCryptography
 	{
-		internal static readonly byte[] DstG1;
-		internal static readonly byte[] DstG2;
+		internal static readonly byte[] DomainSeperator;
 
 		static DefaultBlsCryptograhy()
 		{
-			DstG1 = Encoding.UTF8.GetBytes("BLS_SIG_BLS12381G1_XMD:SHA-256_SSWU_RO_NUL_");
-			DstG2 = Encoding.UTF8.GetBytes("BLS_SIG_BLS12381G2_XMD:SHA-256_SSWU_RO_NUL_");
+			DomainSeperator = Encoding.UTF8.GetBytes("BLS_SIG_BLS12381G1_XMD:SHA-256_SSWU_RO_NUL_");
 		}
 
 		/// <inheritdoc />
 		public bool VerifySignature(byte[] publicKey, byte[] messageHash, byte[] signature)
 		{
-			G1Projective[] g1Values = new[]
-			{
-				G1Projective.HashToCurve(messageHash, DstG1)
-			};
-			G2Projective[] g2Values = new[]
-			{
-				G2Projective.FromCompressed(publicKey)
-			};
 			G1Affine sig = G1Affine.FromCompressed(signature);
-			return this.VerifyG1Signature(sig, g2Values, g1Values);
-		}
+			G2Prepared g2Gen = G2Affine.Generator().Neg().ToProjective().ToPrepared();
 
-		internal bool VerifyG1Signature(
-			G1Affine signature,
-			G2Projective[] g2Values,
-			G1Projective[] g1Values
-		)
-		{
-			G1Projective g1 = signature.ToProjective(); // TODO BLSICP
-			G2Projective g2 = G2Affine.Generator().Neg().ToProjective(); // TODO BLSICP
-			G2Prepared g2Prepared = g2.ToPrepared();
-
-			// TODO BLSICP
-			Fp12 Ell(Fp12 f, G1Projective g1, G2Projective g2, int index)
+			G1Affine msg = G1Projective.HashToCurve(messageHash, DomainSeperator).ToAffine();
+			G2Prepared pk = G2Affine.FromCompressed(publicKey).ToProjective().ToPrepared();
+			(G1Affine, G2Prepared)[] pairs = new[]
 			{
-				(Fp2 c0, Fp2 c1, Fp2 c2) = g2Prepared.Coefficients[index];
-
-				c0 = new Fp2(c0.C0 * g1.Y, c0.C1 * g1.Y);
-				c1 = new Fp2(c1.C0 * g1.X, c1.C1 * g1.X);
-
-				Fp12 newF = f.MultiplyBy014(c2, c1, c0);
-				return newF;
-			}
-
-			/// ???
-			//static Fp12 Ell(Fp12 f, G1Projective g1, G2Projective g2, int index)
-			//{
-			//	//TODO BLSICP
-			//   (Fp c0, Fp c1, Fp c2) = g1Prepared.Coefficients[index];
-
-			//	// Convert Fp to Fp2 by using c0 and c1 as the real part and setting the imaginary part to 0
-			//	Fp2 convertedC0 = new Fp2(c0, Fp.Zero());
-			//	Fp2 convertedC1 = new Fp2(c1, Fp.Zero());
-			//	Fp2 convertedC2 = new Fp2(c2, Fp.Zero());
-
-			//	// Now you can use convertedC0, convertedC1, and convertedC2 with MultiplyBy014
-			//	Fp12 newF = f.MultiplyBy014(convertedC0, convertedC1, convertedC2);
-
-
-			//	return newF;
-			//	throw new NotImplementedException();
-			//}
-
-
-			return this.VerifyInternal(g2Values, g1Values, g1, g2, Ell);
-		}
-
-		internal bool VerifyG2Signature(
-			G2Affine signature,
-			G2Projective[] g2Values,
-			G1Projective[] g1Values
-		)
-		{
-			G1Projective g1 = G1Affine.Generator().Neg().ToProjective();
-			G2Projective g2 = signature.ToProjective();
-			G2Prepared g2Prepared = g2.ToPrepared();
-
-			Fp12 Ell(Fp12 f, G1Projective g1, G2Projective g2, int index)
-			{
-				(Fp2 c0, Fp2 c1, Fp2 c2) = g2Prepared.Coefficients[index];
-
-				c0 = new Fp2(c0.C0 * g1.Y, c0.C1 * g1.Y);
-				c1 = new Fp2(c1.C0 * g1.X, c1.C1 * g1.X);
-
-				Fp12 newF = f.MultiplyBy014(c2, c1, c0);
-				return newF;
-			}
-
-			return this.VerifyInternal(g2Values, g1Values, g1, g2, Ell);
+				(sig, g2Gen),
+				(msg, pk)
+			};
+			return this.VerifyInternal(pairs);
 		}
 
 		private bool VerifyInternal(
-			G2Projective[] g2Values,
-			G1Projective[] g1Values,
-			G1Projective lastG1,
-			G2Projective lastG2,
-			Func<Fp12, G1Projective, G2Projective, int, Fp12> step
+			(G1Affine G1, G2Prepared G2)[] pairs
 		)
 		{
-			if (g2Values.Length == 0 || g1Values.Length == 0)
-			{
-				return false;
-			}
-
-			int nHashes = g2Values.Length;
-
-			if (nHashes != g1Values.Length)
+			if (!pairs.Any())
 			{
 				return false;
 			}
 
 			// Zero keys should always fail
-			if (g1Values.Any(pk => pk.IsIdentity()))
+			if (pairs.Any(p => p.G1.IsIdentity()))
 			{
 				return false;
 			}
@@ -142,40 +61,36 @@ namespace EdjCase.ICP.BLS
 			//{
 			//	return false;
 			//}
-
-			Fp12 millerLoopValue = g1Values.Zip(g2Values, (g1, g2) => (g1, g2))
-				.AsParallel()
-				.Select((pair, i) => BlsUtil.MillerLoop(
-					Fp12.One(),
-					(f) => Step(f, pair.g1, pair.g2, step, i),
-					(f) => Step(f, pair.g1, pair.g2, step, i),
-					(f) => f.Square(),
-					(f) => f.Conjugate()
-				))
-				.Aggregate(Fp12.One(), (acc, result) => acc * result);
-
-
-			Fp12 r = BlsUtil.MillerLoop(
-					Fp12.One(),
-					(f) => Step(f, lastG1, lastG2, step, 0),
-					(f) => Step(f, lastG1, lastG2, step, 0),
-					(f) => f.Square(),
-					(f) => f.Conjugate()
-				);
-			millerLoopValue *= r;
-
-			return FinalExponentiation(millerLoopValue).Equals(Fp12.One());
-		}
-
-
-		private static Fp12 Step(Fp12 f, G1Projective g1, G2Projective g2, Func<Fp12, G1Projective, G2Projective, int, Fp12> step, int index)
-		{
-			bool eitherIdentity = g1.IsIdentity() || g2.IsIdentity();
-			if (eitherIdentity)
+			int index = 0;
+			Fp12 Step(Fp12 f)
 			{
+				foreach ((G1Affine g1, G2Prepared g2) in pairs)
+				{
+					bool eitherIdentity = g1.IsIdentity() || g2.IsInfinity;
+					if (!eitherIdentity)
+					{
+						(Fp2 c0, Fp2 c1, Fp2 c2) = g2.Coefficients[index];
+
+						c0 = new Fp2(c0.C0 * g1.Y, c0.C1 * g1.Y);
+						c1 = new Fp2(c1.C0 * g1.X, c1.C1 * g1.X);
+
+						f = f.MultiplyBy014(c2, c1, c0);
+					}
+				}
+				index += 1;
 				return f;
 			}
-			return step(f, g1, g2, index);
+
+			Fp12 millerLoopValue = BlsUtil.MillerLoop(
+				Fp12.One(),
+				Step,
+				Step,
+				(f) => f.Square(),
+				(f) => f.Conjugate()
+			);
+
+
+			return FinalExponentiation(millerLoopValue).Equals(Fp12.One());
 		}
 
 

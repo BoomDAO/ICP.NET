@@ -49,7 +49,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.WebSockets", "sample
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebSockets.Tests", "test\WebSockets.Tests\WebSockets.Tests.csproj", "{3015AFBC-B866-459F-B25C-4BEA00C2A91E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BLS.Tests", "BLS.Tests\BLS.Tests.csproj", "{213F30BA-D147-4291-93A3-13A8A006126D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BLS.Tests", "test\BLS.Tests\BLS.Tests.csproj", "{213F30BA-D147-4291-93A3-13A8A006126D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

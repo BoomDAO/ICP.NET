@@ -32,16 +32,7 @@ namespace Performance.Tests.Benchmarks
 		[Benchmark]
 		public void Verify()
 		{
-			G1Projective[] g1Values = new[]
-			{
-				G1Projective.FromCompressed(this.publicKey)
-			};
-			G2Projective[] g2Values = new[]
-			{
-				G2Projective.HashToCurve(this.msgHash, DefaultBlsCryptograhy.DstG2)
-			};
-			G2Affine sig = G2Affine.FromCompressed(this.signature);
-			this.bls.VerifyG2Signature(sig, g2Values, g1Values);
+			this.bls.VerifySignature(this.publicKey, this.msgHash, this.signature);
 		}
 
 	}

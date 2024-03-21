@@ -78,67 +78,47 @@ public class Program
 
 
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-	public static void Main(string[] args)
+	public static async Task Main(string[] args)
 	{
-		var publicKey = ByteUtil.FromHexString("b2be11dc8e54ee74dbc07569fd74fe03b5f52ad71cd49a8579b6c6387891f5a20ad980ec2747618c1b9ad35846a68a3e");
-		var msgHash = ByteUtil.FromHexString("");
-		var signature = ByteUtil.FromHexString("b53cfdf8b488a286df1ed20432e2bbc4e6361003757dfda3a4fd6cd98de95e5513f7c448d70b2681e14547a6ced47e7c10e28432e8abcb34de1dc28f39328fd2a13db12a4c6a30bd17b0e42881a429003e4c24583ba0f29a40fd836cf05e1a40");
+		var result = Parser.Default.ParseArguments<UploadOptions, DownloadOptions>(args)
+			.WithNotParsed(errors => { });
+		await result
+			.WithParsedAsync<UploadOptions>(async options =>
+			{
+				IIdentity? identity = null;
+				if (options.IdentityPEMFilePath != null)
+				{
+					identity = IdentityUtil.FromPemFile(options.IdentityPEMFilePath, options.IdentityPassword);
+				}
+				Uri httpBoundryNodeUrl = new Uri(options.Url!);
+				var agent = new HttpAgent(identity, httpBoundryNodeUrl);
+				Samples s = new(agent);
 
-		G1Projective[] g1Values = new[]
-		{
-				G1Projective.FromCompressed(publicKey)
-			};
-		G2Projective[] g2Values = new[]
-		{
-				G2Projective.HashToCurve(msgHash, DefaultBlsCryptograhy.DstG2)
-			};
-		G2Affine sig = G2Affine.FromCompressed(signature);
-		var bls = new DefaultBlsCryptograhy();
-		for (int i = 0; i < 100; i++)
-		{
-			var s = Stopwatch.StartNew();
-			bls.VerifyG2Signature(sig, g2Values, g1Values);
-			Console.WriteLine(s.Elapsed.ToString());
-		}
-		//var result = Parser.Default.ParseArguments<UploadOptions, DownloadOptions>(args)
-		//	.WithNotParsed(errors => { });
-		//await result
-		//	.WithParsedAsync<UploadOptions>(async options =>
-		//	{
-		//		IIdentity? identity = null;
-		//		if (options.IdentityPEMFilePath != null)
-		//		{
-		//			identity = IdentityUtil.FromPemFile(options.IdentityPEMFilePath, options.IdentityPassword);
-		//		}
-		//		Uri httpBoundryNodeUrl = new Uri(options.Url!);
-		//		var agent = new HttpAgent(identity, httpBoundryNodeUrl);
-		//		Samples s = new(agent);
+				Principal canisterId = Principal.FromText(options.CanisterId!);
+				await s.UploadChunkedFileAsync(
+					canisterId,
+					options.Key,
+					options.ContentType,
+					options.Encoding,
+					options.FilePath
+				);
+			});
 
-		//		Principal canisterId = Principal.FromText(options.CanisterId!);
-		//		await s.UploadChunkedFileAsync(
-		//			canisterId,
-		//			options.Key,
-		//			options.ContentType,
-		//			options.Encoding,
-		//			options.FilePath
-		//		);
-		//	});
+		await result
+			.WithParsedAsync<DownloadOptions>(async options =>
+			{
+				IIdentity? identity = null;
+				if (options.IdentityPEMFilePath != null)
+				{
+					identity = IdentityUtil.FromPemFile(options.IdentityPEMFilePath, options.IdentityPassword);
+				}
+				Uri httpBoundryNodeUrl = new Uri(options.Url!);
+				var agent = new HttpAgent(identity, httpBoundryNodeUrl);
+				Samples s = new(agent);
 
-		//await result
-		//	.WithParsedAsync<DownloadOptions>(async options =>
-		//	{
-		//		IIdentity? identity = null;
-		//		if (options.IdentityPEMFilePath != null)
-		//		{
-		//			identity = IdentityUtil.FromPemFile(options.IdentityPEMFilePath, options.IdentityPassword);
-		//		}
-		//		Uri httpBoundryNodeUrl = new Uri(options.Url!);
-		//		var agent = new HttpAgent(identity, httpBoundryNodeUrl);
-		//		Samples s = new(agent);
-
-		//		Principal canisterId = Principal.FromText(options.CanisterId!);
-		//		await s.DownloadFileAsync(canisterId, options.Key, options.Encoding, options.FilePath);
-		//	});
+				Principal canisterId = Principal.FromText(options.CanisterId!);
+				await s.DownloadFileAsync(canisterId, options.Key, options.Encoding, options.FilePath);
+			});
 
 	}
 
@@ -206,7 +186,7 @@ public class Program
 			try
 			{
 				contentStream = File.OpenRead(filePath);
-			
+
 				await client.UploadAssetChunkedAsync(
 						key: key,
 						contentType: contentType,

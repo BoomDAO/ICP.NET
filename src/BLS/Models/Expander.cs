@@ -39,8 +39,8 @@ namespace EdjCase.ICP.BLS.Models
 			}
 
 			byte[] b0 = sHA256.ComputeHash(
-				message
-				.Concat(new byte[64])
+				new byte[64]
+				.Concat(message)
 				.Concat(ToU16Bytes(byteLength))
 				.Concat(new byte[] { 0 })
 				.Concat(dst)
