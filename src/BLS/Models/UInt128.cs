@@ -194,7 +194,7 @@ namespace Dirichlet.Numerics
 
 		public string ToString(IFormatProvider provider)
 		{
-			return this.ToString(null, provider);
+			return this.ToString(null!, provider);
 		}
 
 		public string ToString(string format, IFormatProvider provider)

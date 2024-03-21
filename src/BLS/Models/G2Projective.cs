@@ -120,6 +120,11 @@ namespace EdjCase.ICP.BLS.Models
 		}
 
 
+		public override int GetHashCode()
+		{
+			return this.X.GetHashCode() ^ this.Y.GetHashCode() ^ this.Z.GetHashCode();
+		}
+
 		internal bool IsIdentity()
 		{
 			return this.Z.IsZero();
