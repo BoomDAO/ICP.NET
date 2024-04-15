@@ -66,9 +66,6 @@ public class Program
 		[Option('k', "asset-key", Required = true, HelpText = "The name of the asset to download")]
 		public string Key { get; set; }
 
-		[Option('e', "encoding", Required = true, HelpText = "The encoding of the asset to download (e.g UTF-8)")]
-		public string Encoding { get; set; }
-
 		[Option('i', "identity-pem-path", Required = false, HelpText = "The path to an identity PEM file to auth the download")]
 		public string IdentityPEMFilePath { get; set; }
 
@@ -117,7 +114,7 @@ public class Program
 				Samples s = new(agent);
 
 				Principal canisterId = Principal.FromText(options.CanisterId!);
-				await s.DownloadFileAsync(canisterId, options.Key, options.Encoding, options.FilePath);
+				await s.DownloadFileAsync(canisterId, options.Key, options.FilePath);
 			});
 
 	}
@@ -159,15 +156,14 @@ public class Program
 		public async Task DownloadFileAsync(
 			Principal canisterId,
 			string key,
-			string encoding,
 			string outputFilePath
 		)
 		{
-			var client = new AssetCanisterApiClient(this.agent, canisterId);
+			AssetCanisterApiClient client = new(this.agent, canisterId);
 
 			Console.WriteLine($"Downloading asset '{key}'...");
-			GetResult result = await client.GetAsync(key, new List<string> { encoding });
-			File.WriteAllBytes(outputFilePath, result.Content);
+			byte[] assetBytes = await client.DownloadAssetAsync(key);
+			File.WriteAllBytes(outputFilePath, assetBytes);
 			Console.WriteLine($"Downloaded asset '{key}' to {outputFilePath}");
 		}
 

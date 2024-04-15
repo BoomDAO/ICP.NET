@@ -7,6 +7,9 @@ using System.Collections.Generic;
 using System.IO;
 using System;
 using EdjCase.ICP.Agent.Standards.AssetCanister.Models;
+using System.Linq;
+using System.Threading;
+using System.IO.Compression;
 
 namespace EdjCase.ICP.Agent.Standards.AssetCanister
 {
@@ -23,7 +26,7 @@ namespace EdjCase.ICP.Agent.Standards.AssetCanister
 		/// The maximum size of a file chunk
 		/// It is set to just under 2MB.
 		/// </summary>
-		public const int MAX_CHUNK_SIZE = MAX_INGRESS_MESSAGE_SIZE - 200; // Just under 2MB
+		public const int MAX_CHUNK_SIZE = MAX_INGRESS_MESSAGE_SIZE - 500; // Just under 2MB
 
 		/// <summary>
 		/// The IC agent
@@ -136,7 +139,7 @@ namespace EdjCase.ICP.Agent.Standards.AssetCanister
 						break;
 					}
 					byte[] chunkBytes = bytesRead < buffer.Length
-						? buffer[0..(bytesRead - 1)]
+						? buffer[0..bytesRead]
 						: buffer;
 					CreateChunkResult result = await this.CreateChunkAsync(createBatchResult.BatchId, chunkBytes);
 					chunkIds.Add(result.ChunkId);
@@ -177,6 +180,100 @@ namespace EdjCase.ICP.Agent.Standards.AssetCanister
 				// Rollback batch
 				await this.DeleteBatchAsync(createBatchResult.BatchId);
 			}
+		}
+
+		/// <summary>
+		/// A helper method to download an asset from the asset canister in chunks.
+		/// </summary>
+		/// <param name="key">The key of the asset to download.</param>
+		/// <param name="maxConcurrency">The maximum number of concurrent chunk downloads.</param>
+		/// <returns>The downloaded asset content as a byte array.</returns>
+		public async Task<byte[]> DownloadAssetAsync(string key, int maxConcurrency = 10)
+		{
+			List<string> acceptEncodings = new() { "identity", "gzip", "deflate", "br" };
+			GetResult result = await this.GetAsync(key, acceptEncodings);
+
+			if (!result.TotalLength.TryToUInt64(out ulong totalLength))
+			{
+				throw new Exception("Total file length is too large: " + result.TotalLength);
+			}
+			if (totalLength == (ulong)result.Content.Length)
+			{
+				return result.Content;
+			}
+			int chunkCount = (int)Math.Ceiling((double)totalLength / result.Content.Length);
+
+			// Create a list to store the chunk tasks
+			List<Task<byte[]>> chunkTasks = new List<Task<byte[]>>();
+
+			// Create a semaphore to limit the number of concurrent tasks
+			SemaphoreSlim semaphore = new(maxConcurrency);
+
+			byte[]? sha256 = result.Sha256.GetValueOrDefault();
+			// Download the rest of the chunks
+			// Skip the first chunk as we already have it
+			for (int i = 1; i < chunkCount; i++)
+			{
+				int chunkIndex = i;
+				chunkTasks.Add(Task.Run(async () =>
+				{
+					await semaphore.WaitAsync();
+					try
+					{
+						GetChunkResult chunkResult = await this.GetChunkAsync(key, result.ContentEncoding, UnboundedUInt.FromUInt64((ulong)chunkIndex), sha256);
+						return chunkResult.Content;
+					}
+					finally
+					{
+						semaphore.Release();
+					}
+				}));
+			}
+
+			// Wait for all chunk tasks to complete
+			await Task.WhenAll(chunkTasks);
+
+			// Combine all the bytes into one byte[]
+			byte[] combinedBytes = result.Content.Concat(chunkTasks.SelectMany(t => t.Result)).ToArray();
+
+			switch (result.ContentEncoding)
+			{
+				case "identity":
+				case null:
+				case "":
+					break;
+				case "gzip":
+					using (var memoryStream = new MemoryStream(combinedBytes))
+					using (var gzipStream = new GZipStream(memoryStream, CompressionMode.Decompress))
+					using (var decompressedStream = new MemoryStream())
+					{
+						gzipStream.CopyTo(decompressedStream);
+						combinedBytes = decompressedStream.ToArray();
+					}
+					break;
+				case "deflate":
+					using (var memoryStream = new MemoryStream(combinedBytes))
+					using (var deflateStream = new DeflateStream(memoryStream, CompressionMode.Decompress))
+					using (var decompressedStream = new MemoryStream())
+					{
+						deflateStream.CopyTo(decompressedStream);
+						combinedBytes = decompressedStream.ToArray();
+					}
+					break;
+				case "br":
+					using (var memoryStream = new MemoryStream(combinedBytes))
+					using (var brotliStream = new BrotliStream(memoryStream, CompressionMode.Decompress))
+					using (var decompressedStream = new MemoryStream())
+					{
+						brotliStream.CopyTo(decompressedStream);
+						combinedBytes = decompressedStream.ToArray();
+					}
+					break;
+				default:
+					throw new NotImplementedException($"Content encoding {result.ContentEncoding} is not supported");
+			}
+
+			return combinedBytes;
 		}
 
 		/// <summary>
