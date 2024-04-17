@@ -1255,7 +1255,7 @@
             </summary>
             <param name="key">The key of the asset to download.</param>
             <param name="maxConcurrency">The maximum number of concurrent chunk downloads.</param>
-            <param name="acceptEncodings">The encodings to accept for the asset in order. Defaults to ["identity", "gzip", "deflate", "br"]</param>
+            <param name="acceptEncodings">The encodings to accept for the asset in order. Defaults to ["gzip", "deflate", "br", "identity"]</param>
             <returns>The downloaded asset content as a byte array.</returns>
         </member>
         <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.AssetCanisterApiClient.GetApiVersionAsync">
