@@ -1249,12 +1249,13 @@
             <param name="headers">Additional headers to be included in the request.</param>
             <param name="maxAge">The maximum age of the asset in seconds.</param>
         </member>
-        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.AssetCanisterApiClient.DownloadAssetAsync(System.String,System.Int32)">
+        <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.AssetCanisterApiClient.DownloadAssetAsync(System.String,System.Int32,System.Collections.Generic.List{System.String})">
             <summary>
             A helper method to download an asset from the asset canister in chunks.
             </summary>
             <param name="key">The key of the asset to download.</param>
             <param name="maxConcurrency">The maximum number of concurrent chunk downloads.</param>
+            <param name="acceptEncodings">The encodings to accept for the asset in order. Defaults to ["gzip", "deflate", "br", "identity"]</param>
             <returns>The downloaded asset content as a byte array.</returns>
         </member>
         <member name="M:EdjCase.ICP.Agent.Standards.AssetCanister.AssetCanisterApiClient.GetApiVersionAsync">
