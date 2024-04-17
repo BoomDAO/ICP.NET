@@ -187,10 +187,15 @@ namespace EdjCase.ICP.Agent.Standards.AssetCanister
 		/// </summary>
 		/// <param name="key">The key of the asset to download.</param>
 		/// <param name="maxConcurrency">The maximum number of concurrent chunk downloads.</param>
+		/// <param name="acceptEncodings">The encodings to accept for the asset in order. Defaults to ["gzip", "deflate", "br", "identity"]</param>
 		/// <returns>The downloaded asset content as a byte array.</returns>
-		public async Task<byte[]> DownloadAssetAsync(string key, int maxConcurrency = 10)
+		public async Task<(byte[] Asset, string ContentEncoding)> DownloadAssetAsync(
+			string key,
+			int maxConcurrency = 10,
+			List<string>? acceptEncodings = null
+		)
 		{
-			List<string> acceptEncodings = new() { "identity", "gzip", "deflate", "br" };
+			acceptEncodings ??= new() { "gzip", "deflate", "br", "identity" };
 			GetResult result = await this.GetAsync(key, acceptEncodings);
 
 			if (!result.TotalLength.TryToUInt64(out ulong totalLength))
@@ -199,12 +204,12 @@ namespace EdjCase.ICP.Agent.Standards.AssetCanister
 			}
 			if (totalLength == (ulong)result.Content.Length)
 			{
-				return result.Content;
+				return (result.Content, result.ContentEncoding);
 			}
 			int chunkCount = (int)Math.Ceiling((double)totalLength / result.Content.Length);
 
 			// Create a list to store the chunk tasks
-			List<Task<byte[]>> chunkTasks = new List<Task<byte[]>>();
+			List<Task<byte[]>> chunkTasks = new();
 
 			// Create a semaphore to limit the number of concurrent tasks
 			SemaphoreSlim semaphore = new(maxConcurrency);
@@ -236,44 +241,7 @@ namespace EdjCase.ICP.Agent.Standards.AssetCanister
 			// Combine all the bytes into one byte[]
 			byte[] combinedBytes = result.Content.Concat(chunkTasks.SelectMany(t => t.Result)).ToArray();
 
-			switch (result.ContentEncoding)
-			{
-				case "identity":
-				case null:
-				case "":
-					break;
-				case "gzip":
-					using (var memoryStream = new MemoryStream(combinedBytes))
-					using (var gzipStream = new GZipStream(memoryStream, CompressionMode.Decompress))
-					using (var decompressedStream = new MemoryStream())
-					{
-						gzipStream.CopyTo(decompressedStream);
-						combinedBytes = decompressedStream.ToArray();
-					}
-					break;
-				case "deflate":
-					using (var memoryStream = new MemoryStream(combinedBytes))
-					using (var deflateStream = new DeflateStream(memoryStream, CompressionMode.Decompress))
-					using (var decompressedStream = new MemoryStream())
-					{
-						deflateStream.CopyTo(decompressedStream);
-						combinedBytes = decompressedStream.ToArray();
-					}
-					break;
-				case "br":
-					using (var memoryStream = new MemoryStream(combinedBytes))
-					using (var brotliStream = new BrotliStream(memoryStream, CompressionMode.Decompress))
-					using (var decompressedStream = new MemoryStream())
-					{
-						brotliStream.CopyTo(decompressedStream);
-						combinedBytes = decompressedStream.ToArray();
-					}
-					break;
-				default:
-					throw new NotImplementedException($"Content encoding {result.ContentEncoding} is not supported");
-			}
-
-			return combinedBytes;
+			return (combinedBytes, result.ContentEncoding);
 		}
 
 		/// <summary>

@@ -19,6 +19,7 @@ using EdjCase.ICP.BLS;
 using EdjCase.ICP.Candid.Utilities;
 using EdjCase.ICP.BLS.Models;
 using System.Diagnostics;
+using System.IO.Compression;
 
 public class Program
 {
@@ -162,7 +163,41 @@ public class Program
 			AssetCanisterApiClient client = new(this.agent, canisterId);
 
 			Console.WriteLine($"Downloading asset '{key}'...");
-			byte[] assetBytes = await client.DownloadAssetAsync(key);
+			(byte[] assetBytes, string contentEncoding) = await client.DownloadAssetAsync(key);
+			switch (contentEncoding)
+			{
+				case "identity":
+					break;
+				case "gzip":
+					using (var memoryStream = new MemoryStream(assetBytes))
+					using (var gzipStream = new GZipStream(memoryStream, CompressionMode.Decompress))
+					using (var decompressedStream = new MemoryStream())
+					{
+						gzipStream.CopyTo(decompressedStream);
+						assetBytes = decompressedStream.ToArray();
+					}
+					break;
+				case "deflate":
+					using (var memoryStream = new MemoryStream(assetBytes))
+					using (var deflateStream = new DeflateStream(memoryStream, CompressionMode.Decompress))
+					using (var decompressedStream = new MemoryStream())
+					{
+						deflateStream.CopyTo(decompressedStream);
+						assetBytes = decompressedStream.ToArray();
+					}
+					break;
+				case "br":
+					using (var memoryStream = new MemoryStream(assetBytes))
+					using (var brotliStream = new BrotliStream(memoryStream, CompressionMode.Decompress))
+					using (var decompressedStream = new MemoryStream())
+					{
+						brotliStream.CopyTo(decompressedStream);
+						assetBytes = decompressedStream.ToArray();
+					}
+					break;
+				default:
+					throw new NotImplementedException($"Content encoding {contentEncoding} is not implemented");
+			}
 			File.WriteAllBytes(outputFilePath, assetBytes);
 			Console.WriteLine($"Downloaded asset '{key}' to {outputFilePath}");
 		}
