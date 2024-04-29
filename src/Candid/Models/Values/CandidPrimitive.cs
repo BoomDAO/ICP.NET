@@ -406,11 +406,11 @@ namespace EdjCase.ICP.Candid.Models.Values
 		{
 			if (this.ValueType != type)
 			{
-				if(isNullable && this.ValueType == PrimitiveType.Null)
+				if (isNullable && this.ValueType == PrimitiveType.Null)
 				{
 					return default;
 				}
-				throw new InvalidOperationException($"Cannot convert candid type '{this.Type}' to candid type '{type}'");
+				throw new InvalidOperationException($"Cannot convert candid primitive type '{this.ValueType}' to candid type '{type}'");
 			}
 			return (T)this.value!;
 		}
