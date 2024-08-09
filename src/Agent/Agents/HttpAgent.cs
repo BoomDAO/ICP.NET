@@ -255,16 +255,23 @@ namespace EdjCase.ICP.Agent.Agents
 			{
 				signedContent = this.Identity.SignContent(content);
 			}
+			HttpResponse response = await this.SendSignedContent(url, signedContent, cancellationToken);
+			return (response, signedContent.GenerateRequestId());
+		}
 
+		public async Task<HttpResponse> SendSignedContent(
+			string url,
+			SignedContent signedContent,
+			CancellationToken? cancellationToken = null
+		)
+		{
 
 			byte[] cborBody = this.SerializeSignedContent(signedContent);
 #if DEBUG
 			string hex = ByteUtil.ToHexString(cborBody);
 #endif
 			HttpResponse httpResponse = await this.httpClient.PostAsync(url, cborBody, cancellationToken);
-			var sha256 = SHA256HashFunction.Create();
-			RequestId requestId = RequestId.FromObject(content, sha256); // TODO this is redundant, `CreateSignedContent` hashes it too
-			return (httpResponse, requestId);
+			return httpResponse;
 
 		}
 

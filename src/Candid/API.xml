@@ -1740,16 +1740,12 @@
         <member name="M:EdjCase.ICP.Candid.Models.RequestId.#ctor(System.Byte[])">
             <param name="rawValue">The raw id value</param>
         </member>
-        <member name="M:EdjCase.ICP.Candid.Models.RequestId.FromObject(System.Collections.Generic.IDictionary{System.String,EdjCase.ICP.Candid.Models.IHashable},EdjCase.ICP.Candid.Crypto.IHashFunction)">
+        <member name="M:EdjCase.ICP.Candid.Models.RequestId.FromObject(System.Collections.Generic.IDictionary{System.String,EdjCase.ICP.Candid.Models.IHashable})">
             <summary>
             Converts a hashable object into a request id
             </summary>
             <param name="properties">The properties of the object to hash</param>
-            <param name="hashFunction">The hash function to use to generate the hash</param>
             <returns>A request id object</returns>
-        </member>
-        <member name="M:EdjCase.ICP.Candid.Models.RequestId.ComputeHash(EdjCase.ICP.Candid.Crypto.IHashFunction)">
-            <inheritdoc />
         </member>
         <member name="T:EdjCase.ICP.Candid.Models.ReservedValue">
             <summary>

@@ -50,6 +50,14 @@ namespace EdjCase.ICP.Agent.Models
 			this.SenderSignature = senderSignature;
 		}
 
+		private RequestId? requestIdCache;
+
+		public RequestId GenerateRequestId()
+		{
+			this.requestIdCache ??= RequestId.FromObject(this.Content);
+			return this.requestIdCache;
+		}
+
 		/// <inheritdoc />
 		public Dictionary<string, IHashable> BuildHashableItem()
 		{
@@ -105,6 +113,7 @@ namespace EdjCase.ICP.Agent.Models
 			}
 			writer.WriteEndMap();
 		}
+
 
 		internal class Properties
 		{

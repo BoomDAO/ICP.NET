@@ -51,8 +51,19 @@ namespace EdjCase.ICP.Candid.Models
 		/// <inheritdoc />
 		public byte[] ComputeHash(IHashFunction hashFunction)
 		{
-			RequestId requestId = RequestId.FromObject(this.Properties, hashFunction);
-			return requestId.RawValue;
+			var orderedProperties = this.Properties
+				.Where(o => o.Value != null) // Remove empty/null ones
+				.Select(o =>
+				{
+					byte[] keyDigest = o.Key.ToHashable().ComputeHash(hashFunction);
+					byte[] valueDigest = o.Value!.ComputeHash(hashFunction);
+
+					return (KeyHash: keyDigest, ValueHash: valueDigest);
+				}) // Hash key and value bytes
+				.OrderBy(o => o.KeyHash, new HashComparer()); // Keys in order
+			return orderedProperties
+				.SelectMany(o => o.KeyHash.Concat(o.ValueHash))
+				.ToArray(); // Create single byte[] by concatinating them all together
 		}
 
 		/// <inheritdoc />
@@ -185,6 +196,12 @@ namespace EdjCase.ICP.Candid.Models
 		}
 
 		public static HashableObject ToHashable<T>(this Dictionary<string, T> value)
+			where T : IHashable
+		{
+			return ((IDictionary<string, T>)value).ToHashable();
+		}
+
+		public static HashableObject ToHashable<T>(this IDictionary<string, T> value)
 			where T : IHashable
 		{
 			return new HashableObject(value.ToDictionary(v => v.Key, v => (IHashable)v.Value));

@@ -22,5 +22,10 @@ namespace Sample.RestAPI.Controllers
 			OptionalValue<ProposalInfo> info = await this.Client.GetProposalInfo(id);
 			return this.Ok(info);
 		}
+
+		public async Task<IActionResult> CreateProposal([FromBody] Proposal proposal)
+		{
+			await this.Client.Agent.CallAsync
+		}
 	}
 }

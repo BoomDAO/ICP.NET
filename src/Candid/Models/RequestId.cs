@@ -1,5 +1,6 @@
 using EdjCase.ICP.Candid.Crypto;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 
 namespace EdjCase.ICP.Candid.Models
@@ -7,8 +8,9 @@ namespace EdjCase.ICP.Candid.Models
 	/// <summary>
 	/// A helper class to wrap around the request id byte array that identifies a request
 	/// </summary>
-	public class RequestId : IHashable
+	public class RequestId
 	{
+
 		/// <summary>
 		/// The raw id value
 		/// </summary>
@@ -24,30 +26,11 @@ namespace EdjCase.ICP.Candid.Models
 		/// Converts a hashable object into a request id
 		/// </summary>
 		/// <param name="properties">The properties of the object to hash</param>
-		/// <param name="hashFunction">The hash function to use to generate the hash</param>
 		/// <returns>A request id object</returns>
-		public static RequestId FromObject(IDictionary<string, IHashable> properties, IHashFunction hashFunction)
+		public static RequestId FromObject(IDictionary<string, IHashable> properties)
 		{
-			var orderedProperties = properties
-				.Where(o => o.Value != null) // Remove empty/null ones
-				.Select(o =>
-				{
-					byte[] keyDigest = o.Key.ToHashable().ComputeHash(hashFunction);
-					byte[] valueDigest = o.Value!.ComputeHash(hashFunction);
-
-					return (KeyHash: keyDigest, ValueHash: valueDigest);
-				}) // Hash key and value bytes
-				.OrderBy(o => o.KeyHash, new HashComparer()); // Keys in order
-			byte[] bytes = orderedProperties
-				.SelectMany(o => o.KeyHash.Concat(o.ValueHash))
-				.ToArray(); // Create single byte[] by concatinating them all together
-			return new RequestId(hashFunction.ComputeHash(bytes));
-		}
-
-		/// <inheritdoc />
-		public byte[] ComputeHash(IHashFunction hashFunction)
-		{
-			return hashFunction.ComputeHash(this.RawValue);
+			byte[] bytes = properties.ToHashable().ComputeHash(SHA256HashFunction.Create());
+			return new RequestId(bytes);
 		}
 	}
 }
