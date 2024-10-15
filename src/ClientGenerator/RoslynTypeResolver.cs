@@ -1057,7 +1057,7 @@ namespace EdjCase.ICP.ClientGenerator
 		private EnumDeclarationSyntax GenerateEnum(TypeName enumName, List<(ResolvedName Name, TypeName? Type)> values)
 		{
 			// Build enum options based on the values
-			IEnumerable<SyntaxNode> enumOptions = values
+			IEnumerable<EnumMemberDeclarationSyntax> enumOptions = values
 				.Select(v =>
 				{
 					List<AttributeListSyntax> attributeList = new();
