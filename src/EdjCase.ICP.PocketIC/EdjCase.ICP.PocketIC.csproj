@@ -12,6 +12,7 @@
     <Content Include="runtimes\**\*">
       <Pack>true</Pack>
       <PackagePath>runtimes</PackagePath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
