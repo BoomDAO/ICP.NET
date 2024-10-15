@@ -16,4 +16,9 @@
     </Content>
   </ItemGroup>
 
+
+  <ItemGroup>
+    <ProjectReference Include="..\Candid\EdjCase.ICP.Candid.csproj" />
+  </ItemGroup>
+
 </Project>
