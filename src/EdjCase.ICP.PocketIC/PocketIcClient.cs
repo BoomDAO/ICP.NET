@@ -108,7 +108,7 @@ namespace EdjCase.ICP.PocketIC
 
 		public async Task SetStableMemoryAsync(Principal canisterId, byte[] memory)
 		{
-			var blobId = await this.UploadBlob(memory);
+			var blobId = await this.UploadBlobAsync(memory);
 			var request = new SetStableMemoryRequest { CanisterId = canisterId, BlobId = blobId };
 			await this.PostAsync<object>("/update/set_stable_memory", request);
 		}
