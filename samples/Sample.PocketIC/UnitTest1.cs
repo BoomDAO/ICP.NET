@@ -14,13 +14,17 @@ namespace Sample.PocketIC
 		[TearDown]
 		public async Task Teardown()
 		{
-			this.server?.Stop();
-			this.server?.Dispose();
+			if (this.server != null)
+			{
+				await this.server.Stop();
+				this.server.Dispose();
+			}
 		}
 
 		[Test]
 		public void Test1()
 		{
+			Console.WriteLine(this.server!.GetUrl());
 			Assert.Pass();
 		}
 	}
