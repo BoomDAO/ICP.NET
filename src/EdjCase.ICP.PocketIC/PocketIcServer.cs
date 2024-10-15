@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace EdjCase.ICP.PocketIC
 {
-	public class Server : IDisposable
+	public class PocketIcServer : IDisposable
 	{
 		private readonly Process _serverProcess;
 		private readonly int _port;
 
-		private Server(Process serverProcess, int port)
+		private PocketIcServer(Process serverProcess, int port)
 		{
 			this._serverProcess = serverProcess;
 			this._port = port;
@@ -36,7 +36,7 @@ namespace EdjCase.ICP.PocketIC
 
 
 
-		public static async Task<Server> Start(
+		public static async Task<PocketIcServer> Start(
 			bool showRuntimeLogs = false,
 			bool showErrorLogs = true,
 			CancellationToken? cancellationToken = null
@@ -94,7 +94,7 @@ namespace EdjCase.ICP.PocketIC
 				throw new Exception($"Failed to start PocketIC server after {timeout}");
 			}
 
-			return new Server(serverProcess, port);
+			return new PocketIcServer(serverProcess, port);
 		}
 
 		private static string GetBinPath()
@@ -137,7 +137,7 @@ namespace EdjCase.ICP.PocketIC
 			var searchPaths = new[]
 			{
 				AppContext.BaseDirectory,
-				Path.GetDirectoryName(typeof(Server).Assembly.Location),
+				Path.GetDirectoryName(typeof(PocketIcServer).Assembly.Location),
 				Environment.CurrentDirectory,
 			};
 
@@ -179,11 +179,5 @@ namespace EdjCase.ICP.PocketIC
 				}
 			}
 		}
-	}
-
-	public class StartServerOptions
-	{
-		public bool ShowRuntimeLogs { get; set; } = false;
-		public bool ShowCanisterLogs { get; set; } = false;
 	}
 }

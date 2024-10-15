@@ -1,14 +1,15 @@
+using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.PocketIC;
 
 namespace Sample.PocketIC
 {
 	public class Tests
 	{
-		private Server? server;
+		private PocketIcServer server;
 		[SetUp]
 		public async Task Setup()
 		{
-			this.server = await Server.Start();
+			this.server = await PocketIcServer.Start();
 		}
 
 		[TearDown]
@@ -22,9 +23,11 @@ namespace Sample.PocketIC
 		}
 
 		[Test]
-		public void Test1()
+		public async Task Test1()
 		{
-			Console.WriteLine(this.server!.GetUrl());
+			string url = this.server.GetUrl();
+			PocketIcClient client = await PocketIcClient.CreateAsync(url);
+			Principal canisterId = await client.CreateCanisterAsync();
 			Assert.Pass();
 		}
 	}
