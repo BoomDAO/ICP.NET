@@ -143,6 +143,7 @@ namespace EdjCase.ICP.PocketIC
 			this.AssertInstanceNotDeleted();
 			var json = data != null ? JsonSerializer.Serialize(data) : "";
 			var content = new StringContent(json, Encoding.UTF8, "application/json");
+			Console.WriteLine($"{this.baseUrl}{endpoint}");
 			var response = await this.httpClient.PostAsync($"{this.baseUrl}{endpoint}", content);
 			response.EnsureSuccessStatusCode();
 			var responseContent = await response.Content.ReadAsStringAsync();
