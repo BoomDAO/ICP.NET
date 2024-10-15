@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <PackageId>EdjCase.ICP.PocketIC</PackageId>
+  </PropertyGroup>
+
+
+  <ItemGroup>
+    <Content Include="runtimes\**\*">
+      <Pack>true</Pack>
+      <PackagePath>runtimes</PackagePath>
+    </Content>
+  </ItemGroup>
+
+</Project>
