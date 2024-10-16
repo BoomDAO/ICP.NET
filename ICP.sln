@@ -51,7 +51,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebSockets.Tests", "test\We
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BLS.Tests", "test\BLS.Tests\BLS.Tests.csproj", "{213F30BA-D147-4291-93A3-13A8A006126D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdjCase.ICP.PocketIC", "src\EdjCase.ICP.PocketIC\EdjCase.ICP.PocketIC.csproj", "{051EE789-4283-48DA-81EF-4B8ADFD406D0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdjCase.ICP.PocketIC", "src\PocketIC\EdjCase.ICP.PocketIC.csproj", "{051EE789-4283-48DA-81EF-4B8ADFD406D0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.PocketIC", "samples\Sample.PocketIC\Sample.PocketIC.csproj", "{E674253B-7B51-40D0-9F3D-805007174D31}"
 EndProject
