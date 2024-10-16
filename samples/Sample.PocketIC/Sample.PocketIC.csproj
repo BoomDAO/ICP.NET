@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\EdjCase.ICP.PocketIC\EdjCase.ICP.PocketIC.csproj" />
+    <ProjectReference Include="..\..\src\PocketIC\EdjCase.ICP.PocketIC.csproj" />
   </ItemGroup>
 
   <ItemGroup>
