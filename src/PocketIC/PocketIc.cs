@@ -353,7 +353,6 @@ namespace EdjCase.ICP.PocketIC
 			List<SubnetConfig>? systemSubnets = null,
 			List<SubnetConfig>? verifiedApplicationSubnets = null,
 			bool nonmainnetFeatures = false,
-			TimeSpan? processingTimeout = null,
 			CandidConverter? candidConverter = null
 		)
 		{
@@ -367,8 +366,7 @@ namespace EdjCase.ICP.PocketIC
 				snsSubnet,
 				systemSubnets,
 				verifiedApplicationSubnets,
-				nonmainnetFeatures,
-				processingTimeout
+				nonmainnetFeatures
 			);
 			return new PocketIc(client, candidConverter);
 		}

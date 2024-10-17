@@ -11,7 +11,6 @@ namespace EdjCase.ICP.PocketIC.Client
 	{
 		private readonly HttpClient httpClient;
 		private readonly string baseUrl;
-		private readonly TimeSpan processingTimeout;
 		private readonly int instanceId;
 		private readonly Dictionary<string, SubnetTopology> topology;
 
@@ -19,13 +18,11 @@ namespace EdjCase.ICP.PocketIC.Client
 			HttpClient httpClient,
 			string url,
 			int instanceId,
-			TimeSpan processingTimeout,
 			Dictionary<string, SubnetTopology> topology)
 		{
 			this.httpClient = httpClient;
 			this.baseUrl = url;
 			this.instanceId = instanceId;
-			this.processingTimeout = processingTimeout;
 			this.topology = topology;
 		}
 
@@ -261,11 +258,9 @@ namespace EdjCase.ICP.PocketIC.Client
 			SubnetConfig? snsSubnet = null,
 			List<SubnetConfig>? systemSubnets = null,
 			List<SubnetConfig>? verifiedApplicationSubnets = null,
-			bool nonmainnetFeatures = false,
-			TimeSpan? processingTimeout = null
+			bool nonmainnetFeatures = false
 		)
 		{
-			var timeout = processingTimeout ?? TimeSpan.FromSeconds(30);
 
 			applicationSubnets ??= new List<SubnetConfig>
 			{
@@ -416,7 +411,6 @@ namespace EdjCase.ICP.PocketIC.Client
 				httpClient,
 				url,
 				instanceId,
-				timeout,
 				topology
 			);
 		}
@@ -447,5 +441,55 @@ namespace EdjCase.ICP.PocketIC.Client
 		NNS,
 		SNS,
 		System
+	}
+
+	public class EffectivePrincipal
+	{
+		public required EffectivePrincipalType Type { get; set; }
+		public required Principal Id { get; set; }
+	}
+
+	public enum EffectivePrincipalType
+	{
+		Subnet,
+		Canister
+	}
+
+
+	public class SubnetConfig
+	{
+		public bool? EnableDeterministicTimeSlicing { get; set; }
+		public bool? EnableBenchmarkingInstructionLimits { get; set; }
+		public required SubnetStateConfig State { get; set; }
+	}
+
+	public class SubnetStateConfig
+	{
+		public SubnetStateType Type { get; private set; }
+		public string? Path { get; private set; }
+		public Principal? SubnetId { get; private set; }
+
+		private SubnetStateConfig(SubnetStateType type, string? path, Principal? subnetId)
+		{
+			this.Type = type;
+			this.Path = path;
+			this.SubnetId = subnetId;
+		}
+
+		public static SubnetStateConfig New()
+		{
+			return new SubnetStateConfig(SubnetStateType.New, null, null);
+		}
+
+		public static SubnetStateConfig FromPath(string path, Principal subnetId)
+		{
+			return new SubnetStateConfig(SubnetStateType.FromPath, path, subnetId);
+		}
+	}
+
+	public enum SubnetStateType
+	{
+		New,
+		FromPath
 	}
 }
