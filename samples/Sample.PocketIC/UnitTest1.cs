@@ -1,5 +1,7 @@
 using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.PocketIC;
+using EdjCase.ICP.PocketIC.Client;
+using EdjCase.ICP.PocketIC.Models;
 
 namespace Sample.PocketIC
 {
@@ -26,9 +28,13 @@ namespace Sample.PocketIC
 		public async Task Test1()
 		{
 			string url = this.server.GetUrl();
-			PocketIcClient client = await PocketIcClient.CreateAsync(url);
-			Principal canisterId = await client.CreateCanisterAsync();
-			Assert.Pass();
+			await using (PocketIc pocketIc = await PocketIc.CreateAsync(url))
+			{
+				CreateCanisterResponse response = await pocketIc.CreateCanisterAsync();
+
+				Assert.NotNull(response);
+				Assert.NotNull(response.CanisterId);
+			}
 		}
 	}
 }
