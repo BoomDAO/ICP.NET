@@ -3,6 +3,7 @@ using System.Text.Json;
 using EdjCase.ICP.Candid.Models;
 using EdjCase.ICP.Candid;
 using System.Text.Json.Nodes;
+using System.Security.Cryptography;
 
 namespace EdjCase.ICP.PocketIC.Client
 {
@@ -12,7 +13,6 @@ namespace EdjCase.ICP.PocketIC.Client
 		private readonly string baseUrl;
 		private readonly TimeSpan processingTimeout;
 		private readonly int instanceId;
-		private readonly CandidConverter candidConverter;
 		private readonly Dictionary<string, SubnetTopology> topology;
 
 		private PocketIcClient(
@@ -20,31 +20,28 @@ namespace EdjCase.ICP.PocketIC.Client
 			string url,
 			int instanceId,
 			TimeSpan processingTimeout,
-			Dictionary<string, SubnetTopology> topology,
-			CandidConverter? candidConverter = null)
+			Dictionary<string, SubnetTopology> topology)
 		{
 			this.httpClient = httpClient;
 			this.baseUrl = url;
 			this.instanceId = instanceId;
 			this.processingTimeout = processingTimeout;
-			this.candidConverter = candidConverter ?? CandidConverter.Default;
 			this.topology = topology;
 		}
 
-
-
 		public async Task TickAsync()
 		{
-			await this.PostAsync<object>("/update/tick", null);
+			await this.PostAsync("/update/tick", null);
 		}
 
 		public async Task<byte[]> GetPublicKeyAsync(Principal subnetId)
 		{
-			var request = new
+			var request = new JsonObject
 			{
-				subnet_id = subnetId.Raw
+				["subnet_id"] = Convert.ToBase64String(subnetId.Raw)
 			};
-			return await this.PostAsync<byte[]>("/read/pub_key", request);
+			JsonNode? response = await this.PostAsync("/read/pub_key", request);
+			return response!["public_key"].Deserialize<byte[]>()!;
 		}
 
 		public Dictionary<string, SubnetTopology> GetTopology()
@@ -54,8 +51,8 @@ namespace EdjCase.ICP.PocketIC.Client
 
 		public async Task<ICTimestamp> GetTimeAsync()
 		{
-			var response = await this.GetAsync<GetTimeResponse>("/read/get_time");
-			return ICTimestamp.FromNanoSeconds(response.NanosSinceEpoch);
+			JsonNode? response = await this.GetAsync("/read/get_time");
+			return ICTimestamp.FromNanoSeconds(response!["nanos_since_epoch"].Deserialize<ulong>()!);
 		}
 
 		public async Task SetTimeAsync(ICTimestamp timestamp)
@@ -64,22 +61,21 @@ namespace EdjCase.ICP.PocketIC.Client
 			{
 				throw new ArgumentException("Nanoseconds is too large to convert to ulong");
 			}
-			var request = new
+			var request = new JsonObject
 			{
-				nanos_since_epoch = nanosSinceEpoch
+				["nanos_since_epoch"] = nanosSinceEpoch
 			};
-			await this.PostAsync<object>("/update/set_time", request);
+			await this.PostAsync("/update/set_time", request);
 		}
 
-		public async Task<TResponse> QueryCallAsync<TRequest, TResponse>(
+		public async Task<CandidArg> QueryCallAsync(
 			Principal sender,
 			Principal canisterId,
 			string method,
-			TRequest request,
+			CandidArg request,
 			EffectivePrincipal? effectivePrincipal = null)
-			where TRequest : notnull
 		{
-			return await this.RequestInternalAsync<TRequest, TResponse>(
+			return await this.RequestInternalAsync(
 				"/read/query",
 				sender,
 				canisterId,
@@ -89,15 +85,14 @@ namespace EdjCase.ICP.PocketIC.Client
 			);
 		}
 
-		public async Task<TResponse> UpdateCallAsync<TRequest, TResponse>(
+		public async Task<CandidArg> UpdateCallAsync(
 			Principal sender,
 			Principal canisterId,
 			string method,
-			TRequest request,
+			CandidArg request,
 			EffectivePrincipal? effectivePrincipal = null)
-			where TRequest : notnull
 		{
-			return await this.RequestInternalAsync<TRequest, TResponse>(
+			return await this.RequestInternalAsync(
 				"/update/execute_ingress_message",
 				sender,
 				canisterId,
@@ -107,123 +102,139 @@ namespace EdjCase.ICP.PocketIC.Client
 			);
 		}
 
-		private async Task<TResponse> RequestInternalAsync<TRequest, TResponse>(
+
+		private async Task<CandidArg> RequestInternalAsync(
 			string route,
 			Principal sender,
 			Principal canisterId,
 			string method,
-			TRequest request,
+			CandidArg arg,
 			EffectivePrincipal? effectivePrincipal = null)
-			where TRequest : notnull
 		{
-			CandidTypedValue requestValue = this.candidConverter.FromTypedObject(request);
-			CandidArg arg = CandidArg.FromCandid(requestValue);
 			byte[] payload = arg.Encode();
-			var effectivePrincipalJson = effectivePrincipal == null ? "None" : (effectivePrincipal.Type == EffectivePrincipalType.Subnet ? new
-			{
-				SubnetId = effectivePrincipal.Id.Raw
-			} : new
-			{
-				CanisterId = effectivePrincipal.Id.Raw
-			});
-			var options = new
-			{
-				canister_id = canisterId.Raw,
-				effective_principal = effectivePrincipalJson,
-				method = method,
-				payload = payload,
-				sender = sender.Raw,
-			};
-			var response = await this.PostAsync<CanisterCallResponse>(route, options);
-			CandidArg candidResponse = CandidArg.FromBytes(response.Body);
-			return candidResponse.ToObjects<TResponse>();
-		}
 
+			JsonNode effectivePrincipalJson = effectivePrincipal == null ?
+				JsonValue.Create("None")! :
+				new JsonObject
+				{
+					[effectivePrincipal.Type == EffectivePrincipalType.Subnet ? "SubnetId" : "CanisterId"] =
+						Convert.ToBase64String(effectivePrincipal.Id.Raw)
+				};
+
+			var options = new JsonObject
+			{
+				["canister_id"] = Convert.ToBase64String(canisterId.Raw),
+				["effective_principal"] = effectivePrincipalJson,
+				["method"] = method,
+				["payload"] = Convert.ToBase64String(payload),
+				["sender"] = Convert.ToBase64String(sender.Raw)
+			};
+			JsonNode? response = await this.PostAsync(route, options);
+			if (response == null)
+			{
+				throw new Exception("Failed to get response from canister");
+			}
+			if (response["Err"] != null)
+			{
+				string message = response!["Err"]!["description"]!.Deserialize<string>()!;
+				string code = response!["Err"]!["code"]!.Deserialize<string>()!;
+				throw new Exception($"Canister returned an error. Code: {code}, Message: {message}");
+			}
+			if (response["Ok"] == null)
+			{
+				throw new Exception("Failed to get a valid response from canister. Response: " + response?.ToJsonString());
+			}
+			byte[]? candidBytes = response!["Ok"]!["Reply"]?.Deserialize<byte[]>();
+			if (candidBytes == null)
+			{
+				throw new Exception("Failed to get a valid response from canister. Response: " + response?.ToJsonString());
+			}
+			return CandidArg.FromBytes(candidBytes);
+		}
 		public async Task<Principal?> GetCanisterSubnetIdAsync(Principal canisterId)
 		{
-			var request = new
+			var request = new JsonObject
 			{
-				canister_id = canisterId.Raw
+				["canister_id"] = Convert.ToBase64String(canisterId.Raw)
 			};
-			var response = await this.PostAsync<GetSubnetIdResponse>("/read/get_subnet", request);
-			return response.SubnetId;
+			JsonNode? response = await this.PostAsync("/read/get_subnet", request);
+			return response!["subnet_id"].Deserialize<Principal>();
 		}
 
 		public async Task<ulong> GetCyclesBalanceAsync(Principal canisterId)
 		{
-			var request = new
+			var request = new JsonObject
 			{
-				canister_id = canisterId.Raw
+				["canister_id"] = Convert.ToBase64String(canisterId.Raw)
 			};
-			var response = await this.PostAsync<GetCyclesBalanceResponse>("/read/get_cycles", request);
-			return response.Cycles;
+			JsonNode? response = await this.PostAsync("/read/get_cycles", request);
+			return response!["cycles"].Deserialize<ulong>()!;
 		}
 
 		public async Task<ulong> AddCyclesAsync(Principal canisterId, ulong amount)
 		{
-			var request = new
+			var request = new JsonObject
 			{
-				canister_id = canisterId.Raw,
-				amount = amount
+				["canister_id"] = Convert.ToBase64String(canisterId.Raw),
+				["amount"] = amount
 			};
-			var response = await this.PostAsync<AddCyclesResponse>("/update/add_cycles", request);
-			return response.Cycles;
+			JsonNode? response = await this.PostAsync("/update/add_cycles", request);
+			return response!["cycles"].Deserialize<ulong>()!;
 		}
 
 		public async Task SetStableMemoryAsync(Principal canisterId, byte[] memory)
 		{
-			var blobId = await this.UploadBlobAsync(memory);
-			var request = new
+			byte[] blobId = await this.UploadBlobAsync(memory);
+			var request = new JsonObject
 			{
-				canister_id = canisterId.Raw,
-				blob_id = blobId
+				["canister_id"] = Convert.ToBase64String(canisterId.Raw),
+				["blob_id"] = JsonValue.Create(blobId)
 			};
-			await this.PostAsync<object>("/update/set_stable_memory", request);
+			await this.PostAsync("/update/set_stable_memory", request);
 		}
 
 		public async Task<byte[]> GetStableMemoryAsync(Principal canisterId)
 		{
-			var request = new
+			var request = new JsonObject
 			{
-				canister_id = canisterId
+				["canister_id"] = Convert.ToBase64String(canisterId.Raw)
 			};
-			var response = await this.PostAsync<GetStableMemoryResponse>("/read/get_stable_memory", request);
-			return response.Blob;
+			JsonNode? response = await this.PostAsync("/read/get_stable_memory", request);
+			return response!["blob_id"].Deserialize<byte[]>()!;
 		}
 
-		private async Task<UploadBlobResponse> UploadBlobAsync(byte[] blob)
+		private async Task<byte[]> UploadBlobAsync(byte[] blob)
 		{
 			var content = new ByteArrayContent(blob);
-			var response = await this.httpClient.PostAsync($"{this.baseUrl}/blobstore", content);
+			HttpResponseMessage response = await this.httpClient.PostAsync($"{this.baseUrl}/blobstore", content);
 			response.EnsureSuccessStatusCode();
-			var responseContent = await response.Content.ReadAsStringAsync();
-			return JsonSerializer.Deserialize<UploadBlobResponse>(responseContent)!;
+			var stream = await response.Content.ReadAsStreamAsync();
+			JsonNode? json = await JsonNode.ParseAsync(stream)!;
+			return json!["blob"].Deserialize<byte[]>()!;
 		}
 
-		private async Task<T> GetAsync<T>(string endpoint)
+		private async Task<JsonNode?> GetAsync(string endpoint)
 		{
-			var response = await this.httpClient.GetAsync($"{this.baseUrl}/instances/{this.instanceId}{endpoint}");
+			HttpResponseMessage response = await this.httpClient.GetAsync($"{this.baseUrl}/instances/{this.instanceId}{endpoint}");
 			response.EnsureSuccessStatusCode();
-			var content = await response.Content.ReadAsStringAsync();
-			return JsonSerializer.Deserialize<T>(content)!;
+			Stream stream = await response.Content.ReadAsStreamAsync();
+			return await JsonNode.ParseAsync(stream)!;
 		}
 
-		private async Task<T> PostAsync<T>(string endpoint, object? data)
+		private async Task<JsonNode?> PostAsync(string endpoint, JsonObject? data)
 		{
 			string url = $"{this.baseUrl}/instances/{this.instanceId}{endpoint}";
-			return await PocketIcClient.PostAsync<T>(this.httpClient, url, data);
+			return await PocketIcClient.PostAsync(this.httpClient, url, data);
 		}
 
-		private static async Task<T> PostAsync<T>(HttpClient httpClient, string url, object? data)
+		private static async Task<JsonNode?> PostAsync(HttpClient httpClient, string url, JsonObject? data)
 		{
-			var json = data != null ? JsonSerializer.Serialize(data) : "";
-			Console.WriteLine("POST " + url);
-			Console.WriteLine(json);
+			var json = data?.ToJsonString() ?? "";
 			var content = new StringContent(json, Encoding.UTF8, "application/json");
 			var response = await httpClient.PostAsync(url, content);
 			response.EnsureSuccessStatusCode();
-			var responseContent = await response.Content.ReadAsStringAsync();
-			return JsonSerializer.Deserialize<T>(responseContent)!;
+			var stream = await response.Content.ReadAsStreamAsync();
+			return await JsonNode.ParseAsync(stream);
 		}
 
 		public async ValueTask DisposeAsync()
@@ -251,13 +262,11 @@ namespace EdjCase.ICP.PocketIC.Client
 			List<SubnetConfig>? systemSubnets = null,
 			List<SubnetConfig>? verifiedApplicationSubnets = null,
 			bool nonmainnetFeatures = false,
-			TimeSpan? processingTimeout = null,
-			CandidConverter? candidConverter = null
+			TimeSpan? processingTimeout = null
 		)
 		{
 			var timeout = processingTimeout ?? TimeSpan.FromSeconds(30);
 
-			// Default to a single application subnet
 			applicationSubnets ??= new List<SubnetConfig>
 			{
 				new SubnetConfig
@@ -266,25 +275,27 @@ namespace EdjCase.ICP.PocketIC.Client
 				}
 			};
 
-			object? MapSubnet(SubnetConfig? subnetConfig)
+			JsonNode? MapSubnet(SubnetConfig? subnetConfig)
 			{
 				if (subnetConfig == null)
 				{
 					return null;
 				}
-				object stateConfig;
+				JsonNode stateConfig;
 				switch (subnetConfig.State.Type)
 				{
 					case SubnetStateType.New:
-						stateConfig = "New";
+						stateConfig = JsonValue.Create("New")!;
 						break;
 					case SubnetStateType.FromPath:
-						stateConfig = new
+						stateConfig = new JsonObject
 						{
-							FromPath = new List<object> {
+							["FromPath"] = new JsonArray
+							{
 								subnetConfig.State.Path!,
-								new {
-									subnet_id = Convert.ToBase64String(subnetConfig.State.SubnetId!.Raw)
+								new JsonObject
+								{
+									["subnet_id"] = Convert.ToBase64String(subnetConfig.State.SubnetId!.Raw)
 								}
 							}
 						};
@@ -292,57 +303,122 @@ namespace EdjCase.ICP.PocketIC.Client
 					default:
 						throw new NotImplementedException();
 				}
-				return new
+				return new JsonObject
 				{
-					dts_flag = subnetConfig.EnableDeterministicTimeSlicing == false ? "Disabled" : "Enabled",
-					instruction_config = subnetConfig.EnableBenchmarkingInstructionLimits == true ? "Benchmarking" : "Production",
-					state_config = stateConfig
+					["dts_flag"] = subnetConfig.EnableDeterministicTimeSlicing == false ? "Disabled" : "Enabled",
+					["instruction_config"] = subnetConfig.EnableBenchmarkingInstructionLimits == true ? "Benchmarking" : "Production",
+					["state_config"] = stateConfig
 				};
 			}
 
-			List<object> MapSubnets(List<SubnetConfig>? subnets)
+			JsonArray MapSubnets(List<SubnetConfig>? subnets)
 			{
 				if (subnets == null)
 				{
-					return [];
+					return new JsonArray();
 				}
-				return subnets.Select(s => MapSubnet(s)!).ToList();
+				return new JsonArray(subnets.Select(s => MapSubnet(s)).ToArray());
 			}
 
-
-			var request = new
+			var request = new JsonObject
 			{
-				subnet_config_set = new
+				["subnet_config_set"] = new JsonObject
 				{
-					application = MapSubnets(applicationSubnets),
-					bitcoin = MapSubnet(bitcoinSubnet),
-					fiduciary = MapSubnet(fiduciarySubnet),
-					ii = MapSubnet(iiSubnet),
-					nns = MapSubnet(nnsSubnet),
-					sns = MapSubnet(snsSubnet),
-					system = MapSubnets(systemSubnets),
-					verified_application = MapSubnets(verifiedApplicationSubnets)
+					["application"] = MapSubnets(applicationSubnets),
+					["bitcoin"] = MapSubnet(bitcoinSubnet),
+					["fiduciary"] = MapSubnet(fiduciarySubnet),
+					["ii"] = MapSubnet(iiSubnet),
+					["nns"] = MapSubnet(nnsSubnet),
+					["sns"] = MapSubnet(snsSubnet),
+					["system"] = MapSubnets(systemSubnets),
+					["verified_application"] = MapSubnets(verifiedApplicationSubnets)
 				},
-				nonmainnet_features = nonmainnetFeatures
+				["nonmainnet_features"] = nonmainnetFeatures
 			};
 
 			var httpClient = new HttpClient();
-			var response = await PostAsync<CreateInstanceResponse>(httpClient, $"{url}/instances", request);
-
-			if (response.Error != null)
+			JsonNode? response = await PostAsync(httpClient, $"{url}/instances", request);
+			if (response == null)
 			{
-				throw new Exception($"Failed to create PocketIC instance: {response.Error.Message}");
+				throw new Exception("Failed to create PocketIC instance, no response from server");
 			}
 
-			var client = new PocketIcClient(
+			if (response["Error"] != null)
+			{
+				string message = response!["error"]!["message"]!.Deserialize<string>()!;
+				throw new Exception($"Failed to create PocketIC instance: {message}");
+			}
+			JsonObject? created = response["Created"]?.AsObject();
+			if (created == null)
+			{
+				throw new Exception("Failed to create PocketIC instance, invalid response from server");
+			}
+
+			int instanceId = created["instance_id"]!.Deserialize<int>()!;
+
+			SubnetTopology MapSubnetTopology(string subnetId, JsonNode value)
+			{
+				string? subnetTypeString = value["subnet_kind"]?.Deserialize<string>();
+				if (subnetTypeString == null || !Enum.TryParse<SubnetType>(subnetTypeString, out var subnetType))
+				{
+					throw new Exception($"Invalid subnet type: {subnetTypeString}");
+				}
+
+				byte[] subnetSeed = value["subnet_seed"]
+					?.AsArray()
+					.Select(b => b.Deserialize<byte>())
+					.ToArray()
+					?? throw new Exception("Subnet seed is missing or invalid");
+
+				List<byte[]> nodeIds = value["node_ids"]
+					?.AsArray()
+					.Select(id =>
+					{
+						byte[]? nodeId = id!["node_id"]?.Deserialize<byte[]>() ?? throw new Exception("Node ID is missing or invalid");
+						return nodeId;
+					})
+					.ToList()
+					?? [];
+
+				Principal MapCanisterRangeValue(JsonNode? value)
+				{
+					byte[] canisterIdBytes = value?["canister_id"]?.Deserialize<byte[]>() ?? throw new Exception("Canister range value is missing or invalid");
+					return Principal.FromBytes(canisterIdBytes);
+				}
+
+				List<CanisterRange> canisterRanges = value["canister_ranges"]
+					?.AsArray()
+					.Select(r => new CanisterRange
+					{
+						Start = MapCanisterRangeValue(r?["start"]),
+						End = MapCanisterRangeValue(r?["end"])
+					})
+					.ToList()
+					?? [];
+
+				return new SubnetTopology
+				{
+					Id = Principal.FromText(subnetId),
+					Type = subnetType,
+					SubnetSeed = subnetSeed,
+					NodeIds = nodeIds,
+					CanisterRanges = canisterRanges
+				};
+			}
+			Dictionary<string, SubnetTopology> topology = created["topology"]
+				?.Deserialize<Dictionary<string, JsonNode>>()
+				?.ToDictionary(kv => kv.Key, kv => MapSubnetTopology(kv.Key, kv.Value))
+				?? [];
+
+
+
+			return new PocketIcClient(
 				httpClient,
 				url,
-				response.Created!.InstanceId,
+				instanceId,
 				timeout,
-				response.Created!.Topology,
-				candidConverter
+				topology
 			);
-			return client;
 		}
 	}
 
@@ -351,7 +427,8 @@ namespace EdjCase.ICP.PocketIC.Client
 	{
 		public required Principal Id { get; set; }
 		public required SubnetType Type { get; set; }
-		public required int Size { get; set; }
+		public required byte[] SubnetSeed { get; set; }
+		public required List<byte[]> NodeIds { get; set; }
 		public required List<CanisterRange> CanisterRanges { get; set; }
 	}
 

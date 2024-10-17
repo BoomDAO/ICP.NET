@@ -10,10 +10,15 @@ namespace EdjCase.ICP.PocketIC
 		private static readonly Principal MANAGEMENT_CANISTER_ID = Principal.FromText("aaaaa-aa");
 
 		private readonly PocketIcClient client;
+		private readonly CandidConverter candidConverter;
 
-		private PocketIc(PocketIcClient client)
+		private PocketIc(
+			PocketIcClient client,
+			CandidConverter? candidConverter = null
+		)
 		{
 			this.client = client;
+			this.candidConverter = candidConverter ?? CandidConverter.Default;
 		}
 
 		public async Task<Principal> SetupCanisterAsync(
@@ -37,22 +42,42 @@ namespace EdjCase.ICP.PocketIC
 		public async Task<CreateCanisterResponse> CreateCanisterAsync(CreateCanisterRequest? request = null)
 		{
 			request ??= new CreateCanisterRequest();
-			return await this.CallManagementCanisterAsync<CreateCanisterRequest, CreateCanisterResponse>("provisional_create_canister_with_cycles", request);
+			return await this.UpdateCallAsync<CreateCanisterRequest, CreateCanisterResponse>(
+				Principal.Anonymous(),
+				MANAGEMENT_CANISTER_ID,
+				"provisional_create_canister_with_cycles",
+				request
+			);
 		}
 
-		public Task StartCanisterAsync(StartCanisterRequest request)
+		public async Task StartCanisterAsync(StartCanisterRequest request)
 		{
-			return this.CallManagementCanisterAsync<StartCanisterRequest, object>("start_canister", request);
+			await this.UpdateCallNoResponseAsync(
+				Principal.Anonymous(),
+				MANAGEMENT_CANISTER_ID,
+				"start_canister",
+				request
+			);
 		}
 
-		public Task StopCanisterAsync(StopCanisterRequest request)
+		public async Task StopCanisterAsync(StopCanisterRequest request)
 		{
-			return this.CallManagementCanisterAsync<StopCanisterRequest, object>("stop_canister", request);
+			await this.UpdateCallNoResponseAsync(
+				Principal.Anonymous(),
+				MANAGEMENT_CANISTER_ID,
+				"stop_canister",
+				request
+			);
 		}
 
-		public Task InstallCodeAsync(InstallCodeRequest request)
+		public async Task InstallCodeAsync(InstallCodeRequest request)
 		{
-			return this.CallManagementCanisterAsync<InstallCodeRequest, object>("install_code", request);
+			await this.UpdateCallNoResponseAsync(
+				Principal.Anonymous(),
+				MANAGEMENT_CANISTER_ID,
+				"install_code",
+				request
+			);
 		}
 
 
@@ -65,11 +90,52 @@ namespace EdjCase.ICP.PocketIC
 		)
 			where TRequest : notnull
 		{
-			return await this.client.QueryCallAsync<TRequest, TResponse>(
+			CandidTypedValue requestValue = this.candidConverter.FromTypedObject(request);
+			CandidArg arg = CandidArg.FromCandid(requestValue);
+			CandidArg responseArg = await this.QueryCallRawAsync(
 				sender,
 				canisterId,
 				method,
-				request,
+				arg,
+				effectivePrincipal
+			);
+			return responseArg.ToObjects<TResponse>(this.candidConverter);
+		}
+
+
+		public async Task<TResponse> QueryCallNoRequestAsync<TResponse>(
+			Principal sender,
+			Principal canisterId,
+			string method,
+			EffectivePrincipal? effectivePrincipal = null
+		)
+		{
+			CandidArg arg = CandidArg.FromCandid();
+			CandidArg responseArg = await this.QueryCallRawAsync(
+				sender,
+				canisterId,
+				method,
+				arg,
+				effectivePrincipal
+			);
+			return responseArg.ToObjects<TResponse>(this.candidConverter);
+		}
+
+
+
+		public async Task<CandidArg> QueryCallRawAsync(
+			Principal sender,
+			Principal canisterId,
+			string method,
+			CandidArg arg,
+			EffectivePrincipal? effectivePrincipal = null
+		)
+		{
+			return await this.client.QueryCallAsync(
+				sender,
+				canisterId,
+				method,
+				arg,
 				effectivePrincipal
 			);
 		}
@@ -83,11 +149,87 @@ namespace EdjCase.ICP.PocketIC
 		)
 			where TRequest : notnull
 		{
-			return await this.client.UpdateCallAsync<TRequest, TResponse>(
+			CandidTypedValue requestValue = this.candidConverter.FromTypedObject(request);
+			CandidArg arg = CandidArg.FromCandid(requestValue);
+			CandidArg responseArg = await this.UpdateCallRawAsync(
 				sender,
 				canisterId,
 				method,
-				request,
+				arg,
+				effectivePrincipal
+			);
+			return responseArg.ToObjects<TResponse>(this.candidConverter);
+		}
+
+		public async Task<TResponse> UpdateCallNoRequestAsync<TResponse>(
+			Principal sender,
+			Principal canisterId,
+			string method,
+			EffectivePrincipal? effectivePrincipal = null
+		)
+		{
+			CandidArg arg = CandidArg.FromCandid();
+			CandidArg responseArg = await this.UpdateCallRawAsync(
+				sender,
+				canisterId,
+				method,
+				arg,
+				effectivePrincipal
+			);
+			return responseArg.ToObjects<TResponse>(this.candidConverter);
+		}
+
+		public async Task UpdateCallNoResponseAsync<TRequest>(
+			Principal sender,
+			Principal canisterId,
+			string method,
+			TRequest request,
+			EffectivePrincipal? effectivePrincipal = null
+		)
+			where TRequest : notnull
+		{
+			CandidTypedValue requestValue = this.candidConverter.FromTypedObject(request);
+			CandidArg arg = CandidArg.FromCandid(requestValue);
+			await this.UpdateCallRawAsync(
+				sender,
+				canisterId,
+				method,
+				arg,
+				effectivePrincipal
+			);
+		}
+
+		public async Task UpdateCallNoRequestOrResponseAsync(
+			Principal sender,
+			Principal canisterId,
+			string method,
+			EffectivePrincipal? effectivePrincipal = null
+		)
+		{
+			CandidArg arg = CandidArg.FromCandid();
+			await this.UpdateCallRawAsync(
+				sender,
+				canisterId,
+				method,
+				arg,
+				effectivePrincipal
+			);
+		}
+
+
+		public async Task<CandidArg> UpdateCallRawAsync(
+			Principal sender,
+			Principal canisterId,
+			string method,
+			CandidArg arg,
+			EffectivePrincipal? effectivePrincipal = null
+		)
+		{
+			return await this.client.UpdateCallAsync(
+				sender,
+				canisterId,
+				method,
+				arg,
 				effectivePrincipal
 			);
 		}
@@ -198,16 +340,6 @@ namespace EdjCase.ICP.PocketIC
 			await this.client.DisposeAsync();
 		}
 
-		private async Task<TResponse> CallManagementCanisterAsync<TRequest, TResponse>(string method, TRequest request)
-			where TRequest : class
-		{
-			return await this.client.UpdateCallAsync<TRequest, TResponse>(
-				Principal.Anonymous(),
-				MANAGEMENT_CANISTER_ID,
-				method,
-				request
-			);
-		}
 
 
 		public static async Task<PocketIc> CreateAsync(
@@ -236,10 +368,9 @@ namespace EdjCase.ICP.PocketIC
 				systemSubnets,
 				verifiedApplicationSubnets,
 				nonmainnetFeatures,
-				processingTimeout,
-				candidConverter
+				processingTimeout
 			);
-			return new PocketIc(client);
+			return new PocketIc(client, candidConverter);
 		}
 	}
 

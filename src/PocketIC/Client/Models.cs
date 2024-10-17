@@ -5,12 +5,6 @@ using EdjCase.ICP.Candid.Models;
 
 namespace EdjCase.ICP.PocketIC.Client;
 
-public class UploadBlobResponse
-{
-	[JsonPropertyName("blob_id")]
-	public string BlobId { get; set; }
-}
-
 public class EffectivePrincipal
 {
 	public required EffectivePrincipalType Type { get; set; }

@@ -18,6 +18,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="CanisterWasmModules/*.wasm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\src\PocketIC\EdjCase.ICP.PocketIC.csproj" />
   </ItemGroup>
 
