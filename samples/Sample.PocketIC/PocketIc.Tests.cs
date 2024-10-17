@@ -173,7 +173,13 @@ namespace Sample.PocketIC
 			string url = this.server.GetUrl();
 			await using (PocketIc pocketIc = await PocketIc.CreateAsync(url))
 			{
+				ICTimestamp initialTime = await pocketIc.GetTimeAsync();
+
 				await pocketIc.AdvanceTimeAsync(TimeSpan.FromMinutes(1));
+
+				ICTimestamp newTime = await pocketIc.GetTimeAsync();
+
+				Assert.That(newTime.NanoSeconds, Is.EqualTo(initialTime.NanoSeconds + 60_000_000_000ul));
 
 				// No exception means success
 				Assert.Pass();
